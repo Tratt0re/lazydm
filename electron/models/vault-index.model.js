@@ -5,13 +5,17 @@ const MARKDOWN_EXTENSION = '.md';
 const RESERVED_ROOT_DIR_NAMES = new Set(['compendium']);
 
 function getFileKind(relativePath) {
-  return path.posix.extname(relativePath).toLocaleLowerCase() === MARKDOWN_EXTENSION ? 'md' : 'asset';
+  return path.posix.extname(relativePath).toLocaleLowerCase() === MARKDOWN_EXTENSION
+    ? 'md'
+    : 'asset';
 }
 
 /** Markdown notes are linked by name without extension (`[[goblin-boss]]`), assets by full file name. */
 function getFileName(relativePath) {
   const baseName = path.posix.basename(relativePath);
-  return getFileKind(relativePath) === 'md' ? baseName.slice(0, -MARKDOWN_EXTENSION.length) : baseName;
+  return getFileKind(relativePath) === 'md'
+    ? baseName.slice(0, -MARKDOWN_EXTENSION.length)
+    : baseName;
 }
 
 /** The campaign is the first folder of the path, unless it is a vault-level folder (`compendium`, `_templates`). */
@@ -80,10 +84,21 @@ function insertFileDetails(database, fileId, title, document) {
      VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
   );
   const insertTag = database.prepare('INSERT OR IGNORE INTO tags (file_id, tag) VALUES (?, ?)');
-  const insertHeading = database.prepare('INSERT INTO headings (file_id, level, text, line) VALUES (?, ?, ?, ?)');
+  const insertHeading = database.prepare(
+    'INSERT INTO headings (file_id, level, text, line) VALUES (?, ?, ?, ?)',
+  );
 
   for (const link of document.links) {
-    insertLink.run(fileId, link.raw, link.targetPath, link.targetName, link.heading, link.label, link.kind, link.line);
+    insertLink.run(
+      fileId,
+      link.raw,
+      link.targetPath,
+      link.targetName,
+      link.heading,
+      link.label,
+      link.kind,
+      link.line,
+    );
   }
 
   for (const tag of document.tags) {
@@ -94,7 +109,9 @@ function insertFileDetails(database, fileId, title, document) {
     insertHeading.run(fileId, heading.level, heading.text, heading.line);
   }
 
-  database.prepare('INSERT INTO files_fts (rowid, title, body) VALUES (?, ?, ?)').run(fileId, title, document.body);
+  database
+    .prepare('INSERT INTO files_fts (rowid, title, body) VALUES (?, ?, ?)')
+    .run(fileId, title, document.body);
 }
 
 /**

@@ -22,7 +22,8 @@ app.setAboutPanelOptions({
 });
 app.setPath('userData', path.join(app.getPath('appData'), APP_STORAGE_DIR_NAME));
 
-app.whenReady()
+app
+  .whenReady()
   .then(() => {
     const database = createDatabase();
     const firstStart = isFirstStart();

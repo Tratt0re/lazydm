@@ -57,7 +57,10 @@ function enqueue(token, task) {
       }
 
       console.error('[electron] Vault index task failed:', error);
-      setIndexState({ status: INDEX_STATUS.error, lastError: error instanceof Error ? error.message : String(error) });
+      setIndexState({
+        status: INDEX_STATUS.error,
+        lastError: error instanceof Error ? error.message : String(error),
+      });
     });
 
   return taskQueue;
@@ -169,7 +172,9 @@ async function reindexWatchedPaths(token, relativePaths) {
     }
 
     try {
-      const stats = await fs.promises.stat(resolveInsideVault(rootPath, relativePath)).catch(() => null);
+      const stats = await fs.promises
+        .stat(resolveInsideVault(rootPath, relativePath))
+        .catch(() => null);
 
       if (!stats) {
         if (vaultIndexModel.deletePath(relativePath) > 0) {

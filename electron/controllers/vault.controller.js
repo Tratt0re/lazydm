@@ -85,7 +85,9 @@ async function selectFolder() {
 }
 
 function inspect(payload) {
-  const folderPath = resolveInsideVault(assertReadableDirectory(resolveFolderPath(payload), 'payload.folderPath'));
+  const folderPath = resolveInsideVault(
+    assertReadableDirectory(resolveFolderPath(payload), 'payload.folderPath'),
+  );
   const config = vaultModel.readVaultConfig(folderPath);
 
   let isWritable = true;
@@ -105,7 +107,9 @@ function inspect(payload) {
 }
 
 function open(payload) {
-  const folderPath = resolveInsideVault(assertWritableDirectory(resolveFolderPath(payload), 'payload.folderPath'));
+  const folderPath = resolveInsideVault(
+    assertWritableDirectory(resolveFolderPath(payload), 'payload.folderPath'),
+  );
   const existingConfig = vaultModel.readVaultConfig(folderPath);
   const config = existingConfig ?? vaultModel.createDefaultVaultConfig(path.basename(folderPath));
 
@@ -115,7 +119,10 @@ function open(payload) {
   }
 
   const nowMs = Date.now();
-  const name = typeof config.name === 'string' && config.name.trim().length > 0 ? config.name : path.basename(folderPath);
+  const name =
+    typeof config.name === 'string' && config.name.trim().length > 0
+      ? config.name
+      : path.basename(folderPath);
   const existingRow = vaultModel.getByPath(folderPath);
   let vaultId = existingRow?.id;
 

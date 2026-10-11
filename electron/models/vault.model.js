@@ -65,7 +65,9 @@ function ensureVaultStructure(rootPath) {
 }
 
 function isDirectoryEmpty(directoryPath) {
-  return fs.readdirSync(directoryPath).filter((entryName) => !entryName.startsWith('.')).length === 0;
+  return (
+    fs.readdirSync(directoryPath).filter((entryName) => !entryName.startsWith('.')).length === 0
+  );
 }
 
 /** Hidden entries (`.lazydm`, `.obsidian`, `.git`, `.DS_Store`, iCloud `.name.icloud` placeholders…) are not vault content. */

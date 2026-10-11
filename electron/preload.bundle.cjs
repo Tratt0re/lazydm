@@ -17,6 +17,10 @@ var require_channels = __commonJS({
         remove: "db:app-meta:remove",
         upsert: "db:app-meta:upsert"
       }),
+      index: Object.freeze({
+        getStatus: "index:getStatus",
+        rebuild: "index:rebuild"
+      }),
       reset: Object.freeze({
         factoryReset: "db:reset:factory-reset"
       }),
@@ -183,7 +187,8 @@ var require_package = __commonJS({
         rxjs: "~7.8.0",
         semver: "^7.7.4",
         "tailwind-merge": "^3.4.0",
-        tslib: "^2.3.0"
+        tslib: "^2.3.0",
+        yaml: "^2.9.1"
       },
       devDependencies: {
         "@angular/build": "^21.1.4",
