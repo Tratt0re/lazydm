@@ -1,4 +1,1 @@
-// DTOs placeholder - add your data transfer objects here
-export {};
-
-// Made with Bob
+export * from './vault.dto';

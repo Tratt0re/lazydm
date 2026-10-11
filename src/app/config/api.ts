@@ -16,6 +16,7 @@ export enum APIChannel {
   CAMPAIGNS = 'campaigns',
   CHARACTERS = 'characters',
   ENCOUNTERS = 'encounters',
+  VAULT = 'vault',
   WINDOW = 'window',
 }
 
@@ -32,6 +33,13 @@ export interface ElectronIpcClient {
   };
   readonly encounters: {
     readonly list: OptionalIpcRequest<void, { rows: any[] }>;
+  };
+  readonly vault: {
+    readonly getCurrent: OptionalIpcRequest<void, DTO.VaultStateDto>;
+    readonly selectFolder: OptionalIpcRequest<void, DTO.VaultFolderSelectionDto | null>;
+    readonly inspect: IpcRequest<{ folderPath: string }, DTO.VaultInspectionDto>;
+    readonly open: IpcRequest<{ folderPath: string }, DTO.VaultStateDto>;
+    readonly close: OptionalIpcRequest<void, DTO.VaultStateDto>;
   };
   readonly window: {
     readonly reload: OptionalIpcRequest<void, void>;

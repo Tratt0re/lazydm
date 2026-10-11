@@ -50,5 +50,41 @@
         }
       }
     }
+  },
+  "vault": {
+    "setup": {
+      "title": "Configura il tuo vault",
+      "description": "LazyDM salva le tue campagne come file Markdown in una cartella di tua proprietà. Scegli una cartella esistente o creane una nuova.",
+      "cloudHint": "Scegli una cartella in iCloud Drive, Dropbox, Box o OneDrive per usare lo stesso vault su tutti i tuoi dispositivi.",
+      "chooseFolder": "Scegli cartella",
+      "chooseAnother": "Scegli un'altra cartella",
+      "open": "Apri vault",
+      "create": "Crea vault",
+      "retry": "Riprova",
+      "folderLabel": "Cartella",
+      "detected": {
+        "existing": {
+          "label": "Vault esistente",
+          "description": "Questa cartella contiene già un vault LazyDM. Verrà aperto così com'è."
+        },
+        "empty": {
+          "label": "Nuovo vault",
+          "description": "La cartella è vuota. Qui verrà creato un nuovo vault."
+        },
+        "nonEmpty": {
+          "label": "Nuovo vault",
+          "description": "Questa cartella contiene già dei file. LazyDM aggiungerà la sua configurazione senza toccare i tuoi file."
+        }
+      },
+      "errors": {
+        "desktopOnlyTitle": "Serve l'app desktop",
+        "desktopOnly": "I vault possono essere aperti solo nell'app desktop di LazyDM.",
+        "missingTitle": "Vault non raggiungibile",
+        "missing": "Il vault in {{path}} non è raggiungibile. Potrebbe essere stato spostato o eliminato, oppure il suo cloud non è ancora disponibile.",
+        "readOnlyTitle": "Cartella di sola lettura",
+        "readOnly": "LazyDM non può scrivere in questa cartella. Scegli una cartella modificabile.",
+        "genericTitle": "Qualcosa è andato storto"
+      }
+    }
   }
 }

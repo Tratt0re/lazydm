@@ -50,5 +50,41 @@
         }
       }
     }
+  },
+  "vault": {
+    "setup": {
+      "title": "设置你的资料库",
+      "description": "LazyDM 会将你的战役以 Markdown 文件形式保存在你自己的文件夹中。请选择现有文件夹或新建一个。",
+      "cloudHint": "选择 iCloud Drive、Dropbox、Box 或 OneDrive 中的文件夹，即可在所有设备上使用同一个资料库。",
+      "chooseFolder": "选择文件夹",
+      "chooseAnother": "选择其他文件夹",
+      "open": "打开资料库",
+      "create": "创建资料库",
+      "retry": "重试",
+      "folderLabel": "文件夹",
+      "detected": {
+        "existing": {
+          "label": "现有资料库",
+          "description": "此文件夹已包含 LazyDM 资料库，将按原样打开。"
+        },
+        "empty": {
+          "label": "新资料库",
+          "description": "该文件夹为空，将在此处创建新的资料库。"
+        },
+        "nonEmpty": {
+          "label": "新资料库",
+          "description": "此文件夹中已有文件。LazyDM 会添加其配置，不会改动你的文件。"
+        }
+      },
+      "errors": {
+        "desktopOnlyTitle": "需要桌面应用",
+        "desktopOnly": "资料库只能在 LazyDM 桌面应用中打开。",
+        "missingTitle": "无法访问资料库",
+        "missing": "无法访问位于 {{path}} 的资料库。它可能已被移动或删除，或其云盘尚不可用。",
+        "readOnlyTitle": "只读文件夹",
+        "readOnly": "LazyDM 无法写入此文件夹。请选择一个可编辑的文件夹。",
+        "genericTitle": "出现问题"
+      }
+    }
   }
 }

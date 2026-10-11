@@ -1,8 +1,17 @@
 import { Routes } from '@angular/router';
 
+import { vaultGuard } from '@/guards/vault.guard';
+import { RootLayout } from '@/layout/root-layout/root-layout';
+
 export const routes: Routes = [
   {
+    path: 'setup',
+    loadComponent: () => import('./pages/vault-setup-page/vault-setup-page').then((m) => m.VaultSetupPage),
+  },
+  {
     path: '',
+    component: RootLayout,
+    canMatch: [vaultGuard],
     children: [
       {
         path: '',

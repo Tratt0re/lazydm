@@ -1,4 +1,5 @@
 import { Component, computed, HostListener, inject, OnDestroy, OnInit, signal, ViewEncapsulation } from '@angular/core';
+import { RouterOutlet } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 import { LayoutImports } from '@/shared/components/layout/layout.imports';
 import { Header } from '../header/header';
@@ -12,6 +13,7 @@ import { detectSmallScreenViewport } from '@/shared/utils';
   selector: 'app-root-layout',
   imports: [
     ...LayoutImports,
+    RouterOutlet,
     TranslatePipe,
     Header,
     Toolbar,

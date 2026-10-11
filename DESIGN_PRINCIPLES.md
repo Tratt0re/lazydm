@@ -51,7 +51,7 @@ LazyDM works like **Obsidian**, specialised for Dungeon Masters.
 | `.md` body | content and `[[links]]` | ✅ |
 | `.lazydm/*.json` | template rules, folder/display-name mapping, vault settings | ✅ |
 | Local SQLite | rebuildable index + device-local state | ❌ never |
-| `settings-store` (userData JSON) | device preferences: **theme, language**, window state, last open vault | ❌ never |
+| Device-local preferences | **theme, language** (renderer `localStorage` via `LocalPreferencesService`), Electron-side settings (`settings-store` userData JSON), current vault (`app_meta.current_vault_id`) | ❌ never |
 
 ### 3.1 SQLite is a local, rebuildable index
 

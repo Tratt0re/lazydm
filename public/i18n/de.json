@@ -50,5 +50,41 @@
         }
       }
     }
+  },
+  "vault": {
+    "setup": {
+      "title": "Vault einrichten",
+      "description": "LazyDM speichert deine Kampagnen als Markdown-Dateien in einem Ordner, der dir gehört. Wähle einen vorhandenen Ordner oder erstelle einen neuen.",
+      "cloudHint": "Wähle einen Ordner in iCloud Drive, Dropbox, Box oder OneDrive, um denselben Vault auf all deinen Geräten zu nutzen.",
+      "chooseFolder": "Ordner wählen",
+      "chooseAnother": "Anderen Ordner wählen",
+      "open": "Vault öffnen",
+      "create": "Vault erstellen",
+      "retry": "Erneut versuchen",
+      "folderLabel": "Ordner",
+      "detected": {
+        "existing": {
+          "label": "Vorhandener Vault",
+          "description": "Dieser Ordner enthält bereits einen LazyDM-Vault. Er wird unverändert geöffnet."
+        },
+        "empty": {
+          "label": "Neuer Vault",
+          "description": "Der Ordner ist leer. Hier wird ein neuer Vault erstellt."
+        },
+        "nonEmpty": {
+          "label": "Neuer Vault",
+          "description": "Dieser Ordner enthält bereits Dateien. LazyDM fügt seine Konfiguration hinzu und lässt deine Dateien unverändert."
+        }
+      },
+      "errors": {
+        "desktopOnlyTitle": "Desktop-App erforderlich",
+        "desktopOnly": "Vaults können nur in der LazyDM-Desktop-App geöffnet werden.",
+        "missingTitle": "Vault nicht erreichbar",
+        "missing": "Der Vault unter {{path}} ist nicht erreichbar. Er wurde möglicherweise verschoben oder gelöscht, oder sein Cloud-Laufwerk ist noch nicht verfügbar.",
+        "readOnlyTitle": "Schreibgeschützter Ordner",
+        "readOnly": "LazyDM kann in diesen Ordner nicht schreiben. Wähle einen Ordner, den du bearbeiten kannst.",
+        "genericTitle": "Etwas ist schiefgelaufen"
+      }
+    }
   }
 }
