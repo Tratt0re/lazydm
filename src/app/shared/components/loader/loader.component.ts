@@ -13,7 +13,7 @@ import { mergeClasses } from '@/shared/utils/merge-classes';
     <div class="relative top-1/2 left-1/2 h-[inherit] w-[inherit]">
       @for (_ of bars; track $index) {
         <div
-          class="animate-spinner absolute -top-[3.9%] -left-[10%] h-[8%] w-[24%] rounded-md bg-black dark:bg-white"
+          class="animate-spinner absolute -top-[3.9%] -left-[10%] h-[8%] w-[24%] rounded-none bg-foreground"
           [style]="{
             animationDelay: animationDelay($index),
             transform: transform($index),

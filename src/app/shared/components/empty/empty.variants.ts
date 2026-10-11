@@ -19,13 +19,13 @@ export const emptyImageVariants = cva(
 );
 
 export const emptyIconVariants = cva(
-  `bg-muted text-foreground mb-2 flex size-10 shrink-0 items-center justify-center rounded-lg [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-6`,
+  `border border-input text-primary mb-2 flex size-10 shrink-0 items-center justify-center rounded-none [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-6`,
   {
     variants: {},
   },
 );
 
-export const emptyTitleVariants = cva('text-lg font-medium tracking-tight', {
+export const emptyTitleVariants = cva('font-display text-3xl font-extrabold uppercase leading-none tracking-[0.02em]', {
   variants: {},
 });
 
