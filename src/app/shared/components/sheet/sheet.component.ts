@@ -75,7 +75,7 @@ export class ArcTechSheetOptions<T, U> {
           arc-button
           arcType="ghost"
           arcSize="sm"
-          class="absolute top-1 right-1 cursor-pointer"
+          class="absolute top-3 right-3 cursor-pointer border border-input"
           (click)="onCloseClick()"
         >
           <arc-icon arcType="x" />
@@ -85,7 +85,7 @@ export class ArcTechSheetOptions<T, U> {
       @if (config.arcTitle || config.arcDescription) {
         <header data-slot="sheet-header" class="flex flex-col gap-1.5 border-b border-border p-4 pr-12">
           @if (config.arcTitle) {
-            <h4 data-testid="arc-title" data-slot="sheet-title" class="text-sm leading-none font-bold tracking-[0.1em] uppercase">
+            <h4 data-testid="arc-title" data-slot="sheet-title" class="font-display text-[28px] leading-none font-extrabold tracking-[0.025em] text-foreground-strong uppercase">
               {{ config.arcTitle }}
             </h4>
 

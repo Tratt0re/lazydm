@@ -26,7 +26,7 @@ const SANITIZE_OPTIONS: { readonly ADD_TAGS: string[]; readonly ADD_ATTR: string
   ></div>`,
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
-    class: 'block h-full min-h-0 w-full overflow-auto border border-input bg-background p-6',
+    class: 'block h-full min-h-0 w-full overflow-auto border border-input bg-card p-6',
   },
 })
 export class AppDocumentPreviewComponent {

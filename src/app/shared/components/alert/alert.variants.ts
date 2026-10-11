@@ -1,12 +1,12 @@
 import { cva, type VariantProps } from 'class-variance-authority';
 
 export const alertVariants = cva(
-  'relative w-full rounded-none border-0 border-l-[3px] px-4 py-3 text-sm flex items-center gap-3',
+  'relative w-full rounded-none border border-border border-l-[3px] px-4 py-3 text-sm flex items-center gap-3',
   {
     variants: {
       arcType: {
-        default: 'border-primary bg-primary/12 text-card-foreground [&>[data-slot=alert-icon]]:text-primary',
-        destructive: 'border-destructive bg-destructive/12 text-destructive',
+        default: 'border-l-primary bg-raised text-card-foreground [&>[data-slot=alert-icon]]:text-primary',
+        destructive: 'border-l-destructive bg-card text-destructive',
       },
     },
     defaultVariants: {

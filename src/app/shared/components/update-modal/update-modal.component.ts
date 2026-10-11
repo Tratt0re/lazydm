@@ -11,19 +11,19 @@ import { ArcTechIconComponent } from '@/shared/components/icon/icon.component';
   imports: [TranslatePipe, ArcTechButtonComponent, ArcTechCheckboxComponent, ArcTechIconComponent],
   template: `
     <div
-      class="fixed inset-0 z-50 flex items-center justify-center bg-black/70"
+      class="fixed inset-0 z-50 flex items-center justify-center bg-[rgb(3_5_7/82%)]"
       role="dialog"
       aria-modal="true"
       aria-labelledby="update-modal-title"
       (keydown.escape)="onDismiss()"
     >
       <div
-        class="relative flex w-full max-w-md flex-col gap-5 overflow-hidden rounded-none border-2 border-primary bg-popover p-6 text-popover-foreground shadow-[0_20px_65px_#0009]"
+        class="relative flex w-full max-w-md flex-col gap-5 overflow-hidden rounded-none border-2 border-border-strong bg-card p-6 text-card-foreground shadow-[0_20px_75px_#0008]"
       >
         <header class="flex flex-col gap-3">
-          <div class="-mx-6 -mt-6 flex items-center gap-2 bg-primary px-6 py-4 text-primary-foreground">
+          <div class="flex items-center gap-2 text-primary">
             <arc-icon arcType="arrow-up" class="size-4 shrink-0" />
-            <h2 id="update-modal-title" class="text-sm leading-none font-bold tracking-[0.1em] uppercase">
+            <h2 id="update-modal-title" class="font-display text-[35px] leading-none font-extrabold tracking-[0.025em] text-foreground-strong uppercase">
               {{ 'update.modal.title' | translate }}
             </h2>
           </div>

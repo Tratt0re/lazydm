@@ -130,22 +130,43 @@ Planned Electron modules: `vault`, `cloud-readiness`, `campaign`, `document`, `i
 - **Tab bar** above the header bar, browser-like, one set of tabs per campaign, restored per device.
 - **Editor**: CodeMirror 6, markdown source with live preview (Obsidian-like). Reading mode renders sanitized markdown.
 
-## 9. ArcTechUI visual style (Techno-Brutalism / Retro-Futurism)
+## 9. ArcTechUI visual style (Nordic Relic)
 
 The component library is **ArcTechUI** (formerly ZardUI): classes `ArcTech*`, selectors `arc-*`, inputs/outputs `arc*`,
-provider `provideArcTech()`. Reference design: `arcane-ledger-dashboard-ui-style/`.
+provider `provideArcTech()`. Reference design: **Nordic Relic v0.3.3** in `nordic-relic-v033/` (`DESIGN-SPEC.md`,
+`tokens.css`, `index.html`). Its palette and aesthetics are applied to the existing components; their behaviour,
+variant keys and configuration stay as they are.
 
 - **Theme and language are per-device** preferences (never stored in the vault).
-- **Two themes**: dark (the reference palette) and a matching **parchment** light variant. Both are always supported;
-  use semantic tokens (`bg-card`, `text-primary`, `border-input`…), never raw colours in components.
-- **Square everything**: `--radius: 0`. No rounded shapes by default, no soft UI shadows.
-- **Fonts**: IBM Plex Mono for the UI/body, Barlow Condensed (`font-display`) for headings and big numbers. Fonts are bundled locally.
-- **Typography**: labels, table headers, buttons and nav items are uppercase with wide letter-spacing.
+- **Two themes**: the Nordic Relic dark and light palettes (cold mineral neutrals, a single bronze accent). Both are
+  always supported; use semantic tokens, never raw colours in components.
+  - Surfaces: `bg-background` (canvas), `bg-recessed` (inputs, editor, tracks), `bg-card` (panels, dialogs),
+    `bg-raised` / `bg-popover` (headers, menus, tooltips, selected/active items), `bg-accent` (hover).
+  - Borders: `border-border-subtle`, `border-input`/`border-border` (default 1px steel), `border-border-strong`
+    (popups, dialog frames).
+  - Text: `text-foreground-strong` (headings), `text-foreground`, `text-foreground-secondary`, `text-muted-foreground`.
+  - Bronze: `primary` (fill), `highlight` (hover, focus ring), `primary-pressed` (active).
+  - Semantic: `destructive`, `success`, `warning`, `info`/`mana`, `arcane`. Never use colour alone for state.
+- **Square everything**: `--radius: 0`. Only popups and dialogs get a shadow.
+- **Fonts** (bundled locally): Barlow Condensed (`font-display`) for titles and big numbers, IBM Plex Sans
+  (`font-sans`) for UI and body, IBM Plex Mono (`font-mono`) for labels, nav items, table headers, chips and metadata.
 - **Titles of pages, routes and cards end with a dot in the primary colour**:
   `{{ title }}<span class="text-primary" aria-hidden="true">.</span>` (no whitespace between text and dot).
-- **Accents**: primary-filled buttons, gold active nav item, gold title bar on dialogs, 3px left bar for notices and
-  selected rows, inverted selected segments.
-- **No decorative text or glyphs** from the reference demo (runes, mottos, fake archive codes…). Lucide icons stay.
+- **Component rules**:
+  - Buttons: primary is bronze fill → highlight on hover → pressed on active; secondary/outline are steel-bordered.
+  - Focus: 2px `ring` (highlight) outline with offset.
+  - Nav: the active item is raised surface + border + bronze text (mono, not uppercase).
+  - Selected segments/tabs: bronze fill with canvas-coloured text.
+  - Dialogs and sheets: no coloured header band, same surface throughout, large condensed title, a 2px
+    `border-strong` frame; dialogs add the engraved divider
+    `<div class="arc-engraved-divider" aria-hidden="true"><span></span></div>` under the title. Backdrop is
+    `rgb(3 5 7 / 82%)`.
+  - Alerts: full 1px border plus a 3px left bar in the state colour.
+  - Badges/status chips: outlined, mono.
+  - Tables: raised mono headers; selected row is the raised surface.
+  - Tooltips: raised surface with a bronze border.
+- **No decorative text or glyphs** from the reference demo (runes, mottos, fake archive codes, background grids…).
+  Lucide icons stay.
 - Changes to components are **look only**: variant keys, inputs, outputs and behaviour stay stable.
 
 ## 10. Code conventions
@@ -168,6 +189,7 @@ provider `provideArcTech()`. Reference design: `arcane-ledger-dashboard-ui-style
 | 3 | Cloud readiness at startup: provider detection, placeholder download, wait UI, conflict copies |
 | 4 | Campaigns: create (slug + `campaign.md` + default folders), grid with empty CTA, campaign layout + back link |
 | 5 | Documents: section lists, CodeMirror live preview, reading mode, wikilinks, assets, save with conflict detection, templates |
+| 5.1 | Design-system alignment to Nordic Relic v0.3.3 (tokens, fonts, component look) |
 | 6 | Tab bar |
 | 7 | Link maintenance: backlinks, rename refactoring, broken links |
 | 8 | Compendium and template rules |

@@ -92,11 +92,11 @@ export class Sidebar {
 
   protected navItemClasses(isActive: boolean): string {
     return mergeClasses(
-      'flex h-10 items-center rounded-none px-3 text-xs font-semibold uppercase tracking-[0.06em] transition-colors',
+      'flex h-10 items-center rounded-none border px-3 font-mono text-[11px] font-semibold tracking-[0.04em] transition-colors duration-150',
       this.sidebarCollapsed() ? 'justify-center' : 'justify-start gap-3',
       isActive
-        ? 'bg-sidebar-primary text-sidebar-primary-foreground'
-        : 'text-sidebar-foreground/80 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground',
+        ? 'border-sidebar-border bg-raised text-sidebar-primary'
+        : 'border-transparent text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground',
     );
   }
 

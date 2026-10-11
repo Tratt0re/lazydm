@@ -54,7 +54,7 @@ export class ArcTechSegmentedItemComponent {
   template: `
     <div [class]="classes()" role="group" [attr.aria-label]="arcAriaLabel()">
       <span
-        class="pointer-events-none absolute top-0 bottom-0 left-0 rounded-none bg-foreground transition-[transform,opacity] duration-200 ease-out"
+        class="pointer-events-none absolute top-0 bottom-0 left-0 rounded-none bg-primary transition-[transform,opacity] duration-200 ease-out"
         [style.width]="activeIndicatorState().width"
         [style.transform]="activeIndicatorState().transform"
         [class.opacity-0]="!activeIndicatorState().visible"

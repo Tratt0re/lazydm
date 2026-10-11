@@ -6,9 +6,9 @@ export const inputVariants = cva('w-full', {
   variants: {
     arcType: {
       default:
-        'flex rounded-none border px-3 font-normal border-input bg-background file:border-0 file:text-foreground file:bg-transparent file:font-medium placeholder:text-muted-foreground outline-none focus-visible:border-ring focus-visible:outline-1 focus-visible:outline-ring disabled:cursor-not-allowed disabled:opacity-50',
+        'flex rounded-none border px-3 font-normal border-input bg-recessed file:border-0 file:text-foreground file:bg-transparent file:font-medium placeholder:text-muted-foreground outline-none focus-visible:border-ring focus-visible:outline-1 focus-visible:outline-ring disabled:cursor-not-allowed disabled:opacity-50',
       textarea:
-        'flex pb-2 min-h-20 h-auto rounded-none border border-input bg-background px-3 py-2 text-sm placeholder:text-muted-foreground outline-none focus-visible:border-ring focus-visible:outline-1 focus-visible:outline-ring disabled:cursor-not-allowed disabled:opacity-50',
+        'flex pb-2 min-h-20 h-auto rounded-none border border-input bg-recessed px-3 py-2 text-sm placeholder:text-muted-foreground outline-none focus-visible:border-ring focus-visible:outline-1 focus-visible:outline-ring disabled:cursor-not-allowed disabled:opacity-50',
     },
     arcSize: {
       default: 'text-sm',

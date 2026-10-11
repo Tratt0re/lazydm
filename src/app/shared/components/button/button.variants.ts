@@ -4,18 +4,18 @@ import { mergeClasses } from '@/shared/utils/merge-classes';
 
 export const buttonVariants = cva(
   mergeClasses(
-    'cursor-pointer inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-none border text-xs font-bold uppercase tracking-[0.08em] transition-colors active:translate-y-px',
+    'cursor-pointer inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-none border text-xs font-semibold uppercase tracking-[0.04em] transition-colors duration-150 active:translate-y-px',
     "[&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0",
-    'outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring',
+    'outline-none focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-ring',
     'aria-invalid:border-destructive aria-invalid:outline-destructive',
   ),
   {
     variants: {
       arcType: {
-        default: 'border-primary bg-primary text-primary-foreground hover:brightness-110',
+        default: 'border-primary bg-primary text-primary-foreground hover:border-highlight hover:bg-highlight active:bg-primary-pressed',
         destructive:
           'border-destructive bg-destructive text-destructive-foreground hover:brightness-110 focus-visible:outline-destructive',
-        outline: 'border-input bg-transparent text-foreground hover:bg-accent hover:text-accent-foreground',
+        outline: 'border-input bg-card text-foreground hover:bg-accent hover:text-accent-foreground',
         secondary: 'border-input bg-secondary text-secondary-foreground hover:bg-accent',
         ghost: 'border-transparent hover:bg-accent hover:text-accent-foreground',
         link: 'border-transparent text-primary underline-offset-4 hover:underline',

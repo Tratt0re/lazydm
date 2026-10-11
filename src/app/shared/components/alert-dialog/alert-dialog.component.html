@@ -5,10 +5,7 @@
       arc-button
       arcType="ghost"
       arcSize="sm"
-      [class]="
-        'absolute top-1 right-1 z-10' +
-        (config.arcTitle ? ' text-primary-foreground hover:bg-primary-foreground/15 hover:text-primary-foreground' : '')
-      "
+      class="absolute top-4 right-4 z-10 border border-input"
       (click)="onCancelClick()"
     >
       <arc-icon arcType="x" />
@@ -21,10 +18,11 @@
         <h2
           data-testid="arc-alert-title"
           [id]="titleId()"
-          class="-mx-6 -mt-6 mb-2 bg-primary px-6 py-4 pr-12 text-left text-sm leading-none font-bold tracking-[0.1em] text-primary-foreground uppercase"
+          class="pr-12 text-left font-display text-[35px] leading-none font-extrabold tracking-[0.025em] text-foreground-strong uppercase"
         >
           {{ config.arcTitle }}
         </h2>
+        <div class="arc-engraved-divider mt-2" aria-hidden="true"><span></span></div>
       }
 
       @if (config.arcDescription) {

@@ -4,125 +4,143 @@
 
 @custom-variant dark (&:is(.dark *));
 
-/* ArcTechUI — Techno-Brutalism / Retro-Futurism tokens. Light = parchment variant. */
+/* ArcTechUI tokens — Nordic Relic v0.3.3 palette (nordic-relic-v033/tokens.css). :root = light, .dark = dark. */
 :root {
   --radius: 0rem;
-  --background: #ece6d4;
-  --foreground: #1a1d19;
-  --card: #f4efe0;
-  --card-foreground: #1a1d19;
-  --popover: #f7f2e4;
-  --popover-foreground: #1a1d19;
-  --primary: #a8792a;
-  --primary-foreground: #151912;
-  --secondary: #dfd8c3;
-  --secondary-foreground: #1a1d19;
-  --muted: #d9d2bc;
-  --muted-foreground: #5c5d4f;
-  --accent: #e2dbc6;
-  --accent-foreground: #1a1d19;
-  --destructive: #b4432f;
-  --destructive-foreground: #f4efe0;
-  --border: #a9a691;
-  --input: #8f8d78;
-  --ring: #a8792a;
-  --chart-1: #a8792a;
-  --chart-2: #b4432f;
-  --chart-3: #5f8a55;
-  --chart-4: #3f8478;
-  --chart-5: #4f6f99;
-  --chart-6: #7a5a99;
-  --chart-7: #a65f2a;
-  --chart-8: #7a735a;
-  --sidebar: #e3dcc8;
-  --sidebar-foreground: #3a3d33;
-  --sidebar-primary: #a8792a;
-  --sidebar-primary-foreground: #151912;
-  --sidebar-accent: #d6cfb9;
-  --sidebar-accent-foreground: #1a1d19;
-  --sidebar-border: #a9a691;
-  --sidebar-ring: #a8792a;
-  --high-contrast-table-header-color: #1a1d19;
-  --high-contrast-table-header-foreground-color: #ece6d4;
-  --system-app-color-1: #b4432f;
-  --system-app-color-2: #b0662b;
-  --system-app-color-3: #a8792a;
-  --system-app-color-4: #7c8a3a;
-  --system-app-color-5: #5f8a55;
-  --system-app-color-6: #3f8478;
-  --system-app-color-7: #457f9c;
-  --system-app-color-8: #4f6f99;
-  --system-app-color-9: #7a5a99;
-  --system-app-color-10: #9c4f6a;
-  --system-app-color-11: #6f6f62;
-  --warning: #b07a1f;
-  --success: #4f7a45;
+  --background: #DFE0DE;
+  --foreground: #30363A;
+  --foreground-strong: #202428;
+  --foreground-secondary: #4C5356;
+  --card: #F1F0EB;
+  --card-foreground: #30363A;
+  --popover: #F8F7F2;
+  --popover-foreground: #30363A;
+  --primary: #766043;
+  --primary-foreground: #DFE0DE;
+  --highlight: #8B724E;
+  --primary-pressed: #59482F;
+  --secondary: #F8F7F2;
+  --secondary-foreground: #30363A;
+  --muted: #D7D8D6;
+  --muted-foreground: #62696B;
+  --accent: #E2E4E2;
+  --accent-foreground: #202428;
+  --destructive: #93473D;
+  --destructive-foreground: #F8F7F2;
+  --border: #92979B;
+  --border-subtle: #B9BEBC;
+  --border-strong: #676E71;
+  --input: #92979B;
+  --ring: #8B724E;
+  --recessed: #D7D8D6;
+  --raised: #F8F7F2;
+  --chart-1: #766043;
+  --chart-2: #93473D;
+  --chart-3: #4E7355;
+  --chart-4: #426C89;
+  --chart-5: #71598C;
+  --chart-6: #886724;
+  --chart-7: #426875;
+  --chart-8: #62696B;
+  --sidebar: #D7D8D6;
+  --sidebar-foreground: #4C5356;
+  --sidebar-primary: #766043;
+  --sidebar-primary-foreground: #DFE0DE;
+  --sidebar-accent: #E2E4E2;
+  --sidebar-accent-foreground: #202428;
+  --sidebar-border: #92979B;
+  --sidebar-ring: #8B724E;
+  --high-contrast-table-header-color: #F8F7F2;
+  --high-contrast-table-header-foreground-color: #62696B;
+  --system-app-color-1: #93473D;
+  --system-app-color-2: #8F6233;
+  --system-app-color-3: #886724;
+  --system-app-color-4: #6B7340;
+  --system-app-color-5: #4E7355;
+  --system-app-color-6: #426875;
+  --system-app-color-7: #4C7A8F;
+  --system-app-color-8: #426C89;
+  --system-app-color-9: #71598C;
+  --system-app-color-10: #8A4F64;
+  --system-app-color-11: #62696B;
+  --warning: #886724;
+  --success: #4E7355;
+  --mana: #426C89;
+  --arcane: #71598C;
+  --info: #426875;
 }
 
 .dark {
-  --background: #111412;
-  --foreground: #efe8d5;
-  --card: #1c211d;
-  --card-foreground: #efe8d5;
-  --popover: #1d231d;
-  --popover-foreground: #efe8d5;
-  --primary: #d5aa5a;
-  --primary-foreground: #151912;
-  --secondary: #242921;
-  --secondary-foreground: #efe8d5;
-  --muted: #393e36;
-  --muted-foreground: #a3a493;
-  --accent: #2a2f28;
-  --accent-foreground: #efe8d5;
-  --destructive: #dc6657;
-  --destructive-foreground: #151912;
-  --border: #4d5149;
-  --input: #626957;
-  --ring: #d5aa5a;
-  --chart-1: #d5aa5a;
-  --chart-2: #dc6657;
-  --chart-3: #9bb792;
-  --chart-4: #7fb2a8;
-  --chart-5: #8ea3c2;
-  --chart-6: #a58cc0;
-  --chart-7: #c98a4e;
-  --chart-8: #c9c2a6;
-  --sidebar: #171b18;
-  --sidebar-foreground: #c2c1ae;
-  --sidebar-primary: #d5aa5a;
-  --sidebar-primary-foreground: #191911;
-  --sidebar-accent: #282d26;
-  --sidebar-accent-foreground: #efe8d5;
-  --sidebar-border: #4d5149;
-  --sidebar-ring: #d5aa5a;
-  --high-contrast-table-header-color: #d5aa5a;
-  --high-contrast-table-header-foreground-color: #151912;
-  --system-app-color-1: #dc6657;
-  --system-app-color-2: #d98b4a;
-  --system-app-color-3: #d5aa5a;
-  --system-app-color-4: #b3c27a;
-  --system-app-color-5: #9bb792;
-  --system-app-color-6: #7fb2a8;
-  --system-app-color-7: #86b0c9;
-  --system-app-color-8: #8796c8;
-  --system-app-color-9: #a58cc0;
-  --system-app-color-10: #c97f98;
-  --system-app-color-11: #8a8b7c;
-  --warning: #e3b35c;
-  --success: #9bb792;
+  --background: #101114;
+  --foreground: #D6D1C6;
+  --foreground-strong: #F0ECE3;
+  --foreground-secondary: #B6B2A9;
+  --card: #1A1C1F;
+  --card-foreground: #D6D1C6;
+  --popover: #23262A;
+  --popover-foreground: #D6D1C6;
+  --primary: #B9A27A;
+  --primary-foreground: #101114;
+  --highlight: #D0BD98;
+  --primary-pressed: #8F7B58;
+  --secondary: #23262A;
+  --secondary-foreground: #D6D1C6;
+  --muted: #15171A;
+  --muted-foreground: #9C988F;
+  --accent: #30343A;
+  --accent-foreground: #F0ECE3;
+  --destructive: #A85046;
+  --destructive-foreground: #F0ECE3;
+  --border: #4F555B;
+  --border-subtle: #34383D;
+  --border-strong: #71777A;
+  --input: #4F555B;
+  --ring: #D0BD98;
+  --recessed: #15171A;
+  --raised: #23262A;
+  --chart-1: #B9A27A;
+  --chart-2: #A85046;
+  --chart-3: #819574;
+  --chart-4: #7799B4;
+  --chart-5: #9B88B6;
+  --chart-6: #C2A063;
+  --chart-7: #6F8991;
+  --chart-8: #9C988F;
+  --sidebar: #15171A;
+  --sidebar-foreground: #B6B2A9;
+  --sidebar-primary: #B9A27A;
+  --sidebar-primary-foreground: #101114;
+  --sidebar-accent: #30343A;
+  --sidebar-accent-foreground: #F0ECE3;
+  --sidebar-border: #4F555B;
+  --sidebar-ring: #D0BD98;
+  --high-contrast-table-header-color: #23262A;
+  --high-contrast-table-header-foreground-color: #9C988F;
+  --system-app-color-1: #A85046;
+  --system-app-color-2: #B98457;
+  --system-app-color-3: #C2A063;
+  --system-app-color-4: #A3AD78;
+  --system-app-color-5: #819574;
+  --system-app-color-6: #6F8991;
+  --system-app-color-7: #7FA2B0;
+  --system-app-color-8: #7799B4;
+  --system-app-color-9: #9B88B6;
+  --system-app-color-10: #B07A8C;
+  --system-app-color-11: #9C988F;
+  --warning: #C2A063;
+  --success: #819574;
+  --mana: #7799B4;
+  --arcane: #9B88B6;
+  --info: #6F8991;
 }
 
 @theme inline {
   --font-sans:
-    'IBM Plex Mono',
-    ui-monospace,
-    SFMono-Regular,
-    Menlo,
-    Monaco,
-    Consolas,
-    'Liberation Mono',
-    'Courier New',
-    monospace;
+    'IBM Plex Sans',
+    system-ui,
+    -apple-system,
+    'Segoe UI',
+    sans-serif;
   --font-mono:
     'IBM Plex Mono',
     ui-monospace,
@@ -210,15 +228,19 @@
   --color-system-app-9: var(--system-app-color-9);
   --color-system-app-10: var(--system-app-color-10);
   --color-system-app-11: var(--system-app-color-11);
+  --color-foreground-strong: var(--foreground-strong);
+  --color-foreground-secondary: var(--foreground-secondary);
+  --color-highlight: var(--highlight);
+  --color-primary-pressed: var(--primary-pressed);
+  --color-border-subtle: var(--border-subtle);
+  --color-border-strong: var(--border-strong);
+  --color-recessed: var(--recessed);
+  --color-raised: var(--raised);
+  --color-mana: var(--mana);
+  --color-arcane: var(--arcane);
+  --color-info: var(--info);
   --color-warning: var(--warning);
   --color-success: var(--success);
-}
-
-@utility bg-arc-grid {
-  background-image:
-    linear-gradient(color-mix(in oklch, var(--foreground) 4%, transparent) 1px, transparent 1px),
-    linear-gradient(90deg, color-mix(in oklch, var(--foreground) 4%, transparent) 1px, transparent 1px);
-  background-size: 35px 35px;
 }
 
 @layer base {
@@ -242,7 +264,16 @@
   body {
     @apply bg-background text-foreground;
     font-family: var(--font-sans);
+    font-size: 0.875rem;
+    line-height: 1.5;
     font-feature-settings: 'tnum' 1;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    color: var(--foreground-strong);
   }
 
   ::selection {
@@ -250,12 +281,9 @@
     color: var(--primary-foreground);
   }
 
+  /* Nordic Relic dialog backdrop: near-black at ~82% in both themes. */
   .cdk-overlay-dark-backdrop.cdk-overlay-backdrop-showing {
-    background: color-mix(in oklch, var(--foreground) 45%, transparent) !important;
-  }
-
-  .dark .cdk-overlay-dark-backdrop.cdk-overlay-backdrop-showing {
-    background: #000b !important;
+    background: rgb(3 5 7 / 82%) !important;
   }
 
   input[type='number']::-webkit-inner-spin-button,
@@ -327,10 +355,34 @@
   background: var(--background);
 }
 
+/* Nordic Relic engraved rule: hairline, bronze diamond, hairline. Header/body separator in dialogs. */
+.arc-engraved-divider {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  height: 24px;
+}
+
+.arc-engraved-divider::before,
+.arc-engraved-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
+.arc-engraved-divider > span {
+  flex: none;
+  width: 13px;
+  height: 13px;
+  border: 1px solid var(--primary);
+  transform: rotate(45deg);
+}
+
 /* Reading mode (document-preview). Markdown HTML, so plain selectors rather than Tailwind classes. */
 .arc-markdown-body {
-  font-size: 0.9rem;
-  line-height: 1.7;
+  font-size: 0.9375rem;
+  line-height: 1.6;
   color: var(--foreground);
 }
 
@@ -342,7 +394,7 @@
   font-weight: 800;
   letter-spacing: 0.015em;
   text-transform: uppercase;
-  color: var(--foreground);
+  color: var(--foreground-strong);
   margin: 1.4em 0 0.5em;
 }
 
@@ -383,7 +435,7 @@
 
 .arc-markdown-body code {
   font-family: var(--font-mono);
-  background: var(--muted);
+  background: var(--recessed);
   padding: 0.1em 0.35em;
   font-size: 0.85em;
 }
@@ -421,7 +473,9 @@
 }
 
 .arc-markdown-body th {
-  background: var(--card);
+  background: var(--raised);
+  font-family: var(--font-mono);
+  color: var(--muted-foreground);
   font-size: 0.75rem;
   letter-spacing: 0.08em;
   text-transform: uppercase;

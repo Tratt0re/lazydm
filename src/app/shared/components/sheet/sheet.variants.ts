@@ -1,7 +1,7 @@
 import { cva, type VariantProps } from 'class-variance-authority';
 
 export const sheetVariants = cva(
-  'bg-popover text-popover-foreground data-[state=open]:animate-in data-[state=closed]:animate-out fixed z-50 flex max-h-screen flex-col gap-4 overflow-hidden rounded-none border-primary shadow-[0_20px_65px_#0009] transition ease-in-out data-[state=closed]:duration-300 data-[state=open]:duration-500',
+  'bg-card text-card-foreground data-[state=open]:animate-in data-[state=closed]:animate-out fixed z-50 flex max-h-screen flex-col gap-4 overflow-hidden rounded-none border-border-strong shadow-[0_20px_75px_#0008] transition ease-in-out data-[state=closed]:duration-300 data-[state=open]:duration-500',
   {
     variants: {
       arcSide: {

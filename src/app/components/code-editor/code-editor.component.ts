@@ -35,7 +35,7 @@ import { tags } from '@lezer/highlight';
   template: `<div #host class="h-full min-h-0 w-full"></div>`,
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
-    class: 'block h-full min-h-0 w-full overflow-hidden border border-input bg-background',
+    class: 'block h-full min-h-0 w-full overflow-hidden border border-input bg-recessed',
   },
 })
 export class AppCodeEditorComponent implements OnDestroy {
@@ -179,7 +179,7 @@ const editorTheme = EditorView.theme({
     height: '100%',
     fontSize: '13px',
     color: 'var(--foreground)',
-    backgroundColor: 'var(--background)',
+    backgroundColor: 'var(--recessed)',
   },
   '&.cm-focused': {
     outline: 'none',

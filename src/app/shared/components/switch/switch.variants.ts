@@ -22,7 +22,7 @@ export const switchVariants = cva(
 );
 
 export const switchTrackVariants = cva(
-  'pointer-events-none inline-flex items-center rounded-none border border-input p-px transition-colors data-[state=unchecked]:bg-background',
+  'pointer-events-none inline-flex items-center rounded-none border border-input p-px transition-colors data-[state=unchecked]:bg-recessed',
   {
     variants: {
       arcType: {

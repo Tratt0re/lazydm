@@ -261,7 +261,7 @@ export class ArcTechTooltipDirective implements OnInit, OnDestroy {
 
     <span [class]="arrowClasses()">
       <svg
-        class="bg-foreground fill-foreground z-50 block size-2.5 translate-y-[calc(-50%-2px)] rotate-45 rounded-none"
+        class="bg-primary fill-primary z-50 block size-2.5 translate-y-[calc(-50%-2px)] rotate-45 rounded-none"
         width="10"
         height="5"
         viewBox="0 0 30 10"

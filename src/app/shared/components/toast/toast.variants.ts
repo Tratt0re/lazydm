@@ -7,7 +7,7 @@ export const toastVariants = cva(
     'group toast group-[.toaster]:bg-background group-[.toaster]:text-foreground group-[.toaster]:border-border',
     '[--ngx-sonner-border-radius:0px] [--ngx-sonner-font-family:var(--font-sans)]',
     '[--ngx-sonner-toast-normal-background:var(--popover)] [--ngx-sonner-toast-dark-normal-background:var(--popover)]',
-    '[--ngx-sonner-toast-normal-border-color:var(--primary)] [--ngx-sonner-toast-dark-normal-border-color:var(--primary)]',
+    '[--ngx-sonner-toast-normal-border-color:var(--border-strong)] [--ngx-sonner-toast-dark-normal-border-color:var(--border-strong)]',
     '[--ngx-sonner-toast-normal-color:var(--popover-foreground)] [--ngx-sonner-toast-dark-normal-color:var(--popover-foreground)]',
   ),
   {

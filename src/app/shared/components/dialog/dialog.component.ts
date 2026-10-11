@@ -71,10 +71,7 @@ export class ArcTechDialogOptions<T, U> {
           arc-button
           arcType="ghost"
           arcSize="sm"
-          [class]="
-            'absolute top-1 right-1 z-10' +
-            (config.arcTitle ? ' text-primary-foreground hover:bg-primary-foreground/15 hover:text-primary-foreground' : '')
-          "
+          class="absolute top-4 right-4 z-10 border border-input"
           aria-label="Close dialog"
           title="Close dialog"
           (click)="onCloseClick()"
@@ -88,11 +85,12 @@ export class ArcTechDialogOptions<T, U> {
           @if (config.arcTitle) {
             <h4
               data-testid="arc-title"
-              class="-mx-6 -mt-6 mb-3 bg-primary px-6 py-4 pr-12 text-left text-sm leading-none font-bold tracking-[0.1em] text-primary-foreground uppercase"
+              class="pr-12 text-left font-display text-[35px] leading-none font-extrabold tracking-[0.025em] text-foreground-strong uppercase"
               [attr.id]="titleId()"
             >
               {{ config.arcTitle }}
             </h4>
+            <div class="arc-engraved-divider mt-2" aria-hidden="true"><span></span></div>
 
             @if (config.arcDescription) {
               <p

@@ -3,7 +3,7 @@ import { cva, type VariantProps } from 'class-variance-authority';
 export const formFieldVariants = cva('grid gap-2');
 
 export const formLabelVariants = cva(
-  'text-xs font-semibold uppercase tracking-[0.08em] leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70',
+  'font-mono text-[10px] font-semibold uppercase tracking-[0.08em] text-foreground-secondary leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70',
   {
     variants: {
       arcRequired: {

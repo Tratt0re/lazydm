@@ -41,5 +41,5 @@ export const sidebarTriggerVariants = cva(
 export const sidebarGroupVariants = cva('flex flex-col gap-1');
 
 export const sidebarGroupLabelVariants = cva(
-  'flex h-8 shrink-0 items-center rounded-none px-2 text-[10px] font-medium uppercase tracking-[0.12em] text-sidebar-foreground/70 outline-hidden transition-[margin,opacity] duration-200 ease-linear focus-visible:ring-2 focus-visible:ring-sidebar-ring [&>svg]:size-4 [&>svg]:shrink-0',
+  'flex h-8 shrink-0 items-center rounded-none px-2 font-mono text-[10px] font-semibold uppercase tracking-[0.11em] text-muted-foreground outline-hidden transition-[margin,opacity] duration-200 ease-linear focus-visible:ring-2 focus-visible:ring-sidebar-ring [&>svg]:size-4 [&>svg]:shrink-0',
 );

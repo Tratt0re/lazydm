@@ -1,7 +1,7 @@
 import { cva, type VariantProps } from 'class-variance-authority';
 
 export const commandVariants = cva(
-  'flex h-full w-full flex-col overflow-hidden border border-input rounded-none bg-popover text-popover-foreground',
+  'flex h-full w-full flex-col overflow-hidden border border-border-strong rounded-none bg-popover text-popover-foreground',
   {
     variants: {
       size: {
