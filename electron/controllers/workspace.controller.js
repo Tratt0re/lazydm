@@ -46,7 +46,10 @@ function normalizeTab(value, label, campaign) {
     .map((url, index) => requireTabUrl(url, `${label}.history[${index}]`, campaign));
 
   const historyIndex = Number.isInteger(tab.historyIndex)
-    ? Math.min(Math.max(tab.historyIndex - (tab.history.length - history.length), 0), history.length - 1)
+    ? Math.min(
+        Math.max(tab.historyIndex - (tab.history.length - history.length), 0),
+        history.length - 1,
+      )
     : history.length - 1;
 
   return { id, title, history, historyIndex };

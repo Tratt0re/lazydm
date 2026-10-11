@@ -76,13 +76,20 @@ export class DocumentPage {
 
   constructor() {
     effect((onCleanup) => {
-      if (!this.campaignService.activeCampaign()) {
+      const campaign = this.campaignService.activeCampaign();
+      if (!campaign) {
         return;
       }
 
+      const campaignPath = `/campaigns/${campaign.slug}`;
       onCleanup(
         this.toolbarContext.activate({
           title: this.document()?.title ?? this.noteSlug(),
+          titleMode: 'breadcrumb',
+          titleBreadcrumbs: [
+            { label: campaign.name, path: campaignPath, translate: false },
+            { label: `nav.items.${this.sectionKey()}`, path: `${campaignPath}/${this.sectionKey()}` },
+          ],
           itemNavigation: {
             id: 'document-mode',
             type: 'segmented',

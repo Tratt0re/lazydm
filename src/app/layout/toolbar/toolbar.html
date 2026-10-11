@@ -2,43 +2,37 @@
   <div class="flex min-w-0 items-center gap-2">
     <app-sidebar-toggle [sidebarCollapsed]="sidebarCollapsed()" (toggle)="onSidebarToggle()"></app-sidebar-toggle>
 
-    <div class="flex min-w-0 items-center">
-      @if (!hasItemNavigation() && hasTitleBreadcrumbs()) {
+    <div class="flex min-w-0 items-center gap-4">
+      @if (title(); as title) {
         <div class="flex min-w-0 items-center gap-2">
           <arc-divider arcOrientation="vertical" arcSpacing="sm" class="h-6"></arc-divider>
-
-          <nav [attr.aria-label]="'breadcrumb.ariaLabel' | translate" class="min-w-0">
-            <ol class="flex items-center gap-2 overflow-hidden text-sm text-muted-foreground">
-              @for (item of titleBreadcrumbs(); track item.path ?? item.label; let isLast = $last) {
-                <li class="flex min-w-0 items-center gap-2">
-                  @if (item.path && !isLast) {
-                    <a [routerLink]="item.path" class="truncate transition-colors hover:text-foreground">
-                      @if (isBreadcrumbLabelTranslated(item)) {
-                        {{ item.label | translate }}
+          <div class="flex min-w-0 flex-col justify-center gap-1">
+            @if (hasTitleBreadcrumbs()) {
+              <nav [attr.aria-label]="'breadcrumb.ariaLabel' | translate" class="min-w-0">
+                <ol
+                  class="flex items-center gap-1.5 overflow-hidden font-mono text-[10px] leading-none font-semibold tracking-[0.08em] text-muted-foreground uppercase"
+                >
+                  @for (item of titleBreadcrumbs(); track item.path ?? item.label) {
+                    <li class="flex min-w-0 items-center gap-1.5">
+                      @if (item.path) {
+                        <a [routerLink]="item.path" class="truncate transition-colors hover:text-primary">
+                          {{ isBreadcrumbLabelTranslated(item) ? (item.label | translate) : item.label }}
+                        </a>
                       } @else {
-                        {{ item.label }}
+                        <span class="truncate">
+                          {{ isBreadcrumbLabelTranslated(item) ? (item.label | translate) : item.label }}
+                        </span>
                       }
-                    </a>
-                  } @else {
-                    <span class="truncate font-medium text-foreground">
-                      {{ isBreadcrumbLabelTranslated(item) ? (item.label | translate) : item.label }}@if (isLast) {<span class="text-primary" aria-hidden="true">.</span>}
-                    </span>
+                      <span aria-hidden="true">/</span>
+                    </li>
                   }
-
-                  @if (!isLast) {
-                    <arc-icon arcType="chevron-right" class="size-4" aria-hidden="true"></arc-icon>
-                  }
-                </li>
-              }
-            </ol>
-          </nav>
-        </div>
-      } @else if (!hasItemNavigation() && title(); as title) {
-        <div class="flex min-w-0 items-center gap-2">
-          <arc-divider arcOrientation="vertical" arcSpacing="sm" class="h-6"></arc-divider>
-          <h1 class="truncate font-display text-3xl leading-none font-extrabold tracking-[0.02em] uppercase">
-            {{ title | translate }}<span class="text-primary" aria-hidden="true">.</span>
-          </h1>
+                </ol>
+              </nav>
+            }
+            <h1 class="truncate font-display text-3xl leading-none font-extrabold tracking-[0.02em] uppercase">
+              {{ title | translate }}<span class="text-primary" aria-hidden="true">.</span>
+            </h1>
+          </div>
         </div>
       }
 

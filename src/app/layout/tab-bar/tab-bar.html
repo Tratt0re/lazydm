@@ -31,39 +31,60 @@
 
     <div
       role="tablist"
-      class="flex min-w-0 flex-1 items-stretch overflow-x-auto scrollbar-hide"
+      cdkDropList
+      cdkDropListOrientation="horizontal"
+      cdkDropListLockAxis="x"
+      class="flex min-w-0 flex-1 items-stretch gap-1 overflow-x-auto px-1 scrollbar-hide"
+      [cdkDropListData]="workspace.tabs()"
       [attr.aria-label]="'tabs.ariaLabel' | translate"
+      (cdkDropListDropped)="onDrop($event)"
     >
       @for (tab of workspace.tabs(); track tab.id) {
         @let isActive = tab.id === workspace.activeTabId();
+        @let title = getTitle(tab) || ('tabs.untitled' | translate);
         <div
-          class="group flex max-w-56 min-w-28 shrink-0 items-center border-r border-border transition-colors duration-150"
+          cdkDrag
+          cdkDragLockAxis="x"
+          cdkDragPreviewClass="arc-tab-drag-preview"
+          class="group flex max-w-56 min-w-28 shrink-0 items-center border-b-3 transition-colors duration-150 [&.cdk-drag-placeholder]:opacity-40 [.cdk-drop-list-dragging_&]:transition-transform"
           [class]="
             isActive
-              ? 'bg-primary text-primary-foreground'
-              : 'text-muted-foreground hover:bg-accent hover:text-foreground'
+              ? 'border-primary text-foreground-strong'
+              : 'border-transparent text-foreground-secondary hover:bg-accent hover:text-foreground'
           "
+          [attr.data-tab-id]="tab.id"
           (auxclick)="onTabAuxClick($event, tab)"
         >
           <button
             type="button"
             role="tab"
-            class="flex h-full min-w-0 flex-1 cursor-pointer items-center pl-3 font-mono text-[11px] font-semibold tracking-[0.04em] outline-none focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-ring"
+            class="flex h-full min-w-0 flex-1 cursor-pointer items-center gap-2 pr-3 pl-3 font-mono text-[11px] tracking-[0.04em] outline-none focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-ring"
+            [class.font-bold]="isActive"
+            [class.font-medium]="!isActive"
             [attr.aria-selected]="isActive"
-            [attr.title]="getTitle(tab) || ('tabs.untitled' | translate)"
+            [attr.tabindex]="isActive ? 0 : -1"
+            [attr.title]="title"
             (click)="workspace.activateTab(tab.id)"
+            (keydown)="onTabKeyDown($event, tab)"
           >
-            <span class="truncate">{{ getTitle(tab) || ('tabs.untitled' | translate) }}</span>
+            <arc-icon
+              [arcType]="getIcon(tab)"
+              class="size-3.5 shrink-0"
+              [class.text-primary]="isActive"
+              aria-hidden="true"
+            />
+            <span class="truncate">{{ title }}</span>
           </button>
-          <button
-            type="button"
-            class="mr-1 ml-1 flex size-6 shrink-0 cursor-pointer items-center justify-center opacity-70 outline-none hover:opacity-100 focus-visible:outline-2 focus-visible:outline-ring [&_svg]:size-3.5"
-            [class]="isActive ? 'hover:bg-primary-pressed' : 'hover:bg-raised'"
-            [attr.aria-label]="'tabs.close' | translate"
-            (click)="onCloseClick($event, tab)"
-          >
-            <arc-icon arcType="x" />
-          </button>
+          @if (!workspace.isOverviewTab(tab)) {
+            <button
+              type="button"
+              class="mr-1 -ml-1 flex size-6 shrink-0 cursor-pointer items-center justify-center text-muted-foreground opacity-70 outline-none hover:bg-raised hover:text-foreground hover:opacity-100 focus-visible:outline-2 focus-visible:outline-ring [&_svg]:size-3.5"
+              [attr.aria-label]="'tabs.close' | translate"
+              (click)="onCloseClick($event, tab)"
+            >
+              <arc-icon arcType="x" />
+            </button>
+          }
         </div>
       }
     </div>
@@ -85,3 +106,88 @@
     </div>
   </div>
 }
+
+<span
+  class="hidden"
+  arc-context-menu
+  [arcContextMenuTriggerFor]="tabBarMenu"
+  aria-hidden="true"
+></span>
+
+<ng-template #tabBarMenu>
+  <div arc-menu-content class="w-60">
+    @if (menuLinkUrl(); as url) {
+      <button type="button" arc-menu-item (click)="workspace.openInActiveTab(url)">
+        <arc-icon arcType="file-text" />
+        {{ 'tabs.menu.open' | translate }}
+      </button>
+      <button
+        type="button"
+        arc-menu-item
+        [arcDisabled]="!workspace.canOpenTab()"
+        (click)="workspace.openTab(url)"
+      >
+        <arc-icon arcType="plus" />
+        {{ 'tabs.menu.openInNewTab' | translate }}
+      </button>
+      <button
+        type="button"
+        arc-menu-item
+        [arcDisabled]="!workspace.canOpenTab()"
+        (click)="workspace.openTab(url, { background: true })"
+      >
+        <arc-icon arcType="copy-plus" />
+        {{ 'tabs.menu.openInBackground' | translate }}
+      </button>
+    } @else if (menuTab(); as tab) {
+      <button
+        type="button"
+        arc-menu-item
+        [arcDisabled]="!workspace.canOpenTab()"
+        (click)="workspace.openTab()"
+      >
+        <arc-icon arcType="plus" />
+        {{ 'tabs.new' | translate }}
+        <arc-menu-shortcut>{{ modifierLabel }}T</arc-menu-shortcut>
+      </button>
+      <button
+        type="button"
+        arc-menu-item
+        [arcDisabled]="!workspace.canOpenTab()"
+        (click)="workspace.duplicateTab(tab.id)"
+      >
+        <arc-icon arcType="copy-plus" />
+        {{ 'tabs.menu.duplicate' | translate }}
+      </button>
+      <div class="-mx-1 my-1 h-px bg-border" role="separator"></div>
+      <button
+        type="button"
+        arc-menu-item
+        [arcDisabled]="!workspace.canCloseTab(tab)"
+        (click)="workspace.closeTab(tab.id)"
+      >
+        <arc-icon arcType="x" />
+        {{ 'tabs.close' | translate }}
+        @if (tab.id === workspace.activeTabId()) {
+          <arc-menu-shortcut>{{ modifierLabel }}W</arc-menu-shortcut>
+        }
+      </button>
+      <button
+        type="button"
+        arc-menu-item
+        [arcDisabled]="workspace.tabs().length < 2"
+        (click)="workspace.closeOtherTabs(tab.id)"
+      >
+        {{ 'tabs.menu.closeOthers' | translate }}
+      </button>
+      <button
+        type="button"
+        arc-menu-item
+        [arcDisabled]="menuTabIndex() >= workspace.tabs().length - 1"
+        (click)="workspace.closeTabsToRight(tab.id)"
+      >
+        {{ 'tabs.menu.closeToRight' | translate }}
+      </button>
+    }
+  </div>
+</ng-template>

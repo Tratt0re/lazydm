@@ -59,7 +59,11 @@ export class WorkspaceService extends BaseIpcService<APIChannel.WORKSPACE> {
   /** The tab bar is shown on campaign pages only (not on settings). */
   readonly isVisible = computed(() => {
     const slug = this.campaignSlugSignal();
-    return slug !== null && getCampaignSlug(this.currentUrlSignal()) === slug && this.tabsSignal().length > 0;
+    return (
+      slug !== null &&
+      getCampaignSlug(this.currentUrlSignal()) === slug &&
+      this.tabsSignal().length > 0
+    );
   });
   readonly canGoBack = computed(() => (this.activeTab()?.historyIndex ?? 0) > 0);
   readonly canGoForward = computed(() => {
@@ -89,14 +93,35 @@ export class WorkspaceService extends BaseIpcService<APIChannel.WORKSPACE> {
     return slug !== null && getCampaignSlug(url) === slug;
   }
 
-  /** Fallback label for a tab that has not been shown yet: the last URL segment. */
+  /** The campaign overview: closing every tab leads back there, so an overview tab is never the one to close last. */
+  isOverviewTab(tab: WorkspaceTabDto): boolean {
+    return getTabUrl(tab) === this.getCampaignRoot();
+  }
+
+  canCloseTab(tab: WorkspaceTabDto): boolean {
+    return this.tabsSignal().length > 1 || !this.isOverviewTab(tab);
+  }
+
+  /** Section folder of the tab's current page (`monsters`…), null on the overview. */
+  getTabSection(tab: WorkspaceTabDto): string | null {
+    return getTabUrl(tab).split('/')[3] ?? null;
+  }
+
+  /** Label of a tab that has not been shown yet: the section name, or the note file name. */
   getFallbackTitle(tab: WorkspaceTabDto): string {
     const segments = getTabUrl(tab).split('/').filter(Boolean);
-    return segments.length > 2 ? decodeURIComponent(segments[segments.length - 1]) : '';
+    if (segments.length === 3) {
+      return this.translateService.instant(`nav.items.${segments[2]}`);
+    }
+
+    return segments.length > 3 ? decodeURIComponent(segments[segments.length - 1]) : '';
   }
 
   /** Opens a tab; in the background it is only added, otherwise it becomes the active tab. */
-  async openTab(url = this.getCampaignRoot(), options: { background?: boolean } = {}): Promise<void> {
+  async openTab(
+    url = this.getCampaignRoot(),
+    options: { background?: boolean } = {},
+  ): Promise<void> {
     if (!this.isCampaignUrl(url) || !this.canOpenTab()) {
       return;
     }
@@ -115,6 +140,13 @@ export class WorkspaceService extends BaseIpcService<APIChannel.WORKSPACE> {
     }
   }
 
+  /** A plain navigation of the active tab (recorded in its history). */
+  async openInActiveTab(url: string): Promise<void> {
+    if (this.isCampaignUrl(url)) {
+      await this.router.navigateByUrl(toPath(url));
+    }
+  }
+
   async activateTab(tabId: string): Promise<void> {
     const tab = this.tabsSignal().find((item) => item.id === tabId);
     if (!tab || tabId === this.activeTabIdSignal()) {
@@ -125,6 +157,69 @@ export class WorkspaceService extends BaseIpcService<APIChannel.WORKSPACE> {
       this.activeTabIdSignal.set(tabId);
       this.scheduleSave();
     }
+  }
+
+  /** Drag-to-sort: moves a tab to another position of the bar. */
+  moveTab(previousIndex: number, currentIndex: number): void {
+    const tabs = [...this.tabsSignal()];
+    if (
+      previousIndex === currentIndex ||
+      !tabs[previousIndex] ||
+      currentIndex < 0 ||
+      currentIndex >= tabs.length
+    ) {
+      return;
+    }
+
+    const [tab] = tabs.splice(previousIndex, 1);
+    tabs.splice(currentIndex, 0, tab);
+    this.tabsSignal.set(tabs);
+    this.scheduleSave();
+  }
+
+  /** Opens a copy of a tab (same page and history) right after it, in the background. */
+  duplicateTab(tabId: string): void {
+    const tabs = [...this.tabsSignal()];
+    const index = tabs.findIndex((tab) => tab.id === tabId);
+    if (index < 0 || !this.canOpenTab()) {
+      return;
+    }
+
+    tabs.splice(index + 1, 0, { ...tabs[index], id: crypto.randomUUID() });
+    this.tabsSignal.set(tabs);
+    this.scheduleSave();
+  }
+
+  async closeOtherTabs(tabId: string): Promise<void> {
+    await this.keepTabs(tabId, (_tab, index, keptIndex) => index === keptIndex);
+  }
+
+  async closeTabsToRight(tabId: string): Promise<void> {
+    await this.keepTabs(tabId, (_tab, index, keptIndex) => index <= keptIndex);
+  }
+
+  /** Closes the tabs `keep` rejects; when the active tab is among them, `tabId` becomes active first. */
+  private async keepTabs(
+    tabId: string,
+    keep: (tab: WorkspaceTabDto, index: number, keptIndex: number) => boolean,
+  ): Promise<void> {
+    const keptIndex = this.tabsSignal().findIndex((tab) => tab.id === tabId);
+    if (keptIndex < 0) {
+      return;
+    }
+
+    const isActiveKept = this.tabsSignal().some(
+      (tab, index) => tab.id === this.activeTabIdSignal() && keep(tab, index, keptIndex),
+    );
+    if (!isActiveKept) {
+      await this.activateTab(tabId);
+      if (this.activeTabIdSignal() !== tabId) {
+        return;
+      }
+    }
+
+    this.tabsSignal.update((tabs) => tabs.filter((tab, index) => keep(tab, index, keptIndex)));
+    this.scheduleSave();
   }
 
   async activateSibling(offset: 1 | -1): Promise<void> {
@@ -140,7 +235,7 @@ export class WorkspaceService extends BaseIpcService<APIChannel.WORKSPACE> {
   async closeTab(tabId: string | null = this.activeTabIdSignal()): Promise<void> {
     const tabs = this.tabsSignal();
     const index = tabs.findIndex((tab) => tab.id === tabId);
-    if (index < 0) {
+    if (index < 0 || !this.canCloseTab(tabs[index])) {
       return;
     }
 
@@ -238,7 +333,8 @@ export class WorkspaceService extends BaseIpcService<APIChannel.WORKSPACE> {
     this.tabsSignal.set(savedTabs);
     const currentUrl = this.currentUrlSignal();
     const matchingTab = savedTabs.find((tab) => getTabUrl(tab) === currentUrl);
-    const activeTab = matchingTab ?? savedTabs.find((tab) => tab.id === savedActiveTabId) ?? savedTabs[0];
+    const activeTab =
+      matchingTab ?? savedTabs.find((tab) => tab.id === savedActiveTabId) ?? savedTabs[0];
     this.activeTabIdSignal.set(activeTab.id);
 
     if (matchingTab) {
@@ -260,7 +356,9 @@ export class WorkspaceService extends BaseIpcService<APIChannel.WORKSPACE> {
     }
 
     this.updateTab(tab.id, (item) => {
-      const history = [...item.history.slice(0, item.historyIndex + 1), url].slice(-WORKSPACE_MAX_HISTORY);
+      const history = [...item.history.slice(0, item.historyIndex + 1), url].slice(
+        -WORKSPACE_MAX_HISTORY,
+      );
       return { ...item, history, historyIndex: history.length - 1 };
     });
     this.scheduleSave();
@@ -338,6 +436,8 @@ export class WorkspaceService extends BaseIpcService<APIChannel.WORKSPACE> {
 
     this.ipcClient
       .save({ campaign, tabs: this.tabsSignal(), activeTabId: this.activeTabIdSignal() })
-      .catch((error: unknown) => console.warn('[app] Failed to save campaign tabs:', campaign, error));
+      .catch((error: unknown) =>
+        console.warn('[app] Failed to save campaign tabs:', campaign, error),
+      );
   }
 }

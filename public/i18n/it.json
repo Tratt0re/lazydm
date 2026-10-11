@@ -197,6 +197,14 @@
     "forward": "Avanti",
     "new": "Nuova scheda",
     "close": "Chiudi scheda",
-    "untitled": "Nuova scheda"
+    "untitled": "Nuova scheda",
+    "menu": {
+      "open": "Apri",
+      "openInNewTab": "Apri in una nuova scheda",
+      "openInBackground": "Apri in una scheda in background",
+      "duplicate": "Duplica scheda",
+      "closeOthers": "Chiudi le altre schede",
+      "closeToRight": "Chiudi le schede a destra"
+    }
   }
 }

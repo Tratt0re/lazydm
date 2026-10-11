@@ -132,9 +132,17 @@ Planned Electron modules: `vault`, `cloud-readiness`, `campaign`, `document`, `i
   - Each tab has its **own back/forward history** (max 50 entries); navigating inside a tab drops its forward entries.
   - Click activates, × or middle-click closes, **+** opens the campaign overview; closing the last tab leaves one
     overview tab. Cmd/Ctrl-click or middle-click on a campaign link opens it in a background tab.
+  - **Overview tabs have no ×** (closing everything leads back to the overview); the last tab can never be closed.
+  - **Drag to sort** tabs (CDK drag-drop, horizontal). Each tab shows its section icon.
+  - **Context menu** (right-click, or the menu key / Shift+F10 on a focused tab): on a campaign link — open, open in
+    new tab, open in background tab; on a tab — new tab, duplicate, close, close others, close tabs to the right.
+  - Active tab uses the Nordic Relic *page tabs* look: no fill, 3px bronze bottom border, strong bold text.
+    The tablist has roving focus (arrows / Home / End move the focus, Enter activates).
   - Shortcuts: Cmd/Ctrl+T new tab, Cmd/Ctrl+W close tab (forwarded by the main process, so it no longer closes the
     window), Ctrl+Tab / Ctrl+Shift+Tab next/previous, Cmd/Ctrl+[ / ] back/forward.
   - Entering a campaign from its root restores the last active tab. The bar is hidden outside campaign pages.
+- **Breadcrumb**: section and note pages show the path (`CAMPAIGN / SECTION /`, mono, linked) above the page title
+  in the toolbar, so a restored tab always tells where it points.
 - **Leaving a note with unsaved edits autosaves it** (tab switch, link, sidebar). If the save hits a conflict or an
   error, the navigation is cancelled and the conflict sheet / error toast is shown.
 - **Editor**: CodeMirror 6, markdown source with live preview (Obsidian-like). Reading mode renders sanitized markdown.
@@ -200,6 +208,7 @@ variant keys and configuration stay as they are.
 | 5 | Documents: section lists, CodeMirror live preview, reading mode, wikilinks, assets, save with conflict detection, templates |
 | 5.1 | Design-system alignment to Nordic Relic v0.3.3 (tokens, fonts, component look) |
 | 6 | Tab bar |
+| 6.1 | Tab bar usability: context menus, breadcrumb, drag to sort, overview tab rules, page-tabs style |
 | 7 | Link maintenance: backlinks, rename refactoring, broken links |
 | 8 | Compendium and template rules |
 

@@ -197,6 +197,14 @@
     "forward": "Adelante",
     "new": "Nueva pestaña",
     "close": "Cerrar pestaña",
-    "untitled": "Nueva pestaña"
+    "untitled": "Nueva pestaña",
+    "menu": {
+      "open": "Abrir",
+      "openInNewTab": "Abrir en una pestaña nueva",
+      "openInBackground": "Abrir en segundo plano",
+      "duplicate": "Duplicar pestaña",
+      "closeOthers": "Cerrar las demás pestañas",
+      "closeToRight": "Cerrar pestañas a la derecha"
+    }
   }
 }

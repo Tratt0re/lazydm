@@ -91,7 +91,15 @@ export class CampaignSectionPage {
         return;
       }
 
-      onCleanup(this.toolbarContext.activate({ title: this.sectionLabelKey() }));
+      onCleanup(
+        this.toolbarContext.activate({
+          title: this.sectionLabelKey(),
+          titleMode: 'breadcrumb',
+          titleBreadcrumbs: [
+            { label: campaign.name, path: `/campaigns/${campaign.slug}`, translate: false },
+          ],
+        }),
+      );
       void this.loadFiles(`${campaign.slug}/${section.key}`);
     });
   }

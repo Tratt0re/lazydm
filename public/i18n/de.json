@@ -197,6 +197,14 @@
     "forward": "Vorwärts",
     "new": "Neuer Tab",
     "close": "Tab schließen",
-    "untitled": "Neuer Tab"
+    "untitled": "Neuer Tab",
+    "menu": {
+      "open": "Öffnen",
+      "openInNewTab": "In neuem Tab öffnen",
+      "openInBackground": "In Hintergrund-Tab öffnen",
+      "duplicate": "Tab duplizieren",
+      "closeOthers": "Andere Tabs schließen",
+      "closeToRight": "Tabs rechts schließen"
+    }
   }
 }

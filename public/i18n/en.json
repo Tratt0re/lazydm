@@ -197,6 +197,14 @@
     "forward": "Forward",
     "new": "New tab",
     "close": "Close tab",
-    "untitled": "New tab"
+    "untitled": "New tab",
+    "menu": {
+      "open": "Open",
+      "openInNewTab": "Open in new tab",
+      "openInBackground": "Open in background tab",
+      "duplicate": "Duplicate tab",
+      "closeOthers": "Close other tabs",
+      "closeToRight": "Close tabs to the right"
+    }
   }
 }

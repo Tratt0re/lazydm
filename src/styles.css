@@ -356,6 +356,13 @@
 }
 
 /* Nordic Relic engraved rule: hairline, bronze diamond, hairline. Header/body separator in dialogs. */
+/* Tab being dragged in the campaign tab bar (the CDK renders the preview under <body>). */
+.arc-tab-drag-preview {
+  background: var(--raised);
+  border: 1px solid var(--border-strong);
+  box-shadow: 0 12px 25px #0005;
+}
+
 .arc-engraved-divider {
   display: flex;
   align-items: center;

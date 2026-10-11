@@ -197,6 +197,14 @@
     "forward": "Suivant",
     "new": "Nouvel onglet",
     "close": "Fermer l’onglet",
-    "untitled": "Nouvel onglet"
+    "untitled": "Nouvel onglet",
+    "menu": {
+      "open": "Ouvrir",
+      "openInNewTab": "Ouvrir dans un nouvel onglet",
+      "openInBackground": "Ouvrir en arrière-plan",
+      "duplicate": "Dupliquer l’onglet",
+      "closeOthers": "Fermer les autres onglets",
+      "closeToRight": "Fermer les onglets à droite"
+    }
   }
 }

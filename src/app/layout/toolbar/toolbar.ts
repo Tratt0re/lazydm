@@ -81,10 +81,6 @@ export class Toolbar {
     return 'type' in item && item.type === 'select';
   }
 
-  protected hasItemNavigation(): boolean {
-    return this.itemNavigation() !== null;
-  }
-
   protected hasTitleBreadcrumbs(): boolean {
     return this.titleMode() === 'breadcrumb' && this.titleBreadcrumbs().length > 0;
   }
