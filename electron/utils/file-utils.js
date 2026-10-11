@@ -76,10 +76,16 @@ function resolveInsideVault(rootPath, relativePath = '') {
   }
 
   const realRootPath = fs.realpathSync(path.resolve(rootPath.trim()));
-  const resolvedPath = resolveRealPathOfNearestExisting(path.resolve(realRootPath, relativePath.trim()));
+  const resolvedPath = resolveRealPathOfNearestExisting(
+    path.resolve(realRootPath, relativePath.trim()),
+  );
   const pathFromRoot = path.relative(realRootPath, resolvedPath);
 
-  if (pathFromRoot === '..' || pathFromRoot.startsWith(`..${path.sep}`) || path.isAbsolute(pathFromRoot)) {
+  if (
+    pathFromRoot === '..' ||
+    pathFromRoot.startsWith(`..${path.sep}`) ||
+    path.isAbsolute(pathFromRoot)
+  ) {
     throw new Error(`Path escapes the vault root: ${relativePath}`);
   }
 
