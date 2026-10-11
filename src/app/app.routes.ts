@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 
 import { CAMPAIGN_SLUG_PARAM, campaignGuard } from '@/guards/campaign.guard';
+import { documentLeaveGuard } from '@/guards/document-leave.guard';
 import { vaultGuard } from '@/guards/vault.guard';
 import { RootLayout } from '@/layout/root-layout/root-layout';
 
@@ -47,6 +48,7 @@ export const routes: Routes = [
                   },
                   {
                     path: ':note',
+                    canDeactivate: [documentLeaveGuard],
                     loadComponent: () =>
                       import('./pages/document-page/document-page').then((m) => m.DocumentPage),
                   },

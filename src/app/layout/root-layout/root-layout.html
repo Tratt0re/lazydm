@@ -30,6 +30,8 @@
       [attr.inert]="showSidebarOverlay() ? '' : null"
       [attr.aria-hidden]="showSidebarOverlay() ? 'true' : null"
     >
+      <app-tab-bar />
+
       <app-toolbar
         [sidebarCollapsed]="sidebarCollapsed()"
         [title]="toolbarTitle()"

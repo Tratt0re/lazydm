@@ -190,5 +190,13 @@
       "saveCopy": "Guardar como copia",
       "reload": "Recargar la otra versión"
     }
+  },
+  "tabs": {
+    "ariaLabel": "Pestañas abiertas",
+    "back": "Atrás",
+    "forward": "Adelante",
+    "new": "Nueva pestaña",
+    "close": "Cerrar pestaña",
+    "untitled": "Nueva pestaña"
   }
 }

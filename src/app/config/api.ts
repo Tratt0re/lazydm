@@ -20,6 +20,7 @@ export enum APIChannel {
   ENCOUNTERS = 'encounters',
   VAULT = 'vault',
   WINDOW = 'window',
+  WORKSPACE = 'workspace',
 }
 
 export interface ElectronIpcClient {
@@ -59,6 +60,10 @@ export interface ElectronIpcClient {
   };
   readonly window: {
     readonly reload: OptionalIpcRequest<void, void>;
+  };
+  readonly workspace: {
+    readonly get: IpcRequest<{ campaign: string }, DTO.WorkspaceDto | null>;
+    readonly save: IpcRequest<DTO.SaveWorkspacePayload, DTO.WorkspaceDto | null>;
   };
 }
 

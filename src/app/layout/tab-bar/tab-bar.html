@@ -1,0 +1,87 @@
+@if (workspace.isVisible()) {
+  <div class="flex h-10 items-stretch border-b border-border bg-recessed">
+    <div class="flex shrink-0 items-center gap-1 border-r border-border px-2">
+      <button
+        type="button"
+        arc-button
+        arcType="ghost"
+        arcSize="sm"
+        class="size-7"
+        [arcDisabled]="!workspace.canGoBack()"
+        [attr.aria-label]="'tabs.back' | translate"
+        [arcTooltip]="'tabs.back' | translate"
+        (click)="workspace.goBack()"
+      >
+        <arc-icon arcType="chevron-left" />
+      </button>
+      <button
+        type="button"
+        arc-button
+        arcType="ghost"
+        arcSize="sm"
+        class="size-7"
+        [arcDisabled]="!workspace.canGoForward()"
+        [attr.aria-label]="'tabs.forward' | translate"
+        [arcTooltip]="'tabs.forward' | translate"
+        (click)="workspace.goForward()"
+      >
+        <arc-icon arcType="chevron-right" />
+      </button>
+    </div>
+
+    <div
+      role="tablist"
+      class="flex min-w-0 flex-1 items-stretch overflow-x-auto scrollbar-hide"
+      [attr.aria-label]="'tabs.ariaLabel' | translate"
+    >
+      @for (tab of workspace.tabs(); track tab.id) {
+        @let isActive = tab.id === workspace.activeTabId();
+        <div
+          class="group flex max-w-56 min-w-28 shrink-0 items-center border-r border-border transition-colors duration-150"
+          [class]="
+            isActive
+              ? 'bg-primary text-primary-foreground'
+              : 'text-muted-foreground hover:bg-accent hover:text-foreground'
+          "
+          (auxclick)="onTabAuxClick($event, tab)"
+        >
+          <button
+            type="button"
+            role="tab"
+            class="flex h-full min-w-0 flex-1 cursor-pointer items-center pl-3 font-mono text-[11px] font-semibold tracking-[0.04em] outline-none focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-ring"
+            [attr.aria-selected]="isActive"
+            [attr.title]="getTitle(tab) || ('tabs.untitled' | translate)"
+            (click)="workspace.activateTab(tab.id)"
+          >
+            <span class="truncate">{{ getTitle(tab) || ('tabs.untitled' | translate) }}</span>
+          </button>
+          <button
+            type="button"
+            class="mr-1 ml-1 flex size-6 shrink-0 cursor-pointer items-center justify-center opacity-70 outline-none hover:opacity-100 focus-visible:outline-2 focus-visible:outline-ring [&_svg]:size-3.5"
+            [class]="isActive ? 'hover:bg-primary-pressed' : 'hover:bg-raised'"
+            [attr.aria-label]="'tabs.close' | translate"
+            (click)="onCloseClick($event, tab)"
+          >
+            <arc-icon arcType="x" />
+          </button>
+        </div>
+      }
+    </div>
+
+    <div class="flex shrink-0 items-center border-l border-border px-2">
+      <button
+        type="button"
+        arc-button
+        arcType="ghost"
+        arcSize="sm"
+        class="size-7"
+        [arcDisabled]="!workspace.canOpenTab()"
+        [attr.aria-label]="'tabs.new' | translate"
+        [arcTooltip]="'tabs.new' | translate"
+        (click)="workspace.openTab()"
+      >
+        <arc-icon arcType="plus" />
+      </button>
+    </div>
+  </div>
+}

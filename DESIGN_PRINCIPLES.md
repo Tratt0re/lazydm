@@ -127,7 +127,16 @@ Planned Electron modules: `vault`, `cloud-readiness`, `campaign`, `document`, `i
 - **Campaign list** → grid of campaigns; when empty, a CTA message with a *Create campaign* button.
 - **Campaign layout** → current shell with the sidebar: campaign sections, *Settings*, and right below it a link
   button **Back to campaigns**.
-- **Tab bar** above the header bar, browser-like, one set of tabs per campaign, restored per device.
+- **Tab bar** above the header bar, browser-like, one set of tabs per campaign, restored per device
+  (`workspace` table of the vault index; at most 30 tabs, each tab's URL stays inside its campaign).
+  - Each tab has its **own back/forward history** (max 50 entries); navigating inside a tab drops its forward entries.
+  - Click activates, × or middle-click closes, **+** opens the campaign overview; closing the last tab leaves one
+    overview tab. Cmd/Ctrl-click or middle-click on a campaign link opens it in a background tab.
+  - Shortcuts: Cmd/Ctrl+T new tab, Cmd/Ctrl+W close tab (forwarded by the main process, so it no longer closes the
+    window), Ctrl+Tab / Ctrl+Shift+Tab next/previous, Cmd/Ctrl+[ / ] back/forward.
+  - Entering a campaign from its root restores the last active tab. The bar is hidden outside campaign pages.
+- **Leaving a note with unsaved edits autosaves it** (tab switch, link, sidebar). If the save hits a conflict or an
+  error, the navigation is cancelled and the conflict sheet / error toast is shown.
 - **Editor**: CodeMirror 6, markdown source with live preview (Obsidian-like). Reading mode renders sanitized markdown.
 
 ## 9. ArcTechUI visual style (Nordic Relic)

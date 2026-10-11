@@ -190,5 +190,13 @@
       "saveCopy": "Enregistrer comme copie",
       "reload": "Recharger l'autre version"
     }
+  },
+  "tabs": {
+    "ariaLabel": "Onglets ouverts",
+    "back": "Précédent",
+    "forward": "Suivant",
+    "new": "Nouvel onglet",
+    "close": "Fermer l’onglet",
+    "untitled": "Nouvel onglet"
   }
 }

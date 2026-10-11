@@ -190,5 +190,13 @@
       "saveCopy": "Save as a copy",
       "reload": "Reload the other version"
     }
+  },
+  "tabs": {
+    "ariaLabel": "Open tabs",
+    "back": "Back",
+    "forward": "Forward",
+    "new": "New tab",
+    "close": "Close tab",
+    "untitled": "New tab"
   }
 }

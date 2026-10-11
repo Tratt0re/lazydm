@@ -8,6 +8,7 @@ const resetController = require('./reset.controller');
 const updateController = require('./update.controller');
 const vaultController = require('./vault.controller');
 const windowController = require('./window.controller');
+const workspaceController = require('./workspace.controller');
 
 module.exports = {
   appMetaController,
@@ -20,4 +21,5 @@ module.exports = {
   updateController,
   vaultController,
   windowController,
+  workspaceController,
 };

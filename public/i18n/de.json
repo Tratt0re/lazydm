@@ -190,5 +190,13 @@
       "saveCopy": "Als Kopie speichern",
       "reload": "Andere Version neu laden"
     }
+  },
+  "tabs": {
+    "ariaLabel": "Geöffnete Tabs",
+    "back": "Zurück",
+    "forward": "Vorwärts",
+    "new": "Neuer Tab",
+    "close": "Tab schließen",
+    "untitled": "Neuer Tab"
   }
 }

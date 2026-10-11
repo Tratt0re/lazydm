@@ -47,6 +47,10 @@ const CHANNELS = Object.freeze({
   window: Object.freeze({
     reload: 'window:reload',
   }),
+  workspace: Object.freeze({
+    get: 'workspace:get',
+    save: 'workspace:save',
+  }),
 });
 
 module.exports = {

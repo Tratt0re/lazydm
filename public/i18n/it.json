@@ -190,5 +190,13 @@
       "saveCopy": "Salva come copia",
       "reload": "Ricarica l'altra versione"
     }
+  },
+  "tabs": {
+    "ariaLabel": "Schede aperte",
+    "back": "Indietro",
+    "forward": "Avanti",
+    "new": "Nuova scheda",
+    "close": "Chiudi scheda",
+    "untitled": "Nuova scheda"
   }
 }

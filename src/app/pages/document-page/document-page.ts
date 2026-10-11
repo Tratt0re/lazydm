@@ -103,7 +103,9 @@ export class DocumentPage {
               label: this.translateService.instant('document.toolbar.save'),
               icon: 'save',
               disabled: () => !this.isDirty() || this.isSaving(),
-              action: () => this.save(),
+              action: async () => {
+                await this.save();
+              },
             },
           ],
         }),
@@ -115,10 +117,15 @@ export class DocumentPage {
     });
   }
 
-  protected async save(): Promise<void> {
+  /** Autosave when leaving the note (tab switch, link, sidebar); a conflict or error keeps the user here. */
+  async saveBeforeLeave(): Promise<boolean> {
+    return !this.isDirty() || (await this.save());
+  }
+
+  protected async save(): Promise<boolean> {
     const document = this.document();
     if (!document || this.isSaving()) {
-      return;
+      return false;
     }
 
     this.isSaving.set(true);
@@ -132,13 +139,16 @@ export class DocumentPage {
       if (result.status === 'saved') {
         this.document.set(await this.documentService.read(document.path));
         toast.success(this.translateService.instant('document.toast.saved'));
-      } else {
-        this.openConflictSheet(result.current);
+        return true;
       }
+
+      this.openConflictSheet(result.current);
+      return false;
     } catch (error) {
       toast.error(this.translateService.instant('document.toast.saveError'), {
         description: error instanceof Error ? error.message : String(error),
       });
+      return false;
     } finally {
       this.isSaving.set(false);
     }
@@ -215,6 +225,7 @@ export class DocumentPage {
         content: this.editedContent(),
       });
       toast.success(this.translateService.instant('document.toast.savedCopy', { path: copy.path }));
+      this.editedContent.set(document.content);
 
       const copySlug = copy.path.split('/').pop()!.replace(/\.md$/i, '');
       await this.router.navigate([

@@ -119,6 +119,28 @@ function registerNavigationGuards(mainWindow, isDev) {
   });
 }
 
+/**
+ * The default application menu closes the window on Cmd/Ctrl+W; with the campaign tab bar that
+ * shortcut closes the active tab instead, so it is forwarded to the renderer.
+ */
+function registerTabShortcuts(mainWindow) {
+  mainWindow.webContents.on('before-input-event', (event, input) => {
+    const isModifierPressed = isMac ? input.meta : input.control;
+    if (
+      input.type !== 'keyDown' ||
+      !isModifierPressed ||
+      input.shift ||
+      input.alt ||
+      input.key.toLowerCase() !== 'w'
+    ) {
+      return;
+    }
+
+    event.preventDefault();
+    mainWindow.webContents.send('workspace:shortcut', { action: 'closeTab' });
+  });
+}
+
 function loadWindowContent(mainWindow, isDev) {
   if (isDev) {
     console.log(`[electron] DEV mode -> ${DEV_SERVER_URL}`);
@@ -161,6 +183,7 @@ function createWindow() {
   });
 
   registerNavigationGuards(mainWindow, isDev);
+  registerTabShortcuts(mainWindow);
   loadWindowContent(mainWindow, isDev);
 
   return mainWindow;

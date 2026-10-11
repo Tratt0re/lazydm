@@ -56,6 +56,10 @@ var require_channels = __commonJS({
       }),
       window: Object.freeze({
         reload: "window:reload"
+      }),
+      workspace: Object.freeze({
+        get: "workspace:get",
+        save: "workspace:save"
       })
     });
     module2.exports = {

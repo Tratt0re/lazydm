@@ -14,6 +14,7 @@ import { LayoutImports } from '@/shared/components/layout/layout.imports';
 import { VaultSyncStatusComponent } from '@/components/vault-sync-status/vault-sync-status.component';
 import { Header } from '../header/header';
 import { Sidebar } from '../sidebar/sidebar';
+import { TabBar } from '../tab-bar/tab-bar';
 import { Toolbar } from '../toolbar/toolbar';
 import { MenuConfiguration, type MenuSectionConfig } from '@/config/menu.config';
 import { CampaignService } from '@/services/campaign.service';
@@ -29,6 +30,7 @@ import { detectSmallScreenViewport } from '@/shared/utils';
     Header,
     Toolbar,
     Sidebar,
+    TabBar,
     VaultSyncStatusComponent,
   ],
   templateUrl: './root-layout.html',

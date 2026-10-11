@@ -8,6 +8,7 @@ const {
   updateController,
   vaultController,
   windowController,
+  workspaceController,
 } = require('../controllers');
 const { CHANNELS } = require('./channels');
 
@@ -50,6 +51,9 @@ const IPC_HANDLERS = Object.freeze({
   [CHANNELS.vault.close]: vaultController.close,
 
   [CHANNELS.window.reload]: windowController.reload,
+
+  [CHANNELS.workspace.get]: workspaceController.get,
+  [CHANNELS.workspace.save]: workspaceController.save,
 });
 
 module.exports = {

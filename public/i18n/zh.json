@@ -190,5 +190,13 @@
       "saveCopy": "保存为副本",
       "reload": "重新加载另一版本"
     }
+  },
+  "tabs": {
+    "ariaLabel": "已打开的标签页",
+    "back": "后退",
+    "forward": "前进",
+    "new": "新标签页",
+    "close": "关闭标签页",
+    "untitled": "新标签页"
   }
 }
