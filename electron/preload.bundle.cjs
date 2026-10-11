@@ -90,7 +90,7 @@ var require_package = __commonJS({
       name: "lazydm",
       version: "0.1.0",
       description: "LazyDM - Your lazy dungeon master assistant",
-      author: "Your Name",
+      author: "Tratt0re",
       repository: {
         type: "git",
         url: "https://github.com/yourusername/lazy_dm.git"

@@ -7,7 +7,7 @@ import { TranslatePipe } from '@ngx-translate/core';
   template: `
     <header class="border-b border-border pb-4">
       <h2 class="font-display text-3xl leading-none font-extrabold tracking-[0.02em] uppercase">
-        {{ titleKey() | translate }}
+        {{ titleKey() | translate }}<span class="text-primary" aria-hidden="true">.</span>
       </h2>
       <p class="mt-1 text-sm text-muted-foreground">
         {{ descriptionKey() | translate }}

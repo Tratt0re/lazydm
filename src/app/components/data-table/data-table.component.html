@@ -4,7 +4,9 @@
       @if (title() || description() || visibleActiveFilters().length > 0) {
         <div class="flex min-w-0 flex-1 flex-col gap-1">
           @if (title()) {
-            <h2 class="font-display text-3xl leading-none font-extrabold tracking-[0.02em] uppercase">{{ title() | translate }}</h2>
+            <h2 class="font-display text-3xl leading-none font-extrabold tracking-[0.02em] uppercase">
+              {{ title() | translate }}<span class="text-primary" aria-hidden="true">.</span>
+            </h2>
           }
           @if (description()) {
             <p class="text-sm text-muted-foreground">{{ description() | translate }}</p>

@@ -27,7 +27,9 @@ export const containerProgressBarVariants = cva('w-full transition-all', {
     arcShape: 'default',
   },
 });
-export type ArcTechProgressBarSizeVariants = NonNullable<VariantProps<typeof containerProgressBarVariants>['arcSize']>;
+export type ArcTechProgressBarSizeVariants = NonNullable<
+  VariantProps<typeof containerProgressBarVariants>['arcSize']
+>;
 
 export const progressBarVariants = cva('h-full transition-all', {
   variants: {
@@ -49,5 +51,9 @@ export const progressBarVariants = cva('h-full transition-all', {
     arcShape: 'default',
   },
 });
-export type ArcTechProgressBarTypeVariants = NonNullable<VariantProps<typeof progressBarVariants>['arcType']>;
-export type ArcTechProgressBarShapeVariants = NonNullable<VariantProps<typeof progressBarVariants>['arcShape']>;
+export type ArcTechProgressBarTypeVariants = NonNullable<
+  VariantProps<typeof progressBarVariants>['arcType']
+>;
+export type ArcTechProgressBarShapeVariants = NonNullable<
+  VariantProps<typeof progressBarVariants>['arcShape']
+>;

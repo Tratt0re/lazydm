@@ -16,7 +16,7 @@
         (click)="onSelect(item.key)"
       >
         <span class="block text-xs font-semibold tracking-[0.06em] whitespace-nowrap uppercase lg:whitespace-normal">
-          {{ item.label | translate }}
+          {{ item.label | translate }}<span class="text-primary" aria-hidden="true">.</span>
         </span>
         <span class="mt-1 hidden text-xs leading-5 lg:block">{{ item.description | translate }}</span>
       </button>

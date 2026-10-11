@@ -14,7 +14,9 @@
                 {{ item.label | translate }}
               </a>
             } @else {
-              <span class="truncate font-medium text-foreground">{{ item.label | translate }}</span>
+              <span class="truncate font-medium text-foreground">
+                {{ item.label | translate }}@if (isLast) {<span class="text-primary" aria-hidden="true">.</span>}
+              </span>
             }
 
             @if (!isLast) {
