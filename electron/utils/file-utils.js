@@ -17,6 +17,75 @@ function formatTimestampForFilename(unixTimestampMilliseconds = Date.now()) {
   return `${year}${month}${day}-${hours}${minutes}${seconds}`;
 }
 
+function assertExistingDirectory(directoryPath, label) {
+  if (typeof directoryPath !== 'string' || directoryPath.trim().length === 0) {
+    throw new Error(`${label} must be a non-empty string.`);
+  }
+
+  const normalizedDirectoryPath = path.resolve(directoryPath.trim());
+  if (!fs.existsSync(normalizedDirectoryPath)) {
+    throw new Error(`${label} does not exist: ${normalizedDirectoryPath}`);
+  }
+
+  const stats = fs.statSync(normalizedDirectoryPath);
+  if (!stats.isDirectory()) {
+    throw new Error(`${label} is not a directory: ${normalizedDirectoryPath}`);
+  }
+
+  return normalizedDirectoryPath;
+}
+
+function assertReadableDirectory(directoryPath, label) {
+  const normalizedDirectoryPath = assertExistingDirectory(directoryPath, label);
+  fs.accessSync(normalizedDirectoryPath, fs.constants.R_OK);
+
+  return normalizedDirectoryPath;
+}
+
+function assertWritableDirectory(directoryPath, label) {
+  const normalizedDirectoryPath = assertReadableDirectory(directoryPath, label);
+  fs.accessSync(normalizedDirectoryPath, fs.constants.W_OK);
+
+  return normalizedDirectoryPath;
+}
+
+function resolveRealPathOfNearestExisting(targetPath) {
+  let existingPath = targetPath;
+  const missingSegments = [];
+
+  while (!fs.existsSync(existingPath)) {
+    const parentPath = path.dirname(existingPath);
+    if (parentPath === existingPath) {
+      break;
+    }
+
+    missingSegments.unshift(path.basename(existingPath));
+    existingPath = parentPath;
+  }
+
+  return path.join(fs.realpathSync(existingPath), ...missingSegments);
+}
+
+function resolveInsideVault(rootPath, relativePath = '') {
+  if (typeof rootPath !== 'string' || rootPath.trim().length === 0) {
+    throw new Error('rootPath must be a non-empty string.');
+  }
+
+  if (typeof relativePath !== 'string') {
+    throw new Error('relativePath must be a string.');
+  }
+
+  const realRootPath = fs.realpathSync(path.resolve(rootPath.trim()));
+  const resolvedPath = resolveRealPathOfNearestExisting(path.resolve(realRootPath, relativePath.trim()));
+  const pathFromRoot = path.relative(realRootPath, resolvedPath);
+
+  if (pathFromRoot === '..' || pathFromRoot.startsWith(`..${path.sep}`) || path.isAbsolute(pathFromRoot)) {
+    throw new Error(`Path escapes the vault root: ${relativePath}`);
+  }
+
+  return resolvedPath;
+}
+
 function safeWriteFileAtomic(filePath, content) {
   if (typeof filePath !== 'string' || filePath.trim().length === 0) {
     throw new Error('filePath must be a non-empty string.');
@@ -87,7 +156,11 @@ function listFilesSortedByMtime(directoryPath, options = {}) {
 }
 
 module.exports = {
+  assertExistingDirectory,
+  assertReadableDirectory,
+  assertWritableDirectory,
   formatTimestampForFilename,
   listFilesSortedByMtime,
+  resolveInsideVault,
   safeWriteFileAtomic,
 };

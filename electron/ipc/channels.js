@@ -16,6 +16,13 @@ const CHANNELS = Object.freeze({
     openRelease: 'update:open-release',
     ignoreVersion: 'update:ignore-version',
   }),
+  vault: Object.freeze({
+    getCurrent: 'vault:getCurrent',
+    selectFolder: 'vault:selectFolder',
+    inspect: 'vault:inspect',
+    open: 'vault:open',
+    close: 'vault:close',
+  }),
   window: Object.freeze({
     reload: 'window:reload',
   }),
