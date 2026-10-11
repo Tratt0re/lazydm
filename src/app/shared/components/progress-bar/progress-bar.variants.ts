@@ -3,9 +3,9 @@ import { cva, type VariantProps } from 'class-variance-authority';
 export const containerProgressBarVariants = cva('w-full transition-all', {
   variants: {
     arcType: {
-      default: 'bg-primary/20',
-      destructive: 'bg-destructive/20',
-      accent: 'bg-chart-1/20',
+      default: 'bg-muted',
+      destructive: 'bg-muted',
+      accent: 'bg-muted',
     },
     arcSize: {
       default: 'h-2',
@@ -13,7 +13,7 @@ export const containerProgressBarVariants = cva('w-full transition-all', {
       lg: 'h-5',
     },
     arcShape: {
-      default: 'rounded-full',
+      default: 'rounded-none',
       square: 'rounded-none',
     },
     arcIndeterminate: {
@@ -37,7 +37,7 @@ export const progressBarVariants = cva('h-full transition-all', {
       accent: 'bg-chart-1',
     },
     arcShape: {
-      default: 'rounded-full',
+      default: 'rounded-none',
       square: 'rounded-none',
     },
     arcIndeterminate: {

@@ -1,6 +1,16 @@
 <div class="relative flex flex-col gap-4 p-6" cdkTrapFocus [cdkTrapFocusAutoCapture]="true" arcTechId="alert-dialog" #z="arcTechId">
   @if (config.arcClosable) {
-    <button type="button" arc-button arcType="ghost" arcSize="sm" class="absolute top-1 right-1" (click)="onCancelClick()">
+    <button
+      type="button"
+      arc-button
+      arcType="ghost"
+      arcSize="sm"
+      [class]="
+        'absolute top-1 right-1 z-10' +
+        (config.arcTitle ? ' text-primary-foreground hover:bg-primary-foreground/15 hover:text-primary-foreground' : '')
+      "
+      (click)="onCancelClick()"
+    >
       <arc-icon arcType="x" />
     </button>
   }
@@ -8,7 +18,13 @@
   @if (config.arcTitle || config.arcDescription) {
     <header class="flex flex-col gap-2 text-center sm:text-left">
       @if (config.arcTitle) {
-        <h2 data-testid="arc-alert-title" [id]="titleId()" class="text-lg font-semibold">{{ config.arcTitle }}</h2>
+        <h2
+          data-testid="arc-alert-title"
+          [id]="titleId()"
+          class="-mx-6 -mt-6 mb-2 bg-primary px-6 py-4 pr-12 text-left text-sm leading-none font-bold tracking-[0.1em] text-primary-foreground uppercase"
+        >
+          {{ config.arcTitle }}
+        </h2>
       }
 
       @if (config.arcDescription) {

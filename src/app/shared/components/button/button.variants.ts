@@ -4,30 +4,29 @@ import { mergeClasses } from '@/shared/utils/merge-classes';
 
 export const buttonVariants = cva(
   mergeClasses(
-    'cursor-pointer inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all active:scale-97',
+    'cursor-pointer inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-none border text-xs font-bold uppercase tracking-[0.08em] transition-colors active:translate-y-px',
     "[&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0",
-    'outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px]',
-    'aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive',
+    'outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring',
+    'aria-invalid:border-destructive aria-invalid:outline-destructive',
   ),
   {
     variants: {
       arcType: {
-        default: 'bg-primary text-primary-foreground shadow-xs hover:bg-primary/90',
+        default: 'border-primary bg-primary text-primary-foreground hover:brightness-110',
         destructive:
-          'bg-destructive text-white shadow-xs hover:bg-destructive/90 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40 dark:bg-destructive/60',
-        outline:
-          'border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50',
-        secondary: 'bg-secondary text-secondary-foreground shadow-xs hover:bg-secondary/80',
-        ghost: 'hover:bg-accent hover:text-accent-foreground dark:hover:bg-accent/50',
-        link: 'text-primary underline-offset-4 hover:underline',
+          'border-destructive bg-destructive text-destructive-foreground hover:brightness-110 focus-visible:outline-destructive',
+        outline: 'border-input bg-transparent text-foreground hover:bg-accent hover:text-accent-foreground',
+        secondary: 'border-input bg-secondary text-secondary-foreground hover:bg-accent',
+        ghost: 'border-transparent hover:bg-accent hover:text-accent-foreground',
+        link: 'border-transparent text-primary underline-offset-4 hover:underline',
       },
       arcSize: {
         default: 'h-10 px-4 py-2 data-icon-only:size-10 data-icon-only:p-0',
-        sm: 'h-10 rounded-md gap-1.5 px-3.5 data-icon-only:size-10 data-icon-only:p-0',
-        lg: 'h-11 rounded-md px-6 data-icon-only:size-11 data-icon-only:p-0',
+        sm: 'h-10 gap-1.5 px-3.5 data-icon-only:size-10 data-icon-only:p-0',
+        lg: 'h-11 px-6 data-icon-only:size-11 data-icon-only:p-0',
       },
       arcShape: {
-        default: 'rounded-md',
+        default: 'rounded-none',
         circle: 'rounded-full',
         square: 'rounded-none',
       },

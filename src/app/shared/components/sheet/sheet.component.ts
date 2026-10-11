@@ -83,9 +83,9 @@ export class ArcTechSheetOptions<T, U> {
       }
 
       @if (config.arcTitle || config.arcDescription) {
-        <header data-slot="sheet-header" class="flex flex-col gap-1.5 p-4">
+        <header data-slot="sheet-header" class="flex flex-col gap-1.5 border-b border-border p-4 pr-12">
           @if (config.arcTitle) {
-            <h4 data-testid="arc-title" data-slot="sheet-title" class="text-lg leading-none font-semibold tracking-tight">
+            <h4 data-testid="arc-title" data-slot="sheet-title" class="text-sm leading-none font-bold tracking-[0.1em] uppercase">
               {{ config.arcTitle }}
             </h4>
 
@@ -107,7 +107,7 @@ export class ArcTechSheetOptions<T, U> {
       </main>
 
       @if (!config.arcHideFooter) {
-        <footer data-slot="sheet-footer" class="mt-auto flex flex-col gap-2 p-4">
+        <footer data-slot="sheet-footer" class="mt-auto flex flex-col gap-2 border-t border-border p-4">
           @if (config.arcOkText !== null) {
             <button
               type="button"

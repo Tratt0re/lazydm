@@ -1,7 +1,7 @@
 import { cva, type VariantProps } from 'class-variance-authority';
 
 export const switchVariants = cva(
-  'peer inline-flex min-h-10 min-w-10 shrink-0 cursor-pointer items-center justify-center rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:cursor-not-allowed disabled:opacity-50',
+  'peer inline-flex min-h-10 min-w-10 shrink-0 cursor-pointer items-center justify-center rounded-none outline-none focus-visible:[&>span]:outline-2 focus-visible:[&>span]:outline-offset-2 focus-visible:[&>span]:outline-ring disabled:cursor-not-allowed disabled:opacity-50',
   {
     variants: {
       arcType: {
@@ -22,12 +22,12 @@ export const switchVariants = cva(
 );
 
 export const switchTrackVariants = cva(
-  'pointer-events-none inline-flex items-center rounded-full border-2 border-transparent transition-colors data-[state=unchecked]:bg-input',
+  'pointer-events-none inline-flex items-center rounded-none border border-input p-px transition-colors data-[state=unchecked]:bg-background',
   {
     variants: {
       arcType: {
-        default: 'data-[state=checked]:bg-primary',
-        destructive: 'data-[state=checked]:bg-destructive',
+        default: 'data-[state=checked]:border-primary data-[state=checked]:bg-primary',
+        destructive: 'data-[state=checked]:border-destructive data-[state=checked]:bg-destructive',
       },
       arcSize: {
         default: 'h-6 w-11',
