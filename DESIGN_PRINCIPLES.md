@@ -16,7 +16,7 @@ LazyDM works like **Obsidian**, specialised for Dungeon Masters.
 
 ## 2. Vault layout
 
-```
+```text
 <vault root>/                          chosen or created by the user (may live in iCloud, Box, Dropbox…)
 ├── .lazydm/                           vault config, synced with the vault (like .obsidian/)
 │   ├── vault.json                     vault settings, template rules, folder/display-name mapping
@@ -46,7 +46,7 @@ LazyDM works like **Obsidian**, specialised for Dungeon Masters.
 **Rule: if a piece of data must follow the user to another device, it lives in the vault.**
 
 | Location | Contents | Synced across devices |
-|---|---|---|
+| --- | --- | --- |
 | `.md` frontmatter | `type`, `title`, `tags`, aliases, game fields (CR, HP…) | ✅ via the cloud folder |
 | `.md` body | content and `[[links]]` | ✅ |
 | `.lazydm/*.json` | template rules, folder/display-name mapping, vault settings | ✅ |
@@ -64,7 +64,7 @@ Two database files, both under the app's userData folder:
 - `index/<vaultId>.sqlite` — one per vault:
 
 | Table | Purpose |
-|---|---|
+| --- | --- |
 | `files` | path (vault-relative), campaign, kind (md/asset), frontmatter `type`, title, size, mtime, content hash, frontmatter JSON |
 | `links` | source file, raw target, resolved target (nullable), kind (link/embed) → backlinks, broken links, rename refactoring |
 | `tags` | file ↔ tag |
@@ -84,7 +84,7 @@ Nothing in the index may be irreplaceable. If data cannot be rebuilt from the fi
 ## 4. Process responsibilities
 
 | Electron (main process) | Angular (renderer) |
-|---|---|
+| --- | --- |
 | All file-system access, indexing, watching | UI only |
 | Vault setup and validation | Rendering, navigation, tabs |
 | Cloud-readiness check and sync waits | Minor calculations / formatting |
@@ -160,7 +160,7 @@ provider `provideArcTech()`. Reference design: `arcane-ledger-dashboard-ui-style
 ## 11. Roadmap
 
 | Phase | Scope |
-|---|---|
+| --- | --- |
 | 0 | Remove the legacy DB-snapshot sync and backup (useless once the DB is a cache) |
 | 1 | Vault core: setup/selection, `.lazydm/vault.json`, `vaults` table, path guard, setup page + route guard |
 | 2 | Indexer: per-vault index DB, scan, reconcile, watcher, frontmatter/links/tags/headings parsing |
