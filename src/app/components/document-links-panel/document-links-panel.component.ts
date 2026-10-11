@@ -1,3 +1,4 @@
+import { NgTemplateOutlet } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -6,36 +7,61 @@ import {
   effect,
   inject,
   input,
+  output,
   signal,
 } from '@angular/core';
-import { NgTemplateOutlet } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 
 import { toInAppNoteRoute } from '@/components/document-preview/document-preview.markdown';
-import type { DocumentLinksDto } from '@/dtos';
+import type { DocumentLinkDto, DocumentLinksDto } from '@/dtos';
 import { DocumentService } from '@/services/document.service';
+import { ArcTechBadgeComponent } from '@/shared/components/badge';
 import { ArcTechIconComponent } from '@/shared/components/icon';
+import { ArcTechMenuImports } from '@/shared/components/menu';
+import { ArcTechTooltipImports } from '@/shared/components/tooltip';
 
 const INDEX_UPDATED_EVENT = 'index:updated';
 
-interface BacklinkGroup {
-  readonly sourcePath: string;
+/** A file linked with the note, in either direction. */
+interface LinkedFile {
+  readonly path: string;
   readonly title: string;
   readonly route: string | null;
   readonly sectionLabel: string;
+  /** The file links to this note. */
+  readonly isFrom: boolean;
+  /** This note links to the file. */
+  readonly isTo: boolean;
+  /** Lines of the file that hold the links to this note. */
   readonly snippets: readonly string[];
 }
 
-/** Side panel of a note: the notes linking to it and its own broken links; follows index updates. */
+export interface BrokenLinkFixRequest {
+  readonly action: 'remove' | 'create';
+  readonly link: DocumentLinkDto;
+}
+
+function getFileName(path: string): string {
+  return path.split('/').pop() ?? path;
+}
+
+/** Side panel of a note: files linked with it (from / to) and its own broken links; follows index updates. */
 @Component({
   selector: 'app-document-links-panel',
-  imports: [NgTemplateOutlet, RouterLink, TranslatePipe, ArcTechIconComponent],
+  imports: [
+    NgTemplateOutlet,
+    RouterLink,
+    TranslatePipe,
+    ArcTechBadgeComponent,
+    ArcTechIconComponent,
+    ArcTechMenuImports,
+    ArcTechTooltipImports,
+  ],
   templateUrl: './document-links-panel.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
-    class:
-      'flex h-full min-h-0 w-80 shrink-0 flex-col overflow-y-auto border-l border-border bg-card',
+    class: 'flex h-full min-h-0 w-80 flex-col overflow-hidden border border-border bg-card p-2',
   },
 })
 export class AppDocumentLinksPanelComponent {
@@ -43,29 +69,45 @@ export class AppDocumentLinksPanelComponent {
   private loadToken = 0;
 
   readonly path = input.required<string>();
+  /** A broken link of this note should be fixed; the page saves pending edits first. */
+  readonly fixBrokenLink = output<BrokenLinkFixRequest>();
 
   protected readonly links = signal<DocumentLinksDto | null>(null);
-  protected readonly backlinkCount = computed(() => this.links()?.backlinks.length ?? 0);
   protected readonly brokenLinks = computed(() => this.links()?.brokenLinks ?? []);
-  protected readonly backlinkGroups = computed<readonly BacklinkGroup[]>(() => {
-    const groups = new Map<string, BacklinkGroup>();
-    for (const link of this.links()?.backlinks ?? []) {
-      const group = groups.get(link.sourcePath) ?? {
-        sourcePath: link.sourcePath,
-        title: link.sourceTitle ?? link.sourcePath.split('/').pop() ?? link.sourcePath,
-        route: toInAppNoteRoute(link.sourcePath),
-        sectionLabel: `nav.items.${link.sourcePath.split('/')[1] ?? ''}`,
+  protected readonly linkedFiles = computed<readonly LinkedFile[]>(() => {
+    const files = new Map<string, LinkedFile>();
+    const getFile = (path: string, title: string | null | undefined): LinkedFile =>
+      files.get(path) ?? {
+        path,
+        title: title || getFileName(path),
+        route: toInAppNoteRoute(path),
+        sectionLabel: `nav.items.${path.split('/')[1] ?? ''}`,
+        isFrom: false,
+        isTo: false,
         snippets: [],
       };
-      groups.set(link.sourcePath, {
-        ...group,
-        snippets: group.snippets.includes(link.snippet)
-          ? group.snippets
-          : [...group.snippets, link.snippet],
+
+    for (const link of this.links()?.backlinks ?? []) {
+      const file = getFile(link.sourcePath, link.sourceTitle);
+      files.set(link.sourcePath, {
+        ...file,
+        isFrom: true,
+        snippets: file.snippets.includes(link.snippet)
+          ? file.snippets
+          : [...file.snippets, link.snippet],
       });
     }
 
-    return [...groups.values()];
+    for (const link of this.links()?.outgoingLinks ?? []) {
+      if (link.resolvedPath) {
+        files.set(link.resolvedPath, {
+          ...getFile(link.resolvedPath, link.resolvedTitle),
+          isTo: true,
+        });
+      }
+    }
+
+    return [...files.values()].sort((left, right) => left.title.localeCompare(right.title));
   });
   protected readonly brokenLinksRoute = computed(
     () => `/campaigns/${this.path().split('/')[0]}/broken-links`,

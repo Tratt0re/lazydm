@@ -23,6 +23,8 @@ export interface DocumentLinkDto {
   readonly heading: string | null;
   /** Vault-relative path the link resolves to, or null when the target note isn't found. */
   readonly resolvedPath: string | null;
+  /** Title of the file the link resolves to (null when broken). */
+  readonly resolvedTitle?: string | null;
 }
 
 export interface DocumentDto {
@@ -78,10 +80,25 @@ export interface BacklinkDto {
   readonly snippet: string;
 }
 
-/** Side panel data of a note: who links to it, and its own unresolved links. */
+/** Side panel data of a note: who links to it, what it links to, and its own unresolved links. */
 export interface DocumentLinksDto {
   readonly backlinks: readonly BacklinkDto[];
+  readonly outgoingLinks: readonly DocumentLinkDto[];
   readonly brokenLinks: readonly DocumentLinkDto[];
+}
+
+export interface UnlinkPayload {
+  readonly path: string;
+  /** Raw target of the link to remove (every occurrence in the note is replaced by its text). */
+  readonly raw: string;
+}
+
+export interface CreateFromLinkPayload {
+  readonly sourcePath: string;
+  readonly raw: string;
+  readonly folder: string;
+  readonly title: string;
+  readonly type: string;
 }
 
 /** An unresolved link written in a note of a campaign. */

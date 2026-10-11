@@ -194,10 +194,13 @@
       "reload": "Ricarica l'altra versione"
     },
     "links": {
-      "backlinks": "Collegata da",
-      "noBacklinks": "Nessun'altra nota rimanda qui.",
+      "linkedFiles": "File collegati",
+      "noLinkedFiles": "Ancora nessun collegamento da o verso altri file.",
+      "from": "Da",
+      "to": "A",
+      "fromTooltip": "{{title}} rimanda a questa nota",
+      "toTooltip": "Questa nota rimanda a {{title}}",
       "broken": "Collegamenti interrotti",
-      "noBroken": "Nessun collegamento interrotto in questa nota.",
       "allBroken": "Tutti i collegamenti interrotti della campagna"
     },
     "rename": {
@@ -233,11 +236,28 @@
     "broken": {
       "title": "Collegamenti interrotti",
       "cardDescription": "Collegamenti a note o file che non esistono.",
-      "summary": "{{links}} collegamenti interrotti in {{notes}} note",
+      "summary": "Collegamenti interrotti: {{links}} · note: {{notes}}",
       "line": "Riga {{line}}",
       "emptyTitle": "Nessun collegamento interrotto",
       "emptyDescription": "Ogni collegamento della campagna punta a una nota o a un file esistente.",
-      "loadError": "Impossibile caricare i collegamenti interrotti"
+      "loadError": "Impossibile caricare i collegamenti interrotti",
+      "alertTitle": "Collegamenti interrotti: {{count}}",
+      "review": "Controlla"
+    },
+    "actions": {
+      "create": "Crea nota…",
+      "remove": "Rimuovi collegamento, mantieni il testo",
+      "fixAriaLabel": "Correggi il collegamento interrotto {{link}}",
+      "createTitle": "Crea nota collegata",
+      "createDescription": "Una nuova nota per “{{link}}”: il collegamento punterà a lei.",
+      "titleLabel": "Titolo",
+      "folderLabel": "Cartella",
+      "createSubmit": "Crea e apri",
+      "cancel": "Annulla",
+      "created": "Creata {{title}}",
+      "createError": "Impossibile creare la nota",
+      "removed": "Collegamento rimosso — il testo resta nella nota",
+      "removeError": "Impossibile rimuovere il collegamento"
     }
   }
 }

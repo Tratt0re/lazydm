@@ -4,12 +4,14 @@ import { TranslatePipe } from '@ngx-translate/core';
 
 import { toInAppNoteRoute } from '@/components/document-preview/document-preview.markdown';
 import type { BrokenLinkDto } from '@/dtos';
+import { BrokenLinkActionsService } from '@/services/broken-link-actions.service';
 import { CampaignService } from '@/services/campaign.service';
 import { DocumentService } from '@/services/document.service';
 import { ToolbarContextService } from '@/services/toolbar-context.service';
 import { ArcTechAlertComponent } from '@/shared/components/alert';
 import { ArcTechEmptyComponent } from '@/shared/components/empty';
 import { ArcTechIconComponent } from '@/shared/components/icon';
+import { ArcTechMenuImports } from '@/shared/components/menu';
 
 export const BROKEN_LINKS_ROUTE_SEGMENT = 'broken-links';
 
@@ -32,6 +34,7 @@ interface BrokenLinkGroup {
     ArcTechAlertComponent,
     ArcTechEmptyComponent,
     ArcTechIconComponent,
+    ArcTechMenuImports,
   ],
   templateUrl: './broken-links-page.html',
 })
@@ -39,6 +42,7 @@ export class BrokenLinksPage {
   private readonly campaignService = inject(CampaignService);
   private readonly documentService = inject(DocumentService);
   private readonly toolbarContext = inject(ToolbarContextService);
+  protected readonly brokenLinkActions = inject(BrokenLinkActionsService);
   private loadToken = 0;
 
   protected readonly rows = signal<readonly BrokenLinkDto[]>([]);

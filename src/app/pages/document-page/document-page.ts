@@ -6,13 +6,17 @@ import { map } from 'rxjs';
 import { toast } from 'ngx-sonner';
 
 import { AppCodeEditorComponent } from '@/components/code-editor/code-editor.component';
-import { AppDocumentLinksPanelComponent } from '@/components/document-links-panel/document-links-panel.component';
+import {
+  AppDocumentLinksPanelComponent,
+  type BrokenLinkFixRequest,
+} from '@/components/document-links-panel/document-links-panel.component';
 import { AppDocumentPreviewComponent } from '@/components/document-preview/document-preview.component';
 import { toInAppNoteRoute } from '@/components/document-preview/document-preview.markdown';
 import { AppSheetFormService } from '@/components/sheet-form/sheet-form.service';
 import type { AppSheetField } from '@/components/sheet-form/sheet-form.types';
 import { CAMPAIGN_SECTION_PARAM } from '@/pages/campaign-section-page/campaign-section-page';
 import type { BacklinkDto, DocumentDto } from '@/dtos';
+import { BrokenLinkActionsService } from '@/services/broken-link-actions.service';
 import { CampaignService } from '@/services/campaign.service';
 import { DocumentService } from '@/services/document.service';
 import { LocalPreferencesService } from '@/services/local-preferences.service';
@@ -57,6 +61,7 @@ export class DocumentPage {
   private readonly sheetFormService = inject(AppSheetFormService);
   private readonly localPreferences = inject(LocalPreferencesService);
   private readonly workspace = inject(WorkspaceService);
+  private readonly brokenLinkActions = inject(BrokenLinkActionsService);
   private readonly editor = viewChild(AppCodeEditorComponent);
   private loadToken = 0;
 
@@ -193,6 +198,26 @@ export class DocumentPage {
     const isOpen = !this.isLinksPanelOpen();
     this.isLinksPanelOpen.set(isOpen);
     this.localPreferences.setDocumentLinksPanelOpen(isOpen);
+  }
+
+  /** Fixing a link rewrites this note on disk: pending edits are saved first, the editor reloads after. */
+  protected async onFixBrokenLink({ action, link }: BrokenLinkFixRequest): Promise<void> {
+    const document = this.document();
+    if (!document || (this.isDirty() && !(await this.save()))) {
+      return;
+    }
+
+    const target = { sourcePath: document.path, raw: link.raw, targetName: link.targetName };
+    if (action === 'create') {
+      this.brokenLinkActions.openCreateSheet(target);
+      return;
+    }
+
+    await this.brokenLinkActions.removeLink(target);
+    const reloaded = await this.documentService.read(document.path);
+    this.document.set(reloaded);
+    this.editedContent.set(reloaded.content);
+    this.editor()?.replaceContent(reloaded.content);
   }
 
   /** Rename with a preview of the notes linking here; unsaved edits are saved first (as when leaving). */

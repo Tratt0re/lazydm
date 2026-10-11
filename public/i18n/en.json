@@ -194,10 +194,13 @@
       "reload": "Reload the other version"
     },
     "links": {
-      "backlinks": "Linked from",
-      "noBacklinks": "No other note links here yet.",
+      "linkedFiles": "Linked files",
+      "noLinkedFiles": "No links to or from other files yet.",
+      "from": "From",
+      "to": "To",
+      "fromTooltip": "{{title}} links to this note",
+      "toTooltip": "This note links to {{title}}",
       "broken": "Broken links",
-      "noBroken": "No broken links in this note.",
       "allBroken": "All broken links in the campaign"
     },
     "rename": {
@@ -233,11 +236,28 @@
     "broken": {
       "title": "Broken links",
       "cardDescription": "Links pointing to notes or files that don't exist.",
-      "summary": "{{links}} broken links in {{notes}} notes",
+      "summary": "Broken links: {{links}} · notes: {{notes}}",
       "line": "Line {{line}}",
       "emptyTitle": "No broken links",
       "emptyDescription": "Every link in this campaign points to an existing note or file.",
-      "loadError": "Couldn't load the broken links"
+      "loadError": "Couldn't load the broken links",
+      "alertTitle": "Broken links: {{count}}",
+      "review": "Review"
+    },
+    "actions": {
+      "create": "Create note…",
+      "remove": "Remove link, keep text",
+      "fixAriaLabel": "Fix broken link {{link}}",
+      "createTitle": "Create linked note",
+      "createDescription": "A new note for “{{link}}”: the link will point to it.",
+      "titleLabel": "Title",
+      "folderLabel": "Folder",
+      "createSubmit": "Create and open",
+      "cancel": "Cancel",
+      "created": "Created {{title}}",
+      "createError": "Couldn't create the note",
+      "removed": "Link removed — its text stays in the note",
+      "removeError": "Couldn't remove the link"
     }
   }
 }

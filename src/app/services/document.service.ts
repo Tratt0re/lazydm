@@ -4,12 +4,14 @@ import { APIChannel } from '@/config/api';
 import type {
   BrokenLinkDto,
   CreateDocumentPayload,
+  CreateFromLinkPayload,
   DocumentDto,
   DocumentFileListItemDto,
   DocumentLinksDto,
   RenameDocumentPayload,
   RenameDocumentResultDto,
   SaveDocumentCopyPayload,
+  UnlinkPayload,
   WriteDocumentPayload,
   WriteDocumentResultDto,
 } from '@/dtos';
@@ -50,6 +52,14 @@ export class DocumentService extends BaseIpcService<APIChannel.DOCUMENTS> {
 
   links(path: string): Promise<DocumentLinksDto> {
     return this.ipcClient.links({ path });
+  }
+
+  unlink(payload: UnlinkPayload): Promise<{ path: string; linkCount: number }> {
+    return this.ipcClient.unlink(payload);
+  }
+
+  createFromLink(payload: CreateFromLinkPayload): Promise<DocumentDto> {
+    return this.ipcClient.createFromLink(payload);
   }
 
   async listBrokenLinks(campaign: string): Promise<readonly BrokenLinkDto[]> {

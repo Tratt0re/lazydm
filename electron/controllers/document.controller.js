@@ -1,6 +1,8 @@
 const path = require('node:path');
 const { documentModel, vaultIndexModel, vaultModel } = require('../models');
 const {
+  getLinkPlainText,
+  parseMarkdownDocument,
   renameLinkTarget,
   replaceDocumentTitle,
   rewriteLinks,
@@ -112,14 +114,14 @@ function rewriteRenamedLinks(content, sourcePath, raws, oldName, newName) {
 }
 
 /**
- * Link panel data of a note: the notes linking to it (each with the text of the line holding the link)
- * and its own links that resolve to nothing.
+ * Link panel data of a note: the notes linking to it (each with the text of the line holding the link),
+ * the files it links to, and its own links that resolve to nothing.
  */
 async function links(payload) {
   const body = ensurePlainObject(payload, 'payload');
   const relativePath = requirePath(body);
   if (!indexerController.isOpen()) {
-    return { backlinks: [], brokenLinks: [] };
+    return { backlinks: [], outgoingLinks: [], brokenLinks: [] };
   }
 
   const vaultPath = vaultController.getReadyVaultPath();
@@ -127,6 +129,7 @@ async function links(payload) {
     .listIncomingLinks(relativePath)
     .filter((link) => link.sourcePath !== relativePath)
     .slice(0, BACKLINKS_MAX_ROWS);
+  const outgoing = vaultIndexModel.listOutgoingLinks(relativePath);
   const linesBySource = new Map();
 
   for (const sourcePath of new Set(incomingLinks.map((link) => link.sourcePath))) {
@@ -145,9 +148,10 @@ async function links(payload) {
         .trim()
         .slice(0, BACKLINK_SNIPPET_MAX_LENGTH),
     })),
-    brokenLinks: vaultIndexModel
-      .listOutgoingLinks(relativePath)
-      .filter((link) => link.resolvedPath === null && link.targetName !== ''),
+    outgoingLinks: outgoing.filter(
+      (link) => link.resolvedPath !== null && link.resolvedPath !== relativePath,
+    ),
+    brokenLinks: outgoing.filter((link) => link.resolvedPath === null && link.targetName !== ''),
   };
 }
 
@@ -232,13 +236,102 @@ async function rename(payload) {
   return { path: newPath, updatedPaths, failedPaths, linkCount };
 }
 
+/** Writes a rewritten note only if it did not change since it was read; throws on a conflict. */
+async function writeRewrittenNote(vaultPath, document, rewritten) {
+  const result = await documentModel.writeDocument(vaultPath, document.path, rewritten.content, document.contentHash);
+  if (result.status !== 'saved') {
+    throw new Error(`The note changed meanwhile, try again: ${document.path}`);
+  }
+}
+
+/** Removes a link from a note, leaving its text (label, or what it pointed to) in place. */
+async function unlink(payload) {
+  const body = ensurePlainObject(payload, 'payload');
+  const relativePath = requirePath(body);
+  const raw = requireString(body.raw, 'payload.raw', { trim: false });
+
+  const vaultPath = vaultController.getReadyVaultPath();
+  const document = await documentModel.readDocument(vaultPath, relativePath);
+  const rewritten = rewriteLinks(
+    document.content,
+    (link) => (link.raw === raw ? { text: getLinkPlainText(link) } : null),
+    { sourcePath: relativePath },
+  );
+
+  if (rewritten.count > 0) {
+    await writeRewrittenNote(vaultPath, document, rewritten);
+    if (indexerController.isOpen()) {
+      await indexerController.reindexPaths([relativePath]);
+    }
+  }
+
+  return { path: relativePath, linkCount: rewritten.count };
+}
+
+/**
+ * Creates the note a broken link points to, in the chosen folder. The new file gets the kebab-case name of
+ * its title; when that differs from what the link says, the link is rewritten to it (its text kept as alias).
+ */
+async function createFromLink(payload) {
+  const body = ensurePlainObject(payload, 'payload');
+  const sourcePath = requirePath(body, 'sourcePath');
+  const raw = requireString(body.raw, 'payload.raw', { trim: false });
+  const folderPath = requirePath(body, 'folder');
+  const title = requireString(body.title, 'payload.title', { maxLength: DOCUMENT_TITLE_MAX_LENGTH });
+  const type = toSlug(requireString(body.type, 'payload.type', { maxLength: DOCUMENT_TYPE_MAX_LENGTH }));
+
+  const slug = toSlug(title);
+  if (slug.length === 0) {
+    throw new Error('payload.title must contain at least one letter or number.');
+  }
+
+  const vaultPath = vaultController.getReadyVaultPath();
+  const source = await documentModel.readDocument(vaultPath, sourcePath);
+  const link = parseMarkdownDocument(source.content, { sourcePath }).links.find((item) => item.raw === raw);
+  if (!link) {
+    throw new Error(`Link not found in ${sourcePath}: ${raw}`);
+  }
+
+  const created = await documentModel.createDocument(vaultPath, { folderPath, slug, title, type });
+
+  if (link.targetName.toLocaleLowerCase() !== slug) {
+    const rewritten = rewriteLinks(
+      source.content,
+      (item) => {
+        if (item.raw !== raw) {
+          return null;
+        }
+
+        const renamed = renameLinkTarget(item, item.targetName, slug);
+        if (renamed === null || item.syntax === 'markdown' || item.label) {
+          return renamed;
+        }
+
+        return `${renamed}|${getLinkPlainText(item)}`;
+      },
+      { sourcePath },
+    );
+    if (rewritten.count > 0) {
+      await writeRewrittenNote(vaultPath, source, rewritten);
+    }
+  }
+
+  if (indexerController.isOpen()) {
+    await indexerController.reindexPaths([sourcePath, created.path]);
+  }
+
+  return created;
+}
+
 module.exports = {
   brokenLinks,
+  createFromLink,
   create,
   links,
   list,
   read,
   rename,
   saveCopy,
+  unlink,
   write,
 };

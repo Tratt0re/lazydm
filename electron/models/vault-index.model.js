@@ -75,7 +75,7 @@ function listOutgoingLinks(sourcePath) {
   return getVaultIndexDatabase()
     .prepare(
       `SELECT l.target_raw AS raw, l.kind, l.target_name AS targetName, l.target_heading AS heading,
-              t.path AS resolvedPath
+              t.path AS resolvedPath, t.title AS resolvedTitle
        FROM links l
        JOIN files s ON s.id = l.source_file_id
        LEFT JOIN files t ON t.id = l.target_file_id

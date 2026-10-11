@@ -41,6 +41,8 @@ import type { ArcTechIcon } from '@/shared/components/icon/icons';
         </div>
       }
     </div>
+
+    <ng-content />
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,

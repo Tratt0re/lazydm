@@ -194,10 +194,13 @@
       "reload": "Andere Version neu laden"
     },
     "links": {
-      "backlinks": "Verlinkt von",
-      "noBacklinks": "Noch keine andere Notiz verlinkt hierher.",
+      "linkedFiles": "Verknüpfte Dateien",
+      "noLinkedFiles": "Noch keine Links von oder zu anderen Dateien.",
+      "from": "Von",
+      "to": "Zu",
+      "fromTooltip": "{{title}} verlinkt auf diese Notiz",
+      "toTooltip": "Diese Notiz verlinkt auf {{title}}",
       "broken": "Defekte Links",
-      "noBroken": "Keine defekten Links in dieser Notiz.",
       "allBroken": "Alle defekten Links der Kampagne"
     },
     "rename": {
@@ -233,11 +236,28 @@
     "broken": {
       "title": "Defekte Links",
       "cardDescription": "Links auf Notizen oder Dateien, die es nicht gibt.",
-      "summary": "{{links}} defekte Links in {{notes}} Notizen",
+      "summary": "Defekte Links: {{links}} · Notizen: {{notes}}",
       "line": "Zeile {{line}}",
       "emptyTitle": "Keine defekten Links",
       "emptyDescription": "Jeder Link dieser Kampagne verweist auf eine vorhandene Notiz oder Datei.",
-      "loadError": "Die defekten Links konnten nicht geladen werden"
+      "loadError": "Die defekten Links konnten nicht geladen werden",
+      "alertTitle": "Defekte Links: {{count}}",
+      "review": "Prüfen"
+    },
+    "actions": {
+      "create": "Notiz erstellen…",
+      "remove": "Link entfernen, Text behalten",
+      "fixAriaLabel": "Defekten Link {{link}} beheben",
+      "createTitle": "Verlinkte Notiz erstellen",
+      "createDescription": "Eine neue Notiz für „{{link}}“: der Link zeigt dann auf sie.",
+      "titleLabel": "Titel",
+      "folderLabel": "Ordner",
+      "createSubmit": "Erstellen und öffnen",
+      "cancel": "Abbrechen",
+      "created": "{{title}} erstellt",
+      "createError": "Die Notiz konnte nicht erstellt werden",
+      "removed": "Link entfernt — der Text bleibt in der Notiz",
+      "removeError": "Der Link konnte nicht entfernt werden"
     }
   }
 }

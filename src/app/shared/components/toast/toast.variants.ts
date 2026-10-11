@@ -25,3 +25,25 @@ export const toastVariants = cva(
 );
 
 export type ArcTechToastVariants = VariantProps<typeof toastVariants>;
+
+/**
+ * Nordic Relic notification banner: card surface, 1px border in the state colour, strong uppercase
+ * title, muted mono description and a square close button on the right.
+ */
+export const toastClasses = {
+  toast: mergeClasses(
+    '!items-start !gap-3 !border !border-border-strong !bg-card !py-3.5 !pr-12 !pl-3.5 !text-card-foreground',
+    '!shadow-[0_12px_25px_#0005] [&_[data-icon]]:mt-px',
+  ),
+  title: '!text-[12px] !font-bold !uppercase !tracking-[0.05em] !text-foreground-strong',
+  description: '!mt-1 !font-mono !text-[11px] !leading-[1.5] !text-muted-foreground',
+  closeButton: mergeClasses(
+    '!top-1/2 !right-2.5 !left-auto ![transform:none] -translate-y-1/2',
+    '!size-7 !rounded-none !border !border-border !bg-transparent',
+    '!text-muted-foreground hover:!bg-accent hover:!text-foreground focus-visible:!outline-2 focus-visible:!outline-ring',
+  ),
+  success: '!border-success [&_[data-icon]]:text-success',
+  error: '!border-destructive [&_[data-icon]]:text-destructive',
+  warning: '!border-warning [&_[data-icon]]:text-warning',
+  info: '!border-info [&_[data-icon]]:text-info',
+} as const;

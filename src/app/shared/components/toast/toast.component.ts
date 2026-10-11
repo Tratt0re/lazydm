@@ -3,7 +3,7 @@ import { ChangeDetectionStrategy, Component, computed, input, ViewEncapsulation 
 import type { ClassValue } from 'clsx';
 import { NgxSonnerToaster } from 'ngx-sonner';
 
-import { toastVariants, type ArcTechToastVariants } from './toast.variants';
+import { toastClasses, toastVariants, type ArcTechToastVariants } from './toast.variants';
 
 import { mergeClasses } from '@/shared/utils/merge-classes';
 
@@ -21,7 +21,7 @@ import { mergeClasses } from '@/shared/utils/merge-classes';
       [duration]="duration()"
       [visibleToasts]="visibleToasts()"
       [closeButton]="closeButton()"
-      [toastOptions]="toastOptions()"
+      [toastOptions]="mergedToastOptions()"
       [dir]="dir()"
     />
   `,
@@ -44,6 +44,12 @@ export class ArcTechToastComponent {
   readonly closeButton = input<boolean>(false);
   readonly toastOptions = input<Record<string, unknown>>({});
   readonly dir = input<'ltr' | 'rtl' | 'auto'>('auto');
+
+  protected readonly mergedToastOptions = computed(() => {
+    const options = this.toastOptions();
+    const classes = (options['classes'] ?? {}) as Record<string, string>;
+    return { ...options, classes: { ...toastClasses, ...classes } };
+  });
 
   protected readonly classes = computed(() =>
     mergeClasses('toaster group', toastVariants({ variant: this.variant() }), this.class()),

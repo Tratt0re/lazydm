@@ -45,20 +45,54 @@
               </div>
             }
 
-            <ul class="flex flex-col gap-1 px-4 pb-4 pl-11">
+            <ul class="flex flex-col gap-0.5 px-4 pb-4 pl-9">
               @for (link of group.links; track $index) {
-                <li class="flex min-w-0 items-center gap-3 font-mono text-[11px]">
-                  <arc-icon
-                    arcType="unlink"
-                    class="size-3.5 shrink-0 text-destructive"
-                    aria-hidden="true"
-                  />
-                  <span class="truncate text-destructive" [attr.title]="link.raw">{{
-                    link.raw
-                  }}</span>
-                  <span class="ml-auto shrink-0 text-muted-foreground">
-                    {{ 'links.broken.line' | translate: { line: link.line } }}
-                  </span>
+                <li>
+                  <button
+                    type="button"
+                    arc-menu
+                    [arcMenuTriggerFor]="fixMenu"
+                    class="flex w-full min-w-0 items-center gap-3 border border-transparent px-2 py-1.5 text-left font-mono text-[11px] transition-colors duration-150 hover:border-border/60 hover:bg-muted/40 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-ring"
+                    [attr.aria-label]="'links.actions.fixAriaLabel' | translate: { link: link.raw }"
+                  >
+                    <arc-icon
+                      arcType="unlink"
+                      class="size-3.5 shrink-0 text-destructive"
+                      aria-hidden="true"
+                    />
+                    <span class="min-w-0 truncate text-destructive" [attr.title]="link.raw">{{
+                      link.raw
+                    }}</span>
+                    <span class="ml-auto shrink-0 text-muted-foreground">
+                      {{ 'links.broken.line' | translate: { line: link.line } }}
+                    </span>
+                    <arc-icon
+                      arcType="chevron-down"
+                      class="size-3.5 shrink-0 text-muted-foreground"
+                      aria-hidden="true"
+                    />
+                  </button>
+
+                  <ng-template #fixMenu>
+                    <div arc-menu-content class="w-56">
+                      <button
+                        type="button"
+                        arc-menu-item
+                        (click)="brokenLinkActions.openCreateSheet(link)"
+                      >
+                        <arc-icon arcType="plus" />
+                        {{ 'links.actions.create' | translate }}
+                      </button>
+                      <button
+                        type="button"
+                        arc-menu-item
+                        (click)="brokenLinkActions.removeLink(link)"
+                      >
+                        <arc-icon arcType="unlink" />
+                        {{ 'links.actions.remove' | translate }}
+                      </button>
+                    </div>
+                  </ng-template>
                 </li>
               }
             </ul>

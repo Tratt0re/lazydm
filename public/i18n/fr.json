@@ -194,10 +194,13 @@
       "reload": "Recharger l'autre version"
     },
     "links": {
-      "backlinks": "Liée depuis",
-      "noBacklinks": "Aucune autre note ne pointe encore ici.",
+      "linkedFiles": "Fichiers liés",
+      "noLinkedFiles": "Aucun lien vers ou depuis d’autres fichiers pour l’instant.",
+      "from": "De",
+      "to": "Vers",
+      "fromTooltip": "{{title}} pointe vers cette note",
+      "toTooltip": "Cette note pointe vers {{title}}",
       "broken": "Liens cassés",
-      "noBroken": "Aucun lien cassé dans cette note.",
       "allBroken": "Tous les liens cassés de la campagne"
     },
     "rename": {
@@ -233,11 +236,28 @@
     "broken": {
       "title": "Liens cassés",
       "cardDescription": "Liens vers des notes ou fichiers qui n’existent pas.",
-      "summary": "{{links}} liens cassés dans {{notes}} notes",
+      "summary": "Liens cassés : {{links}} · notes : {{notes}}",
       "line": "Ligne {{line}}",
       "emptyTitle": "Aucun lien cassé",
       "emptyDescription": "Chaque lien de cette campagne pointe vers une note ou un fichier existant.",
-      "loadError": "Impossible de charger les liens cassés"
+      "loadError": "Impossible de charger les liens cassés",
+      "alertTitle": "Liens cassés : {{count}}",
+      "review": "Vérifier"
+    },
+    "actions": {
+      "create": "Créer la note…",
+      "remove": "Retirer le lien, garder le texte",
+      "fixAriaLabel": "Réparer le lien cassé {{link}}",
+      "createTitle": "Créer la note liée",
+      "createDescription": "Une nouvelle note pour « {{link}} » : le lien pointera vers elle.",
+      "titleLabel": "Titre",
+      "folderLabel": "Dossier",
+      "createSubmit": "Créer et ouvrir",
+      "cancel": "Annuler",
+      "created": "{{title}} créée",
+      "createError": "Impossible de créer la note",
+      "removed": "Lien retiré — le texte reste dans la note",
+      "removeError": "Impossible de retirer le lien"
     }
   }
 }

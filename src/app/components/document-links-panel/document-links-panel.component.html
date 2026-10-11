@@ -1,39 +1,34 @@
-<section [attr.aria-labelledby]="'backlinks-heading'">
-  <header class="flex items-center justify-between gap-2 border-b border-border px-4 py-3">
-    <h2
-      id="backlinks-heading"
-      class="font-mono text-[10px] font-semibold tracking-[0.11em] text-muted-foreground uppercase"
-    >
-      {{ 'document.links.backlinks' | translate }}
-    </h2>
-    <span class="font-mono text-[10px] font-semibold text-muted-foreground">{{
-      backlinkCount()
-    }}</span>
-  </header>
+<div class="flex min-h-0 flex-1 flex-col gap-1 overflow-y-auto">
+  <h2
+    class="flex h-8 shrink-0 items-center justify-between px-2 font-mono text-[10px] font-semibold tracking-[0.11em] text-muted-foreground uppercase"
+  >
+    {{ 'document.links.linkedFiles' | translate }}
+    <span>{{ linkedFiles().length }}</span>
+  </h2>
 
-  @if (backlinkGroups().length === 0) {
-    <p class="px-4 py-3 text-sm text-muted-foreground">
-      {{ 'document.links.noBacklinks' | translate }}
+  @if (linkedFiles().length === 0) {
+    <p class="px-3 pb-3 text-xs leading-5 text-muted-foreground">
+      {{ 'document.links.noLinkedFiles' | translate }}
     </p>
   } @else {
-    <ul>
-      @for (group of backlinkGroups(); track group.sourcePath) {
-        <li class="border-b border-border-subtle last:border-b-0">
-          @if (group.route) {
+    <ul class="flex flex-col gap-1">
+      @for (file of linkedFiles(); track file.path) {
+        <li>
+          @if (file.route) {
             <a
-              [routerLink]="group.route"
-              class="block px-4 py-3 transition-colors duration-150 hover:bg-accent focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-ring"
+              [routerLink]="file.route"
+              class="block border border-transparent px-3 py-3 text-muted-foreground transition-colors duration-150 hover:border-border/60 hover:bg-muted/40 hover:text-foreground focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-ring"
             >
               <ng-container
-                [ngTemplateOutlet]="backlinkContent"
-                [ngTemplateOutletContext]="{ $implicit: group }"
+                [ngTemplateOutlet]="linkedFileContent"
+                [ngTemplateOutletContext]="{ $implicit: file }"
               />
             </a>
           } @else {
-            <div class="px-4 py-3">
+            <div class="border border-transparent px-3 py-3 text-muted-foreground">
               <ng-container
-                [ngTemplateOutlet]="backlinkContent"
-                [ngTemplateOutletContext]="{ $implicit: group }"
+                [ngTemplateOutlet]="linkedFileContent"
+                [ngTemplateOutletContext]="{ $implicit: file }"
               />
             </div>
           }
@@ -41,56 +36,98 @@
       }
     </ul>
   }
-</section>
 
-<section class="border-t border-border" [attr.aria-labelledby]="'broken-links-heading'">
-  <header class="flex items-center justify-between gap-2 border-b border-border px-4 py-3">
+  @if (brokenLinks().length > 0) {
     <h2
-      id="broken-links-heading"
-      class="font-mono text-[10px] font-semibold tracking-[0.11em] text-muted-foreground uppercase"
+      class="mt-3 flex h-8 shrink-0 items-center justify-between border-t border-border-subtle px-2 pt-3 font-mono text-[10px] font-semibold tracking-[0.11em] text-destructive uppercase"
     >
       {{ 'document.links.broken' | translate }}
+      <span>{{ brokenLinks().length }}</span>
     </h2>
-    <span class="font-mono text-[10px] font-semibold text-muted-foreground">{{
-      brokenLinks().length
-    }}</span>
-  </header>
 
-  @if (brokenLinks().length === 0) {
-    <p class="px-4 py-3 text-sm text-muted-foreground">
-      {{ 'document.links.noBroken' | translate }}
-    </p>
-  } @else {
-    <ul class="flex flex-col gap-1 px-4 py-3">
+    <ul class="flex flex-col gap-1">
       @for (link of brokenLinks(); track $index) {
-        <li class="flex min-w-0 items-center gap-2 font-mono text-[11px] text-destructive">
-          <arc-icon arcType="unlink" class="size-3.5 shrink-0" aria-hidden="true" />
-          <span class="truncate" [attr.title]="link.raw">{{ link.raw }}</span>
+        <li>
+          <button
+            type="button"
+            arc-menu
+            [arcMenuTriggerFor]="fixMenu"
+            class="flex w-full min-w-0 items-center gap-2 border border-transparent px-3 py-2 text-left font-mono text-[11px] text-destructive transition-colors duration-150 hover:border-border/60 hover:bg-muted/40 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-ring"
+            [attr.aria-label]="'links.actions.fixAriaLabel' | translate: { link: link.raw }"
+          >
+            <arc-icon arcType="unlink" class="size-3.5 shrink-0" aria-hidden="true" />
+            <span class="min-w-0 flex-1 truncate" [attr.title]="link.raw">{{ link.raw }}</span>
+            <arc-icon
+              arcType="chevron-down"
+              class="size-3.5 shrink-0 opacity-70"
+              aria-hidden="true"
+            />
+          </button>
+
+          <ng-template #fixMenu>
+            <div arc-menu-content class="w-56">
+              <button
+                type="button"
+                arc-menu-item
+                (click)="fixBrokenLink.emit({ action: 'create', link })"
+              >
+                <arc-icon arcType="plus" />
+                {{ 'links.actions.create' | translate }}
+              </button>
+              <button
+                type="button"
+                arc-menu-item
+                (click)="fixBrokenLink.emit({ action: 'remove', link })"
+              >
+                <arc-icon arcType="unlink" />
+                {{ 'links.actions.remove' | translate }}
+              </button>
+            </div>
+          </ng-template>
         </li>
       }
     </ul>
+
+    <a
+      [routerLink]="brokenLinksRoute()"
+      class="mt-1 flex items-center gap-2 border border-transparent px-3 py-2 font-mono text-[11px] font-semibold tracking-[0.04em] text-primary transition-colors duration-150 hover:border-border/60 hover:bg-muted/40 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-ring"
+    >
+      {{ 'document.links.allBroken' | translate }}
+    </a>
   }
+</div>
 
-  <a
-    [routerLink]="brokenLinksRoute()"
-    class="flex items-center gap-2 border-t border-border-subtle px-4 py-3 font-mono text-[11px] font-semibold tracking-[0.04em] text-primary transition-colors duration-150 hover:bg-accent focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-ring"
-  >
-    <arc-icon arcType="unlink" class="size-3.5 shrink-0" aria-hidden="true" />
-    {{ 'document.links.allBroken' | translate }}
-  </a>
-</section>
-
-<ng-template #backlinkContent let-group>
-  <span class="flex min-w-0 items-center gap-2">
-    <arc-icon arcType="file-text" class="size-3.5 shrink-0 text-primary" aria-hidden="true" />
-    <span class="truncate text-sm font-semibold text-foreground-strong">{{ group.title }}</span>
+<ng-template #linkedFileContent let-file>
+  <span class="flex min-w-0 items-start justify-between gap-2">
+    <span
+      class="min-w-0 truncate text-xs font-semibold tracking-[0.06em] text-foreground uppercase"
+      [attr.title]="file.title"
+    >
+      {{ file.title }}
+    </span>
+    <span class="flex shrink-0 gap-1">
+      @if (file.isFrom) {
+        <arc-badge
+          arcType="outline"
+          [arcTooltip]="'document.links.fromTooltip' | translate: { title: file.title }"
+        >
+          {{ 'document.links.from' | translate }}
+        </arc-badge>
+      }
+      @if (file.isTo) {
+        <arc-badge
+          arcType="secondary"
+          [arcTooltip]="'document.links.toTooltip' | translate: { title: file.title }"
+        >
+          {{ 'document.links.to' | translate }}
+        </arc-badge>
+      }
+    </span>
   </span>
-  <span
-    class="mt-1 block font-mono text-[10px] font-semibold tracking-[0.08em] text-muted-foreground uppercase"
-  >
-    {{ group.sectionLabel | translate }}
+  <span class="mt-1 block font-mono text-[10px] font-semibold tracking-[0.08em] uppercase">
+    {{ file.sectionLabel | translate }}
   </span>
-  @for (snippet of group.snippets; track snippet) {
-    <span class="mt-2 line-clamp-2 block text-xs text-foreground-secondary">{{ snippet }}</span>
+  @for (snippet of file.snippets; track snippet) {
+    <span class="mt-1 line-clamp-2 block text-xs leading-5">{{ snippet }}</span>
   }
 </ng-template>

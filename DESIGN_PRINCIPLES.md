@@ -119,10 +119,18 @@ Planned Electron modules: `vault`, `cloud-readiness`, `campaign`, `document`, `i
   Open tabs and their history follow the new URL. Unsaved edits are saved before renaming.
 - Renames made outside LazyDM (Finder, Obsidian on another device) are **not** refactored: the other tool already
   rewrote the links, and LazyDM only sees a delete plus a new file.
-- **Backlinks** live in a right side panel of the note (*Links* toggles it, open state per device): linking notes
-  with the line that links, then the note's own broken links. It follows index updates.
+- **Linked files** live in a right side panel of the note (*Links* toggles it with a slide, open state per device),
+  styled like the settings sidebar: every file linked with the note, tagged **FROM** (it links here) and/or **TO**
+  (this note links to it), with a tooltip and the linking lines. The note's own broken links appear below only
+  when there are some. It follows index updates.
 - Unresolved links are shown as broken, never silently dropped: styled in the preview, listed in the note panel and
-  in the per-campaign **Broken links** page (`/campaigns/<slug>/broken-links`, reachable from the overview).
+  in the per-campaign **Broken links** page (`/campaigns/<slug>/broken-links`). The overview shows an alert with a
+  *Review* button only when the campaign has broken links.
+- **Fixing a broken link** (menu on each broken link, in the panel and on the page):
+  - *Remove link, keep text*: every occurrence of that link in the note becomes its label (or what it pointed to).
+  - *Create note…*: title (suggested from the link) and folder (the link's folder, else the source note's section);
+    the note is created from its template and opened. If its kebab file name differs from the link text, the link is
+    rewritten to it with the old text kept as alias (`[[klarg-the-bugbear|Klarg the Bugbear]]`).
 - Moving notes between sections and deleting notes are not available yet.
 
 ## 7. Security
@@ -193,6 +201,8 @@ variant keys and configuration stay as they are.
   - Alerts: full 1px border plus a 3px left bar in the state colour.
   - Badges/status chips: outlined, mono.
   - Tables: raised mono headers; selected row is the raised surface.
+  - Toasts follow the *notification banner*: card surface, 1px border in the state colour, uppercase title, mono
+    description, square close button on the right.
   - Tooltips: raised surface with a bronze border.
 - **No decorative text or glyphs** from the reference demo (runes, mottos, fake archive codes, background grids…).
   Lucide icons stay.

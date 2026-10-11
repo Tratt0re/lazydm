@@ -6,16 +6,37 @@ import { CAMPAIGN_SECTIONS } from '@/config/menu.config';
 import { CampaignService } from '@/services/campaign.service';
 import { DocumentService } from '@/services/document.service';
 import { ToolbarContextService } from '@/services/toolbar-context.service';
+import { ArcTechAlertComponent } from '@/shared/components/alert';
+import { ArcTechButtonComponent } from '@/shared/components/button';
 import { ArcTechIconComponent } from '@/shared/components/icon';
 
 @Component({
   selector: 'app-campaign-home-page',
-  imports: [RouterLink, TranslatePipe, ArcTechIconComponent],
+  imports: [RouterLink, TranslatePipe, ArcTechAlertComponent, ArcTechButtonComponent, ArcTechIconComponent],
   template: `
     @if (campaign(); as campaign) {
       <div class="mx-auto flex w-full max-w-5xl flex-col gap-6 p-6">
         @if (campaign.description) {
           <p class="max-w-3xl text-sm text-muted-foreground">{{ campaign.description }}</p>
+        }
+
+        @if (brokenLinkCount() > 0) {
+          <arc-alert
+            arcType="destructive"
+            arcIcon="unlink"
+            [arcTitle]="'links.broken.alertTitle' | translate: { count: brokenLinkCount() }"
+            [arcDescription]="'links.broken.cardDescription' | translate"
+          >
+            <a
+              arc-button
+              arcType="outline"
+              arcSize="sm"
+              class="shrink-0"
+              [routerLink]="['/campaigns', campaign.slug, 'broken-links']"
+            >
+              {{ 'links.broken.review' | translate }}
+            </a>
+          </arc-alert>
         }
 
         <ul class="grid gap-2.5 sm:grid-cols-2 lg:grid-cols-3">
@@ -37,21 +58,6 @@ import { ArcTechIconComponent } from '@/shared/components/icon';
           }
         </ul>
 
-        <a
-          [routerLink]="['/campaigns', campaign.slug, 'broken-links']"
-          class="flex items-center gap-4 border border-border bg-card p-4 transition-colors hover:border-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
-        >
-          <arc-icon arcType="unlink" class="size-6 shrink-0" [class]="brokenLinkCount() > 0 ? 'text-destructive' : 'text-primary'" />
-          <span class="flex min-w-0 flex-1 flex-col gap-1">
-            <span class="text-xs font-bold tracking-[0.08em] uppercase">
-              {{ 'links.broken.title' | translate }}<span class="text-primary" aria-hidden="true">.</span>
-            </span>
-            <span class="text-sm text-muted-foreground">{{ 'links.broken.cardDescription' | translate }}</span>
-          </span>
-          <span class="shrink-0 font-mono text-lg font-semibold" [class.text-destructive]="brokenLinkCount() > 0">
-            {{ brokenLinkCount() }}
-          </span>
-        </a>
       </div>
     }
   `,

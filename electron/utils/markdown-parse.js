@@ -214,10 +214,11 @@ function isInsideRanges(index, ranges) {
 /**
  * Rewrites links of a markdown document in place. `replace(link)` receives each link parsed the way
  * `parseMarkdownDocument` does (so code blocks, inline code and frontmatter are skipped) and returns
- * the new raw target (`raw` of the link) or null to leave it untouched. Line endings are preserved.
+ * the new raw target (`raw` of the link), `{ text }` to replace the whole link with plain text, or null
+ * to leave it untouched. Line endings are preserved.
  *
  * @param {string} text - Raw file content.
- * @param {(link: ReturnType<typeof parseWikilink>) => string|null} replace - New raw target, or null.
+ * @param {(link: ReturnType<typeof parseWikilink>) => string|{ text: string }|null} replace - Replacement, or null.
  * @param {{ sourcePath?: string }} [options] - Vault-relative path of the document, used for relative links.
  * @returns {{ content: string, count: number }} The rewritten content and the number of links changed.
  */
@@ -255,7 +256,9 @@ function rewriteLinks(text, replace, options = {}) {
       }
 
       const newRaw = replace(parseWikilink(match[1] === '!', match[2], index + 1));
-      if (typeof newRaw === 'string' && newRaw !== match[2]) {
+      if (newRaw && typeof newRaw === 'object') {
+        replacements.push({ start: match.index, end: match.index + match[0].length, text: newRaw.text });
+      } else if (typeof newRaw === 'string' && newRaw !== match[2]) {
         replacements.push({ start: match.index, end: match.index + match[0].length, text: `${match[1]}[[${newRaw}]]` });
       }
     }
@@ -267,7 +270,9 @@ function rewriteLinks(text, replace, options = {}) {
 
       const link = parseMarkdownLink(match[1] === '!', match[2], match[3], sourceDir, index + 1);
       const newRaw = link ? replace(link) : null;
-      if (typeof newRaw === 'string' && newRaw !== match[3]) {
+      if (newRaw && typeof newRaw === 'object') {
+        replacements.push({ start: match.index, end: match.index + match[0].length, text: newRaw.text });
+      } else if (typeof newRaw === 'string' && newRaw !== match[3]) {
         const hrefStart = match[0].indexOf(match[3], match[0].indexOf('](') + 2);
         const text = `${match[0].slice(0, hrefStart)}${newRaw}${match[0].slice(hrefStart + match[3].length)}`;
         replacements.push({ start: match.index, end: match.index + match[0].length, text });
@@ -334,6 +339,20 @@ function renameLinkTarget(link, oldName, newName) {
   return renamedPath === null ? null : `${renamedPath}${heading}${alias}`;
 }
 
+/** Text a link leaves behind when it is removed: its label, else what it points to. */
+function getLinkPlainText(link) {
+  if (link.label) {
+    return link.label;
+  }
+
+  if (link.syntax === 'markdown') {
+    return link.raw;
+  }
+
+  const target = link.targetName || '';
+  return link.heading ? (target ? `${target} > ${link.heading}` : link.heading) : target;
+}
+
 /**
  * Sets the note title: the frontmatter `title:` (when there is a frontmatter) and the first `# Heading`
  * if it still shows the old title. Everything else, comments and key order included, stays as it is.
@@ -383,6 +402,7 @@ function replaceDocumentTitle(text, oldTitle, newTitle) {
 }
 
 module.exports = {
+  getLinkPlainText,
   parseMarkdownDocument,
   renameLinkTarget,
   replaceDocumentTitle,

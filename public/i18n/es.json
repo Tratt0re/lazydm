@@ -194,10 +194,13 @@
       "reload": "Recargar la otra versión"
     },
     "links": {
-      "backlinks": "Enlazada desde",
-      "noBacklinks": "Ninguna otra nota enlaza aquí todavía.",
+      "linkedFiles": "Archivos enlazados",
+      "noLinkedFiles": "Aún no hay enlaces desde o hacia otros archivos.",
+      "from": "Desde",
+      "to": "Hacia",
+      "fromTooltip": "{{title}} enlaza a esta nota",
+      "toTooltip": "Esta nota enlaza a {{title}}",
       "broken": "Enlaces rotos",
-      "noBroken": "No hay enlaces rotos en esta nota.",
       "allBroken": "Todos los enlaces rotos de la campaña"
     },
     "rename": {
@@ -233,11 +236,28 @@
     "broken": {
       "title": "Enlaces rotos",
       "cardDescription": "Enlaces a notas o archivos que no existen.",
-      "summary": "{{links}} enlaces rotos en {{notes}} notas",
+      "summary": "Enlaces rotos: {{links}} · notas: {{notes}}",
       "line": "Línea {{line}}",
       "emptyTitle": "No hay enlaces rotos",
       "emptyDescription": "Todos los enlaces de esta campaña apuntan a una nota o archivo existente.",
-      "loadError": "No se pudieron cargar los enlaces rotos"
+      "loadError": "No se pudieron cargar los enlaces rotos",
+      "alertTitle": "Enlaces rotos: {{count}}",
+      "review": "Revisar"
+    },
+    "actions": {
+      "create": "Crear nota…",
+      "remove": "Quitar enlace, mantener el texto",
+      "fixAriaLabel": "Arreglar el enlace roto {{link}}",
+      "createTitle": "Crear nota enlazada",
+      "createDescription": "Una nota nueva para «{{link}}»: el enlace apuntará a ella.",
+      "titleLabel": "Título",
+      "folderLabel": "Carpeta",
+      "createSubmit": "Crear y abrir",
+      "cancel": "Cancelar",
+      "created": "{{title}} creada",
+      "createError": "No se pudo crear la nota",
+      "removed": "Enlace quitado — el texto se queda en la nota",
+      "removeError": "No se pudo quitar el enlace"
     }
   }
 }

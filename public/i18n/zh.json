@@ -194,10 +194,13 @@
       "reload": "重新加载另一版本"
     },
     "links": {
-      "backlinks": "反向链接",
-      "noBacklinks": "还没有其他笔记链接到这里。",
+      "linkedFiles": "关联文件",
+      "noLinkedFiles": "还没有与其他文件之间的链接。",
+      "from": "来自",
+      "to": "指向",
+      "fromTooltip": "{{title}} 链接到此笔记",
+      "toTooltip": "此笔记链接到 {{title}}",
       "broken": "失效链接",
-      "noBroken": "此笔记中没有失效链接。",
       "allBroken": "战役中的所有失效链接"
     },
     "rename": {
@@ -233,11 +236,28 @@
     "broken": {
       "title": "失效链接",
       "cardDescription": "指向不存在的笔记或文件的链接。",
-      "summary": "{{notes}} 篇笔记中有 {{links}} 个失效链接",
+      "summary": "失效链接：{{links}} · 笔记：{{notes}}",
       "line": "第 {{line}} 行",
       "emptyTitle": "没有失效链接",
       "emptyDescription": "此战役中的每个链接都指向现有的笔记或文件。",
-      "loadError": "无法加载失效链接"
+      "loadError": "无法加载失效链接",
+      "alertTitle": "失效链接：{{count}}",
+      "review": "查看"
+    },
+    "actions": {
+      "create": "创建笔记…",
+      "remove": "移除链接，保留文本",
+      "fixAriaLabel": "修复失效链接 {{link}}",
+      "createTitle": "创建链接的笔记",
+      "createDescription": "为“{{link}}”新建一篇笔记：链接将指向它。",
+      "titleLabel": "标题",
+      "folderLabel": "文件夹",
+      "createSubmit": "创建并打开",
+      "cancel": "取消",
+      "created": "已创建 {{title}}",
+      "createError": "无法创建笔记",
+      "removed": "已移除链接 — 文本保留在笔记中",
+      "removeError": "无法移除链接"
     }
   }
 }
