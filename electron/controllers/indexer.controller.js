@@ -1,10 +1,9 @@
 const fs = require('node:fs');
 const path = require('node:path');
-const { createHash } = require('node:crypto');
 const { closeVaultIndexDatabase, openVaultIndexDatabase } = require('../database/vault-index-db');
 const { vaultIndexModel, vaultModel } = require('../models');
 const { broadcastIpcEvent } = require('../ipc/broadcast');
-const { resolveInsideVault } = require('../utils/file-utils');
+const { hashContent, resolveInsideVault } = require('../utils/file-utils');
 const { parseMarkdownDocument } = require('../utils/markdown-parse');
 
 const WATCH_DEBOUNCE_MS = 300;
@@ -38,6 +37,11 @@ function getStatus() {
   return { ...indexState };
 }
 
+/** True once the index of the current vault is open (it is queryable while the first scan runs). */
+function isOpen() {
+  return activeVault !== null;
+}
+
 function setIndexState(changes) {
   indexState = { ...indexState, ...changes };
   broadcastIpcEvent(INDEX_EVENT_CHANNELS.statusChanged, getStatus());
@@ -64,10 +68,6 @@ function enqueue(token, task) {
     });
 
   return taskQueue;
-}
-
-function hashContent(buffer) {
-  return createHash('sha256').update(buffer).digest('hex');
 }
 
 function isFileChanged(file, knownState) {
@@ -294,6 +294,7 @@ function rebuild() {
 
 module.exports = {
   getStatus,
+  isOpen,
   rebuild,
   start,
   stop,

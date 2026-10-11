@@ -1,5 +1,6 @@
 const fs = require('node:fs');
 const path = require('node:path');
+const { createHash } = require('node:crypto');
 
 function pad2(value) {
   return String(value).padStart(2, '0');
@@ -161,11 +162,17 @@ function listFilesSortedByMtime(directoryPath, options = {}) {
   return files;
 }
 
+/** SHA-256 of a file content; the vault index and the conflict check on save compare these. */
+function hashContent(content) {
+  return createHash('sha256').update(content).digest('hex');
+}
+
 module.exports = {
   assertExistingDirectory,
   assertReadableDirectory,
   assertWritableDirectory,
   formatTimestampForFilename,
+  hashContent,
   listFilesSortedByMtime,
   resolveInsideVault,
   safeWriteFileAtomic,

@@ -6,23 +6,14 @@ const { ensurePlainObject, normalizeOptionalString, requireString } = require('.
 const CAMPAIGN_NAME_MAX_LENGTH = 80;
 const CAMPAIGN_DESCRIPTION_MAX_LENGTH = 500;
 
-function requireVaultPath() {
-  const { status, vault } = vaultController.getCurrent();
-  if (status !== 'ready' || !vault) {
-    throw new Error('No vault is open.');
-  }
-
-  return vault.path;
-}
-
 async function list() {
-  return { rows: await campaignModel.listCampaigns(requireVaultPath()) };
+  return { rows: await campaignModel.listCampaigns(vaultController.getReadyVaultPath()) };
 }
 
 async function get(payload) {
   const body = ensurePlainObject(payload, 'payload');
   const slug = requireString(body.slug, 'payload.slug');
-  const campaign = await campaignModel.readCampaign(requireVaultPath(), slug);
+  const campaign = await campaignModel.readCampaign(vaultController.getReadyVaultPath(), slug);
   if (!campaign) {
     throw new Error(`Campaign not found: ${slug}`);
   }
@@ -44,7 +35,7 @@ async function create(payload) {
     throw new Error('payload.name must contain at least one letter or number.');
   }
 
-  const vaultPath = requireVaultPath();
+  const vaultPath = vaultController.getReadyVaultPath();
   if (campaignModel.campaignFolderExists(vaultPath, slug)) {
     throw new Error(`A folder named "${slug}" already exists in the vault.`);
   }

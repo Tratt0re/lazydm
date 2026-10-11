@@ -71,6 +71,16 @@ function getCurrent() {
   return { status, vault: toVaultDto(row) };
 }
 
+/** Root folder of the open vault; throws when no usable vault is open. */
+function getReadyVaultPath() {
+  const { status, vault } = getCurrent();
+  if (status !== VAULT_STATUS.ready || !vault) {
+    throw new Error('No vault is open.');
+  }
+
+  return vault.path;
+}
+
 async function selectFolder() {
   const result = await dialog.showOpenDialog({
     properties: ['openDirectory', 'createDirectory'],
@@ -169,6 +179,7 @@ function close() {
 module.exports = {
   close,
   getCurrent,
+  getReadyVaultPath,
   inspect,
   open,
   selectFolder,

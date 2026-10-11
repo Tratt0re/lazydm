@@ -2,6 +2,7 @@ const {
   appMetaController,
   campaignController,
   cloudReadinessController,
+  documentController,
   indexerController,
   resetController,
   updateController,
@@ -25,6 +26,12 @@ const IPC_HANDLERS = Object.freeze({
   [CHANNELS.cloud.getStatus]: cloudReadinessController.getStatus,
   [CHANNELS.cloud.skipWait]: cloudReadinessController.skipWait,
   [CHANNELS.cloud.recheck]: cloudReadinessController.recheck,
+
+  [CHANNELS.documents.list]: documentController.list,
+  [CHANNELS.documents.read]: documentController.read,
+  [CHANNELS.documents.write]: documentController.write,
+  [CHANNELS.documents.saveCopy]: documentController.saveCopy,
+  [CHANNELS.documents.create]: documentController.create,
 
   [CHANNELS.index.getStatus]: indexerController.getStatus,
   [CHANNELS.index.rebuild]: indexerController.rebuild,

@@ -8,7 +8,7 @@ const {
   markFirstStartCompleted,
   runMigrations,
 } = require('./database');
-const { cloudReadinessController, indexerController, vaultController } = require('./controllers');
+const { assetController, cloudReadinessController, indexerController, vaultController } = require('./controllers');
 const { registerIpcHandlers } = require('./ipc');
 const { createWindow } = require('./window');
 
@@ -21,6 +21,7 @@ app.setAboutPanelOptions({
   applicationName: APP_NAME,
 });
 app.setPath('userData', path.join(app.getPath('appData'), APP_STORAGE_DIR_NAME));
+assetController.registerAssetScheme();
 
 app
   .whenReady()
@@ -41,6 +42,7 @@ app
     }
 
     registerIpcHandlers();
+    assetController.handleAssetRequests();
     createWindow();
 
     const currentVault = vaultController.getCurrent();

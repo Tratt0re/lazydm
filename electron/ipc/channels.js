@@ -17,6 +17,13 @@ const CHANNELS = Object.freeze({
     skipWait: 'cloud:skipWait',
     recheck: 'cloud:recheck',
   }),
+  documents: Object.freeze({
+    list: 'documents:list',
+    read: 'documents:read',
+    write: 'documents:write',
+    saveCopy: 'documents:saveCopy',
+    create: 'documents:create',
+  }),
   index: Object.freeze({
     getStatus: 'index:getStatus',
     rebuild: 'index:rebuild',

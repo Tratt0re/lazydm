@@ -44,7 +44,10 @@ async function readCampaign(rootPath, slug) {
   }
 
   const text = await fs.promises.readFile(campaignFilePath, 'utf8');
-  return toCampaign(slug, parseMarkdownDocument(text, { sourcePath: `${slug}/${CAMPAIGN_FILE_NAME}` }));
+  return toCampaign(
+    slug,
+    parseMarkdownDocument(text, { sourcePath: `${slug}/${CAMPAIGN_FILE_NAME}` }),
+  );
 }
 
 /** A campaign is a top-level folder of the vault that contains a `campaign.md` note. */
@@ -91,10 +94,15 @@ async function createCampaign(rootPath, { slug, name, description }) {
   await fs.promises.mkdir(resolveInsideVault(rootPath, slug));
 
   for (const sectionDirName of CAMPAIGN_SECTION_DIR_NAMES) {
-    await fs.promises.mkdir(resolveInsideVault(rootPath, `${slug}/${sectionDirName}`), { recursive: true });
+    await fs.promises.mkdir(resolveInsideVault(rootPath, `${slug}/${sectionDirName}`), {
+      recursive: true,
+    });
   }
 
-  safeWriteFileAtomic(getCampaignFilePath(rootPath, slug), buildCampaignNote({ name, description }));
+  safeWriteFileAtomic(
+    getCampaignFilePath(rootPath, slug),
+    buildCampaignNote({ name, description }),
+  );
   return readCampaign(rootPath, slug);
 }
 

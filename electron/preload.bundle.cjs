@@ -27,6 +27,13 @@ var require_channels = __commonJS({
         skipWait: "cloud:skipWait",
         recheck: "cloud:recheck"
       }),
+      documents: Object.freeze({
+        list: "documents:list",
+        read: "documents:read",
+        write: "documents:write",
+        saveCopy: "documents:saveCopy",
+        create: "documents:create"
+      }),
       index: Object.freeze({
         getStatus: "index:getStatus",
         rebuild: "index:rebuild"
@@ -180,11 +187,18 @@ var require_package = __commonJS({
         "@angular/forms": "^21.1.0",
         "@angular/platform-browser": "^21.1.0",
         "@angular/router": "^21.1.0",
+        "@codemirror/commands": "^6.11.1",
+        "@codemirror/lang-markdown": "^6.5.2",
+        "@codemirror/language": "^6.13.1",
+        "@codemirror/language-data": "^6.5.2",
+        "@codemirror/state": "^6.7.6",
+        "@codemirror/view": "^6.43.14",
         "@ngx-translate/core": "^17.0.0",
         "@ngx-translate/http-loader": "^17.0.0",
         "better-sqlite3": "^12.6.2",
         "class-variance-authority": "^0.7.1",
         clsx: "^2.1.1",
+        dompurify: "^3.4.16",
         echarts: "^6.0.0",
         "embla-carousel-angular": "^21.0.0",
         "embla-carousel-autoplay": "^8.6.0",
@@ -192,6 +206,7 @@ var require_package = __commonJS({
         "embla-carousel-wheel-gestures": "^8.1.0",
         exceljs: "^4.4.0",
         "lucide-angular": "^0.563.0",
+        "markdown-it": "^15.0.2",
         "ngx-echarts": "^21.0.0",
         "ngx-sonner": "^3.1.0",
         rxjs: "~7.8.0",
@@ -206,6 +221,7 @@ var require_package = __commonJS({
         "@angular/compiler-cli": "^21.1.0",
         "@electron/rebuild": "^4.0.3",
         "@tailwindcss/postcss": "^4.1.18",
+        "@types/markdown-it": "^14.2.0",
         "@types/semver": "^7.7.1",
         concurrently: "^9.2.1",
         electron: "^40.4.0",

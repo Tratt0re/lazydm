@@ -45,6 +45,46 @@ function getFileState(relativePath) {
   );
 }
 
+/** Files of a vault folder and its sub-folders, with what the section lists show. */
+function listFolderFiles(folderPath) {
+  const folderPrefix = `${folderPath.replace(/\/+$/, '')}/`;
+  const rows = getVaultIndexDatabase()
+    .prepare(
+      `SELECT f.path, f.name, f.kind, f.type, f.title, f.size, f.mtime_ms,
+              (SELECT group_concat(t.tag, char(31)) FROM tags t WHERE t.file_id = f.id) AS tags
+       FROM files f
+       WHERE substr(f.path, 1, length(?)) = ?
+       ORDER BY f.title COLLATE NOCASE, f.path`,
+    )
+    .all(folderPrefix, folderPrefix);
+
+  return rows.map((row) => ({
+    path: row.path,
+    name: row.name,
+    kind: row.kind,
+    type: row.type,
+    title: row.title,
+    size: row.size,
+    mtimeMs: row.mtime_ms,
+    tags: row.tags ? row.tags.split('\u001f') : [],
+  }));
+}
+
+/** Links written in a file, with the vault path they resolve to (null when broken). */
+function listOutgoingLinks(sourcePath) {
+  return getVaultIndexDatabase()
+    .prepare(
+      `SELECT l.target_raw AS raw, l.kind, l.target_name AS targetName, l.target_heading AS heading,
+              t.path AS resolvedPath
+       FROM links l
+       JOIN files s ON s.id = l.source_file_id
+       LEFT JOIN files t ON t.id = l.target_file_id
+       WHERE s.path = ?
+       ORDER BY l.line, l.id`,
+    )
+    .all(sourcePath);
+}
+
 function countFiles() {
   return getVaultIndexDatabase().prepare('SELECT COUNT(*) AS total FROM files').get().total;
 }
@@ -224,6 +264,8 @@ module.exports = {
   getFileKind,
   getFileState,
   listFileStates,
+  listFolderFiles,
+  listOutgoingLinks,
   resolveLinks,
   saveFile,
   touchFile,
