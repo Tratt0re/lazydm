@@ -85,6 +85,28 @@
         "readOnly": "LazyDM no puede escribir en esta carpeta. Elige una carpeta que puedas editar.",
         "genericTitle": "Algo salió mal"
       }
+    },
+    "sync": {
+      "overlayTitle": "Sincronizando tu vault",
+      "overlayDescription": "{{provider}} está descargando notas que cambiaron en tus otros dispositivos. LazyDM abrirá el vault en cuanto estén en este dispositivo.",
+      "progress": "{{done}} de {{total}} notas descargadas",
+      "skip": "Continuar sin esperar",
+      "pendingTitle": "Algunas notas aún se están sincronizando",
+      "pendingDescription": "{{count}} notas aún no están en este dispositivo. Aparecerán en cuanto {{provider}} las descargue.",
+      "recheck": "Volver a comprobar",
+      "conflictsTitle": "Se encontraron copias en conflicto",
+      "conflictsDescription": "Tu servicio en la nube creó copias de notas editadas a la vez en dos dispositivos. Revísalas y elimina la copia que no necesites:",
+      "conflictsMore": "…y {{count}} más",
+      "dismiss": "Descartar",
+      "errorTitle": "No se pudo comprobar la sincronización del vault",
+      "providers": {
+        "icloud": "iCloud Drive",
+        "box": "Box",
+        "dropbox": "Dropbox",
+        "onedrive": "OneDrive",
+        "google-drive": "Google Drive",
+        "generic": "Tu servicio en la nube"
+      }
     }
   }
 }

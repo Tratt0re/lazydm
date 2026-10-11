@@ -2,6 +2,7 @@ import { Component, computed, HostListener, inject, OnDestroy, OnInit, signal, V
 import { RouterOutlet } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 import { LayoutImports } from '@/shared/components/layout/layout.imports';
+import { VaultSyncStatusComponent } from '@/components/vault-sync-status/vault-sync-status.component';
 import { Header } from '../header/header';
 import { Sidebar } from '../sidebar/sidebar';
 import { Toolbar } from '../toolbar/toolbar';
@@ -18,6 +19,7 @@ import { detectSmallScreenViewport } from '@/shared/utils';
     Header,
     Toolbar,
     Sidebar,
+    VaultSyncStatusComponent,
   ],
   templateUrl: './root-layout.html',
   encapsulation: ViewEncapsulation.None,

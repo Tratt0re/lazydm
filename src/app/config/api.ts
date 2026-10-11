@@ -15,6 +15,7 @@ export enum APIChannel {
   APP_META = 'appMeta',
   CAMPAIGNS = 'campaigns',
   CHARACTERS = 'characters',
+  CLOUD = 'cloud',
   ENCOUNTERS = 'encounters',
   VAULT = 'vault',
   WINDOW = 'window',
@@ -30,6 +31,11 @@ export interface ElectronIpcClient {
   };
   readonly characters: {
     readonly list: OptionalIpcRequest<void, { rows: any[] }>;
+  };
+  readonly cloud: {
+    readonly getStatus: OptionalIpcRequest<void, DTO.CloudReadinessStatusDto>;
+    readonly skipWait: OptionalIpcRequest<void, DTO.CloudReadinessStatusDto>;
+    readonly recheck: OptionalIpcRequest<void, DTO.CloudReadinessStatusDto>;
   };
   readonly encounters: {
     readonly list: OptionalIpcRequest<void, { rows: any[] }>;

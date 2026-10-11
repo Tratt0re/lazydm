@@ -85,6 +85,28 @@
         "readOnly": "LazyDM kann in diesen Ordner nicht schreiben. Wähle einen Ordner, den du bearbeiten kannst.",
         "genericTitle": "Etwas ist schiefgelaufen"
       }
+    },
+    "sync": {
+      "overlayTitle": "Vault wird synchronisiert",
+      "overlayDescription": "{{provider}} lädt Notizen herunter, die auf deinen anderen Geräten geändert wurden. LazyDM öffnet den Vault, sobald sie auf diesem Gerät sind.",
+      "progress": "{{done}} von {{total}} Notizen heruntergeladen",
+      "skip": "Ohne Warten fortfahren",
+      "pendingTitle": "Einige Notizen werden noch synchronisiert",
+      "pendingDescription": "{{count}} Notizen sind noch nicht auf diesem Gerät. Sie erscheinen, sobald {{provider}} sie heruntergeladen hat.",
+      "recheck": "Erneut prüfen",
+      "conflictsTitle": "Konfliktkopien gefunden",
+      "conflictsDescription": "Dein Cloud-Dienst hat Kopien von Notizen erstellt, die gleichzeitig auf zwei Geräten bearbeitet wurden. Prüfe sie und lösche die Kopie, die du nicht brauchst:",
+      "conflictsMore": "…und {{count}} weitere",
+      "dismiss": "Ausblenden",
+      "errorTitle": "Vault-Synchronisierung konnte nicht geprüft werden",
+      "providers": {
+        "icloud": "iCloud Drive",
+        "box": "Box",
+        "dropbox": "Dropbox",
+        "onedrive": "OneDrive",
+        "google-drive": "Google Drive",
+        "generic": "Dein Cloud-Dienst"
+      }
     }
   }
 }

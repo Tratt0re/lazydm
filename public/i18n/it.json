@@ -85,6 +85,28 @@
         "readOnly": "LazyDM non può scrivere in questa cartella. Scegli una cartella modificabile.",
         "genericTitle": "Qualcosa è andato storto"
       }
+    },
+    "sync": {
+      "overlayTitle": "Sincronizzazione del vault",
+      "overlayDescription": "{{provider}} sta scaricando le note modificate sugli altri dispositivi. LazyDM aprirà il vault non appena saranno su questo dispositivo.",
+      "progress": "{{done}} di {{total}} note scaricate",
+      "skip": "Continua senza attendere",
+      "pendingTitle": "Alcune note sono ancora in sincronizzazione",
+      "pendingDescription": "{{count}} note non sono ancora su questo dispositivo. Appariranno appena {{provider}} le avrà scaricate.",
+      "recheck": "Controlla di nuovo",
+      "conflictsTitle": "Trovate copie in conflitto",
+      "conflictsDescription": "Il tuo servizio cloud ha creato copie di note modificate contemporaneamente su due dispositivi. Controllale ed elimina la copia che non ti serve:",
+      "conflictsMore": "…e altre {{count}}",
+      "dismiss": "Ignora",
+      "errorTitle": "Impossibile verificare la sincronizzazione del vault",
+      "providers": {
+        "icloud": "iCloud Drive",
+        "box": "Box",
+        "dropbox": "Dropbox",
+        "onedrive": "OneDrive",
+        "google-drive": "Google Drive",
+        "generic": "Il tuo servizio cloud"
+      }
     }
   }
 }

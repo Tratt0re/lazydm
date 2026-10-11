@@ -85,6 +85,28 @@
         "readOnly": "LazyDM 无法写入此文件夹。请选择一个可编辑的文件夹。",
         "genericTitle": "出现问题"
       }
+    },
+    "sync": {
+      "overlayTitle": "正在同步资料库",
+      "overlayDescription": "{{provider}} 正在下载你在其他设备上修改过的笔记。笔记下载到本设备后，LazyDM 就会打开资料库。",
+      "progress": "已下载 {{done}} / {{total}} 条笔记",
+      "skip": "不等待，继续",
+      "pendingTitle": "部分笔记仍在同步",
+      "pendingDescription": "还有 {{count}} 条笔记不在本设备上。{{provider}} 下载完成后它们就会出现。",
+      "recheck": "重新检查",
+      "conflictsTitle": "发现冲突副本",
+      "conflictsDescription": "你的云服务为同时在两台设备上编辑的笔记创建了副本。请检查并删除不需要的副本：",
+      "conflictsMore": "……另有 {{count}} 个",
+      "dismiss": "忽略",
+      "errorTitle": "无法检查资料库同步状态",
+      "providers": {
+        "icloud": "iCloud Drive",
+        "box": "Box",
+        "dropbox": "Dropbox",
+        "onedrive": "OneDrive",
+        "google-drive": "Google Drive",
+        "generic": "你的云服务"
+      }
     }
   }
 }
