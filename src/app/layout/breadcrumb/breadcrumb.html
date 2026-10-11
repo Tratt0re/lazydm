@@ -6,7 +6,7 @@
     }
 
     <nav [attr.aria-label]="'breadcrumb.ariaLabel' | translate" class="min-w-0">
-      <ol class="flex items-center gap-2 overflow-hidden text-sm text-muted-foreground">
+      <ol class="flex items-center gap-2 overflow-hidden text-[10px] tracking-[0.12em] text-muted-foreground uppercase">
         @for (item of items(); track item.path ?? item.label; let isLast = $last) {
           <li class="flex items-center gap-2">
             @if (item.path && !isLast) {

@@ -214,6 +214,13 @@
   --color-success: var(--success);
 }
 
+@utility bg-arc-grid {
+  background-image:
+    linear-gradient(color-mix(in oklch, var(--foreground) 4%, transparent) 1px, transparent 1px),
+    linear-gradient(90deg, color-mix(in oklch, var(--foreground) 4%, transparent) 1px, transparent 1px);
+  background-size: 35px 35px;
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;

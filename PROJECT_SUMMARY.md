@@ -35,7 +35,7 @@ The **LazyDM** scaffolding project has been successfully created with all necess
 5. **Settings Page** (`/settings`) - Empty placeholder for settings
 
 ### Shared Component Library (~60 Components)
-Complete "ArcTech" UI component library including:
+Complete "ArcTechUI" component library (Techno-Brutalism / Retro-Futurism style) including:
 - Form controls (Button, Input, Select, Checkbox, Switch, etc.)
 - Data display (Table, Badge, Alert, Empty, Loader, etc.)
 - Overlays (Dialog, Sheet, Popover, Tooltip, Dropdown, etc.)
@@ -59,8 +59,8 @@ Complete "ArcTech" UI component library including:
 - ✅ ECharts configuration
 
 ### Assets
-- ✅ Manrope font family (complete)
-- ✅ JetBrains Mono font family (complete)
+- ✅ Barlow Condensed font family (display, 500–900)
+- ✅ IBM Plex Mono font family (base, 400–700)
 - ✅ Icon assets structure
 - ✅ Styles directory
 

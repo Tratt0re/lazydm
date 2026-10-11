@@ -40,7 +40,9 @@
       } @else if (!hasItemNavigation() && title(); as title) {
         <div class="flex min-w-0 items-center gap-2">
           <arc-divider arcOrientation="vertical" arcSpacing="sm" class="h-6"></arc-divider>
-          <h1 class="truncate text-lg font-semibold tracking-tight">{{ title | translate }}</h1>
+          <h1 class="truncate font-display text-3xl leading-none font-extrabold tracking-[0.02em] uppercase">
+            {{ title | translate }}
+          </h1>
         </div>
       }
 

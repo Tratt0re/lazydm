@@ -5,8 +5,8 @@ import { TranslatePipe } from '@ngx-translate/core';
   selector: 'app-settings-section-header',
   imports: [TranslatePipe],
   template: `
-    <header class="border-b border-border/60 pb-4">
-      <h2 class="text-lg font-semibold tracking-tight">
+    <header class="border-b border-border pb-4">
+      <h2 class="font-display text-3xl leading-none font-extrabold tracking-[0.02em] uppercase">
         {{ titleKey() | translate }}
       </h2>
       <p class="mt-1 text-sm text-muted-foreground">

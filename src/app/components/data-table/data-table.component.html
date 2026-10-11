@@ -4,7 +4,7 @@
       @if (title() || description() || visibleActiveFilters().length > 0) {
         <div class="flex min-w-0 flex-1 flex-col gap-1">
           @if (title()) {
-            <h2 class="text-xl font-semibold tracking-tight">{{ title() | translate }}</h2>
+            <h2 class="font-display text-3xl leading-none font-extrabold tracking-[0.02em] uppercase">{{ title() | translate }}</h2>
           }
           @if (description()) {
             <p class="text-sm text-muted-foreground">{{ description() | translate }}</p>
@@ -12,7 +12,7 @@
           @if (visibleActiveFilters().length > 0) {
             <div class="flex flex-wrap items-center gap-2 pt-1">
               @for (activeFilter of visibleActiveFilters(); track activeFilter.id) {
-                <arc-badge arcType="filter" arcShape="pill" class="max-w-full gap-1.5">
+                <arc-badge arcType="filter" class="max-w-full gap-1.5">
                   @if (activeFilter.icon; as activeFilterIcon) {
                     <arc-icon [arcType]="activeFilterIcon" class="size-3 shrink-0" />
                   }
@@ -20,7 +20,7 @@
                   @if (isActiveFilterRemovable(activeFilter)) {
                     <button
                       type="button"
-                      class="inline-flex size-4 shrink-0 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-foreground/10 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                      class="inline-flex size-4 shrink-0 items-center justify-center rounded-none text-muted-foreground transition-colors hover:bg-foreground/10 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                       [attr.aria-label]="activeFilterRemoveLabel(activeFilter)"
                       [attr.title]="activeFilterRemoveLabel(activeFilter)"
                       (click)="onActiveFilterRemove($event, activeFilter)"

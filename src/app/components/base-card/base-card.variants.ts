@@ -2,7 +2,7 @@ import { cva } from 'class-variance-authority';
 
 import { mergeClasses } from '@/shared/utils/merge-classes';
 
-export const baseCardVariants = cva('bg-card text-card-foreground flex flex-col gap-6 rounded-xl border py-6 shadow-sm');
+export const baseCardVariants = cva('bg-card text-card-foreground flex flex-col gap-6 rounded-none border py-6');
 
 export const baseCardHeaderVariants = cva(
   mergeClasses('@container/card-header items-start gap-2 px-6', '[.border-b]:pb-6'),
@@ -19,7 +19,7 @@ export const baseCardHeaderVariants = cva(
   },
 );
 
-export const baseCardTitleVariants = cva('leading-none font-semibold', {
+export const baseCardTitleVariants = cva('text-xs leading-none font-bold uppercase tracking-[0.08em]', {
   variants: {
     variant: {
       default: '',

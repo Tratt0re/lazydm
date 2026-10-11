@@ -92,7 +92,7 @@ export class Sidebar {
 
   protected navItemClasses(isActive: boolean): string {
     return mergeClasses(
-      'flex h-9 items-center rounded-md px-3 text-sm transition-colors',
+      'flex h-10 items-center rounded-none px-3 text-xs font-semibold uppercase tracking-[0.06em] transition-colors',
       this.sidebarCollapsed() ? 'justify-center' : 'justify-start gap-3',
       isActive
         ? 'bg-sidebar-primary text-sidebar-primary-foreground'
