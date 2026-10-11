@@ -1,0 +1,39 @@
+@if (errorMessage(); as message) {
+  <div class="mx-auto w-full max-w-5xl p-6">
+    <arc-alert
+      arcType="destructive"
+      arcIcon="circle-alert"
+      [arcTitle]="'document.loadError' | translate"
+      [arcDescription]="message"
+    />
+  </div>
+} @else if (!isLoading()) {
+  <div class="flex h-full min-h-0 flex-col gap-2 p-4">
+    @if (isDirty()) {
+      <p class="shrink-0 text-[10px] font-semibold tracking-[0.12em] text-primary uppercase">
+        {{ 'document.unsavedChanges' | translate }}
+      </p>
+    }
+
+    <div class="min-h-0 flex-1">
+      <app-code-editor
+        #editor
+        [hidden]="mode() !== 'write'"
+        class="h-full"
+        [documentKey]="notePath()"
+        [initialContent]="document()?.content ?? ''"
+        [placeholderText]="'document.editorPlaceholder' | translate"
+        (contentChange)="editedContent.set($event)"
+        (saveRequested)="save()"
+      />
+      @if (mode() === 'preview') {
+        <app-document-preview
+          class="h-full"
+          [body]="previewBody()"
+          [links]="document()?.links ?? []"
+          [sourcePath]="document()?.path ?? ''"
+        />
+      }
+    </div>
+  </div>
+}

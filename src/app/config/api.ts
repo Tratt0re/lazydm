@@ -16,6 +16,7 @@ export enum APIChannel {
   CAMPAIGNS = 'campaigns',
   CHARACTERS = 'characters',
   CLOUD = 'cloud',
+  DOCUMENTS = 'documents',
   ENCOUNTERS = 'encounters',
   VAULT = 'vault',
   WINDOW = 'window',
@@ -38,6 +39,13 @@ export interface ElectronIpcClient {
     readonly getStatus: OptionalIpcRequest<void, DTO.CloudReadinessStatusDto>;
     readonly skipWait: OptionalIpcRequest<void, DTO.CloudReadinessStatusDto>;
     readonly recheck: OptionalIpcRequest<void, DTO.CloudReadinessStatusDto>;
+  };
+  readonly documents: {
+    readonly list: IpcRequest<DTO.ListDocumentsPayload, { rows: DTO.DocumentFileListItemDto[] }>;
+    readonly read: IpcRequest<DTO.ReadDocumentPayload, DTO.DocumentDto>;
+    readonly write: IpcRequest<DTO.WriteDocumentPayload, DTO.WriteDocumentResultDto>;
+    readonly saveCopy: IpcRequest<DTO.SaveDocumentCopyPayload, DTO.DocumentDto>;
+    readonly create: IpcRequest<DTO.CreateDocumentPayload, DTO.DocumentDto>;
   };
   readonly encounters: {
     readonly list: OptionalIpcRequest<void, { rows: any[] }>;

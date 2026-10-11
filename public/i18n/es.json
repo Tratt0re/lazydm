@@ -156,7 +156,39 @@
       },
       "assets": {
         "description": "Imágenes, mapas, PDF y sonidos."
-      }
+      },
+      "newNote": {
+        "create": "Nueva nota",
+        "title": "Nueva nota",
+        "titleLabel": "Título",
+        "titlePlaceholder": "Jefe goblin",
+        "submit": "Crear nota",
+        "cancel": "Cancelar"
+      },
+      "loadError": "No se pudo cargar esta sección"
+    }
+  },
+  "document": {
+    "loadError": "No se pudo cargar esta nota",
+    "unsavedChanges": "Cambios sin guardar",
+    "editorPlaceholder": "Empieza a escribir…",
+    "toolbar": {
+      "write": "Escribir",
+      "preview": "Vista previa",
+      "save": "Guardar",
+      "modeAriaLabel": "Alternar entre escribir y leer esta nota"
+    },
+    "toast": {
+      "saved": "Nota guardada",
+      "saveError": "No se pudo guardar la nota",
+      "savedCopy": "Guardada como copia: {{path}}"
+    },
+    "conflict": {
+      "title": "Esta nota cambió en otro lugar",
+      "description": "Alguien —quizás tú, desde otro dispositivo— guardó una versión más reciente de esta nota mientras la editabas. Elige qué hacer con tus cambios.",
+      "keepMine": "Mantener mi versión",
+      "saveCopy": "Guardar como copia",
+      "reload": "Recargar la otra versión"
     }
   }
 }

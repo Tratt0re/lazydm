@@ -1,0 +1,65 @@
+@if (section(); as section) {
+  <div class="mx-auto flex w-full max-w-5xl flex-col gap-4 p-6">
+    @if (section.noteType) {
+      <div class="flex justify-end">
+        <button arc-button type="button" (click)="openCreateSheet()">
+          <arc-icon arcType="plus" />
+          {{ 'campaigns.sections.newNote.create' | translate }}
+        </button>
+      </div>
+    }
+
+    @if (errorMessage(); as message) {
+      <arc-alert
+        arcType="destructive"
+        arcIcon="circle-alert"
+        [arcTitle]="'campaigns.sections.loadError' | translate"
+        [arcDescription]="message"
+      />
+    }
+
+    @if (!isLoading() && !errorMessage()) {
+      @if (files().length === 0) {
+        <arc-empty
+          class="border border-dashed border-border bg-card/60"
+          [arcIcon]="section.icon"
+          [arcTitle]="'campaigns.sections.emptyTitle' | translate: { section: (sectionLabelKey() | translate) }"
+          [arcDescription]="'campaigns.sections.emptyDescription' | translate: { folder: folderPath() }"
+        />
+      } @else {
+        <ul class="flex flex-col border border-border bg-card">
+          @for (file of files(); track file.path) {
+            <li class="border-b border-border last:border-b-0">
+              @if (file.kind === 'md') {
+                <a
+                  [routerLink]="['/campaigns', campaignSlug(), section.key, toNoteSlug(file)]"
+                  class="flex items-center justify-between gap-4 p-4 transition-colors hover:bg-accent/60 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-ring"
+                >
+                  <span class="flex min-w-0 items-center gap-3">
+                    <arc-icon arcType="file-text" class="size-4 shrink-0 text-primary" />
+                    <span class="truncate text-sm font-semibold">{{ file.title }}</span>
+                  </span>
+                  @if (file.tags.length > 0) {
+                    <span class="hidden shrink-0 truncate text-[10px] font-semibold tracking-[0.1em] text-muted-foreground uppercase sm:block">
+                      {{ file.tags.join(' · ') }}
+                    </span>
+                  }
+                </a>
+              } @else {
+                <div class="flex items-center justify-between gap-4 p-4 text-muted-foreground">
+                  <span class="flex min-w-0 items-center gap-3">
+                    <arc-icon arcType="image" class="size-4 shrink-0" />
+                    <span class="truncate text-sm">{{ file.name }}</span>
+                  </span>
+                  <span class="shrink-0 text-[10px] font-semibold tracking-[0.1em] uppercase">
+                    {{ formatFileSize(file.size) }}
+                  </span>
+                </div>
+              }
+            </li>
+          }
+        </ul>
+      }
+    }
+  </div>
+}

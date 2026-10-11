@@ -17,16 +17,18 @@ export interface CampaignSectionConfig {
   /** Folder name of the section inside the campaign, also used as the route segment. */
   readonly key: string;
   readonly icon: ArcTechIcon;
+  /** `frontmatter.type` given to notes created in this section; null for the assets section (no notes). */
+  readonly noteType: string | null;
 }
 
 /** Default folders of a campaign, in sidebar order (the Electron side creates the same folders). */
 export const CAMPAIGN_SECTIONS: readonly CampaignSectionConfig[] = [
-  { key: 'scenes', icon: 'clapperboard' },
-  { key: 'characters', icon: 'users' },
-  { key: 'monsters', icon: 'skull' },
-  { key: 'encounters', icon: 'swords' },
-  { key: 'sessions', icon: 'calendar' },
-  { key: 'assets', icon: 'image' },
+  { key: 'scenes', icon: 'clapperboard', noteType: 'scene' },
+  { key: 'characters', icon: 'users', noteType: 'character' },
+  { key: 'monsters', icon: 'skull', noteType: 'monster' },
+  { key: 'encounters', icon: 'swords', noteType: 'encounter' },
+  { key: 'sessions', icon: 'calendar', noteType: 'session' },
+  { key: 'assets', icon: 'image', noteType: null },
 ];
 
 export class MenuConfiguration {

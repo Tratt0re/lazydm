@@ -156,7 +156,39 @@
       },
       "assets": {
         "description": "Images, cartes, PDF et sons."
-      }
+      },
+      "newNote": {
+        "create": "Nouvelle note",
+        "title": "Nouvelle note",
+        "titleLabel": "Titre",
+        "titlePlaceholder": "Chef gobelin",
+        "submit": "Créer la note",
+        "cancel": "Annuler"
+      },
+      "loadError": "Impossible de charger cette section"
+    }
+  },
+  "document": {
+    "loadError": "Impossible de charger cette note",
+    "unsavedChanges": "Modifications non enregistrées",
+    "editorPlaceholder": "Commencez à écrire…",
+    "toolbar": {
+      "write": "Écrire",
+      "preview": "Aperçu",
+      "save": "Enregistrer",
+      "modeAriaLabel": "Basculer entre écriture et lecture de cette note"
+    },
+    "toast": {
+      "saved": "Note enregistrée",
+      "saveError": "Impossible d'enregistrer la note",
+      "savedCopy": "Enregistrée comme copie : {{path}}"
+    },
+    "conflict": {
+      "title": "Cette note a changé ailleurs",
+      "description": "Quelqu'un — peut-être vous, depuis un autre appareil — a enregistré une version plus récente de cette note pendant que vous la modifiiez. Choisissez quoi faire de vos modifications.",
+      "keepMine": "Garder ma version",
+      "saveCopy": "Enregistrer comme copie",
+      "reload": "Recharger l'autre version"
     }
   }
 }

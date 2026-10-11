@@ -156,7 +156,39 @@
       },
       "assets": {
         "description": "Images, maps, PDFs and sounds."
-      }
+      },
+      "newNote": {
+        "create": "New note",
+        "title": "New note",
+        "titleLabel": "Title",
+        "titlePlaceholder": "Goblin Boss",
+        "submit": "Create note",
+        "cancel": "Cancel"
+      },
+      "loadError": "Couldn't load this section"
+    }
+  },
+  "document": {
+    "loadError": "Couldn't load this note",
+    "unsavedChanges": "Unsaved changes",
+    "editorPlaceholder": "Start writing…",
+    "toolbar": {
+      "write": "Write",
+      "preview": "Preview",
+      "save": "Save",
+      "modeAriaLabel": "Switch between writing and reading this note"
+    },
+    "toast": {
+      "saved": "Note saved",
+      "saveError": "Couldn't save the note",
+      "savedCopy": "Saved as a copy: {{path}}"
+    },
+    "conflict": {
+      "title": "This note changed elsewhere",
+      "description": "Someone — maybe you, on another device — saved a newer version of this note while you were editing. Choose what to do with your changes.",
+      "keepMine": "Keep my version",
+      "saveCopy": "Save as a copy",
+      "reload": "Reload the other version"
     }
   }
 }

@@ -156,7 +156,39 @@
       },
       "assets": {
         "description": "Bilder, Karten, PDFs und Sounds."
-      }
+      },
+      "newNote": {
+        "create": "Neue Notiz",
+        "title": "Neue Notiz",
+        "titleLabel": "Titel",
+        "titlePlaceholder": "Goblin-Boss",
+        "submit": "Notiz erstellen",
+        "cancel": "Abbrechen"
+      },
+      "loadError": "Dieser Bereich konnte nicht geladen werden"
+    }
+  },
+  "document": {
+    "loadError": "Diese Notiz konnte nicht geladen werden",
+    "unsavedChanges": "Nicht gespeicherte Änderungen",
+    "editorPlaceholder": "Beginne zu schreiben…",
+    "toolbar": {
+      "write": "Schreiben",
+      "preview": "Vorschau",
+      "save": "Speichern",
+      "modeAriaLabel": "Zwischen Schreiben und Lesen dieser Notiz wechseln"
+    },
+    "toast": {
+      "saved": "Notiz gespeichert",
+      "saveError": "Notiz konnte nicht gespeichert werden",
+      "savedCopy": "Als Kopie gespeichert: {{path}}"
+    },
+    "conflict": {
+      "title": "Diese Notiz hat sich anderswo geändert",
+      "description": "Jemand — vielleicht du, auf einem anderen Gerät — hat eine neuere Version dieser Notiz gespeichert, während du sie bearbeitet hast. Wähle, was mit deinen Änderungen passieren soll.",
+      "keepMine": "Meine Version behalten",
+      "saveCopy": "Als Kopie speichern",
+      "reload": "Andere Version neu laden"
     }
   }
 }

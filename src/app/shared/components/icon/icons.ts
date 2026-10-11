@@ -127,6 +127,12 @@ import {
   Clapperboard,
   ImageIcon,
   Skull,
+  FileText,
+  Save,
+  Eye,
+  Link,
+  RotateCcw,
+  CopyPlus,
 } from 'lucide-angular';
 
 export const ARCTECH_ICONS = {
@@ -257,6 +263,12 @@ export const ARCTECH_ICONS = {
   clapperboard: Clapperboard,
   image: ImageIcon,
   skull: Skull,
+  'file-text': FileText,
+  save: Save,
+  eye: Eye,
+  link: Link,
+  'rotate-ccw': RotateCcw,
+  'copy-plus': CopyPlus,
 } as const satisfies Record<string, LucideIconData>;
 
 export declare type ArcTechIcon = keyof typeof ARCTECH_ICONS | LucideIconData;

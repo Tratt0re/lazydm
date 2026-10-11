@@ -36,10 +36,21 @@ export const routes: Routes = [
               },
               {
                 path: ':section',
-                loadComponent: () =>
-                  import('./pages/campaign-section-page/campaign-section-page').then(
-                    (m) => m.CampaignSectionPage,
-                  ),
+                children: [
+                  {
+                    path: '',
+                    pathMatch: 'full',
+                    loadComponent: () =>
+                      import('./pages/campaign-section-page/campaign-section-page').then(
+                        (m) => m.CampaignSectionPage,
+                      ),
+                  },
+                  {
+                    path: ':note',
+                    loadComponent: () =>
+                      import('./pages/document-page/document-page').then((m) => m.DocumentPage),
+                  },
+                ],
               },
             ],
           },

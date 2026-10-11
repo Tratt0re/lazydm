@@ -156,7 +156,39 @@
       },
       "assets": {
         "description": "Immagini, mappe, PDF e suoni."
-      }
+      },
+      "newNote": {
+        "create": "Nuova nota",
+        "title": "Nuova nota",
+        "titleLabel": "Titolo",
+        "titlePlaceholder": "Capo dei Goblin",
+        "submit": "Crea nota",
+        "cancel": "Annulla"
+      },
+      "loadError": "Impossibile caricare questa sezione"
+    }
+  },
+  "document": {
+    "loadError": "Impossibile caricare questa nota",
+    "unsavedChanges": "Modifiche non salvate",
+    "editorPlaceholder": "Inizia a scrivere…",
+    "toolbar": {
+      "write": "Scrivi",
+      "preview": "Anteprima",
+      "save": "Salva",
+      "modeAriaLabel": "Passa tra scrittura e lettura di questa nota"
+    },
+    "toast": {
+      "saved": "Nota salvata",
+      "saveError": "Impossibile salvare la nota",
+      "savedCopy": "Salvata come copia: {{path}}"
+    },
+    "conflict": {
+      "title": "Questa nota è cambiata altrove",
+      "description": "Qualcuno — forse tu, da un altro dispositivo — ha salvato una versione più recente di questa nota mentre la stavi modificando. Scegli cosa fare con le tue modifiche.",
+      "keepMine": "Mantieni la mia versione",
+      "saveCopy": "Salva come copia",
+      "reload": "Ricarica l'altra versione"
     }
   }
 }
