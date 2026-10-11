@@ -46,73 +46,6 @@ function safeWriteFileAtomic(filePath, content) {
   return normalizedPath;
 }
 
-function safeReplaceFileWithBackup(oldPath, newPath, backupSuffix) {
-  if (typeof oldPath !== 'string' || oldPath.trim().length === 0) {
-    throw new Error('oldPath must be a non-empty string.');
-  }
-
-  if (typeof newPath !== 'string' || newPath.trim().length === 0) {
-    throw new Error('newPath must be a non-empty string.');
-  }
-
-  if (typeof backupSuffix !== 'string' || backupSuffix.trim().length === 0) {
-    throw new Error('backupSuffix must be a non-empty string.');
-  }
-
-  const sourcePath = newPath.trim();
-  const targetPath = oldPath.trim();
-
-  if (!fs.existsSync(sourcePath)) {
-    throw new Error(`Source file not found: ${sourcePath}`);
-  }
-
-  const targetDirectoryPath = path.dirname(targetPath);
-  fs.mkdirSync(targetDirectoryPath, { recursive: true });
-
-  const extension = path.extname(targetPath) || '.sqlite';
-  const basePreviousLocalCopyPath = path.join(
-    targetDirectoryPath,
-    `db-local-prev-${backupSuffix.trim()}${extension}`,
-  );
-  let previousLocalCopyPath = basePreviousLocalCopyPath;
-  let previousCopyIndex = 1;
-  while (fs.existsSync(previousLocalCopyPath)) {
-    previousLocalCopyPath = path.join(
-      targetDirectoryPath,
-      `db-local-prev-${backupSuffix.trim()}-${previousCopyIndex}${extension}`,
-    );
-    previousCopyIndex += 1;
-  }
-  const targetWalPath = `${targetPath}-wal`;
-  const targetShmPath = `${targetPath}-shm`;
-  let movedExistingFile = false;
-
-  if (fs.existsSync(targetPath)) {
-    fs.renameSync(targetPath, previousLocalCopyPath);
-    movedExistingFile = true;
-  }
-
-  if (fs.existsSync(targetWalPath)) {
-    fs.unlinkSync(targetWalPath);
-  }
-
-  if (fs.existsSync(targetShmPath)) {
-    fs.unlinkSync(targetShmPath);
-  }
-
-  try {
-    fs.copyFileSync(sourcePath, targetPath);
-  } catch (error) {
-    if (movedExistingFile && !fs.existsSync(targetPath) && fs.existsSync(previousLocalCopyPath)) {
-      fs.renameSync(previousLocalCopyPath, targetPath);
-    }
-
-    throw error;
-  }
-
-  return movedExistingFile ? previousLocalCopyPath : null;
-}
-
 function listFilesSortedByMtime(directoryPath, options = {}) {
   if (typeof directoryPath !== 'string' || directoryPath.trim().length === 0) {
     throw new Error('directoryPath must be a non-empty string.');
@@ -156,6 +89,5 @@ function listFilesSortedByMtime(directoryPath, options = {}) {
 module.exports = {
   formatTimestampForFilename,
   listFilesSortedByMtime,
-  safeReplaceFileWithBackup,
   safeWriteFileAtomic,
 };
