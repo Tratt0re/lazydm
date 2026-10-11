@@ -2,20 +2,20 @@ import { makeEnvironmentProviders, type EnvironmentProviders, inject, provideApp
 import { EVENT_MANAGER_PLUGINS } from '@angular/platform-browser';
 
 import { LocalPreferencesService } from '@/services/local-preferences.service';
-import { ZardDebounceEventManagerPlugin } from './event-manager-plugins/zard-debounce-event-manager-plugin';
-import { ZardEventManagerPlugin } from './event-manager-plugins/zard-event-manager-plugin';
-import { ZardDarkMode } from '../../services/dark-mode';
+import { ArcTechDebounceEventManagerPlugin } from './event-manager-plugins/arctech-debounce-event-manager-plugin';
+import { ArcTechEventManagerPlugin } from './event-manager-plugins/arctech-event-manager-plugin';
+import { ArcTechDarkMode } from '../../services/dark-mode';
 
-export function provideZard(): EnvironmentProviders {
+export function provideArcTech(): EnvironmentProviders {
   const eventManagerPlugins = [
     {
       provide: EVENT_MANAGER_PLUGINS,
-      useClass: ZardEventManagerPlugin,
+      useClass: ArcTechEventManagerPlugin,
       multi: true,
     },
     {
       provide: EVENT_MANAGER_PLUGINS,
-      useClass: ZardDebounceEventManagerPlugin,
+      useClass: ArcTechDebounceEventManagerPlugin,
       multi: true,
     },
   ];
@@ -23,7 +23,7 @@ export function provideZard(): EnvironmentProviders {
   return makeEnvironmentProviders([
     provideAppInitializer(() => {
       const localPreferencesService = inject(LocalPreferencesService);
-      const darkModeService = inject(ZardDarkMode);
+      const darkModeService = inject(ArcTechDarkMode);
 
       try {
         localPreferencesService.init();

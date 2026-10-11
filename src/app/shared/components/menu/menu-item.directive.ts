@@ -6,10 +6,10 @@ import type { ClassValue } from 'clsx';
 
 import { mergeClasses } from '@/shared/utils/merge-classes';
 
-import { menuItemVariants, type ZardMenuItemTypeVariants } from './menu.variants';
+import { menuItemVariants, type ArcTechMenuItemTypeVariants } from './menu.variants';
 
 @Directive({
-  selector: 'button[z-menu-item], [z-menu-item]',
+  selector: 'button[arc-menu-item], [arc-menu-item]',
   host: {
     '[class]': 'classes()',
     '[attr.data-orientation]': "'horizontal'",
@@ -31,17 +31,17 @@ import { menuItemVariants, type ZardMenuItemTypeVariants } from './menu.variants
     },
   ],
 })
-export class ZardMenuItemDirective {
+export class ArcTechMenuItemDirective {
   private readonly cdkMenuItem = inject(CdkMenuItem, { host: true });
 
-  readonly zDisabled = input<boolean, BooleanInput>(false, { transform: booleanAttribute });
-  readonly zInset = input<boolean, BooleanInput>(false, { transform: booleanAttribute });
-  readonly zType = input<ZardMenuItemTypeVariants>('default');
+  readonly arcDisabled = input<boolean, BooleanInput>(false, { transform: booleanAttribute });
+  readonly arcInset = input<boolean, BooleanInput>(false, { transform: booleanAttribute });
+  readonly arcType = input<ArcTechMenuItemTypeVariants>('default');
   readonly class = input<ClassValue>('');
 
   private readonly isFocused = signal(false);
 
-  protected readonly disabledState = computed(() => this.zDisabled());
+  protected readonly disabledState = computed(() => this.arcDisabled());
 
   protected readonly isOpenState = computed(() => this.cdkMenuItem.isMenuOpen());
 
@@ -50,8 +50,8 @@ export class ZardMenuItemDirective {
   protected readonly classes = computed(() =>
     mergeClasses(
       menuItemVariants({
-        inset: this.zInset(),
-        zType: this.zType(),
+        inset: this.arcInset(),
+        arcType: this.arcType(),
       }),
       this.class(),
     ),
@@ -59,7 +59,7 @@ export class ZardMenuItemDirective {
 
   constructor() {
     effect(() => {
-      const disabled = this.zDisabled();
+      const disabled = this.arcDisabled();
       untracked(() => {
         this.cdkMenuItem.disabled = disabled;
       });
@@ -67,7 +67,7 @@ export class ZardMenuItemDirective {
   }
 
   onFocus(): void {
-    if (!this.zDisabled()) {
+    if (!this.arcDisabled()) {
       this.isFocused.set(true);
     }
   }
@@ -81,7 +81,7 @@ export class ZardMenuItemDirective {
       return;
     }
 
-    if (!this.zDisabled()) {
+    if (!this.arcDisabled()) {
       const item = event.currentTarget;
       (item as HTMLElement)?.focus({ preventScroll: true });
     }

@@ -5,38 +5,38 @@ import { LucideAngularModule } from 'lucide-angular';
 
 import { mergeClasses } from '@/shared/utils/merge-classes';
 
-import { iconVariants, type ZardIconSizeVariants } from './icon.variants';
-import { ZARD_ICONS, type ZardIcon } from './icons';
+import { iconVariants, type ArcTechIconSizeVariants } from './icon.variants';
+import { ARCTECH_ICONS, type ArcTechIcon } from './icons';
 
 @Component({
-  selector: 'z-icon, [z-icon]',
+  selector: 'arc-icon, [arc-icon]',
   imports: [LucideAngularModule],
   template: `
     <lucide-angular
       [img]="icon()"
-      [strokeWidth]="zStrokeWidth()"
-      [absoluteStrokeWidth]="zAbsoluteStrokeWidth()"
+      [strokeWidth]="arcStrokeWidth()"
+      [absoluteStrokeWidth]="arcAbsoluteStrokeWidth()"
       [class]="classes()"
     />
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
 })
-export class ZardIconComponent {
-  readonly zType = input.required<ZardIcon>();
-  readonly zSize = input<ZardIconSizeVariants>('default');
-  readonly zStrokeWidth = input<number>(2);
-  readonly zAbsoluteStrokeWidth = input<boolean>(false);
+export class ArcTechIconComponent {
+  readonly arcType = input.required<ArcTechIcon>();
+  readonly arcSize = input<ArcTechIconSizeVariants>('default');
+  readonly arcStrokeWidth = input<number>(2);
+  readonly arcAbsoluteStrokeWidth = input<boolean>(false);
   readonly class = input<ClassValue>('');
 
   protected readonly classes = computed(() =>
-    mergeClasses(iconVariants({ zSize: this.zSize() }), this.class(), this.zStrokeWidth() === 0 ? 'stroke-none' : ''),
+    mergeClasses(iconVariants({ arcSize: this.arcSize() }), this.class(), this.arcStrokeWidth() === 0 ? 'stroke-none' : ''),
   );
 
   protected readonly icon = computed(() => {
-    const type = this.zType();
+    const type = this.arcType();
     if (typeof type === 'string') {
-      return ZARD_ICONS[type] ?? ZARD_ICONS.circle;
+      return ARCTECH_ICONS[type] ?? ARCTECH_ICONS.circle;
     }
 
     return type;

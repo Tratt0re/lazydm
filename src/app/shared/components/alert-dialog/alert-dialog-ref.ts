@@ -4,9 +4,9 @@ import { filter, Subject, takeUntil } from 'rxjs';
 
 import { noopFn } from '@/shared/utils/merge-classes';
 
-import type { OnClickCallback, ZardAlertDialogComponent, ZardAlertDialogOptions } from './alert-dialog.component';
+import type { OnClickCallback, ArcTechAlertDialogComponent, ArcTechAlertDialogOptions } from './alert-dialog.component';
 
-export class ZardAlertDialogRef<T = unknown> {
+export class ArcTechAlertDialogRef<T = unknown> {
   private readonly destroy$ = new Subject<void>();
   private isClosing = false;
 
@@ -14,8 +14,8 @@ export class ZardAlertDialogRef<T = unknown> {
 
   constructor(
     private readonly overlayRef: OverlayRef,
-    private readonly config: ZardAlertDialogOptions<T>,
-    private readonly containerInstance: ZardAlertDialogComponent<T>,
+    private readonly config: ArcTechAlertDialogOptions<T>,
+    private readonly containerInstance: ArcTechAlertDialogComponent<T>,
   ) {
     containerInstance.cancelTriggered.subscribe(() => this.handleCancel());
     containerInstance.okTriggered.subscribe(() => this.handleOk());
@@ -40,7 +40,7 @@ export class ZardAlertDialogRef<T = unknown> {
   }
 
   private handleCancel(): void {
-    const cancelFn = this.config.zOnCancel;
+    const cancelFn = this.config.arcOnCancel;
     if (typeof cancelFn === 'function') {
       const result = (cancelFn as OnClickCallback<T>)(this.componentInstance as T);
       if (result !== false) {
@@ -52,7 +52,7 @@ export class ZardAlertDialogRef<T = unknown> {
   }
 
   private handleOk(): void {
-    const okFn = this.config.zOnOk;
+    const okFn = this.config.arcOnOk;
     if (typeof okFn === 'function') {
       const result = (okFn as OnClickCallback<T>)(this.componentInstance as T);
       if (result !== false) {
@@ -64,7 +64,7 @@ export class ZardAlertDialogRef<T = unknown> {
   }
 
   private handleMaskClick(): void {
-    const hasMaskClosable = this.config.zMaskClosable ?? true;
+    const hasMaskClosable = this.config.arcMaskClosable ?? true;
     if (hasMaskClosable) {
       this.overlayRef
         .outsidePointerEvents()

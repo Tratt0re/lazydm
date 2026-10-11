@@ -1,11 +1,11 @@
-<z-header [zHeight]="64" class="justify-between gap-4">
+<arc-header [arcHeight]="64" class="justify-between gap-4">
   <div class="flex min-w-0 items-center gap-2">
     <app-sidebar-toggle [sidebarCollapsed]="sidebarCollapsed()" (toggle)="onSidebarToggle()"></app-sidebar-toggle>
 
     <div class="flex min-w-0 items-center">
       @if (!hasItemNavigation() && hasTitleBreadcrumbs()) {
         <div class="flex min-w-0 items-center gap-2">
-          <z-divider zOrientation="vertical" zSpacing="sm" class="h-6"></z-divider>
+          <arc-divider arcOrientation="vertical" arcSpacing="sm" class="h-6"></arc-divider>
 
           <nav [attr.aria-label]="'breadcrumb.ariaLabel' | translate" class="min-w-0">
             <ol class="flex items-center gap-2 overflow-hidden text-sm text-muted-foreground">
@@ -30,7 +30,7 @@
                   }
 
                   @if (!isLast) {
-                    <z-icon zType="chevron-right" class="size-4" aria-hidden="true"></z-icon>
+                    <arc-icon arcType="chevron-right" class="size-4" aria-hidden="true"></arc-icon>
                   }
                 </li>
               }
@@ -39,27 +39,27 @@
         </div>
       } @else if (!hasItemNavigation() && title(); as title) {
         <div class="flex min-w-0 items-center gap-2">
-          <z-divider zOrientation="vertical" zSpacing="sm" class="h-6"></z-divider>
+          <arc-divider arcOrientation="vertical" arcSpacing="sm" class="h-6"></arc-divider>
           <h1 class="truncate text-lg font-semibold tracking-tight">{{ title | translate }}</h1>
         </div>
       }
 
       @if (itemNavigation(); as item) {
         <div class="flex items-center gap-2">
-          <z-segmented
-            [zDefaultValue]="item.defaultValue ?? ''"
-            [zSize]="item.size ?? 'sm'"
-            [zAriaLabel]="item.ariaLabel ?? 'Toolbar segmented control'"
-            (zChange)="onItemNavigationChange(item, $event)"
+          <arc-segmented
+            [arcDefaultValue]="item.defaultValue ?? ''"
+            [arcSize]="item.size ?? 'sm'"
+            [arcAriaLabel]="item.ariaLabel ?? 'Toolbar segmented control'"
+            (arcChange)="onItemNavigationChange(item, $event)"
           >
             @for (option of item.options; track option.value) {
-              <z-segmented-item
+              <arc-segmented-item
                 [value]="option.value"
                 [label]="option.label | translate"
                 [disabled]="option.disabled ?? false"
               />
             }
-          </z-segmented>
+          </arc-segmented>
         </div>
       }
     </div>
@@ -74,41 +74,41 @@
               {{ item.label | translate }}
             </span>
           }
-          <z-select
+          <arc-select
             [class]="item.class ?? 'w-24'"
-            [zValue]="resolveSelectItemValue(item)"
-            [zSize]="item.size ?? 'sm'"
-            [zPlaceholder]="item.placeholder ?? ''"
-            [zDisabled]="isToolbarItemDisabled(item)"
+            [arcValue]="resolveSelectItemValue(item)"
+            [arcSize]="item.size ?? 'sm'"
+            [arcPlaceholder]="item.placeholder ?? ''"
+            [arcDisabled]="isToolbarItemDisabled(item)"
             [attr.title]="item.ariaLabel ?? null"
-            (zSelectionChange)="onSelectItemChange(item, $event)"
+            (arcSelectionChange)="onSelectItemChange(item, $event)"
           >
             @for (option of item.options; track option.value) {
-              <z-select-item
-                [zValue]="option.value"
-                [zLabel]="option.label"
-                [zDisabled]="option.disabled ?? false"
+              <arc-select-item
+                [arcValue]="option.value"
+                [arcLabel]="option.label"
+                [arcDisabled]="option.disabled ?? false"
               />
             }
-          </z-select>
+          </arc-select>
         </div>
       } @else if (isToolbarAction(item)) {
         <button
-          z-button
+          arc-button
           type="button"
           class="shrink-0"
-          [zType]="item.buttonType ?? 'default'"
-          [zSize]="item.buttonSize ?? 'sm'"
-          [zShape]="item.buttonShape ?? 'default'"
-          [zDisabled]="isActionDisabled(item)"
+          [arcType]="item.buttonType ?? 'default'"
+          [arcSize]="item.buttonSize ?? 'sm'"
+          [arcShape]="item.buttonShape ?? 'default'"
+          [arcDisabled]="isActionDisabled(item)"
           (click)="onActionClick(item)"
         >
           @if (item.icon) {
-            <z-icon [zType]="item.icon" class="size-4" />
+            <arc-icon [arcType]="item.icon" class="size-4" />
           }
           <span>{{ item.label | translate }}</span>
         </button>
       }
     }
   </div>
-</z-header>
+</arc-header>

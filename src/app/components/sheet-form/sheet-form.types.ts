@@ -1,7 +1,7 @@
-import type { ZardComboboxGroup, ZardComboboxOption } from '@/shared/components/combobox';
-import type { ZardIcon } from '@/shared/components/icon';
-import type { ZardPopoverPlacement } from '@/shared/components/popover/popover.component';
-import type { ZardSelectSizeVariants } from '@/shared/components/select';
+import type { ArcTechComboboxGroup, ArcTechComboboxOption } from '@/shared/components/combobox';
+import type { ArcTechIcon } from '@/shared/components/icon';
+import type { ArcTechPopoverPlacement } from '@/shared/components/popover/popover.component';
+import type { ArcTechSelectSizeVariants } from '@/shared/components/select';
 
 export type AppSheetFieldType = 'date-picker' | 'combobox' | 'select' | 'checkbox' | 'input';
 export type AppSheetFieldWidth = `${number}/${number}` | 'full';
@@ -24,22 +24,22 @@ export interface AppSheetFieldBase<TType extends AppSheetFieldType, TValue exten
 }
 
 export interface AppSheetDatePickerField extends AppSheetFieldBase<'date-picker', Date | string | null> {
-  readonly zFormat?: string;
-  readonly zIconPosition?: 'left' | 'right';
-  readonly zPopoverPlacement?: ZardPopoverPlacement;
-  readonly zPopoverAutoFlip?: boolean;
-  readonly zPopoverPush?: boolean;
-  readonly zPopoverViewportMargin?: number;
+  readonly arcFormat?: string;
+  readonly arcIconPosition?: 'left' | 'right';
+  readonly arcPopoverPlacement?: ArcTechPopoverPlacement;
+  readonly arcPopoverAutoFlip?: boolean;
+  readonly arcPopoverPush?: boolean;
+  readonly arcPopoverViewportMargin?: number;
   readonly minDate?: Date | string | number | null;
   readonly maxDate?: Date | string | number | null;
 }
 
-export interface AppSheetComboboxOption extends Omit<ZardComboboxOption, 'label'> {
+export interface AppSheetComboboxOption extends Omit<ArcTechComboboxOption, 'label'> {
   readonly label: string;
   readonly translate?: boolean;
 }
 
-export interface AppSheetComboboxGroup extends Omit<ZardComboboxGroup, 'label' | 'options'> {
+export interface AppSheetComboboxGroup extends Omit<ArcTechComboboxGroup, 'label' | 'options'> {
   readonly label?: string;
   readonly translate?: boolean;
   readonly options: readonly AppSheetComboboxOption[];
@@ -61,7 +61,7 @@ export interface AppSheetSelectOption {
   readonly value: string;
   readonly label: string;
   readonly translate?: boolean;
-  readonly icon?: ZardIcon;
+  readonly icon?: ArcTechIcon;
   readonly colorHex?: string | null;
   readonly disabled?: boolean;
 }
@@ -70,13 +70,13 @@ export interface AppSheetSelectField extends AppSheetFieldBase<'select', string 
   readonly multiple?: boolean;
   readonly maxLabelCount?: number;
   readonly showSelectedLabel?: boolean;
-  readonly size?: ZardSelectSizeVariants;
+  readonly size?: ArcTechSelectSizeVariants;
   readonly options: readonly AppSheetSelectOption[];
 }
 
 export interface AppSheetCheckboxField extends AppSheetFieldBase<'checkbox', boolean> {
   readonly checkboxLabel?: string;
-  readonly icon?: ZardIcon;
+  readonly icon?: ArcTechIcon;
 }
 
 export interface AppSheetInputField extends AppSheetFieldBase<'input', string | null> {

@@ -11,33 +11,33 @@ import {
   ViewContainerRef,
 } from '@angular/core';
 
-import { ZardDialogRef } from './dialog-ref';
-import { ZardDialogComponent, ZardDialogOptions } from './dialog.component';
+import { ArcTechDialogRef } from './dialog-ref';
+import { ArcTechDialogComponent, ArcTechDialogOptions } from './dialog.component';
 
 type ContentType<T> = ComponentType<T> | TemplateRef<T> | string;
 
-export const Z_MODAL_DATA = new InjectionToken<any>('Z_MODAL_DATA');
+export const ARC_MODAL_DATA = new InjectionToken<any>('ARC_MODAL_DATA');
 
 @Injectable({
   providedIn: 'root',
 })
-export class ZardDialogService {
+export class ArcTechDialogService {
   private overlay = inject(Overlay);
   private injector = inject(Injector);
   private platformId = inject(PLATFORM_ID);
 
-  create<T, U>(config: ZardDialogOptions<T, U>): ZardDialogRef<T> {
-    return this.open<T, U>(config.zContent as ComponentType<T>, config);
+  create<T, U>(config: ArcTechDialogOptions<T, U>): ArcTechDialogRef<T> {
+    return this.open<T, U>(config.arcContent as ComponentType<T>, config);
   }
 
-  private open<T, U>(componentOrTemplateRef: ContentType<T>, config: ZardDialogOptions<T, U>) {
+  private open<T, U>(componentOrTemplateRef: ContentType<T>, config: ArcTechDialogOptions<T, U>) {
     const overlayRef = this.createOverlay();
 
     if (!overlayRef) {
-      return new ZardDialogRef(
+      return new ArcTechDialogRef(
         undefined as unknown as OverlayRef,
         config,
-        undefined as unknown as ZardDialogComponent<T, U>,
+        undefined as unknown as ArcTechDialogComponent<T, U>,
         this.platformId,
       );
     }
@@ -63,33 +63,33 @@ export class ZardDialogService {
     return undefined;
   }
 
-  private attachDialogContainer<T, U>(overlayRef: OverlayRef, config: ZardDialogOptions<T, U>) {
+  private attachDialogContainer<T, U>(overlayRef: OverlayRef, config: ArcTechDialogOptions<T, U>) {
     const injector = Injector.create({
       parent: this.injector,
       providers: [
         { provide: OverlayRef, useValue: overlayRef },
-        { provide: ZardDialogOptions, useValue: config },
+        { provide: ArcTechDialogOptions, useValue: config },
       ],
     });
 
-    const containerPortal = new ComponentPortal<ZardDialogComponent<T, U>>(
-      ZardDialogComponent,
-      config.zViewContainerRef,
+    const containerPortal = new ComponentPortal<ArcTechDialogComponent<T, U>>(
+      ArcTechDialogComponent,
+      config.arcViewContainerRef,
       injector,
     );
 
-    const containerRef = overlayRef.attach<ZardDialogComponent<T, U>>(containerPortal);
+    const containerRef = overlayRef.attach<ArcTechDialogComponent<T, U>>(containerPortal);
 
     return containerRef.instance;
   }
 
   private attachDialogContent<T, U>(
     componentOrTemplateRef: ContentType<T>,
-    dialogContainer: ZardDialogComponent<T, U>,
+    dialogContainer: ArcTechDialogComponent<T, U>,
     overlayRef: OverlayRef,
-    config: ZardDialogOptions<T, U>,
+    config: ArcTechDialogOptions<T, U>,
   ) {
-    const dialogRef = new ZardDialogRef<T>(overlayRef, config, dialogContainer, this.platformId);
+    const dialogRef = new ArcTechDialogRef<T>(overlayRef, config, dialogContainer, this.platformId);
 
     if (componentOrTemplateRef instanceof TemplateRef) {
       dialogContainer.attachTemplatePortal(
@@ -104,7 +104,7 @@ export class ZardDialogService {
     } else if (typeof componentOrTemplateRef !== 'string') {
       const injector = this.createInjector<T, U>(dialogRef, config);
       const contentRef = dialogContainer.attachComponentPortal<T>(
-        new ComponentPortal(componentOrTemplateRef, config.zViewContainerRef, injector),
+        new ComponentPortal(componentOrTemplateRef, config.arcViewContainerRef, injector),
       );
       dialogRef.componentInstance = contentRef.instance;
     }
@@ -112,12 +112,12 @@ export class ZardDialogService {
     return dialogRef;
   }
 
-  private createInjector<T, U>(dialogRef: ZardDialogRef<T>, config: ZardDialogOptions<T, U>) {
+  private createInjector<T, U>(dialogRef: ArcTechDialogRef<T>, config: ArcTechDialogOptions<T, U>) {
     return Injector.create({
       parent: this.injector,
       providers: [
-        { provide: ZardDialogRef, useValue: dialogRef },
-        { provide: Z_MODAL_DATA, useValue: config.zData },
+        { provide: ArcTechDialogRef, useValue: dialogRef },
+        { provide: ARC_MODAL_DATA, useValue: config.arcData },
       ],
     });
   }

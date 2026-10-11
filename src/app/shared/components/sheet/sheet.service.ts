@@ -3,30 +3,30 @@ import { ComponentPortal, TemplatePortal } from '@angular/cdk/portal';
 import { isPlatformBrowser } from '@angular/common';
 import { inject, Injectable, InjectionToken, Injector, PLATFORM_ID, TemplateRef } from '@angular/core';
 
-import { ZardSheetRef } from './sheet-ref';
-import { ZardSheetComponent, ZardSheetOptions } from './sheet.component';
+import { ArcTechSheetRef } from './sheet-ref';
+import { ArcTechSheetComponent, ArcTechSheetOptions } from './sheet.component';
 
 type ContentType<T> = ComponentType<T> | TemplateRef<T> | string;
-export const Z_SHEET_DATA = new InjectionToken<any>('Z_SHEET_DATA');
+export const ARC_SHEET_DATA = new InjectionToken<any>('ARC_SHEET_DATA');
 
 @Injectable({
   providedIn: 'root',
 })
-export class ZardSheetService {
+export class ArcTechSheetService {
   private overlay = inject(Overlay);
   private injector = inject(Injector);
   private platformId = inject(PLATFORM_ID);
 
-  create<T, U>(config: ZardSheetOptions<T, U>): ZardSheetRef<T> {
-    return this.open<T, U>(config.zContent as ComponentType<T>, config);
+  create<T, U>(config: ArcTechSheetOptions<T, U>): ArcTechSheetRef<T> {
+    return this.open<T, U>(config.arcContent as ComponentType<T>, config);
   }
 
-  private open<T, U>(componentOrTemplateRef: ContentType<T>, config: ZardSheetOptions<T, U>) {
+  private open<T, U>(componentOrTemplateRef: ContentType<T>, config: ArcTechSheetOptions<T, U>) {
     const overlayRef = this.createOverlay();
 
     if (!overlayRef) {
       // Return a mock sheet ref for SSR environments
-      return new ZardSheetRef(undefined as any, config, undefined as any, this.platformId);
+      return new ArcTechSheetRef(undefined as any, config, undefined as any, this.platformId);
     }
 
     const sheetContainer = this.attachSheetContainer<T, U>(overlayRef, config);
@@ -49,21 +49,21 @@ export class ZardSheetService {
     return undefined;
   }
 
-  private attachSheetContainer<T, U>(overlayRef: OverlayRef, config: ZardSheetOptions<T, U>) {
+  private attachSheetContainer<T, U>(overlayRef: OverlayRef, config: ArcTechSheetOptions<T, U>) {
     const injector = Injector.create({
       parent: this.injector,
       providers: [
         { provide: OverlayRef, useValue: overlayRef },
-        { provide: ZardSheetOptions, useValue: config },
+        { provide: ArcTechSheetOptions, useValue: config },
       ],
     });
 
-    const containerPortal = new ComponentPortal<ZardSheetComponent<T, U>>(
-      ZardSheetComponent,
-      config.zViewContainerRef,
+    const containerPortal = new ComponentPortal<ArcTechSheetComponent<T, U>>(
+      ArcTechSheetComponent,
+      config.arcViewContainerRef,
       injector,
     );
-    const containerRef = overlayRef.attach<ZardSheetComponent<T, U>>(containerPortal);
+    const containerRef = overlayRef.attach<ArcTechSheetComponent<T, U>>(containerPortal);
     containerRef.instance.state.set('open');
 
     return containerRef.instance;
@@ -71,11 +71,11 @@ export class ZardSheetService {
 
   private attachSheetContent<T, U>(
     componentOrTemplateRef: ContentType<T>,
-    sheetContainer: ZardSheetComponent<T, U>,
+    sheetContainer: ArcTechSheetComponent<T, U>,
     overlayRef: OverlayRef,
-    config: ZardSheetOptions<T, U>,
+    config: ArcTechSheetOptions<T, U>,
   ) {
-    const sheetRef = new ZardSheetRef<T>(overlayRef, config, sheetContainer, this.platformId);
+    const sheetRef = new ArcTechSheetRef<T>(overlayRef, config, sheetContainer, this.platformId);
 
     if (componentOrTemplateRef instanceof TemplateRef) {
       sheetContainer.attachTemplatePortal(
@@ -87,7 +87,7 @@ export class ZardSheetService {
     } else if (typeof componentOrTemplateRef !== 'string') {
       const injector = this.createInjector<T, U>(sheetRef, config);
       const contentRef = sheetContainer.attachComponentPortal<T>(
-        new ComponentPortal(componentOrTemplateRef, config.zViewContainerRef, injector),
+        new ComponentPortal(componentOrTemplateRef, config.arcViewContainerRef, injector),
       );
       sheetRef.componentInstance = contentRef.instance;
     }
@@ -95,12 +95,12 @@ export class ZardSheetService {
     return sheetRef;
   }
 
-  private createInjector<T, U>(sheetRef: ZardSheetRef<T>, config: ZardSheetOptions<T, U>) {
+  private createInjector<T, U>(sheetRef: ArcTechSheetRef<T>, config: ArcTechSheetOptions<T, U>) {
     return Injector.create({
       parent: this.injector,
       providers: [
-        { provide: ZardSheetRef, useValue: sheetRef },
-        { provide: Z_SHEET_DATA, useValue: config.zData },
+        { provide: ArcTechSheetRef, useValue: sheetRef },
+        { provide: ARC_SHEET_DATA, useValue: config.arcData },
       ],
     });
   }

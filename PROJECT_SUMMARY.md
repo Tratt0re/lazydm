@@ -35,7 +35,7 @@ The **LazyDM** scaffolding project has been successfully created with all necess
 5. **Settings Page** (`/settings`) - Empty placeholder for settings
 
 ### Shared Component Library (~60 Components)
-Complete "Zard" UI component library including:
+Complete "ArcTech" UI component library including:
 - Form controls (Button, Input, Select, Checkbox, Switch, etc.)
 - Data display (Table, Badge, Alert, Empty, Loader, etc.)
 - Overlays (Dialog, Sheet, Popover, Tooltip, Dropdown, etc.)

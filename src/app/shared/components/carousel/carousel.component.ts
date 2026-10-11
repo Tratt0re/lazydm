@@ -15,20 +15,20 @@ import type { ClassValue } from 'clsx';
 import type { EmblaCarouselType, EmblaEventType, EmblaOptionsType, EmblaPluginType } from 'embla-carousel';
 import { EmblaCarouselDirective } from 'embla-carousel-angular';
 
-import { ZardButtonComponent } from '@/shared/components/button';
+import { ArcTechButtonComponent } from '@/shared/components/button';
 import {
   carouselNextButtonVariants,
   carouselPreviousButtonVariants,
   carouselVariants,
-  type ZardCarouselControlsVariants,
-  type ZardCarouselOrientationVariants,
+  type ArcTechCarouselControlsVariants,
+  type ArcTechCarouselOrientationVariants,
 } from '@/shared/components/carousel/carousel.variants';
-import { ZardIconComponent } from '@/shared/components/icon';
+import { ArcTechIconComponent } from '@/shared/components/icon';
 import { mergeClasses } from '@/shared/utils/merge-classes';
 
 @Component({
-  selector: 'z-carousel',
-  imports: [EmblaCarouselDirective, ZardButtonComponent, ZardIconComponent],
+  selector: 'arc-carousel',
+  imports: [EmblaCarouselDirective, ArcTechButtonComponent, ArcTechIconComponent],
   template: `
     <div class="relative">
       <div
@@ -36,7 +36,7 @@ import { mergeClasses } from '@/shared/utils/merge-classes';
         #emblaRef="emblaCarousel"
         [class]="classes()"
         [options]="options()"
-        [plugins]="zPlugins()"
+        [plugins]="arcPlugins()"
         [subscribeToEvents]="subscribeToEvents"
         (emblaChange)="onEmblaChange($event, emblaRef.emblaApi!)"
         aria-roledescription="carousel"
@@ -45,29 +45,29 @@ import { mergeClasses } from '@/shared/utils/merge-classes';
       >
         <ng-content />
 
-        @let controls = zControls();
+        @let controls = arcControls();
         @if (controls === 'button') {
           <button
             type="button"
-            z-button
-            zType="outline"
+            arc-button
+            arcType="outline"
             [class]="prevBtnClasses()"
             [disabled]="!canScrollPrev()"
             (click)="slidePrevious()"
             aria-label="Previous slide"
           >
-            <z-icon zType="chevron-left" class="size-4" aria-hidden="true" />
+            <arc-icon arcType="chevron-left" class="size-4" aria-hidden="true" />
           </button>
           <button
             type="button"
-            z-button
-            zType="outline"
+            arc-button
+            arcType="outline"
             [class]="nextBtnClasses()"
             [disabled]="!canScrollNext()"
             (click)="slideNext()"
             aria-label="Next slide"
           >
-            <z-icon zType="chevron-right" class="size-4" aria-hidden="true" />
+            <arc-icon arcType="chevron-right" class="size-4" aria-hidden="true" />
           </button>
         } @else if (controls === 'dot') {
           <div class="mt-2 flex justify-center gap-1">
@@ -82,9 +82,9 @@ import { mergeClasses } from '@/shared/utils/merge-classes';
                 [attr.aria-current]="$index === selectedIndex() ? 'true' : null"
                 [aria-label]="'Go to slide ' + ($index + 1)"
               >
-                <z-icon
-                  zType="circle-small"
-                  [zStrokeWidth]="0"
+                <arc-icon
+                  arcType="circle-small"
+                  [arcStrokeWidth]="0"
                   [class]="$index === selectedIndex() ? 'fill-primary' : 'fill-border'"
                 />
               </button>
@@ -101,16 +101,16 @@ import { mergeClasses } from '@/shared/utils/merge-classes';
     '(keydown.arrowright.prevent)': 'slideNext()',
   },
 })
-export class ZardCarouselComponent {
+export class ArcTechCarouselComponent {
   protected readonly emblaRef = viewChild(EmblaCarouselDirective);
 
   readonly class = input<ClassValue>('');
-  readonly zOptions: InputSignal<EmblaOptionsType> = input<EmblaOptionsType>({ loop: false });
-  readonly zPlugins: InputSignal<EmblaPluginType[]> = input<EmblaPluginType[]>([]);
-  readonly zOrientation = input<ZardCarouselOrientationVariants>('horizontal');
-  readonly zControls = input<ZardCarouselControlsVariants>('button');
-  readonly zInited = output<EmblaCarouselType>();
-  readonly zSelected = output<void>();
+  readonly arcOptions: InputSignal<EmblaOptionsType> = input<EmblaOptionsType>({ loop: false });
+  readonly arcPlugins: InputSignal<EmblaPluginType[]> = input<EmblaPluginType[]>([]);
+  readonly arcOrientation = input<ArcTechCarouselOrientationVariants>('horizontal');
+  readonly arcControls = input<ArcTechCarouselControlsVariants>('button');
+  readonly arcInited = output<EmblaCarouselType>();
+  readonly arcSelected = output<void>();
 
   protected readonly selectedIndex = signal<number>(0);
   protected readonly canScrollPrev = signal<boolean>(false);
@@ -118,8 +118,8 @@ export class ZardCarouselComponent {
   protected readonly scrollSnaps = signal<number[]>([]);
   protected readonly subscribeToEvents: EmblaEventType[] = ['init', 'select', 'reInit'];
   protected readonly options: Signal<EmblaOptionsType> = computed(() => ({
-    ...this.zOptions(),
-    axis: this.zOrientation() === 'horizontal' ? 'x' : 'y',
+    ...this.arcOptions(),
+    axis: this.arcOrientation() === 'horizontal' ? 'x' : 'y',
   }));
 
   protected readonly dots = computed(() => new Array<string>(this.scrollSnaps().length).fill('.'));
@@ -131,14 +131,14 @@ export class ZardCarouselComponent {
       this.scrollSnaps.set(emblaApi.scrollSnapList());
       this.checkNavigation(emblaApi);
       if (type === 'init') {
-        this.zInited.emit(emblaApi);
+        this.arcInited.emit(emblaApi);
       }
       return;
     }
 
     if (type === 'select' && emblaApi.selectedScrollSnap() !== this.#index) {
       this.checkNavigation(emblaApi);
-      this.zSelected.emit();
+      this.arcSelected.emit();
     }
   }
 
@@ -171,14 +171,14 @@ export class ZardCarouselComponent {
   }
 
   protected readonly classes = computed(() =>
-    mergeClasses(carouselVariants({ zOrientation: this.zOrientation() }), this.class()),
+    mergeClasses(carouselVariants({ arcOrientation: this.arcOrientation() }), this.class()),
   );
 
   protected readonly prevBtnClasses = computed(() =>
-    mergeClasses(carouselPreviousButtonVariants({ zOrientation: this.zOrientation() })),
+    mergeClasses(carouselPreviousButtonVariants({ arcOrientation: this.arcOrientation() })),
   );
 
   protected readonly nextBtnClasses = computed(() =>
-    mergeClasses(carouselNextButtonVariants({ zOrientation: this.zOrientation() })),
+    mergeClasses(carouselNextButtonVariants({ arcOrientation: this.arcOrientation() })),
   );
 }

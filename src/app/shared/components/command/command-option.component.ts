@@ -13,19 +13,19 @@ import {
 
 import type { ClassValue } from 'clsx';
 
-import type { ZardCommandOptionGroupComponent } from '@/shared/components/command/command-option-group.component';
-import { ZardCommandComponent } from '@/shared/components/command/command.component';
+import type { ArcTechCommandOptionGroupComponent } from '@/shared/components/command/command-option-group.component';
+import { ArcTechCommandComponent } from '@/shared/components/command/command.component';
 import {
   commandItemVariants,
   commandShortcutVariants,
-  type ZardCommandItemVariants,
+  type ArcTechCommandItemVariants,
 } from '@/shared/components/command/command.variants';
-import { ZardIconComponent, type ZardIcon } from '@/shared/components/icon';
+import { ArcTechIconComponent, type ArcTechIcon } from '@/shared/components/icon';
 import { mergeClasses, transform } from '@/shared/utils/merge-classes';
 
 @Component({
-  selector: 'z-command-option',
-  imports: [ZardIconComponent],
+  selector: 'arc-command-option',
+  imports: [ArcTechIconComponent],
   template: `
     @if (isOptionVisible()) {
       <div
@@ -33,23 +33,23 @@ import { mergeClasses, transform } from '@/shared/utils/merge-classes';
         [attr.role]="'option'"
         [attr.aria-selected]="isSelected()"
         [attr.data-selected]="isSelected()"
-        [attr.data-disabled]="zDisabled()"
+        [attr.data-disabled]="arcDisabled()"
         [attr.tabindex]="0"
         (click)="onClick()"
         (keydown.{enter,space}.prevent)="onClick()"
         (mouseenter)="onMouseEnter()"
       >
-        @if (zIcon()) {
-          <div z-icon [zType]="zIcon()!" class="mr-2 flex shrink-0 items-center justify-center"></div>
+        @if (arcIcon()) {
+          <div arc-icon [arcType]="arcIcon()!" class="mr-2 flex shrink-0 items-center justify-center"></div>
         }
-        <span class="flex-1">{{ zLabel() }}</span>
-        @if (zShortcut()) {
-          <span [class]="shortcutClasses()">{{ zShortcut() }}</span>
+        <span class="flex-1">{{ arcLabel() }}</span>
+        @if (arcShortcut()) {
+          <span [class]="shortcutClasses()">{{ arcShortcut() }}</span>
         }
-        @if (zShowSelectedIndicator()) {
+        @if (arcShowSelectedIndicator()) {
           <span class="ml-2 flex size-4 shrink-0 items-center justify-center">
-            @if (zSelected()) {
-              <z-icon zType="check" class="size-4" />
+            @if (arcSelected()) {
+              <arc-icon arcType="check" class="size-4" />
             }
           </span>
         }
@@ -58,27 +58,27 @@ import { mergeClasses, transform } from '@/shared/utils/merge-classes';
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
-  exportAs: 'zCommandOption',
+  exportAs: 'arcCommandOption',
 })
-export class ZardCommandOptionComponent {
+export class ArcTechCommandOptionComponent {
   private readonly elementRef = inject(ElementRef);
-  private readonly parentCommandComponent = inject(ZardCommandComponent, { optional: true });
+  private readonly parentCommandComponent = inject(ArcTechCommandComponent, { optional: true });
 
-  readonly zValue = input.required<unknown>();
-  readonly zLabel = input.required<string>();
-  readonly zCommand = input<string>('');
-  readonly zIcon = input<ZardIcon>();
-  readonly zShortcut = input<string>('');
-  readonly zDisabled = input(false, { transform });
-  readonly zSelected = input(false, { transform: booleanAttribute });
-  readonly zShowSelectedIndicator = input(false, { transform: booleanAttribute });
-  readonly variant = input<ZardCommandItemVariants>('default');
+  readonly arcValue = input.required<unknown>();
+  readonly arcLabel = input.required<string>();
+  readonly arcCommand = input<string>('');
+  readonly arcIcon = input<ArcTechIcon>();
+  readonly arcShortcut = input<string>('');
+  readonly arcDisabled = input(false, { transform });
+  readonly arcSelected = input(false, { transform: booleanAttribute });
+  readonly arcShowSelectedIndicator = input(false, { transform: booleanAttribute });
+  readonly variant = input<ArcTechCommandItemVariants>('default');
   readonly class = input<ClassValue>('');
-  readonly parentCommand = input<ZardCommandComponent | null>(null);
-  readonly commandGroup = input<ZardCommandOptionGroupComponent | null>(null);
+  readonly parentCommand = input<ArcTechCommandComponent | null>(null);
+  readonly commandGroup = input<ArcTechCommandOptionGroupComponent | null>(null);
 
   readonly isActive = signal(false);
-  readonly isSelected = computed(() => this.isActive() || this.zSelected());
+  readonly isSelected = computed(() => this.isActive() || this.arcSelected());
 
   protected readonly classes = computed(() => {
     const baseClasses = commandItemVariants({ variant: this.variant() });
@@ -125,7 +125,7 @@ export class ZardCommandOptionComponent {
   }
 
   onClick() {
-    if (this.zDisabled()) {
+    if (this.arcDisabled()) {
       return;
     }
 
@@ -133,7 +133,7 @@ export class ZardCommandOptionComponent {
   }
 
   onMouseEnter() {
-    if (this.zDisabled()) {
+    if (this.arcDisabled()) {
       return;
     }
     // Visual feedback for hover

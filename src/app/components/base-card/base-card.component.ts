@@ -18,12 +18,12 @@ import {
   baseCardTitleVariants,
   baseCardVariants,
 } from './base-card.variants';
-import { ZardIdDirective, ZardStringTemplateOutletDirective } from '@/shared/core';
+import { ArcTechIdDirective, ArcTechStringTemplateOutletDirective } from '@/shared/core';
 import { mergeClasses } from '@/shared/utils/merge-classes';
 
 @Component({
   selector: 'app-base-card',
-  imports: [ZardStringTemplateOutletDirective, ZardIdDirective],
+  imports: [ArcTechStringTemplateOutletDirective, ArcTechIdDirective],
   templateUrl: './base-card.component.html',
   styles: `
     [data-slot='card-footer']:empty {
@@ -41,37 +41,37 @@ import { mergeClasses } from '@/shared/utils/merge-classes';
   exportAs: 'appBaseCard',
 })
 export class AppBaseCardComponent {
-  private readonly generatedId = viewChild<ZardIdDirective>('z');
+  private readonly generatedId = viewChild<ArcTechIdDirective>('z');
 
   readonly class = input<ClassValue>('');
-  readonly zFooterBorder = input(false, { transform: booleanAttribute });
-  readonly zHeaderBorder = input(false, { transform: booleanAttribute });
-  readonly zHeaderVariant = input<'default' | 'segmented'>('default');
-  readonly zBodyFill = input(false, { transform: booleanAttribute });
-  readonly zDescription = input<string | TemplateRef<void>>();
-  readonly zTitle = input<string | TemplateRef<void>>();
+  readonly arcFooterBorder = input(false, { transform: booleanAttribute });
+  readonly arcHeaderBorder = input(false, { transform: booleanAttribute });
+  readonly arcHeaderVariant = input<'default' | 'segmented'>('default');
+  readonly arcBodyFill = input(false, { transform: booleanAttribute });
+  readonly arcDescription = input<string | TemplateRef<void>>();
+  readonly arcTitle = input<string | TemplateRef<void>>();
 
   protected readonly titleId = computed(() => {
     const baseId = this.generatedId()?.id();
-    return this.zTitle() && baseId ? `${baseId}-title` : null;
+    return this.arcTitle() && baseId ? `${baseId}-title` : null;
   });
 
   protected readonly descriptionId = computed(() => {
     const baseId = this.generatedId()?.id();
-    return this.zDescription() && baseId ? `${baseId}-description` : null;
+    return this.arcDescription() && baseId ? `${baseId}-description` : null;
   });
 
   protected readonly classes = computed(() => mergeClasses(baseCardVariants(), this.class()));
   protected readonly bodyClasses = computed(() =>
-    mergeClasses(baseCardBodyVariants(), this.zBodyFill() ? 'flex-1 min-h-0' : ''),
+    mergeClasses(baseCardBodyVariants(), this.arcBodyFill() ? 'flex-1 min-h-0' : ''),
   );
   protected readonly footerClasses = computed(() =>
-    mergeClasses(baseCardFooterVariants(), this.zFooterBorder() ? 'border-t' : ''),
+    mergeClasses(baseCardFooterVariants(), this.arcFooterBorder() ? 'border-t' : ''),
   );
   protected readonly headerClasses = computed(() =>
-    mergeClasses(baseCardHeaderVariants({ variant: this.zHeaderVariant() }), this.zHeaderBorder() ? 'border-b' : ''),
+    mergeClasses(baseCardHeaderVariants({ variant: this.arcHeaderVariant() }), this.arcHeaderBorder() ? 'border-b' : ''),
   );
   protected readonly titleClasses = computed(() =>
-    mergeClasses(baseCardTitleVariants({ variant: this.zHeaderVariant() })),
+    mergeClasses(baseCardTitleVariants({ variant: this.arcHeaderVariant() })),
   );
 }

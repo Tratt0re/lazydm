@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, computed, input, TemplateRef, ViewE
 
 import type { ClassValue } from 'clsx';
 
-import { ZardStringTemplateOutletDirective } from '@/shared/core/directives/string-template-outlet/string-template-outlet.directive';
+import { ArcTechStringTemplateOutletDirective } from '@/shared/core/directives/string-template-outlet/string-template-outlet.directive';
 import { mergeClasses } from '@/shared/utils/merge-classes';
 
 import {
@@ -10,34 +10,34 @@ import {
   alertIconVariants,
   alertTitleVariants,
   alertVariants,
-  type ZardAlertTypeVariants,
+  type ArcTechAlertTypeVariants,
 } from './alert.variants';
-import { ZardIconComponent } from '@/shared/components/icon/icon.component';
-import type { ZardIcon } from '@/shared/components/icon/icons';
+import { ArcTechIconComponent } from '@/shared/components/icon/icon.component';
+import type { ArcTechIcon } from '@/shared/components/icon/icons';
 
 @Component({
-  selector: 'z-alert, [z-alert]',
-  imports: [ZardIconComponent, ZardStringTemplateOutletDirective],
+  selector: 'arc-alert, [arc-alert]',
+  imports: [ArcTechIconComponent, ArcTechStringTemplateOutletDirective],
   standalone: true,
   template: `
-    @if (zIcon() || iconName()) {
+    @if (arcIcon() || iconName()) {
       <span [class]="iconClasses()" data-slot="alert-icon">
-        <ng-container *zStringTemplateOutlet="zIcon()">
-          <z-icon [zType]="iconName()!" />
+        <ng-container *arcStringTemplateOutlet="arcIcon()">
+          <arc-icon [arcType]="iconName()!" />
         </ng-container>
       </span>
     }
 
     <div class="flex-1">
-      @if (zTitle()) {
+      @if (arcTitle()) {
         <div [class]="titleClasses()" data-slot="alert-title">
-          <ng-container *zStringTemplateOutlet="zTitle()">{{ zTitle() }}</ng-container>
+          <ng-container *arcStringTemplateOutlet="arcTitle()">{{ arcTitle() }}</ng-container>
         </div>
       }
 
-      @if (zDescription()) {
+      @if (arcDescription()) {
         <div [class]="descriptionClasses()" data-slot="alert-description">
-          <ng-container *zStringTemplateOutlet="zDescription()">{{ zDescription() }}</ng-container>
+          <ng-container *arcStringTemplateOutlet="arcDescription()">{{ arcDescription() }}</ng-container>
         </div>
       }
     </div>
@@ -49,30 +49,30 @@ import type { ZardIcon } from '@/shared/components/icon/icons';
     '[class]': 'classes()',
     '[attr.data-slot]': '"alert"',
   },
-  exportAs: 'zAlert',
+  exportAs: 'arcAlert',
 })
-export class ZardAlertComponent {
+export class ArcTechAlertComponent {
   readonly class = input<ClassValue>('');
-  readonly zTitle = input<string | TemplateRef<void>>('');
-  readonly zDescription = input<string | TemplateRef<void>>('');
-  readonly zIcon = input<ZardIcon | TemplateRef<void>>();
-  readonly zType = input<ZardAlertTypeVariants>('default');
+  readonly arcTitle = input<string | TemplateRef<void>>('');
+  readonly arcDescription = input<string | TemplateRef<void>>('');
+  readonly arcIcon = input<ArcTechIcon | TemplateRef<void>>();
+  readonly arcType = input<ArcTechAlertTypeVariants>('default');
 
-  protected readonly classes = computed(() => mergeClasses(alertVariants({ zType: this.zType() }), this.class()));
+  protected readonly classes = computed(() => mergeClasses(alertVariants({ arcType: this.arcType() }), this.class()));
 
   protected readonly iconClasses = computed(() => alertIconVariants());
 
   protected readonly titleClasses = computed(() => alertTitleVariants());
 
-  protected readonly descriptionClasses = computed(() => alertDescriptionVariants({ zType: this.zType() }));
+  protected readonly descriptionClasses = computed(() => alertDescriptionVariants({ arcType: this.arcType() }));
 
-  protected readonly iconName = computed((): ZardIcon | null => {
-    const customIcon = this.zIcon();
+  protected readonly iconName = computed((): ArcTechIcon | null => {
+    const customIcon = this.arcIcon();
     if (customIcon && !(customIcon instanceof TemplateRef)) {
       return customIcon;
     }
 
-    if (this.zType() === 'destructive') {
+    if (this.arcType() === 'destructive') {
       return 'circle-alert';
     }
 

@@ -8,7 +8,7 @@ import type { EmblaPluginType } from 'embla-carousel';
 @Injectable({
   providedIn: 'root',
 })
-export class ZardCarouselPluginsService {
+export class ArcTechCarouselPluginsService {
   /**
    * Creates an autoplay plugin for the carousel
    */

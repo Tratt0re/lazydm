@@ -19,14 +19,14 @@ export const selectTriggerVariants = cva(
   ),
   {
     variants: {
-      zSize: {
+      arcSize: {
         sm: 'min-h-10 px-2.5 py-2 text-xs',
         default: 'min-h-10 px-3 py-2 text-sm',
         lg: 'min-h-11 px-4 py-2.5 text-base',
       },
     },
     defaultVariants: {
-      zSize: 'default',
+      arcSize: 'default',
     },
   },
 );
@@ -37,20 +37,20 @@ export const selectItemVariants = cva(
   'relative mb-0.5 flex min-w-full cursor-pointer items-center gap-2 rounded-sm text-nowrap outline-hidden select-none hover:bg-accent hover:text-accent-foreground data-[focused=true]:bg-accent data-[focused=true]:text-accent-foreground data-selected:bg-accent data-selected:text-accent-foreground data-disabled:pointer-events-none data-disabled:cursor-not-allowed data-disabled:opacity-50 data-disabled:hover:bg-transparent data-disabled:hover:text-current [&_svg:not([class*="text-"])]:text-muted-foreground [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*="size-"])]:size-4',
   {
     variants: {
-      zSize: {
+      arcSize: {
         sm: 'min-h-10 py-2 text-xs',
         default: 'min-h-10 py-2 text-sm',
         lg: 'min-h-11 py-2.5 text-base',
       },
-      zMode: {
+      arcMode: {
         normal: 'pr-8 pl-2',
         compact: 'pl-6.5 pr-2',
       },
     },
     compoundVariants: [
       {
-        zMode: 'compact',
-        zSize: 'sm',
+        arcMode: 'compact',
+        arcSize: 'sm',
         class: 'pl-5 pr-2',
       },
     ],
@@ -59,25 +59,25 @@ export const selectItemVariants = cva(
 
 export const selectItemIconVariants = cva('absolute flex size-3.5 items-center justify-center', {
   variants: {
-    // zSize variants are placeholders for compound variant matching
-    zSize: {
+    // arcSize variants are placeholders for compound variant matching
+    arcSize: {
       sm: '',
       default: '',
       lg: '',
     },
-    zMode: {
+    arcMode: {
       normal: 'right-2',
       compact: 'left-2',
     },
   },
   compoundVariants: [
     {
-      zMode: 'compact',
-      zSize: 'sm',
+      arcMode: 'compact',
+      arcSize: 'sm',
       class: 'left-1',
     },
   ],
 });
 
-export type ZardSelectSizeVariants = NonNullable<VariantProps<typeof selectTriggerVariants>['zSize']>;
-export type ZardSelectItemModeVariants = NonNullable<VariantProps<typeof selectItemVariants>['zMode']>;
+export type ArcTechSelectSizeVariants = NonNullable<VariantProps<typeof selectTriggerVariants>['arcSize']>;
+export type ArcTechSelectItemModeVariants = NonNullable<VariantProps<typeof selectItemVariants>['arcMode']>;

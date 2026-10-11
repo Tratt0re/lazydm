@@ -26,72 +26,72 @@ import {
 
 import { mergeClasses, noopFn } from '@/shared/utils/merge-classes';
 
-import type { ZardSheetRef } from './sheet-ref';
-import { sheetVariants, type ZardSheetVariants } from './sheet.variants';
-import { ZardButtonComponent } from '@/shared/components/button/button.component';
-import type { ZardButtonTypeVariants } from '@/shared/components/button/button.variants';
-import { ZardIconComponent } from '@/shared/components/icon/icon.component';
-import type { ZardIcon } from '@/shared/components/icon/icons';
+import type { ArcTechSheetRef } from './sheet-ref';
+import { sheetVariants, type ArcTechSheetVariants } from './sheet.variants';
+import { ArcTechButtonComponent } from '@/shared/components/button/button.component';
+import type { ArcTechButtonTypeVariants } from '@/shared/components/button/button.variants';
+import { ArcTechIconComponent } from '@/shared/components/icon/icon.component';
+import type { ArcTechIcon } from '@/shared/components/icon/icons';
 
 export type OnClickCallback<T> = (instance: T) => false | void | object;
-export class ZardSheetOptions<T, U> {
-  zCancelIcon?: ZardIcon;
-  zCancelText?: string | null;
-  zClosable?: boolean;
-  zContent?: string | TemplateRef<T> | Type<T>;
-  zCustomClasses?: string;
-  zData?: U;
-  zDescription?: string;
-  zHeight?: string;
-  zHideFooter?: boolean;
-  zMaskClosable?: boolean;
-  zMiddleDisabled?: boolean;
-  zMiddleIcon?: ZardIcon;
-  zMiddleText?: string | null;
-  zMiddleType?: ZardButtonTypeVariants;
-  zOkDestructive?: boolean;
-  zOkDisabled?: boolean;
-  zOkIcon?: ZardIcon;
-  zOkText?: string | null;
-  zOnCancel?: EventEmitter<T> | OnClickCallback<T> = noopFn;
-  zOnMiddle?: EventEmitter<T> | OnClickCallback<T> = noopFn;
-  zOnOk?: EventEmitter<T> | OnClickCallback<T> = noopFn;
-  zSide?: ZardSheetVariants['zSide'] = 'left';
-  zSize?: ZardSheetVariants['zSize'] = 'default';
-  zTitle?: string | TemplateRef<T>;
-  zViewContainerRef?: ViewContainerRef;
-  zWidth?: string;
+export class ArcTechSheetOptions<T, U> {
+  arcCancelIcon?: ArcTechIcon;
+  arcCancelText?: string | null;
+  arcClosable?: boolean;
+  arcContent?: string | TemplateRef<T> | Type<T>;
+  arcCustomClasses?: string;
+  arcData?: U;
+  arcDescription?: string;
+  arcHeight?: string;
+  arcHideFooter?: boolean;
+  arcMaskClosable?: boolean;
+  arcMiddleDisabled?: boolean;
+  arcMiddleIcon?: ArcTechIcon;
+  arcMiddleText?: string | null;
+  arcMiddleType?: ArcTechButtonTypeVariants;
+  arcOkDestructive?: boolean;
+  arcOkDisabled?: boolean;
+  arcOkIcon?: ArcTechIcon;
+  arcOkText?: string | null;
+  arcOnCancel?: EventEmitter<T> | OnClickCallback<T> = noopFn;
+  arcOnMiddle?: EventEmitter<T> | OnClickCallback<T> = noopFn;
+  arcOnOk?: EventEmitter<T> | OnClickCallback<T> = noopFn;
+  arcSide?: ArcTechSheetVariants['arcSide'] = 'left';
+  arcSize?: ArcTechSheetVariants['arcSize'] = 'default';
+  arcTitle?: string | TemplateRef<T>;
+  arcViewContainerRef?: ViewContainerRef;
+  arcWidth?: string;
 }
 
 @Component({
-  selector: 'z-sheet',
-  imports: [OverlayModule, PortalModule, A11yModule, ZardButtonComponent, ZardIconComponent],
+  selector: 'arc-sheet',
+  imports: [OverlayModule, PortalModule, A11yModule, ArcTechButtonComponent, ArcTechIconComponent],
   template: `
     <div cdkTrapFocus [cdkTrapFocusAutoCapture]="true" tabindex="-1" class="flex h-full min-h-0 flex-col">
-      @if (config.zClosable || config.zClosable === undefined) {
+      @if (config.arcClosable || config.arcClosable === undefined) {
         <button
           type="button"
-          data-testid="z-close-header-button"
-          z-button
-          zType="ghost"
-          zSize="sm"
+          data-testid="arc-close-header-button"
+          arc-button
+          arcType="ghost"
+          arcSize="sm"
           class="absolute top-1 right-1 cursor-pointer"
           (click)="onCloseClick()"
         >
-          <z-icon zType="x" />
+          <arc-icon arcType="x" />
         </button>
       }
 
-      @if (config.zTitle || config.zDescription) {
+      @if (config.arcTitle || config.arcDescription) {
         <header data-slot="sheet-header" class="flex flex-col gap-1.5 p-4">
-          @if (config.zTitle) {
-            <h4 data-testid="z-title" data-slot="sheet-title" class="text-lg leading-none font-semibold tracking-tight">
-              {{ config.zTitle }}
+          @if (config.arcTitle) {
+            <h4 data-testid="arc-title" data-slot="sheet-title" class="text-lg leading-none font-semibold tracking-tight">
+              {{ config.arcTitle }}
             </h4>
 
-            @if (config.zDescription) {
-              <p data-testid="z-description" data-slot="sheet-description" class="text-muted-foreground text-sm">
-                {{ config.zDescription }}
+            @if (config.arcDescription) {
+              <p data-testid="arc-description" data-slot="sheet-description" class="text-muted-foreground text-sm">
+                {{ config.arcDescription }}
               </p>
             }
           }
@@ -102,62 +102,62 @@ export class ZardSheetOptions<T, U> {
         <ng-template cdkPortalOutlet />
 
         @if (isStringContent) {
-          <div data-testid="z-content" data-slot="sheet-content" [innerHTML]="config.zContent"></div>
+          <div data-testid="arc-content" data-slot="sheet-content" [innerHTML]="config.arcContent"></div>
         }
       </main>
 
-      @if (!config.zHideFooter) {
+      @if (!config.arcHideFooter) {
         <footer data-slot="sheet-footer" class="mt-auto flex flex-col gap-2 p-4">
-          @if (config.zOkText !== null) {
+          @if (config.arcOkText !== null) {
             <button
               type="button"
-              data-testid="z-ok-button"
+              data-testid="arc-ok-button"
               class="cursor-pointer"
-              z-button
-              [zType]="config.zOkDestructive ? 'destructive' : 'default'"
-              [disabled]="config.zOkDisabled"
+              arc-button
+              [arcType]="config.arcOkDestructive ? 'destructive' : 'default'"
+              [disabled]="config.arcOkDisabled"
               (click)="onOkClick()"
             >
-              @if (config.zOkIcon) {
-                <z-icon [zType]="config.zOkIcon" />
+              @if (config.arcOkIcon) {
+                <arc-icon [arcType]="config.arcOkIcon" />
               }
 
-              {{ config.zOkText ?? 'OK' }}
+              {{ config.arcOkText ?? 'OK' }}
             </button>
           }
 
-          @if (config.zMiddleText !== null && config.zMiddleText !== undefined) {
+          @if (config.arcMiddleText !== null && config.arcMiddleText !== undefined) {
             <button
               type="button"
-              data-testid="z-middle-button"
+              data-testid="arc-middle-button"
               class="cursor-pointer"
-              z-button
-              [zType]="config.zMiddleType ?? 'outline'"
-              [disabled]="config.zMiddleDisabled"
+              arc-button
+              [arcType]="config.arcMiddleType ?? 'outline'"
+              [disabled]="config.arcMiddleDisabled"
               (click)="onMiddleClick()"
             >
-              @if (config.zMiddleIcon) {
-                <z-icon [zType]="config.zMiddleIcon" />
+              @if (config.arcMiddleIcon) {
+                <arc-icon [arcType]="config.arcMiddleIcon" />
               }
 
-              {{ config.zMiddleText }}
+              {{ config.arcMiddleText }}
             </button>
           }
 
-          @if (config.zCancelText !== null) {
+          @if (config.arcCancelText !== null) {
             <button
               type="button"
-              data-testid="z-cancel-button"
+              data-testid="arc-cancel-button"
               class="cursor-pointer"
-              z-button
-              zType="outline"
+              arc-button
+              arcType="outline"
               (click)="onCloseClick()"
             >
-              @if (config.zCancelIcon) {
-                <z-icon [zType]="config.zCancelIcon" />
+              @if (config.arcCancelIcon) {
+                <arc-icon [arcType]="config.arcCancelIcon" />
               }
 
-              {{ config.zCancelText ?? 'Cancel' }}
+              {{ config.arcCancelText ?? 'Cancel' }}
             </button>
           }
         </footer>
@@ -169,30 +169,30 @@ export class ZardSheetOptions<T, U> {
     'data-slot': 'sheet',
     '[class]': 'classes()',
     '[attr.data-state]': 'state()',
-    '[style.width]': 'config.zWidth ? config.zWidth + " !important" : null',
-    '[style.height]': 'config.zHeight ? config.zHeight + " !important" : null',
+    '[style.width]': 'config.arcWidth ? config.arcWidth + " !important" : null',
+    '[style.height]': 'config.arcHeight ? config.arcHeight + " !important" : null',
   },
-  exportAs: 'zSheet',
+  exportAs: 'arcSheet',
 })
-export class ZardSheetComponent<T, U> extends BasePortalOutlet {
+export class ArcTechSheetComponent<T, U> extends BasePortalOutlet {
   private readonly host = inject(ElementRef<HTMLElement>);
-  protected readonly config = inject(ZardSheetOptions<T, U>);
+  protected readonly config = inject(ArcTechSheetOptions<T, U>);
 
   protected readonly classes = computed(() => {
-    const zSize = this.config.zWidth || this.config.zHeight ? 'custom' : this.config.zSize;
+    const arcSize = this.config.arcWidth || this.config.arcHeight ? 'custom' : this.config.arcSize;
 
     return mergeClasses(
       sheetVariants({
-        zSide: this.config.zSide,
-        zSize,
+        arcSide: this.config.arcSide,
+        arcSize,
       }),
-      this.config.zCustomClasses,
+      this.config.arcCustomClasses,
     );
   });
 
-  sheetRef?: ZardSheetRef<T>;
+  sheetRef?: ArcTechSheetRef<T>;
 
-  protected readonly isStringContent = typeof this.config.zContent === 'string';
+  protected readonly isStringContent = typeof this.config.arcContent === 'string';
 
   readonly portalOutlet = viewChild.required(CdkPortalOutlet);
 

@@ -6,7 +6,7 @@ import { commandListVariants } from '@/shared/components/command/command.variant
 import { mergeClasses } from '@/shared/utils/merge-classes';
 
 @Component({
-  selector: 'z-command-list',
+  selector: 'arc-command-list',
   template: `
     <div [class]="classes()" role="listbox" id="command-list">
       <ng-content />
@@ -14,9 +14,9 @@ import { mergeClasses } from '@/shared/utils/merge-classes';
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
-  exportAs: 'zCommandList',
+  exportAs: 'arcCommandList',
 })
-export class ZardCommandListComponent {
+export class ArcTechCommandListComponent {
   readonly class = input<ClassValue>('');
 
   protected readonly classes = computed(() => mergeClasses(commandListVariants(), this.class()));

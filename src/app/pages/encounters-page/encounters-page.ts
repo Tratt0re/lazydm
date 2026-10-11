@@ -1,17 +1,17 @@
 import { Component, OnInit, inject } from '@angular/core';
-import { ZardIconComponent } from '@/shared/components/icon';
-import { ZardEmptyComponent } from '@/shared/components/empty';
+import { ArcTechIconComponent } from '@/shared/components/icon';
+import { ArcTechEmptyComponent } from '@/shared/components/empty';
 import { ToolbarContextService } from '@/services/toolbar-context.service';
 
 @Component({
   selector: 'app-encounters-page',
-  imports: [ZardIconComponent, ZardEmptyComponent],
+  imports: [ArcTechIconComponent, ArcTechEmptyComponent],
   template: `
     <div class="container mx-auto p-6">
-      <z-empty
-        [zIcon]="'swords'"
-        [zTitle]="'Encounters'"
-        [zDescription]="'This section will contain your combat encounters. Plan your first encounter to challenge your players!'"
+      <arc-empty
+        [arcIcon]="'swords'"
+        [arcTitle]="'Encounters'"
+        [arcDescription]="'This section will contain your combat encounters. Plan your first encounter to challenge your players!'"
       />
     </div>
   `,

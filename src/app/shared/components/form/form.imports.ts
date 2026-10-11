@@ -1,13 +1,13 @@
 import {
-  ZardFormControlComponent,
-  ZardFormFieldComponent,
-  ZardFormLabelComponent,
-  ZardFormMessageComponent,
+  ArcTechFormControlComponent,
+  ArcTechFormFieldComponent,
+  ArcTechFormLabelComponent,
+  ArcTechFormMessageComponent,
 } from '@/shared/components/form/form.component';
 
-export const ZardFormImports = [
-  ZardFormFieldComponent,
-  ZardFormLabelComponent,
-  ZardFormControlComponent,
-  ZardFormMessageComponent,
+export const ArcTechFormImports = [
+  ArcTechFormFieldComponent,
+  ArcTechFormLabelComponent,
+  ArcTechFormControlComponent,
+  ArcTechFormMessageComponent,
 ] as const;

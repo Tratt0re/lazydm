@@ -14,7 +14,7 @@ import { menuLabelVariants } from '@/shared/components/menu/menu.variants';
 import { mergeClasses } from '@/shared/utils/merge-classes';
 
 @Component({
-  selector: 'z-menu-label, [z-menu-label]',
+  selector: 'arc-menu-label, [arc-menu-label]',
   template: `
     <ng-content />
   `,
@@ -24,9 +24,9 @@ import { mergeClasses } from '@/shared/utils/merge-classes';
     '[class]': 'classes()',
     '[attr.data-inset]': 'inset() || null',
   },
-  exportAs: 'zMenuLabel',
+  exportAs: 'arcMenuLabel',
 })
-export class ZardMenuLabelComponent {
+export class ArcTechMenuLabelComponent {
   readonly class = input<ClassValue>('');
   readonly inset = input<boolean, BooleanInput>(false, { transform: booleanAttribute });
 

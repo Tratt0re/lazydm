@@ -18,17 +18,17 @@ import type { ClassValue } from 'clsx';
 import { AppPaginationComponent } from '@/components/pagination/pagination.component';
 import { APP_ICON_OPTIONS } from '@/config/visual-options.config';
 import { NumberFormatService } from '@/services/number-format.service';
-import { ZardBadgeComponent } from '@/shared/components/badge';
-import { ZardButtonComponent } from '@/shared/components/button';
-import { ZardCheckboxComponent } from '@/shared/components/checkbox';
-import { ZardComboboxComponent, type ZardComboboxOption } from '@/shared/components/combobox';
-import { ZardDatePickerComponent } from '@/shared/components/date-picker';
-import { ZardIconComponent, ZARD_ICONS, type ZardIcon } from '@/shared/components/icon';
-import { ZardInputDirective } from '@/shared/components/input';
-import { ZardSelectImports } from '@/shared/components/select';
-import { ZardSwitchComponent } from '@/shared/components/switch';
-import { ZardTableImports, type ZardTableTypeVariants } from '@/shared/components/table';
-import { ZardTooltipImports } from '@/shared/components/tooltip';
+import { ArcTechBadgeComponent } from '@/shared/components/badge';
+import { ArcTechButtonComponent } from '@/shared/components/button';
+import { ArcTechCheckboxComponent } from '@/shared/components/checkbox';
+import { ArcTechComboboxComponent, type ArcTechComboboxOption } from '@/shared/components/combobox';
+import { ArcTechDatePickerComponent } from '@/shared/components/date-picker';
+import { ArcTechIconComponent, ARCTECH_ICONS, type ArcTechIcon } from '@/shared/components/icon';
+import { ArcTechInputDirective } from '@/shared/components/input';
+import { ArcTechSelectImports } from '@/shared/components/select';
+import { ArcTechSwitchComponent } from '@/shared/components/switch';
+import { ArcTechTableImports, type ArcTechTableTypeVariants } from '@/shared/components/table';
+import { ArcTechTooltipImports } from '@/shared/components/tooltip';
 import { mergeClasses } from '@/shared/utils/merge-classes';
 
 import type {
@@ -58,7 +58,7 @@ type EditableValueMap = Map<TableRow, Map<string, unknown>>;
 type EditableErrorMap = Map<TableRow, Map<string, string>>;
 type RowClassResolver = (row: TableRow) => ClassValue | null | undefined;
 type CurrencyCellIcon = {
-  readonly icon: ZardIcon;
+  readonly icon: ArcTechIcon;
   readonly color: string;
 };
 const APP_ICON_BY_VALUE = new Map(APP_ICON_OPTIONS.map((option) => [option.value, option.icon ?? null] as const));
@@ -69,17 +69,17 @@ const APP_ICON_BY_VALUE = new Map(APP_ICON_OPTIONS.map((option) => [option.value
     NgTemplateOutlet,
     TranslatePipe,
     AppPaginationComponent,
-    ZardBadgeComponent,
-    ZardButtonComponent,
-    ZardCheckboxComponent,
-    ZardComboboxComponent,
-    ZardDatePickerComponent,
-    ZardIconComponent,
-    ZardInputDirective,
-    ZardSwitchComponent,
-    ...ZardTooltipImports,
-    ...ZardSelectImports,
-    ...ZardTableImports,
+    ArcTechBadgeComponent,
+    ArcTechButtonComponent,
+    ArcTechCheckboxComponent,
+    ArcTechComboboxComponent,
+    ArcTechDatePickerComponent,
+    ArcTechIconComponent,
+    ArcTechInputDirective,
+    ArcTechSwitchComponent,
+    ...ArcTechTooltipImports,
+    ...ArcTechSelectImports,
+    ...ArcTechTableImports,
   ],
   templateUrl: './data-table.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -101,7 +101,7 @@ export class AppDataTableComponent {
   readonly activeFilters = input<readonly TableActiveFilterItem[]>([], { alias: 'active-filters' });
   readonly emptyMessage = input('No data available.');
   readonly emptyActionLabel = input('');
-  readonly emptyActionIcon = input<ZardIcon | null>(null);
+  readonly emptyActionIcon = input<ArcTechIcon | null>(null);
   readonly actionColumnName = input('common.actions');
   readonly currencyCode = input('');
   readonly editablePickerIconClass = input<ClassValue>('text-primary opacity-70');
@@ -110,8 +110,8 @@ export class AppDataTableComponent {
 
   readonly minHeight = input<TableWidthValue | null>(null);
   readonly maxHeight = input<TableWidthValue | null>(null);
-  readonly appearance = input<ZardTableTypeVariants>('default');
-  readonly zRowDividers = input(true, { transform: booleanAttribute });
+  readonly appearance = input<ArcTechTableTypeVariants>('default');
+  readonly arcRowDividers = input(true, { transform: booleanAttribute });
   readonly showEmpty = input(true, { transform: booleanAttribute });
   readonly hoverable = input(true, { transform: booleanAttribute });
   readonly selectable = input(false, { transform: booleanAttribute });
@@ -251,7 +251,7 @@ export class AppDataTableComponent {
       this.stickyHeader() ? 'border-separate border-spacing-0' : '',
       this.highContrastHeader() ? '[&_th]:text-high-contrast-table-header-foreground' : '',
       this.appearance() === 'striped' ? '[&_tbody_tr:nth-child(odd)]:bg-muted/50' : '',
-      this.stickyHeader() && this.zRowDividers()
+      this.stickyHeader() && this.arcRowDividers()
         ? '[&_tbody_tr]:border-b-0 [&_tbody_tr_td]:border-b [&_tbody_tr_td]:border-border/60 [&_tbody_tr:last-child_td]:border-b-0'
         : '',
       this.hoverable() ? '' : '[&_tbody_tr:hover]:!bg-transparent',
@@ -624,7 +624,7 @@ export class AppDataTableComponent {
     return column.options?.find((option) => `${option.value}` === normalizedValue) ?? null;
   }
 
-  protected getEditableComboboxOptions(column: EditableColumnDataItem): ZardComboboxOption[] {
+  protected getEditableComboboxOptions(column: EditableColumnDataItem): ArcTechComboboxOption[] {
     const options = column.options ?? [];
     return options.map((option) => ({
       value: this.stringifyOptionValue(option.value),
@@ -765,7 +765,7 @@ export class AppDataTableComponent {
       : { icon: 'arrow-down', color: 'var(--negative-transaction-color)' };
   }
 
-  protected cellIcon(row: TableRow, column: ColumnDataItem): ZardIcon | null {
+  protected cellIcon(row: TableRow, column: ColumnDataItem): ArcTechIcon | null {
     const fallbackIcon = this.resolveTableIcon(column.cellIcon?.icon);
     const iconColumnKey = column.cellIcon?.iconColumnKey;
     if (iconColumnKey) {
@@ -879,7 +879,7 @@ export class AppDataTableComponent {
     return column.type === 'badge';
   }
 
-  protected badgeIcon(row: TableRow, column: ColumnDataItem): ZardIcon | null {
+  protected badgeIcon(row: TableRow, column: ColumnDataItem): ArcTechIcon | null {
     if (!this.isBadgeColumn(column)) {
       return null;
     }
@@ -998,13 +998,13 @@ export class AppDataTableComponent {
     }
   }
 
-  private resolveTableIcon(value: unknown): ZardIcon | null {
+  private resolveTableIcon(value: unknown): ArcTechIcon | null {
     if (!value) {
       return null;
     }
 
     if (typeof value !== 'string') {
-      return value as ZardIcon;
+      return value as ArcTechIcon;
     }
 
     const normalizedValue = value.trim();
@@ -1017,7 +1017,7 @@ export class AppDataTableComponent {
       return mappedIcon;
     }
 
-    return this.isRegisteredIcon(normalizedValue) ? (normalizedValue as ZardIcon) : null;
+    return this.isRegisteredIcon(normalizedValue) ? (normalizedValue as ArcTechIcon) : null;
   }
 
   private badgeColorHex(row: TableRow, column: ColumnDataItem): string | null {
@@ -1030,8 +1030,8 @@ export class AppDataTableComponent {
     return typeof colorValue === 'string' && colorValue.trim().length > 0 ? colorValue : null;
   }
 
-  private isRegisteredIcon(value: string): value is keyof typeof ZARD_ICONS {
-    return Object.prototype.hasOwnProperty.call(ZARD_ICONS, value);
+  private isRegisteredIcon(value: string): value is keyof typeof ARCTECH_ICONS {
+    return Object.prototype.hasOwnProperty.call(ARCTECH_ICONS, value);
   }
 
   private shouldRenderAction(actionItem: ActionItem, row: TableRow): boolean {

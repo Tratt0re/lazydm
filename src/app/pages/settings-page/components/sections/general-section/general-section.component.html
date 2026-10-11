@@ -10,19 +10,19 @@
         <label class="mb-1 block text-sm font-medium" for="settings-theme">
           {{ 'settings.general.cards.theme.fieldLabel' | translate }}
         </label>
-        <z-select
+        <arc-select
           id="settings-theme"
-          [zValue]="selectedTheme()"
-          (zSelectionChange)="onThemeChange($event)"
+          [arcValue]="selectedTheme()"
+          (arcSelectionChange)="onThemeChange($event)"
         >
           @for (theme of themeOptions; track theme) {
-            <z-select-item
-              [zValue]="theme"
-              [zLabel]="themeOptionLabelKey(theme) | translate"
-              [zIcon]="themeOptionIcon(theme)"
+            <arc-select-item
+              [arcValue]="theme"
+              [arcLabel]="themeOptionLabelKey(theme) | translate"
+              [arcIcon]="themeOptionIcon(theme)"
             />
           }
-        </z-select>
+        </arc-select>
         <p class="mt-2 text-xs text-muted-foreground">
           {{ 'settings.general.cards.theme.description' | translate }}
         </p>
@@ -32,15 +32,15 @@
         <label class="mb-1 block text-sm font-medium" for="settings-language">
           {{ 'settings.general.cards.language.fieldLabel' | translate }}
         </label>
-        <z-select
+        <arc-select
           id="settings-language"
-          [zValue]="selectedLanguage()"
-          (zSelectionChange)="onLanguageChange($event)"
+          [arcValue]="selectedLanguage()"
+          (arcSelectionChange)="onLanguageChange($event)"
         >
           @for (language of languages; track language) {
-            <z-select-item [zValue]="language" [zLabel]="getLanguageLabelKey(language) | translate" />
+            <arc-select-item [arcValue]="language" [arcLabel]="getLanguageLabelKey(language) | translate" />
           }
-        </z-select>
+        </arc-select>
         <p class="mt-2 text-xs text-muted-foreground">
           {{ 'settings.general.cards.language.description' | translate }}
         </p>

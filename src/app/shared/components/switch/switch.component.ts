@@ -15,44 +15,44 @@ import { type ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 import type { ClassValue } from 'clsx';
 
-import { ZardIdDirective } from '@/shared/core';
+import { ArcTechIdDirective } from '@/shared/core';
 import { mergeClasses, noopFn } from '@/shared/utils/merge-classes';
 
 import {
   switchTrackVariants,
   switchVariants,
-  type ZardSwitchSizeVariants,
-  type ZardSwitchTypeVariants,
+  type ArcTechSwitchSizeVariants,
+  type ArcTechSwitchTypeVariants,
 } from './switch.variants';
 
 type OnTouchedType = () => void;
 type OnChangeType = (value: boolean) => void;
 
 @Component({
-  selector: 'z-switch',
-  imports: [ZardIdDirective],
+  selector: 'arc-switch',
+  imports: [ArcTechIdDirective],
   template: `
-    <span class="inline-flex min-h-11 items-center" zardId="switch" #z="zardId"
+    <span class="inline-flex min-h-11 items-center" arcTechId="switch" #z="arcTechId"
     [class.gap-2]="hasLabel()">
       <button
-        [id]="zId() || z.id()"
+        [id]="arcId() || z.id()"
         type="button"
         role="switch"
         [attr.data-state]="status()"
-        [attr.aria-checked]="zChecked()"
-        [attr.aria-label]="zAriaLabel() || null"
+        [attr.aria-checked]="arcChecked()"
+        [attr.aria-label]="arcAriaLabel() || null"
         [class]="classes()"
-        [disabled]="zDisabled() || formDisabled()"
+        [disabled]="arcDisabled() || formDisabled()"
         (click)="onSwitchChange()"
       >
         <span
           [class]="trackClasses()"
-          [attr.data-type]="zType()"
-          [attr.data-size]="zSize()"
+          [attr.data-type]="arcType()"
+          [attr.data-size]="arcSize()"
           [attr.data-state]="status()"
         >
           <span
-            [attr.data-size]="zSize()"
+            [attr.data-size]="arcSize()"
             [attr.data-state]="status()"
             class="bg-background pointer-events-none block h-5 w-5 rounded-full shadow-lg ring-0 transition-transform data-[size=lg]:h-6 data-[size=lg]:w-6 data-[size=sm]:h-4 data-[size=sm]:w-4 data-[state=checked]:translate-x-5 data-[size=lg]:data-[state=checked]:translate-x-6 data-[size=sm]:data-[state=checked]:translate-x-4 data-[state=unchecked]:translate-x-0 data-[size=lg]:data-[state=unchecked]:translate-x-0 data-[size=sm]:data-[state=unchecked]:translate-x-0"
           ></span>
@@ -61,7 +61,7 @@ type OnChangeType = (value: boolean) => void;
 
       <label
         class="text-sm leading-none font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-        [for]="zId() || z.id()"
+        [for]="arcId() || z.id()"
       >
         <ng-content />
       </label>
@@ -70,22 +70,22 @@ type OnChangeType = (value: boolean) => void;
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => ZardSwitchComponent),
+      useExisting: forwardRef(() => ArcTechSwitchComponent),
       multi: true,
     },
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
-  exportAs: 'zSwitch',
+  exportAs: 'arcSwitch',
 })
-export class ZardSwitchComponent implements ControlValueAccessor {
+export class ArcTechSwitchComponent implements ControlValueAccessor {
   readonly class = input<ClassValue>('');
-  readonly zChecked = model<boolean>(true);
-  readonly zId = input<string>('');
-  readonly zAriaLabel = input<string>('');
-  readonly zSize = input<ZardSwitchSizeVariants>('default');
-  readonly zType = input<ZardSwitchTypeVariants>('default');
-  readonly zDisabled = input(false, { transform: booleanAttribute });
+  readonly arcChecked = model<boolean>(true);
+  readonly arcId = input<string>('');
+  readonly arcAriaLabel = input<string>('');
+  readonly arcSize = input<ArcTechSwitchSizeVariants>('default');
+  readonly arcType = input<ArcTechSwitchTypeVariants>('default');
+  readonly arcDisabled = input(false, { transform: booleanAttribute });
 
   protected readonly labelContent = contentChild<ElementRef>('labelContent');
   protected readonly hasLabel = computed(() => !!this.labelContent());
@@ -93,18 +93,18 @@ export class ZardSwitchComponent implements ControlValueAccessor {
   private onChange: OnChangeType = noopFn;
   private onTouched: OnTouchedType = noopFn;
 
-  protected readonly status = computed(() => (this.zChecked() ? 'checked' : 'unchecked'));
+  protected readonly status = computed(() => (this.arcChecked() ? 'checked' : 'unchecked'));
   protected readonly classes = computed(() =>
-    mergeClasses(switchVariants({ zType: this.zType(), zSize: this.zSize() }), this.class()),
+    mergeClasses(switchVariants({ arcType: this.arcType(), arcSize: this.arcSize() }), this.class()),
   );
   protected readonly trackClasses = computed(() =>
-    mergeClasses(switchTrackVariants({ zType: this.zType(), zSize: this.zSize() })),
+    mergeClasses(switchTrackVariants({ arcType: this.arcType(), arcSize: this.arcSize() })),
   );
 
   protected readonly formDisabled = signal(false);
 
   writeValue(val: boolean): void {
-    this.zChecked.set(val);
+    this.arcChecked.set(val);
   }
 
   registerOnChange(fn: OnChangeType): void {
@@ -116,13 +116,13 @@ export class ZardSwitchComponent implements ControlValueAccessor {
   }
 
   onSwitchChange(): void {
-    if (this.zDisabled() || this.formDisabled()) {
+    if (this.arcDisabled() || this.formDisabled()) {
       return;
     }
 
-    this.zChecked.update(checked => !checked);
+    this.arcChecked.update(checked => !checked);
     this.onTouched();
-    this.onChange(this.zChecked());
+    this.onChange(this.arcChecked());
   }
 
   setDisabledState(isDisabled: boolean): void {

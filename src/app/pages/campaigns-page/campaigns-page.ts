@@ -1,17 +1,17 @@
 import { Component, OnInit, inject } from '@angular/core';
-import { ZardIconComponent } from '@/shared/components/icon';
-import { ZardEmptyComponent } from '@/shared/components/empty';
+import { ArcTechIconComponent } from '@/shared/components/icon';
+import { ArcTechEmptyComponent } from '@/shared/components/empty';
 import { ToolbarContextService } from '@/services/toolbar-context.service';
 
 @Component({
   selector: 'app-campaigns-page',
-  imports: [ZardIconComponent, ZardEmptyComponent],
+  imports: [ArcTechIconComponent, ArcTechEmptyComponent],
   template: `
     <div class="container mx-auto p-6">
-      <z-empty
-        [zIcon]="'book-open'"
-        [zTitle]="'Campaigns'"
-        [zDescription]="'This section will contain your D&D campaigns. Start creating your first campaign to begin your adventure!'"
+      <arc-empty
+        [arcIcon]="'book-open'"
+        [arcTitle]="'Campaigns'"
+        [arcDescription]="'This section will contain your D&D campaigns. Start creating your first campaign to begin your adventure!'"
       />
     </div>
   `,

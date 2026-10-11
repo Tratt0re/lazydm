@@ -1,17 +1,17 @@
 import { Component, OnInit, inject } from '@angular/core';
-import { ZardIconComponent } from '@/shared/components/icon';
-import { ZardEmptyComponent } from '@/shared/components/empty';
+import { ArcTechIconComponent } from '@/shared/components/icon';
+import { ArcTechEmptyComponent } from '@/shared/components/empty';
 import { ToolbarContextService } from '@/services/toolbar-context.service';
 
 @Component({
   selector: 'app-characters-page',
-  imports: [ZardIconComponent, ZardEmptyComponent],
+  imports: [ArcTechIconComponent, ArcTechEmptyComponent],
   template: `
     <div class="container mx-auto p-6">
-      <z-empty
-        [zIcon]="'users'"
-        [zTitle]="'Characters'"
-        [zDescription]="'This section will contain your player characters and NPCs. Create your first character to get started!'"
+      <arc-empty
+        [arcIcon]="'users'"
+        [arcTitle]="'Characters'"
+        [arcDescription]="'This section will contain your player characters and NPCs. Create your first character to get started!'"
       />
     </div>
   `,

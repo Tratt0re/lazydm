@@ -14,7 +14,7 @@ import { dropdownContentVariants } from '@/shared/components/dropdown/dropdown.v
 import { mergeClasses } from '@/shared/utils/merge-classes';
 
 @Component({
-  selector: 'z-dropdown-menu-content',
+  selector: 'arc-dropdown-menu-content',
   template: `
     <ng-template #contentTemplate>
       <div [class]="contentClasses()" role="menu" tabindex="-1" aria-orientation="vertical">
@@ -27,9 +27,9 @@ import { mergeClasses } from '@/shared/utils/merge-classes';
   host: {
     '[style.display]': '"none"',
   },
-  exportAs: 'zDropdownMenuContent',
+  exportAs: 'arcDropdownMenuContent',
 })
-export class ZardDropdownMenuContentComponent {
+export class ArcTechDropdownMenuContentComponent {
   readonly contentTemplate = viewChild.required<TemplateRef<unknown>>('contentTemplate');
 
   readonly class = input<ClassValue>('');

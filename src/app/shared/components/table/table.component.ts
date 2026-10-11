@@ -3,8 +3,8 @@ import { booleanAttribute, ChangeDetectionStrategy, Component, computed, inject,
 import type { ClassValue } from 'clsx';
 
 import {
-  type ZardTableSizeVariants,
-  type ZardTableTypeVariants,
+  type ArcTechTableSizeVariants,
+  type ArcTechTableTypeVariants,
   tableBodyVariants,
   tableCaptionVariants,
   tableCellVariants,
@@ -16,7 +16,7 @@ import {
 import { mergeClasses } from '@/shared/utils/merge-classes';
 
 @Component({
-  selector: 'table[z-table]',
+  selector: 'table[arc-table]',
   template: `
     <ng-content />
   `,
@@ -25,28 +25,28 @@ import { mergeClasses } from '@/shared/utils/merge-classes';
   host: {
     '[class]': 'classes()',
   },
-  exportAs: 'zTable',
+  exportAs: 'arcTable',
 })
-export class ZardTableComponent {
-  readonly zType = input<ZardTableTypeVariants>('default');
-  readonly zSize = input<ZardTableSizeVariants>('default');
-  readonly zRowDividers = input(true, { transform: booleanAttribute });
+export class ArcTechTableComponent {
+  readonly arcType = input<ArcTechTableTypeVariants>('default');
+  readonly arcSize = input<ArcTechTableSizeVariants>('default');
+  readonly arcRowDividers = input(true, { transform: booleanAttribute });
   readonly class = input<ClassValue>('');
 
   protected readonly classes = computed(() =>
     mergeClasses(
       tableVariants({
-        zType: this.zType(),
-        zSize: this.zSize(),
+        arcType: this.arcType(),
+        arcSize: this.arcSize(),
       }),
-      this.zRowDividers() ? '' : '[&_tbody_tr]:border-b-0 [&_tbody_tr:last-child]:border-b-0',
+      this.arcRowDividers() ? '' : '[&_tbody_tr]:border-b-0 [&_tbody_tr:last-child]:border-b-0',
       this.class(),
     ),
   );
 }
 
 @Component({
-  selector: 'thead[z-table-header]',
+  selector: 'thead[arc-table-header]',
   template: `
     <ng-content />
   `,
@@ -55,16 +55,16 @@ export class ZardTableComponent {
   host: {
     '[class]': 'classes()',
   },
-  exportAs: 'zTableHeader',
+  exportAs: 'arcTableHeader',
 })
-export class ZardTableHeaderComponent {
+export class ArcTechTableHeaderComponent {
   readonly class = input<ClassValue>('');
 
   protected readonly classes = computed(() => mergeClasses(tableHeaderVariants(), this.class()));
 }
 
 @Component({
-  selector: 'tbody[z-table-body]',
+  selector: 'tbody[arc-table-body]',
   template: `
     <ng-content />
   `,
@@ -73,16 +73,16 @@ export class ZardTableHeaderComponent {
   host: {
     '[class]': 'classes()',
   },
-  exportAs: 'zTableBody',
+  exportAs: 'arcTableBody',
 })
-export class ZardTableBodyComponent {
+export class ArcTechTableBodyComponent {
   readonly class = input<ClassValue>('');
 
   protected readonly classes = computed(() => mergeClasses(tableBodyVariants(), this.class()));
 }
 
 @Component({
-  selector: 'tr[z-table-row]',
+  selector: 'tr[arc-table-row]',
   template: `
     <ng-content />
   `,
@@ -91,23 +91,23 @@ export class ZardTableBodyComponent {
   host: {
     '[class]': 'classes()',
   },
-  exportAs: 'zTableRow',
+  exportAs: 'arcTableRow',
 })
-export class ZardTableRowComponent {
-  private readonly parentTable = inject(ZardTableComponent, { optional: true });
+export class ArcTechTableRowComponent {
+  private readonly parentTable = inject(ArcTechTableComponent, { optional: true });
   readonly class = input<ClassValue>('');
 
   protected readonly classes = computed(() =>
     mergeClasses(
       tableRowVariants(),
-      this.parentTable?.zRowDividers() === false ? 'border-b-0' : '',
+      this.parentTable?.arcRowDividers() === false ? 'border-b-0' : '',
       this.class(),
     ),
   );
 }
 
 @Component({
-  selector: 'th[z-table-head]',
+  selector: 'th[arc-table-head]',
   template: `
     <ng-content />
   `,
@@ -116,16 +116,16 @@ export class ZardTableRowComponent {
   host: {
     '[class]': 'classes()',
   },
-  exportAs: 'zTableHead',
+  exportAs: 'arcTableHead',
 })
-export class ZardTableHeadComponent {
+export class ArcTechTableHeadComponent {
   readonly class = input<ClassValue>('');
 
   protected readonly classes = computed(() => mergeClasses(tableHeadVariants(), this.class()));
 }
 
 @Component({
-  selector: 'td[z-table-cell]',
+  selector: 'td[arc-table-cell]',
   template: `
     <ng-content />
   `,
@@ -134,16 +134,16 @@ export class ZardTableHeadComponent {
   host: {
     '[class]': 'classes()',
   },
-  exportAs: 'zTableCell',
+  exportAs: 'arcTableCell',
 })
-export class ZardTableCellComponent {
+export class ArcTechTableCellComponent {
   readonly class = input<ClassValue>('');
 
   protected readonly classes = computed(() => mergeClasses(tableCellVariants(), this.class()));
 }
 
 @Component({
-  selector: 'caption[z-table-caption]',
+  selector: 'caption[arc-table-caption]',
   template: `
     <ng-content />
   `,
@@ -152,9 +152,9 @@ export class ZardTableCellComponent {
   host: {
     '[class]': 'classes()',
   },
-  exportAs: 'zTableCaption',
+  exportAs: 'arcTableCaption',
 })
-export class ZardTableCaptionComponent {
+export class ArcTechTableCaptionComponent {
   readonly class = input<ClassValue>('');
 
   protected readonly classes = computed(() => mergeClasses(tableCaptionVariants(), this.class()));

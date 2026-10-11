@@ -4,10 +4,10 @@ import type { ClassValue } from 'clsx';
 
 import { mergeClasses } from '@/shared/utils/merge-classes';
 
-import { badgeVariants, type ZardBadgeShapeVariants, type ZardBadgeTypeVariants } from './badge.variants';
+import { badgeVariants, type ArcTechBadgeShapeVariants, type ArcTechBadgeTypeVariants } from './badge.variants';
 
 @Component({
-  selector: 'z-badge',
+  selector: 'arc-badge',
   template: `
     <ng-content />
   `,
@@ -16,15 +16,15 @@ import { badgeVariants, type ZardBadgeShapeVariants, type ZardBadgeTypeVariants 
   host: {
     '[class]': 'classes()',
   },
-  exportAs: 'zBadge',
+  exportAs: 'arcBadge',
 })
-export class ZardBadgeComponent {
-  readonly zType = input<ZardBadgeTypeVariants>('default');
-  readonly zShape = input<ZardBadgeShapeVariants>('default');
+export class ArcTechBadgeComponent {
+  readonly arcType = input<ArcTechBadgeTypeVariants>('default');
+  readonly arcShape = input<ArcTechBadgeShapeVariants>('default');
 
   readonly class = input<ClassValue>('');
 
   protected readonly classes = computed(() =>
-    mergeClasses(badgeVariants({ zType: this.zType(), zShape: this.zShape() }), this.class()),
+    mergeClasses(badgeVariants({ arcType: this.arcType(), arcShape: this.arcShape() }), this.class()),
   );
 }

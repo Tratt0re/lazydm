@@ -12,17 +12,17 @@ import type { ClassValue } from 'clsx';
 import {
   containerProgressBarVariants,
   progressBarVariants,
-  type ZardProgressBarShapeVariants,
-  type ZardProgressBarSizeVariants,
-  type ZardProgressBarTypeVariants,
+  type ArcTechProgressBarShapeVariants,
+  type ArcTechProgressBarSizeVariants,
+  type ArcTechProgressBarTypeVariants,
 } from './progress-bar.variants';
 
 import { mergeClasses } from '@/shared/utils/merge-classes';
 
 @Component({
-  selector: 'z-progress-bar',
+  selector: 'arc-progress-bar',
   template: `
-    @if (zIndeterminate()) {
+    @if (arcIndeterminate()) {
       <div [class]="classes()">
         <div [class]="barClasses()"></div>
       </div>
@@ -54,11 +54,11 @@ import { mergeClasses } from '@/shared/utils/merge-classes';
     class: 'w-full',
   },
 })
-export class ZardProgressBarComponent {
-  readonly zType = input<ZardProgressBarTypeVariants>('default');
-  readonly zSize = input<ZardProgressBarSizeVariants>('default');
-  readonly zShape = input<ZardProgressBarShapeVariants>('default');
-  readonly zIndeterminate = input(false, { transform: booleanAttribute });
+export class ArcTechProgressBarComponent {
+  readonly arcType = input<ArcTechProgressBarTypeVariants>('default');
+  readonly arcSize = input<ArcTechProgressBarSizeVariants>('default');
+  readonly arcShape = input<ArcTechProgressBarShapeVariants>('default');
+  readonly arcIndeterminate = input(false, { transform: booleanAttribute });
   readonly class = input<ClassValue>('');
   readonly barClass = input<ClassValue>('');
   readonly progress = input(0);
@@ -75,10 +75,10 @@ export class ZardProgressBarComponent {
   protected readonly classes = computed(() =>
     mergeClasses(
       containerProgressBarVariants({
-        zIndeterminate: this.zIndeterminate(),
-        zType: this.zType(),
-        zSize: this.zSize(),
-        zShape: this.zShape(),
+        arcIndeterminate: this.arcIndeterminate(),
+        arcType: this.arcType(),
+        arcSize: this.arcSize(),
+        arcShape: this.arcShape(),
       }),
       this.class(),
     ),
@@ -86,7 +86,7 @@ export class ZardProgressBarComponent {
 
   protected readonly barClasses = computed(() =>
     mergeClasses(
-      progressBarVariants({ zIndeterminate: this.zIndeterminate(), zType: this.zType(), zShape: this.zShape() }),
+      progressBarVariants({ arcIndeterminate: this.arcIndeterminate(), arcType: this.arcType(), arcShape: this.arcShape() }),
       this.barClass(),
     ),
   );

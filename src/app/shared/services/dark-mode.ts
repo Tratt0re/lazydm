@@ -15,7 +15,7 @@ export type DarkModeOptions = ThemePreference;
 @Injectable({
   providedIn: 'root',
 })
-export class ZardDarkMode {
+export class ArcTechDarkMode {
   private readonly document = inject(DOCUMENT);
   private readonly destroyRef = inject(DestroyRef);
   private readonly localPreferencesService = inject(LocalPreferencesService);

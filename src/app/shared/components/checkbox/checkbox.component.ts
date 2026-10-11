@@ -14,42 +14,42 @@ import { type ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 import type { ClassValue } from 'clsx';
 
-import { ZardIdDirective } from '@/shared/core';
+import { ArcTechIdDirective } from '@/shared/core';
 import { mergeClasses, noopFn } from '@/shared/utils/merge-classes';
 
 import {
   checkboxLabelVariants,
   checkboxVariants,
-  type ZardCheckboxShapeVariants,
-  type ZardCheckboxSizeVariants,
-  type ZardCheckboxTypeVariants,
+  type ArcTechCheckboxShapeVariants,
+  type ArcTechCheckboxSizeVariants,
+  type ArcTechCheckboxTypeVariants,
 } from './checkbox.variants';
-import { ZardIconComponent } from '@/shared/components/icon/icon.component';
+import { ArcTechIconComponent } from '@/shared/components/icon/icon.component';
 
 type OnTouchedType = () => void;
 type OnChangeType = (value: boolean) => void;
 
 @Component({
-  selector: 'z-checkbox, [z-checkbox]',
-  imports: [ZardIconComponent, ZardIdDirective],
+  selector: 'arc-checkbox, [arc-checkbox]',
+  imports: [ArcTechIconComponent, ArcTechIdDirective],
   template: `
-    <main class="relative flex" zardId="checkbox" #z="zardId">
+    <main class="relative flex" arcTechId="checkbox" #z="arcTechId">
       <input
         #input
         type="checkbox"
         name="checkbox"
         [id]="z.id()"
         [class]="classes()"
-        [checked]="zChecked()"
+        [checked]="arcChecked()"
         [disabled]="disabled()"
         (blur)="onCheckboxBlur()"
         (click)="onCheckboxChange()"
       />
-      <z-icon
-        zType="check"
+      <arc-icon
+        arcType="check"
         [class]="
           'text-primary-foreground pointer-events-none absolute top-1/2 left-1/2 flex -translate-x-1/2 -translate-y-1/2 items-center justify-center transition-opacity ' +
-          (zChecked() ? 'opacity-100' : 'opacity-0')
+          (arcChecked() ? 'opacity-100' : 'opacity-0')
         "
       />
     </main>
@@ -60,7 +60,7 @@ type OnChangeType = (value: boolean) => void;
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => ZardCheckboxComponent),
+      useExisting: forwardRef(() => ArcTechCheckboxComponent),
       multi: true,
     },
   ],
@@ -70,40 +70,40 @@ type OnChangeType = (value: boolean) => void;
     '[class]': 'hostClasses()',
     '[attr.aria-disabled]': 'disabled()',
   },
-  exportAs: 'zCheckbox',
+  exportAs: 'arcCheckbox',
 })
-export class ZardCheckboxComponent implements ControlValueAccessor {
+export class ArcTechCheckboxComponent implements ControlValueAccessor {
   readonly checkChange = output<boolean>();
 
   readonly class = input<ClassValue>('');
-  readonly zDisabled = input(false, { transform: booleanAttribute });
-  readonly zType = input<ZardCheckboxTypeVariants>('default');
-  readonly zSize = input<ZardCheckboxSizeVariants>('default');
-  readonly zShape = input<ZardCheckboxShapeVariants>('default');
-  readonly zNoLabelSpacing = input(false, { transform: booleanAttribute });
-  readonly zChecked = model<boolean>(false);
+  readonly arcDisabled = input(false, { transform: booleanAttribute });
+  readonly arcType = input<ArcTechCheckboxTypeVariants>('default');
+  readonly arcSize = input<ArcTechCheckboxSizeVariants>('default');
+  readonly arcShape = input<ArcTechCheckboxShapeVariants>('default');
+  readonly arcNoLabelSpacing = input(false, { transform: booleanAttribute });
+  readonly arcChecked = model<boolean>(false);
 
   private onChange: OnChangeType = noopFn;
   private onTouched: OnTouchedType = noopFn;
 
   protected readonly classes = computed(() =>
-    mergeClasses(checkboxVariants({ zType: this.zType(), zSize: this.zSize(), zShape: this.zShape() }), this.class()),
+    mergeClasses(checkboxVariants({ arcType: this.arcType(), arcSize: this.arcSize(), arcShape: this.arcShape() }), this.class()),
   );
 
   protected readonly hostClasses = computed(() =>
     mergeClasses(
       this.disabled() ? 'cursor-not-allowed' : 'cursor-pointer',
       'flex items-center',
-      this.zNoLabelSpacing() ? 'gap-0' : 'gap-2',
+      this.arcNoLabelSpacing() ? 'gap-0' : 'gap-2',
     ),
   );
 
   readonly disabledByForm = signal(false);
-  protected readonly labelClasses = computed(() => mergeClasses(checkboxLabelVariants({ zSize: this.zSize() })));
-  protected readonly disabled = computed(() => this.zDisabled() || this.disabledByForm());
+  protected readonly labelClasses = computed(() => mergeClasses(checkboxLabelVariants({ arcSize: this.arcSize() })));
+  protected readonly disabled = computed(() => this.arcDisabled() || this.disabledByForm());
 
   writeValue(val: boolean): void {
-    this.zChecked.set(val);
+    this.arcChecked.set(val);
   }
 
   setDisabledState(isDisabled: boolean): void {
@@ -127,8 +127,8 @@ export class ZardCheckboxComponent implements ControlValueAccessor {
       return;
     }
 
-    this.zChecked.update(v => !v);
-    this.onChange(this.zChecked());
-    this.checkChange.emit(this.zChecked());
+    this.arcChecked.update(v => !v);
+    this.onChange(this.arcChecked());
+    this.checkChange.emit(this.arcChecked());
   }
 }

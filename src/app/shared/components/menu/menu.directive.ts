@@ -18,48 +18,48 @@ import {
   untracked,
 } from '@angular/core';
 
-import { ZardMenuManagerService } from './menu-manager.service';
-import { MENU_POSITIONS_MAP, type ZardMenuPlacement } from './menu-positions';
+import { ArcTechMenuManagerService } from './menu-manager.service';
+import { MENU_POSITIONS_MAP, type ArcTechMenuPlacement } from './menu-positions';
 
-export type ZardMenuTrigger = 'click' | 'hover';
+export type ArcTechMenuTrigger = 'click' | 'hover';
 
 @Directive({
-  selector: '[z-menu]',
+  selector: '[arc-menu]',
   standalone: true,
   host: {
     role: 'button',
     '[attr.aria-haspopup]': "'menu'",
     '[attr.aria-expanded]': 'cdkTrigger.isOpen()',
     '[attr.data-state]': "cdkTrigger.isOpen() ? 'open': 'closed'",
-    '[attr.data-disabled]': "zDisabled() ? '' : undefined",
+    '[attr.data-disabled]': "arcDisabled() ? '' : undefined",
     '[style.cursor]': "'pointer'",
   },
   hostDirectives: [
     {
       directive: CdkMenuTrigger,
-      inputs: ['cdkMenuTriggerFor: zMenuTriggerFor'],
+      inputs: ['cdkMenuTriggerFor: arcMenuTriggerFor'],
     },
   ],
 })
-export class ZardMenuDirective implements OnInit, OnDestroy {
-  private static readonly MENU_CONTENT_SELECTOR = '.cdk-overlay-pane [z-menu-content]';
+export class ArcTechMenuDirective implements OnInit, OnDestroy {
+  private static readonly MENU_CONTENT_SELECTOR = '.cdk-overlay-pane [arc-menu-content]';
 
   protected readonly cdkTrigger = inject(CdkMenuTrigger, { host: true });
   private readonly document = inject(DOCUMENT);
   private readonly elementRef = inject(ElementRef);
-  private readonly menuManager = inject(ZardMenuManagerService);
+  private readonly menuManager = inject(ArcTechMenuManagerService);
   private readonly platformId = inject(PLATFORM_ID);
 
   private closeTimeout: ReturnType<typeof setTimeout> | null = null;
   private readonly cleanupFunctions: Array<() => void> = [];
 
-  readonly zMenuTriggerFor = input.required<TemplateRef<void>>();
-  readonly zDisabled = input<boolean, BooleanInput>(false, { transform: booleanAttribute });
-  readonly zTrigger = input<ZardMenuTrigger>('click');
-  readonly zHoverDelay = input<number>(100);
-  readonly zPlacement = input<ZardMenuPlacement>('bottomLeft');
+  readonly arcMenuTriggerFor = input.required<TemplateRef<void>>();
+  readonly arcDisabled = input<boolean, BooleanInput>(false, { transform: booleanAttribute });
+  readonly arcTrigger = input<ArcTechMenuTrigger>('click');
+  readonly arcHoverDelay = input<number>(100);
+  readonly arcPlacement = input<ArcTechMenuPlacement>('bottomLeft');
 
-  private readonly menuPositions = computed(() => this.getPositionsByPlacement(this.zPlacement()));
+  private readonly menuPositions = computed(() => this.getPositionsByPlacement(this.arcPlacement()));
 
   constructor() {
     effect(() => {
@@ -70,7 +70,7 @@ export class ZardMenuDirective implements OnInit, OnDestroy {
     });
   }
 
-  private getPositionsByPlacement(placement: ZardMenuPlacement): ConnectedPosition[] {
+  private getPositionsByPlacement(placement: ArcTechMenuPlacement): ConnectedPosition[] {
     return MENU_POSITIONS_MAP[placement] || MENU_POSITIONS_MAP['bottomLeft'];
   }
 
@@ -79,7 +79,7 @@ export class ZardMenuDirective implements OnInit, OnDestroy {
 
     // If trigger is hover but device is mobile, skip hover behavior
     // The CDK MenuTrigger will handle click by default
-    if (this.zTrigger() === 'hover' && !isMobile) {
+    if (this.arcTrigger() === 'hover' && !isMobile) {
       this.initializeHoverBehavior();
     }
   }
@@ -105,7 +105,7 @@ export class ZardMenuDirective implements OnInit, OnDestroy {
     const element = this.elementRef.nativeElement;
 
     this.addEventListenerWithCleanup(element, 'mouseenter', () => {
-      if (this.zDisabled()) {
+      if (this.arcDisabled()) {
         return;
       }
 
@@ -133,7 +133,7 @@ export class ZardMenuDirective implements OnInit, OnDestroy {
   }
 
   private setupMenuContentListeners(): void {
-    const menuContent = this.document.querySelector(ZardMenuDirective.MENU_CONTENT_SELECTOR);
+    const menuContent = this.document.querySelector(ArcTechMenuDirective.MENU_CONTENT_SELECTOR);
     if (!menuContent) {
       return;
     }
@@ -165,9 +165,9 @@ export class ZardMenuDirective implements OnInit, OnDestroy {
     }
 
     const isMovingToTrigger = this.elementRef.nativeElement.contains(relatedTarget);
-    const isMovingToMenu = relatedTarget.closest(ZardMenuDirective.MENU_CONTENT_SELECTOR);
+    const isMovingToMenu = relatedTarget.closest(ArcTechMenuDirective.MENU_CONTENT_SELECTOR);
     const isMovingToOtherTrigger =
-      relatedTarget.matches('[z-menu]') && !this.elementRef.nativeElement.contains(relatedTarget);
+      relatedTarget.matches('[arc-menu]') && !this.elementRef.nativeElement.contains(relatedTarget);
 
     if (isMovingToOtherTrigger) {
       return false;
@@ -179,7 +179,7 @@ export class ZardMenuDirective implements OnInit, OnDestroy {
   private scheduleMenuClose(): void {
     this.closeTimeout = setTimeout(() => {
       this.cdkTrigger.close();
-    }, this.zHoverDelay());
+    }, this.arcHoverDelay());
   }
 
   private addEventListenerWithCleanup(

@@ -26,7 +26,7 @@ import { mergeClasses } from '@/shared/utils/merge-classes';
 import { dropdownContentVariants } from './dropdown.variants';
 
 @Component({
-  selector: 'z-dropdown-menu',
+  selector: 'arc-dropdown-menu',
   imports: [OverlayModule],
   template: `
     <!-- Dropdown Trigger -->
@@ -54,9 +54,9 @@ import { dropdownContentVariants } from './dropdown.variants';
     '[attr.data-state]': 'isOpen() ? "open" : "closed"',
     '(document:click)': 'onDocumentClick($event)',
   },
-  exportAs: 'zDropdownMenu',
+  exportAs: 'arcDropdownMenu',
 })
-export class ZardDropdownMenuComponent implements OnDestroy {
+export class ArcTechDropdownMenuComponent implements OnDestroy {
   private elementRef = inject(ElementRef);
   private overlay = inject(Overlay);
   private overlayPositionBuilder = inject(OverlayPositionBuilder);
@@ -213,7 +213,7 @@ export class ZardDropdownMenuComponent implements OnDestroy {
     }
     const dropdownElement = this.overlayRef.overlayElement;
     return Array.from(
-      dropdownElement.querySelectorAll<HTMLElement>('z-dropdown-menu-item, [z-dropdown-menu-item]'),
+      dropdownElement.querySelectorAll<HTMLElement>('arc-dropdown-menu-item, [arc-dropdown-menu-item]'),
     ).filter(item => item.dataset['disabled'] === undefined);
   }
 

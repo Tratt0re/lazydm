@@ -6,7 +6,7 @@ export const formLabelVariants = cva(
   'text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70',
   {
     variants: {
-      zRequired: {
+      arcRequired: {
         true: "after:content-['*'] after:ml-0.5 after:text-destructive",
       },
     },
@@ -17,7 +17,7 @@ export const formControlVariants = cva('');
 
 export const formMessageVariants = cva('text-sm', {
   variants: {
-    zType: {
+    arcType: {
       default: 'text-muted-foreground',
       error: 'text-destructive',
       success: 'text-success',
@@ -25,8 +25,8 @@ export const formMessageVariants = cva('text-sm', {
     },
   },
   defaultVariants: {
-    zType: 'default',
+    arcType: 'default',
   },
 });
 
-export type ZardFormMessageTypeVariants = NonNullable<VariantProps<typeof formMessageVariants>['zType']>;
+export type ArcTechFormMessageTypeVariants = NonNullable<VariantProps<typeof formMessageVariants>['arcType']>;

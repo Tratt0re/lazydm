@@ -195,7 +195,7 @@ export const MENU_POSITIONS_MAP: { [key: string]: ConnectedPosition[] } = {
   ],
 };
 
-export type ZardMenuPlacement =
+export type ArcTechMenuPlacement =
   | 'bottomLeft'
   | 'bottomCenter'
   | 'bottomRight'

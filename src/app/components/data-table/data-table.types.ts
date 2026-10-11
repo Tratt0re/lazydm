@@ -1,6 +1,6 @@
-import type { ZardBadgeShapeVariants, ZardBadgeTypeVariants } from '@/shared/components/badge';
-import type { ZardButtonTypeVariants } from '@/shared/components/button';
-import type { ZardIcon } from '@/shared/components/icon';
+import type { ArcTechBadgeShapeVariants, ArcTechBadgeTypeVariants } from '@/shared/components/badge';
+import type { ArcTechButtonTypeVariants } from '@/shared/components/button';
+import type { ArcTechIcon } from '@/shared/components/icon';
 
 export type TableCellType = 'string' | 'number' | 'currency' | 'date' | 'datetime' | 'boolean' | 'badge';
 export type TableCellAlign = 'left' | 'center' | 'right';
@@ -19,9 +19,9 @@ export interface TableDataStructureItem {
 }
 
 export interface TableBadgeConfig {
-  readonly icon?: ZardIcon;
-  readonly type?: ZardBadgeTypeVariants;
-  readonly shape?: ZardBadgeShapeVariants;
+  readonly icon?: ArcTechIcon;
+  readonly type?: ArcTechBadgeTypeVariants;
+  readonly shape?: ArcTechBadgeShapeVariants;
   readonly iconColumnKey?: string;
   readonly colorHexColumnKey?: string;
   readonly colorMode?: TableBadgeColorMode;
@@ -29,7 +29,7 @@ export interface TableBadgeConfig {
 }
 
 export interface TableCellIconConfig {
-  readonly icon?: ZardIcon;
+  readonly icon?: ArcTechIcon;
   readonly iconColumnKey?: string;
   readonly colorHex?: string;
   readonly colorHexColumnKey?: string;
@@ -66,7 +66,7 @@ export interface EditableOptionItem {
   readonly label: string;
   readonly value: string | number | boolean;
   readonly translate?: boolean;
-  readonly icon?: ZardIcon;
+  readonly icon?: ArcTechIcon;
   readonly colorHex?: string;
 }
 
@@ -92,10 +92,10 @@ export interface EditableColumnDataItem extends ColumnDataItem {
 
 export interface ActionItem {
   readonly id: string;
-  readonly icon: ZardIcon;
+  readonly icon: ArcTechIcon;
   readonly label: string;
   readonly action: (row: object) => void | Promise<void>;
-  readonly buttonType?: ZardButtonTypeVariants;
+  readonly buttonType?: ArcTechButtonTypeVariants;
   readonly disabled?: (row: object) => boolean;
   readonly visible?: (row: object) => boolean;
   readonly showWhenDisabled?: boolean;
@@ -105,16 +105,16 @@ export interface TableHeaderActionItem {
   readonly id: string;
   readonly label: string;
   readonly action: () => void | Promise<void>;
-  readonly icon?: ZardIcon;
+  readonly icon?: ArcTechIcon;
   readonly showLabel?: boolean;
-  readonly buttonType?: ZardButtonTypeVariants;
+  readonly buttonType?: ArcTechButtonTypeVariants;
   readonly disabled?: boolean | (() => boolean);
 }
 
 export interface TableActiveFilterItem {
   readonly id: string;
   readonly label: string;
-  readonly icon?: ZardIcon;
+  readonly icon?: ArcTechIcon;
   readonly translate?: boolean;
   readonly removable?: boolean;
 }

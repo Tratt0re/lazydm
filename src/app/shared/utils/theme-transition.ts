@@ -1,4 +1,4 @@
-import type { DarkModeOptions, ZardDarkMode } from '@/shared/services/dark-mode';
+import type { DarkModeOptions, ArcTechDarkMode } from '@/shared/services/dark-mode';
 
 type ThemeViewTransitionDocument = Document & {
   startViewTransition?: (updateCallback: () => void | Promise<void>) => {
@@ -12,7 +12,7 @@ interface ApplyThemeTransitionOptions {
 }
 
 export function applyThemeTransition(
-  darkMode: ZardDarkMode,
+  darkMode: ArcTechDarkMode,
   { targetMode, origin = null }: ApplyThemeTransitionOptions = {},
 ): void {
   if (typeof window === 'undefined') {

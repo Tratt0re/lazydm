@@ -11,66 +11,66 @@ import {
   ViewContainerRef,
 } from '@angular/core';
 
-import { ZardAlertDialogRef } from './alert-dialog-ref';
-import { ZardAlertDialogComponent, ZardAlertDialogOptions } from './alert-dialog.component';
+import { ArcTechAlertDialogRef } from './alert-dialog-ref';
+import { ArcTechAlertDialogComponent, ArcTechAlertDialogOptions } from './alert-dialog.component';
 
 type ContentType<T> = ComponentType<T> | TemplateRef<T> | string | undefined;
 
-export const Z_ALERT_MODAL_DATA = new InjectionToken<unknown>('Z_ALERT_MODAL_DATA');
+export const ARC_ALERT_MODAL_DATA = new InjectionToken<unknown>('ARC_ALERT_MODAL_DATA');
 
 @Injectable({
   providedIn: 'root',
 })
-export class ZardAlertDialogService {
+export class ArcTechAlertDialogService {
   private readonly overlay = inject(Overlay);
   private readonly injector = inject(Injector);
   private readonly platformId = inject(PLATFORM_ID);
 
-  create<T>(config: ZardAlertDialogOptions<T>): ZardAlertDialogRef<T> {
-    return this.open<T>(config.zContent, config);
+  create<T>(config: ArcTechAlertDialogOptions<T>): ArcTechAlertDialogRef<T> {
+    return this.open<T>(config.arcContent, config);
   }
 
   confirm<T>(
-    config: Omit<ZardAlertDialogOptions<T>, 'zOkText' | 'zCancelText'> & {
-      zOkText?: string;
-      zCancelText?: string;
+    config: Omit<ArcTechAlertDialogOptions<T>, 'arcOkText' | 'arcCancelText'> & {
+      arcOkText?: string;
+      arcCancelText?: string;
     },
-  ): ZardAlertDialogRef<T> {
-    const confirmConfig: ZardAlertDialogOptions<T> = {
+  ): ArcTechAlertDialogRef<T> {
+    const confirmConfig: ArcTechAlertDialogOptions<T> = {
       ...config,
-      zOkText: config.zOkText ?? 'Confirm',
-      zCancelText: config.zCancelText ?? 'Cancel',
-      zOkDestructive: config.zOkDestructive ?? false,
+      arcOkText: config.arcOkText ?? 'Confirm',
+      arcCancelText: config.arcCancelText ?? 'Cancel',
+      arcOkDestructive: config.arcOkDestructive ?? false,
     };
     return this.create(confirmConfig);
   }
 
-  warning<T>(config: Omit<ZardAlertDialogOptions<T>, 'zOkText'> & { zOkText?: string }): ZardAlertDialogRef<T> {
-    const warningConfig: ZardAlertDialogOptions<T> = {
+  warning<T>(config: Omit<ArcTechAlertDialogOptions<T>, 'arcOkText'> & { arcOkText?: string }): ArcTechAlertDialogRef<T> {
+    const warningConfig: ArcTechAlertDialogOptions<T> = {
       ...config,
-      zOkText: config.zOkText ?? 'OK',
-      zCancelText: null,
+      arcOkText: config.arcOkText ?? 'OK',
+      arcCancelText: null,
     };
     return this.create(warningConfig);
   }
 
-  info<T>(config: Omit<ZardAlertDialogOptions<T>, 'zOkText'> & { zOkText?: string }): ZardAlertDialogRef<T> {
-    const infoConfig: ZardAlertDialogOptions<T> = {
+  info<T>(config: Omit<ArcTechAlertDialogOptions<T>, 'arcOkText'> & { arcOkText?: string }): ArcTechAlertDialogRef<T> {
+    const infoConfig: ArcTechAlertDialogOptions<T> = {
       ...config,
-      zOkText: config.zOkText ?? 'OK',
-      zCancelText: null,
+      arcOkText: config.arcOkText ?? 'OK',
+      arcCancelText: null,
     };
     return this.create(infoConfig);
   }
 
-  private open<T>(componentOrTemplateRef: ContentType<T>, config: ZardAlertDialogOptions<T>) {
+  private open<T>(componentOrTemplateRef: ContentType<T>, config: ArcTechAlertDialogOptions<T>) {
     const overlayRef = this.createOverlay();
 
     if (!overlayRef) {
-      return new ZardAlertDialogRef(
+      return new ArcTechAlertDialogRef(
         undefined as unknown as OverlayRef,
         config,
-        undefined as unknown as ZardAlertDialogComponent<T>,
+        undefined as unknown as ArcTechAlertDialogComponent<T>,
       );
     }
 
@@ -99,18 +99,18 @@ export class ZardAlertDialogService {
     return this.overlay.create(overlayConfig);
   }
 
-  private attachAlertDialogContainer<T>(overlayRef: OverlayRef, config: ZardAlertDialogOptions<T>) {
+  private attachAlertDialogContainer<T>(overlayRef: OverlayRef, config: ArcTechAlertDialogOptions<T>) {
     const injector = Injector.create({
       parent: this.injector,
       providers: [
         { provide: OverlayRef, useValue: overlayRef },
-        { provide: ZardAlertDialogOptions, useValue: config },
+        { provide: ArcTechAlertDialogOptions, useValue: config },
       ],
     });
 
-    const containerPortal = new ComponentPortal<ZardAlertDialogComponent<T>>(
-      ZardAlertDialogComponent,
-      config.zViewContainerRef,
+    const containerPortal = new ComponentPortal<ArcTechAlertDialogComponent<T>>(
+      ArcTechAlertDialogComponent,
+      config.arcViewContainerRef,
       injector,
     );
 
@@ -121,11 +121,11 @@ export class ZardAlertDialogService {
 
   private attachAlertDialogContent<T>(
     componentOrTemplateRef: ContentType<T>,
-    alertDialogContainer: ZardAlertDialogComponent<T>,
+    alertDialogContainer: ArcTechAlertDialogComponent<T>,
     overlayRef: OverlayRef,
-    config: ZardAlertDialogOptions<T>,
+    config: ArcTechAlertDialogOptions<T>,
   ) {
-    const alertDialogRef = new ZardAlertDialogRef<T>(overlayRef, config, alertDialogContainer);
+    const alertDialogRef = new ArcTechAlertDialogRef<T>(overlayRef, config, alertDialogContainer);
 
     if (componentOrTemplateRef instanceof TemplateRef) {
       alertDialogContainer.attachTemplatePortal(
@@ -140,7 +140,7 @@ export class ZardAlertDialogService {
     } else if (componentOrTemplateRef && typeof componentOrTemplateRef !== 'string') {
       const injector = this.createInjector<T>(alertDialogRef, config);
       const contentRef = alertDialogContainer.attachComponentPortal(
-        new ComponentPortal(componentOrTemplateRef, config.zViewContainerRef, injector),
+        new ComponentPortal(componentOrTemplateRef, config.arcViewContainerRef, injector),
       );
       alertDialogRef.componentInstance = contentRef.instance;
     }
@@ -148,12 +148,12 @@ export class ZardAlertDialogService {
     return alertDialogRef;
   }
 
-  private createInjector<T>(alertDialogRef: ZardAlertDialogRef<T>, config: ZardAlertDialogOptions<T>) {
+  private createInjector<T>(alertDialogRef: ArcTechAlertDialogRef<T>, config: ArcTechAlertDialogOptions<T>) {
     return Injector.create({
       parent: this.injector,
       providers: [
-        { provide: ZardAlertDialogRef, useValue: alertDialogRef },
-        { provide: Z_ALERT_MODAL_DATA, useValue: config.zData },
+        { provide: ArcTechAlertDialogRef, useValue: alertDialogRef },
+        { provide: ARC_ALERT_MODAL_DATA, useValue: config.arcData },
       ],
     });
   }

@@ -1,15 +1,15 @@
-import { ZardContextMenuDirective } from '@/shared/components/menu/context-menu.directive';
-import { ZardMenuContentDirective } from '@/shared/components/menu/menu-content.directive';
-import { ZardMenuItemDirective } from '@/shared/components/menu/menu-item.directive';
-import { ZardMenuLabelComponent } from '@/shared/components/menu/menu-label.component';
-import { ZardMenuShortcutComponent } from '@/shared/components/menu/menu-shortcut.component';
-import { ZardMenuDirective } from '@/shared/components/menu/menu.directive';
+import { ArcTechContextMenuDirective } from '@/shared/components/menu/context-menu.directive';
+import { ArcTechMenuContentDirective } from '@/shared/components/menu/menu-content.directive';
+import { ArcTechMenuItemDirective } from '@/shared/components/menu/menu-item.directive';
+import { ArcTechMenuLabelComponent } from '@/shared/components/menu/menu-label.component';
+import { ArcTechMenuShortcutComponent } from '@/shared/components/menu/menu-shortcut.component';
+import { ArcTechMenuDirective } from '@/shared/components/menu/menu.directive';
 
-export const ZardMenuImports = [
-  ZardContextMenuDirective,
-  ZardMenuContentDirective,
-  ZardMenuItemDirective,
-  ZardMenuDirective,
-  ZardMenuLabelComponent,
-  ZardMenuShortcutComponent,
+export const ArcTechMenuImports = [
+  ArcTechContextMenuDirective,
+  ArcTechMenuContentDirective,
+  ArcTechMenuItemDirective,
+  ArcTechMenuDirective,
+  ArcTechMenuLabelComponent,
+  ArcTechMenuShortcutComponent,
 ] as const;

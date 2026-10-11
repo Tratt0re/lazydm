@@ -3,13 +3,13 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { A11yModule } from '@angular/cdk/a11y';
 
-import { ZardIconComponent } from '@/shared/components/icon';
+import { ArcTechIconComponent } from '@/shared/components/icon';
 import {
   SidebarComponent,
   SidebarGroupComponent,
   SidebarGroupLabelComponent,
 } from '@/shared/components/layout/sidebar.component';
-import { ZardTooltipImports } from '@/shared/components/tooltip';
+import { ArcTechTooltipImports } from '@/shared/components/tooltip';
 import { mergeClasses } from '@/shared/utils/merge-classes';
 import { UpdateService } from '@/shared/core/services/update.service';
 
@@ -22,11 +22,11 @@ import type { MenuSectionConfig } from '@/config/menu.config';
     RouterLinkActive,
     A11yModule,
     TranslatePipe,
-    ZardIconComponent,
+    ArcTechIconComponent,
     SidebarComponent,
     SidebarGroupComponent,
     SidebarGroupLabelComponent,
-    ...ZardTooltipImports,
+    ...ArcTechTooltipImports,
   ],
   templateUrl: './sidebar.html',
   encapsulation: ViewEncapsulation.None,

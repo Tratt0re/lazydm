@@ -15,17 +15,17 @@ import { type ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 import type { ClassValue } from 'clsx';
 
-import { ZardCommandComponent } from '@/shared/components/command/command.component';
+import { ArcTechCommandComponent } from '@/shared/components/command/command.component';
 import { commandInputVariants } from '@/shared/components/command/command.variants';
-import { ZardIconComponent } from '@/shared/components/icon';
+import { ArcTechIconComponent } from '@/shared/components/icon';
 import { mergeClasses } from '@/shared/utils/merge-classes';
 
 @Component({
-  selector: 'z-command-input',
-  imports: [ZardIconComponent],
+  selector: 'arc-command-input',
+  imports: [ArcTechIconComponent],
   template: `
     <div class="flex items-center border-b px-3" cmdk-input-wrapper="">
-      <z-icon zType="search" class="mr-2 shrink-0 opacity-50" />
+      <arc-icon arcType="search" class="mr-2 shrink-0 opacity-50" />
       <input
         #searchInput
         [class]="classes()"
@@ -50,16 +50,16 @@ import { mergeClasses } from '@/shared/utils/merge-classes';
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => ZardCommandInputComponent),
+      useExisting: forwardRef(() => ArcTechCommandInputComponent),
       multi: true,
     },
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
-  exportAs: 'zCommandInput',
+  exportAs: 'arcCommandInput',
 })
-export class ZardCommandInputComponent implements ControlValueAccessor {
-  private readonly commandComponent = inject(ZardCommandComponent, { optional: true });
+export class ArcTechCommandInputComponent implements ControlValueAccessor {
+  private readonly commandComponent = inject(ArcTechCommandComponent, { optional: true });
   readonly searchInput = viewChild.required<ElementRef<HTMLInputElement>>('searchInput');
 
   readonly placeholder = input<string>('Type a command or search...');

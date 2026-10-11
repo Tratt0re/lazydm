@@ -7,7 +7,7 @@ import { SidebarComponent } from '@/shared/components/layout/sidebar.component';
 import { mergeClasses } from '@/shared/utils/merge-classes';
 
 @Component({
-  selector: 'z-layout',
+  selector: 'arc-layout',
   template: `
     <ng-content />
   `,
@@ -16,18 +16,18 @@ import { mergeClasses } from '@/shared/utils/merge-classes';
   host: {
     '[class]': 'classes()',
   },
-  exportAs: 'zLayout',
+  exportAs: 'arcLayout',
 })
 export class LayoutComponent {
   readonly class = input<ClassValue>('');
-  readonly zDirection = input<LayoutVariants>('auto');
+  readonly arcDirection = input<LayoutVariants>('auto');
 
   // Query for direct sidebar children to auto-detect layout direction
   private readonly sidebars = contentChildren(SidebarComponent, { descendants: false });
 
   private readonly detectedDirection = computed(() => {
-    if (this.zDirection() !== 'auto') {
-      return this.zDirection();
+    if (this.arcDirection() !== 'auto') {
+      return this.arcDirection();
     }
 
     // Auto-detection: Check if there are any sidebar children
@@ -38,7 +38,7 @@ export class LayoutComponent {
   protected readonly classes = computed(() =>
     mergeClasses(
       layoutVariants({
-        zDirection: this.detectedDirection(),
+        arcDirection: this.detectedDirection(),
       }),
       this.class(),
     ),

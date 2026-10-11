@@ -3,12 +3,12 @@
   class="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-9999 focus:rounded-md focus:bg-background focus:px-4 focus:py-2 focus:text-sm focus:font-medium focus:ring-2 focus:ring-ring focus:ring-offset-2"
 >{{ 'common.skipToContent' | translate }}</a>
 
-<z-layout class="h-full overflow-hidden" [style.--app-shell-header-offset]="headerOffset()">
+<arc-layout class="h-full overflow-hidden" [style.--app-shell-header-offset]="headerOffset()">
   @if (isFullscreen()) {
     <app-header></app-header>
   }
 
-  <z-layout class="relative min-h-0 flex-1" zDirection="horizontal">
+  <arc-layout class="relative min-h-0 flex-1" arcDirection="horizontal">
     @if (showSidebarOverlay()) {
       <button
         type="button"
@@ -25,7 +25,7 @@
       (sidebarCollapsedChange)="setSidebarCollapsed($event)"
     ></app-sidebar>
 
-    <z-layout
+    <arc-layout
       class="min-w-0 flex-1"
       [attr.inert]="showSidebarOverlay() ? '' : null"
       [attr.aria-hidden]="showSidebarOverlay() ? 'true' : null"
@@ -40,10 +40,10 @@
         (sidebarToggle)="toggleSidebar()"
       ></app-toolbar>
 
-      <z-content id="main-content" class="min-h-0">
+      <arc-content id="main-content" class="min-h-0">
         <ng-content />
-      </z-content>
+      </arc-content>
 
-    </z-layout>
-  </z-layout>
-</z-layout>
+    </arc-layout>
+  </arc-layout>
+</arc-layout>

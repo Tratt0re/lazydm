@@ -1,7 +1,7 @@
 import type { ListenerOptions } from '@angular/core';
 import { EventManagerPlugin } from '@angular/platform-browser';
 
-export class ZardDebounceEventManagerPlugin extends EventManagerPlugin {
+export class ArcTechDebounceEventManagerPlugin extends EventManagerPlugin {
   override supports(eventName: string): boolean {
     return /\.debounce(?:\.|$)/.test(eventName);
   }

@@ -25,4 +25,4 @@ export const dropdownItemVariants = cva(
   },
 );
 
-export type ZardDropdownItemVariants = VariantProps<typeof dropdownItemVariants>;
+export type ArcTechDropdownItemVariants = VariantProps<typeof dropdownItemVariants>;

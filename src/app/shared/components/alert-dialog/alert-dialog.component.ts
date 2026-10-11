@@ -27,41 +27,41 @@ import {
 
 import type { ClassValue } from 'clsx';
 
-import { ZardIdDirective } from '@/shared/core';
+import { ArcTechIdDirective } from '@/shared/core';
 import { mergeClasses, noopFn } from '@/shared/utils/merge-classes';
 
-import type { ZardAlertDialogRef } from './alert-dialog-ref';
-import { ZardAlertDialogService } from './alert-dialog.service';
+import type { ArcTechAlertDialogRef } from './alert-dialog-ref';
+import { ArcTechAlertDialogService } from './alert-dialog.service';
 import { alertDialogVariants } from './alert-dialog.variants';
-import { ZardButtonComponent } from '@/shared/components/button/button.component';
-import { ZardIconComponent } from '@/shared/components/icon/icon.component';
+import { ArcTechButtonComponent } from '@/shared/components/button/button.component';
+import { ArcTechIconComponent } from '@/shared/components/icon/icon.component';
 
 export type OnClickCallback<T> = (instance: T) => false | void | object;
 
-export class ZardAlertDialogOptions<T> {
-  zCancelText?: string | null;
-  zClosable?: boolean;
-  zContent?: string | TemplateRef<T> | Type<T>;
-  zCustomClasses?: ClassValue;
-  zData?: object;
-  zDescription?: string;
-  zMaskClosable?: boolean;
-  zOkDestructive?: boolean;
-  zOkDisabled?: boolean;
-  zOkText?: string | null;
-  zOnCancel?: EventEmitter<T> | OnClickCallback<T> = noopFn;
-  zOnOk?: EventEmitter<T> | OnClickCallback<T> = noopFn;
-  zTitle?: string | TemplateRef<T>;
-  zViewContainerRef?: ViewContainerRef;
-  zWidth?: string;
+export class ArcTechAlertDialogOptions<T> {
+  arcCancelText?: string | null;
+  arcClosable?: boolean;
+  arcContent?: string | TemplateRef<T> | Type<T>;
+  arcCustomClasses?: ClassValue;
+  arcData?: object;
+  arcDescription?: string;
+  arcMaskClosable?: boolean;
+  arcOkDestructive?: boolean;
+  arcOkDisabled?: boolean;
+  arcOkText?: string | null;
+  arcOnCancel?: EventEmitter<T> | OnClickCallback<T> = noopFn;
+  arcOnOk?: EventEmitter<T> | OnClickCallback<T> = noopFn;
+  arcTitle?: string | TemplateRef<T>;
+  arcViewContainerRef?: ViewContainerRef;
+  arcWidth?: string;
 }
 
 @Component({
-  selector: 'z-alert-dialog',
-  imports: [OverlayModule, PortalModule, ZardButtonComponent, ZardIconComponent, A11yModule, ZardIdDirective],
+  selector: 'arc-alert-dialog',
+  imports: [OverlayModule, PortalModule, ArcTechButtonComponent, ArcTechIconComponent, A11yModule, ArcTechIdDirective],
   templateUrl: './alert-dialog.component.html',
   styles: `
-    z-alert-dialog {
+    arc-alert-dialog {
       inset: 0;
       margin: auto;
       width: fit-content;
@@ -75,13 +75,13 @@ export class ZardAlertDialogOptions<T> {
     }
 
     @starting-style {
-      z-alert-dialog {
+      arc-alert-dialog {
         opacity: 0;
         transform: scale(0.9);
       }
     }
 
-    z-alert-dialog.alert-dialog-leave {
+    arc-alert-dialog.alert-dialog-leave {
       opacity: 0;
       transform: scale(0.9);
       transition:
@@ -93,7 +93,7 @@ export class ZardAlertDialogOptions<T> {
   encapsulation: ViewEncapsulation.None,
   host: {
     '[class]': 'classes()',
-    '[style.width]': 'config.zWidth ? config.zWidth : null',
+    '[style.width]': 'config.arcWidth ? config.arcWidth : null',
     role: 'alertdialog',
     '[attr.aria-modal]': 'true',
     '[attr.aria-labelledby]': 'titleId()',
@@ -101,28 +101,28 @@ export class ZardAlertDialogOptions<T> {
     'animate.enter': 'alert-dialog-enter',
     'animate.leave': 'alert-dialog-leave',
   },
-  exportAs: 'zAlertDialog',
+  exportAs: 'arcAlertDialog',
 })
-export class ZardAlertDialogComponent<T> extends BasePortalOutlet {
-  protected readonly alertDialogId = viewChild<ZardIdDirective>('z');
+export class ArcTechAlertDialogComponent<T> extends BasePortalOutlet {
+  protected readonly alertDialogId = viewChild<ArcTechIdDirective>('z');
   private readonly host = inject(ElementRef<HTMLElement>);
-  protected readonly config = inject(ZardAlertDialogOptions<T>);
+  protected readonly config = inject(ArcTechAlertDialogOptions<T>);
 
-  protected readonly classes = computed(() => mergeClasses(alertDialogVariants(), this.config.zCustomClasses));
+  protected readonly classes = computed(() => mergeClasses(alertDialogVariants(), this.config.arcCustomClasses));
 
   protected readonly titleId = computed(() => {
     const baseId = this.alertDialogId()?.id();
-    return this.config.zTitle && baseId ? `${baseId}-title` : null;
+    return this.config.arcTitle && baseId ? `${baseId}-title` : null;
   });
 
   protected readonly descriptionId = computed(() => {
     const baseId = this.alertDialogId()?.id();
-    return this.config.zDescription && baseId ? `${baseId}-description` : null;
+    return this.config.arcDescription && baseId ? `${baseId}-description` : null;
   });
 
-  alertDialogRef?: ZardAlertDialogRef<T>;
+  alertDialogRef?: ArcTechAlertDialogRef<T>;
 
-  protected readonly isStringContent = computed(() => typeof this.config.zContent === 'string');
+  protected readonly isStringContent = computed(() => typeof this.config.arcContent === 'string');
 
   readonly portalOutlet = viewChild.required(CdkPortalOutlet);
 
@@ -162,7 +162,7 @@ export class ZardAlertDialogComponent<T> extends BasePortalOutlet {
 }
 
 @NgModule({
-  imports: [ZardButtonComponent, ZardAlertDialogComponent, OverlayModule, PortalModule, A11yModule],
-  providers: [ZardAlertDialogService],
+  imports: [ArcTechButtonComponent, ArcTechAlertDialogComponent, OverlayModule, PortalModule, A11yModule],
+  providers: [ArcTechAlertDialogService],
 })
-export class ZardAlertDialogModule {}
+export class ArcTechAlertDialogModule {}

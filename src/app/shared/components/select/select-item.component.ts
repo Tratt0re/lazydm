@@ -9,13 +9,13 @@ import {
   signal,
 } from '@angular/core';
 
-import { ZardIconComponent } from '@/shared/components/icon';
-import type { ZardIcon } from '@/shared/components/icon';
+import { ArcTechIconComponent } from '@/shared/components/icon';
+import type { ArcTechIcon } from '@/shared/components/icon';
 import {
   selectItemIconVariants,
   selectItemVariants,
-  type ZardSelectItemModeVariants,
-  type ZardSelectSizeVariants,
+  type ArcTechSelectItemModeVariants,
+  type ArcTechSelectSizeVariants,
 } from '@/shared/components/select/select.variants';
 import { mergeClasses, noopFn, transform } from '@/shared/utils/merge-classes';
 
@@ -27,27 +27,27 @@ interface SelectHost {
 }
 
 @Component({
-  selector: 'z-select-item, [z-select-item]',
-  imports: [ZardIconComponent],
+  selector: 'arc-select-item, [arc-select-item]',
+  imports: [ArcTechIconComponent],
   template: `
     @if (isSelected()) {
       <span [class]="iconClasses()">
-        <z-icon zType="check" [zStrokeWidth]="strokeWidth()" aria-hidden="true" data-testid="check-icon" />
+        <arc-icon arcType="check" [arcStrokeWidth]="strokeWidth()" aria-hidden="true" data-testid="check-icon" />
       </span>
     }
-    @if (zColorHex(); as colorHex) {
+    @if (arcColorHex(); as colorHex) {
       <span
         class="inline-block h-3.5 w-6 shrink-0 rounded-sm border border-border/70"
         [style.backgroundColor]="colorHex"
       ></span>
     }
-    @if (zIcon(); as iconType) {
-      <z-icon [zType]="iconType" class="size-3.5 shrink-0" />
+    @if (arcIcon(); as iconType) {
+      <arc-icon [arcType]="iconType" class="size-3.5 shrink-0" />
     }
-    @if (zShowLabel()) {
+    @if (arcShowLabel()) {
       <span class="truncate">
-        @if (zLabel()) {
-          {{ zLabel() }}
+        @if (arcLabel()) {
+          {{ arcLabel() }}
         } @else {
           <ng-content />
         }
@@ -59,8 +59,8 @@ interface SelectHost {
     role: 'option',
     tabindex: '-1',
     '[class]': 'classes()',
-    '[attr.value]': 'zValue()',
-    '[attr.data-disabled]': 'zDisabled() ? "" : null',
+    '[attr.value]': 'arcValue()',
+    '[attr.data-disabled]': 'arcDisabled() ? "" : null',
     '[attr.data-selected]': 'isSelected() ? "" : null',
     '[attr.aria-selected]': 'isSelected()',
     '(click)': 'onClick()',
@@ -68,22 +68,22 @@ interface SelectHost {
     '(keydown.{tab}.prevent)': 'noopFn',
   },
 })
-export class ZardSelectItemComponent {
+export class ArcTechSelectItemComponent {
   readonly elementRef = inject(ElementRef<HTMLElement>);
 
-  readonly zValue = input.required<string>();
-  readonly zDisabled = input(false, { transform });
-  readonly zLabel = input<string>('');
-  readonly zShowLabel = input(true, { transform });
-  readonly zIcon = input<ZardIcon | null>(null);
-  readonly zColorHex = input<string | null>(null);
+  readonly arcValue = input.required<string>();
+  readonly arcDisabled = input(false, { transform });
+  readonly arcLabel = input<string>('');
+  readonly arcShowLabel = input(true, { transform });
+  readonly arcIcon = input<ArcTechIcon | null>(null);
+  readonly arcColorHex = input<string | null>(null);
   readonly class = input<string>('');
 
   private readonly select = signal<SelectHost | null>(null);
   noopFn = noopFn;
 
   readonly label = linkedSignal<string>(() => {
-    const explicitLabel = this.zLabel().trim();
+    const explicitLabel = this.arcLabel().trim();
     if (explicitLabel.length > 0) {
       return explicitLabel;
     }
@@ -92,36 +92,36 @@ export class ZardSelectItemComponent {
     return (element.textContent ?? element.innerText)?.trim() ?? '';
   });
 
-  readonly zMode = signal<ZardSelectItemModeVariants>('normal');
-  readonly zSize = signal<ZardSelectSizeVariants>('default');
+  readonly arcMode = signal<ArcTechSelectItemModeVariants>('normal');
+  readonly arcSize = signal<ArcTechSelectSizeVariants>('default');
 
   protected readonly classes = computed(() =>
-    mergeClasses(selectItemVariants({ zMode: this.zMode(), zSize: this.zSize() }), this.class()),
+    mergeClasses(selectItemVariants({ arcMode: this.arcMode(), arcSize: this.arcSize() }), this.class()),
   );
 
   protected readonly iconClasses = computed(() =>
-    mergeClasses(selectItemIconVariants({ zMode: this.zMode(), zSize: this.zSize() })),
+    mergeClasses(selectItemIconVariants({ arcMode: this.arcMode(), arcSize: this.arcSize() })),
   );
 
-  protected readonly strokeWidth = computed(() => (this.zMode() === 'compact' ? 3 : 2));
+  protected readonly strokeWidth = computed(() => (this.arcMode() === 'compact' ? 3 : 2));
 
-  protected readonly isSelected = computed(() => this.select()?.selectedValue().includes(this.zValue()) ?? false);
+  protected readonly isSelected = computed(() => this.select()?.selectedValue().includes(this.arcValue()) ?? false);
 
   setSelectHost(selectHost: SelectHost) {
     this.select.set(selectHost);
   }
 
   onMouseEnter() {
-    if (this.zDisabled()) {
+    if (this.arcDisabled()) {
       return;
     }
     this.select()?.navigateTo();
   }
 
   onClick() {
-    if (this.zDisabled()) {
+    if (this.arcDisabled()) {
       return;
     }
-    this.select()?.selectItem(this.zValue(), this.label());
+    this.select()?.selectItem(this.arcValue(), this.label());
   }
 }

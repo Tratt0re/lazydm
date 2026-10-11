@@ -12,11 +12,11 @@ import type { ClassValue } from 'clsx';
 
 import { mergeClasses } from '@/shared/utils/merge-classes';
 
-import { ZardDropdownService } from './dropdown.service';
-import { dropdownItemVariants, type ZardDropdownItemVariants } from './dropdown.variants';
+import { ArcTechDropdownService } from './dropdown.service';
+import { dropdownItemVariants, type ArcTechDropdownItemVariants } from './dropdown.variants';
 
 @Component({
-  selector: 'z-dropdown-menu-item, [z-dropdown-menu-item]',
+  selector: 'arc-dropdown-menu-item, [arc-dropdown-menu-item]',
   template: `
     <ng-content />
   `,
@@ -32,12 +32,12 @@ import { dropdownItemVariants, type ZardDropdownItemVariants } from './dropdown.
     role: 'menuitem',
     tabindex: '-1',
   },
-  exportAs: 'zDropdownMenuItem',
+  exportAs: 'arcDropdownMenuItem',
 })
-export class ZardDropdownMenuItemComponent {
-  private readonly dropdownService = inject(ZardDropdownService);
+export class ArcTechDropdownMenuItemComponent {
+  private readonly dropdownService = inject(ArcTechDropdownService);
 
-  readonly variant = input<ZardDropdownItemVariants['variant']>('default');
+  readonly variant = input<ArcTechDropdownItemVariants['variant']>('default');
   readonly inset = input(false, { transform: booleanAttribute });
   readonly disabled = input(false, { transform: booleanAttribute });
   readonly class = input<ClassValue>('');

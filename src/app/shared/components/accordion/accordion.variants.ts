@@ -30,7 +30,7 @@ export const accordionContentVariants = cva('grid text-sm transition-all', {
   },
 });
 
-export type ZardAccordionVariants = VariantProps<typeof accordionVariants>;
-export type ZardAccordionItemVariants = VariantProps<typeof accordionItemVariants>;
-export type ZardAccordionTriggerVariants = VariantProps<typeof accordionTriggerVariants>;
-export type ZardAccordionContentVariants = VariantProps<typeof accordionContentVariants>;
+export type ArcTechAccordionVariants = VariantProps<typeof accordionVariants>;
+export type ArcTechAccordionItemVariants = VariantProps<typeof accordionItemVariants>;
+export type ArcTechAccordionTriggerVariants = VariantProps<typeof accordionTriggerVariants>;
+export type ArcTechAccordionContentVariants = VariantProps<typeof accordionContentVariants>;

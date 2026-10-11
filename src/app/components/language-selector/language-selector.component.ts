@@ -2,22 +2,22 @@ import { Component, inject } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 
 import { I18nService } from '@/services/i18n.service';
-import { ZardButtonComponent } from '@/shared/components/button';
+import { ArcTechButtonComponent } from '@/shared/components/button';
 import {
-  ZardDropdownDirective,
-  ZardDropdownMenuContentComponent,
-  ZardDropdownMenuItemComponent,
+  ArcTechDropdownDirective,
+  ArcTechDropdownMenuContentComponent,
+  ArcTechDropdownMenuItemComponent,
 } from '@/shared/components/dropdown';
-import { ZardIconComponent } from '@/shared/components/icon';
+import { ArcTechIconComponent } from '@/shared/components/icon';
 
 @Component({
   selector: 'app-language-selector',
   imports: [
-    ZardButtonComponent,
-    ZardDropdownDirective,
-    ZardDropdownMenuContentComponent,
-    ZardDropdownMenuItemComponent,
-    ZardIconComponent,
+    ArcTechButtonComponent,
+    ArcTechDropdownDirective,
+    ArcTechDropdownMenuContentComponent,
+    ArcTechDropdownMenuItemComponent,
+    ArcTechIconComponent,
     TranslatePipe,
   ],
   templateUrl: './language-selector.component.html',

@@ -30,16 +30,16 @@ import { type ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import type { ClassValue } from 'clsx';
 import { filter } from 'rxjs';
 
-import { ZardBadgeComponent } from '@/shared/components/badge';
-import { ZardIconComponent } from '@/shared/components/icon';
-import type { ZardIcon } from '@/shared/components/icon';
-import { ZARD_ICONS } from '@/shared/components/icon';
-import { ZardSelectItemComponent } from '@/shared/components/select/select-item.component';
+import { ArcTechBadgeComponent } from '@/shared/components/badge';
+import { ArcTechIconComponent } from '@/shared/components/icon';
+import type { ArcTechIcon } from '@/shared/components/icon';
+import { ARCTECH_ICONS } from '@/shared/components/icon';
+import { ArcTechSelectItemComponent } from '@/shared/components/select/select-item.component';
 import {
   selectContentVariants,
   selectTriggerVariants,
   selectVariants,
-  type ZardSelectSizeVariants,
+  type ArcTechSelectSizeVariants,
 } from '@/shared/components/select/select.variants';
 import { mergeClasses, transform } from '@/shared/utils/merge-classes';
 
@@ -47,7 +47,7 @@ type OnTouchedType = () => void;
 type OnChangeType = (value: string) => void;
 interface SelectSingleVisual {
   readonly label: string;
-  readonly icon: ZardIcon | null;
+  readonly icon: ArcTechIcon | null;
   readonly colorHex: string | null;
 }
 
@@ -55,8 +55,8 @@ const COMPACT_MODE_WIDTH_THRESHOLD = 100;
 let nextSelectInstanceId = 0;
 
 @Component({
-  selector: 'z-select, [z-select]',
-  imports: [OverlayModule, ZardBadgeComponent, ZardIconComponent],
+  selector: 'arc-select, [arc-select]',
+  imports: [OverlayModule, ArcTechBadgeComponent, ArcTechIconComponent],
   template: `
     <button
       #triggerButton
@@ -67,10 +67,10 @@ let nextSelectInstanceId = 0;
       [attr.aria-labelledby]="ariaLabelledBy()"
       [attr.aria-label]="ariaLabel()"
       [class]="triggerClasses()"
-      [disabled]="zDisabled()"
+      [disabled]="arcDisabled()"
       [attr.aria-expanded]="isOpen()"
       [attr.aria-haspopup]="'listbox'"
-      [attr.data-placeholder]="!zValue() ? '' : null"
+      [attr.data-placeholder]="!arcValue() ? '' : null"
       (blur)="!isOpen() && isFocus.set(false)"
       (click)="toggle()"
       (focus)="onFocus()"
@@ -84,26 +84,26 @@ let nextSelectInstanceId = 0;
             ></span>
           }
           @if (selectedVisual.icon; as iconType) {
-            <z-icon [zType]="iconType" class="size-3.5 shrink-0" />
+            <arc-icon [arcType]="iconType" class="size-3.5 shrink-0" />
           }
-          @if (zShowSelectedLabel()) {
+          @if (arcShowSelectedLabel()) {
             <span class="truncate">{{ selectedVisual.label }}</span>
           }
         } @else {
           @for (label of selectedLabels(); track $index) {
-            @if (zMultiple()) {
-              <z-badge zType="secondary">
+            @if (arcMultiple()) {
+              <arc-badge arcType="secondary">
                 <span class="truncate">{{ label }}</span>
-              </z-badge>
+              </arc-badge>
             } @else {
               <span class="truncate">{{ label }}</span>
             }
           } @empty {
-            <span class="text-muted-foreground truncate">{{ zPlaceholder() }}</span>
+            <span class="text-muted-foreground truncate">{{ arcPlaceholder() }}</span>
           }
         }
       </span>
-      <z-icon zType="chevron-down" zSize="lg" [class]="chevronClasses()" />
+      <arc-icon arcType="chevron-down" arcSize="lg" [class]="chevronClasses()" />
     </button>
 
     <ng-template #dropdownTemplate>
@@ -125,20 +125,20 @@ let nextSelectInstanceId = 0;
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => ZardSelectComponent),
+      useExisting: forwardRef(() => ArcTechSelectComponent),
       multi: true,
     },
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     '[attr.data-active]': 'isFocus() ? "" : null',
-    '[attr.data-disabled]': 'zDisabled() ? "" : null',
+    '[attr.data-disabled]': 'arcDisabled() ? "" : null',
     '[attr.data-state]': 'isOpen() ? "open" : "closed"',
     '[class]': 'classes()',
     '(keydown.{enter,space,arrowdown,arrowup,escape}.prevent)': 'onTriggerKeydown($event)',
   },
 })
-export class ZardSelectComponent implements ControlValueAccessor, AfterContentInit, OnDestroy {
+export class ArcTechSelectComponent implements ControlValueAccessor, AfterContentInit, OnDestroy {
   private readonly destroyRef = inject(DestroyRef);
   private readonly elementRef = inject(ElementRef<HTMLElement>);
   private readonly injector = inject(Injector);
@@ -150,27 +150,27 @@ export class ZardSelectComponent implements ControlValueAccessor, AfterContentIn
 
   readonly dropdownTemplate = viewChild.required<TemplateRef<void>>('dropdownTemplate');
   readonly triggerButton = viewChild.required<ElementRef<HTMLButtonElement>>('triggerButton');
-  readonly selectItems = contentChildren(ZardSelectItemComponent);
+  readonly selectItems = contentChildren(ArcTechSelectItemComponent);
 
   private overlayRef?: OverlayRef;
   private portal?: TemplatePortal;
-  private readonly triggerIdValue = signal(`z-select-${this.instanceId}`);
-  private readonly popupIdValue = signal(`z-select-${this.instanceId}-listbox`);
+  private readonly triggerIdValue = signal(`arc-select-${this.instanceId}`);
+  private readonly popupIdValue = signal(`arc-select-${this.instanceId}-listbox`);
   private readonly externalLabelId = signal<string | null>(null);
   private readonly hostAriaLabel = signal<string | null>(null);
 
   readonly class = input<ClassValue>('');
-  readonly zDisabled = input(false, { transform });
-  readonly zLabel = input<string>('');
-  readonly zMaxLabelCount = input<number>(1);
-  readonly zMultiple = input<boolean>(false);
-  readonly zPlaceholder = input<string>('Select an option...');
-  readonly zSize = input<ZardSelectSizeVariants>('default');
-  readonly zShowSelectedLabel = input(true, { transform });
-  readonly zChevronClass = input<ClassValue>('opacity-50');
-  readonly zValue = model<string | string[]>(this.zMultiple() ? [] : '');
+  readonly arcDisabled = input(false, { transform });
+  readonly arcLabel = input<string>('');
+  readonly arcMaxLabelCount = input<number>(1);
+  readonly arcMultiple = input<boolean>(false);
+  readonly arcPlaceholder = input<string>('Select an option...');
+  readonly arcSize = input<ArcTechSelectSizeVariants>('default');
+  readonly arcShowSelectedLabel = input(true, { transform });
+  readonly arcChevronClass = input<ClassValue>('opacity-50');
+  readonly arcValue = model<string | string[]>(this.arcMultiple() ? [] : '');
 
-  readonly zSelectionChange = output<string | string[]>();
+  readonly arcSelectionChange = output<string | string[]>();
 
   readonly isOpen = signal(false);
   readonly focusedIndex = signal<number>(-1);
@@ -189,12 +189,12 @@ export class ZardSelectComponent implements ControlValueAccessor, AfterContentIn
       return explicitAriaLabel;
     }
 
-    const manualLabel = this.zLabel().trim();
+    const manualLabel = this.arcLabel().trim();
     if (manualLabel.length > 0) {
       return manualLabel;
     }
 
-    const placeholder = this.zPlaceholder().trim();
+    const placeholder = this.arcPlaceholder().trim();
     return placeholder.length > 0 ? placeholder : 'Select an option';
   });
 
@@ -206,8 +206,8 @@ export class ZardSelectComponent implements ControlValueAccessor, AfterContentIn
 
   // Compute the label based on selected value
   readonly selectedLabels = computed<string[]>(() => {
-    const selectedValue = this.zValue();
-    if (this.zMultiple() && Array.isArray(selectedValue)) {
+    const selectedValue = this.arcValue();
+    if (this.arcMultiple() && Array.isArray(selectedValue)) {
       return this.provideLabelsForMultiselectMode(selectedValue);
     }
 
@@ -215,18 +215,18 @@ export class ZardSelectComponent implements ControlValueAccessor, AfterContentIn
   });
 
   protected readonly selectedSingleVisual = computed<SelectSingleVisual | null>(() => {
-    if (this.zMultiple()) {
+    if (this.arcMultiple()) {
       return null;
     }
 
-    const selectedValue = this.zValue();
+    const selectedValue = this.arcValue();
     if (typeof selectedValue !== 'string' || selectedValue.length === 0) {
       return null;
     }
 
     const selectedItem = this.getMatchingItem(selectedValue);
     if (!selectedItem) {
-      if (!this.zShowSelectedLabel() && this.isRegisteredIcon(selectedValue)) {
+      if (!this.arcShowSelectedLabel() && this.isRegisteredIcon(selectedValue)) {
         return {
           label: selectedValue,
           icon: selectedValue,
@@ -237,8 +237,8 @@ export class ZardSelectComponent implements ControlValueAccessor, AfterContentIn
       return null;
     }
 
-    const icon = selectedItem.zIcon();
-    const colorHex = selectedItem.zColorHex();
+    const icon = selectedItem.arcIcon();
+    const colorHex = selectedItem.arcColorHex();
 
     if (!icon && !colorHex) {
       return null;
@@ -261,11 +261,11 @@ export class ZardSelectComponent implements ControlValueAccessor, AfterContentIn
 
   protected readonly classes = computed(() => mergeClasses(selectVariants(), this.class()));
   protected readonly contentClasses = computed(() => mergeClasses(selectContentVariants()));
-  protected readonly chevronClasses = computed(() => mergeClasses(this.zChevronClass()));
+  protected readonly chevronClasses = computed(() => mergeClasses(this.arcChevronClass()));
   protected readonly triggerClasses = computed(() =>
     mergeClasses(
       selectTriggerVariants({
-        zSize: this.zSize(),
+        arcSize: this.arcSize(),
       }),
     ),
   );
@@ -327,7 +327,7 @@ export class ZardSelectComponent implements ControlValueAccessor, AfterContentIn
   }
 
   toggle() {
-    if (this.zDisabled()) {
+    if (this.arcDisabled()) {
       return;
     }
 
@@ -344,7 +344,7 @@ export class ZardSelectComponent implements ControlValueAccessor, AfterContentIn
       return;
     }
 
-    this.zValue.update(selectedValues => {
+    this.arcValue.update(selectedValues => {
       if (Array.isArray(selectedValues)) {
         return selectedValues.includes(value) ? selectedValues.filter(v => v !== value) : [...selectedValues, value];
       }
@@ -352,9 +352,9 @@ export class ZardSelectComponent implements ControlValueAccessor, AfterContentIn
       return value;
     });
     this.onChange(value);
-    this.zSelectionChange.emit(this.zValue());
+    this.arcSelectionChange.emit(this.arcValue());
 
-    if (this.zMultiple()) {
+    if (this.arcMultiple()) {
       // in multiple mode it can happen that button changes size because of selection badges,
       // which requires overlay position to update
       this.updateOverlayPosition();
@@ -368,7 +368,7 @@ export class ZardSelectComponent implements ControlValueAccessor, AfterContentIn
     }
   }
 
-  private navigateTo(element: ZardSelectItemComponent, index: number): void {
+  private navigateTo(element: ArcTechSelectItemComponent, index: number): void {
     this.focusedIndex.set(index);
     this.updateItemFocus(this.getSelectItems(true), index);
   }
@@ -380,7 +380,7 @@ export class ZardSelectComponent implements ControlValueAccessor, AfterContentIn
   }
 
   private provideLabelsForMultiselectMode(selectedValue: string[]): string[] {
-    const labelsToShowCount = selectedValue.length - this.zMaxLabelCount();
+    const labelsToShowCount = selectedValue.length - this.arcMaxLabelCount();
     const labels = [];
     let index = 0;
     for (const value of selectedValue) {
@@ -389,7 +389,7 @@ export class ZardSelectComponent implements ControlValueAccessor, AfterContentIn
         labels.push(matchingItem.label());
         index++;
       }
-      if (labelsToShowCount && this.zMaxLabelCount() && index === this.zMaxLabelCount()) {
+      if (labelsToShowCount && this.arcMaxLabelCount() && index === this.arcMaxLabelCount()) {
         labels.push(`${labelsToShowCount} more item${labelsToShowCount > 1 ? 's' : ''} selected`);
         break;
       }
@@ -406,12 +406,12 @@ export class ZardSelectComponent implements ControlValueAccessor, AfterContentIn
 
     items.forEach((item, index) => {
       item.setSelectHost({
-        selectedValue: () => (this.zMultiple() ? (this.zValue() as string[]) : [this.zValue() as string]),
+        selectedValue: () => (this.arcMultiple() ? (this.arcValue() as string[]) : [this.arcValue() as string]),
         selectItem: (value: string, label: string) => this.selectItem(value, label),
         navigateTo: () => this.navigateTo(item, index),
       });
-      item.zSize.set(this.zSize());
-      item.zMode.set(shouldUseCompactMode ? 'compact' : 'normal');
+      item.arcSize.set(this.arcSize());
+      item.arcMode.set(shouldUseCompactMode ? 'compact' : 'normal');
     });
   }
 
@@ -429,7 +429,7 @@ export class ZardSelectComponent implements ControlValueAccessor, AfterContentIn
   }
 
   private provideLabelForSingleSelectMode(selectedValue: string): string[] {
-    const manualLabel = this.zLabel();
+    const manualLabel = this.arcLabel();
     if (manualLabel) {
       return [manualLabel];
     }
@@ -498,12 +498,12 @@ export class ZardSelectComponent implements ControlValueAccessor, AfterContentIn
     }
   }
 
-  private getMatchingItem(value: string): ZardSelectItemComponent | undefined {
-    return this.selectItems()?.find(item => item.zValue() === value);
+  private getMatchingItem(value: string): ArcTechSelectItemComponent | undefined {
+    return this.selectItems()?.find(item => item.arcValue() === value);
   }
 
-  private isRegisteredIcon(value: string): value is keyof typeof ZARD_ICONS {
-    return Object.hasOwn(ZARD_ICONS, value);
+  private isRegisteredIcon(value: string): value is keyof typeof ARCTECH_ICONS {
+    return Object.hasOwn(ARCTECH_ICONS, value);
   }
 
   private determinePortalWidthOnOpen(portalWidth: number): void {
@@ -516,7 +516,7 @@ export class ZardSelectComponent implements ControlValueAccessor, AfterContentIn
         const overlayPaneElement = this.overlayRef.overlayElement;
         const textElements = Array.from(
           overlayPaneElement.querySelectorAll<HTMLElement>(
-            'z-select-item > span.truncate, [z-select-item] > span.truncate',
+            'arc-select-item > span.truncate, [arc-select-item] > span.truncate',
           ),
         );
         let isOverflow = false;
@@ -619,7 +619,7 @@ export class ZardSelectComponent implements ControlValueAccessor, AfterContentIn
       return [];
     }
     const dropdownElement = this.overlayRef.overlayElement;
-    return Array.from(dropdownElement.querySelectorAll<HTMLElement>('z-select-item, [z-select-item]')).filter(
+    return Array.from(dropdownElement.querySelectorAll<HTMLElement>('arc-select-item, [arc-select-item]')).filter(
       item => ignoreFilter || item.dataset['disabled'] === undefined,
     );
   }
@@ -708,10 +708,10 @@ export class ZardSelectComponent implements ControlValueAccessor, AfterContentIn
 
     // Find the index of the currently selected item
     let selectedValue;
-    if (Array.isArray(this.zValue()) && this.zValue().length) {
-      [selectedValue] = this.zValue();
+    if (Array.isArray(this.arcValue()) && this.arcValue().length) {
+      [selectedValue] = this.arcValue();
     } else {
-      selectedValue = this.zValue();
+      selectedValue = this.arcValue();
     }
 
     let selectedIndex = items.findIndex(item => item.getAttribute('value') === selectedValue);
@@ -727,10 +727,10 @@ export class ZardSelectComponent implements ControlValueAccessor, AfterContentIn
 
   // ControlValueAccessor implementation
   writeValue(value: string | string[] | null): void {
-    if (this.zMultiple() && Array.isArray(value)) {
-      this.zValue.set(value);
+    if (this.arcMultiple() && Array.isArray(value)) {
+      this.arcValue.set(value);
     } else {
-      this.zValue.set(value ?? '');
+      this.arcValue.set(value ?? '');
     }
   }
 

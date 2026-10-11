@@ -1,19 +1,19 @@
 import {
-  ZardTableComponent,
-  ZardTableHeaderComponent,
-  ZardTableBodyComponent,
-  ZardTableRowComponent,
-  ZardTableHeadComponent,
-  ZardTableCellComponent,
-  ZardTableCaptionComponent,
+  ArcTechTableComponent,
+  ArcTechTableHeaderComponent,
+  ArcTechTableBodyComponent,
+  ArcTechTableRowComponent,
+  ArcTechTableHeadComponent,
+  ArcTechTableCellComponent,
+  ArcTechTableCaptionComponent,
 } from '@/shared/components/table/table.component';
 
-export const ZardTableImports = [
-  ZardTableComponent,
-  ZardTableHeaderComponent,
-  ZardTableBodyComponent,
-  ZardTableRowComponent,
-  ZardTableHeadComponent,
-  ZardTableCellComponent,
-  ZardTableCaptionComponent,
+export const ArcTechTableImports = [
+  ArcTechTableComponent,
+  ArcTechTableHeaderComponent,
+  ArcTechTableBodyComponent,
+  ArcTechTableRowComponent,
+  ArcTechTableHeadComponent,
+  ArcTechTableCellComponent,
+  ArcTechTableCaptionComponent,
 ] as const;

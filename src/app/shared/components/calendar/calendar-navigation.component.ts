@@ -7,65 +7,65 @@ import { getCalendarMonthLabels, resolveCalendarLocale } from '@/shared/componen
 import { mergeClasses } from '@/shared/utils/merge-classes';
 
 import { calendarNavVariants } from './calendar.variants';
-import { ZardButtonComponent } from '@/shared/components/button/button.component';
-import { ZardIconComponent } from '@/shared/components/icon/icon.component';
-import { ZardSelectItemComponent } from '@/shared/components/select/select-item.component';
-import { ZardSelectComponent } from '@/shared/components/select/select.component';
+import { ArcTechButtonComponent } from '@/shared/components/button/button.component';
+import { ArcTechIconComponent } from '@/shared/components/icon/icon.component';
+import { ArcTechSelectItemComponent } from '@/shared/components/select/select-item.component';
+import { ArcTechSelectComponent } from '@/shared/components/select/select.component';
 
 @Component({
-  selector: 'z-calendar-navigation',
-  imports: [ZardButtonComponent, ZardIconComponent, ZardSelectComponent, ZardSelectItemComponent],
+  selector: 'arc-calendar-navigation',
+  imports: [ArcTechButtonComponent, ArcTechIconComponent, ArcTechSelectComponent, ArcTechSelectItemComponent],
   template: `
     <div [class]="navClasses()">
       <button
         type="button"
-        z-button
-        zType="ghost"
-        zSize="sm"
+        arc-button
+        arcType="ghost"
+        arcSize="sm"
         (click)="onPreviousClick()"
         [disabled]="isPreviousDisabled()"
         [attr.aria-label]="previousMonthAriaLabel()"
         class="h-7 w-7 p-0"
       >
-        <z-icon zType="chevron-left" />
+        <arc-icon arcType="chevron-left" />
       </button>
 
       <!-- Month and Year Selectors -->
       <div class="flex items-center space-x-2">
         <!-- Month Select -->
-        <z-select [zValue]="currentMonth()" [zLabel]="currentMonthName()" (zSelectionChange)="onMonthChange($event)">
+        <arc-select [arcValue]="currentMonth()" [arcLabel]="currentMonthName()" (arcSelectionChange)="onMonthChange($event)">
           @for (month of months(); track $index) {
-            <z-select-item [zValue]="$index.toString()">{{ month }}</z-select-item>
+            <arc-select-item [arcValue]="$index.toString()">{{ month }}</arc-select-item>
           }
-        </z-select>
+        </arc-select>
 
         <!-- Year Select -->
-        <z-select [zValue]="currentYear()" [zLabel]="currentYear()" (zSelectionChange)="onYearChange($event)">
+        <arc-select [arcValue]="currentYear()" [arcLabel]="currentYear()" (arcSelectionChange)="onYearChange($event)">
           @for (year of availableYears(); track year) {
-            <z-select-item [zValue]="year.toString()">{{ year }}</z-select-item>
+            <arc-select-item [arcValue]="year.toString()">{{ year }}</arc-select-item>
           }
-        </z-select>
+        </arc-select>
       </div>
 
       <button
         type="button"
-        z-button
-        zType="ghost"
-        zSize="sm"
+        arc-button
+        arcType="ghost"
+        arcSize="sm"
         (click)="onNextClick()"
         [disabled]="isNextDisabled()"
         [attr.aria-label]="nextMonthAriaLabel()"
         class="h-7 w-7 p-0"
       >
-        <z-icon zType="chevron-right" />
+        <arc-icon arcType="chevron-right" />
       </button>
     </div>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
-  exportAs: 'zCalendarNavigation',
+  exportAs: 'arcCalendarNavigation',
 })
-export class ZardCalendarNavigationComponent {
+export class ArcTechCalendarNavigationComponent {
   private readonly translateService = inject(TranslateService);
   private readonly currentLocale = toSignal(
     this.translateService.onLangChange.pipe(

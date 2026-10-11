@@ -6,11 +6,11 @@ import { TranslateService } from '@ngx-translate/core';
 import { map, startWith } from 'rxjs';
 
 import { RootLayout } from '@/layout/root-layout/root-layout';
-import { ZardToastComponent } from '@/shared/components/toast';
+import { ArcTechToastComponent } from '@/shared/components/toast';
 
 @Component({
   selector: 'app-root',
-  imports: [RootLayout, RouterOutlet, ZardToastComponent],
+  imports: [RootLayout, RouterOutlet, ArcTechToastComponent],
   templateUrl: './app.html',
   styleUrl: './app.css',
 })

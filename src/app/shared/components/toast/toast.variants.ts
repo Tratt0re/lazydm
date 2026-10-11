@@ -16,4 +16,4 @@ export const toastVariants = cva(
   },
 );
 
-export type ZardToastVariants = VariantProps<typeof toastVariants>;
+export type ArcTechToastVariants = VariantProps<typeof toastVariants>;

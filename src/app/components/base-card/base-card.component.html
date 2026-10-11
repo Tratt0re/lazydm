@@ -1,15 +1,15 @@
-<ng-container zardId="card" #z="zardId">
-  @let title = zTitle();
+<ng-container arcTechId="card" #z="arcTechId">
+  @let title = arcTitle();
   @if (title) {
     <div [class]="headerClasses()" data-slot="card-header">
       <div [class]="titleClasses()" [id]="titleId()" data-slot="card-title">
-        <ng-container *zStringTemplateOutlet="title">{{ title }}</ng-container>
+        <ng-container *arcStringTemplateOutlet="title">{{ title }}</ng-container>
       </div>
 
-      @let description = zDescription();
+      @let description = arcDescription();
       @if (description) {
         <div class="text-muted-foreground text-sm" [id]="descriptionId()" data-slot="card-description">
-          <ng-container *zStringTemplateOutlet="description">{{ description }}</ng-container>
+          <ng-container *arcStringTemplateOutlet="description">{{ description }}</ng-container>
         </div>
       }
     </div>

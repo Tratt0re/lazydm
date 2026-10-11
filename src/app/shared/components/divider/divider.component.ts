@@ -2,33 +2,33 @@ import { ChangeDetectionStrategy, Component, computed, input, ViewEncapsulation 
 
 import type { ClassValue } from 'clsx';
 
-import { dividerVariants, type ZardDividerVariants } from './divider.variants';
+import { dividerVariants, type ArcTechDividerVariants } from './divider.variants';
 
 import { mergeClasses } from '@/shared/utils/merge-classes';
 
 @Component({
-  selector: 'z-divider',
+  selector: 'arc-divider',
   standalone: true,
   template: '',
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
   host: {
     '[attr.role]': `'separator'`,
-    '[attr.aria-orientation]': 'zOrientation()',
+    '[attr.aria-orientation]': 'arcOrientation()',
     '[class]': 'classes()',
   },
-  exportAs: 'zDivider',
+  exportAs: 'arcDivider',
 })
-export class ZardDividerComponent {
-  readonly zOrientation = input<ZardDividerVariants['zOrientation']>('horizontal');
-  readonly zSpacing = input<ZardDividerVariants['zSpacing']>('default');
+export class ArcTechDividerComponent {
+  readonly arcOrientation = input<ArcTechDividerVariants['arcOrientation']>('horizontal');
+  readonly arcSpacing = input<ArcTechDividerVariants['arcSpacing']>('default');
   readonly class = input<ClassValue>('');
 
   protected readonly classes = computed(() =>
     mergeClasses(
       dividerVariants({
-        zOrientation: this.zOrientation(),
-        zSpacing: this.zSpacing(),
+        arcOrientation: this.arcOrientation(),
+        arcSpacing: this.arcSpacing(),
       }),
       this.class(),
     ),

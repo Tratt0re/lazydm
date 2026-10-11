@@ -20,7 +20,7 @@ import { noopFn } from '@/shared/utils/merge-classes';
 @Injectable({
   providedIn: 'root',
 })
-export class ZardDropdownService {
+export class ArcTechDropdownService {
   private readonly overlay = inject(Overlay);
   private readonly overlayPositionBuilder = inject(OverlayPositionBuilder);
   private readonly platformId = inject(PLATFORM_ID);
@@ -180,7 +180,7 @@ export class ZardDropdownService {
     }
     const dropdownElement = this.overlayRef.overlayElement;
     return Array.from(
-      dropdownElement.querySelectorAll<HTMLElement>('z-dropdown-menu-item, [z-dropdown-menu-item]'),
+      dropdownElement.querySelectorAll<HTMLElement>('arc-dropdown-menu-item, [arc-dropdown-menu-item]'),
     ).filter(item => item.dataset['disabled'] === undefined);
   }
 

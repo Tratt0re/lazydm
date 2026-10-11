@@ -39,7 +39,7 @@ type OnTouchedType = () => void;
 type OnChangeType = (value: number) => void;
 
 @Component({
-  selector: 'z-slider-track',
+  selector: 'arc-slider-track',
   imports: [],
   standalone: true,
   template: `
@@ -59,7 +59,7 @@ export class ZSliderTrackComponent {
   readonly class = input<ClassValue>('');
 
   protected readonly classes = computed(() =>
-    mergeClasses(sliderTrackVariants({ zOrientation: this.orientation() }), this.class()),
+    mergeClasses(sliderTrackVariants({ arcOrientation: this.orientation() }), this.class()),
   );
 
   private readonly trackEl = viewChild.required<ElementRef<HTMLElement>>('track');
@@ -70,7 +70,7 @@ export class ZSliderTrackComponent {
 }
 
 @Component({
-  selector: 'z-slider-range',
+  selector: 'arc-slider-range',
   imports: [],
   standalone: true,
   template: `
@@ -94,12 +94,12 @@ export class ZSliderRangeComponent {
   readonly class = input<ClassValue>('');
 
   protected readonly classes = computed(() =>
-    mergeClasses(sliderRangeVariants({ zOrientation: this.orientation() }), this.class()),
+    mergeClasses(sliderRangeVariants({ arcOrientation: this.orientation() }), this.class()),
   );
 }
 
 @Component({
-  selector: 'z-slider-thumb',
+  selector: 'arc-slider-thumb',
   imports: [],
   standalone: true,
   template: `
@@ -141,7 +141,7 @@ export class ZSliderThumbComponent {
   );
 
   protected readonly orientationClasses = computed(() =>
-    mergeClasses(sliderOrientationVariants({ zOrientation: this.orientation() })),
+    mergeClasses(sliderOrientationVariants({ arcOrientation: this.orientation() })),
   );
 
   private readonly thumbEl = viewChild.required<ElementRef<HTMLElement>>('thumb');
@@ -152,29 +152,29 @@ export class ZSliderThumbComponent {
 }
 
 @Component({
-  selector: 'z-slider',
+  selector: 'arc-slider',
   imports: [ZSliderTrackComponent, ZSliderRangeComponent, ZSliderThumbComponent],
   standalone: true,
   template: `
     <span
       data-slot="slider"
-      [attr.data-orientation]="zOrientation()"
+      [attr.data-orientation]="arcOrientation()"
       class="flex data-[orientation=horizontal]:w-full data-[orientation=horizontal]:items-center data-[orientation=vertical]:h-full data-[orientation=vertical]:justify-center"
     >
-      <z-slider-track [orientation]="zOrientation()">
-        <z-slider-range [orientation]="zOrientation()" [percent]="percentValue()" />
-      </z-slider-track>
+      <arc-slider-track [orientation]="arcOrientation()">
+        <arc-slider-range [orientation]="arcOrientation()" [percent]="percentValue()" />
+      </arc-slider-track>
 
-      <z-slider-thumb
+      <arc-slider-thumb
         tabindex="0"
-        [orientation]="zOrientation()"
+        [orientation]="arcOrientation()"
         [percent]="percentValue()"
         [offset]="thumbOffset()"
         [value]="lastEmittedValue()"
-        [min]="zMin()"
-        [max]="zMax()"
+        [min]="arcMin()"
+        [max]="arcMax()"
         [disabled]="disabled()"
-        [ariaLabel]="zAriaLabel()"
+        [ariaLabel]="arcAriaLabel()"
         (keydown.{home,end,arrowleft,arrowright,arrowdown,arrowup}.prevent)="handleKeydown($event)"
       />
     </span>
@@ -182,7 +182,7 @@ export class ZSliderThumbComponent {
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => ZardSliderComponent),
+      useExisting: forwardRef(() => ArcTechSliderComponent),
       multi: true,
     },
   ],
@@ -190,25 +190,25 @@ export class ZSliderThumbComponent {
   encapsulation: ViewEncapsulation.None,
   host: {
     '[class]': 'classes()',
-    '[attr.data-orientation]': 'zOrientation()',
+    '[attr.data-orientation]': 'arcOrientation()',
     '[attr.aria-disabled]': 'disabled() ? true : null',
     '[attr.data-disabled]': 'disabled() ? true : null',
   },
-  exportAs: 'zSlider',
+  exportAs: 'arcSlider',
 })
-export class ZardSliderComponent implements ControlValueAccessor, AfterViewInit, OnChanges, OnDestroy {
-  readonly zMin = input(0, { transform: numberAttribute });
-  readonly zMax = input(100, { transform: numberAttribute });
-  readonly zDefault = input(0, { transform: numberAttribute });
-  readonly zValue = input(null, { transform: numberAttribute });
-  readonly zStep = input(1, { transform: numberAttribute });
-  readonly zDisabled = input(false, { transform: booleanAttribute });
+export class ArcTechSliderComponent implements ControlValueAccessor, AfterViewInit, OnChanges, OnDestroy {
+  readonly arcMin = input(0, { transform: numberAttribute });
+  readonly arcMax = input(100, { transform: numberAttribute });
+  readonly arcDefault = input(0, { transform: numberAttribute });
+  readonly arcValue = input(null, { transform: numberAttribute });
+  readonly arcStep = input(1, { transform: numberAttribute });
+  readonly arcDisabled = input(false, { transform: booleanAttribute });
 
-  readonly zOrientation = input<'horizontal' | 'vertical'>('horizontal');
-  readonly zAriaLabel = input<string>('');
+  readonly arcOrientation = input<'horizontal' | 'vertical'>('horizontal');
+  readonly arcAriaLabel = input<string>('');
   readonly class = input<ClassValue>('');
 
-  readonly zSlideIndexChange = output<number>();
+  readonly arcSlideIndexChange = output<number>();
 
   readonly thumbRef = viewChild.required(ZSliderThumbComponent);
   readonly trackRef = viewChild.required(ZSliderTrackComponent);
@@ -217,10 +217,10 @@ export class ZardSliderComponent implements ControlValueAccessor, AfterViewInit,
   private document = inject(DOCUMENT);
 
   protected readonly classes = computed(() =>
-    mergeClasses(sliderVariants({ orientation: this.zOrientation() }), this.class()),
+    mergeClasses(sliderVariants({ orientation: this.arcOrientation() }), this.class()),
   );
 
-  protected readonly disabled = linkedSignal(() => this.zDisabled());
+  protected readonly disabled = linkedSignal(() => this.arcDisabled());
 
   readonly percentValue = signal(50);
   readonly lastEmittedValue = signal(0);
@@ -235,8 +235,8 @@ export class ZardSliderComponent implements ControlValueAccessor, AfterViewInit,
   private destroy$ = new Subject<void>();
 
   ngOnChanges(changes: SimpleChanges): void {
-    if ('zValue' in changes && !changes['zValue'].firstChange) {
-      const value = this.zValue();
+    if ('arcValue' in changes && !changes['arcValue'].firstChange) {
+      const value = this.arcValue();
       if (value !== this.lastEmittedValue()) {
         this.setInitialValue();
       }
@@ -257,7 +257,7 @@ export class ZardSliderComponent implements ControlValueAccessor, AfterViewInit,
         const isTrack = this.trackRef().nativeElement.contains(target);
 
         if (isTrack && !isThumb) {
-          const coord = this.zOrientation() === 'vertical' ? event.clientY : event.clientX;
+          const coord = this.arcOrientation() === 'vertical' ? event.clientY : event.clientX;
           const clickPercentage = this.calculatePercentage(coord);
           this.updateSliderFromPercentage(clickPercentage);
           this.onTouched();
@@ -277,7 +277,7 @@ export class ZardSliderComponent implements ControlValueAccessor, AfterViewInit,
           pointerMove$.pipe(
             takeUntil(pointerUp$),
             map(event => {
-              const coord = this.zOrientation() === 'vertical' ? event.clientY : event.clientX;
+              const coord = this.arcOrientation() === 'vertical' ? event.clientY : event.clientX;
               return this.calculatePercentage(coord);
             }),
           ),
@@ -301,9 +301,9 @@ export class ZardSliderComponent implements ControlValueAccessor, AfterViewInit,
       return;
     }
 
-    const min = this.zMin();
-    const max = this.zMax();
-    const step = this.zStep();
+    const min = this.arcMin();
+    const max = this.arcMax();
+    const step = this.arcStep();
 
     const clampedValue = clamp(value, [min, max]);
     const roundedValue = roundToStep(clampedValue, min, step);
@@ -334,8 +334,8 @@ export class ZardSliderComponent implements ControlValueAccessor, AfterViewInit,
     }
 
     const percent = this.percentValue();
-    const rawValue = this.zMin() + ((this.zMax() - this.zMin()) * percent) / 100;
-    const currentValue = roundToStep(rawValue, this.zMin(), this.zStep());
+    const rawValue = this.arcMin() + ((this.arcMax() - this.arcMin()) * percent) / 100;
+    const currentValue = roundToStep(rawValue, this.arcMin(), this.arcStep());
 
     let newValue = currentValue;
 
@@ -343,18 +343,18 @@ export class ZardSliderComponent implements ControlValueAccessor, AfterViewInit,
 
     switch (key) {
       case 'Home':
-        newValue = this.zMin();
+        newValue = this.arcMin();
         break;
       case 'End':
-        newValue = this.zMax();
+        newValue = this.arcMax();
         break;
       case 'ArrowLeft':
       case 'ArrowDown':
-        newValue = Math.max(currentValue - this.zStep(), this.zMin());
+        newValue = Math.max(currentValue - this.arcStep(), this.arcMin());
         break;
       case 'ArrowRight':
       case 'ArrowUp':
-        newValue = Math.min(currentValue + this.zStep(), this.zMax());
+        newValue = Math.min(currentValue + this.arcStep(), this.arcMax());
         break;
 
       default:
@@ -362,8 +362,8 @@ export class ZardSliderComponent implements ControlValueAccessor, AfterViewInit,
     }
 
     if (newValue !== currentValue) {
-      this.percentValue.set(convertValueToPercentage(newValue, this.zMin(), this.zMax()));
-      this.zSlideIndexChange.emit(newValue);
+      this.percentValue.set(convertValueToPercentage(newValue, this.arcMin(), this.arcMax()));
+      this.arcSlideIndexChange.emit(newValue);
       this.lastEmittedValue.set(newValue);
       this.onChange(newValue);
     }
@@ -371,12 +371,12 @@ export class ZardSliderComponent implements ControlValueAccessor, AfterViewInit,
 
   private updateSliderFromPercentage(percentage: number): void {
     const clamped = clamp(percentage, [0, 1]);
-    const rawValue = this.zMin() + (this.zMax() - this.zMin()) * clamped;
-    const value = roundToStep(rawValue, this.zMin(), this.zStep());
+    const rawValue = this.arcMin() + (this.arcMax() - this.arcMin()) * clamped;
+    const value = roundToStep(rawValue, this.arcMin(), this.arcStep());
 
     if (value !== this.lastEmittedValue()) {
-      this.percentValue.set(convertValueToPercentage(value, this.zMin(), this.zMax()));
-      this.zSlideIndexChange.emit(value);
+      this.percentValue.set(convertValueToPercentage(value, this.arcMin(), this.arcMax()));
+      this.arcSlideIndexChange.emit(value);
       this.lastEmittedValue.set(value);
       this.onChange(value);
     }
@@ -384,7 +384,7 @@ export class ZardSliderComponent implements ControlValueAccessor, AfterViewInit,
 
   private calculatePercentage(clientCoord: number): number {
     const rect = this.elementRef.nativeElement.getBoundingClientRect();
-    if (this.zOrientation() === 'vertical') {
+    if (this.arcOrientation() === 'vertical') {
       const relativeY = (clientCoord - rect.top) / rect.height;
       return clamp(1 - relativeY, [0, 1]);
     }
@@ -393,12 +393,12 @@ export class ZardSliderComponent implements ControlValueAccessor, AfterViewInit,
   }
 
   private setInitialValue(): void {
-    const min = this.zMin();
-    const max = this.zMax();
-    const step = this.zStep();
+    const min = this.arcMin();
+    const max = this.arcMax();
+    const step = this.arcStep();
 
-    const def = clamp(this.zDefault(), [min, max]);
-    const raw = this.zValue();
+    const def = clamp(this.arcDefault(), [min, max]);
+    const raw = this.arcValue();
     const value = raw != null && raw >= min && raw <= max ? raw : def;
 
     const initial = roundToStep(value, min, step);

@@ -126,7 +126,7 @@ import {
   FileUp,
 } from 'lucide-angular';
 
-export const ZARD_ICONS = {
+export const ARCTECH_ICONS = {
   home: Home,
   house: House,
   settings: Settings,
@@ -253,4 +253,4 @@ export const ZARD_ICONS = {
   swords: Swords,
 } as const satisfies Record<string, LucideIconData>;
 
-export declare type ZardIcon = keyof typeof ZARD_ICONS | LucideIconData;
+export declare type ArcTechIcon = keyof typeof ARCTECH_ICONS | LucideIconData;

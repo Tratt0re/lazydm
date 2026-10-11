@@ -2,15 +2,15 @@ import { Injectable } from '@angular/core';
 
 import {
   type SheetOnClickCallback,
-  type ZardSheetOptions,
-  ZardSheetRef,
-  ZardSheetService,
+  type ArcTechSheetOptions,
+  ArcTechSheetRef,
+  ArcTechSheetService,
 } from '@/shared/components/sheet';
 import { AppSheetFormComponent } from './sheet-form.component';
 import type { AppSheetField, AppSheetFieldValueMap, AppSheetFormData } from './sheet-form.types';
 
 export interface AppSheetFormOpenOptions
-  extends Omit<ZardSheetOptions<AppSheetFormComponent, AppSheetFormData>, 'zContent' | 'zData' | 'zOnOk'> {
+  extends Omit<ArcTechSheetOptions<AppSheetFormComponent, AppSheetFormData>, 'arcContent' | 'arcData' | 'arcOnOk'> {
   readonly fields: readonly AppSheetField[];
   readonly values?: AppSheetFieldValueMap;
   readonly validateBeforeSubmit?: boolean;
@@ -21,9 +21,9 @@ export interface AppSheetFormOpenOptions
   providedIn: 'root',
 })
 export class AppSheetFormService {
-  constructor(private readonly zardSheetService: ZardSheetService) {}
+  constructor(private readonly arcTechSheetService: ArcTechSheetService) {}
 
-  open(options: AppSheetFormOpenOptions): ZardSheetRef<AppSheetFormComponent> {
+  open(options: AppSheetFormOpenOptions): ArcTechSheetRef<AppSheetFormComponent> {
     const {
       fields,
       values,
@@ -37,11 +37,11 @@ export class AppSheetFormService {
       values,
     };
 
-    return this.zardSheetService.create<AppSheetFormComponent, AppSheetFormData>({
+    return this.arcTechSheetService.create<AppSheetFormComponent, AppSheetFormData>({
       ...sheetOptions,
-      zContent: AppSheetFormComponent,
-      zData: data,
-      zOnOk: (component) => {
+      arcContent: AppSheetFormComponent,
+      arcData: data,
+      arcOnOk: (component) => {
         if (validateBeforeSubmit && !component.isValid()) {
           return false;
         }

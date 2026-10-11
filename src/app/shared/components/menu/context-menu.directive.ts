@@ -5,7 +5,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { noopFn } from '@/shared/utils/merge-classes';
 
 @Directive({
-  selector: '[z-context-menu]',
+  selector: '[arc-context-menu]',
   host: {
     'data-slot': 'context-menu-trigger',
     '[attr.tabindex]': "'0'",
@@ -19,17 +19,17 @@ import { noopFn } from '@/shared/utils/merge-classes';
   hostDirectives: [
     {
       directive: CdkContextMenuTrigger,
-      inputs: ['cdkContextMenuTriggerFor: zContextMenuTriggerFor'],
+      inputs: ['cdkContextMenuTriggerFor: arcContextMenuTriggerFor'],
     },
   ],
 })
-export class ZardContextMenuDirective {
+export class ArcTechContextMenuDirective {
   protected readonly cdkTrigger = inject(CdkContextMenuTrigger, { host: true });
   private readonly destroyRef = inject(DestroyRef);
   private readonly document = inject(DOCUMENT);
   private readonly elementRef = inject(ElementRef);
 
-  readonly zContextMenuTriggerFor = input.required<TemplateRef<void>>();
+  readonly arcContextMenuTriggerFor = input.required<TemplateRef<void>>();
   noopFn = noopFn;
 
   constructor() {

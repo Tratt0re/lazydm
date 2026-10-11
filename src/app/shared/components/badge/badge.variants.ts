@@ -4,7 +4,7 @@ export const badgeVariants = cva(
   'inline-flex items-center justify-center border px-2 py-0.5 text-xs font-medium w-fit whitespace-nowrap shrink-0 [&>svg]:size-3 gap-1 [&>svg]:pointer-events-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive transition-[color,box-shadow] overflow-hidden',
   {
     variants: {
-      zType: {
+      arcType: {
         default: 'border-transparent bg-primary text-primary-foreground [a&]:hover:bg-primary/90 h-5',
         secondary: 'border-transparent bg-secondary text-secondary-foreground [a&]:hover:bg-secondary/90 h-5',
         destructive:
@@ -12,18 +12,18 @@ export const badgeVariants = cva(
         filter: 'h-6 border-border/70 bg-muted text-foreground px-2 pr-1',
         outline: 'text-foreground [a&]:hover:bg-accent [a&]:hover:text-accent-foreground',
       },
-      zShape: {
+      arcShape: {
         default: 'rounded-md',
         square: 'rounded-none',
         pill: 'rounded-full',
       },
     },
     defaultVariants: {
-      zType: 'default',
-      zShape: 'default',
+      arcType: 'default',
+      arcShape: 'default',
     },
   },
 );
 
-export type ZardBadgeTypeVariants = NonNullable<VariantProps<typeof badgeVariants>['zType']>;
-export type ZardBadgeShapeVariants = NonNullable<VariantProps<typeof badgeVariants>['zShape']>;
+export type ArcTechBadgeTypeVariants = NonNullable<VariantProps<typeof badgeVariants>['arcType']>;
+export type ArcTechBadgeShapeVariants = NonNullable<VariantProps<typeof badgeVariants>['arcShape']>;

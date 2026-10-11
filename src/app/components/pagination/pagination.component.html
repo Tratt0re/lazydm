@@ -3,15 +3,15 @@
     @if (showPageSizeSelector()) {
       <div class="flex items-center gap-2">
         <span class="text-xs text-muted-foreground">{{ pageSizeLabel() }}</span>
-        <z-select
-          [zValue]="pageSizeValue()"
-          [zLabel]="pageSizeValue()"
-          (zSelectionChange)="onPageSizeSelectionChange($event)"
+        <arc-select
+          [arcValue]="pageSizeValue()"
+          [arcLabel]="pageSizeValue()"
+          (arcSelectionChange)="onPageSizeSelectionChange($event)"
         >
           @for (option of normalizedPageSizeOptions(); track option) {
-            <z-select-item [zValue]="option.toString()" [zLabel]="option.toString()" />
+            <arc-select-item [arcValue]="option.toString()" [arcLabel]="option.toString()" />
           }
-        </z-select>
+        </arc-select>
       </div>
     }
   </div>
@@ -20,25 +20,25 @@
     @if (showTopPagination()) {
       <div class="flex items-center gap-2">
         <button
-          z-button
+          arc-button
           type="button"
-          zType="secondary"
-          [zDisabled]="normalizedCurrentPage() <= 1"
+          arcType="secondary"
+          [arcDisabled]="normalizedCurrentPage() <= 1"
           (click)="goToPreviousPage()"
         >
-          <z-icon zType="chevron-left" aria-hidden="true" />
+          <arc-icon arcType="chevron-left" aria-hidden="true" />
           {{ 'common.pagination.previous' | translate }}
         </button>
 
         <button
-          z-button
+          arc-button
           type="button"
-          zType="secondary"
-          [zDisabled]="normalizedCurrentPage() >= normalizedTotalPages()"
+          arcType="secondary"
+          [arcDisabled]="normalizedCurrentPage() >= normalizedTotalPages()"
           (click)="goToNextPage()"
         >
           {{ 'common.pagination.next' | translate }}
-          <z-icon zType="chevron-right" aria-hidden="true" />
+          <arc-icon arcType="chevron-right" aria-hidden="true" />
         </button>
       </div>
     }
@@ -53,11 +53,11 @@
   </p>
 
   <div class="md:justify-self-end">
-    <z-pagination
-      [zPageIndex]="normalizedCurrentPage()"
-      [zTotal]="normalizedTotalPages()"
-      [zVisiblePages]="normalizedMaxVisiblePages()"
-      (zPageIndexChange)="onPageChange($event)"
+    <arc-pagination
+      [arcPageIndex]="normalizedCurrentPage()"
+      [arcTotal]="normalizedTotalPages()"
+      [arcVisiblePages]="normalizedMaxVisiblePages()"
+      (arcPageIndexChange)="onPageChange($event)"
     />
   </div>
 </div>

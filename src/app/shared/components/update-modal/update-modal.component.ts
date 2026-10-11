@@ -2,13 +2,13 @@ import { ChangeDetectionStrategy, Component, inject, signal, ViewEncapsulation }
 import { TranslatePipe } from '@ngx-translate/core';
 
 import { UpdateService } from '@/shared/core/services/update.service';
-import { ZardButtonComponent } from '@/shared/components/button/button.component';
-import { ZardCheckboxComponent } from '@/shared/components/checkbox/checkbox.component';
-import { ZardIconComponent } from '@/shared/components/icon/icon.component';
+import { ArcTechButtonComponent } from '@/shared/components/button/button.component';
+import { ArcTechCheckboxComponent } from '@/shared/components/checkbox/checkbox.component';
+import { ArcTechIconComponent } from '@/shared/components/icon/icon.component';
 
 @Component({
   selector: 'app-update-modal',
-  imports: [TranslatePipe, ZardButtonComponent, ZardCheckboxComponent, ZardIconComponent],
+  imports: [TranslatePipe, ArcTechButtonComponent, ArcTechCheckboxComponent, ArcTechIconComponent],
   template: `
     <div
       class="fixed inset-0 z-50 flex items-center justify-center bg-black/40"
@@ -22,7 +22,7 @@ import { ZardIconComponent } from '@/shared/components/icon/icon.component';
       >
         <header class="flex flex-col gap-1.5">
           <div class="flex items-center gap-2">
-            <z-icon zType="arrow-up" class="size-5 shrink-0 text-foreground" />
+            <arc-icon arcType="arrow-up" class="size-5 shrink-0 text-foreground" />
             <h2 id="update-modal-title" class="text-base font-semibold">
               {{ 'update.modal.title' | translate }}
             </h2>
@@ -39,21 +39,21 @@ import { ZardIconComponent } from '@/shared/components/icon/icon.component';
           </p>
         </header>
 
-        <z-checkbox [(zChecked)]="ignoreChecked">
+        <arc-checkbox [(arcChecked)]="ignoreChecked">
           {{
             'update.modal.ignore'
               | translate: { latest: updateService.updateResult()?.latestVersion }
           }}
-        </z-checkbox>
+        </arc-checkbox>
 
         <footer class="flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
-          <button type="button" z-button zType="outline" (click)="onDismiss()">
+          <button type="button" arc-button arcType="outline" (click)="onDismiss()">
             {{
               'update.modal.cta.dismiss'
                 | translate: { current: updateService.updateResult()?.currentVersion }
             }}
           </button>
-          <button type="button" z-button zType="default" (click)="onUpdate()">
+          <button type="button" arc-button arcType="default" (click)="onUpdate()">
             {{ 'update.modal.cta.update' | translate }}
           </button>
         </footer>

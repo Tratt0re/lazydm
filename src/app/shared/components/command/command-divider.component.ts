@@ -2,12 +2,12 @@ import { ChangeDetectionStrategy, Component, computed, inject, input, ViewEncaps
 
 import type { ClassValue } from 'clsx';
 
-import { ZardCommandComponent } from '@/shared/components/command/command.component';
+import { ArcTechCommandComponent } from '@/shared/components/command/command.component';
 import { commandSeparatorVariants } from '@/shared/components/command/command.variants';
 import { mergeClasses } from '@/shared/utils/merge-classes';
 
 @Component({
-  selector: 'z-command-divider',
+  selector: 'arc-command-divider',
   template: `
     @if (shouldShow()) {
       <div [class]="classes()" role="separator"></div>
@@ -15,10 +15,10 @@ import { mergeClasses } from '@/shared/utils/merge-classes';
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
-  exportAs: 'zCommandDivider',
+  exportAs: 'arcCommandDivider',
 })
-export class ZardCommandDividerComponent {
-  private readonly commandComponent = inject(ZardCommandComponent, { optional: true });
+export class ArcTechCommandDividerComponent {
+  private readonly commandComponent = inject(ArcTechCommandComponent, { optional: true });
 
   readonly class = input<ClassValue>('');
 

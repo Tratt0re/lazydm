@@ -3,11 +3,11 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { RouterLink } from '@angular/router';
 
 import { SidebarToggleComponent } from '@/components/sidebar-toggle/sidebar-toggle.component';
-import { ZardButtonComponent } from '@/shared/components/button';
-import { ZardDividerComponent } from '@/shared/components/divider';
-import { ZardIconComponent } from '@/shared/components/icon';
-import { ZardSegmentedComponent, ZardSegmentedItemComponent } from '@/shared/components/segmented';
-import { ZardSelectImports } from '@/shared/components/select';
+import { ArcTechButtonComponent } from '@/shared/components/button';
+import { ArcTechDividerComponent } from '@/shared/components/divider';
+import { ArcTechIconComponent } from '@/shared/components/icon';
+import { ArcTechSegmentedComponent, ArcTechSegmentedItemComponent } from '@/shared/components/segmented';
+import { ArcTechSelectImports } from '@/shared/components/select';
 import { HeaderComponent } from '@/shared/components/layout/header.component';
 import type {
   ToolbarAction,
@@ -25,12 +25,12 @@ import type {
     SidebarToggleComponent,
     TranslatePipe,
     RouterLink,
-    ZardButtonComponent,
-    ZardDividerComponent,
-    ZardIconComponent,
-    ZardSegmentedComponent,
-    ZardSegmentedItemComponent,
-    ...ZardSelectImports,
+    ArcTechButtonComponent,
+    ArcTechDividerComponent,
+    ArcTechIconComponent,
+    ArcTechSegmentedComponent,
+    ArcTechSegmentedItemComponent,
+    ...ArcTechSelectImports,
   ],
   templateUrl: './toolbar.html',
   encapsulation: ViewEncapsulation.None,

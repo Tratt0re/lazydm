@@ -18,18 +18,18 @@ import { mergeClasses } from '@/shared/utils/merge-classes';
 
 import {
   buttonVariants,
-  type ZardButtonShapeVariants,
-  type ZardButtonSizeVariants,
-  type ZardButtonTypeVariants,
+  type ArcTechButtonShapeVariants,
+  type ArcTechButtonSizeVariants,
+  type ArcTechButtonTypeVariants,
 } from './button.variants';
-import { ZardIconComponent } from '@/shared/components/icon/icon.component';
+import { ArcTechIconComponent } from '@/shared/components/icon/icon.component';
 
 @Component({
-  selector: 'z-button, button[z-button], a[z-button]',
-  imports: [ZardIconComponent],
+  selector: 'arc-button, button[arc-button], a[arc-button]',
+  imports: [ArcTechIconComponent],
   template: `
-    @if (zLoading()) {
-      <z-icon zType="loader-circle" class="animate-spin duration-2000" />
+    @if (arcLoading()) {
+      <arc-icon arcType="loader-circle" class="animate-spin duration-2000" />
     }
     <ng-content />
   `,
@@ -38,24 +38,24 @@ import { ZardIconComponent } from '@/shared/components/icon/icon.component';
   host: {
     '[class]': 'classes()',
     '[attr.data-icon-only]': 'iconOnly() || null',
-    '[attr.data-disabled]': 'isNotInsideOfButtonOrLink() && zDisabled() || null',
-    '[attr.aria-disabled]': 'isNotInsideOfButtonOrLink() && zDisabled() || null',
-    '[attr.disabled]': 'isNotInsideOfButtonOrLink() && zDisabled() ? "" : null',
+    '[attr.data-disabled]': 'isNotInsideOfButtonOrLink() && arcDisabled() || null',
+    '[attr.aria-disabled]': 'isNotInsideOfButtonOrLink() && arcDisabled() || null',
+    '[attr.disabled]': 'isNotInsideOfButtonOrLink() && arcDisabled() ? "" : null',
     '[attr.role]': 'isNotInsideOfButtonOrLink() ? "button" : null',
     '[attr.tabindex]': 'isNotInsideOfButtonOrLink() ? "0" : null',
   },
-  exportAs: 'zButton',
+  exportAs: 'arcButton',
 })
-export class ZardButtonComponent implements OnDestroy {
+export class ArcTechButtonComponent implements OnDestroy {
   private readonly elementRef = inject(ElementRef<HTMLElement>);
 
-  readonly zType = input<ZardButtonTypeVariants>('default');
-  readonly zSize = input<ZardButtonSizeVariants>('default');
-  readonly zShape = input<ZardButtonShapeVariants>('default');
+  readonly arcType = input<ArcTechButtonTypeVariants>('default');
+  readonly arcSize = input<ArcTechButtonSizeVariants>('default');
+  readonly arcShape = input<ArcTechButtonShapeVariants>('default');
   readonly class = input<ClassValue>('');
-  readonly zFull = input(false, { transform: booleanAttribute });
-  readonly zLoading = input(false, { transform: booleanAttribute });
-  readonly zDisabled = input(false, { transform: booleanAttribute });
+  readonly arcFull = input(false, { transform: booleanAttribute });
+  readonly arcLoading = input(false, { transform: booleanAttribute });
+  readonly arcDisabled = input(false, { transform: booleanAttribute });
 
   private readonly iconOnlyState = signal(false);
   readonly iconOnly = this.iconOnlyState.asReadonly();
@@ -70,7 +70,7 @@ export class ZardButtonComponent implements OnDestroy {
 
       const check = () => {
         const el = this.elementRef.nativeElement;
-        const hasIcon = el.querySelector('z-icon, [z-icon]') !== null;
+        const hasIcon = el.querySelector('arc-icon, [arc-icon]') !== null;
         const children = Array.from<Node>(el.childNodes);
         const hasText = children.some(node => {
           if (node.nodeType === 3) {
@@ -78,7 +78,7 @@ export class ZardButtonComponent implements OnDestroy {
           }
           if (node.nodeType === 1) {
             const element = node as HTMLElement;
-            if (element.matches('z-icon, [z-icon]')) {
+            if (element.matches('arc-icon, [arc-icon]')) {
               return false;
             }
             return element.textContent?.trim() !== '';
@@ -109,12 +109,12 @@ export class ZardButtonComponent implements OnDestroy {
   protected readonly classes = computed(() =>
     mergeClasses(
       buttonVariants({
-        zType: this.zType(),
-        zSize: this.zSize(),
-        zShape: this.zShape(),
-        zFull: this.zFull(),
-        zLoading: this.zLoading(),
-        zDisabled: this.zDisabled(),
+        arcType: this.arcType(),
+        arcSize: this.arcSize(),
+        arcShape: this.arcShape(),
+        arcFull: this.arcFull(),
+        arcLoading: this.arcLoading(),
+        arcDisabled: this.arcDisabled(),
       }),
       this.class(),
     ),
@@ -122,9 +122,9 @@ export class ZardButtonComponent implements OnDestroy {
 
   protected readonly isNotInsideOfButtonOrLink = computed(() => {
     // Evaluated once; assumes component parent doesn't change after mount
-    const zardButtonElement = this.elementRef.nativeElement;
-    if (zardButtonElement.parentElement) {
-      const { tagName } = zardButtonElement.parentElement;
+    const arcTechButtonElement = this.elementRef.nativeElement;
+    if (arcTechButtonElement.parentElement) {
+      const { tagName } = arcTechButtonElement.parentElement;
       return tagName !== 'BUTTON' && tagName !== 'A';
     }
     return true;

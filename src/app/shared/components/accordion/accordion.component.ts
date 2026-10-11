@@ -10,12 +10,12 @@ import {
 
 import type { ClassValue } from 'clsx';
 
-import { ZardAccordionItemComponent } from '@/shared/components/accordion/accordion-item.component';
+import { ArcTechAccordionItemComponent } from '@/shared/components/accordion/accordion-item.component';
 import { accordionVariants } from '@/shared/components/accordion/accordion.variants';
 import { mergeClasses } from '@/shared/utils/merge-classes';
 
 @Component({
-  selector: 'z-accordion',
+  selector: 'arc-accordion',
   template: `
     <ng-content />
   `,
@@ -24,22 +24,22 @@ import { mergeClasses } from '@/shared/utils/merge-classes';
   host: {
     '[class]': 'classes()',
   },
-  exportAs: 'zAccordion',
+  exportAs: 'arcAccordion',
 })
-export class ZardAccordionComponent implements AfterContentInit {
-  readonly items = contentChildren(ZardAccordionItemComponent);
+export class ArcTechAccordionComponent implements AfterContentInit {
+  readonly items = contentChildren(ArcTechAccordionItemComponent);
 
   readonly class = input<ClassValue>('');
-  readonly zType = input<'single' | 'multiple'>('single');
-  readonly zCollapsible = input<boolean>(true);
-  readonly zDefaultValue = input<string | string[]>('');
+  readonly arcType = input<'single' | 'multiple'>('single');
+  readonly arcCollapsible = input<boolean>(true);
+  readonly arcDefaultValue = input<string | string[]>('');
 
   private readonly defaultValue = computed(() => {
-    const defaultValue = this.zDefaultValue();
+    const defaultValue = this.arcDefaultValue();
     if (typeof defaultValue === 'string') {
       return defaultValue ? [defaultValue] : [];
-    } else if (this.zType() === 'single') {
-      throw new Error('Array of default values is supported only for multiple zType');
+    } else if (this.arcType() === 'single') {
+      throw new Error('Array of default values is supported only for multiple arcType');
     }
     return defaultValue;
   });
@@ -49,22 +49,22 @@ export class ZardAccordionComponent implements AfterContentInit {
   ngAfterContentInit(): void {
     for (const item of this.items()) {
       item.accordion = this;
-      item.isOpen.set(this.defaultValue().includes(item.zValue()));
+      item.isOpen.set(this.defaultValue().includes(item.arcValue()));
     }
   }
 
-  toggleItem(selectedItem: ZardAccordionItemComponent): void {
-    if (this.zType() === 'single') {
+  toggleItem(selectedItem: ArcTechAccordionItemComponent): void {
+    if (this.arcType() === 'single') {
       this.toggleForSingleType(selectedItem);
     } else {
       this.toggleForMultipleType(selectedItem);
     }
   }
 
-  private toggleForSingleType(selectedItem: ZardAccordionItemComponent): void {
+  private toggleForSingleType(selectedItem: ArcTechAccordionItemComponent): void {
     const isClosing = selectedItem.isOpen();
 
-    if (isClosing && !this.zCollapsible()) {
+    if (isClosing && !this.arcCollapsible()) {
       return;
     }
 
@@ -74,9 +74,9 @@ export class ZardAccordionComponent implements AfterContentInit {
     }
   }
 
-  private toggleForMultipleType(selectedItem: ZardAccordionItemComponent): void {
+  private toggleForMultipleType(selectedItem: ArcTechAccordionItemComponent): void {
     const isClosing = selectedItem.isOpen();
-    if (isClosing && !this.zCollapsible() && this.countOpenItems() <= 1) {
+    if (isClosing && !this.arcCollapsible() && this.countOpenItems() <= 1) {
       return;
     }
 

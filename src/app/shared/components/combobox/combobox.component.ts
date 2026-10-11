@@ -20,68 +20,68 @@ import { type ControlValueAccessor, FormsModule, NG_VALUE_ACCESSOR } from '@angu
 
 import type { ClassValue } from 'clsx';
 
-import { ZardBadgeComponent } from '@/shared/components/badge';
-import { ZardButtonComponent, type ZardButtonTypeVariants } from '@/shared/components/button';
-import { ZardIdDirective } from '@/shared/core';
-import { comboboxVariants, type ZardComboboxWidthVariants } from '@/shared/components/combobox/combobox.variants';
+import { ArcTechBadgeComponent } from '@/shared/components/badge';
+import { ArcTechButtonComponent, type ArcTechButtonTypeVariants } from '@/shared/components/button';
+import { ArcTechIdDirective } from '@/shared/core';
+import { comboboxVariants, type ArcTechComboboxWidthVariants } from '@/shared/components/combobox/combobox.variants';
 import {
-  ZardCommandComponent,
-  ZardCommandEmptyComponent,
-  ZardCommandInputComponent,
-  ZardCommandListComponent,
-  ZardCommandOptionComponent,
-  ZardCommandOptionGroupComponent,
-  type ZardCommandOption,
+  ArcTechCommandComponent,
+  ArcTechCommandEmptyComponent,
+  ArcTechCommandInputComponent,
+  ArcTechCommandListComponent,
+  ArcTechCommandOptionComponent,
+  ArcTechCommandOptionGroupComponent,
+  type ArcTechCommandOption,
 } from '@/shared/components/command';
-import { ZardEmptyComponent } from '@/shared/components/empty';
-import { ZardIconComponent, type ZardIcon } from '@/shared/components/icon';
-import { ZardPopoverComponent, ZardPopoverDirective } from '@/shared/components/popover';
+import { ArcTechEmptyComponent } from '@/shared/components/empty';
+import { ArcTechIconComponent, type ArcTechIcon } from '@/shared/components/icon';
+import { ArcTechPopoverComponent, ArcTechPopoverDirective } from '@/shared/components/popover';
 import { mergeClasses } from '@/shared/utils/merge-classes';
 
-export interface ZardComboboxOption {
+export interface ArcTechComboboxOption {
   value: string;
   label: string;
   disabled?: boolean;
-  icon?: ZardIcon;
+  icon?: ArcTechIcon;
 }
 
-export interface ZardComboboxGroup {
+export interface ArcTechComboboxGroup {
   label?: string;
-  options: ZardComboboxOption[];
+  options: ArcTechComboboxOption[];
 }
 
 @Component({
-  selector: 'z-combobox',
+  selector: 'arc-combobox',
   imports: [
     FormsModule,
     NgTemplateOutlet,
-    ZardBadgeComponent,
-    ZardButtonComponent,
-    ZardCommandComponent,
-    ZardCommandInputComponent,
-    ZardCommandListComponent,
-    ZardCommandEmptyComponent,
-    ZardCommandOptionComponent,
-    ZardCommandOptionGroupComponent,
-    ZardPopoverDirective,
-    ZardPopoverComponent,
-    ZardEmptyComponent,
-    ZardIconComponent,
-    ZardIdDirective,
+    ArcTechBadgeComponent,
+    ArcTechButtonComponent,
+    ArcTechCommandComponent,
+    ArcTechCommandInputComponent,
+    ArcTechCommandListComponent,
+    ArcTechCommandEmptyComponent,
+    ArcTechCommandOptionComponent,
+    ArcTechCommandOptionGroupComponent,
+    ArcTechPopoverDirective,
+    ArcTechPopoverComponent,
+    ArcTechEmptyComponent,
+    ArcTechIconComponent,
+    ArcTechIdDirective,
   ],
   template: `
     <button
       type="button"
-      z-button
-      zPopover
-      zardId="combobox"
-      #z="zardId"
+      arc-button
+      arcPopover
+      arcTechId="combobox"
+      #z="arcTechId"
       role="combobox"
-      [id]="zId() || z.id()"
-      [zContent]="popoverContent"
-      [zType]="buttonVariant()"
+      [id]="arcId() || z.id()"
+      [arcContent]="popoverContent"
+      [arcType]="buttonVariant()"
       [class]="buttonClasses()"
-      [zDisabled]="disabled()"
+      [arcDisabled]="disabled()"
       [attr.aria-expanded]="open()"
       [attr.aria-haspopup]="'listbox'"
       [attr.aria-controls]="'combobox-listbox'"
@@ -89,16 +89,16 @@ export interface ZardComboboxGroup {
       [attr.aria-describedby]="ariaDescribedBy()"
       [attr.aria-autocomplete]="searchable() ? 'list' : 'none'"
       [attr.aria-activedescendant]="null"
-      (zVisibleChange)="setOpen($event)"
+      (arcVisibleChange)="setOpen($event)"
       #popoverTrigger
     >
       <span [class]="valueContainerClasses()">
         @if (multiple()) {
           <span class="flex min-w-0 flex-wrap items-center gap-1.5">
             @for (label of displayLabels(); track $index) {
-              <z-badge zType="secondary" class="max-w-[120px] truncate">
+              <arc-badge arcType="secondary" class="max-w-[120px] truncate">
                 <span class="truncate">{{ label }}</span>
-              </z-badge>
+              </arc-badge>
             } @empty {
               <span class="text-muted-foreground truncate">{{ placeholder() }}</span>
             }
@@ -106,32 +106,32 @@ export interface ZardComboboxGroup {
         } @else {
           @if (selectedOption(); as selectedOption) {
             @if (selectedOption.icon; as selectedIcon) {
-              <z-icon zSize="sm" [zType]="selectedIcon" class="shrink-0 text-primary opacity-70" />
+              <arc-icon arcSize="sm" [arcType]="selectedIcon" class="shrink-0 text-primary opacity-70" />
             }
           }
           <span class="truncate">{{ displayValue() ?? placeholder() }}</span>
         }
       </span>
-      <z-icon zType="chevrons-up-down" [class]="chevronClasses()" />
+      <arc-icon arcType="chevrons-up-down" [class]="chevronClasses()" />
     </button>
 
     <ng-template #popoverContent>
-      <z-popover [class]="popoverClasses()">
-        <z-command class="min-h-auto" (zCommandSelected)="handleSelect($event)" #commandRef>
+      <arc-popover [class]="popoverClasses()">
+        <arc-command class="min-h-auto" (arcCommandSelected)="handleSelect($event)" #commandRef>
           @if (searchable()) {
-            <z-command-input [placeholder]="searchPlaceholder()" #commandInputRef />
+            <arc-command-input [placeholder]="searchPlaceholder()" #commandInputRef />
           }
 
-          <z-command-list id="combobox-listbox" role="listbox" [attr.aria-multiselectable]="multiple() ? 'true' : null">
+          <arc-command-list id="combobox-listbox" role="listbox" [attr.aria-multiselectable]="multiple() ? 'true' : null">
             @if (emptyText()) {
-              <z-command-empty>
-                <z-empty [zDescription]="emptyText()" />
-              </z-command-empty>
+              <arc-command-empty>
+                <arc-empty [arcDescription]="emptyText()" />
+              </arc-command-empty>
             }
 
             @for (group of groups(); track group.label ?? $index) {
               @if (group.label) {
-                <z-command-option-group [zLabel]="group.label" #commandGroup>
+                <arc-command-option-group [arcLabel]="group.label" #commandGroup>
                   @for (option of group.options; track option.value) {
                     <ng-container
                       [ngTemplateOutlet]="commandOption"
@@ -142,7 +142,7 @@ export interface ZardComboboxGroup {
                       }"
                     />
                   }
-                </z-command-option-group>
+                </arc-command-option-group>
               } @else {
                 @for (option of group.options; track option.value) {
                   <ng-container
@@ -167,19 +167,19 @@ export interface ZardComboboxGroup {
                 }
               }
             }
-          </z-command-list>
-        </z-command>
-      </z-popover>
+          </arc-command-list>
+        </arc-command>
+      </arc-popover>
     </ng-template>
 
     <ng-template #commandOption let-option let-cmd="commandInstance" let-grp="groupInstance">
-      <z-command-option
-        [zValue]="option.value"
-        [zLabel]="option.label"
-        [zDisabled]="option.disabled ?? false"
-        [zIcon]="option.icon"
-        [zSelected]="isOptionSelected(option.value)"
-        [zShowSelectedIndicator]="multiple()"
+      <arc-command-option
+        [arcValue]="option.value"
+        [arcLabel]="option.label"
+        [arcDisabled]="option.disabled ?? false"
+        [arcIcon]="option.icon"
+        [arcSelected]="isOptionSelected(option.value)"
+        [arcShowSelectedIndicator]="multiple()"
         [parentCommand]="cmd"
         [commandGroup]="grp"
       />
@@ -188,7 +188,7 @@ export interface ZardComboboxGroup {
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => ZardComboboxComponent),
+      useExisting: forwardRef(() => ArcTechComboboxComponent),
       multi: true,
     },
   ],
@@ -201,17 +201,17 @@ export interface ZardComboboxGroup {
     '(keydown.{arrowdown,arrowup,enter,home,end,pageup,pagedown,space}.prevent)': 'onKeyDown($event)',
     '(keydown.tab)': 'onKeyDown($event)',
   },
-  exportAs: 'zCombobox',
+  exportAs: 'arcCombobox',
 })
-export class ZardComboboxComponent implements ControlValueAccessor {
+export class ArcTechComboboxComponent implements ControlValueAccessor {
   private readonly injector = inject(Injector);
 
-  readonly zId = input<string>('');
+  readonly arcId = input<string>('');
   readonly class = input<ClassValue>('');
-  readonly buttonVariant = input<ZardButtonTypeVariants>('outline');
-  readonly zButtonClass = input<ClassValue>('');
-  readonly zChevronClass = input<ClassValue>('opacity-50');
-  readonly zWidth = input<ZardComboboxWidthVariants>('default');
+  readonly buttonVariant = input<ArcTechButtonTypeVariants>('outline');
+  readonly arcButtonClass = input<ClassValue>('');
+  readonly arcChevronClass = input<ClassValue>('opacity-50');
+  readonly arcWidth = input<ArcTechComboboxWidthVariants>('default');
   readonly placeholder = input<string>('Select...');
   readonly searchPlaceholder = input<string>('Search...');
   readonly emptyText = input<string>('No results found.');
@@ -220,18 +220,18 @@ export class ZardComboboxComponent implements ControlValueAccessor {
   readonly multiple = input(false, { transform: booleanAttribute });
   readonly maxLabelCount = input(1);
   readonly value = input<string | readonly string[] | null | undefined>(undefined);
-  readonly options = input<ZardComboboxOption[]>([]);
-  readonly groups = input<ZardComboboxGroup[]>([]);
+  readonly options = input<ArcTechComboboxOption[]>([]);
+  readonly groups = input<ArcTechComboboxGroup[]>([]);
   readonly ariaLabel = input<string>('');
   readonly ariaDescribedBy = input<string>('');
 
-  readonly zValueChange = output<string | string[] | null>();
-  readonly zComboSelected = output<ZardComboboxOption>();
+  readonly arcValueChange = output<string | string[] | null>();
+  readonly arcComboSelected = output<ArcTechComboboxOption>();
 
-  readonly popoverDirective = viewChild.required('popoverTrigger', { read: ZardPopoverDirective });
+  readonly popoverDirective = viewChild.required('popoverTrigger', { read: ArcTechPopoverDirective });
   readonly buttonRef = viewChild.required('popoverTrigger', { read: ElementRef });
-  readonly commandRef = viewChild('commandRef', { read: ZardCommandComponent });
-  readonly commandInputRef = viewChild('commandInputRef', { read: ZardCommandInputComponent });
+  readonly commandRef = viewChild('commandRef', { read: ArcTechCommandComponent });
+  readonly commandInputRef = viewChild('commandInputRef', { read: ArcTechCommandInputComponent });
 
   protected readonly open = signal(false);
   protected readonly internalValue = signal<string | readonly string[] | null>(null);
@@ -239,7 +239,7 @@ export class ZardComboboxComponent implements ControlValueAccessor {
   protected readonly classes = computed(() =>
     mergeClasses(
       comboboxVariants({
-        zWidth: this.zWidth(),
+        arcWidth: this.arcWidth(),
       }),
       this.class(),
     ),
@@ -249,16 +249,16 @@ export class ZardComboboxComponent implements ControlValueAccessor {
     mergeClasses(
       'w-full justify-between',
       this.multiple() ? 'h-auto min-h-9 py-1.5' : '',
-      this.zButtonClass(),
+      this.arcButtonClass(),
     ),
   );
   protected readonly valueContainerClasses = computed(() =>
     mergeClasses('min-w-0 flex-1 text-left', this.multiple() ? '' : 'flex items-center gap-2'),
   );
-  protected readonly chevronClasses = computed(() => mergeClasses('ml-2 shrink-0', this.zChevronClass()));
+  protected readonly chevronClasses = computed(() => mergeClasses('ml-2 shrink-0', this.arcChevronClass()));
 
   protected readonly popoverClasses = computed(() => {
-    const widthClass = this.zWidth() === 'full' ? 'w-full' : comboboxVariants({ zWidth: this.zWidth() });
+    const widthClass = this.arcWidth() === 'full' ? 'w-full' : comboboxVariants({ arcWidth: this.arcWidth() });
     return `${widthClass} p-0`;
   });
 
@@ -340,7 +340,7 @@ export class ZardComboboxComponent implements ControlValueAccessor {
     }
   }
 
-  handleSelect(commandOption: ZardCommandOption) {
+  handleSelect(commandOption: ArcTechCommandOption) {
     const selectedValue = commandOption.value as string;
 
     if (this.multiple()) {
@@ -352,11 +352,11 @@ export class ZardComboboxComponent implements ControlValueAccessor {
 
       this.internalValue.set(nextValues);
       this.onChange(nextValues);
-      this.zValueChange.emit(nextValues);
+      this.arcValueChange.emit(nextValues);
 
       const selectedOption = this.getOptionByValue(selectedValue);
       if (selectedOption && !alreadySelected) {
-        this.zComboSelected.emit(selectedOption);
+        this.arcComboSelected.emit(selectedOption);
       }
 
       return;
@@ -368,13 +368,13 @@ export class ZardComboboxComponent implements ControlValueAccessor {
 
     this.internalValue.set(newValue);
     this.onChange(newValue);
-    this.zValueChange.emit(newValue);
+    this.arcValueChange.emit(newValue);
 
     // Emit the combobox option if we have a selection
     if (newValue) {
       const selectedOption = this.getOptionByValue(newValue);
       if (selectedOption) {
-        this.zComboSelected.emit(selectedOption);
+        this.arcComboSelected.emit(selectedOption);
       }
     }
 
@@ -396,7 +396,7 @@ export class ZardComboboxComponent implements ControlValueAccessor {
       if (this.selectedValues().length > 0) {
         this.internalValue.set([]);
         this.onChange([]);
-        this.zValueChange.emit([]);
+        this.arcValueChange.emit([]);
       }
       return;
     }
@@ -404,7 +404,7 @@ export class ZardComboboxComponent implements ControlValueAccessor {
     if (this.currentValue()) {
       this.internalValue.set(null);
       this.onChange(null);
-      this.zValueChange.emit(null);
+      this.arcValueChange.emit(null);
     }
   }
 
@@ -499,7 +499,7 @@ export class ZardComboboxComponent implements ControlValueAccessor {
     this.onTouched = fn;
   }
 
-  private getOptionByValue(value: string): ZardComboboxOption | null {
+  private getOptionByValue(value: string): ArcTechComboboxOption | null {
     if (this.groups().length > 0) {
       for (const group of this.groups()) {
         const option = group.options.find(opt => opt.value === value);

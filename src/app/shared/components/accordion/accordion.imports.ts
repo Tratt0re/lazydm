@@ -1,4 +1,4 @@
-import { ZardAccordionItemComponent } from '@/shared/components/accordion/accordion-item.component';
-import { ZardAccordionComponent } from '@/shared/components/accordion/accordion.component';
+import { ArcTechAccordionItemComponent } from '@/shared/components/accordion/accordion-item.component';
+import { ArcTechAccordionComponent } from '@/shared/components/accordion/accordion.component';
 
-export const ZardAccordionImports = [ZardAccordionComponent, ZardAccordionItemComponent] as const;
+export const ArcTechAccordionImports = [ArcTechAccordionComponent, ArcTechAccordionItemComponent] as const;

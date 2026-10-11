@@ -6,7 +6,7 @@ import { menuShortcutVariants } from '@/shared/components/menu/menu.variants';
 import { mergeClasses } from '@/shared/utils/merge-classes';
 
 @Component({
-  selector: 'z-menu-shortcut, [z-menu-shortcut]',
+  selector: 'arc-menu-shortcut, [arc-menu-shortcut]',
   template: `
     <ng-content />
   `,
@@ -15,9 +15,9 @@ import { mergeClasses } from '@/shared/utils/merge-classes';
   host: {
     '[class]': 'classes()',
   },
-  exportAs: 'zMenuShortcut',
+  exportAs: 'arcMenuShortcut',
 })
-export class ZardMenuShortcutComponent {
+export class ArcTechMenuShortcutComponent {
   readonly class = input<ClassValue>('');
 
   protected readonly classes = computed(() => mergeClasses(menuShortcutVariants(), this.class()));

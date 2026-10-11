@@ -11,7 +11,7 @@ export const buttonVariants = cva(
   ),
   {
     variants: {
-      zType: {
+      arcType: {
         default: 'bg-primary text-primary-foreground shadow-xs hover:bg-primary/90',
         destructive:
           'bg-destructive text-white shadow-xs hover:bg-destructive/90 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40 dark:bg-destructive/60',
@@ -21,33 +21,33 @@ export const buttonVariants = cva(
         ghost: 'hover:bg-accent hover:text-accent-foreground dark:hover:bg-accent/50',
         link: 'text-primary underline-offset-4 hover:underline',
       },
-      zSize: {
+      arcSize: {
         default: 'h-10 px-4 py-2 data-icon-only:size-10 data-icon-only:p-0',
         sm: 'h-10 rounded-md gap-1.5 px-3.5 data-icon-only:size-10 data-icon-only:p-0',
         lg: 'h-11 rounded-md px-6 data-icon-only:size-11 data-icon-only:p-0',
       },
-      zShape: {
+      arcShape: {
         default: 'rounded-md',
         circle: 'rounded-full',
         square: 'rounded-none',
       },
-      zFull: {
+      arcFull: {
         true: 'w-full',
       },
-      zLoading: {
+      arcLoading: {
         true: 'opacity-50 pointer-events-none',
       },
-      zDisabled: {
+      arcDisabled: {
         true: 'pointer-events-none opacity-50',
       },
     },
     defaultVariants: {
-      zType: 'default',
-      zSize: 'default',
-      zShape: 'default',
+      arcType: 'default',
+      arcSize: 'default',
+      arcShape: 'default',
     },
   },
 );
-export type ZardButtonShapeVariants = NonNullable<VariantProps<typeof buttonVariants>['zShape']>;
-export type ZardButtonSizeVariants = NonNullable<VariantProps<typeof buttonVariants>['zSize']>;
-export type ZardButtonTypeVariants = NonNullable<VariantProps<typeof buttonVariants>['zType']>;
+export type ArcTechButtonShapeVariants = NonNullable<VariantProps<typeof buttonVariants>['arcShape']>;
+export type ArcTechButtonSizeVariants = NonNullable<VariantProps<typeof buttonVariants>['arcSize']>;
+export type ArcTechButtonTypeVariants = NonNullable<VariantProps<typeof buttonVariants>['arcType']>;

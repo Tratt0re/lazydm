@@ -10,7 +10,7 @@ import {
 
 import type { ClassValue } from 'clsx';
 
-import { ZardStringTemplateOutletDirective } from '@/shared/core/directives/string-template-outlet/string-template-outlet.directive';
+import { ArcTechStringTemplateOutletDirective } from '@/shared/core/directives/string-template-outlet/string-template-outlet.directive';
 import { mergeClasses } from '@/shared/utils/merge-classes';
 
 import {
@@ -22,41 +22,41 @@ import {
   emptyTitleVariants,
   emptyVariants,
 } from './empty.variants';
-import { ZardIconComponent } from '@/shared/components/icon/icon.component';
-import { type ZardIcon } from '@/shared/components/icon/icons';
+import { ArcTechIconComponent } from '@/shared/components/icon/icon.component';
+import { type ArcTechIcon } from '@/shared/components/icon/icons';
 
 @Component({
-  selector: 'z-empty',
-  imports: [NgOptimizedImage, ZardIconComponent, ZardStringTemplateOutletDirective],
+  selector: 'arc-empty',
+  imports: [NgOptimizedImage, ArcTechIconComponent, ArcTechStringTemplateOutletDirective],
   template: `
-    @let image = zImage();
-    @let icon = zIcon();
-    @let title = zTitle();
-    @let description = zDescription();
-    @let actions = zActions();
+    @let image = arcImage();
+    @let icon = arcIcon();
+    @let title = arcTitle();
+    @let description = arcDescription();
+    @let actions = arcActions();
 
     <div [class]="headerClasses()">
       @if (image) {
         <div [class]="imageClasses()">
-          <ng-container *zStringTemplateOutlet="image">
+          <ng-container *arcStringTemplateOutlet="image">
             <img [ngSrc]="image" width="64" height="64" alt="Empty" class="mx-auto" />
           </ng-container>
         </div>
       } @else if (icon) {
         <div [class]="iconClasses()" data-testid="icon">
-          <z-icon [zType]="icon" zSize="xl" />
+          <arc-icon [arcType]="icon" arcSize="xl" />
         </div>
       }
 
       @if (title) {
         <div [class]="titleClasses()">
-          <ng-container *zStringTemplateOutlet="title">{{ title }}</ng-container>
+          <ng-container *arcStringTemplateOutlet="title">{{ title }}</ng-container>
         </div>
       }
 
       @if (description) {
         <div [class]="descriptionClasses()">
-          <ng-container *zStringTemplateOutlet="description">{{ description }}</ng-container>
+          <ng-container *arcStringTemplateOutlet="description">{{ description }}</ng-container>
         </div>
       }
     </div>
@@ -64,7 +64,7 @@ import { type ZardIcon } from '@/shared/components/icon/icons';
     @if (actions.length) {
       <div [class]="actionsClasses()">
         @for (action of actions; track $index) {
-          <ng-container *zStringTemplateOutlet="action" />
+          <ng-container *arcStringTemplateOutlet="action" />
         }
       </div>
     }
@@ -76,14 +76,14 @@ import { type ZardIcon } from '@/shared/components/icon/icons';
   host: {
     '[class]': 'classes()',
   },
-  exportAs: 'zEmpty',
+  exportAs: 'arcEmpty',
 })
-export class ZardEmptyComponent {
-  readonly zActions = input<TemplateRef<void>[]>([]);
-  readonly zIcon = input<ZardIcon>();
-  readonly zImage = input<string | TemplateRef<void>>();
-  readonly zTitle = input<string | TemplateRef<void>>();
-  readonly zDescription = input<string | TemplateRef<void>>();
+export class ArcTechEmptyComponent {
+  readonly arcActions = input<TemplateRef<void>[]>([]);
+  readonly arcIcon = input<ArcTechIcon>();
+  readonly arcImage = input<string | TemplateRef<void>>();
+  readonly arcTitle = input<string | TemplateRef<void>>();
+  readonly arcDescription = input<string | TemplateRef<void>>();
   readonly class = input<ClassValue>('');
 
   protected readonly classes = computed(() => mergeClasses(emptyVariants(), this.class()));

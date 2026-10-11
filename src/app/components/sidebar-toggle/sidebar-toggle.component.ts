@@ -1,12 +1,12 @@
 import { Component, input, output } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 
-import { ZardButtonComponent } from '@/shared/components/button';
-import { ZardIconComponent } from '@/shared/components/icon';
+import { ArcTechButtonComponent } from '@/shared/components/button';
+import { ArcTechIconComponent } from '@/shared/components/icon';
 
 @Component({
   selector: 'app-sidebar-toggle',
-  imports: [ZardButtonComponent, ZardIconComponent, TranslatePipe],
+  imports: [ArcTechButtonComponent, ArcTechIconComponent, TranslatePipe],
   templateUrl: './sidebar-toggle.component.html',
 })
 export class SidebarToggleComponent {

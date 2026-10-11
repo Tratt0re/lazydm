@@ -23,7 +23,7 @@ import { EventManagerPlugin } from '@angular/platform-browser';
  * Stop propagation
  * (click.stop)="handler()"
  */
-export class ZardEventManagerPlugin extends EventManagerPlugin {
+export class ArcTechEventManagerPlugin extends EventManagerPlugin {
   #keywords = ['prevent', 'stop', 'stop-immediate', 'prevent-with-stop'];
 
   override supports(eventName: string): boolean {

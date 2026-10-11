@@ -26,13 +26,13 @@ export const sliderTrackVariants = cva(
   'flex bg-muted relative grow overflow-hidden rounded-full data-[orientation=horizontal]:h-1.5 data-[orientation=horizontal]:w-full data-[orientation=vertical]:h-full data-[orientation=vertical]:w-1.5',
   {
     variants: {
-      zOrientation: {
+      arcOrientation: {
         horizontal: 'h-1.5 w-full',
         vertical: 'w-1.5 h-full min-h-44',
       },
     },
     defaultVariants: {
-      zOrientation: 'horizontal',
+      arcOrientation: 'horizontal',
     },
   },
 );
@@ -43,13 +43,13 @@ export const sliderRangeVariants = cva(
   'bg-primary absolute data-[orientation=horizontal]:h-full data-[orientation=vertical]:w-full',
   {
     variants: {
-      zOrientation: {
+      arcOrientation: {
         horizontal: 'h-full',
         vertical: 'w-full',
       },
     },
     defaultVariants: {
-      zOrientation: 'horizontal',
+      arcOrientation: 'horizontal',
     },
   },
 );
@@ -72,13 +72,13 @@ export type SliderThumbVariants = VariantProps<typeof sliderThumbVariants>;
 
 export const sliderOrientationVariants = cva('absolute', {
   variants: {
-    zOrientation: {
+    arcOrientation: {
       horizontal: 'translate-x-[-50%]',
       vertical: 'translate-y-[50%]',
     },
   },
   defaultVariants: {
-    zOrientation: 'horizontal',
+    arcOrientation: 'horizontal',
   },
 });
 

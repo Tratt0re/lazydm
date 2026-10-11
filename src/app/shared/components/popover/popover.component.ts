@@ -27,8 +27,8 @@ import { popoverVariants } from './popover.variants';
 
 import { mergeClasses, transform } from '@/shared/utils/merge-classes';
 
-export type ZardPopoverTrigger = 'click' | 'hover' | null;
-export type ZardPopoverPlacement = 'top' | 'bottom' | 'left' | 'right';
+export type ArcTechPopoverTrigger = 'click' | 'hover' | null;
+export type ArcTechPopoverPlacement = 'top' | 'bottom' | 'left' | 'right';
 
 const POPOVER_POSITIONS_MAP: { [key: string]: ConnectedPosition } = {
   top: {
@@ -66,11 +66,11 @@ const POPOVER_POSITIONS_MAP: { [key: string]: ConnectedPosition } = {
 } as const;
 
 @Directive({
-  selector: '[zPopover]',
+  selector: '[arcPopover]',
   standalone: true,
-  exportAs: 'zPopover',
+  exportAs: 'arcPopover',
 })
-export class ZardPopoverDirective implements OnInit, OnDestroy {
+export class ArcTechPopoverDirective implements OnInit, OnDestroy {
   private readonly destroyRef = inject(DestroyRef);
   private readonly overlay = inject(Overlay);
   private readonly overlayPositionBuilder = inject(OverlayPositionBuilder);
@@ -83,25 +83,25 @@ export class ZardPopoverDirective implements OnInit, OnDestroy {
   private overlayRefSubscription?: Subscription;
   private listeners: (() => void)[] = [];
 
-  readonly zTrigger = input<ZardPopoverTrigger>('click');
-  readonly zContent = input.required<TemplateRef<unknown>>();
-  readonly zPlacement = input<ZardPopoverPlacement>('bottom');
-  readonly zAutoFlip = input(true, { transform });
-  readonly zPush = input(false, { transform });
-  readonly zViewportMargin = input<number>(8);
-  readonly zOrigin = input<ElementRef>();
-  readonly zVisible = input<boolean>(false);
-  readonly zOverlayClickable = input<boolean>(true);
-  readonly zVisibleChange = output<boolean>();
+  readonly arcTrigger = input<ArcTechPopoverTrigger>('click');
+  readonly arcContent = input.required<TemplateRef<unknown>>();
+  readonly arcPlacement = input<ArcTechPopoverPlacement>('bottom');
+  readonly arcAutoFlip = input(true, { transform });
+  readonly arcPush = input(false, { transform });
+  readonly arcViewportMargin = input<number>(8);
+  readonly arcOrigin = input<ElementRef>();
+  readonly arcVisible = input<boolean>(false);
+  readonly arcOverlayClickable = input<boolean>(true);
+  readonly arcVisibleChange = output<boolean>();
 
   private readonly isVisible = signal(false);
 
   get nativeElement() {
-    return this.zOrigin()?.nativeElement ?? this.elementRef.nativeElement;
+    return this.arcOrigin()?.nativeElement ?? this.elementRef.nativeElement;
   }
 
   constructor() {
-    toObservable(this.zVisible)
+    toObservable(this.arcVisible)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(visible => {
         const currentlyVisible = this.isVisible();
@@ -112,7 +112,7 @@ export class ZardPopoverDirective implements OnInit, OnDestroy {
         }
       });
 
-    toObservable(this.zTrigger)
+    toObservable(this.arcTrigger)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(trigger => {
         if (this.listeners.length) {
@@ -146,10 +146,10 @@ export class ZardPopoverDirective implements OnInit, OnDestroy {
       this.createOverlay();
     }
 
-    const templatePortal = new TemplatePortal(this.zContent(), this.viewContainerRef);
+    const templatePortal = new TemplatePortal(this.arcContent(), this.viewContainerRef);
     this.overlayRef?.attach(templatePortal);
     this.isVisible.set(true);
-    this.zVisibleChange.emit(true);
+    this.arcVisibleChange.emit(true);
   }
 
   hide() {
@@ -159,7 +159,7 @@ export class ZardPopoverDirective implements OnInit, OnDestroy {
 
     this.overlayRef?.detach();
     this.isVisible.set(false);
-    this.zVisibleChange.emit(false);
+    this.arcVisibleChange.emit(false);
   }
 
   toggle() {
@@ -175,7 +175,7 @@ export class ZardPopoverDirective implements OnInit, OnDestroy {
       const positionStrategy = this.overlayPositionBuilder
         .flexibleConnectedTo(this.nativeElement)
         .withPositions(this.getPositions())
-        .withPush(this.zPush())
+        .withPush(this.arcPush())
         .withFlexibleDimensions(false)
         .withViewportMargin(this.resolveViewportMargin());
 
@@ -189,8 +189,8 @@ export class ZardPopoverDirective implements OnInit, OnDestroy {
 
   private subscribeToOverlayRef(): void {
     if (
-      this.zOverlayClickable() &&
-      this.zTrigger() === 'click' &&
+      this.arcOverlayClickable() &&
+      this.arcTrigger() === 'click' &&
       isPlatformBrowser(this.platformId) &&
       this.overlayRef
     ) {
@@ -202,7 +202,7 @@ export class ZardPopoverDirective implements OnInit, OnDestroy {
   }
 
   private setupTriggers() {
-    const trigger = this.zTrigger();
+    const trigger = this.arcTrigger();
     if (!trigger) {
       return;
     }
@@ -224,7 +224,7 @@ export class ZardPopoverDirective implements OnInit, OnDestroy {
   }
 
   private getPositions(): ConnectedPosition[] {
-    const placement = this.zPlacement();
+    const placement = this.arcPlacement();
     const positions: ConnectedPosition[] = [];
 
     // Primary position
@@ -238,7 +238,7 @@ export class ZardPopoverDirective implements OnInit, OnDestroy {
       offsetY: primaryConfig.offsetY ?? 0,
     });
 
-    if (!this.zAutoFlip()) {
+    if (!this.arcAutoFlip()) {
       return positions;
     }
 
@@ -366,7 +366,7 @@ export class ZardPopoverDirective implements OnInit, OnDestroy {
   }
 
   private resolveViewportMargin(): number {
-    const margin = Number(this.zViewportMargin());
+    const margin = Number(this.arcViewportMargin());
     if (!Number.isFinite(margin) || margin < 0) {
       return 0;
     }
@@ -376,7 +376,7 @@ export class ZardPopoverDirective implements OnInit, OnDestroy {
 }
 
 @Component({
-  selector: 'z-popover',
+  selector: 'arc-popover',
   imports: [],
   standalone: true,
   template: `
@@ -387,7 +387,7 @@ export class ZardPopoverDirective implements OnInit, OnDestroy {
     '[class]': 'classes()',
   },
 })
-export class ZardPopoverComponent {
+export class ArcTechPopoverComponent {
   readonly class = input<string>('');
 
   protected readonly classes = computed(() => mergeClasses(popoverVariants(), this.class()));

@@ -1,12 +1,12 @@
 import { Injectable, computed, signal } from '@angular/core';
 
 import type {
-  ZardButtonShapeVariants,
-  ZardButtonSizeVariants,
-  ZardButtonTypeVariants,
+  ArcTechButtonShapeVariants,
+  ArcTechButtonSizeVariants,
+  ArcTechButtonTypeVariants,
 } from '@/shared/components/button';
-import type { ZardIcon } from '@/shared/components/icon';
-import type { ZardSelectSizeVariants } from '@/shared/components/select';
+import type { ArcTechIcon } from '@/shared/components/icon';
+import type { ArcTechSelectSizeVariants } from '@/shared/components/select';
 
 type ToolbarActionHandler = () => void | Promise<void>;
 type ToolbarActionDisabled = boolean | (() => boolean);
@@ -49,7 +49,7 @@ export interface ToolbarSelectItem {
   readonly type: 'select';
   readonly label?: string;
   readonly ariaLabel?: string;
-  readonly size?: ZardSelectSizeVariants;
+  readonly size?: ArcTechSelectSizeVariants;
   readonly value: ToolbarDynamicString;
   readonly placeholder?: string;
   readonly class?: string;
@@ -65,10 +65,10 @@ export type ToolbarItemNavigation = ToolbarSegmentedItem;
 export interface ToolbarAction {
   readonly id: string;
   readonly label: string;
-  readonly icon?: ZardIcon;
-  readonly buttonType?: ZardButtonTypeVariants;
-  readonly buttonSize?: ZardButtonSizeVariants;
-  readonly buttonShape?: ZardButtonShapeVariants;
+  readonly icon?: ArcTechIcon;
+  readonly buttonType?: ArcTechButtonTypeVariants;
+  readonly buttonSize?: ArcTechButtonSizeVariants;
+  readonly buttonShape?: ArcTechButtonShapeVariants;
   readonly disabled?: ToolbarActionDisabled;
   readonly action: ToolbarActionHandler;
 }

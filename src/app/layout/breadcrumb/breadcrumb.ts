@@ -6,7 +6,7 @@ import { NavigationEnd, Router, RouterLink } from '@angular/router';
 import { filter, map, startWith } from 'rxjs';
 
 import { SidebarToggleComponent } from '@/components/sidebar-toggle/sidebar-toggle.component';
-import { ZardIconComponent } from '@/shared/components/icon';
+import { ArcTechIconComponent } from '@/shared/components/icon';
 import { HeaderComponent } from '@/shared/components/layout/header.component';
 import { MenuConfiguration } from '@/config/menu.config';
 
@@ -17,7 +17,7 @@ interface BreadcrumbItem {
 
 @Component({
   selector: 'app-breadcrumb',
-  imports: [HeaderComponent, RouterLink, SidebarToggleComponent, ZardIconComponent, TranslatePipe],
+  imports: [HeaderComponent, RouterLink, SidebarToggleComponent, ArcTechIconComponent, TranslatePipe],
   templateUrl: './breadcrumb.html',
   encapsulation: ViewEncapsulation.None,
 })

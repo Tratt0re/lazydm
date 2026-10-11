@@ -3,12 +3,12 @@ import { ChangeDetectionStrategy, Component, computed, input, ViewEncapsulation 
 import type { ClassValue } from 'clsx';
 import { NgxSonnerToaster } from 'ngx-sonner';
 
-import { toastVariants, type ZardToastVariants } from './toast.variants';
+import { toastVariants, type ArcTechToastVariants } from './toast.variants';
 
 import { mergeClasses } from '@/shared/utils/merge-classes';
 
 @Component({
-  selector: 'z-toast, z-toaster',
+  selector: 'arc-toast, arc-toaster',
   imports: [NgxSonnerToaster],
   standalone: true,
   template: `
@@ -27,11 +27,11 @@ import { mergeClasses } from '@/shared/utils/merge-classes';
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
-  exportAs: 'zToast',
+  exportAs: 'arcToast',
 })
-export class ZardToastComponent {
+export class ArcTechToastComponent {
   readonly class = input<ClassValue>('');
-  readonly variant = input<ZardToastVariants['variant']>('default');
+  readonly variant = input<ArcTechToastVariants['variant']>('default');
   readonly theme = input<'light' | 'dark' | 'system'>('system');
   readonly position = input<'top-left' | 'top-center' | 'top-right' | 'bottom-left' | 'bottom-center' | 'bottom-right'>(
     'bottom-right',

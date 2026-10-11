@@ -11,24 +11,24 @@ import {
 
 import type { ClassValue } from 'clsx';
 
-import { ZardCommandOptionComponent } from '@/shared/components/command/command-option.component';
-import { ZardCommandComponent } from '@/shared/components/command/command.component';
+import { ArcTechCommandOptionComponent } from '@/shared/components/command/command-option.component';
+import { ArcTechCommandComponent } from '@/shared/components/command/command.component';
 import { commandGroupHeadingVariants, commandGroupVariants } from '@/shared/components/command/command.variants';
 import { mergeClasses } from '@/shared/utils/merge-classes';
 
-export abstract class ZardCommandOptionGroup {
-  abstract registerOption(option: ZardCommandOptionComponent): void;
-  abstract unregisterOption(option: ZardCommandOptionComponent): void;
+export abstract class ArcTechCommandOptionGroup {
+  abstract registerOption(option: ArcTechCommandOptionComponent): void;
+  abstract unregisterOption(option: ArcTechCommandOptionComponent): void;
 }
 
 @Component({
-  selector: 'z-command-option-group',
+  selector: 'arc-command-option-group',
   template: `
     @if (isGroupVisible()) {
       <div [class]="classes()" role="group">
-        @if (zLabel()) {
+        @if (arcLabel()) {
           <div [class]="headingClasses()" role="presentation">
-            {{ zLabel() }}
+            {{ arcLabel() }}
           </div>
         }
         <div role="group">
@@ -39,14 +39,14 @@ export abstract class ZardCommandOptionGroup {
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
-  exportAs: 'zCommandOptionGroup',
+  exportAs: 'arcCommandOptionGroup',
 })
-export class ZardCommandOptionGroupComponent implements ZardCommandOptionGroup {
-  private readonly commandComponent = inject(ZardCommandComponent, { optional: true });
-  private readonly optionComponentsAsChildren = contentChildren(ZardCommandOptionComponent, { descendants: true });
-  private readonly registeredOptionComponents = signal<ZardCommandOptionComponent[]>([]);
+export class ArcTechCommandOptionGroupComponent implements ArcTechCommandOptionGroup {
+  private readonly commandComponent = inject(ArcTechCommandComponent, { optional: true });
+  private readonly optionComponentsAsChildren = contentChildren(ArcTechCommandOptionComponent, { descendants: true });
+  private readonly registeredOptionComponents = signal<ArcTechCommandOptionComponent[]>([]);
 
-  readonly zLabel = input.required<string>();
+  readonly arcLabel = input.required<string>();
   readonly class = input<ClassValue>('');
 
   protected readonly classes = computed(() => mergeClasses(commandGroupVariants({}), this.class()));
@@ -71,11 +71,11 @@ export class ZardCommandOptionGroupComponent implements ZardCommandOptionGroup {
     return this.optionComponents().some(option => filteredOptions.includes(option));
   });
 
-  registerOption(option: ZardCommandOptionComponent) {
+  registerOption(option: ArcTechCommandOptionComponent) {
     this.registeredOptionComponents.update(current => [...current, option]);
   }
 
-  unregisterOption(option: ZardCommandOptionComponent) {
+  unregisterOption(option: ArcTechCommandOptionComponent) {
     this.registeredOptionComponents.update(current => current.filter(o => o !== option));
   }
 }

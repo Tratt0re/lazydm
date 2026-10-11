@@ -2,30 +2,30 @@ import { ChangeDetectionStrategy, Component, computed, input, signal, ViewEncaps
 
 import type { ClassValue } from 'clsx';
 
-import type { ZardAccordionComponent } from '@/shared/components/accordion/accordion.component';
+import type { ArcTechAccordionComponent } from '@/shared/components/accordion/accordion.component';
 import {
   accordionContentVariants,
   accordionItemVariants,
   accordionTriggerVariants,
 } from '@/shared/components/accordion/accordion.variants';
-import { ZardIconComponent } from '@/shared/components/icon';
+import { ArcTechIconComponent } from '@/shared/components/icon';
 import { mergeClasses } from '@/shared/utils/merge-classes';
 
 @Component({
-  selector: 'z-accordion-item',
-  imports: [ZardIconComponent],
+  selector: 'arc-accordion-item',
+  imports: [ArcTechIconComponent],
   template: `
     <button
       type="button"
-      [attr.aria-controls]="'content-' + zValue()"
+      [attr.aria-controls]="'content-' + arcValue()"
       [attr.aria-expanded]="isOpen()"
-      [id]="'accordion-' + zValue()"
+      [id]="'accordion-' + arcValue()"
       [class]="triggerClasses()"
       (click)="toggle()"
     >
-      {{ zTitle() }}
-      <z-icon
-        zType="chevron-down"
+      {{ arcTitle() }}
+      <arc-icon
+        arcType="chevron-down"
         class="text-muted-foreground pointer-events-none size-4 shrink-0 translate-y-0.5 transition-transform duration-200"
         [class]="isOpen() ? 'rotate-180' : ''"
       />
@@ -33,9 +33,9 @@ import { mergeClasses } from '@/shared/utils/merge-classes';
 
     <div
       role="region"
-      [attr.aria-labelledby]="'accordion-' + zValue()"
+      [attr.aria-labelledby]="'accordion-' + arcValue()"
       [attr.data-state]="isOpen() ? 'open' : 'closed'"
-      [id]="'content-' + zValue()"
+      [id]="'content-' + arcValue()"
       [class]="contentClasses()"
     >
       <div class="overflow-hidden">
@@ -51,14 +51,14 @@ import { mergeClasses } from '@/shared/utils/merge-classes';
     '[class]': 'itemClasses()',
     '[attr.data-state]': "isOpen() ? 'open' : 'closed'",
   },
-  exportAs: 'zAccordionItem',
+  exportAs: 'arcAccordionItem',
 })
-export class ZardAccordionItemComponent {
-  readonly zTitle = input<string>('');
-  readonly zValue = input<string>('');
+export class ArcTechAccordionItemComponent {
+  readonly arcTitle = input<string>('');
+  readonly arcValue = input<string>('');
   readonly class = input<ClassValue>('');
 
-  accordion!: ZardAccordionComponent;
+  accordion!: ArcTechAccordionComponent;
   readonly isOpen = signal(false);
 
   protected readonly itemClasses = computed(() => mergeClasses(accordionItemVariants(), this.class()));

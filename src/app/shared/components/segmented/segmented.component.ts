@@ -19,7 +19,7 @@ import { type ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 import type { ClassValue } from 'clsx';
 
-import { segmentedItemVariants, segmentedVariants, type ZardSegmentedVariants } from './segmented.variants';
+import { segmentedItemVariants, segmentedVariants, type ArcTechSegmentedVariants } from './segmented.variants';
 
 import { mergeClasses } from '@/shared/utils/merge-classes';
 
@@ -35,24 +35,24 @@ interface SegmentedActiveIndicatorState {
   readonly visible: boolean;
 }
 @Component({
-  selector: 'z-segmented-item',
+  selector: 'arc-segmented-item',
   standalone: true,
   template: `
     <ng-content />
   `,
   encapsulation: ViewEncapsulation.None,
 })
-export class ZardSegmentedItemComponent {
+export class ArcTechSegmentedItemComponent {
   readonly value = input.required<string>();
   readonly label = input.required<string>();
   readonly disabled = input(false);
 }
 
 @Component({
-  selector: 'z-segmented',
+  selector: 'arc-segmented',
   standalone: true,
   template: `
-    <div [class]="classes()" role="group" [attr.aria-label]="zAriaLabel()">
+    <div [class]="classes()" role="group" [attr.aria-label]="arcAriaLabel()">
       <span
         class="pointer-events-none absolute top-1 bottom-1 left-0 rounded-sm bg-background shadow-sm transition-[transform,opacity] duration-200 ease-out"
         [style.width]="activeIndicatorState().width"
@@ -65,7 +65,7 @@ export class ZardSegmentedItemComponent {
           #segmentButton
           type="button"
           [class]="getItemClasses(option.value)"
-          [disabled]="option.disabled || zDisabled()"
+          [disabled]="option.disabled || arcDisabled()"
           [attr.aria-pressed]="isSelected(option.value)"
           [attr.tabindex]="tabIndexFor(option.value)"
           (click)="selectOption(option.value)"
@@ -79,7 +79,7 @@ export class ZardSegmentedItemComponent {
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => ZardSegmentedComponent),
+      useExisting: forwardRef(() => ArcTechSegmentedComponent),
       multi: true,
     },
   ],
@@ -88,27 +88,27 @@ export class ZardSegmentedItemComponent {
   host: {
     '[class]': 'wrapperClasses()',
   },
-  exportAs: 'zSegmented',
+  exportAs: 'arcSegmented',
 })
-export class ZardSegmentedComponent implements ControlValueAccessor, OnInit {
-  private readonly itemComponents = contentChildren(ZardSegmentedItemComponent);
+export class ArcTechSegmentedComponent implements ControlValueAccessor, OnInit {
+  private readonly itemComponents = contentChildren(ArcTechSegmentedItemComponent);
   private readonly segmentButtons = viewChildren<ElementRef<HTMLButtonElement>>('segmentButton');
   private readonly layoutVersion = signal(0);
 
   readonly class = input<ClassValue>('');
-  readonly zSize = input<ZardSegmentedVariants['zSize']>('default');
-  readonly zOptions = input<SegmentedOption[]>([]);
-  readonly zDefaultValue = input<string>('');
-  readonly zDisabled = input(false, { transform: booleanAttribute });
-  readonly zFull = input(false, { transform: booleanAttribute });
-  readonly zAriaLabel = input<string>('Segmented control');
+  readonly arcSize = input<ArcTechSegmentedVariants['arcSize']>('default');
+  readonly arcOptions = input<SegmentedOption[]>([]);
+  readonly arcDefaultValue = input<string>('');
+  readonly arcDisabled = input(false, { transform: booleanAttribute });
+  readonly arcFull = input(false, { transform: booleanAttribute });
+  readonly arcAriaLabel = input<string>('Segmented control');
 
-  readonly zChange = output<string>();
+  readonly arcChange = output<string>();
 
   protected readonly selectedValue = signal<string>('');
-  protected readonly items = signal<readonly ZardSegmentedItemComponent[]>([]);
+  protected readonly items = signal<readonly ArcTechSegmentedItemComponent[]>([]);
   protected readonly resolvedOptions = computed<readonly SegmentedOption[]>(() => {
-    const options = this.zOptions();
+    const options = this.arcOptions();
     if (options.length > 0) {
       return options;
     }
@@ -152,24 +152,24 @@ export class ZardSegmentedComponent implements ControlValueAccessor, OnInit {
 
   ngOnInit() {
     // Initialize with default value
-    if (this.zDefaultValue()) {
-      this.selectedValue.set(this.zDefaultValue());
+    if (this.arcDefaultValue()) {
+      this.selectedValue.set(this.arcDefaultValue());
     }
   }
 
   protected readonly classes = computed(() =>
-    mergeClasses(segmentedVariants({ zSize: this.zSize() }), this.zFull() ? 'flex w-full' : '', this.class()),
+    mergeClasses(segmentedVariants({ arcSize: this.arcSize() }), this.arcFull() ? 'flex w-full' : '', this.class()),
   );
 
-  protected readonly wrapperClasses = computed(() => (this.zFull() ? 'block w-full' : 'inline-block'));
+  protected readonly wrapperClasses = computed(() => (this.arcFull() ? 'block w-full' : 'inline-block'));
 
   protected getItemClasses(value: string): string {
     return mergeClasses(
       segmentedItemVariants({
-        zSize: this.zSize(),
+        arcSize: this.arcSize(),
         isActive: this.isSelected(value),
       }),
-      this.zFull() ? 'flex-1' : '',
+      this.arcFull() ? 'flex-1' : '',
     );
   }
 
@@ -182,7 +182,7 @@ export class ZardSegmentedComponent implements ControlValueAccessor, OnInit {
   }
 
   protected selectOption(value: string) {
-    if (this.zDisabled()) return;
+    if (this.arcDisabled()) return;
 
     const option = this.resolvedOptions().find((resolvedOption) => resolvedOption.value === value);
     if (!option || option.disabled) return;
@@ -190,7 +190,7 @@ export class ZardSegmentedComponent implements ControlValueAccessor, OnInit {
     this.selectedValue.set(value);
     this.onChange(value);
     this.onTouched();
-    this.zChange.emit(value);
+    this.arcChange.emit(value);
   }
 
   protected onItemKeydown(event: KeyboardEvent, value: string): void {
@@ -240,7 +240,7 @@ export class ZardSegmentedComponent implements ControlValueAccessor, OnInit {
   }
 
   setDisabledState(_isDisabled: boolean): void {
-    // Handled by zDisabled input
+    // Handled by arcDisabled input
   }
 
   private activeIndex(): number {

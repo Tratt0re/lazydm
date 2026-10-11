@@ -15,12 +15,12 @@ import { TranslatePipe } from '@ngx-translate/core';
 import type { ClassValue } from 'clsx';
 
 import {
-  ZardButtonComponent,
-  type ZardButtonSizeVariants,
-  type ZardButtonTypeVariants,
+  ArcTechButtonComponent,
+  type ArcTechButtonSizeVariants,
+  type ArcTechButtonTypeVariants,
 } from '@/shared/components/button';
-import { ZardIconComponent } from '@/shared/components/icon';
-import { ZardTooltipImports } from '@/shared/components/tooltip';
+import { ArcTechIconComponent } from '@/shared/components/icon';
+import { ArcTechTooltipImports } from '@/shared/components/tooltip';
 import {
   paginationContentVariants,
   paginationEllipsisVariants,
@@ -31,7 +31,7 @@ import {
 import { mergeClasses } from '@/shared/utils/merge-classes';
 
 @Component({
-  selector: 'ul[z-pagination-content]',
+  selector: 'ul[arc-pagination-content]',
   template: `
     <ng-content />
   `,
@@ -41,16 +41,16 @@ import { mergeClasses } from '@/shared/utils/merge-classes';
     'data-slot': 'pagination-content',
     '[class]': 'classes()',
   },
-  exportAs: 'zPaginationContent',
+  exportAs: 'arcPaginationContent',
 })
-export class ZardPaginationContentComponent {
+export class ArcTechPaginationContentComponent {
   readonly class = input<ClassValue>('');
 
   protected readonly classes = computed(() => mergeClasses(paginationContentVariants(), this.class()));
 }
 
 @Component({
-  selector: 'li[z-pagination-item]',
+  selector: 'li[arc-pagination-item]',
   template: `
     <ng-content />
   `,
@@ -59,169 +59,169 @@ export class ZardPaginationContentComponent {
   host: {
     'data-slot': 'pagination-item',
   },
-  exportAs: 'zPaginationItem',
+  exportAs: 'arcPaginationItem',
 })
-export class ZardPaginationItemComponent {}
+export class ArcTechPaginationItemComponent {}
 // Structural wrapper component for pagination items (<li>). No inputs required.
 
 @Component({
-  selector: 'button[z-pagination-button], a[z-pagination-button]',
-  imports: [ZardButtonComponent],
+  selector: 'button[arc-pagination-button], a[arc-pagination-button]',
+  imports: [ArcTechButtonComponent],
   template: `
-    <z-button
-      [attr.data-active]="zActive() || null"
+    <arc-button
+      [attr.data-active]="arcActive() || null"
       [class]="class()"
-      [zDisabled]="zDisabled()"
-      [zSize]="zSize()"
-      [zType]="zButtonType()"
+      [arcDisabled]="arcDisabled()"
+      [arcSize]="arcSize()"
+      [arcType]="arcButtonType()"
     >
       <ng-content />
-    </z-button>
+    </arc-button>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
   host: {
     'data-slot': 'pagination-button',
   },
-  exportAs: 'zPaginationButton',
+  exportAs: 'arcPaginationButton',
 })
-export class ZardPaginationButtonComponent {
+export class ArcTechPaginationButtonComponent {
   readonly class = input<ClassValue>('');
-  readonly zActive = input(false, { transform: booleanAttribute });
-  readonly zDisabled = input(false, { transform: booleanAttribute });
-  readonly zSize = input<ZardButtonSizeVariants>('default');
-  readonly zType = input<ZardButtonTypeVariants | null>(null);
+  readonly arcActive = input(false, { transform: booleanAttribute });
+  readonly arcDisabled = input(false, { transform: booleanAttribute });
+  readonly arcSize = input<ArcTechButtonSizeVariants>('default');
+  readonly arcType = input<ArcTechButtonTypeVariants | null>(null);
 
-  protected readonly zButtonType = computed<ZardButtonTypeVariants>(() =>
-    this.zType() ?? (this.zActive() ? 'outline' : 'ghost'),
+  protected readonly arcButtonType = computed<ArcTechButtonTypeVariants>(() =>
+    this.arcType() ?? (this.arcActive() ? 'outline' : 'ghost'),
   );
 }
 
 @Component({
-  selector: 'z-pagination-previous',
-  imports: [TranslatePipe, ZardPaginationButtonComponent, ZardIconComponent, ...ZardTooltipImports],
+  selector: 'arc-pagination-previous',
+  imports: [TranslatePipe, ArcTechPaginationButtonComponent, ArcTechIconComponent, ...ArcTechTooltipImports],
   template: `
     <button
       type="button"
-      z-pagination-button
+      arc-pagination-button
       [attr.aria-label]="'common.pagination.tooltips.previousPage' | translate"
-      [attr.disabled]="zDisabled() ? '' : null"
-      [zTooltip]="'common.pagination.tooltips.previousPage' | translate"
-      [zType]="'secondary'"
+      [attr.disabled]="arcDisabled() ? '' : null"
+      [arcTooltip]="'common.pagination.tooltips.previousPage' | translate"
+      [arcType]="'secondary'"
       [class]="classes()"
-      [zSize]="zSize()"
-      [zDisabled]="zDisabled()"
+      [arcSize]="arcSize()"
+      [arcDisabled]="arcDisabled()"
     >
-      <z-icon zType="chevron-left" aria-hidden="true" />
+      <arc-icon arcType="chevron-left" aria-hidden="true" />
     </button>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
-  exportAs: 'zPaginationPrevious',
+  exportAs: 'arcPaginationPrevious',
 })
-export class ZardPaginationPreviousComponent {
+export class ArcTechPaginationPreviousComponent {
   readonly class = input<ClassValue>('');
-  readonly zDisabled = input(false, { transform: booleanAttribute });
-  readonly zSize = input<ZardButtonSizeVariants>('default');
+  readonly arcDisabled = input(false, { transform: booleanAttribute });
+  readonly arcSize = input<ArcTechButtonSizeVariants>('default');
 
   protected readonly classes = computed(() => mergeClasses(paginationPreviousVariants(), this.class()));
 }
 
 @Component({
-  selector: 'z-pagination-next',
-  imports: [TranslatePipe, ZardPaginationButtonComponent, ZardIconComponent, ...ZardTooltipImports],
+  selector: 'arc-pagination-next',
+  imports: [TranslatePipe, ArcTechPaginationButtonComponent, ArcTechIconComponent, ...ArcTechTooltipImports],
   template: `
     <button
       type="button"
-      z-pagination-button
+      arc-pagination-button
       [attr.aria-label]="'common.pagination.tooltips.nextPage' | translate"
-      [attr.disabled]="zDisabled() ? '' : null"
-      [zTooltip]="'common.pagination.tooltips.nextPage' | translate"
-      [zType]="'secondary'"
+      [attr.disabled]="arcDisabled() ? '' : null"
+      [arcTooltip]="'common.pagination.tooltips.nextPage' | translate"
+      [arcType]="'secondary'"
       [class]="classes()"
-      [zDisabled]="zDisabled()"
-      [zSize]="zSize()"
+      [arcDisabled]="arcDisabled()"
+      [arcSize]="arcSize()"
     >
-      <z-icon zType="chevron-right" aria-hidden="true" />
+      <arc-icon arcType="chevron-right" aria-hidden="true" />
     </button>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
-  exportAs: 'zPaginationNext',
+  exportAs: 'arcPaginationNext',
 })
-export class ZardPaginationNextComponent {
+export class ArcTechPaginationNextComponent {
   readonly class = input<ClassValue>('');
-  readonly zDisabled = input(false, { transform: booleanAttribute });
-  readonly zSize = input<ZardButtonSizeVariants>('default');
+  readonly arcDisabled = input(false, { transform: booleanAttribute });
+  readonly arcSize = input<ArcTechButtonSizeVariants>('default');
 
   protected readonly classes = computed(() => mergeClasses(paginationNextVariants(), this.class()));
 }
 
 @Component({
-  selector: 'z-pagination-first',
-  imports: [TranslatePipe, ZardPaginationButtonComponent, ZardIconComponent, ...ZardTooltipImports],
+  selector: 'arc-pagination-first',
+  imports: [TranslatePipe, ArcTechPaginationButtonComponent, ArcTechIconComponent, ...ArcTechTooltipImports],
   template: `
     <button
       type="button"
-      z-pagination-button
+      arc-pagination-button
       [attr.aria-label]="'common.pagination.tooltips.firstPage' | translate"
-      [attr.disabled]="zDisabled() ? '' : null"
-      [zTooltip]="'common.pagination.tooltips.firstPage' | translate"
-      [zType]="'secondary'"
+      [attr.disabled]="arcDisabled() ? '' : null"
+      [arcTooltip]="'common.pagination.tooltips.firstPage' | translate"
+      [arcType]="'secondary'"
       [class]="classes()"
-      [zDisabled]="zDisabled()"
-      [zSize]="zSize()"
+      [arcDisabled]="arcDisabled()"
+      [arcSize]="arcSize()"
     >
-      <z-icon zType="chevrons-left" aria-hidden="true" />
+      <arc-icon arcType="chevrons-left" aria-hidden="true" />
     </button>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
-  exportAs: 'zPaginationFirst',
+  exportAs: 'arcPaginationFirst',
 })
-export class ZardPaginationFirstComponent {
+export class ArcTechPaginationFirstComponent {
   readonly class = input<ClassValue>('');
-  readonly zDisabled = input(false, { transform: booleanAttribute });
-  readonly zSize = input<ZardButtonSizeVariants>('default');
+  readonly arcDisabled = input(false, { transform: booleanAttribute });
+  readonly arcSize = input<ArcTechButtonSizeVariants>('default');
 
   protected readonly classes = computed(() => mergeClasses('size-9 p-0', this.class()));
 }
 
 @Component({
-  selector: 'z-pagination-last',
-  imports: [TranslatePipe, ZardPaginationButtonComponent, ZardIconComponent, ...ZardTooltipImports],
+  selector: 'arc-pagination-last',
+  imports: [TranslatePipe, ArcTechPaginationButtonComponent, ArcTechIconComponent, ...ArcTechTooltipImports],
   template: `
     <button
       type="button"
-      z-pagination-button
+      arc-pagination-button
       [attr.aria-label]="'common.pagination.tooltips.lastPage' | translate"
-      [attr.disabled]="zDisabled() ? '' : null"
-      [zTooltip]="'common.pagination.tooltips.lastPage' | translate"
-      [zType]="'secondary'"
+      [attr.disabled]="arcDisabled() ? '' : null"
+      [arcTooltip]="'common.pagination.tooltips.lastPage' | translate"
+      [arcType]="'secondary'"
       [class]="classes()"
-      [zDisabled]="zDisabled()"
-      [zSize]="zSize()"
+      [arcDisabled]="arcDisabled()"
+      [arcSize]="arcSize()"
     >
-      <z-icon zType="chevrons-right" aria-hidden="true" />
+      <arc-icon arcType="chevrons-right" aria-hidden="true" />
     </button>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
-  exportAs: 'zPaginationLast',
+  exportAs: 'arcPaginationLast',
 })
-export class ZardPaginationLastComponent {
+export class ArcTechPaginationLastComponent {
   readonly class = input<ClassValue>('');
-  readonly zDisabled = input(false, { transform: booleanAttribute });
-  readonly zSize = input<ZardButtonSizeVariants>('default');
+  readonly arcDisabled = input(false, { transform: booleanAttribute });
+  readonly arcSize = input<ArcTechButtonSizeVariants>('default');
 
   protected readonly classes = computed(() => mergeClasses('size-9 p-0', this.class()));
 }
 
 @Component({
-  selector: 'z-pagination-ellipsis',
-  imports: [ZardIconComponent],
+  selector: 'arc-pagination-ellipsis',
+  imports: [ArcTechIconComponent],
   template: `
-    <z-icon zType="ellipsis" aria-hidden="true" />
+    <arc-icon arcType="ellipsis" aria-hidden="true" />
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
@@ -229,65 +229,65 @@ export class ZardPaginationLastComponent {
     '[class]': 'classes()',
     'aria-hidden': 'true',
   },
-  exportAs: 'zPaginationEllipsis',
+  exportAs: 'arcPaginationEllipsis',
 })
-export class ZardPaginationEllipsisComponent {
+export class ArcTechPaginationEllipsisComponent {
   readonly class = input<ClassValue>('');
 
   protected readonly classes = computed(() => mergeClasses(paginationEllipsisVariants(), this.class()));
 }
 
 @Component({
-  selector: 'z-pagination',
+  selector: 'arc-pagination',
   imports: [
     TranslatePipe,
-    ZardPaginationContentComponent,
-    ZardPaginationItemComponent,
-    ZardPaginationButtonComponent,
-    ZardPaginationFirstComponent,
-    ZardPaginationPreviousComponent,
-    ZardPaginationNextComponent,
-    ZardPaginationLastComponent,
+    ArcTechPaginationContentComponent,
+    ArcTechPaginationItemComponent,
+    ArcTechPaginationButtonComponent,
+    ArcTechPaginationFirstComponent,
+    ArcTechPaginationPreviousComponent,
+    ArcTechPaginationNextComponent,
+    ArcTechPaginationLastComponent,
     NgTemplateOutlet,
   ],
   template: `
-    @if (zContent()) {
-      <ng-container *ngTemplateOutlet="zContent()" />
+    @if (arcContent()) {
+      <ng-container *ngTemplateOutlet="arcContent()" />
     } @else {
-      <ul z-pagination-content>
-        <li z-pagination-item>
-          <z-pagination-first
-            [zSize]="zSize()"
-            [zDisabled]="zDisabled() || zPageIndex() === 1"
+      <ul arc-pagination-content>
+        <li arc-pagination-item>
+          <arc-pagination-first
+            [arcSize]="arcSize()"
+            [arcDisabled]="arcDisabled() || arcPageIndex() === 1"
             (click)="goToPage(1)"
           />
         </li>
 
-        <li z-pagination-item>
-          @let pagePrevious = Math.max(1, zPageIndex() - 1);
-          <z-pagination-previous
-            [zSize]="zSize()"
-            [zDisabled]="zDisabled() || zPageIndex() === 1"
+        <li arc-pagination-item>
+          @let pagePrevious = Math.max(1, arcPageIndex() - 1);
+          <arc-pagination-previous
+            [arcSize]="arcSize()"
+            [arcDisabled]="arcDisabled() || arcPageIndex() === 1"
             (click)="goToPage(pagePrevious)"
           />
         </li>
 
         @for (page of pages(); track page) {
-          <li z-pagination-item>
+          <li arc-pagination-item>
             <button
-              z-pagination-button
+              arc-pagination-button
               type="button"
               class="focus-visible:rounded-md"
-              [attr.aria-current]="page === zPageIndex() ? 'page' : null"
-              [attr.aria-disabled]="zDisabled() || null"
-              [zActive]="page === zPageIndex()"
-              [zDisabled]="zDisabled()"
-              [zSize]="zSize()"
+              [attr.aria-current]="page === arcPageIndex() ? 'page' : null"
+              [attr.aria-disabled]="arcDisabled() || null"
+              [arcActive]="page === arcPageIndex()"
+              [arcDisabled]="arcDisabled()"
+              [arcSize]="arcSize()"
               (click)="goToPage(page)"
             >
               <span class="sr-only">
                 {{
-                  page === zTotal()
+                  page === arcTotal()
                     ? ('common.pagination.tooltips.toLastPage' | translate)
                     : ('common.pagination.tooltips.toPage' | translate)
                 }}
@@ -297,20 +297,20 @@ export class ZardPaginationEllipsisComponent {
           </li>
         }
 
-        <li z-pagination-item>
-          @let pageNext = Math.min(zPageIndex() + 1, zTotal());
-          <z-pagination-next
-            [zSize]="zSize()"
-            [zDisabled]="zDisabled() || zPageIndex() === zTotal()"
+        <li arc-pagination-item>
+          @let pageNext = Math.min(arcPageIndex() + 1, arcTotal());
+          <arc-pagination-next
+            [arcSize]="arcSize()"
+            [arcDisabled]="arcDisabled() || arcPageIndex() === arcTotal()"
             (click)="goToPage(pageNext)"
           />
         </li>
 
-        <li z-pagination-item>
-          <z-pagination-last
-            [zSize]="zSize()"
-            [zDisabled]="zDisabled() || zPageIndex() === zTotal()"
-            (click)="goToPage(zTotal())"
+        <li arc-pagination-item>
+          <arc-pagination-last
+            [arcSize]="arcSize()"
+            [arcDisabled]="arcDisabled() || arcPageIndex() === arcTotal()"
+            (click)="goToPage(arcTotal())"
           />
         </li>
       </ul>
@@ -320,31 +320,31 @@ export class ZardPaginationEllipsisComponent {
   encapsulation: ViewEncapsulation.None,
   host: {
     role: 'group',
-    '[attr.aria-label]': 'zAriaLabel()',
+    '[attr.aria-label]': 'arcAriaLabel()',
     'data-slot': 'pagination',
     '[class]': 'classes()',
   },
-  exportAs: 'zPagination',
+  exportAs: 'arcPagination',
 })
-export class ZardPaginationComponent {
-  readonly zPageIndex = model<number>(1);
-  readonly zTotal = input<number>(1);
-  readonly zVisiblePages = input<number>(5);
-  readonly zSize = input<ZardButtonSizeVariants>('default');
-  readonly zDisabled = input(false, { transform: booleanAttribute });
-  readonly zContent = input<TemplateRef<void> | undefined>();
-  readonly zAriaLabel = input('Pagination');
+export class ArcTechPaginationComponent {
+  readonly arcPageIndex = model<number>(1);
+  readonly arcTotal = input<number>(1);
+  readonly arcVisiblePages = input<number>(5);
+  readonly arcSize = input<ArcTechButtonSizeVariants>('default');
+  readonly arcDisabled = input(false, { transform: booleanAttribute });
+  readonly arcContent = input<TemplateRef<void> | undefined>();
+  readonly arcAriaLabel = input('Pagination');
 
   readonly class = input<ClassValue>('');
 
-  readonly zPageIndexChange = output<number>();
+  readonly arcPageIndexChange = output<number>();
   readonly Math = Math;
 
   protected readonly classes = computed(() => mergeClasses(paginationVariants(), this.class()));
   readonly pages = computed<number[]>(() => {
-    const total = Math.max(1, Math.trunc(this.zTotal()));
-    const visiblePages = Math.max(1, Math.trunc(this.zVisiblePages()));
-    const current = this.clampPage(this.zPageIndex());
+    const total = Math.max(1, Math.trunc(this.arcTotal()));
+    const visiblePages = Math.max(1, Math.trunc(this.arcVisiblePages()));
+    const current = this.clampPage(this.arcPageIndex());
 
     if (total <= visiblePages) {
       return Array.from({ length: total }, (_, index) => index + 1);
@@ -363,7 +363,7 @@ export class ZardPaginationComponent {
   });
 
   private clampPage(page: number): number {
-    const total = Math.max(1, Math.trunc(this.zTotal()));
+    const total = Math.max(1, Math.trunc(this.arcTotal()));
     const normalizedPage = Math.trunc(page);
     if (!Number.isFinite(normalizedPage)) {
       return 1;
@@ -374,9 +374,9 @@ export class ZardPaginationComponent {
 
   goToPage(page: number): void {
     const nextPage = this.clampPage(page);
-    if (!this.zDisabled() && nextPage !== this.zPageIndex()) {
-      this.zPageIndex.set(nextPage);
-      this.zPageIndexChange.emit(nextPage);
+    if (!this.arcDisabled() && nextPage !== this.arcPageIndex()) {
+      this.arcPageIndex.set(nextPage);
+      this.arcPageIndexChange.emit(nextPage);
     }
   }
 }

@@ -4,40 +4,40 @@ export const checkboxVariants = cva(
   'cursor-[unset] peer appearance-none border transition shadow hover:shadow-md focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50',
   {
     variants: {
-      zType: {
+      arcType: {
         default: 'border-primary checked:bg-primary',
         destructive: 'border-destructive checked:bg-destructive',
       },
-      zSize: {
+      arcSize: {
         default: 'size-4',
         lg: 'size-6',
       },
-      zShape: {
+      arcShape: {
         default: 'rounded',
         circle: 'rounded-full',
         square: 'rounded-none',
       },
     },
     defaultVariants: {
-      zType: 'default',
-      zSize: 'default',
-      zShape: 'default',
+      arcType: 'default',
+      arcSize: 'default',
+      arcShape: 'default',
     },
   },
 );
 
 export const checkboxLabelVariants = cva('cursor-[unset] text-current empty:hidden select-none', {
   variants: {
-    zSize: {
+    arcSize: {
       default: 'text-base',
       lg: 'text-lg',
     },
   },
   defaultVariants: {
-    zSize: 'default',
+    arcSize: 'default',
   },
 });
 
-export type ZardCheckboxShapeVariants = NonNullable<VariantProps<typeof checkboxVariants>['zShape']>;
-export type ZardCheckboxSizeVariants = NonNullable<VariantProps<typeof checkboxVariants>['zSize']>;
-export type ZardCheckboxTypeVariants = NonNullable<VariantProps<typeof checkboxVariants>['zType']>;
+export type ArcTechCheckboxShapeVariants = NonNullable<VariantProps<typeof checkboxVariants>['arcShape']>;
+export type ArcTechCheckboxSizeVariants = NonNullable<VariantProps<typeof checkboxVariants>['arcSize']>;
+export type ArcTechCheckboxTypeVariants = NonNullable<VariantProps<typeof checkboxVariants>['arcType']>;

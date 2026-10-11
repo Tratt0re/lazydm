@@ -1,14 +1,14 @@
 import { booleanAttribute, ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 
-import { ZardButtonComponent } from '@/shared/components/button';
-import { ZardIconComponent } from '@/shared/components/icon';
-import { ZardPaginationComponent } from '@/shared/components/pagination';
-import { ZardSelectImports } from '@/shared/components/select';
+import { ArcTechButtonComponent } from '@/shared/components/button';
+import { ArcTechIconComponent } from '@/shared/components/icon';
+import { ArcTechPaginationComponent } from '@/shared/components/pagination';
+import { ArcTechSelectImports } from '@/shared/components/select';
 
 @Component({
   selector: 'app-pagination',
-  imports: [TranslatePipe, ZardButtonComponent, ZardIconComponent, ZardPaginationComponent, ...ZardSelectImports],
+  imports: [TranslatePipe, ArcTechButtonComponent, ArcTechIconComponent, ArcTechPaginationComponent, ...ArcTechSelectImports],
   templateUrl: './pagination.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

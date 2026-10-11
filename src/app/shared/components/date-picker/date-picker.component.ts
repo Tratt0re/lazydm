@@ -19,65 +19,65 @@ import { map, startWith } from 'rxjs';
 
 import type { ClassValue } from 'clsx';
 
-import { ZardButtonComponent } from '@/shared/components/button/button.component';
-import type { ZardButtonSizeVariants, ZardButtonTypeVariants } from '@/shared/components/button/button.variants';
-import { ZardCalendarComponent } from '@/shared/components/calendar/calendar.component';
-import { ZardIconComponent } from '@/shared/components/icon/icon.component';
-import { ZardPopoverComponent, ZardPopoverDirective } from '@/shared/components/popover/popover.component';
-import type { ZardPopoverPlacement } from '@/shared/components/popover/popover.component';
-import { ZardIdDirective } from '@/shared/core';
+import { ArcTechButtonComponent } from '@/shared/components/button/button.component';
+import type { ArcTechButtonSizeVariants, ArcTechButtonTypeVariants } from '@/shared/components/button/button.variants';
+import { ArcTechCalendarComponent } from '@/shared/components/calendar/calendar.component';
+import { ArcTechIconComponent } from '@/shared/components/icon/icon.component';
+import { ArcTechPopoverComponent, ArcTechPopoverDirective } from '@/shared/components/popover/popover.component';
+import type { ArcTechPopoverPlacement } from '@/shared/components/popover/popover.component';
+import { ArcTechIdDirective } from '@/shared/core';
 
 import { mergeClasses, transform } from '@/shared/utils/merge-classes';
 
-const HEIGHT_BY_SIZE: Record<NonNullable<ZardButtonSizeVariants>, string> = {
+const HEIGHT_BY_SIZE: Record<NonNullable<ArcTechButtonSizeVariants>, string> = {
   sm: 'h-8',
   default: 'h-10',
   lg: 'h-12',
 };
 
 @Component({
-  selector: 'z-date-picker, [z-date-picker]',
-  imports: [ZardButtonComponent, ZardCalendarComponent, ZardPopoverComponent, ZardPopoverDirective, ZardIconComponent, ZardIdDirective],
+  selector: 'arc-date-picker, [arc-date-picker]',
+  imports: [ArcTechButtonComponent, ArcTechCalendarComponent, ArcTechPopoverComponent, ArcTechPopoverDirective, ArcTechIconComponent, ArcTechIdDirective],
   standalone: true,
   template: `
     <button
-      z-button
+      arc-button
       type="button"
-      zardId="date-picker"
-      #z="zardId"
-      [id]="zId() || z.id()"
-      [zType]="zType()"
-      [zSize]="zSize()"
-      [zDisabled]="disabled()"
+      arcTechId="date-picker"
+      #z="arcTechId"
+      [id]="arcId() || z.id()"
+      [arcType]="arcType()"
+      [arcSize]="arcSize()"
+      [arcDisabled]="disabled()"
       [disabled]="disabled()"
       [class]="buttonClasses()"
-      zPopover
-      #popoverDirective="zPopover"
-      [zContent]="calendarTemplate"
-      zTrigger="click"
-      [zPlacement]="zPopoverPlacement()"
-      [zAutoFlip]="zPopoverAutoFlip()"
-      [zPush]="zPopoverPush()"
-      [zViewportMargin]="zPopoverViewportMargin()"
-      (zVisibleChange)="onPopoverVisibilityChange($event)"
+      arcPopover
+      #popoverDirective="arcPopover"
+      [arcContent]="calendarTemplate"
+      arcTrigger="click"
+      [arcPlacement]="arcPopoverPlacement()"
+      [arcAutoFlip]="arcPopoverAutoFlip()"
+      [arcPush]="arcPopoverPush()"
+      [arcViewportMargin]="arcPopoverViewportMargin()"
+      (arcVisibleChange)="onPopoverVisibilityChange($event)"
       [attr.aria-expanded]="false"
       [attr.aria-haspopup]="true"
       [attr.aria-label]="chooseDateAriaLabel()"
     >
-      @if (zIconPosition() === 'left') {
-        <z-icon zType="calendar" [class]="zCalendarIconClass()" />
+      @if (arcIconPosition() === 'left') {
+        <arc-icon arcType="calendar" [class]="arcCalendarIconClass()" />
       }
       <span [class]="textClasses()">
         {{ displayText() }}
       </span>
-      @if (zIconPosition() === 'right') {
-        <z-icon zType="calendar" [class]="zCalendarIconClass()" />
+      @if (arcIconPosition() === 'right') {
+        <arc-icon arcType="calendar" [class]="arcCalendarIconClass()" />
       }
     </button>
 
     <ng-template #calendarTemplate>
-      <z-popover [class]="popoverClasses()">
-        <z-calendar
+      <arc-popover [class]="popoverClasses()">
+        <arc-calendar
           #calendar
           class="border-0"
           [value]="value()"
@@ -86,14 +86,14 @@ const HEIGHT_BY_SIZE: Record<NonNullable<ZardButtonSizeVariants>, string> = {
           [disabled]="disabled()"
           (dateChange)="onDateChange($event)"
         />
-      </z-popover>
+      </arc-popover>
     </ng-template>
   `,
   providers: [
     DatePipe,
     {
       provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => ZardDatePickerComponent),
+      useExisting: forwardRef(() => ArcTechDatePickerComponent),
       multi: true,
     },
   ],
@@ -102,9 +102,9 @@ const HEIGHT_BY_SIZE: Record<NonNullable<ZardButtonSizeVariants>, string> = {
   host: {
     '[class]': 'class()',
   },
-  exportAs: 'zDatePicker',
+  exportAs: 'arcDatePicker',
 })
-export class ZardDatePickerComponent implements ControlValueAccessor {
+export class ArcTechDatePickerComponent implements ControlValueAccessor {
   private readonly datePipe = inject(DatePipe);
   private readonly translateService = inject(TranslateService);
   private readonly currentLocale = toSignal(
@@ -116,24 +116,24 @@ export class ZardDatePickerComponent implements ControlValueAccessor {
   );
 
   readonly calendarTemplate = viewChild.required<TemplateRef<unknown>>('calendarTemplate');
-  readonly popoverDirective = viewChild.required<ZardPopoverDirective>('popoverDirective');
-  readonly calendar = viewChild.required<ZardCalendarComponent>('calendar');
+  readonly popoverDirective = viewChild.required<ArcTechPopoverDirective>('popoverDirective');
+  readonly calendar = viewChild.required<ArcTechCalendarComponent>('calendar');
 
-  readonly zId = input<string>('');
+  readonly arcId = input<string>('');
   readonly class = input<ClassValue>('');
-  readonly zType = input<ZardButtonTypeVariants>('outline');
-  readonly zSize = input<ZardButtonSizeVariants>('default');
-  readonly zIconPosition = input<'left' | 'right'>('left');
-  readonly zBorderless = input(false, { transform });
-  readonly zPaddingless = input(false, { transform });
-  readonly zCalendarIconClass = input<ClassValue>('');
-  readonly zPopoverPlacement = input<ZardPopoverPlacement>('bottom');
-  readonly zPopoverAutoFlip = input(true, { transform });
-  readonly zPopoverPush = input(false, { transform });
-  readonly zPopoverViewportMargin = input(8);
+  readonly arcType = input<ArcTechButtonTypeVariants>('outline');
+  readonly arcSize = input<ArcTechButtonSizeVariants>('default');
+  readonly arcIconPosition = input<'left' | 'right'>('left');
+  readonly arcBorderless = input(false, { transform });
+  readonly arcPaddingless = input(false, { transform });
+  readonly arcCalendarIconClass = input<ClassValue>('');
+  readonly arcPopoverPlacement = input<ArcTechPopoverPlacement>('bottom');
+  readonly arcPopoverAutoFlip = input(true, { transform });
+  readonly arcPopoverPush = input(false, { transform });
+  readonly arcPopoverViewportMargin = input(8);
   readonly value = model<Date | null>(null);
   readonly placeholder = input<string>('Pick a date');
-  readonly zFormat = input<string>('MMMM d, yyyy');
+  readonly arcFormat = input<string>('MMMM d, yyyy');
   readonly minDate = input<Date | null>(null);
   readonly maxDate = input<Date | null>(null);
   readonly disabled = model<boolean>(false);
@@ -147,15 +147,15 @@ export class ZardDatePickerComponent implements ControlValueAccessor {
 
   protected readonly buttonClasses = computed(() => {
     const hasValue = !!this.value();
-    const size = this.zSize();
+    const size = this.arcSize();
     const height = HEIGHT_BY_SIZE[size];
     return mergeClasses(
       'text-left font-normal',
-      this.zIconPosition() === 'right' ? 'justify-between' : 'justify-start',
-      this.zBorderless()
+      this.arcIconPosition() === 'right' ? 'justify-between' : 'justify-start',
+      this.arcBorderless()
         ? 'border-0 bg-transparent shadow-none hover:bg-transparent focus-visible:border-0 focus-visible:ring-0 dark:bg-transparent dark:hover:bg-transparent'
         : '',
-      this.zPaddingless() ? 'px-0 py-0' : '',
+      this.arcPaddingless() ? 'px-0 py-0' : '',
       !hasValue && 'text-muted-foreground',
       height,
       'w-full min-w-0',
@@ -178,7 +178,7 @@ export class ZardDatePickerComponent implements ControlValueAccessor {
     if (!date) {
       return this.placeholder();
     }
-    return this.formatDate(date, this.zFormat(), locale);
+    return this.formatDate(date, this.arcFormat(), locale);
   });
 
   protected onDateChange(date: Date | Date[]): void {

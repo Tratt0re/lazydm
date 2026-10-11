@@ -1,13 +1,13 @@
-import { ZardDropdownMenuItemComponent } from '@/shared/components/dropdown/dropdown-item.component';
-import { ZardDropdownMenuContentComponent } from '@/shared/components/dropdown/dropdown-menu-content.component';
-import { ZardDropdownDirective } from '@/shared/components/dropdown/dropdown-trigger.directive';
-import { ZardDropdownMenuComponent } from '@/shared/components/dropdown/dropdown.component';
-import { ZardMenuLabelComponent } from '@/shared/components/menu/menu-label.component';
+import { ArcTechDropdownMenuItemComponent } from '@/shared/components/dropdown/dropdown-item.component';
+import { ArcTechDropdownMenuContentComponent } from '@/shared/components/dropdown/dropdown-menu-content.component';
+import { ArcTechDropdownDirective } from '@/shared/components/dropdown/dropdown-trigger.directive';
+import { ArcTechDropdownMenuComponent } from '@/shared/components/dropdown/dropdown.component';
+import { ArcTechMenuLabelComponent } from '@/shared/components/menu/menu-label.component';
 
-export const ZardDropdownImports = [
-  ZardDropdownMenuComponent,
-  ZardDropdownMenuItemComponent,
-  ZardMenuLabelComponent,
-  ZardDropdownMenuContentComponent,
-  ZardDropdownDirective,
+export const ArcTechDropdownImports = [
+  ArcTechDropdownMenuComponent,
+  ArcTechDropdownMenuItemComponent,
+  ArcTechMenuLabelComponent,
+  ArcTechDropdownMenuContentComponent,
+  ArcTechDropdownDirective,
 ] as const;

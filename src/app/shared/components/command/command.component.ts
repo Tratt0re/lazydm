@@ -14,43 +14,43 @@ import { type ControlValueAccessor, FormsModule, NG_VALUE_ACCESSOR } from '@angu
 
 import type { ClassValue } from 'clsx';
 
-import { ZardCommandInputComponent } from '@/shared/components/command/command-input.component';
-import { ZardCommandOptionComponent } from '@/shared/components/command/command-option.component';
-import { commandVariants, type ZardCommandSizeVariants } from '@/shared/components/command/command.variants';
-import type { ZardIcon } from '@/shared/components/icon';
+import { ArcTechCommandInputComponent } from '@/shared/components/command/command-input.component';
+import { ArcTechCommandOptionComponent } from '@/shared/components/command/command-option.component';
+import { commandVariants, type ArcTechCommandSizeVariants } from '@/shared/components/command/command.variants';
+import type { ArcTechIcon } from '@/shared/components/icon';
 import { mergeClasses } from '@/shared/utils/merge-classes';
 
-export interface ZardCommandOption {
+export interface ArcTechCommandOption {
   value: unknown;
   label: string;
   disabled?: boolean;
   command?: string;
   shortcut?: string;
-  icon?: ZardIcon;
+  icon?: ArcTechIcon;
   action?: () => void;
   key?: string; // Keyboard shortcut key (e.g., 'n' for Ctrl+N)
 }
 
-export interface ZardCommandGroup {
+export interface ArcTechCommandGroup {
   label: string;
-  options: ZardCommandOption[];
+  options: ArcTechCommandOption[];
 }
 
-export interface ZardCommandConfig {
+export interface ArcTechCommandConfig {
   placeholder?: string;
   emptyText?: string;
-  groups: ZardCommandGroup[];
+  groups: ArcTechCommandGroup[];
   dividers?: boolean;
-  onSelect?: (option: ZardCommandOption) => void;
+  onSelect?: (option: ArcTechCommandOption) => void;
 }
 
-export abstract class ZardCommand {
-  abstract registerOption(option: ZardCommandOptionComponent): void;
-  abstract unregisterOption(option: ZardCommandOptionComponent): void;
+export abstract class ArcTechCommand {
+  abstract registerOption(option: ArcTechCommandOptionComponent): void;
+  abstract unregisterOption(option: ArcTechCommandOptionComponent): void;
 }
 
 @Component({
-  selector: 'z-command',
+  selector: 'arc-command',
   imports: [FormsModule],
   template: `
     <div [class]="classes()">
@@ -66,7 +66,7 @@ export abstract class ZardCommand {
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => ZardCommandComponent),
+      useExisting: forwardRef(() => ArcTechCommandComponent),
       multi: true,
     },
   ],
@@ -78,18 +78,18 @@ export abstract class ZardCommand {
     '[attr.aria-expanded]': 'true',
     '(keydown.{arrowdown,arrowup,enter,escape}.prevent)': 'onKeyDown($event)',
   },
-  exportAs: 'zCommand',
+  exportAs: 'arcCommand',
 })
-export class ZardCommandComponent implements ControlValueAccessor, ZardCommand {
-  private readonly commandInput = contentChild(ZardCommandInputComponent);
-  private readonly optionComponentsAsChildren = contentChildren(ZardCommandOptionComponent, { descendants: true });
-  private readonly registeredOptionComponents = signal<ZardCommandOptionComponent[]>([]);
+export class ArcTechCommandComponent implements ControlValueAccessor, ArcTechCommand {
+  private readonly commandInput = contentChild(ArcTechCommandInputComponent);
+  private readonly optionComponentsAsChildren = contentChildren(ArcTechCommandOptionComponent, { descendants: true });
+  private readonly registeredOptionComponents = signal<ArcTechCommandOptionComponent[]>([]);
 
-  readonly size = input<ZardCommandSizeVariants>('default');
+  readonly size = input<ArcTechCommandSizeVariants>('default');
   readonly class = input<ClassValue>('');
 
-  readonly zCommandChange = output<ZardCommandOption>();
-  readonly zCommandSelected = output<ZardCommandOption>();
+  readonly arcCommandChange = output<ArcTechCommandOption>();
+  readonly arcCommandSelected = output<ArcTechCommandOption>();
 
   // Internal signals for search functionality
   readonly searchTerm = signal('');
@@ -99,11 +99,11 @@ export class ZardCommandComponent implements ControlValueAccessor, ZardCommand {
     this.optionComponentsAsChildren().length ? this.optionComponentsAsChildren() : this.registeredOptionComponents(),
   );
 
-  registerOption(option: ZardCommandOptionComponent) {
+  registerOption(option: ArcTechCommandOptionComponent) {
     this.registeredOptionComponents.update(current => [...current, option]);
   }
 
-  unregisterOption(option: ZardCommandOptionComponent) {
+  unregisterOption(option: ArcTechCommandOptionComponent) {
     this.registeredOptionComponents.update(current => current.filter(o => o !== option));
   }
 
@@ -128,8 +128,8 @@ export class ZardCommandComponent implements ControlValueAccessor, ZardCommand {
     }
 
     return this.optionComponents().filter(option => {
-      const label = option.zLabel().toLowerCase();
-      const command = option.zCommand()?.toLowerCase() ?? '';
+      const label = option.arcLabel().toLowerCase();
+      const command = option.arcCommand()?.toLowerCase() ?? '';
       return label.includes(lowerSearchTerm) || command.includes(lowerSearchTerm);
     });
   });
@@ -175,19 +175,19 @@ export class ZardCommandComponent implements ControlValueAccessor, ZardCommand {
     this.updateSelectedOption();
   }
 
-  selectOption(option: ZardCommandOptionComponent) {
-    const commandOption: ZardCommandOption = {
-      value: option.zValue(),
-      label: option.zLabel(),
-      disabled: option.zDisabled(),
-      command: option.zCommand(),
-      shortcut: option.zShortcut(),
-      icon: option.zIcon(),
+  selectOption(option: ArcTechCommandOptionComponent) {
+    const commandOption: ArcTechCommandOption = {
+      value: option.arcValue(),
+      label: option.arcLabel(),
+      disabled: option.arcDisabled(),
+      command: option.arcCommand(),
+      shortcut: option.arcShortcut(),
+      icon: option.arcIcon(),
     };
 
     this.onChange(commandOption.value);
-    this.zCommandChange.emit(commandOption);
-    this.zCommandSelected.emit(commandOption);
+    this.arcCommandChange.emit(commandOption);
+    this.arcCommandSelected.emit(commandOption);
   }
 
   // in @Component host: '(keydown)': 'onKeyDown($event)'
@@ -219,7 +219,7 @@ export class ZardCommandComponent implements ControlValueAccessor, ZardCommand {
       case 'Enter':
         if (currentIndex >= 0 && currentIndex < filteredOptions.length) {
           const selectedOption = filteredOptions[currentIndex];
-          if (!selectedOption.zDisabled()) {
+          if (!selectedOption.arcDisabled()) {
             this.selectOption(selectedOption);
           }
         }

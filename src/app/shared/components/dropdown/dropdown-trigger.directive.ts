@@ -1,32 +1,32 @@
 import { Directive, ElementRef, inject, input, type OnInit, ViewContainerRef } from '@angular/core';
 
-import type { ZardDropdownMenuContentComponent } from './dropdown-menu-content.component';
-import { ZardDropdownService } from './dropdown.service';
+import type { ArcTechDropdownMenuContentComponent } from './dropdown-menu-content.component';
+import { ArcTechDropdownService } from './dropdown.service';
 
 @Directive({
-  selector: '[z-dropdown], [zDropdown]',
+  selector: '[arc-dropdown], [arcDropdown]',
   host: {
     '[attr.tabindex]': '0',
     '[attr.role]': '"button"',
     '[attr.aria-haspopup]': '"menu"',
     '[attr.aria-expanded]': 'dropdownService.isOpen()',
-    '[attr.aria-disabled]': 'zDisabled()',
+    '[attr.aria-disabled]': 'arcDisabled()',
     '(click.prevent-with-stop)': 'onClick()',
     '(mouseenter)': 'onHoverToggle($event)',
     '(mouseleave)': 'onHoverToggle($event)',
     '(keydown.{enter,space}.prevent-with-stop)': 'toggleDropdown()',
     '(keydown.arrowdown.prevent)': 'openDropdown()',
   },
-  exportAs: 'zDropdown',
+  exportAs: 'arcDropdown',
 })
-export class ZardDropdownDirective implements OnInit {
+export class ArcTechDropdownDirective implements OnInit {
   private readonly elementRef = inject(ElementRef);
   private readonly viewContainerRef = inject(ViewContainerRef);
-  protected readonly dropdownService = inject(ZardDropdownService);
+  protected readonly dropdownService = inject(ArcTechDropdownService);
 
-  readonly zDropdownMenu = input<ZardDropdownMenuContentComponent>();
-  readonly zTrigger = input<'click' | 'hover'>('click');
-  readonly zDisabled = input<boolean>(false);
+  readonly arcDropdownMenu = input<ArcTechDropdownMenuContentComponent>();
+  readonly arcTrigger = input<'click' | 'hover'>('click');
+  readonly arcDisabled = input<boolean>(false);
 
   ngOnInit() {
     // Ensure button has proper accessibility attributes
@@ -38,7 +38,7 @@ export class ZardDropdownDirective implements OnInit {
   }
 
   protected onClick() {
-    if (this.zTrigger() !== 'click') {
+    if (this.arcTrigger() !== 'click') {
       return;
     }
 
@@ -46,7 +46,7 @@ export class ZardDropdownDirective implements OnInit {
   }
 
   protected onHoverToggle(event: MouseEvent) {
-    if (this.zTrigger() !== 'hover' || this.zDisabled()) {
+    if (this.arcTrigger() !== 'hover' || this.arcDisabled()) {
       return;
     }
 
@@ -58,22 +58,22 @@ export class ZardDropdownDirective implements OnInit {
   }
 
   protected toggleDropdown() {
-    if (this.zDisabled()) {
+    if (this.arcDisabled()) {
       return;
     }
 
-    const menuContent = this.zDropdownMenu();
+    const menuContent = this.arcDropdownMenu();
     if (menuContent) {
       this.dropdownService.toggle(this.elementRef, menuContent.contentTemplate(), this.viewContainerRef);
     }
   }
 
   protected openDropdown() {
-    if (this.zDisabled()) {
+    if (this.arcDisabled()) {
       return;
     }
 
-    const menuContent = this.zDropdownMenu();
+    const menuContent = this.arcDropdownMenu();
     if (menuContent && !this.dropdownService.isOpen()) {
       this.dropdownService.toggle(this.elementRef, menuContent.contentTemplate(), this.viewContainerRef);
     }

@@ -1,21 +1,21 @@
 import { Injectable } from '@angular/core';
 
-import type { ZardMenuDirective } from './menu.directive';
+import type { ArcTechMenuDirective } from './menu.directive';
 
 @Injectable({
   providedIn: 'root',
 })
-export class ZardMenuManagerService {
-  private activeHoverMenu: ZardMenuDirective | null = null;
+export class ArcTechMenuManagerService {
+  private activeHoverMenu: ArcTechMenuDirective | null = null;
 
-  registerHoverMenu(menu: ZardMenuDirective): void {
+  registerHoverMenu(menu: ArcTechMenuDirective): void {
     if (this.activeHoverMenu && this.activeHoverMenu !== menu) {
       this.activeHoverMenu.close();
     }
     this.activeHoverMenu = menu;
   }
 
-  unregisterHoverMenu(menu: ZardMenuDirective): void {
+  unregisterHoverMenu(menu: ArcTechMenuDirective): void {
     if (this.activeHoverMenu === menu) {
       this.activeHoverMenu = null;
     }

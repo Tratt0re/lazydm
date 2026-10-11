@@ -1,12 +1,12 @@
 <button
-  z-button
+  arc-button
   type="button"
-  zType="ghost"
-  zSize="sm"
-  zShape="circle"
+  arcType="ghost"
+  arcSize="sm"
+  arcShape="circle"
   [attr.aria-label]="(sidebarCollapsed() ? 'sidebar.expand' : 'sidebar.collapse') | translate"
   [attr.aria-expanded]="!sidebarCollapsed()"
   (click)="onToggle()"
 >
-  <z-icon zType="panel-left" class="size-4" />
+  <arc-icon arcType="panel-left" class="size-4" />
 </button>

@@ -6,7 +6,7 @@ import { contentVariants } from '@/shared/components/layout/layout.variants';
 import { mergeClasses } from '@/shared/utils/merge-classes';
 
 @Component({
-  selector: 'z-content',
+  selector: 'arc-content',
   template: `
     <main>
       <ng-content />
@@ -17,7 +17,7 @@ import { mergeClasses } from '@/shared/utils/merge-classes';
   host: {
     '[class]': 'classes()',
   },
-  exportAs: 'zContent',
+  exportAs: 'arcContent',
 })
 export class ContentComponent {
   readonly class = input<ClassValue>('');

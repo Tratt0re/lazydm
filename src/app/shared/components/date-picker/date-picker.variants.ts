@@ -2,20 +2,20 @@ import { cva } from 'class-variance-authority';
 
 const datePickerVariants = cva('', {
   variants: {
-    zSize: {
+    arcSize: {
       sm: '',
       default: '',
       lg: '',
     },
-    zType: {
+    arcType: {
       default: '',
       outline: '',
       ghost: '',
     },
   },
   defaultVariants: {
-    zSize: 'default',
-    zType: 'outline',
+    arcSize: 'default',
+    arcType: 'outline',
   },
 });
 

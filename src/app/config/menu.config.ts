@@ -1,8 +1,8 @@
-import type { ZardIcon } from '@/shared/components/icon';
+import type { ArcTechIcon } from '@/shared/components/icon';
 
 export interface MenuItemConfig {
   readonly label: string;
-  readonly icon: ZardIcon;
+  readonly icon: ArcTechIcon;
   readonly path: string;
   readonly exact?: boolean;
 }

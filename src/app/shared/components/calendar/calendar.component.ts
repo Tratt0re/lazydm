@@ -15,8 +15,8 @@ import { NG_VALUE_ACCESSOR, type ControlValueAccessor } from '@angular/forms';
 import type { ClassValue } from 'clsx';
 import { filter, map } from 'rxjs';
 
-import { ZardCalendarGridComponent } from '@/shared/components/calendar/calendar-grid.component';
-import { ZardCalendarNavigationComponent } from '@/shared/components/calendar/calendar-navigation.component';
+import { ArcTechCalendarGridComponent } from '@/shared/components/calendar/calendar-grid.component';
+import { ArcTechCalendarNavigationComponent } from '@/shared/components/calendar/calendar-navigation.component';
 import type { CalendarMode, CalendarValue } from '@/shared/components/calendar/calendar.types';
 import {
   generateCalendarDays,
@@ -29,11 +29,11 @@ import { calendarVariants } from '@/shared/components/calendar/calendar.variants
 import { mergeClasses, noopFn } from '@/shared/utils/merge-classes';
 
 @Component({
-  selector: 'z-calendar, [z-calendar]',
-  imports: [ZardCalendarNavigationComponent, ZardCalendarGridComponent],
+  selector: 'arc-calendar, [arc-calendar]',
+  imports: [ArcTechCalendarNavigationComponent, ArcTechCalendarGridComponent],
   template: `
     <div [class]="classes()">
-      <z-calendar-navigation
+      <arc-calendar-navigation
         [currentMonth]="currentMonthValue()"
         [currentYear]="currentYearValue()"
         [minDate]="minDate()"
@@ -45,7 +45,7 @@ import { mergeClasses, noopFn } from '@/shared/utils/merge-classes';
         (nextMonth)="nextMonth()"
       />
 
-      <z-calendar-grid
+      <arc-calendar-grid
         [calendarDays]="calendarDays()"
         [disabled]="disabled()"
         (dateSelect)="onDateSelect($event)"
@@ -58,7 +58,7 @@ import { mergeClasses, noopFn } from '@/shared/utils/merge-classes';
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => ZardCalendarComponent),
+      useExisting: forwardRef(() => ArcTechCalendarComponent),
       multi: true,
     },
   ],
@@ -67,10 +67,10 @@ import { mergeClasses, noopFn } from '@/shared/utils/merge-classes';
   host: {
     '[attr.tabindex]': '0',
   },
-  exportAs: 'zCalendar',
+  exportAs: 'arcCalendar',
 })
-export class ZardCalendarComponent implements ControlValueAccessor {
-  private readonly gridRef = viewChild.required(ZardCalendarGridComponent);
+export class ArcTechCalendarComponent implements ControlValueAccessor {
+  private readonly gridRef = viewChild.required(ArcTechCalendarGridComponent);
 
   // Public method to reset navigation (useful for date-picker)
   resetNavigation(): void {
@@ -82,7 +82,7 @@ export class ZardCalendarComponent implements ControlValueAccessor {
 
   // Public inputs
   readonly class = input<ClassValue>('');
-  readonly zMode = input<CalendarMode>('single');
+  readonly arcMode = input<CalendarMode>('single');
   readonly value = model<CalendarValue>(null);
   readonly minDate = input<Date | null>(null);
   readonly maxDate = input<Date | null>(null);
@@ -103,7 +103,7 @@ export class ZardCalendarComponent implements ControlValueAccessor {
   private readonly normalizedValue = computed(() => normalizeCalendarValue(this.value()));
   private readonly currentDate = computed(() => {
     const val = this.normalizedValue();
-    const mode = this.zMode();
+    const mode = this.arcMode();
 
     if (!val) {
       return new Date();
@@ -139,8 +139,8 @@ export class ZardCalendarComponent implements ControlValueAccessor {
     return generateCalendarDays({
       year: selectedDate.getFullYear(),
       month: selectedDate.getMonth(),
-      mode: this.zMode(),
-      selectedDates: getSelectedDatesArray(this.normalizedValue(), this.zMode()),
+      mode: this.arcMode(),
+      selectedDates: getSelectedDatesArray(this.normalizedValue(), this.arcMode()),
       minDate: this.minDate(),
       maxDate: this.maxDate(),
       disabled: this.disabled(),
@@ -249,7 +249,7 @@ export class ZardCalendarComponent implements ControlValueAccessor {
       return;
     }
 
-    const mode = this.zMode();
+    const mode = this.arcMode();
     const currentValue = this.normalizedValue();
 
     if (mode === 'single') {

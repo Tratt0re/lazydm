@@ -1,4 +1,4 @@
-import { ZardSelectItemComponent } from '@/shared/components/select/select-item.component';
-import { ZardSelectComponent } from '@/shared/components/select/select.component';
+import { ArcTechSelectItemComponent } from '@/shared/components/select/select-item.component';
+import { ArcTechSelectComponent } from '@/shared/components/select/select.component';
 
-export const ZardSelectImports = [ZardSelectComponent, ZardSelectItemComponent] as const;
+export const ArcTechSelectImports = [ArcTechSelectComponent, ArcTechSelectItemComponent] as const;

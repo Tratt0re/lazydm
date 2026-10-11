@@ -4,7 +4,7 @@ import { EventEmitter, Inject, PLATFORM_ID } from '@angular/core';
 
 import { filter, fromEvent, Subject, takeUntil } from 'rxjs';
 
-import type { ZardSheetComponent, ZardSheetOptions } from './sheet.component';
+import type { ArcTechSheetComponent, ArcTechSheetOptions } from './sheet.component';
 
 const enum eTriggerAction {
   CANCEL = 'cancel',
@@ -12,7 +12,7 @@ const enum eTriggerAction {
   OK = 'ok',
 }
 
-export class ZardSheetRef<T = any, R = any, U = any> {
+export class ArcTechSheetRef<T = any, R = any, U = any> {
   private destroy$ = new Subject<void>();
   private isClosing = false;
   protected result?: R;
@@ -20,15 +20,15 @@ export class ZardSheetRef<T = any, R = any, U = any> {
 
   constructor(
     private overlayRef: OverlayRef,
-    private config: ZardSheetOptions<T, U>,
-    private containerInstance: ZardSheetComponent<T, U>,
+    private config: ArcTechSheetOptions<T, U>,
+    private containerInstance: ArcTechSheetComponent<T, U>,
     @Inject(PLATFORM_ID) private platformId: object,
   ) {
     this.containerInstance.cancelTriggered.subscribe(() => this.trigger(eTriggerAction.CANCEL));
     this.containerInstance.middleTriggered.subscribe(() => this.trigger(eTriggerAction.MIDDLE));
     this.containerInstance.okTriggered.subscribe(() => this.trigger(eTriggerAction.OK));
 
-    if ((this.config.zMaskClosable ?? true) && isPlatformBrowser(this.platformId)) {
+    if ((this.config.arcMaskClosable ?? true) && isPlatformBrowser(this.platformId)) {
       this.overlayRef
         .outsidePointerEvents()
         .pipe(takeUntil(this.destroy$))
@@ -76,7 +76,7 @@ export class ZardSheetRef<T = any, R = any, U = any> {
   }
 
   private trigger(action: eTriggerAction) {
-    const trigger = { ok: this.config.zOnOk, middle: this.config.zOnMiddle, cancel: this.config.zOnCancel }[action];
+    const trigger = { ok: this.config.arcOnOk, middle: this.config.arcOnMiddle, cancel: this.config.arcOnCancel }[action];
 
     if (trigger instanceof EventEmitter) {
       trigger.emit(this.getContentComponent());

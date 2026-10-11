@@ -4,14 +4,14 @@ import { EventEmitter, Inject, PLATFORM_ID } from '@angular/core';
 
 import { filter, fromEvent, Subject, takeUntil } from 'rxjs';
 
-import type { ZardDialogComponent, ZardDialogOptions } from './dialog.component';
+import type { ArcTechDialogComponent, ArcTechDialogOptions } from './dialog.component';
 
 const enum eTriggerAction {
   CANCEL = 'cancel',
   OK = 'ok',
 }
 
-export class ZardDialogRef<T = any, R = any, U = any> {
+export class ArcTechDialogRef<T = any, R = any, U = any> {
   private destroy$ = new Subject<void>();
   private isClosing = false;
   protected result?: R;
@@ -19,14 +19,14 @@ export class ZardDialogRef<T = any, R = any, U = any> {
 
   constructor(
     private overlayRef: OverlayRef,
-    private config: ZardDialogOptions<T, U>,
-    private containerInstance: ZardDialogComponent<T, U>,
+    private config: ArcTechDialogOptions<T, U>,
+    private containerInstance: ArcTechDialogComponent<T, U>,
     @Inject(PLATFORM_ID) private platformId: object,
   ) {
     this.containerInstance.cancelTriggered.subscribe(() => this.trigger(eTriggerAction.CANCEL));
     this.containerInstance.okTriggered.subscribe(() => this.trigger(eTriggerAction.OK));
 
-    if ((this.config.zMaskClosable ?? true) && isPlatformBrowser(this.platformId)) {
+    if ((this.config.arcMaskClosable ?? true) && isPlatformBrowser(this.platformId)) {
       this.overlayRef
         .outsidePointerEvents()
         .pipe(takeUntil(this.destroy$))
@@ -74,7 +74,7 @@ export class ZardDialogRef<T = any, R = any, U = any> {
   }
 
   private trigger(action: eTriggerAction) {
-    const trigger = { ok: this.config.zOnOk, cancel: this.config.zOnCancel }[action];
+    const trigger = { ok: this.config.arcOnOk, cancel: this.config.arcOnCancel }[action];
 
     if (trigger instanceof EventEmitter) {
       trigger.emit(this.getContentComponent());

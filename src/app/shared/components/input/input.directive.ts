@@ -9,33 +9,33 @@ import { resolveNumberFormatSeparators } from '@/shared/utils/number-format';
 
 import {
   inputVariants,
-  type ZardInputSizeVariants,
-  type ZardInputStatusVariants,
-  type ZardInputTypeVariants,
+  type ArcTechInputSizeVariants,
+  type ArcTechInputStatusVariants,
+  type ArcTechInputTypeVariants,
 } from './input.variants';
 
 type OnTouchedType = () => void;
 type OnChangeType = (value: string) => void;
 
 @Directive({
-  selector: 'input[z-input], textarea[z-input]',
+  selector: 'input[arc-input], textarea[arc-input]',
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => ZardInputDirective),
+      useExisting: forwardRef(() => ArcTechInputDirective),
       multi: true,
     },
   ],
   host: {
     '[class]': 'classes()',
-    '[attr.aria-invalid]': "zStatus() === 'error' ? 'true' : null",
+    '[attr.aria-invalid]': "arcStatus() === 'error' ? 'true' : null",
     '(input)': 'updateValue($event.target)',
     '(focus)': 'onFocus()',
     '(blur)': 'onBlur()',
   },
-  exportAs: 'zInput',
+  exportAs: 'arcInput',
 })
-export class ZardInputDirective implements ControlValueAccessor {
+export class ArcTechInputDirective implements ControlValueAccessor {
   private readonly elementRef = inject(ElementRef);
   private readonly numberFormatService = inject(NumberFormatService);
   private onTouched: OnTouchedType = noopFn;
@@ -43,20 +43,20 @@ export class ZardInputDirective implements ControlValueAccessor {
   private isFocused = false;
 
   readonly class = input<ClassValue>('');
-  readonly zBorderless = input(false, { transform });
-  readonly zSize = input<ZardInputSizeVariants>('default');
-  readonly zStatus = input<ZardInputStatusVariants>();
+  readonly arcBorderless = input(false, { transform });
+  readonly arcSize = input<ArcTechInputSizeVariants>('default');
+  readonly arcStatus = input<ArcTechInputStatusVariants>();
   readonly value = model<string>('');
 
-  readonly size = linkedSignal<ZardInputSizeVariants>(() => this.zSize());
+  readonly size = linkedSignal<ArcTechInputSizeVariants>(() => this.arcSize());
 
   protected readonly classes = computed(() =>
     mergeClasses(
       inputVariants({
-        zType: this.getType(),
-        zSize: this.size(),
-        zStatus: this.zStatus(),
-        zBorderless: this.zBorderless(),
+        arcType: this.getType(),
+        arcSize: this.size(),
+        arcStatus: this.arcStatus(),
+        arcBorderless: this.arcBorderless(),
       }),
       this.class(),
     ),
@@ -122,7 +122,7 @@ export class ZardInputDirective implements ControlValueAccessor {
     this.onTouched();
   }
 
-  getType(): ZardInputTypeVariants {
+  getType(): ArcTechInputTypeVariants {
     const isTextarea = this.elementRef.nativeElement.tagName.toLowerCase() === 'textarea';
     return isTextarea ? 'textarea' : 'default';
   }
@@ -151,7 +151,7 @@ export class ZardInputDirective implements ControlValueAccessor {
     }
 
     const element = this.elementRef.nativeElement as HTMLInputElement;
-    element.dataset['zNumericInput'] = 'true';
+    element.dataset['arcNumericInput'] = 'true';
     element.type = 'text';
     element.inputMode = this.allowsDecimalInput() ? 'decimal' : 'numeric';
     element.autocomplete = 'off';
@@ -178,7 +178,7 @@ export class ZardInputDirective implements ControlValueAccessor {
   }
 
   private isNumericInput(): boolean {
-    return this.elementRef.nativeElement.dataset?.['zNumericInput'] === 'true';
+    return this.elementRef.nativeElement.dataset?.['arcNumericInput'] === 'true';
   }
 
   private allowsDecimalInput(): boolean {

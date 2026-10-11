@@ -27,77 +27,77 @@ import {
 
 import { mergeClasses, noopFn } from '@/shared/utils/merge-classes';
 
-import type { ZardDialogRef } from './dialog-ref';
-import { ZardDialogService } from './dialog.service';
+import type { ArcTechDialogRef } from './dialog-ref';
+import { ArcTechDialogService } from './dialog.service';
 import { dialogVariants } from './dialog.variants';
-import { ZardButtonComponent } from '@/shared/components/button/button.component';
-import { ZardIconComponent } from '@/shared/components/icon/icon.component';
-import type { ZardIcon } from '@/shared/components/icon/icons';
+import { ArcTechButtonComponent } from '@/shared/components/button/button.component';
+import { ArcTechIconComponent } from '@/shared/components/icon/icon.component';
+import type { ArcTechIcon } from '@/shared/components/icon/icons';
 
 // Used by the NgModule provider definition
 let nextDialogInstanceId = 0;
 
 export type OnClickCallback<T> = (instance: T) => false | void | object;
-export class ZardDialogOptions<T, U> {
-  zCancelIcon?: ZardIcon;
-  zCancelText?: string | null;
-  zClosable?: boolean;
-  zContent?: string | TemplateRef<T> | Type<T>;
-  zCustomClasses?: string;
-  zData?: U;
-  zDescription?: string;
-  zHideFooter?: boolean;
-  zMaskClosable?: boolean;
-  zOkDestructive?: boolean;
-  zOkDisabled?: boolean;
-  zOkIcon?: ZardIcon;
-  zOkText?: string | null;
-  zOnCancel?: EventEmitter<T> | OnClickCallback<T> = noopFn;
-  zOnOk?: EventEmitter<T> | OnClickCallback<T> = noopFn;
-  zTitle?: string | TemplateRef<T>;
-  zViewContainerRef?: ViewContainerRef;
-  zWidth?: string;
+export class ArcTechDialogOptions<T, U> {
+  arcCancelIcon?: ArcTechIcon;
+  arcCancelText?: string | null;
+  arcClosable?: boolean;
+  arcContent?: string | TemplateRef<T> | Type<T>;
+  arcCustomClasses?: string;
+  arcData?: U;
+  arcDescription?: string;
+  arcHideFooter?: boolean;
+  arcMaskClosable?: boolean;
+  arcOkDestructive?: boolean;
+  arcOkDisabled?: boolean;
+  arcOkIcon?: ArcTechIcon;
+  arcOkText?: string | null;
+  arcOnCancel?: EventEmitter<T> | OnClickCallback<T> = noopFn;
+  arcOnOk?: EventEmitter<T> | OnClickCallback<T> = noopFn;
+  arcTitle?: string | TemplateRef<T>;
+  arcViewContainerRef?: ViewContainerRef;
+  arcWidth?: string;
 }
 
 @Component({
-  selector: 'z-dialog',
-  imports: [A11yModule, OverlayModule, PortalModule, ZardButtonComponent, ZardIconComponent],
+  selector: 'arc-dialog',
+  imports: [A11yModule, OverlayModule, PortalModule, ArcTechButtonComponent, ArcTechIconComponent],
   template: `
     <div #dialogSurface cdkTrapFocus [cdkTrapFocusAutoCapture]="true" tabindex="-1" class="flex h-full min-h-0 flex-col">
-      @if (config.zClosable || config.zClosable === undefined) {
+      @if (config.arcClosable || config.arcClosable === undefined) {
         <button
           type="button"
-          data-testid="z-close-header-button"
-          z-button
-          zType="ghost"
-          zSize="sm"
+          data-testid="arc-close-header-button"
+          arc-button
+          arcType="ghost"
+          arcSize="sm"
           class="absolute top-1 right-1 z-10"
           aria-label="Close dialog"
           title="Close dialog"
           (click)="onCloseClick()"
         >
-          <z-icon zType="x" />
+          <arc-icon arcType="x" />
         </button>
       }
 
-      @if (config.zTitle || config.zDescription) {
+      @if (config.arcTitle || config.arcDescription) {
         <header class="flex shrink-0 flex-col space-y-1.5 pr-10 text-center sm:text-left pb-2">
-          @if (config.zTitle) {
+          @if (config.arcTitle) {
             <h4
-              data-testid="z-title"
+              data-testid="arc-title"
               class="text-lg leading-none font-semibold tracking-tight"
               [attr.id]="titleId()"
             >
-              {{ config.zTitle }}
+              {{ config.arcTitle }}
             </h4>
 
-            @if (config.zDescription) {
+            @if (config.arcDescription) {
               <p
-                data-testid="z-description"
+                data-testid="arc-description"
                 class="text-muted-foreground text-sm"
                 [attr.id]="descriptionId()"
               >
-                {{ config.zDescription }}
+                {{ config.arcDescription }}
               </p>
             }
           }
@@ -108,36 +108,36 @@ export class ZardDialogOptions<T, U> {
         <ng-template cdkPortalOutlet />
 
         @if (isStringContent) {
-          <div data-testid="z-content" [innerHTML]="config.zContent"></div>
+          <div data-testid="arc-content" [innerHTML]="config.arcContent"></div>
         }
       </main>
 
-      @if (!config.zHideFooter) {
+      @if (!config.arcHideFooter) {
         <footer class="flex flex-col-reverse gap-2 sm:flex-row sm:justify-end sm:gap-0 sm:space-x-2 pt-2">
-          @if (config.zCancelText !== null) {
-            <button type="button" data-testid="z-cancel-button" z-button zType="outline" (click)="onCloseClick()">
-              @if (config.zCancelIcon) {
-                <z-icon [zType]="config.zCancelIcon" />
+          @if (config.arcCancelText !== null) {
+            <button type="button" data-testid="arc-cancel-button" arc-button arcType="outline" (click)="onCloseClick()">
+              @if (config.arcCancelIcon) {
+                <arc-icon [arcType]="config.arcCancelIcon" />
               }
 
-              {{ config.zCancelText ?? 'Cancel' }}
+              {{ config.arcCancelText ?? 'Cancel' }}
             </button>
           }
 
-          @if (config.zOkText !== null) {
+          @if (config.arcOkText !== null) {
             <button
               type="button"
-              data-testid="z-ok-button"
-              z-button
-              [zType]="config.zOkDestructive ? 'destructive' : 'default'"
-              [disabled]="config.zOkDisabled"
+              data-testid="arc-ok-button"
+              arc-button
+              [arcType]="config.arcOkDestructive ? 'destructive' : 'default'"
+              [disabled]="config.arcOkDisabled"
               (click)="onOkClick()"
             >
-              @if (config.zOkIcon) {
-                <z-icon [zType]="config.zOkIcon" />
+              @if (config.arcOkIcon) {
+                <arc-icon [arcType]="config.arcOkIcon" />
               }
 
-              {{ config.zOkText ?? 'OK' }}
+              {{ config.arcOkText ?? 'OK' }}
             </button>
           }
         </footer>
@@ -175,25 +175,25 @@ export class ZardDialogOptions<T, U> {
     'aria-modal': 'true',
     '[attr.aria-labelledby]': 'titleId()',
     '[attr.aria-describedby]': 'descriptionId()',
-    '[style.width]': 'config.zWidth ? config.zWidth : null',
+    '[style.width]': 'config.arcWidth ? config.arcWidth : null',
     'animate.enter': 'dialog-enter',
     'animate.leave': 'dialog-leave',
   },
-  exportAs: 'zDialog',
+  exportAs: 'arcDialog',
 })
-export class ZardDialogComponent<T, U> extends BasePortalOutlet {
+export class ArcTechDialogComponent<T, U> extends BasePortalOutlet {
   private readonly host = inject(ElementRef<HTMLElement>);
-  protected readonly config = inject(ZardDialogOptions<T, U>);
+  protected readonly config = inject(ArcTechDialogOptions<T, U>);
   private readonly instanceId = ++nextDialogInstanceId;
   private readonly previouslyFocusedElement = this.getActiveElement();
 
-  protected readonly classes = computed(() => mergeClasses(dialogVariants(), this.config.zCustomClasses));
-  dialogRef?: ZardDialogRef<T>;
+  protected readonly classes = computed(() => mergeClasses(dialogVariants(), this.config.arcCustomClasses));
+  dialogRef?: ArcTechDialogRef<T>;
 
-  protected readonly isStringContent = typeof this.config.zContent === 'string';
-  protected readonly titleId = computed(() => (this.config.zTitle ? `z-dialog-title-${this.instanceId}` : null));
+  protected readonly isStringContent = typeof this.config.arcContent === 'string';
+  protected readonly titleId = computed(() => (this.config.arcTitle ? `arc-dialog-title-${this.instanceId}` : null));
   protected readonly descriptionId = computed(() =>
-    this.config.zTitle && this.config.zDescription ? `z-dialog-description-${this.instanceId}` : null,
+    this.config.arcTitle && this.config.arcDescription ? `arc-dialog-description-${this.instanceId}` : null,
   );
 
   readonly dialogSurface = viewChild.required<ElementRef<HTMLElement>>('dialogSurface');
@@ -251,7 +251,7 @@ export class ZardDialogComponent<T, U> extends BasePortalOutlet {
 }
 
 @NgModule({
-  imports: [A11yModule, ZardButtonComponent, ZardDialogComponent, OverlayModule, PortalModule],
-  providers: [ZardDialogService],
+  imports: [A11yModule, ArcTechButtonComponent, ArcTechDialogComponent, OverlayModule, PortalModule],
+  providers: [ArcTechDialogService],
 })
-export class ZardDialogModule {}
+export class ArcTechDialogModule {}

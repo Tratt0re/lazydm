@@ -2,7 +2,7 @@ import { cva, type VariantProps } from 'class-variance-authority';
 
 export const iconVariants = cva('flex items-center justify-center', {
   variants: {
-    zSize: {
+    arcSize: {
       sm: 'size-3',
       default: 'size-3.5',
       lg: 'size-4',
@@ -10,8 +10,8 @@ export const iconVariants = cva('flex items-center justify-center', {
     },
   },
   defaultVariants: {
-    zSize: 'default',
+    arcSize: 'default',
   },
 });
 
-export type ZardIconSizeVariants = NonNullable<VariantProps<typeof iconVariants>['zSize']>;
+export type ArcTechIconSizeVariants = NonNullable<VariantProps<typeof iconVariants>['arcSize']>;

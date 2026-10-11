@@ -2,17 +2,17 @@ import { Component, inject } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 
 import { I18nService } from '@/services/i18n.service';
-import { ZardSelectImports } from '@/shared/components/select';
-import { EDarkModes, ZardDarkMode } from '@/shared/services/dark-mode';
+import { ArcTechSelectImports } from '@/shared/components/select';
+import { EDarkModes, ArcTechDarkMode } from '@/shared/services/dark-mode';
 import { applyThemeTransition } from '@/shared/utils/theme-transition';
 
 @Component({
   selector: 'app-general-section',
-  imports: [TranslatePipe, ...ZardSelectImports],
+  imports: [TranslatePipe, ...ArcTechSelectImports],
   templateUrl: './general-section.component.html',
 })
 export class GeneralSectionComponent {
-  protected readonly darkMode = inject(ZardDarkMode);
+  protected readonly darkMode = inject(ArcTechDarkMode);
   protected readonly i18nService = inject(I18nService);
   protected readonly themeOptions = [EDarkModes.SYSTEM, EDarkModes.LIGHT, EDarkModes.DARK] as const;
   protected readonly languages = this.i18nService.supportedLanguages;

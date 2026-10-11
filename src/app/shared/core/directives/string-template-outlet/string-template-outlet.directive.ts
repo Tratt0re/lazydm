@@ -14,31 +14,31 @@ export function isTemplateRef<C = unknown>(value: unknown): value is TemplateRef
   return value instanceof TemplateRef;
 }
 
-export interface ZardStringTemplateOutletContext {
+export interface ArcTechStringTemplateOutletContext {
   $implicit: unknown;
   [key: string]: unknown;
 }
 
 @Directive({
-  selector: '[zStringTemplateOutlet]',
-  exportAs: 'zStringTemplateOutlet',
+  selector: '[arcStringTemplateOutlet]',
+  exportAs: 'arcStringTemplateOutlet',
 })
-export class ZardStringTemplateOutletDirective<T = unknown> implements OnDestroy {
+export class ArcTechStringTemplateOutletDirective<T = unknown> implements OnDestroy {
   private readonly viewContainer = inject(ViewContainerRef);
   private readonly templateRef = inject(TemplateRef<void>);
 
-  private embeddedViewRef: EmbeddedViewRef<ZardStringTemplateOutletContext> | null = null;
-  private readonly context = {} as ZardStringTemplateOutletContext;
+  private embeddedViewRef: EmbeddedViewRef<ArcTechStringTemplateOutletContext> | null = null;
+  private readonly context = {} as ArcTechStringTemplateOutletContext;
 
   #isFirstChange = true;
   #lastOutletWasTemplate = false;
   #lastTemplateRef: TemplateRef<void> | null = null;
-  #lastContext?: ZardStringTemplateOutletContext;
+  #lastContext?: ArcTechStringTemplateOutletContext;
 
-  readonly zStringTemplateOutletContext = input<ZardStringTemplateOutletContext | undefined>(undefined);
-  readonly zStringTemplateOutlet = input.required<T | TemplateRef<void>>();
+  readonly arcStringTemplateOutletContext = input<ArcTechStringTemplateOutletContext | undefined>(undefined);
+  readonly arcStringTemplateOutlet = input.required<T | TemplateRef<void>>();
 
-  #hasContextShapeChanged(context: ZardStringTemplateOutletContext | undefined): boolean {
+  #hasContextShapeChanged(context: ArcTechStringTemplateOutletContext | undefined): boolean {
     if (!context) {
       return false;
     }
@@ -59,7 +59,7 @@ export class ZardStringTemplateOutletDirective<T = unknown> implements OnDestroy
 
   #shouldViewBeRecreated(
     stringTemplateOutlet: TemplateRef<void> | T,
-    stringTemplateOutletContext: ZardStringTemplateOutletContext | undefined,
+    stringTemplateOutletContext: ArcTechStringTemplateOutletContext | undefined,
   ): boolean {
     const isTemplate = isTemplateRef(stringTemplateOutlet);
 
@@ -74,7 +74,7 @@ export class ZardStringTemplateOutletDirective<T = unknown> implements OnDestroy
 
   #updateTrackingState(
     stringTemplateOutlet: TemplateRef<void> | T,
-    stringTemplateOutletContext: ZardStringTemplateOutletContext | undefined,
+    stringTemplateOutletContext: ArcTechStringTemplateOutletContext | undefined,
   ): void {
     const isTemplate = isTemplateRef(stringTemplateOutlet);
     if (this.#isFirstChange && !isTemplate) {
@@ -90,8 +90,8 @@ export class ZardStringTemplateOutletDirective<T = unknown> implements OnDestroy
   }
 
   readonly #viewEffect: EffectRef = effect(() => {
-    const stringTemplateOutlet = this.zStringTemplateOutlet();
-    const stringTemplateOutletContext = this.zStringTemplateOutletContext();
+    const stringTemplateOutlet = this.arcStringTemplateOutlet();
+    const stringTemplateOutletContext = this.arcStringTemplateOutletContext();
 
     if (!this.#isFirstChange && isTemplateRef(stringTemplateOutlet)) {
       this.#isFirstChange = true;
@@ -106,7 +106,7 @@ export class ZardStringTemplateOutletDirective<T = unknown> implements OnDestroy
 
     if (recreateView) {
       this.#recreateView(
-        stringTemplateOutlet as TemplateRef<ZardStringTemplateOutletContext>,
+        stringTemplateOutlet as TemplateRef<ArcTechStringTemplateOutletContext>,
         stringTemplateOutletContext,
       );
     } else {
@@ -115,8 +115,8 @@ export class ZardStringTemplateOutletDirective<T = unknown> implements OnDestroy
   });
 
   #recreateView(
-    outlet: TemplateRef<ZardStringTemplateOutletContext>,
-    context: ZardStringTemplateOutletContext | undefined,
+    outlet: TemplateRef<ArcTechStringTemplateOutletContext>,
+    context: ArcTechStringTemplateOutletContext | undefined,
   ): void {
     this.viewContainer.clear();
     if (isTemplateRef(outlet)) {
@@ -126,7 +126,7 @@ export class ZardStringTemplateOutletDirective<T = unknown> implements OnDestroy
     }
   }
 
-  #updateContext(outlet: TemplateRef<void> | T, context: ZardStringTemplateOutletContext | undefined): void {
+  #updateContext(outlet: TemplateRef<void> | T, context: ArcTechStringTemplateOutletContext | undefined): void {
     const newCtx = isTemplateRef(outlet) ? context : this.context;
     let oldCtx = this.embeddedViewRef?.context;
 
@@ -141,9 +141,9 @@ export class ZardStringTemplateOutletDirective<T = unknown> implements OnDestroy
   }
 
   static ngTemplateContextGuard<T>(
-    _dir: ZardStringTemplateOutletDirective<T>,
+    _dir: ArcTechStringTemplateOutletDirective<T>,
     _ctx: unknown,
-  ): _ctx is ZardStringTemplateOutletContext {
+  ): _ctx is ArcTechStringTemplateOutletContext {
     return true;
   }
 

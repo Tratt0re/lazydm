@@ -1,9 +1,9 @@
-import type { ZardIcon } from '@/shared/components/icon';
+import type { ArcTechIcon } from '@/shared/components/icon';
 
 export interface AppVisualOption {
   readonly label: string;
   readonly value: string;
-  readonly icon?: ZardIcon;
+  readonly icon?: ArcTechIcon;
   readonly colorHex?: string;
 }
 

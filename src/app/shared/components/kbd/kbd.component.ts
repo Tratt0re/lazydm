@@ -7,7 +7,7 @@ import { kbdVariants } from './kbd.variants';
 import { mergeClasses } from '@/shared/utils/merge-classes';
 
 @Component({
-  selector: 'z-kbd, [z-kbd]',
+  selector: 'arc-kbd, [arc-kbd]',
   standalone: true,
   template: `
     <kbd><ng-content /></kbd>
@@ -17,9 +17,9 @@ import { mergeClasses } from '@/shared/utils/merge-classes';
   host: {
     '[class]': 'classes()',
   },
-  exportAs: 'zKbd',
+  exportAs: 'arcKbd',
 })
-export class ZardKbdComponent {
+export class ArcTechKbdComponent {
   readonly class = input<ClassValue>('');
 
   protected readonly classes = computed(() => mergeClasses(kbdVariants(), this.class()));

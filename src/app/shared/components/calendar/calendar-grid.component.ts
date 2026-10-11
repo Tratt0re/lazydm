@@ -21,7 +21,7 @@ import { getCalendarWeekdayLabels, getDayAriaLabel, getDayId, resolveCalendarLoc
 import { calendarDayButtonVariants, calendarDayVariants, calendarWeekdayVariants } from './calendar.variants';
 
 @Component({
-  selector: 'z-calendar-grid',
+  selector: 'arc-calendar-grid',
   template: `
     <div #gridContainer>
       <!-- Weekdays Header -->
@@ -63,9 +63,9 @@ import { calendarDayButtonVariants, calendarDayVariants, calendarWeekdayVariants
     '(keydown.{arrowleft,arrowright,arrowup,arrowdown,home,end,pageup,pagedown,enter,space}.prevent)':
       'onKeyDown($event)',
   },
-  exportAs: 'zCalendarGrid',
+  exportAs: 'arcCalendarGrid',
 })
-export class ZardCalendarGridComponent {
+export class ArcTechCalendarGridComponent {
   private readonly translateService = inject(TranslateService);
   private readonly currentLocale = toSignal(
     this.translateService.onLangChange.pipe(

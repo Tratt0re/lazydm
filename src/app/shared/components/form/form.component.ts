@@ -7,28 +7,28 @@ import {
   formFieldVariants,
   formLabelVariants,
   formMessageVariants,
-  type ZardFormMessageTypeVariants,
+  type ArcTechFormMessageTypeVariants,
 } from '@/shared/components/form/form.variants';
 import { mergeClasses, transform } from '@/shared/utils/merge-classes';
 
 @Component({
-  selector: 'z-form-field, [z-form-field]',
+  selector: 'arc-form-field, [arc-form-field]',
   template: '<ng-content />',
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
   host: {
     '[class]': 'classes()',
   },
-  exportAs: 'zFormField',
+  exportAs: 'arcFormField',
 })
-export class ZardFormFieldComponent {
+export class ArcTechFormFieldComponent {
   readonly class = input<ClassValue>('');
 
   protected readonly classes = computed(() => mergeClasses(formFieldVariants(), this.class()));
 }
 
 @Component({
-  selector: 'z-form-control, [z-form-control]',
+  selector: 'arc-form-control, [arc-form-control]',
   imports: [],
   template: `
     <div class="relative">
@@ -47,9 +47,9 @@ export class ZardFormFieldComponent {
   host: {
     '[class]': 'classes()',
   },
-  exportAs: 'zFormControl',
+  exportAs: 'arcFormControl',
 })
-export class ZardFormControlComponent {
+export class ArcTechFormControlComponent {
   readonly class = input<ClassValue>('');
   readonly errorMessage = input<string>('');
   readonly helpText = input<string>('');
@@ -58,37 +58,37 @@ export class ZardFormControlComponent {
 }
 
 @Component({
-  selector: 'z-form-label, label[z-form-label]',
+  selector: 'arc-form-label, label[arc-form-label]',
   template: '<ng-content />',
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
   host: {
     '[class]': 'classes()',
   },
-  exportAs: 'zFormLabel',
+  exportAs: 'arcFormLabel',
 })
-export class ZardFormLabelComponent {
+export class ArcTechFormLabelComponent {
   readonly class = input<ClassValue>('');
-  readonly zRequired = input(false, { transform });
+  readonly arcRequired = input(false, { transform });
 
   protected readonly classes = computed(() =>
-    mergeClasses(formLabelVariants({ zRequired: this.zRequired() }), this.class()),
+    mergeClasses(formLabelVariants({ arcRequired: this.arcRequired() }), this.class()),
   );
 }
 
 @Component({
-  selector: 'z-form-message, [z-form-message]',
+  selector: 'arc-form-message, [arc-form-message]',
   template: '<ng-content />',
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
   host: {
     '[class]': 'classes()',
   },
-  exportAs: 'zFormMessage',
+  exportAs: 'arcFormMessage',
 })
-export class ZardFormMessageComponent {
+export class ArcTechFormMessageComponent {
   readonly class = input<ClassValue>('');
-  readonly zType = input<ZardFormMessageTypeVariants>('default');
+  readonly arcType = input<ArcTechFormMessageTypeVariants>('default');
 
-  protected readonly classes = computed(() => mergeClasses(formMessageVariants({ zType: this.zType() }), this.class()));
+  protected readonly classes = computed(() => mergeClasses(formMessageVariants({ arcType: this.arcType() }), this.class()));
 }

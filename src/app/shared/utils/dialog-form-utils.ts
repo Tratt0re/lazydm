@@ -1,7 +1,7 @@
 import type { TranslateService } from '@ngx-translate/core';
 
 import type { EditableOptionItem } from '@/components/data-table';
-import type { ZardComboboxOption } from '@/shared/components/combobox';
+import type { ArcTechComboboxOption } from '@/shared/components/combobox';
 
 /**
  * Parses a value as a positive integer. Returns null if invalid.
@@ -51,12 +51,12 @@ export function dateToUnixMs(value: Date | null | undefined): number | null {
 }
 
 /**
- * Maps EditableOptionItem[] to ZardComboboxOption[], translating labels via TranslateService.
+ * Maps EditableOptionItem[] to ArcTechComboboxOption[], translating labels via TranslateService.
  */
 export function editableOptionsToCombobox(
   options: readonly EditableOptionItem[] | undefined,
   translateService: TranslateService,
-): readonly ZardComboboxOption[] {
+): readonly ArcTechComboboxOption[] {
   return (options ?? []).map((option) => ({
     value: `${option.value}`,
     label: translateService.instant(option.label),

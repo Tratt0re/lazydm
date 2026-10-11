@@ -1,4 +1,4 @@
-<z-header [zHeight]="null" class="justify-between gap-4 py-4">
+<arc-header [arcHeight]="null" class="justify-between gap-4 py-4">
   <div class="flex min-w-0 items-center gap-2">
     @if (isSmallScreen()) {
       <app-sidebar-toggle [sidebarCollapsed]="sidebarCollapsed()" (toggle)="toggleSidebar()"></app-sidebar-toggle>
@@ -18,11 +18,11 @@
             }
 
             @if (!isLast) {
-              <z-icon zType="chevron-right" class="size-4"></z-icon>
+              <arc-icon arcType="chevron-right" class="size-4"></arc-icon>
             }
           </li>
         }
       </ol>
     </nav>
   </div>
-</z-header>
+</arc-header>

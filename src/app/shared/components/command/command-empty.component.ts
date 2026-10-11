@@ -2,12 +2,12 @@ import { ChangeDetectionStrategy, Component, computed, inject, input, ViewEncaps
 
 import type { ClassValue } from 'clsx';
 
-import { ZardCommandComponent } from '@/shared/components/command/command.component';
+import { ArcTechCommandComponent } from '@/shared/components/command/command.component';
 import { commandEmptyVariants } from '@/shared/components/command/command.variants';
 import { mergeClasses } from '@/shared/utils/merge-classes';
 
 @Component({
-  selector: 'z-command-empty',
+  selector: 'arc-command-empty',
   template: `
     @if (shouldShow()) {
       <div [class]="classes()">
@@ -17,10 +17,10 @@ import { mergeClasses } from '@/shared/utils/merge-classes';
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
-  exportAs: 'zCommandEmpty',
+  exportAs: 'arcCommandEmpty',
 })
-export class ZardCommandEmptyComponent {
-  private readonly commandComponent = inject(ZardCommandComponent, { optional: true });
+export class ArcTechCommandEmptyComponent {
+  private readonly commandComponent = inject(ArcTechCommandComponent, { optional: true });
 
   readonly class = input<ClassValue>('');
 

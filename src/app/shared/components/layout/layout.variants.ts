@@ -3,17 +3,17 @@ import { cva, type VariantProps } from 'class-variance-authority';
 // Layout Variants
 export const layoutVariants = cva('flex w-full min-h-0', {
   variants: {
-    zDirection: {
+    arcDirection: {
       horizontal: 'flex-row',
       vertical: 'flex-col',
       auto: 'flex-col',
     },
   },
   defaultVariants: {
-    zDirection: 'auto',
+    arcDirection: 'auto',
   },
 });
-export type LayoutVariants = NonNullable<VariantProps<typeof layoutVariants>['zDirection']>;
+export type LayoutVariants = NonNullable<VariantProps<typeof layoutVariants>['arcDirection']>;
 
 // Header Variants
 export const headerVariants = cva('flex items-center px-4 bg-background border-b border-border shrink-0', {

@@ -2,16 +2,16 @@ import { ChangeDetectionStrategy, Component, computed, effect, inject, input, si
 import { TranslateService } from '@ngx-translate/core';
 
 import { NumberFormatService } from '@/services/number-format.service';
-import { ZardCheckboxComponent } from '@/shared/components/checkbox';
+import { ArcTechCheckboxComponent } from '@/shared/components/checkbox';
 import {
-  ZardComboboxComponent,
-  type ZardComboboxGroup,
-  type ZardComboboxOption,
+  ArcTechComboboxComponent,
+  type ArcTechComboboxGroup,
+  type ArcTechComboboxOption,
 } from '@/shared/components/combobox';
-import { ZardDatePickerComponent } from '@/shared/components/date-picker';
-import { ZardInputDirective } from '@/shared/components/input';
-import { ZardSelectImports } from '@/shared/components/select';
-import { Z_SHEET_DATA } from '@/shared/components/sheet';
+import { ArcTechDatePickerComponent } from '@/shared/components/date-picker';
+import { ArcTechInputDirective } from '@/shared/components/input';
+import { ArcTechSelectImports } from '@/shared/components/select';
+import { ARC_SHEET_DATA } from '@/shared/components/sheet';
 import { mergeClasses } from '@/shared/utils/merge-classes';
 import type {
   AppSheetCheckboxField,
@@ -49,14 +49,14 @@ const GRID_SPAN_CLASS_BY_VALUE = {
 
 @Component({
   selector: 'app-sheet-form',
-  imports: [ZardDatePickerComponent, ZardComboboxComponent, ZardCheckboxComponent, ZardInputDirective, ...ZardSelectImports],
+  imports: [ArcTechDatePickerComponent, ArcTechComboboxComponent, ArcTechCheckboxComponent, ArcTechInputDirective, ...ArcTechSelectImports],
   templateUrl: './sheet-form.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppSheetFormComponent {
   private readonly numberFormatService = inject(NumberFormatService);
   private readonly translateService = inject(TranslateService);
-  private readonly sheetData = inject<AppSheetFormData | null>(Z_SHEET_DATA, { optional: true });
+  private readonly sheetData = inject<AppSheetFormData | null>(ARC_SHEET_DATA, { optional: true });
 
   readonly fields = input<readonly AppSheetField[] | null>(null);
   readonly values = input<AppSheetFieldValueMap | null>(null);
@@ -200,7 +200,7 @@ export class AppSheetFormComponent {
     return currentValue;
   }
 
-  protected comboboxOptions(field: AppSheetComboboxField): ZardComboboxOption[] {
+  protected comboboxOptions(field: AppSheetComboboxField): ArcTechComboboxOption[] {
     const fieldTranslate = field.translate ?? false;
     return (field.options ?? []).map((option) => ({
       ...option,
@@ -208,7 +208,7 @@ export class AppSheetFormComponent {
     }));
   }
 
-  protected comboboxGroups(field: AppSheetComboboxField): ZardComboboxGroup[] {
+  protected comboboxGroups(field: AppSheetComboboxField): ArcTechComboboxGroup[] {
     const fieldTranslate = field.translate ?? false;
     return (field.groups ?? []).map((group) => ({
       label: group.label ? this.translateMaybe(group.label, group.translate ?? fieldTranslate) : undefined,

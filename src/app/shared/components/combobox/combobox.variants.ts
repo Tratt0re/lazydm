@@ -2,7 +2,7 @@ import { cva, type VariantProps } from 'class-variance-authority';
 
 export const comboboxVariants = cva('', {
   variants: {
-    zWidth: {
+    arcWidth: {
       default: 'w-50',
       sm: 'w-37.5',
       md: 'w-62.5',
@@ -11,8 +11,8 @@ export const comboboxVariants = cva('', {
     },
   },
   defaultVariants: {
-    zWidth: 'default',
+    arcWidth: 'default',
   },
 });
 
-export type ZardComboboxWidthVariants = NonNullable<VariantProps<typeof comboboxVariants>['zWidth']>;
+export type ArcTechComboboxWidthVariants = NonNullable<VariantProps<typeof comboboxVariants>['arcWidth']>;
