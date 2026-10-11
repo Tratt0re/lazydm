@@ -16,7 +16,14 @@ export interface BrokenLinkTarget {
   readonly targetName: string;
 }
 
-const NOTE_SECTIONS = CAMPAIGN_SECTIONS.filter((section) => section.noteType !== null);
+/**
+ * Folders a note can be created in from a broken link. Encounters are linkable but are special files,
+ * not plain notes, so they are left out until they get their own format.
+ */
+const NON_NOTE_SECTION_KEYS: readonly string[] = ['encounters'];
+const NOTE_SECTIONS = CAMPAIGN_SECTIONS.filter(
+  (section) => section.noteType !== null && !NON_NOTE_SECTION_KEYS.includes(section.key),
+);
 
 /** `ghost-note` → `Ghost note`; names with spaces are kept as written. */
 function toSuggestedTitle(targetName: string): string {

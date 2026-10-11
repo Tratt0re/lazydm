@@ -126,10 +126,11 @@ Planned Electron modules: `vault`, `cloud-readiness`, `campaign`, `document`, `i
 - Unresolved links are shown as broken, never silently dropped: styled in the preview, listed in the note panel and
   in the per-campaign **Broken links** page (`/campaigns/<slug>/broken-links`). The overview shows an alert with a
   *Review* button only when the campaign has broken links.
-- **Fixing a broken link** (menu on each broken link, in the panel and on the page):
+- **Fixing a broken link** (menu on each broken link: in the note panel, on the broken links page, and on the
+  broken link itself in the preview — click or Enter/Space):
   - *Remove link, keep text*: every occurrence of that link in the note becomes its label (or what it pointed to).
   - *Create note…*: title (suggested from the link) and folder (the link's folder, else the source note's section);
-    the note is created from its template and opened. If its kebab file name differs from the link text, the link is
+    the note is created from its template and opened. Encounters are not offered as a folder (see below). If its kebab file name differs from the link text, the link is
     rewritten to it with the old text kept as alias (`[[klarg-the-bugbear|Klarg the Bugbear]]`).
 - Moving notes between sections and deleting notes are not available yet.
 
@@ -235,5 +236,8 @@ variant keys and configuration stay as they are.
 | 8 | Compendium and template rules |
 
 ## 12. Open decisions
+
+- **Encounters** are special files: linkable from markdown notes, but not plain notes (own format/editor to be
+  designed). Until then they are not offered as a target folder for notes created from links.
 
 - **Backup**: optional "zip the vault" backup to replace the removed DB backup — to be decided later.

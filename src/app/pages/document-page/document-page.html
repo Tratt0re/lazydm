@@ -8,7 +8,8 @@
     />
   </div>
 } @else if (!isLoading()) {
-  <div class="flex h-full min-h-0">
+  <!-- Window height minus tab bar, toolbar and content padding, like the settings page. -->
+  <div class="flex h-[calc(100dvh-(10rem+var(--app-shell-header-offset)))] min-h-80">
     <div class="flex h-full min-h-0 min-w-0 flex-1 flex-col gap-2 p-4">
       @if (isDirty()) {
         <p class="shrink-0 text-[10px] font-semibold tracking-[0.12em] text-primary uppercase">
@@ -33,6 +34,7 @@
             [body]="previewBody()"
             [links]="document()?.links ?? []"
             [sourcePath]="document()?.path ?? ''"
+            (fixBrokenLink)="onFixBrokenLink($event)"
           />
         }
       </div>

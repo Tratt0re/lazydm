@@ -21,6 +21,8 @@ export interface RenderMarkdownOptions {
 
 interface WikilinkTokenMeta {
   readonly isEmbed: boolean;
+  /** Raw target as written between the brackets (`name#heading|label`). */
+  readonly raw: string;
   readonly resolvedPath: string | null;
   readonly targetName: string;
   readonly heading: string | null;
@@ -57,7 +59,7 @@ export function toInAppNoteRoute(resolvedPath: string): string | null {
 }
 
 function renderWikilinkToken(token: Token): string {
-  const { isEmbed, resolvedPath, targetName, heading, label, sourcePath } =
+  const { isEmbed, raw, resolvedPath, targetName, heading, label, sourcePath } =
     token.meta as unknown as WikilinkTokenMeta;
   const displayText = escapeHtml(
     label ?? (heading ? `${targetName} > ${heading}` : targetName || 'this note'),
@@ -73,7 +75,8 @@ function renderWikilinkToken(token: Token): string {
   }
 
   if (!resolvedPath) {
-    return `<span class="arc-wikilink arc-wikilink-broken" title="Note not found: ${escapeHtml(targetName)}">${displayText}</span>`;
+    // A menu trigger: the preview offers to create the note or turn the link into plain text.
+    return `<span class="arc-wikilink arc-wikilink-broken" role="button" tabindex="0" aria-haspopup="menu" data-broken-raw="${escapeHtml(raw)}" data-broken-target="${escapeHtml(targetName)}" title="Note not found: ${escapeHtml(targetName)}">${displayText}</span>`;
   }
 
   // Same note: a plain in-page anchor jump, so it works without any router navigation.
@@ -104,6 +107,7 @@ function wikilinkRule(state: StateInline, silent: boolean): boolean {
     const token = state.push('wikilink', '', 0);
     const meta: WikilinkTokenMeta = {
       isEmbed: match[1] === '!',
+      raw: link?.raw ?? match[2],
       resolvedPath: link?.resolvedPath ?? null,
       targetName: link?.targetName ?? match[2].split('|')[0].split('#')[0],
       heading: link?.heading ?? null,

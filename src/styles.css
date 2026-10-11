@@ -511,7 +511,12 @@
 .arc-markdown-body .arc-wikilink-broken {
   color: var(--destructive);
   text-decoration: underline dashed;
-  cursor: help;
+  cursor: pointer;
+}
+
+.arc-markdown-body .arc-wikilink-broken:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
 }
 
 .arc-markdown-body .arc-wikilink-external,
