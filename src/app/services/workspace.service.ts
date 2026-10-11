@@ -93,14 +93,8 @@ export class WorkspaceService extends BaseIpcService<APIChannel.WORKSPACE> {
     return slug !== null && getCampaignSlug(url) === slug;
   }
 
-  /** The campaign overview: closing every tab leads back there, so an overview tab is never the one to close last. */
-  isOverviewTab(tab: WorkspaceTabDto): boolean {
-    return getTabUrl(tab) === this.getCampaignRoot();
-  }
-
-  canCloseTab(tab: WorkspaceTabDto): boolean {
-    return this.tabsSignal().length > 1 || !this.isOverviewTab(tab);
-  }
+  /** A campaign always keeps at least one open tab. */
+  readonly canCloseTabs = computed(() => this.tabsSignal().length > 1);
 
   /** Section folder of the tab's current page (`monsters`…), null on the overview. */
   getTabSection(tab: WorkspaceTabDto): string | null {
@@ -235,7 +229,7 @@ export class WorkspaceService extends BaseIpcService<APIChannel.WORKSPACE> {
   async closeTab(tabId: string | null = this.activeTabIdSignal()): Promise<void> {
     const tabs = this.tabsSignal();
     const index = tabs.findIndex((tab) => tab.id === tabId);
-    if (index < 0 || !this.canCloseTab(tabs[index])) {
+    if (index < 0 || !this.canCloseTabs()) {
       return;
     }
 
@@ -245,13 +239,12 @@ export class WorkspaceService extends BaseIpcService<APIChannel.WORKSPACE> {
       return;
     }
 
-    const nextTab = tabs[index + 1] ?? tabs[index - 1] ?? createTab(this.getCampaignRoot());
+    const nextTab = tabs[index + 1] ?? tabs[index - 1];
     if (!(await this.navigate(getTabUrl(nextTab)))) {
       return;
     }
 
-    const remainingTabs = this.tabsSignal().filter((tab) => tab.id !== tabId);
-    this.tabsSignal.set(remainingTabs.length > 0 ? remainingTabs : [nextTab]);
+    this.tabsSignal.update((items) => items.filter((tab) => tab.id !== tabId));
     this.activeTabIdSignal.set(nextTab.id);
     this.scheduleSave();
   }

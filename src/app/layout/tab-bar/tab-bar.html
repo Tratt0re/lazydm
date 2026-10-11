@@ -75,7 +75,7 @@
             />
             <span class="truncate">{{ title }}</span>
           </button>
-          @if (!workspace.isOverviewTab(tab)) {
+          @if (workspace.canCloseTabs()) {
             <button
               type="button"
               class="mr-1 -ml-1 flex size-6 shrink-0 cursor-pointer items-center justify-center text-muted-foreground opacity-70 outline-none hover:bg-raised hover:text-foreground hover:opacity-100 focus-visible:outline-2 focus-visible:outline-ring [&_svg]:size-3.5"
@@ -163,7 +163,7 @@
       <button
         type="button"
         arc-menu-item
-        [arcDisabled]="!workspace.canCloseTab(tab)"
+        [arcDisabled]="!workspace.canCloseTabs()"
         (click)="workspace.closeTab(tab.id)"
       >
         <arc-icon arcType="x" />

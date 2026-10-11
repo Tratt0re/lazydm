@@ -130,9 +130,10 @@ Planned Electron modules: `vault`, `cloud-readiness`, `campaign`, `document`, `i
 - **Tab bar** above the header bar, browser-like, one set of tabs per campaign, restored per device
   (`workspace` table of the vault index; at most 30 tabs, each tab's URL stays inside its campaign).
   - Each tab has its **own back/forward history** (max 50 entries); navigating inside a tab drops its forward entries.
-  - Click activates, × or middle-click closes, **+** opens the campaign overview; closing the last tab leaves one
-    overview tab. Cmd/Ctrl-click or middle-click on a campaign link opens it in a background tab.
-  - **Overview tabs have no ×** (closing everything leads back to the overview); the last tab can never be closed.
+  - Click activates, × or middle-click closes, **+** opens the campaign overview. Cmd/Ctrl-click or middle-click on a
+    campaign link opens it in a background tab.
+  - **The last open tab cannot be closed**: with a single tab there is no ×, and close (menu, Cmd/Ctrl+W,
+    middle-click) does nothing.
   - **Drag to sort** tabs (CDK drag-drop, horizontal). Each tab shows its section icon.
   - **Context menu** (right-click, or the menu key / Shift+F10 on a focused tab): on a campaign link — open, open in
     new tab, open in background tab; on a tab — new tab, duplicate, close, close others, close tabs to the right.
