@@ -29,7 +29,12 @@ function stripFrontmatterFence(content: string): string {
 
 @Component({
   selector: 'app-document-page',
-  imports: [TranslatePipe, ArcTechAlertComponent, AppCodeEditorComponent, AppDocumentPreviewComponent],
+  imports: [
+    TranslatePipe,
+    ArcTechAlertComponent,
+    AppCodeEditorComponent,
+    AppDocumentPreviewComponent,
+  ],
   templateUrl: './document-page.html',
 })
 export class DocumentPage {
@@ -53,7 +58,8 @@ export class DocumentPage {
   );
 
   protected readonly notePath = computed(
-    () => `${this.campaignService.activeCampaign()?.slug ?? ''}/${this.sectionKey()}/${this.noteSlug()}.md`,
+    () =>
+      `${this.campaignService.activeCampaign()?.slug ?? ''}/${this.sectionKey()}/${this.noteSlug()}.md`,
   );
 
   protected readonly document = signal<DocumentDto | null>(null);
@@ -63,7 +69,9 @@ export class DocumentPage {
   protected readonly isSaving = signal(false);
   protected readonly errorMessage = signal<string | null>(null);
 
-  protected readonly isDirty = computed(() => this.document() !== null && this.editedContent() !== this.document()!.content);
+  protected readonly isDirty = computed(
+    () => this.document() !== null && this.editedContent() !== this.document()!.content,
+  );
   protected readonly previewBody = computed(() => stripFrontmatterFence(this.editedContent()));
 
   constructor() {
@@ -82,7 +90,10 @@ export class DocumentPage {
             ariaLabel: this.translateService.instant('document.toolbar.modeAriaLabel'),
             options: [
               { value: 'write', label: this.translateService.instant('document.toolbar.write') },
-              { value: 'preview', label: this.translateService.instant('document.toolbar.preview') },
+              {
+                value: 'preview',
+                label: this.translateService.instant('document.toolbar.preview'),
+              },
             ],
             change: (value) => this.mode.set(value as DocumentViewMode),
           },
@@ -199,11 +210,19 @@ export class DocumentPage {
     }
 
     try {
-      const copy = await this.documentService.saveCopy({ path: document.path, content: this.editedContent() });
+      const copy = await this.documentService.saveCopy({
+        path: document.path,
+        content: this.editedContent(),
+      });
       toast.success(this.translateService.instant('document.toast.savedCopy', { path: copy.path }));
 
       const copySlug = copy.path.split('/').pop()!.replace(/\.md$/i, '');
-      await this.router.navigate(['/campaigns', this.campaignService.activeCampaign()?.slug, this.sectionKey(), copySlug]);
+      await this.router.navigate([
+        '/campaigns',
+        this.campaignService.activeCampaign()?.slug,
+        this.sectionKey(),
+        copySlug,
+      ]);
     } catch (error) {
       toast.error(this.translateService.instant('document.toast.saveError'), {
         description: error instanceof Error ? error.message : String(error),

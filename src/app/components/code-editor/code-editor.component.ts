@@ -157,7 +157,11 @@ const wikilinkHighlightPlugin = ViewPlugin.fromClass(
 const markdownHighlightStyle = HighlightStyle.define([
   { tag: tags.heading1, color: 'var(--primary)', fontWeight: '800' },
   { tag: tags.heading2, color: 'var(--primary)', fontWeight: '700' },
-  { tag: [tags.heading3, tags.heading4, tags.heading5, tags.heading6], color: 'var(--primary)', fontWeight: '600' },
+  {
+    tag: [tags.heading3, tags.heading4, tags.heading5, tags.heading6],
+    color: 'var(--primary)',
+    fontWeight: '600',
+  },
   { tag: tags.strong, fontWeight: '700' },
   { tag: tags.emphasis, fontStyle: 'italic' },
   { tag: tags.strikethrough, textDecoration: 'line-through' },

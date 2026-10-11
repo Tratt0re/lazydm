@@ -1,4 +1,10 @@
-import MarkdownIt, { type Env, type MarkdownIt as MarkdownItInstance, type RendererRule, type StateInline, type Token } from 'markdown-it';
+import MarkdownIt, {
+  type Env,
+  type MarkdownIt as MarkdownItInstance,
+  type RendererRule,
+  type StateInline,
+  type Token,
+} from 'markdown-it';
 
 import type { DocumentLinkDto } from '@/dtos';
 
@@ -23,7 +29,10 @@ interface WikilinkTokenMeta {
 }
 
 function escapeHtml(value: string): string {
-  return value.replace(/[&<>"]/g, (char) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[char] ?? char);
+  return value.replace(
+    /[&<>"]/g,
+    (char) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[char] ?? char,
+  );
 }
 
 function slugifyHeading(text: string): string {
@@ -47,8 +56,11 @@ function toInAppNoteRoute(resolvedPath: string): string | null {
 }
 
 function renderWikilinkToken(token: Token): string {
-  const { isEmbed, resolvedPath, targetName, heading, label, sourcePath } = token.meta as unknown as WikilinkTokenMeta;
-  const displayText = escapeHtml(label ?? (heading ? `${targetName} > ${heading}` : targetName || 'this note'));
+  const { isEmbed, resolvedPath, targetName, heading, label, sourcePath } =
+    token.meta as unknown as WikilinkTokenMeta;
+  const displayText = escapeHtml(
+    label ?? (heading ? `${targetName} > ${heading}` : targetName || 'this note'),
+  );
 
   if (isEmbed && resolvedPath && IMAGE_EXTENSION_PATTERN.test(resolvedPath)) {
     const src = `${ASSET_PROTOCOL}/${resolvedPath.split('/').map(encodeURIComponent).join('/')}`;
@@ -116,7 +128,8 @@ function headingPermalinkRule(originalRule: RendererRule): RendererRule {
   };
 }
 
-const renderTokenAsIs: RendererRule = (tokens, index, options, _env, self) => self.renderToken(tokens, index, options);
+const renderTokenAsIs: RendererRule = (tokens, index, options, _env, self) =>
+  self.renderToken(tokens, index, options);
 
 function createRenderer(): MarkdownItInstance {
   const md = new MarkdownIt({ html: false, linkify: true, breaks: false, typographer: false });

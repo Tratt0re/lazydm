@@ -52,7 +52,12 @@ export class MenuConfiguration {
       {
         label: 'nav.sections.campaign',
         items: [
-          { label: 'nav.items.overview', icon: 'layout-dashboard', path: campaignPath, exact: true },
+          {
+            label: 'nav.items.overview',
+            icon: 'layout-dashboard',
+            path: campaignPath,
+            exact: true,
+          },
           ...CAMPAIGN_SECTIONS.map((section) => ({
             label: `nav.items.${section.key}`,
             icon: section.icon,

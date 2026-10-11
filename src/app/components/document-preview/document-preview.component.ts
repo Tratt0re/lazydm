@@ -19,7 +19,11 @@ const SANITIZE_OPTIONS: { readonly ADD_TAGS: string[]; readonly ADD_ATTR: string
  */
 @Component({
   selector: 'app-document-preview',
-  template: `<div class="arc-markdown-body" [innerHTML]="renderedHtml()" (click)="onContentClick($event)"></div>`,
+  template: `<div
+    class="arc-markdown-body"
+    [innerHTML]="renderedHtml()"
+    (click)="onContentClick($event)"
+  ></div>`,
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     class: 'block h-full min-h-0 w-full overflow-auto border border-input bg-background p-6',
@@ -34,7 +38,10 @@ export class AppDocumentPreviewComponent {
   readonly sourcePath = input.required<string>();
 
   protected readonly renderedHtml = computed(() => {
-    const html = renderMarkdownBody(this.body(), { links: this.links(), sourcePath: this.sourcePath() });
+    const html = renderMarkdownBody(this.body(), {
+      links: this.links(),
+      sourcePath: this.sourcePath(),
+    });
     return this.sanitizer.bypassSecurityTrustHtml(DOMPurify.sanitize(html, SANITIZE_OPTIONS));
   });
 
