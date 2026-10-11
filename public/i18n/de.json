@@ -1,0 +1,54 @@
+{
+  "nav": {
+    "sections": {
+      "main": "Menü"
+    },
+    "items": {
+      "home": "Startseite",
+      "campaigns": "Kampagnen",
+      "characters": "Charaktere",
+      "encounters": "Begegnungen",
+      "settings": "Einstellungen"
+    }
+  },
+  "header": {
+    "language": {
+      "options": {
+        "en": "English",
+        "es": "Español",
+        "it": "Italiano",
+        "fr": "Français",
+        "de": "Deutsch",
+        "uk": "Українська",
+        "zh": "中文"
+      }
+    }
+  },
+  "settings": {
+    "sections": {
+      "general": {
+        "title": "Allgemein",
+        "description": "Darstellung der App und Verhalten im gesamten Arbeitsbereich festlegen."
+      }
+    },
+    "general": {
+      "intro": "Diese Einstellungen werden sofort übernommen, damit die App zu deinem Spielstil passt.",
+      "appearanceGroupTitle": "Darstellung",
+      "cards": {
+        "theme": {
+          "description": "Das Erscheinungsbild auswählen, das sich für den täglichen Einsatz am besten eignet.",
+          "fieldLabel": "Designmodus",
+          "options": {
+            "system": "System",
+            "light": "Hell",
+            "dark": "Dunkel"
+          }
+        },
+        "language": {
+          "description": "Sprache für Navigation, Beschriftungen und Meldungen in der gesamten App auswählen.",
+          "fieldLabel": "App-Sprache"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,54 @@
+{
+  "nav": {
+    "sections": {
+      "main": "Menu"
+    },
+    "items": {
+      "home": "Accueil",
+      "campaigns": "Campagnes",
+      "characters": "Personnages",
+      "encounters": "Rencontres",
+      "settings": "Paramètres"
+    }
+  },
+  "header": {
+    "language": {
+      "options": {
+        "en": "English",
+        "es": "Español",
+        "it": "Italiano",
+        "fr": "Français",
+        "de": "Deutsch",
+        "uk": "Українська",
+        "zh": "中文"
+      }
+    }
+  },
+  "settings": {
+    "sections": {
+      "general": {
+        "title": "Général",
+        "description": "Définir l'apparence et le comportement de l'application dans tout l'espace de travail."
+      }
+    },
+    "general": {
+      "intro": "Ces préférences prennent effet immédiatement pour que l'application corresponde à votre façon de mener vos sessions.",
+      "appearanceGroupTitle": "Apparence",
+      "cards": {
+        "theme": {
+          "description": "Choisir l'apparence la plus adaptée à une utilisation quotidienne dans toute l'application.",
+          "fieldLabel": "Mode d'affichage",
+          "options": {
+            "system": "Système",
+            "light": "Clair",
+            "dark": "Sombre"
+          }
+        },
+        "language": {
+          "description": "Choisir la langue utilisée dans la navigation, les libellés et les messages de l'application.",
+          "fieldLabel": "Langue de l'application"
+        }
+      }
+    }
+  }
+}

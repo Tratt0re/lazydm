@@ -1,0 +1,54 @@
+{
+  "nav": {
+    "sections": {
+      "main": "Menu"
+    },
+    "items": {
+      "home": "Home",
+      "campaigns": "Campaigns",
+      "characters": "Characters",
+      "encounters": "Encounters",
+      "settings": "Settings"
+    }
+  },
+  "header": {
+    "language": {
+      "options": {
+        "en": "English",
+        "es": "Español",
+        "it": "Italiano",
+        "fr": "Français",
+        "de": "Deutsch",
+        "uk": "Українська",
+        "zh": "中文"
+      }
+    }
+  },
+  "settings": {
+    "sections": {
+      "general": {
+        "title": "General",
+        "description": "Set how the app looks and behaves across your workspace."
+      }
+    },
+    "general": {
+      "intro": "These preferences update right away so the app matches how you play and run your sessions.",
+      "appearanceGroupTitle": "Appearance",
+      "cards": {
+        "theme": {
+          "description": "Pick the appearance that feels best for everyday use across the whole app.",
+          "fieldLabel": "Theme mode",
+          "options": {
+            "system": "System",
+            "light": "Light",
+            "dark": "Dark"
+          }
+        },
+        "language": {
+          "description": "Choose the language used in navigation, labels, and messages throughout the app.",
+          "fieldLabel": "App language"
+        }
+      }
+    }
+  }
+}

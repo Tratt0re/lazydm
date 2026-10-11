@@ -1,0 +1,54 @@
+{
+  "nav": {
+    "sections": {
+      "main": "菜单"
+    },
+    "items": {
+      "home": "主页",
+      "campaigns": "战役",
+      "characters": "角色",
+      "encounters": "遭遇战",
+      "settings": "首选项"
+    }
+  },
+  "header": {
+    "language": {
+      "options": {
+        "en": "English",
+        "es": "Español",
+        "it": "Italiano",
+        "fr": "Français",
+        "de": "Deutsch",
+        "uk": "Українська",
+        "zh": "中文"
+      }
+    }
+  },
+  "settings": {
+    "sections": {
+      "general": {
+        "title": "通用",
+        "description": "设置应用在整个工作区中的外观和行为方式。"
+      }
+    },
+    "general": {
+      "intro": "这些偏好设置立即生效，使应用与你主持游戏的方式保持一致。",
+      "appearanceGroupTitle": "外观",
+      "cards": {
+        "theme": {
+          "description": "选择最适合日常使用的外观。",
+          "fieldLabel": "显示模式",
+          "options": {
+            "system": "跟随系统",
+            "light": "浅色",
+            "dark": "深色"
+          }
+        },
+        "language": {
+          "description": "选择应用导航、标签和消息所用的语言。",
+          "fieldLabel": "应用语言"
+        }
+      }
+    }
+  }
+}

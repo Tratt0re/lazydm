@@ -1,0 +1,137 @@
+{
+  "name": "lazydm",
+  "version": "0.1.0",
+  "description": "LazyDM - Your lazy dungeon master assistant",
+  "author": "Tratt0re",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/lazy_dm.git"
+  },
+  "main": "electron/main.js",
+  "scripts": {
+    "ng": "ng",
+    "start": "ng serve",
+    "build": "ng build",
+    "build:web": "node scripts/build-web.js",
+    "build:preload": "node scripts/build-preload.js",
+    "build:preload:prod": "node scripts/build-preload.js --prod",
+    "build:prod": "npm run build:web && npm run build:preload:prod",
+    "preload:watch": "node scripts/build-preload.js --watch",
+    "build:desktop": "npm run build:prod && electron-builder --dir --publish never",
+    "dist": "npm run build:prod && electron-builder --publish never",
+    "dist:mac": "npm run build:prod && electron-builder --mac --publish never",
+    "dist:win": "npm run build:prod && electron-builder --win --x64 --publish never",
+    "dist:linux": "npm run build:prod && electron-builder --linux --publish never",
+    "watch": "ng build --watch --configuration development",
+    "test": "ng test",
+    "postinstall": "electron-rebuild -f -w better-sqlite3",
+    "electron:dev": "npm run build:preload && electronmon .",
+    "electron:start": "npm run build:preload && electron .",
+    "electron:prod": "npm run build:prod && electron . --prod",
+    "dev": "concurrently -k \"ng serve\" \"npm run preload:watch\" \"wait-on http://localhost:4200 && npm run electron:dev\""
+  },
+  "prettier": {
+    "printWidth": 100,
+    "singleQuote": true,
+    "overrides": [
+      {
+        "files": "*.html",
+        "options": {
+          "parser": "angular"
+        }
+      }
+    ]
+  },
+  "private": true,
+  "packageManager": "npm@11.8.0",
+  "build": {
+    "appId": "com.lazydm.desktop",
+    "productName": "LazyDM",
+    "icon": "src/assetts/icon/app_icon.png",
+    "directories": {
+      "output": "release",
+      "buildResources": "."
+    },
+    "asar": true,
+    "asarUnpack": [
+      "**/*.node"
+    ],
+    "files": [
+      "dist/lazydm/browser/**/*",
+      "electron/**/*",
+      "package.json"
+    ],
+    "mac": {
+      "target": [
+        "dmg",
+        "zip"
+      ],
+      "category": "public.app-category.utilities"
+    },
+    "win": {
+      "icon": "src/assetts/icon/app_icon.png",
+      "target": [
+        "nsis",
+        "portable"
+      ]
+    },
+    "nsis": {
+      "artifactName": "lazydm-setup-${version}-${arch}.${ext}"
+    },
+    "portable": {
+      "artifactName": "lazydm-portable-${version}-${arch}.${ext}"
+    },
+    "linux": {
+      "target": [
+        "AppImage"
+      ],
+      "category": "Utility"
+    }
+  },
+  "dependencies": {
+    "@angular/cdk": "^21.1.4",
+    "@angular/common": "^21.1.0",
+    "@angular/compiler": "^21.1.0",
+    "@angular/core": "^21.1.0",
+    "@angular/forms": "^21.1.0",
+    "@angular/platform-browser": "^21.1.0",
+    "@angular/router": "^21.1.0",
+    "@ngx-translate/core": "^17.0.0",
+    "@ngx-translate/http-loader": "^17.0.0",
+    "better-sqlite3": "^12.6.2",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "echarts": "^6.0.0",
+    "embla-carousel-angular": "^21.0.0",
+    "embla-carousel-autoplay": "^8.6.0",
+    "embla-carousel-class-names": "^8.6.0",
+    "embla-carousel-wheel-gestures": "^8.1.0",
+    "exceljs": "^4.4.0",
+    "lucide-angular": "^0.563.0",
+    "ngx-echarts": "^21.0.0",
+    "ngx-sonner": "^3.1.0",
+    "rxjs": "~7.8.0",
+    "semver": "^7.7.4",
+    "tailwind-merge": "^3.4.0",
+    "tslib": "^2.3.0"
+  },
+  "devDependencies": {
+    "@angular/build": "^21.1.4",
+    "@angular/cli": "^21.1.4",
+    "@angular/compiler-cli": "^21.1.0",
+    "@electron/rebuild": "^4.0.3",
+    "@tailwindcss/postcss": "^4.1.18",
+    "@types/semver": "^7.7.1",
+    "concurrently": "^9.2.1",
+    "electron": "^40.4.0",
+    "electron-builder": "^26.7.0",
+    "electronmon": "^2.0.4",
+    "jsdom": "^27.1.0",
+    "postcss": "^8.5.6",
+    "tailwindcss": "^4.1.18",
+    "tailwindcss-animate": "^1.0.7",
+    "typescript": "~5.9.2",
+    "vitest": "^4.0.8",
+    "wait-on": "^9.0.3"
+  }
+}

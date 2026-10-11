@@ -1,0 +1,54 @@
+{
+  "nav": {
+    "sections": {
+      "main": "Menú"
+    },
+    "items": {
+      "home": "Inicio",
+      "campaigns": "Campañas",
+      "characters": "Personajes",
+      "encounters": "Encuentros",
+      "settings": "Configuración"
+    }
+  },
+  "header": {
+    "language": {
+      "options": {
+        "en": "English",
+        "es": "Español",
+        "it": "Italiano",
+        "fr": "Français",
+        "de": "Deutsch",
+        "uk": "Українська",
+        "zh": "中文"
+      }
+    }
+  },
+  "settings": {
+    "sections": {
+      "general": {
+        "title": "General",
+        "description": "Define cómo se ve y se comporta la app en todo tu espacio de trabajo."
+      }
+    },
+    "general": {
+      "intro": "Estas preferencias se aplican al instante para que la app se adapte a cómo diriges tus sesiones.",
+      "appearanceGroupTitle": "Apariencia",
+      "cards": {
+        "theme": {
+          "description": "Elige la apariencia más cómoda para usar la app todos los días.",
+          "fieldLabel": "Modo de tema",
+          "options": {
+            "system": "Sistema",
+            "light": "Claro",
+            "dark": "Oscuro"
+          }
+        },
+        "language": {
+          "description": "Elige el idioma de la navegación, las etiquetas y los mensajes de toda la app.",
+          "fieldLabel": "Idioma de la app"
+        }
+      }
+    }
+  }
+}
