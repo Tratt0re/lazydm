@@ -51,7 +51,7 @@ LazyDM works like **Obsidian**, specialised for Dungeon Masters.
 | `.md` body | content and `[[links]]` | ✅ |
 | `.lazydm/*.json` | template rules, folder/display-name mapping, vault settings | ✅ |
 | Local SQLite | rebuildable index + device-local state | ❌ never |
-| `settings-store` (userData JSON) | device preferences | ❌ never |
+| `settings-store` (userData JSON) | device preferences: **theme, language**, window state, last open vault | ❌ never |
 
 ### 3.1 SQLite is a local, rebuildable index
 
@@ -135,6 +135,7 @@ Planned Electron modules: `vault`, `cloud-readiness`, `campaign`, `document`, `i
 The component library is **ArcTechUI** (formerly ZardUI): classes `ArcTech*`, selectors `arc-*`, inputs/outputs `arc*`,
 provider `provideArcTech()`. Reference design: `arcane-ledger-dashboard-ui-style/`.
 
+- **Theme and language are per-device** preferences (never stored in the vault).
 - **Two themes**: dark (the reference palette) and a matching **parchment** light variant. Both are always supported;
   use semantic tokens (`bg-card`, `text-primary`, `border-input`…), never raw colours in components.
 - **Square everything**: `--radius: 0`. No rounded shapes by default, no soft UI shadows.
@@ -173,5 +174,4 @@ provider `provideArcTech()`. Reference design: `arcane-ledger-dashboard-ui-style
 
 ## 12. Open decisions
 
-- **Theme and language**: device-local (recommended, current default) or stored in the vault like Obsidian's appearance settings?
 - **Backup**: optional "zip the vault" backup to replace the removed DB backup — to be decided later.
