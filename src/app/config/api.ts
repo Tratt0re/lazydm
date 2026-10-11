@@ -47,6 +47,9 @@ export interface ElectronIpcClient {
     readonly write: IpcRequest<DTO.WriteDocumentPayload, DTO.WriteDocumentResultDto>;
     readonly saveCopy: IpcRequest<DTO.SaveDocumentCopyPayload, DTO.DocumentDto>;
     readonly create: IpcRequest<DTO.CreateDocumentPayload, DTO.DocumentDto>;
+    readonly rename: IpcRequest<DTO.RenameDocumentPayload, DTO.RenameDocumentResultDto>;
+    readonly links: IpcRequest<DTO.ReadDocumentPayload, DTO.DocumentLinksDto>;
+    readonly brokenLinks: IpcRequest<{ campaign: string }, { rows: DTO.BrokenLinkDto[] }>;
   };
   readonly encounters: {
     readonly list: OptionalIpcRequest<void, { rows: any[] }>;

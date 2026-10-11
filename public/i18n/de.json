@@ -15,7 +15,8 @@
       "monsters": "Monster",
       "sessions": "Sitzungen",
       "assets": "Dateien",
-      "backToCampaigns": "Zurück zu den Kampagnen"
+      "backToCampaigns": "Zurück zu den Kampagnen",
+      "broken-links": "Defekte Links"
     }
   },
   "header": {
@@ -176,7 +177,9 @@
       "write": "Schreiben",
       "preview": "Vorschau",
       "save": "Speichern",
-      "modeAriaLabel": "Zwischen Schreiben und Lesen dieser Notiz wechseln"
+      "modeAriaLabel": "Zwischen Schreiben und Lesen dieser Notiz wechseln",
+      "links": "Links",
+      "rename": "Umbenennen"
     },
     "toast": {
       "saved": "Notiz gespeichert",
@@ -189,6 +192,25 @@
       "keepMine": "Meine Version behalten",
       "saveCopy": "Als Kopie speichern",
       "reload": "Andere Version neu laden"
+    },
+    "links": {
+      "backlinks": "Verlinkt von",
+      "noBacklinks": "Noch keine andere Notiz verlinkt hierher.",
+      "broken": "Defekte Links",
+      "noBroken": "Keine defekten Links in dieser Notiz.",
+      "allBroken": "Alle defekten Links der Kampagne"
+    },
+    "rename": {
+      "title": "Notiz umbenennen",
+      "titleLabel": "Titel",
+      "submit": "Umbenennen",
+      "cancel": "Abbrechen",
+      "linkedFrom": "Verlinkt von: {{notes}}",
+      "noBacklinks": "Keine andere Notiz verlinkt hierher.",
+      "updateLinks": "{{links}} Links in {{notes}} Notizen aktualisieren",
+      "done": "Notiz umbenannt — {{links}} Links in {{notes}} Notizen aktualisiert",
+      "failed": "Einige Notizen wurden inzwischen geändert und verwenden noch den alten Namen",
+      "error": "Die Notiz konnte nicht umbenannt werden"
     }
   },
   "tabs": {
@@ -205,6 +227,17 @@
       "duplicate": "Tab duplizieren",
       "closeOthers": "Andere Tabs schließen",
       "closeToRight": "Tabs rechts schließen"
+    }
+  },
+  "links": {
+    "broken": {
+      "title": "Defekte Links",
+      "cardDescription": "Links auf Notizen oder Dateien, die es nicht gibt.",
+      "summary": "{{links}} defekte Links in {{notes}} Notizen",
+      "line": "Zeile {{line}}",
+      "emptyTitle": "Keine defekten Links",
+      "emptyDescription": "Jeder Link dieser Kampagne verweist auf eine vorhandene Notiz oder Datei.",
+      "loadError": "Die defekten Links konnten nicht geladen werden"
     }
   }
 }

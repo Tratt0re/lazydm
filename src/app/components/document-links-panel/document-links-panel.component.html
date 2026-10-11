@@ -1,0 +1,96 @@
+<section [attr.aria-labelledby]="'backlinks-heading'">
+  <header class="flex items-center justify-between gap-2 border-b border-border px-4 py-3">
+    <h2
+      id="backlinks-heading"
+      class="font-mono text-[10px] font-semibold tracking-[0.11em] text-muted-foreground uppercase"
+    >
+      {{ 'document.links.backlinks' | translate }}
+    </h2>
+    <span class="font-mono text-[10px] font-semibold text-muted-foreground">{{
+      backlinkCount()
+    }}</span>
+  </header>
+
+  @if (backlinkGroups().length === 0) {
+    <p class="px-4 py-3 text-sm text-muted-foreground">
+      {{ 'document.links.noBacklinks' | translate }}
+    </p>
+  } @else {
+    <ul>
+      @for (group of backlinkGroups(); track group.sourcePath) {
+        <li class="border-b border-border-subtle last:border-b-0">
+          @if (group.route) {
+            <a
+              [routerLink]="group.route"
+              class="block px-4 py-3 transition-colors duration-150 hover:bg-accent focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-ring"
+            >
+              <ng-container
+                [ngTemplateOutlet]="backlinkContent"
+                [ngTemplateOutletContext]="{ $implicit: group }"
+              />
+            </a>
+          } @else {
+            <div class="px-4 py-3">
+              <ng-container
+                [ngTemplateOutlet]="backlinkContent"
+                [ngTemplateOutletContext]="{ $implicit: group }"
+              />
+            </div>
+          }
+        </li>
+      }
+    </ul>
+  }
+</section>
+
+<section class="border-t border-border" [attr.aria-labelledby]="'broken-links-heading'">
+  <header class="flex items-center justify-between gap-2 border-b border-border px-4 py-3">
+    <h2
+      id="broken-links-heading"
+      class="font-mono text-[10px] font-semibold tracking-[0.11em] text-muted-foreground uppercase"
+    >
+      {{ 'document.links.broken' | translate }}
+    </h2>
+    <span class="font-mono text-[10px] font-semibold text-muted-foreground">{{
+      brokenLinks().length
+    }}</span>
+  </header>
+
+  @if (brokenLinks().length === 0) {
+    <p class="px-4 py-3 text-sm text-muted-foreground">
+      {{ 'document.links.noBroken' | translate }}
+    </p>
+  } @else {
+    <ul class="flex flex-col gap-1 px-4 py-3">
+      @for (link of brokenLinks(); track $index) {
+        <li class="flex min-w-0 items-center gap-2 font-mono text-[11px] text-destructive">
+          <arc-icon arcType="unlink" class="size-3.5 shrink-0" aria-hidden="true" />
+          <span class="truncate" [attr.title]="link.raw">{{ link.raw }}</span>
+        </li>
+      }
+    </ul>
+  }
+
+  <a
+    [routerLink]="brokenLinksRoute()"
+    class="flex items-center gap-2 border-t border-border-subtle px-4 py-3 font-mono text-[11px] font-semibold tracking-[0.04em] text-primary transition-colors duration-150 hover:bg-accent focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-ring"
+  >
+    <arc-icon arcType="unlink" class="size-3.5 shrink-0" aria-hidden="true" />
+    {{ 'document.links.allBroken' | translate }}
+  </a>
+</section>
+
+<ng-template #backlinkContent let-group>
+  <span class="flex min-w-0 items-center gap-2">
+    <arc-icon arcType="file-text" class="size-3.5 shrink-0 text-primary" aria-hidden="true" />
+    <span class="truncate text-sm font-semibold text-foreground-strong">{{ group.title }}</span>
+  </span>
+  <span
+    class="mt-1 block font-mono text-[10px] font-semibold tracking-[0.08em] text-muted-foreground uppercase"
+  >
+    {{ group.sectionLabel | translate }}
+  </span>
+  @for (snippet of group.snippets; track snippet) {
+    <span class="mt-2 line-clamp-2 block text-xs text-foreground-secondary">{{ snippet }}</span>
+  }
+</ng-template>

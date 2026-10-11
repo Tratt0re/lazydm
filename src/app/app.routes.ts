@@ -36,6 +36,11 @@ export const routes: Routes = [
                   import('./pages/campaign-home-page/campaign-home-page').then((m) => m.CampaignHomePage),
               },
               {
+                path: 'broken-links',
+                loadComponent: () =>
+                  import('./pages/broken-links-page/broken-links-page').then((m) => m.BrokenLinksPage),
+              },
+              {
                 path: ':section',
                 children: [
                   {

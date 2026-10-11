@@ -200,6 +200,12 @@ async function reindexWatchedPaths(token, relativePaths) {
   }
 }
 
+/** Reindexes some paths right away (after LazyDM changed them), without waiting for the watcher. */
+function reindexPaths(relativePaths) {
+  const token = activeToken;
+  return enqueue(token, () => reindexWatchedPaths(token, [...new Set(relativePaths)]));
+}
+
 function flushWatchedPaths() {
   watchTimer = null;
   const relativePaths = [...pendingWatchPaths];
@@ -296,6 +302,7 @@ module.exports = {
   getStatus,
   isOpen,
   rebuild,
+  reindexPaths,
   start,
   stop,
 };

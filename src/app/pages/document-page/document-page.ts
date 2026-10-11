@@ -6,12 +6,18 @@ import { map } from 'rxjs';
 import { toast } from 'ngx-sonner';
 
 import { AppCodeEditorComponent } from '@/components/code-editor/code-editor.component';
+import { AppDocumentLinksPanelComponent } from '@/components/document-links-panel/document-links-panel.component';
 import { AppDocumentPreviewComponent } from '@/components/document-preview/document-preview.component';
+import { toInAppNoteRoute } from '@/components/document-preview/document-preview.markdown';
+import { AppSheetFormService } from '@/components/sheet-form/sheet-form.service';
+import type { AppSheetField } from '@/components/sheet-form/sheet-form.types';
 import { CAMPAIGN_SECTION_PARAM } from '@/pages/campaign-section-page/campaign-section-page';
-import type { DocumentDto } from '@/dtos';
+import type { BacklinkDto, DocumentDto } from '@/dtos';
 import { CampaignService } from '@/services/campaign.service';
 import { DocumentService } from '@/services/document.service';
+import { LocalPreferencesService } from '@/services/local-preferences.service';
 import { ToolbarContextService } from '@/services/toolbar-context.service';
+import { WorkspaceService } from '@/services/workspace.service';
 import { ArcTechAlertComponent } from '@/shared/components/alert';
 import type { ArcTechSheetRef } from '@/shared/components/sheet';
 import { ArcTechSheetService } from '@/shared/components/sheet';
@@ -19,6 +25,8 @@ import { ArcTechSheetService } from '@/shared/components/sheet';
 export const DOCUMENT_NOTE_PARAM = 'note';
 
 type DocumentViewMode = 'write' | 'preview';
+
+const RENAME_PREVIEW_MAX_TITLES = 5;
 
 const FRONTMATTER_FENCE_PATTERN = /^---\r?\n[\s\S]*?\r?\n(?:---|\.\.\.)\r?\n?/;
 
@@ -33,6 +41,7 @@ function stripFrontmatterFence(content: string): string {
     TranslatePipe,
     ArcTechAlertComponent,
     AppCodeEditorComponent,
+    AppDocumentLinksPanelComponent,
     AppDocumentPreviewComponent,
   ],
   templateUrl: './document-page.html',
@@ -45,6 +54,9 @@ export class DocumentPage {
   private readonly sheetService = inject(ArcTechSheetService);
   private readonly translateService = inject(TranslateService);
   private readonly toolbarContext = inject(ToolbarContextService);
+  private readonly sheetFormService = inject(AppSheetFormService);
+  private readonly localPreferences = inject(LocalPreferencesService);
+  private readonly workspace = inject(WorkspaceService);
   private readonly editor = viewChild(AppCodeEditorComponent);
   private loadToken = 0;
 
@@ -68,6 +80,7 @@ export class DocumentPage {
   protected readonly isLoading = signal(true);
   protected readonly isSaving = signal(false);
   protected readonly errorMessage = signal<string | null>(null);
+  protected readonly isLinksPanelOpen = signal(this.localPreferences.getDocumentLinksPanelOpen());
 
   protected readonly isDirty = computed(
     () => this.document() !== null && this.editedContent() !== this.document()!.content,
@@ -105,6 +118,21 @@ export class DocumentPage {
             change: (value) => this.mode.set(value as DocumentViewMode),
           },
           itemActions: [
+            {
+              id: 'links',
+              label: this.translateService.instant('document.toolbar.links'),
+              icon: 'panel-right',
+              buttonType: 'outline',
+              action: () => this.toggleLinksPanel(),
+            },
+            {
+              id: 'rename',
+              label: this.translateService.instant('document.toolbar.rename'),
+              icon: 'pencil-line',
+              buttonType: 'outline',
+              disabled: () => !this.document() || this.isSaving(),
+              action: () => this.openRenameSheet(),
+            },
             {
               id: 'save',
               label: this.translateService.instant('document.toolbar.save'),
@@ -158,6 +186,120 @@ export class DocumentPage {
       return false;
     } finally {
       this.isSaving.set(false);
+    }
+  }
+
+  protected toggleLinksPanel(): void {
+    const isOpen = !this.isLinksPanelOpen();
+    this.isLinksPanelOpen.set(isOpen);
+    this.localPreferences.setDocumentLinksPanelOpen(isOpen);
+  }
+
+  /** Rename with a preview of the notes linking here; unsaved edits are saved first (as when leaving). */
+  protected async openRenameSheet(): Promise<void> {
+    const document = this.document();
+    if (!document || (this.isDirty() && !(await this.save()))) {
+      return;
+    }
+
+    let backlinks: readonly BacklinkDto[] = [];
+    try {
+      backlinks = (await this.documentService.links(document.path)).backlinks;
+    } catch (error) {
+      console.warn('[app] Failed to load backlinks for rename:', document.path, error);
+    }
+
+    const sourceTitles = [
+      ...new Map(backlinks.map((link) => [link.sourcePath, link.sourceTitle ?? link.sourcePath])).values(),
+    ];
+    const listedTitles = sourceTitles.slice(0, RENAME_PREVIEW_MAX_TITLES).join(', ');
+    const hiddenCount = sourceTitles.length - RENAME_PREVIEW_MAX_TITLES;
+    const fields: AppSheetField[] = [
+      {
+        id: 'title',
+        type: 'input',
+        label: 'document.rename.titleLabel',
+        value: document.title,
+        required: true,
+        translate: true,
+      },
+    ];
+
+    if (sourceTitles.length > 0) {
+      fields.push({
+        id: 'updateLinks',
+        type: 'checkbox',
+        value: true,
+        checkboxLabel: this.translateService.instant('document.rename.updateLinks', {
+          links: backlinks.length,
+          notes: sourceTitles.length,
+        }),
+      });
+    }
+
+    let isSubmitting = false;
+    const sheetRef = this.sheetFormService.open({
+      arcTitle: this.translateService.instant('document.rename.title'),
+      arcDescription:
+        sourceTitles.length > 0
+          ? this.translateService.instant('document.rename.linkedFrom', {
+              notes: hiddenCount > 0 ? `${listedTitles} +${hiddenCount}` : listedTitles,
+            })
+          : this.translateService.instant('document.rename.noBacklinks'),
+      arcOkText: this.translateService.instant('document.rename.submit'),
+      arcCancelText: this.translateService.instant('document.rename.cancel'),
+      fields,
+      onSubmit: (form) => {
+        if (!isSubmitting) {
+          isSubmitting = true;
+          const values = form.getValues();
+          void this.renameNote(document, String(values['title'] ?? ''), values['updateLinks'] !== false).then(
+            (isRenamed) => {
+              isSubmitting = false;
+              if (isRenamed) {
+                sheetRef.close();
+              }
+            },
+          );
+        }
+
+        return false;
+      },
+    });
+  }
+
+  private async renameNote(document: DocumentDto, title: string, updateLinks: boolean): Promise<boolean> {
+    try {
+      const result = await this.documentService.rename({ path: document.path, title, updateLinks });
+      toast.success(
+        this.translateService.instant('document.rename.done', {
+          links: result.linkCount,
+          notes: result.updatedPaths.length,
+        }),
+      );
+      if (result.failedPaths.length > 0) {
+        toast.warning(this.translateService.instant('document.rename.failed'), {
+          description: result.failedPaths.join(', '),
+        });
+      }
+
+      const oldRoute = toInAppNoteRoute(document.path);
+      const newRoute = toInAppNoteRoute(result.path);
+      if (oldRoute && newRoute && oldRoute !== newRoute) {
+        await this.workspace.replaceUrl(oldRoute, newRoute);
+      } else {
+        const renamed = await this.documentService.read(result.path);
+        this.document.set(renamed);
+        this.editedContent.set(renamed.content);
+        this.editor()?.replaceContent(renamed.content);
+      }
+
+      return true;
+    } catch (error) {
+      toast.error(this.translateService.instant('document.rename.error'), {
+        description: error instanceof Error ? error.message : String(error),
+      });
+      return false;
     }
   }
 

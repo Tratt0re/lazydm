@@ -134,6 +134,26 @@ export class WorkspaceService extends BaseIpcService<APIChannel.WORKSPACE> {
     }
   }
 
+  /**
+   * A note moved (rename): every tab and history entry pointing to the old URL now points to the new
+   * one, and the page shown on the old URL is replaced without adding a history entry.
+   */
+  async replaceUrl(oldUrl: string, newUrl: string): Promise<void> {
+    const isShown = toPath(this.router.url) === oldUrl;
+    this.tabsSignal.update((tabs) =>
+      tabs.map((tab) =>
+        tab.history.includes(oldUrl)
+          ? { ...tab, history: tab.history.map((url) => (url === oldUrl ? newUrl : url)) }
+          : tab,
+      ),
+    );
+    this.scheduleSave();
+
+    if (isShown) {
+      await this.navigate(newUrl, { replaceUrl: true });
+    }
+  }
+
   /** A plain navigation of the active tab (recorded in its history). */
   async openInActiveTab(url: string): Promise<void> {
     if (this.isCampaignUrl(url)) {

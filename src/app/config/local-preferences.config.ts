@@ -3,6 +3,7 @@ export enum LocalPreferenceKey {
   THEME_COLOR = 'theme_color',
   LANGUAGE = 'language',
   ONBOARDING_COMPLETED = 'onboarding_completed',
+  DOCUMENT_LINKS_PANEL_OPEN = 'document_links_panel_open',
 }
 
 export type ThemePreference = 'light' | 'dark' | 'system';
@@ -12,6 +13,7 @@ export interface LocalPreferences {
   readonly themeColor: string;
   readonly language: string;
   readonly onboardingCompleted: boolean;
+  readonly documentLinksPanelOpen: boolean;
 }
 
 export const LOCAL_PREFERENCE_DEFAULTS: Readonly<LocalPreferences> = Object.freeze({
@@ -19,4 +21,5 @@ export const LOCAL_PREFERENCE_DEFAULTS: Readonly<LocalPreferences> = Object.free
   themeColor: 'default',
   language: 'en',
   onboardingCompleted: false,
+  documentLinksPanelOpen: true,
 });

@@ -13,6 +13,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 
 import { CAMPAIGN_SECTIONS } from '@/config/menu.config';
 import type { WorkspaceTabDto } from '@/dtos';
+import { BROKEN_LINKS_ROUTE_SEGMENT } from '@/pages/broken-links-page/broken-links-page';
 import { WorkspaceService } from '@/services/workspace.service';
 import { ArcTechButtonComponent } from '@/shared/components/button';
 import { ArcTechIconComponent } from '@/shared/components/icon';
@@ -138,6 +139,10 @@ export class TabBar {
 
   protected getIcon(tab: WorkspaceTabDto): ArcTechIcon {
     const sectionKey = this.workspace.getTabSection(tab);
+    if (sectionKey === BROKEN_LINKS_ROUTE_SEGMENT) {
+      return 'unlink';
+    }
+
     return (
       CAMPAIGN_SECTIONS.find((section) => section.key === sectionKey)?.icon ?? 'layout-dashboard'
     );

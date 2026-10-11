@@ -15,7 +15,8 @@
       "monsters": "Monstruos",
       "sessions": "Sesiones",
       "assets": "Recursos",
-      "backToCampaigns": "Volver a las campañas"
+      "backToCampaigns": "Volver a las campañas",
+      "broken-links": "Enlaces rotos"
     }
   },
   "header": {
@@ -176,7 +177,9 @@
       "write": "Escribir",
       "preview": "Vista previa",
       "save": "Guardar",
-      "modeAriaLabel": "Alternar entre escribir y leer esta nota"
+      "modeAriaLabel": "Alternar entre escribir y leer esta nota",
+      "links": "Enlaces",
+      "rename": "Renombrar"
     },
     "toast": {
       "saved": "Nota guardada",
@@ -189,6 +192,25 @@
       "keepMine": "Mantener mi versión",
       "saveCopy": "Guardar como copia",
       "reload": "Recargar la otra versión"
+    },
+    "links": {
+      "backlinks": "Enlazada desde",
+      "noBacklinks": "Ninguna otra nota enlaza aquí todavía.",
+      "broken": "Enlaces rotos",
+      "noBroken": "No hay enlaces rotos en esta nota.",
+      "allBroken": "Todos los enlaces rotos de la campaña"
+    },
+    "rename": {
+      "title": "Renombrar nota",
+      "titleLabel": "Título",
+      "submit": "Renombrar",
+      "cancel": "Cancelar",
+      "linkedFrom": "Enlazada desde: {{notes}}",
+      "noBacklinks": "Ninguna otra nota enlaza aquí.",
+      "updateLinks": "Actualizar {{links}} enlaces en {{notes}} notas",
+      "done": "Nota renombrada — {{links}} enlaces actualizados en {{notes}} notas",
+      "failed": "Algunas notas cambiaron mientras tanto y siguen usando el nombre anterior",
+      "error": "No se pudo renombrar la nota"
     }
   },
   "tabs": {
@@ -205,6 +227,17 @@
       "duplicate": "Duplicar pestaña",
       "closeOthers": "Cerrar las demás pestañas",
       "closeToRight": "Cerrar pestañas a la derecha"
+    }
+  },
+  "links": {
+    "broken": {
+      "title": "Enlaces rotos",
+      "cardDescription": "Enlaces a notas o archivos que no existen.",
+      "summary": "{{links}} enlaces rotos en {{notes}} notas",
+      "line": "Línea {{line}}",
+      "emptyTitle": "No hay enlaces rotos",
+      "emptyDescription": "Todos los enlaces de esta campaña apuntan a una nota o archivo existente.",
+      "loadError": "No se pudieron cargar los enlaces rotos"
     }
   }
 }

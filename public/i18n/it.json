@@ -15,7 +15,8 @@
       "monsters": "Mostri",
       "sessions": "Sessioni",
       "assets": "Risorse",
-      "backToCampaigns": "Torna alle campagne"
+      "backToCampaigns": "Torna alle campagne",
+      "broken-links": "Collegamenti interrotti"
     }
   },
   "header": {
@@ -176,7 +177,9 @@
       "write": "Scrivi",
       "preview": "Anteprima",
       "save": "Salva",
-      "modeAriaLabel": "Passa tra scrittura e lettura di questa nota"
+      "modeAriaLabel": "Passa tra scrittura e lettura di questa nota",
+      "links": "Collegamenti",
+      "rename": "Rinomina"
     },
     "toast": {
       "saved": "Nota salvata",
@@ -189,6 +192,25 @@
       "keepMine": "Mantieni la mia versione",
       "saveCopy": "Salva come copia",
       "reload": "Ricarica l'altra versione"
+    },
+    "links": {
+      "backlinks": "Collegata da",
+      "noBacklinks": "Nessun'altra nota rimanda qui.",
+      "broken": "Collegamenti interrotti",
+      "noBroken": "Nessun collegamento interrotto in questa nota.",
+      "allBroken": "Tutti i collegamenti interrotti della campagna"
+    },
+    "rename": {
+      "title": "Rinomina nota",
+      "titleLabel": "Titolo",
+      "submit": "Rinomina",
+      "cancel": "Annulla",
+      "linkedFrom": "Collegata da: {{notes}}",
+      "noBacklinks": "Nessun'altra nota rimanda qui.",
+      "updateLinks": "Aggiorna {{links}} collegamenti in {{notes}} note",
+      "done": "Nota rinominata — {{links}} collegamenti aggiornati in {{notes}} note",
+      "failed": "Alcune note sono cambiate nel frattempo e usano ancora il vecchio nome",
+      "error": "Impossibile rinominare la nota"
     }
   },
   "tabs": {
@@ -205,6 +227,17 @@
       "duplicate": "Duplica scheda",
       "closeOthers": "Chiudi le altre schede",
       "closeToRight": "Chiudi le schede a destra"
+    }
+  },
+  "links": {
+    "broken": {
+      "title": "Collegamenti interrotti",
+      "cardDescription": "Collegamenti a note o file che non esistono.",
+      "summary": "{{links}} collegamenti interrotti in {{notes}} note",
+      "line": "Riga {{line}}",
+      "emptyTitle": "Nessun collegamento interrotto",
+      "emptyDescription": "Ogni collegamento della campagna punta a una nota o a un file esistente.",
+      "loadError": "Impossibile caricare i collegamenti interrotti"
     }
   }
 }

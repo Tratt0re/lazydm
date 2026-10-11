@@ -15,7 +15,8 @@
       "monsters": "Monsters",
       "sessions": "Sessions",
       "assets": "Assets",
-      "backToCampaigns": "Back to campaigns"
+      "backToCampaigns": "Back to campaigns",
+      "broken-links": "Broken links"
     }
   },
   "header": {
@@ -176,7 +177,9 @@
       "write": "Write",
       "preview": "Preview",
       "save": "Save",
-      "modeAriaLabel": "Switch between writing and reading this note"
+      "modeAriaLabel": "Switch between writing and reading this note",
+      "links": "Links",
+      "rename": "Rename"
     },
     "toast": {
       "saved": "Note saved",
@@ -189,6 +192,25 @@
       "keepMine": "Keep my version",
       "saveCopy": "Save as a copy",
       "reload": "Reload the other version"
+    },
+    "links": {
+      "backlinks": "Linked from",
+      "noBacklinks": "No other note links here yet.",
+      "broken": "Broken links",
+      "noBroken": "No broken links in this note.",
+      "allBroken": "All broken links in the campaign"
+    },
+    "rename": {
+      "title": "Rename note",
+      "titleLabel": "Title",
+      "submit": "Rename",
+      "cancel": "Cancel",
+      "linkedFrom": "Linked from: {{notes}}",
+      "noBacklinks": "No other note links here.",
+      "updateLinks": "Update {{links}} links in {{notes}} notes",
+      "done": "Note renamed — {{links}} links updated in {{notes}} notes",
+      "failed": "Some notes changed meanwhile and still use the old name",
+      "error": "Couldn't rename the note"
     }
   },
   "tabs": {
@@ -205,6 +227,17 @@
       "duplicate": "Duplicate tab",
       "closeOthers": "Close other tabs",
       "closeToRight": "Close tabs to the right"
+    }
+  },
+  "links": {
+    "broken": {
+      "title": "Broken links",
+      "cardDescription": "Links pointing to notes or files that don't exist.",
+      "summary": "{{links}} broken links in {{notes}} notes",
+      "line": "Line {{line}}",
+      "emptyTitle": "No broken links",
+      "emptyDescription": "Every link in this campaign points to an existing note or file.",
+      "loadError": "Couldn't load the broken links"
     }
   }
 }

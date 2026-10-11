@@ -86,6 +86,7 @@ function parseWikilink(isEmbed, inner, line) {
 
   return {
     kind: isEmbed ? 'embed' : 'wikilink',
+    syntax: 'wikilink',
     raw: inner,
     targetPath: targetPath.length > 0 ? targetPath : null,
     targetName: targetPath.length > 0 ? toLinkName(targetPath) : '',
@@ -113,6 +114,7 @@ function parseMarkdownLink(isEmbed, label, href, sourceDir, line) {
 
   return {
     kind: isEmbed ? 'embed' : 'markdown',
+    syntax: 'markdown',
     raw: href,
     targetPath,
     targetName: toLinkName(targetPath),
@@ -192,6 +194,197 @@ function parseMarkdownDocument(text, options = {}) {
   };
 }
 
+function detectNewline(text) {
+  return String(text ?? '').includes('\r\n') ? '\r\n' : '\n';
+}
+
+function splitBom(text) {
+  const value = String(text ?? '');
+  return value.startsWith('\uFEFF') ? ['\uFEFF', value.slice(1)] : ['', value];
+}
+
+function getRanges(line, pattern) {
+  return [...line.matchAll(pattern)].map((match) => [match.index, match.index + match[0].length]);
+}
+
+function isInsideRanges(index, ranges) {
+  return ranges.some(([start, end]) => index >= start && index < end);
+}
+
+/**
+ * Rewrites links of a markdown document in place. `replace(link)` receives each link parsed the way
+ * `parseMarkdownDocument` does (so code blocks, inline code and frontmatter are skipped) and returns
+ * the new raw target (`raw` of the link) or null to leave it untouched. Line endings are preserved.
+ *
+ * @param {string} text - Raw file content.
+ * @param {(link: ReturnType<typeof parseWikilink>) => string|null} replace - New raw target, or null.
+ * @param {{ sourcePath?: string }} [options] - Vault-relative path of the document, used for relative links.
+ * @returns {{ content: string, count: number }} The rewritten content and the number of links changed.
+ */
+function rewriteLinks(text, replace, options = {}) {
+  const sourceDir = path.posix.dirname(options.sourcePath ?? '');
+  const newline = detectNewline(text);
+  const [bom, content] = splitBom(text);
+  const lines = normalizeNewlines(content).split('\n');
+  const { bodyStartLine } = splitFrontmatter(content);
+  let fenceMarker = null;
+  let count = 0;
+
+  const rewrittenLines = lines.map((rawLine, index) => {
+    if (index + 1 < bodyStartLine) {
+      return rawLine;
+    }
+
+    const fenceMatch = rawLine.match(FENCE_PATTERN);
+    if (fenceMatch) {
+      const marker = fenceMatch[1][0];
+      fenceMarker = fenceMarker === null ? marker : fenceMarker === marker ? null : fenceMarker;
+      return rawLine;
+    }
+
+    if (fenceMarker !== null) {
+      return rawLine;
+    }
+
+    const codeRanges = getRanges(rawLine, INLINE_CODE_PATTERN);
+    const replacements = [];
+
+    for (const match of rawLine.matchAll(WIKILINK_PATTERN)) {
+      if (isInsideRanges(match.index, codeRanges)) {
+        continue;
+      }
+
+      const newRaw = replace(parseWikilink(match[1] === '!', match[2], index + 1));
+      if (typeof newRaw === 'string' && newRaw !== match[2]) {
+        replacements.push({ start: match.index, end: match.index + match[0].length, text: `${match[1]}[[${newRaw}]]` });
+      }
+    }
+
+    for (const match of rawLine.matchAll(MARKDOWN_LINK_PATTERN)) {
+      if (isInsideRanges(match.index, codeRanges)) {
+        continue;
+      }
+
+      const link = parseMarkdownLink(match[1] === '!', match[2], match[3], sourceDir, index + 1);
+      const newRaw = link ? replace(link) : null;
+      if (typeof newRaw === 'string' && newRaw !== match[3]) {
+        const hrefStart = match[0].indexOf(match[3], match[0].indexOf('](') + 2);
+        const text = `${match[0].slice(0, hrefStart)}${newRaw}${match[0].slice(hrefStart + match[3].length)}`;
+        replacements.push({ start: match.index, end: match.index + match[0].length, text });
+      }
+    }
+
+    count += replacements.length;
+    return replacements
+      .sort((left, right) => right.start - left.start)
+      .reduce((line, { start, end, text }) => `${line.slice(0, start)}${text}${line.slice(end)}`, rawLine);
+  });
+
+  return { content: `${bom}${rewrittenLines.join(newline)}`, count };
+}
+
+/** Swaps the file name at the end of a link path (`monsters/old.md`, `old`), keeping folders, `.md` and spacing. */
+function replaceLinkFileName(linkPath, oldName, newName, { encoded = false } = {}) {
+  const [, leading, inner, trailing] = linkPath.match(/^(\s*)(.*?)(\s*)$/);
+  const nameStart = inner.lastIndexOf('/') + 1;
+  const fileName = inner.slice(nameStart);
+  const extension = fileName.toLocaleLowerCase().endsWith(MARKDOWN_EXTENSION)
+    ? fileName.slice(-MARKDOWN_EXTENSION.length)
+    : '';
+  const baseName = extension ? fileName.slice(0, -extension.length) : fileName;
+
+  let comparableName = baseName;
+  if (encoded) {
+    try {
+      comparableName = decodeURIComponent(baseName);
+    } catch (_) {
+      // keep the raw name when it is not valid URI encoding
+    }
+  }
+
+  if (comparableName.toLocaleLowerCase() !== oldName.toLocaleLowerCase()) {
+    return null;
+  }
+
+  const replacementName = encoded && baseName.includes('%') ? encodeURIComponent(newName) : newName;
+  return `${leading}${inner.slice(0, nameStart)}${replacementName}${extension}${trailing}`;
+}
+
+/**
+ * New raw target of a link after its note was renamed from `oldName` to `newName` (file names without
+ * `.md`; the folder does not change). Keeps the link's own form: bare name, path, `.md`, `#heading`, `|alias`.
+ * Returns null when the link does not end with the old file name.
+ */
+function renameLinkTarget(link, oldName, newName) {
+  if (link.syntax === 'markdown') {
+    const hashIndex = link.raw.indexOf('#');
+    const linkPath = hashIndex < 0 ? link.raw : link.raw.slice(0, hashIndex);
+    const suffix = hashIndex < 0 ? '' : link.raw.slice(hashIndex);
+    const renamedPath = replaceLinkFileName(linkPath, oldName, newName, { encoded: true });
+    return renamedPath === null ? null : `${renamedPath}${suffix}`;
+  }
+
+  const pipeIndex = link.raw.indexOf('|');
+  const target = pipeIndex < 0 ? link.raw : link.raw.slice(0, pipeIndex);
+  const alias = pipeIndex < 0 ? '' : link.raw.slice(pipeIndex);
+  const hashIndex = target.indexOf('#');
+  const linkPath = hashIndex < 0 ? target : target.slice(0, hashIndex);
+  const heading = hashIndex < 0 ? '' : target.slice(hashIndex);
+  const renamedPath = replaceLinkFileName(linkPath, oldName, newName);
+  return renamedPath === null ? null : `${renamedPath}${heading}${alias}`;
+}
+
+/**
+ * Sets the note title: the frontmatter `title:` (when there is a frontmatter) and the first `# Heading`
+ * if it still shows the old title. Everything else, comments and key order included, stays as it is.
+ *
+ * @param {string} text - Raw file content.
+ * @param {string|null} oldTitle - Title the note currently has.
+ * @param {string} newTitle - Title to set.
+ */
+function replaceDocumentTitle(text, oldTitle, newTitle) {
+  const newline = detectNewline(text);
+  const [bom, content] = splitBom(text);
+  const lines = normalizeNewlines(content).split('\n');
+  const { frontmatterText, bodyStartLine } = splitFrontmatter(content);
+  let outputLines = lines;
+
+  if (frontmatterText !== null) {
+    const frontmatter = YAML.parseDocument(frontmatterText);
+    if (frontmatter.errors.length === 0 && (frontmatter.contents === null || YAML.isMap(frontmatter.contents))) {
+      frontmatter.set('title', newTitle);
+      const frontmatterLines = frontmatter.toString().replace(/\n$/, '').split('\n');
+      outputLines = [lines[0], ...frontmatterLines, ...lines.slice(bodyStartLine - 2)];
+    }
+  }
+
+  const bodyOffset = outputLines.length - (lines.length - (bodyStartLine - 1));
+  let fenceMarker = null;
+  for (let index = bodyOffset; index < outputLines.length; index++) {
+    const line = outputLines[index];
+    const fenceMatch = line.match(FENCE_PATTERN);
+    if (fenceMatch) {
+      const marker = fenceMatch[1][0];
+      fenceMarker = fenceMarker === null ? marker : fenceMarker === marker ? null : fenceMarker;
+      continue;
+    }
+
+    const headingMatch = fenceMarker === null ? line.match(HEADING_PATTERN) : null;
+    if (headingMatch && headingMatch[1].length === 1) {
+      if (oldTitle !== null && headingMatch[2] === oldTitle) {
+        outputLines = [...outputLines];
+        outputLines[index] = line.replace(oldTitle, newTitle);
+      }
+      break;
+    }
+  }
+
+  return `${bom}${outputLines.join(newline)}`;
+}
+
 module.exports = {
   parseMarkdownDocument,
+  renameLinkTarget,
+  replaceDocumentTitle,
+  rewriteLinks,
 };

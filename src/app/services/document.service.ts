@@ -2,9 +2,13 @@ import { Injectable } from '@angular/core';
 
 import { APIChannel } from '@/config/api';
 import type {
+  BrokenLinkDto,
   CreateDocumentPayload,
   DocumentDto,
   DocumentFileListItemDto,
+  DocumentLinksDto,
+  RenameDocumentPayload,
+  RenameDocumentResultDto,
   SaveDocumentCopyPayload,
   WriteDocumentPayload,
   WriteDocumentResultDto,
@@ -38,5 +42,18 @@ export class DocumentService extends BaseIpcService<APIChannel.DOCUMENTS> {
 
   create(payload: CreateDocumentPayload): Promise<DocumentDto> {
     return this.ipcClient.create(payload);
+  }
+
+  rename(payload: RenameDocumentPayload): Promise<RenameDocumentResultDto> {
+    return this.ipcClient.rename(payload);
+  }
+
+  links(path: string): Promise<DocumentLinksDto> {
+    return this.ipcClient.links({ path });
+  }
+
+  async listBrokenLinks(campaign: string): Promise<readonly BrokenLinkDto[]> {
+    const { rows } = await this.ipcClient.brokenLinks({ campaign });
+    return rows;
   }
 }

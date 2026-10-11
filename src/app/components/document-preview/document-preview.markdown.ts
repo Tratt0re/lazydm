@@ -44,7 +44,8 @@ function slugifyHeading(text: string): string {
 }
 
 /** Vault paths look like `<campaign>/<section>/<name>.md`; only that shape is browsable in-app so far. */
-function toInAppNoteRoute(resolvedPath: string): string | null {
+/** In-app route of a campaign note (`<campaign>/<section>/<note>.md`), null for anything else. */
+export function toInAppNoteRoute(resolvedPath: string): string | null {
   const segments = resolvedPath.split('/');
   if (segments.length !== 3 || !segments[2].toLocaleLowerCase().endsWith('.md')) {
     return null;

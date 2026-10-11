@@ -67,3 +67,45 @@ export interface CreateDocumentPayload {
 export type WriteDocumentResultDto =
   | { readonly status: 'saved'; readonly contentHash: string; readonly mtimeMs: number }
   | { readonly status: 'conflict'; readonly current: DocumentDto };
+
+/** A link from another note, with the text of the line that holds it. */
+export interface BacklinkDto {
+  readonly sourcePath: string;
+  readonly sourceTitle: string | null;
+  readonly raw: string;
+  readonly kind: DocumentLinkKind;
+  readonly line: number;
+  readonly snippet: string;
+}
+
+/** Side panel data of a note: who links to it, and its own unresolved links. */
+export interface DocumentLinksDto {
+  readonly backlinks: readonly BacklinkDto[];
+  readonly brokenLinks: readonly DocumentLinkDto[];
+}
+
+/** An unresolved link written in a note of a campaign. */
+export interface BrokenLinkDto {
+  readonly sourcePath: string;
+  readonly sourceTitle: string | null;
+  readonly raw: string;
+  readonly kind: DocumentLinkKind;
+  readonly targetName: string;
+  readonly heading: string | null;
+  readonly line: number;
+}
+
+export interface RenameDocumentPayload {
+  readonly path: string;
+  readonly title: string;
+  /** Rewrite the links of other notes pointing to this one (default true). */
+  readonly updateLinks?: boolean;
+}
+
+export interface RenameDocumentResultDto {
+  readonly path: string;
+  readonly updatedPaths: readonly string[];
+  /** Notes changed by someone else meanwhile: their links were left as they were. */
+  readonly failedPaths: readonly string[];
+  readonly linkCount: number;
+}

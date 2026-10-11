@@ -23,6 +23,9 @@ const CHANNELS = Object.freeze({
     write: 'documents:write',
     saveCopy: 'documents:saveCopy',
     create: 'documents:create',
+    rename: 'documents:rename',
+    links: 'documents:links',
+    brokenLinks: 'documents:brokenLinks',
   }),
   index: Object.freeze({
     getStatus: 'index:getStatus',

@@ -15,7 +15,8 @@
       "monsters": "Monstres",
       "sessions": "Sessions",
       "assets": "Ressources",
-      "backToCampaigns": "Retour aux campagnes"
+      "backToCampaigns": "Retour aux campagnes",
+      "broken-links": "Liens cassés"
     }
   },
   "header": {
@@ -176,7 +177,9 @@
       "write": "Écrire",
       "preview": "Aperçu",
       "save": "Enregistrer",
-      "modeAriaLabel": "Basculer entre écriture et lecture de cette note"
+      "modeAriaLabel": "Basculer entre écriture et lecture de cette note",
+      "links": "Liens",
+      "rename": "Renommer"
     },
     "toast": {
       "saved": "Note enregistrée",
@@ -189,6 +192,25 @@
       "keepMine": "Garder ma version",
       "saveCopy": "Enregistrer comme copie",
       "reload": "Recharger l'autre version"
+    },
+    "links": {
+      "backlinks": "Liée depuis",
+      "noBacklinks": "Aucune autre note ne pointe encore ici.",
+      "broken": "Liens cassés",
+      "noBroken": "Aucun lien cassé dans cette note.",
+      "allBroken": "Tous les liens cassés de la campagne"
+    },
+    "rename": {
+      "title": "Renommer la note",
+      "titleLabel": "Titre",
+      "submit": "Renommer",
+      "cancel": "Annuler",
+      "linkedFrom": "Liée depuis : {{notes}}",
+      "noBacklinks": "Aucune autre note ne pointe ici.",
+      "updateLinks": "Mettre à jour {{links}} liens dans {{notes}} notes",
+      "done": "Note renommée — {{links}} liens mis à jour dans {{notes}} notes",
+      "failed": "Certaines notes ont changé entre-temps et utilisent encore l’ancien nom",
+      "error": "Impossible de renommer la note"
     }
   },
   "tabs": {
@@ -205,6 +227,17 @@
       "duplicate": "Dupliquer l’onglet",
       "closeOthers": "Fermer les autres onglets",
       "closeToRight": "Fermer les onglets à droite"
+    }
+  },
+  "links": {
+    "broken": {
+      "title": "Liens cassés",
+      "cardDescription": "Liens vers des notes ou fichiers qui n’existent pas.",
+      "summary": "{{links}} liens cassés dans {{notes}} notes",
+      "line": "Ligne {{line}}",
+      "emptyTitle": "Aucun lien cassé",
+      "emptyDescription": "Chaque lien de cette campagne pointe vers une note ou un fichier existant.",
+      "loadError": "Impossible de charger les liens cassés"
     }
   }
 }

@@ -111,8 +111,19 @@ Planned Electron modules: `vault`, `cloud-readiness`, `campaign`, `document`, `i
 
 - Obsidian syntax: `[[note-name]]`, `[[note-name|label]]`, `[[note-name#heading]]`, embeds `![[image.png]]`.
 - Resolution by file name, campaign first, then `compendium/`.
-- Renaming or moving a file updates the links that point to it.
-- Unresolved links are shown as broken, never silently dropped.
+- **Rename** (note toolbar → *Rename*): the new title gives the new kebab-case file name in the same folder;
+  `title:` and the `# Heading` (if it still shows the old title) are updated. The sheet previews the notes linking
+  here; with *Update links* (default on) every link the index resolved to the note is rewritten, keeping its form
+  (bare name or path, `.md`, `#heading`, `|alias`, markdown links and embeds). Code blocks and inline code are never
+  touched. Each rewrite is conflict-checked like a save: a note changed meanwhile is reported, not overwritten.
+  Open tabs and their history follow the new URL. Unsaved edits are saved before renaming.
+- Renames made outside LazyDM (Finder, Obsidian on another device) are **not** refactored: the other tool already
+  rewrote the links, and LazyDM only sees a delete plus a new file.
+- **Backlinks** live in a right side panel of the note (*Links* toggles it, open state per device): linking notes
+  with the line that links, then the note's own broken links. It follows index updates.
+- Unresolved links are shown as broken, never silently dropped: styled in the preview, listed in the note panel and
+  in the per-campaign **Broken links** page (`/campaigns/<slug>/broken-links`, reachable from the overview).
+- Moving notes between sections and deleting notes are not available yet.
 
 ## 7. Security
 
@@ -210,7 +221,7 @@ variant keys and configuration stay as they are.
 | 5.1 | Design-system alignment to Nordic Relic v0.3.3 (tokens, fonts, component look) |
 | 6 | Tab bar |
 | 6.1 | Tab bar usability: context menus, breadcrumb, drag to sort, overview tab rules, page-tabs style |
-| 7 | Link maintenance: backlinks, rename refactoring, broken links |
+| 7 | Link maintenance: backlinks panel, rename with link refactoring, broken links page |
 | 8 | Compendium and template rules |
 
 ## 12. Open decisions

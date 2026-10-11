@@ -1,0 +1,70 @@
+<div class="mx-auto flex w-full max-w-5xl flex-col gap-6 p-6">
+  @if (errorMessage(); as message) {
+    <arc-alert
+      arcType="destructive"
+      arcIcon="circle-alert"
+      [arcTitle]="'links.broken.loadError' | translate"
+      [arcDescription]="message"
+    />
+  } @else if (!isLoading()) {
+    @if (groups().length === 0) {
+      <arc-empty
+        arcIcon="link"
+        [arcTitle]="'links.broken.emptyTitle' | translate"
+        [arcDescription]="'links.broken.emptyDescription' | translate"
+      />
+    } @else {
+      <p class="font-mono text-[11px] font-semibold tracking-[0.04em] text-muted-foreground">
+        {{ 'links.broken.summary' | translate: { links: rows().length, notes: groups().length } }}
+      </p>
+
+      <ul class="flex flex-col border border-border bg-card">
+        @for (group of groups(); track group.sourcePath) {
+          <li class="border-b border-border last:border-b-0">
+            @if (group.route) {
+              <a
+                [routerLink]="group.route"
+                class="flex items-center justify-between gap-4 px-4 pt-4 pb-2 transition-colors duration-150 hover:bg-accent focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-ring"
+              >
+                <span class="flex min-w-0 items-center gap-3">
+                  <arc-icon arcType="file-text" class="size-4 shrink-0 text-primary" />
+                  <span class="truncate text-sm font-semibold text-foreground-strong">{{
+                    group.title
+                  }}</span>
+                </span>
+                <span
+                  class="shrink-0 font-mono text-[10px] font-semibold tracking-[0.08em] text-muted-foreground uppercase"
+                >
+                  {{ group.sectionLabel | translate }}
+                </span>
+              </a>
+            } @else {
+              <div class="flex items-center gap-3 px-4 pt-4 pb-2">
+                <arc-icon arcType="file-text" class="size-4 shrink-0 text-muted-foreground" />
+                <span class="truncate text-sm font-semibold">{{ group.title }}</span>
+              </div>
+            }
+
+            <ul class="flex flex-col gap-1 px-4 pb-4 pl-11">
+              @for (link of group.links; track $index) {
+                <li class="flex min-w-0 items-center gap-3 font-mono text-[11px]">
+                  <arc-icon
+                    arcType="unlink"
+                    class="size-3.5 shrink-0 text-destructive"
+                    aria-hidden="true"
+                  />
+                  <span class="truncate text-destructive" [attr.title]="link.raw">{{
+                    link.raw
+                  }}</span>
+                  <span class="ml-auto shrink-0 text-muted-foreground">
+                    {{ 'links.broken.line' | translate: { line: link.line } }}
+                  </span>
+                </li>
+              }
+            </ul>
+          </li>
+        }
+      </ul>
+    }
+  }
+</div>

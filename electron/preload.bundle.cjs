@@ -32,7 +32,10 @@ var require_channels = __commonJS({
         read: "documents:read",
         write: "documents:write",
         saveCopy: "documents:saveCopy",
-        create: "documents:create"
+        create: "documents:create",
+        rename: "documents:rename",
+        links: "documents:links",
+        brokenLinks: "documents:brokenLinks"
       }),
       index: Object.freeze({
         getStatus: "index:getStatus",

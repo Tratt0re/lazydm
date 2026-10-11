@@ -15,7 +15,8 @@
       "monsters": "怪物",
       "sessions": "团次",
       "assets": "素材",
-      "backToCampaigns": "返回战役列表"
+      "backToCampaigns": "返回战役列表",
+      "broken-links": "失效链接"
     }
   },
   "header": {
@@ -176,7 +177,9 @@
       "write": "编写",
       "preview": "预览",
       "save": "保存",
-      "modeAriaLabel": "在编写和阅读此笔记之间切换"
+      "modeAriaLabel": "在编写和阅读此笔记之间切换",
+      "links": "链接",
+      "rename": "重命名"
     },
     "toast": {
       "saved": "笔记已保存",
@@ -189,6 +192,25 @@
       "keepMine": "保留我的版本",
       "saveCopy": "保存为副本",
       "reload": "重新加载另一版本"
+    },
+    "links": {
+      "backlinks": "反向链接",
+      "noBacklinks": "还没有其他笔记链接到这里。",
+      "broken": "失效链接",
+      "noBroken": "此笔记中没有失效链接。",
+      "allBroken": "战役中的所有失效链接"
+    },
+    "rename": {
+      "title": "重命名笔记",
+      "titleLabel": "标题",
+      "submit": "重命名",
+      "cancel": "取消",
+      "linkedFrom": "链接来源：{{notes}}",
+      "noBacklinks": "没有其他笔记链接到这里。",
+      "updateLinks": "更新 {{notes}} 篇笔记中的 {{links}} 个链接",
+      "done": "笔记已重命名 — 已更新 {{notes}} 篇笔记中的 {{links}} 个链接",
+      "failed": "部分笔记在此期间已被修改，仍在使用旧名称",
+      "error": "无法重命名笔记"
     }
   },
   "tabs": {
@@ -205,6 +227,17 @@
       "duplicate": "复制标签页",
       "closeOthers": "关闭其他标签页",
       "closeToRight": "关闭右侧标签页"
+    }
+  },
+  "links": {
+    "broken": {
+      "title": "失效链接",
+      "cardDescription": "指向不存在的笔记或文件的链接。",
+      "summary": "{{notes}} 篇笔记中有 {{links}} 个失效链接",
+      "line": "第 {{line}} 行",
+      "emptyTitle": "没有失效链接",
+      "emptyDescription": "此战役中的每个链接都指向现有的笔记或文件。",
+      "loadError": "无法加载失效链接"
     }
   }
 }

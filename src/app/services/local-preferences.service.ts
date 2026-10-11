@@ -77,6 +77,16 @@ export class LocalPreferencesService {
     this.setText(LocalPreferenceKey.ONBOARDING_COMPLETED, onboardingCompleted ? '1' : '0');
   }
 
+  /** Whether the backlinks panel of notes is open (per device). */
+  getDocumentLinksPanelOpen(): boolean {
+    const value = this.getText(LocalPreferenceKey.DOCUMENT_LINKS_PANEL_OPEN);
+    return value === undefined ? LOCAL_PREFERENCE_DEFAULTS.documentLinksPanelOpen : value === '1';
+  }
+
+  setDocumentLinksPanelOpen(isOpen: boolean): void {
+    this.setText(LocalPreferenceKey.DOCUMENT_LINKS_PANEL_OPEN, isOpen ? '1' : '0');
+  }
+
   private getText(key: LocalPreferenceKey): string | undefined {
     if (!this.isBrowser) {
       return undefined;

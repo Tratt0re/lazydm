@@ -1,9 +1,10 @@
-import { Component, effect, inject } from '@angular/core';
+import { Component, effect, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 
 import { CAMPAIGN_SECTIONS } from '@/config/menu.config';
 import { CampaignService } from '@/services/campaign.service';
+import { DocumentService } from '@/services/document.service';
 import { ToolbarContextService } from '@/services/toolbar-context.service';
 import { ArcTechIconComponent } from '@/shared/components/icon';
 
@@ -35,22 +36,44 @@ import { ArcTechIconComponent } from '@/shared/components/icon';
             </li>
           }
         </ul>
+
+        <a
+          [routerLink]="['/campaigns', campaign.slug, 'broken-links']"
+          class="flex items-center gap-4 border border-border bg-card p-4 transition-colors hover:border-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+        >
+          <arc-icon arcType="unlink" class="size-6 shrink-0" [class]="brokenLinkCount() > 0 ? 'text-destructive' : 'text-primary'" />
+          <span class="flex min-w-0 flex-1 flex-col gap-1">
+            <span class="text-xs font-bold tracking-[0.08em] uppercase">
+              {{ 'links.broken.title' | translate }}<span class="text-primary" aria-hidden="true">.</span>
+            </span>
+            <span class="text-sm text-muted-foreground">{{ 'links.broken.cardDescription' | translate }}</span>
+          </span>
+          <span class="shrink-0 font-mono text-lg font-semibold" [class.text-destructive]="brokenLinkCount() > 0">
+            {{ brokenLinkCount() }}
+          </span>
+        </a>
       </div>
     }
   `,
 })
 export class CampaignHomePage {
   private readonly campaignService = inject(CampaignService);
+  private readonly documentService = inject(DocumentService);
   private readonly toolbarContext = inject(ToolbarContextService);
 
   protected readonly campaign = this.campaignService.activeCampaign;
   protected readonly sections = CAMPAIGN_SECTIONS;
+  protected readonly brokenLinkCount = signal(0);
 
   constructor() {
     effect((onCleanup) => {
       const campaign = this.campaign();
       if (campaign) {
         onCleanup(this.toolbarContext.activate({ title: campaign.name }));
+        this.documentService
+          .listBrokenLinks(campaign.slug)
+          .then((rows) => this.brokenLinkCount.set(rows.length))
+          .catch((error: unknown) => console.warn('[app] Failed to count broken links:', error));
       }
     });
   }

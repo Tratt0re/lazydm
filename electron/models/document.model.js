@@ -92,6 +92,21 @@ async function saveDocumentCopy(rootPath, relativePath, content) {
   return readDocument(rootPath, copyPath);
 }
 
+/** Renames a note file inside the vault; a case-only rename of the same file is allowed. */
+async function renameDocumentFile(rootPath, fromPath, toPath) {
+  assertMarkdownPath(fromPath);
+  assertMarkdownPath(toPath);
+  const fromAbsolutePath = resolveInsideVault(rootPath, fromPath);
+  const toAbsolutePath = resolveInsideVault(rootPath, toPath);
+  const isCaseOnlyRename = fromPath.toLocaleLowerCase() === toPath.toLocaleLowerCase();
+
+  if (!isCaseOnlyRename && fs.existsSync(toAbsolutePath)) {
+    throw new Error(`A note named "${path.posix.basename(toPath)}" already exists in ${path.posix.dirname(toPath)}.`);
+  }
+
+  await fs.promises.rename(fromAbsolutePath, toAbsolutePath);
+}
+
 /** Template of a note type (`_templates/monster.md`), with Obsidian's `{{title}}`, `{{date}}` and `{{time}}` filled in. */
 async function readTemplate(rootPath, type, title) {
   const templatePath = resolveInsideVault(rootPath, `${TEMPLATES_DIR_NAME}/${type}${MARKDOWN_EXTENSION}`);
@@ -130,6 +145,7 @@ async function createDocument(rootPath, { folderPath, slug, title, type }) {
 module.exports = {
   createDocument,
   readDocument,
+  renameDocumentFile,
   saveDocumentCopy,
   writeDocument,
 };

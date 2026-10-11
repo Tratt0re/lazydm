@@ -85,6 +85,34 @@ function listOutgoingLinks(sourcePath) {
     .all(sourcePath);
 }
 
+/** Links that resolve to a file (self-links included), with the note they are written in. */
+function listIncomingLinks(targetPath) {
+  return getVaultIndexDatabase()
+    .prepare(
+      `SELECT s.path AS sourcePath, s.title AS sourceTitle, l.target_raw AS raw, l.kind, l.line
+       FROM links l
+       JOIN files s ON s.id = l.source_file_id
+       JOIN files t ON t.id = l.target_file_id
+       WHERE t.path = ?
+       ORDER BY s.title COLLATE NOCASE, s.path, l.line, l.id`,
+    )
+    .all(targetPath);
+}
+
+/** Links written in the notes of a campaign that resolve to no file. */
+function listBrokenLinks(campaign) {
+  return getVaultIndexDatabase()
+    .prepare(
+      `SELECT s.path AS sourcePath, s.title AS sourceTitle, l.target_raw AS raw, l.kind,
+              l.target_name AS targetName, l.target_heading AS heading, l.line
+       FROM links l
+       JOIN files s ON s.id = l.source_file_id
+       WHERE s.campaign = ? AND l.target_file_id IS NULL AND l.target_name <> ''
+       ORDER BY s.title COLLATE NOCASE, s.path, l.line, l.id`,
+    )
+    .all(campaign);
+}
+
 function countFiles() {
   return getVaultIndexDatabase().prepare('SELECT COUNT(*) AS total FROM files').get().total;
 }
@@ -263,8 +291,10 @@ module.exports = {
   deletePath,
   getFileKind,
   getFileState,
+  listBrokenLinks,
   listFileStates,
   listFolderFiles,
+  listIncomingLinks,
   listOutgoingLinks,
   resolveLinks,
   saveFile,
