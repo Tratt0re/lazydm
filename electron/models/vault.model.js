@@ -68,6 +68,51 @@ function isDirectoryEmpty(directoryPath) {
   return fs.readdirSync(directoryPath).filter((entryName) => !entryName.startsWith('.')).length === 0;
 }
 
+/** Hidden entries (`.lazydm`, `.obsidian`, `.git`, `.DS_Store`, iCloud `.name.icloud` placeholders…) are not vault content. */
+function isIgnoredVaultPath(relativePath) {
+  return relativePath.split('/').some((segment) => segment.startsWith('.'));
+}
+
+function toVaultRelativePath(rootPath, absolutePath) {
+  return path.relative(rootPath, absolutePath).split(path.sep).join('/');
+}
+
+/**
+ * Lists every content file of the vault (or of one of its folders) with the stats the index reconciles on.
+ *
+ * @returns {Promise<{ path: string, size: number, mtimeMs: number }[]>} Vault-relative POSIX paths.
+ */
+async function listVaultFiles(rootPath, relativeDir = '') {
+  const files = [];
+  const realRootPath = resolveInsideVault(rootPath);
+  const pendingDirs = [resolveInsideVault(realRootPath, relativeDir)];
+
+  while (pendingDirs.length > 0) {
+    const directoryPath = pendingDirs.pop();
+    const entries = await fs.promises.readdir(directoryPath, { withFileTypes: true });
+
+    for (const entry of entries) {
+      if (entry.name.startsWith('.')) {
+        continue;
+      }
+
+      const absolutePath = path.join(directoryPath, entry.name);
+      if (entry.isDirectory()) {
+        pendingDirs.push(absolutePath);
+      } else if (entry.isFile()) {
+        const stats = await fs.promises.stat(absolutePath);
+        files.push({
+          path: toVaultRelativePath(realRootPath, absolutePath),
+          size: stats.size,
+          mtimeMs: Math.trunc(stats.mtimeMs),
+        });
+      }
+    }
+  }
+
+  return files;
+}
+
 module.exports = {
   ...vaultBaseModel,
   createDefaultVaultConfig,
@@ -75,6 +120,8 @@ module.exports = {
   getByPath,
   hasVaultConfig,
   isDirectoryEmpty,
+  isIgnoredVaultPath,
+  listVaultFiles,
   readVaultConfig,
   writeVaultConfig,
 };

@@ -1,5 +1,6 @@
 const {
   appMetaController,
+  indexerController,
   resetController,
   updateController,
   vaultController,
@@ -14,6 +15,9 @@ const IPC_HANDLERS = Object.freeze({
   [CHANNELS.appMeta.update]: appMetaController.update,
   [CHANNELS.appMeta.remove]: appMetaController.remove,
   [CHANNELS.appMeta.upsert]: appMetaController.upsert,
+
+  [CHANNELS.index.getStatus]: indexerController.getStatus,
+  [CHANNELS.index.rebuild]: indexerController.rebuild,
 
   [CHANNELS.reset.factoryReset]: resetController.factoryReset,
 

@@ -7,6 +7,10 @@ const CHANNELS = Object.freeze({
     remove: 'db:app-meta:remove',
     upsert: 'db:app-meta:upsert',
   }),
+  index: Object.freeze({
+    getStatus: 'index:getStatus',
+    rebuild: 'index:rebuild',
+  }),
   reset: Object.freeze({
     factoryReset: 'db:reset:factory-reset',
   }),

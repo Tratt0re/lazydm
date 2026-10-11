@@ -7,6 +7,7 @@ const {
   assertWritableDirectory,
   resolveInsideVault,
 } = require('../utils/file-utils');
+const indexerController = require('./indexer.controller');
 const { ensurePlainObject, requireString } = require('./utils');
 
 const CURRENT_VAULT_ID_KEY = 'current_vault_id';
@@ -132,10 +133,14 @@ function open(payload) {
   }
 
   saveCurrentVaultId(vaultId);
-  return { status: VAULT_STATUS.ready, vault: toVaultDto(vaultModel.getById(vaultId)) };
+  const vault = toVaultDto(vaultModel.getById(vaultId));
+  indexerController.start(vault);
+
+  return { status: VAULT_STATUS.ready, vault };
 }
 
 function close() {
+  indexerController.stop();
   if (readCurrentVaultId()) {
     appMetaModel.deleteByKey(CURRENT_VAULT_ID_KEY);
   }

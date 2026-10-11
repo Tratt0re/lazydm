@@ -8,6 +8,7 @@ const {
   markFirstStartCompleted,
   runMigrations,
 } = require('./database');
+const { indexerController, vaultController } = require('./controllers');
 const { registerIpcHandlers } = require('./ipc');
 const { createWindow } = require('./window');
 
@@ -41,6 +42,11 @@ app.whenReady()
     registerIpcHandlers();
     createWindow();
 
+    const currentVault = vaultController.getCurrent();
+    if (currentVault.status === 'ready') {
+      indexerController.start(currentVault.vault);
+    }
+
     app.on('activate', () => {
       if (BrowserWindow.getAllWindows().length === 0) {
         createWindow();
@@ -64,5 +70,6 @@ app.on('before-quit', () => {
   }
 
   beforeQuitHandled = true;
+  indexerController.stop();
   closeDatabase();
 });
