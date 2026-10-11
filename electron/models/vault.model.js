@@ -70,6 +70,11 @@ function isDirectoryEmpty(directoryPath) {
   );
 }
 
+/** A top-level folder holds a campaign unless it is hidden or vault-level (`_templates`, `compendium`…). */
+function isCampaignDirName(dirName) {
+  return !dirName.startsWith('.') && !dirName.startsWith('_') && !VAULT_DEFAULT_DIR_NAMES.includes(dirName);
+}
+
 /** Hidden entries (`.lazydm`, `.obsidian`, `.git`, `.DS_Store`, iCloud `.name.icloud` placeholders…) are not vault content. */
 function isIgnoredVaultPath(relativePath) {
   return relativePath.split('/').some((segment) => segment.startsWith('.'));
@@ -131,6 +136,7 @@ module.exports = {
   ensureVaultStructure,
   getByPath,
   hasVaultConfig,
+  isCampaignDirName,
   isDatalessStats,
   isDirectoryEmpty,
   isIgnoredVaultPath,

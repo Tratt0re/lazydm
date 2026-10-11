@@ -1,5 +1,6 @@
 const {
   appMetaController,
+  campaignController,
   cloudReadinessController,
   indexerController,
   resetController,
@@ -16,6 +17,10 @@ const IPC_HANDLERS = Object.freeze({
   [CHANNELS.appMeta.update]: appMetaController.update,
   [CHANNELS.appMeta.remove]: appMetaController.remove,
   [CHANNELS.appMeta.upsert]: appMetaController.upsert,
+
+  [CHANNELS.campaigns.list]: campaignController.list,
+  [CHANNELS.campaigns.get]: campaignController.get,
+  [CHANNELS.campaigns.create]: campaignController.create,
 
   [CHANNELS.cloud.getStatus]: cloudReadinessController.getStatus,
   [CHANNELS.cloud.skipWait]: cloudReadinessController.skipWait,

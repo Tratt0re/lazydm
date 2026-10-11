@@ -1,8 +1,8 @@
 const path = require('node:path');
 const { getVaultIndexDatabase } = require('../database/vault-index-db');
+const { isCampaignDirName } = require('./vault.model');
 
 const MARKDOWN_EXTENSION = '.md';
-const RESERVED_ROOT_DIR_NAMES = new Set(['compendium']);
 
 function getFileKind(relativePath) {
   return path.posix.extname(relativePath).toLocaleLowerCase() === MARKDOWN_EXTENSION
@@ -26,7 +26,7 @@ function getCampaignSlug(relativePath) {
   }
 
   const [rootDir] = segments;
-  return RESERVED_ROOT_DIR_NAMES.has(rootDir) || rootDir.startsWith('_') ? null : rootDir;
+  return isCampaignDirName(rootDir) ? rootDir : null;
 }
 
 function listFileStates() {

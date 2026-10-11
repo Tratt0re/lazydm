@@ -124,6 +124,9 @@ import {
   Shirt,
   PencilLine,
   FileUp,
+  Clapperboard,
+  ImageIcon,
+  Skull,
 } from 'lucide-angular';
 
 export const ARCTECH_ICONS = {
@@ -251,6 +254,9 @@ export const ARCTECH_ICONS = {
   'book-open': BookOpen,
   users: Users,
   swords: Swords,
+  clapperboard: Clapperboard,
+  image: ImageIcon,
+  skull: Skull,
 } as const satisfies Record<string, LucideIconData>;
 
 export declare type ArcTechIcon = keyof typeof ARCTECH_ICONS | LucideIconData;

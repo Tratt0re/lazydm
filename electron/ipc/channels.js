@@ -7,6 +7,11 @@ const CHANNELS = Object.freeze({
     remove: 'db:app-meta:remove',
     upsert: 'db:app-meta:upsert',
   }),
+  campaigns: Object.freeze({
+    list: 'campaigns:list',
+    get: 'campaigns:get',
+    create: 'campaigns:create',
+  }),
   cloud: Object.freeze({
     getStatus: 'cloud:getStatus',
     skipWait: 'cloud:skipWait',

@@ -1,4 +1,5 @@
 const appMetaController = require('./app-meta.controller');
+const campaignController = require('./campaign.controller');
 const cloudReadinessController = require('./cloud-readiness.controller');
 const indexerController = require('./indexer.controller');
 const resetController = require('./reset.controller');
@@ -8,6 +9,7 @@ const windowController = require('./window.controller');
 
 module.exports = {
   appMetaController,
+  campaignController,
   cloudReadinessController,
   indexerController,
   resetController,
