@@ -37,7 +37,11 @@ let activeToken = 0;
 let releaseWait = null;
 
 function getStatus() {
-  return { ...cloudState, pendingPaths: [...cloudState.pendingPaths], conflictPaths: [...cloudState.conflictPaths] };
+  return {
+    ...cloudState,
+    pendingPaths: [...cloudState.pendingPaths],
+    conflictPaths: [...cloudState.conflictPaths],
+  };
 }
 
 function setCloudState(changes) {
@@ -91,14 +95,20 @@ async function downloadPendingNotes(token, rootPath, pendingPaths) {
           remainingPaths.delete(relativePath);
         }
       } catch (error) {
-        console.warn('[electron] Cloud download failed ->', relativePath, error instanceof Error ? error.message : error);
+        console.warn(
+          '[electron] Cloud download failed ->',
+          relativePath,
+          error instanceof Error ? error.message : error,
+        );
       }
 
       publishPending(token, remainingPaths);
     }
   }
 
-  await Promise.all(Array.from({ length: Math.min(DOWNLOAD_CONCURRENCY, queue.length) }, () => worker()));
+  await Promise.all(
+    Array.from({ length: Math.min(DOWNLOAD_CONCURRENCY, queue.length) }, () => worker()),
+  );
   return remainingPaths.size === 0 ? 'done' : CLOUD_STATUS.timeout;
 }
 
@@ -125,7 +135,9 @@ async function prepare(vault) {
       return getStatus();
     }
 
-    const pendingPaths = files.filter((file) => file.isDataless && isMarkdownPath(file.path)).map((file) => file.path);
+    const pendingPaths = files
+      .filter((file) => file.isDataless && isMarkdownPath(file.path))
+      .map((file) => file.path);
     setCloudState({
       totalFiles: files.length,
       pendingFiles: pendingPaths.length,
@@ -157,7 +169,10 @@ async function prepare(vault) {
   } catch (error) {
     if (isCurrent(token)) {
       console.error('[electron] Cloud readiness check failed:', error);
-      setCloudState({ status: CLOUD_STATUS.error, lastError: error instanceof Error ? error.message : String(error) });
+      setCloudState({
+        status: CLOUD_STATUS.error,
+        lastError: error instanceof Error ? error.message : String(error),
+      });
     }
   }
 

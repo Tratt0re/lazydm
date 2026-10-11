@@ -75,7 +75,10 @@ function detectCloudProvider(rootPath) {
 async function requestDownload(rootPath, relativePath, timeoutMs) {
   let timer = null;
   const timeout = new Promise((_, reject) => {
-    timer = globalThis.setTimeout(() => reject(new Error(`Download timed out: ${relativePath}`)), timeoutMs);
+    timer = globalThis.setTimeout(
+      () => reject(new Error(`Download timed out: ${relativePath}`)),
+      timeoutMs,
+    );
   });
 
   const read = (async () => {
@@ -114,7 +117,9 @@ function findConflictCopies(files) {
           return false;
         }
 
-        const originalPath = path.posix.join(directory, `${match[1]}${extension}`).toLocaleLowerCase();
+        const originalPath = path.posix
+          .join(directory, `${match[1]}${extension}`)
+          .toLocaleLowerCase();
         return !requiresOriginal || existingPaths.has(originalPath);
       });
     })

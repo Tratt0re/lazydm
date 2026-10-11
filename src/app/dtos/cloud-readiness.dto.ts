@@ -1,13 +1,7 @@
 export type CloudProvider = 'icloud' | 'box' | 'dropbox' | 'onedrive' | 'google-drive';
 
 export type CloudReadinessStatus =
-  | 'idle'
-  | 'checking'
-  | 'downloading'
-  | 'ready'
-  | 'timeout'
-  | 'skipped'
-  | 'error';
+  'idle' | 'checking' | 'downloading' | 'ready' | 'timeout' | 'skipped' | 'error';
 
 export interface CloudReadinessStatusDto {
   readonly status: CloudReadinessStatus;

@@ -1,4 +1,13 @@
-import { Component, computed, HostListener, inject, OnDestroy, OnInit, signal, ViewEncapsulation } from '@angular/core';
+import {
+  Component,
+  computed,
+  HostListener,
+  inject,
+  OnDestroy,
+  OnInit,
+  signal,
+  ViewEncapsulation,
+} from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 import { LayoutImports } from '@/shared/components/layout/layout.imports';
@@ -35,7 +44,9 @@ export class RootLayout implements OnInit, OnDestroy {
   protected readonly isSmallScreen = signal(detectSmallScreenViewport());
   protected readonly menuSections: readonly MenuSectionConfig[] = MenuConfiguration.sections;
   protected readonly headerOffset = computed(() => (this.isFullscreen() ? '2rem' : '0rem'));
-  protected readonly showSidebarOverlay = computed(() => this.isSmallScreen() && !this.sidebarCollapsed());
+  protected readonly showSidebarOverlay = computed(
+    () => this.isSmallScreen() && !this.sidebarCollapsed(),
+  );
   protected readonly toolbarTitle = this.toolbarContextService.title;
   protected readonly toolbarTitleMode = this.toolbarContextService.titleMode;
   protected readonly toolbarTitleBreadcrumbs = this.toolbarContextService.titleBreadcrumbs;
@@ -110,5 +121,4 @@ export class RootLayout implements OnInit, OnDestroy {
 
     return this.readDocumentFullscreenState();
   }
-
 }

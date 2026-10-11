@@ -10,7 +10,12 @@ const CONFLICT_PATHS_PREVIEW_LIMIT = 5;
 
 @Component({
   selector: 'app-vault-sync-status',
-  imports: [TranslatePipe, ArcTechAlertComponent, ArcTechButtonComponent, ArcTechProgressBarComponent],
+  imports: [
+    TranslatePipe,
+    ArcTechAlertComponent,
+    ArcTechButtonComponent,
+    ArcTechProgressBarComponent,
+  ],
   templateUrl: './vault-sync-status.component.html',
 })
 export class VaultSyncStatusComponent {
@@ -43,7 +48,8 @@ export class VaultSyncStatusComponent {
   );
   protected readonly showConflicts = computed(
     () =>
-      this.conflictPaths().length > 0 && this.dismissedConflictsKey() !== this.conflictPaths().join('\n'),
+      this.conflictPaths().length > 0 &&
+      this.dismissedConflictsKey() !== this.conflictPaths().join('\n'),
   );
 
   constructor() {
