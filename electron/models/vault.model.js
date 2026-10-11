@@ -80,9 +80,18 @@ function toVaultRelativePath(rootPath, absolutePath) {
 }
 
 /**
+ * A cloud placeholder whose content is not downloaded yet: it reports a size but occupies no disk block.
+ * Reliable for File Provider drives on macOS (iCloud, Box, Dropbox, OneDrive, Google Drive);
+ * `blocks` is not available on Windows, where this is always false.
+ */
+function isDatalessStats(stats) {
+  return stats.size > 0 && stats.blocks === 0;
+}
+
+/**
  * Lists every content file of the vault (or of one of its folders) with the stats the index reconciles on.
  *
- * @returns {Promise<{ path: string, size: number, mtimeMs: number }[]>} Vault-relative POSIX paths.
+ * @returns {Promise<{ path: string, size: number, mtimeMs: number, isDataless: boolean }[]>} Vault-relative POSIX paths.
  */
 async function listVaultFiles(rootPath, relativeDir = '') {
   const files = [];
@@ -107,6 +116,7 @@ async function listVaultFiles(rootPath, relativeDir = '') {
           path: toVaultRelativePath(realRootPath, absolutePath),
           size: stats.size,
           mtimeMs: Math.trunc(stats.mtimeMs),
+          isDataless: isDatalessStats(stats),
         });
       }
     }
@@ -121,6 +131,7 @@ module.exports = {
   ensureVaultStructure,
   getByPath,
   hasVaultConfig,
+  isDatalessStats,
   isDirectoryEmpty,
   isIgnoredVaultPath,
   listVaultFiles,

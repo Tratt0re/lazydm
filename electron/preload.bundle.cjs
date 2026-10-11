@@ -17,6 +17,11 @@ var require_channels = __commonJS({
         remove: "db:app-meta:remove",
         upsert: "db:app-meta:upsert"
       }),
+      cloud: Object.freeze({
+        getStatus: "cloud:getStatus",
+        skipWait: "cloud:skipWait",
+        recheck: "cloud:recheck"
+      }),
       index: Object.freeze({
         getStatus: "index:getStatus",
         rebuild: "index:rebuild"

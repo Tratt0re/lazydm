@@ -7,6 +7,7 @@ const {
   assertWritableDirectory,
   resolveInsideVault,
 } = require('../utils/file-utils');
+const cloudReadinessController = require('./cloud-readiness.controller');
 const indexerController = require('./indexer.controller');
 const { ensurePlainObject, requireString } = require('./utils');
 
@@ -141,12 +142,22 @@ function open(payload) {
 
   saveCurrentVaultId(vaultId);
   const vault = toVaultDto(vaultModel.getById(vaultId));
-  indexerController.start(vault);
+  startSession(vault);
 
   return { status: VAULT_STATUS.ready, vault };
 }
 
+/** Waits for the cloud client to download the vault notes, then indexes the vault. Runs in the background. */
+function startSession(vault) {
+  void cloudReadinessController.prepare(vault).then(() => {
+    if (readCurrentVaultId() === vault.id) {
+      indexerController.start(vault);
+    }
+  });
+}
+
 function close() {
+  cloudReadinessController.cancel();
   indexerController.stop();
   if (readCurrentVaultId()) {
     appMetaModel.deleteByKey(CURRENT_VAULT_ID_KEY);
@@ -161,4 +172,5 @@ module.exports = {
   inspect,
   open,
   selectFolder,
+  startSession,
 };

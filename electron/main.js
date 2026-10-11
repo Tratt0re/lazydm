@@ -8,7 +8,7 @@ const {
   markFirstStartCompleted,
   runMigrations,
 } = require('./database');
-const { indexerController, vaultController } = require('./controllers');
+const { cloudReadinessController, indexerController, vaultController } = require('./controllers');
 const { registerIpcHandlers } = require('./ipc');
 const { createWindow } = require('./window');
 
@@ -45,7 +45,7 @@ app
 
     const currentVault = vaultController.getCurrent();
     if (currentVault.status === 'ready') {
-      indexerController.start(currentVault.vault);
+      vaultController.startSession(currentVault.vault);
     }
 
     app.on('activate', () => {
@@ -71,6 +71,7 @@ app.on('before-quit', () => {
   }
 
   beforeQuitHandled = true;
+  cloudReadinessController.cancel();
   indexerController.stop();
   closeDatabase();
 });
