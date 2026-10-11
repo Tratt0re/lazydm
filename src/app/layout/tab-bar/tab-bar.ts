@@ -67,6 +67,13 @@ export class TabBar {
 
   /** Cmd/Ctrl-click and middle-click on campaign links open them in a background tab. */
   private readonly handleLinkClick = (event: MouseEvent) => {
+    // Releasing the right button fires an auxclick that the overlay would read as a click outside
+    // the menu just opened (its trigger is a hidden element), closing it right away.
+    if (event.type === 'auxclick' && event.button === 2 && this.contextMenuTrigger().isOpen()) {
+      event.stopPropagation();
+      return;
+    }
+
     const isNewTabClick =
       event.type === 'auxclick'
         ? event.button === 1
