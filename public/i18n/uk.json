@@ -1,14 +1,21 @@
 {
   "nav": {
     "sections": {
-      "main": "Меню"
+      "main": "Меню",
+      "campaign": "Кампанія"
     },
     "items": {
       "home": "Головна",
       "campaigns": "Кампанії",
       "characters": "Персонажі",
-      "encounters": "Сутички",
-      "settings": "Параметри"
+      "encounters": "Зіткнення",
+      "settings": "Параметри",
+      "overview": "Огляд",
+      "scenes": "Сцени",
+      "monsters": "Монстри",
+      "sessions": "Сесії",
+      "assets": "Ресурси",
+      "backToCampaigns": "Назад до кампаній"
     }
   },
   "header": {
@@ -106,6 +113,49 @@
         "onedrive": "OneDrive",
         "google-drive": "Google Drive",
         "generic": "Ваш хмарний сервіс"
+      }
+    }
+  },
+  "campaigns": {
+    "list": {
+      "title": "Кампанії",
+      "create": "Нова кампанія",
+      "emptyTitle": "Кампаній ще немає",
+      "emptyDescription": "Кампанія — це тека у вашому сховищі зі сценами, персонажами, монстрами, зіткненнями та сесіями. Створіть першу, щоб почати підготовку.",
+      "loadError": "Не вдалося завантажити кампанії"
+    },
+    "create": {
+      "title": "Нова кампанія",
+      "description": "LazyDM створить у вашому сховищі теку для кампанії зі стандартними розділами.",
+      "nameLabel": "Назва",
+      "namePlaceholder": "Загублена шахта Фанделвера",
+      "nameDescription": "Теку буде названо так само, з дефісами замість пробілів.",
+      "descriptionLabel": "Опис",
+      "descriptionPlaceholder": "Короткий опис пригоди",
+      "submit": "Створити кампанію",
+      "cancel": "Скасувати",
+      "error": "Не вдалося створити кампанію"
+    },
+    "sections": {
+      "emptyTitle": "У розділі «{{section}}» поки порожньо",
+      "emptyDescription": "Нотатки, які ви додасте в теку {{folder}} свого сховища, з'являться тут.",
+      "scenes": {
+        "description": "Місця, події та моменти для гри за столом."
+      },
+      "characters": {
+        "description": "Персонажі гравців і НІП."
+      },
+      "monsters": {
+        "description": "Характеристики та нотатки про істот."
+      },
+      "encounters": {
+        "description": "Бої та випробування, готові до гри."
+      },
+      "sessions": {
+        "description": "Підготовка й підсумки кожної сесії."
+      },
+      "assets": {
+        "description": "Зображення, мапи, PDF і звуки."
       }
     }
   }

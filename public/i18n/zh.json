@@ -1,14 +1,21 @@
 {
   "nav": {
     "sections": {
-      "main": "菜单"
+      "main": "菜单",
+      "campaign": "战役"
     },
     "items": {
       "home": "主页",
       "campaigns": "战役",
       "characters": "角色",
-      "encounters": "遭遇战",
-      "settings": "首选项"
+      "encounters": "遭遇",
+      "settings": "首选项",
+      "overview": "概览",
+      "scenes": "场景",
+      "monsters": "怪物",
+      "sessions": "团次",
+      "assets": "素材",
+      "backToCampaigns": "返回战役列表"
     }
   },
   "header": {
@@ -106,6 +113,49 @@
         "onedrive": "OneDrive",
         "google-drive": "Google Drive",
         "generic": "你的云服务"
+      }
+    }
+  },
+  "campaigns": {
+    "list": {
+      "title": "战役",
+      "create": "新建战役",
+      "emptyTitle": "还没有战役",
+      "emptyDescription": "战役是资料库中的一个文件夹，包含场景、角色、怪物、遭遇和团次。创建第一个战役即可开始准备。",
+      "loadError": "无法加载战役"
+    },
+    "create": {
+      "title": "新建战役",
+      "description": "LazyDM 会在你的资料库中为该战役创建一个文件夹，并附带默认分区。",
+      "nameLabel": "名称",
+      "namePlaceholder": "凡达林的失落矿坑",
+      "nameDescription": "文件夹将以此命名，空格会替换为连字符。",
+      "descriptionLabel": "描述",
+      "descriptionPlaceholder": "冒险的简短概述",
+      "submit": "创建战役",
+      "cancel": "取消",
+      "error": "无法创建战役"
+    },
+    "sections": {
+      "emptyTitle": "{{section}}中还没有内容",
+      "emptyDescription": "你添加到资料库 {{folder}} 文件夹中的笔记会显示在这里。",
+      "scenes": {
+        "description": "在桌上进行的地点、事件和时刻。"
+      },
+      "characters": {
+        "description": "玩家角色和非玩家角色。"
+      },
+      "monsters": {
+        "description": "数据块和生物笔记。"
+      },
+      "encounters": {
+        "description": "随时可用的战斗和挑战。"
+      },
+      "sessions": {
+        "description": "每次团次的准备和回顾。"
+      },
+      "assets": {
+        "description": "图片、地图、PDF 和音效。"
       }
     }
   }

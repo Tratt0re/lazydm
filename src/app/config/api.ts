@@ -27,7 +27,9 @@ export interface ElectronIpcClient {
     readonly set: IpcRequest<{ key: string; value: string }, { success: boolean }>;
   };
   readonly campaigns: {
-    readonly list: OptionalIpcRequest<void, { rows: any[] }>;
+    readonly list: OptionalIpcRequest<void, { rows: DTO.CampaignDto[] }>;
+    readonly get: IpcRequest<{ slug: string }, DTO.CampaignDto>;
+    readonly create: IpcRequest<DTO.CreateCampaignPayload, DTO.CampaignDto>;
   };
   readonly characters: {
     readonly list: OptionalIpcRequest<void, { rows: any[] }>;

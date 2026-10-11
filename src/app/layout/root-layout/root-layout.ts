@@ -16,6 +16,7 @@ import { Header } from '../header/header';
 import { Sidebar } from '../sidebar/sidebar';
 import { Toolbar } from '../toolbar/toolbar';
 import { MenuConfiguration, type MenuSectionConfig } from '@/config/menu.config';
+import { CampaignService } from '@/services/campaign.service';
 import { ToolbarContextService } from '@/services/toolbar-context.service';
 import { detectSmallScreenViewport } from '@/shared/utils';
 
@@ -42,7 +43,10 @@ export class RootLayout implements OnInit, OnDestroy {
   protected readonly sidebarCollapsed = signal(false);
   protected readonly isFullscreen = signal(false);
   protected readonly isSmallScreen = signal(detectSmallScreenViewport());
-  protected readonly menuSections: readonly MenuSectionConfig[] = MenuConfiguration.sections;
+  private readonly campaignService = inject(CampaignService);
+  protected readonly menuSections = computed<readonly MenuSectionConfig[]>(() =>
+    MenuConfiguration.forCampaign(this.campaignService.activeCampaign()?.slug ?? null),
+  );
   protected readonly headerOffset = computed(() => (this.isFullscreen() ? '2rem' : '0rem'));
   protected readonly showSidebarOverlay = computed(
     () => this.isSmallScreen() && !this.sidebarCollapsed(),

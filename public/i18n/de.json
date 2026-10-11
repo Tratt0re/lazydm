@@ -1,14 +1,21 @@
 {
   "nav": {
     "sections": {
-      "main": "Menü"
+      "main": "Menü",
+      "campaign": "Kampagne"
     },
     "items": {
       "home": "Startseite",
       "campaigns": "Kampagnen",
       "characters": "Charaktere",
       "encounters": "Begegnungen",
-      "settings": "Einstellungen"
+      "settings": "Einstellungen",
+      "overview": "Übersicht",
+      "scenes": "Szenen",
+      "monsters": "Monster",
+      "sessions": "Sitzungen",
+      "assets": "Dateien",
+      "backToCampaigns": "Zurück zu den Kampagnen"
     }
   },
   "header": {
@@ -106,6 +113,49 @@
         "onedrive": "OneDrive",
         "google-drive": "Google Drive",
         "generic": "Dein Cloud-Dienst"
+      }
+    }
+  },
+  "campaigns": {
+    "list": {
+      "title": "Kampagnen",
+      "create": "Neue Kampagne",
+      "emptyTitle": "Noch keine Kampagnen",
+      "emptyDescription": "Eine Kampagne ist ein Ordner in deinem Vault mit Szenen, Charakteren, Monstern, Begegnungen und Sitzungen. Erstelle die erste, um mit der Vorbereitung zu beginnen.",
+      "loadError": "Kampagnen konnten nicht geladen werden"
+    },
+    "create": {
+      "title": "Neue Kampagne",
+      "description": "LazyDM legt in deinem Vault einen Ordner für die Kampagne mit den Standardbereichen an.",
+      "nameLabel": "Name",
+      "namePlaceholder": "Die verlorene Mine von Phandelver",
+      "nameDescription": "Der Ordner wird danach benannt, mit Bindestrichen statt Leerzeichen.",
+      "descriptionLabel": "Beschreibung",
+      "descriptionPlaceholder": "Eine kurze Zusammenfassung des Abenteuers",
+      "submit": "Kampagne erstellen",
+      "cancel": "Abbrechen",
+      "error": "Kampagne konnte nicht erstellt werden"
+    },
+    "sections": {
+      "emptyTitle": "Noch keine Einträge in {{section}}",
+      "emptyDescription": "Notizen im Ordner {{folder}} deines Vaults erscheinen hier.",
+      "scenes": {
+        "description": "Orte, Ereignisse und Momente für den Spieltisch."
+      },
+      "characters": {
+        "description": "Spielercharaktere und NSCs."
+      },
+      "monsters": {
+        "description": "Werteblöcke und Kreaturennotizen."
+      },
+      "encounters": {
+        "description": "Kämpfe und Herausforderungen, bereit zum Spielen."
+      },
+      "sessions": {
+        "description": "Vorbereitung und Rückblicke jeder Sitzung."
+      },
+      "assets": {
+        "description": "Bilder, Karten, PDFs und Sounds."
       }
     }
   }

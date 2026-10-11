@@ -1,0 +1,116 @@
+import { Component, OnInit, computed, inject, signal } from '@angular/core';
+import { Router, RouterLink } from '@angular/router';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { toast } from 'ngx-sonner';
+
+import { AppSheetFormService } from '@/components/sheet-form/sheet-form.service';
+import type { AppSheetField } from '@/components/sheet-form/sheet-form.types';
+import { CampaignService } from '@/services/campaign.service';
+import { VaultService } from '@/services/vault.service';
+import { ArcTechAlertComponent } from '@/shared/components/alert';
+import { ArcTechButtonComponent } from '@/shared/components/button';
+import { ArcTechEmptyComponent } from '@/shared/components/empty';
+import { ArcTechIconComponent } from '@/shared/components/icon';
+
+const CREATE_CAMPAIGN_FIELDS: readonly AppSheetField[] = [
+  {
+    id: 'name',
+    type: 'input',
+    label: 'campaigns.create.nameLabel',
+    placeholder: 'campaigns.create.namePlaceholder',
+    description: 'campaigns.create.nameDescription',
+    required: true,
+    translate: true,
+  },
+  {
+    id: 'description',
+    type: 'input',
+    label: 'campaigns.create.descriptionLabel',
+    placeholder: 'campaigns.create.descriptionPlaceholder',
+    translate: true,
+  },
+];
+
+@Component({
+  selector: 'app-campaign-list-page',
+  imports: [
+    RouterLink,
+    TranslatePipe,
+    ArcTechAlertComponent,
+    ArcTechButtonComponent,
+    ArcTechEmptyComponent,
+    ArcTechIconComponent,
+  ],
+  templateUrl: './campaign-list-page.html',
+})
+export class CampaignListPage implements OnInit {
+  private readonly campaignService = inject(CampaignService);
+  private readonly vaultService = inject(VaultService);
+  private readonly sheetFormService = inject(AppSheetFormService);
+  private readonly translateService = inject(TranslateService);
+  private readonly router = inject(Router);
+
+  protected readonly campaigns = this.campaignService.campaigns;
+  protected readonly vaultName = computed(() => this.vaultService.currentVault()?.name ?? '');
+  protected readonly isLoading = signal(true);
+  protected readonly errorMessage = signal<string | null>(null);
+
+  ngOnInit(): void {
+    void this.loadCampaigns();
+  }
+
+  protected openCreateSheet(): void {
+    let isSubmitting = false;
+
+    const sheetRef = this.sheetFormService.open({
+      arcTitle: this.translateService.instant('campaigns.create.title'),
+      arcDescription: this.translateService.instant('campaigns.create.description'),
+      arcOkText: this.translateService.instant('campaigns.create.submit'),
+      arcCancelText: this.translateService.instant('campaigns.create.cancel'),
+      fields: CREATE_CAMPAIGN_FIELDS,
+      onSubmit: (form) => {
+        if (!isSubmitting) {
+          isSubmitting = true;
+          const values = form.getValues();
+          void this.createCampaign(String(values['name'] ?? ''), String(values['description'] ?? '')).then(
+            (created) => {
+              isSubmitting = false;
+              if (created) {
+                sheetRef.close();
+              }
+            },
+          );
+        }
+
+        // The sheet is closed once the campaign folder exists (creation goes through IPC).
+        return false;
+      },
+    });
+  }
+
+  private async createCampaign(name: string, description: string): Promise<boolean> {
+    try {
+      const campaign = await this.campaignService.create({ name, description });
+      await this.router.navigate(['/campaigns', campaign.slug]);
+      return true;
+    } catch (error) {
+      toast.error(this.translateService.instant('campaigns.create.error'), {
+        description: error instanceof Error ? error.message : String(error),
+      });
+      return false;
+    }
+  }
+
+  private async loadCampaigns(): Promise<void> {
+    this.isLoading.set(true);
+    this.errorMessage.set(null);
+
+    try {
+      await this.campaignService.loadCampaigns();
+    } catch (error) {
+      this.errorMessage.set(error instanceof Error ? error.message : String(error));
+    } finally {
+      this.isLoading.set(false);
+    }
+  }
+}

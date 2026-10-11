@@ -1,14 +1,21 @@
 {
   "nav": {
     "sections": {
-      "main": "Menu"
+      "main": "Menu",
+      "campaign": "Campaign"
     },
     "items": {
       "home": "Home",
       "campaigns": "Campaigns",
       "characters": "Characters",
       "encounters": "Encounters",
-      "settings": "Settings"
+      "settings": "Settings",
+      "overview": "Overview",
+      "scenes": "Scenes",
+      "monsters": "Monsters",
+      "sessions": "Sessions",
+      "assets": "Assets",
+      "backToCampaigns": "Back to campaigns"
     }
   },
   "header": {
@@ -106,6 +113,49 @@
         "onedrive": "OneDrive",
         "google-drive": "Google Drive",
         "generic": "Your cloud service"
+      }
+    }
+  },
+  "campaigns": {
+    "list": {
+      "title": "Campaigns",
+      "create": "New campaign",
+      "emptyTitle": "No campaigns yet",
+      "emptyDescription": "A campaign is a folder in your vault with scenes, characters, monsters, encounters and sessions. Create your first one to start preparing.",
+      "loadError": "Couldn't load the campaigns"
+    },
+    "create": {
+      "title": "New campaign",
+      "description": "LazyDM creates a folder for the campaign in your vault, with its default sections.",
+      "nameLabel": "Name",
+      "namePlaceholder": "Lost Mine of Phandelver",
+      "nameDescription": "The folder is named after it, with dashes instead of spaces.",
+      "descriptionLabel": "Description",
+      "descriptionPlaceholder": "A short summary of the adventure",
+      "submit": "Create campaign",
+      "cancel": "Cancel",
+      "error": "Couldn't create the campaign"
+    },
+    "sections": {
+      "emptyTitle": "No {{section}} yet",
+      "emptyDescription": "Notes you add to the {{folder}} folder of your vault appear here.",
+      "scenes": {
+        "description": "Locations, events and moments to run at the table."
+      },
+      "characters": {
+        "description": "Player characters and NPCs."
+      },
+      "monsters": {
+        "description": "Stat blocks and creature notes."
+      },
+      "encounters": {
+        "description": "Combats and challenges, ready to run."
+      },
+      "sessions": {
+        "description": "Prep and recaps of each session."
+      },
+      "assets": {
+        "description": "Images, maps, PDFs and sounds."
       }
     }
   }

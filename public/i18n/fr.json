@@ -1,14 +1,21 @@
 {
   "nav": {
     "sections": {
-      "main": "Menu"
+      "main": "Menu",
+      "campaign": "Campagne"
     },
     "items": {
       "home": "Accueil",
       "campaigns": "Campagnes",
       "characters": "Personnages",
       "encounters": "Rencontres",
-      "settings": "Paramètres"
+      "settings": "Paramètres",
+      "overview": "Aperçu",
+      "scenes": "Scènes",
+      "monsters": "Monstres",
+      "sessions": "Sessions",
+      "assets": "Ressources",
+      "backToCampaigns": "Retour aux campagnes"
     }
   },
   "header": {
@@ -106,6 +113,49 @@
         "onedrive": "OneDrive",
         "google-drive": "Google Drive",
         "generic": "Votre service cloud"
+      }
+    }
+  },
+  "campaigns": {
+    "list": {
+      "title": "Campagnes",
+      "create": "Nouvelle campagne",
+      "emptyTitle": "Aucune campagne pour l'instant",
+      "emptyDescription": "Une campagne est un dossier de votre vault avec des scènes, des personnages, des monstres, des rencontres et des sessions. Créez la première pour commencer à préparer.",
+      "loadError": "Impossible de charger les campagnes"
+    },
+    "create": {
+      "title": "Nouvelle campagne",
+      "description": "LazyDM crée un dossier pour la campagne dans votre vault, avec ses sections par défaut.",
+      "nameLabel": "Nom",
+      "namePlaceholder": "La Mine perdue de Phandelver",
+      "nameDescription": "Le dossier porte ce nom, avec des tirets à la place des espaces.",
+      "descriptionLabel": "Description",
+      "descriptionPlaceholder": "Un court résumé de l'aventure",
+      "submit": "Créer la campagne",
+      "cancel": "Annuler",
+      "error": "Impossible de créer la campagne"
+    },
+    "sections": {
+      "emptyTitle": "Aucun élément dans {{section}}",
+      "emptyDescription": "Les notes que vous ajoutez au dossier {{folder}} de votre vault apparaissent ici.",
+      "scenes": {
+        "description": "Lieux, événements et moments à jouer à la table."
+      },
+      "characters": {
+        "description": "Personnages joueurs et PNJ."
+      },
+      "monsters": {
+        "description": "Blocs de statistiques et notes de créatures."
+      },
+      "encounters": {
+        "description": "Combats et défis, prêts à jouer."
+      },
+      "sessions": {
+        "description": "Préparation et comptes rendus de chaque session."
+      },
+      "assets": {
+        "description": "Images, cartes, PDF et sons."
       }
     }
   }

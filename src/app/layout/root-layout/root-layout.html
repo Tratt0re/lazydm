@@ -19,7 +19,7 @@
     }
 
     <app-sidebar
-      [menuSections]="menuSections"
+      [menuSections]="menuSections()"
       [isSmallScreen]="isSmallScreen()"
       [sidebarCollapsed]="sidebarCollapsed()"
       (sidebarCollapsedChange)="setSidebarCollapsed($event)"

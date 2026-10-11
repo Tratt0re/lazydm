@@ -1,0 +1,77 @@
+<main class="min-h-full bg-arc-grid">
+  <div class="mx-auto flex w-full max-w-6xl flex-col gap-6 p-6 md:p-10">
+    <header class="flex flex-wrap items-end justify-between gap-4 border-b border-border pb-6">
+      <div class="min-w-0">
+        @if (vaultName()) {
+          <p class="mb-2 truncate text-[10px] font-semibold tracking-[0.16em] text-primary uppercase">
+            {{ vaultName() }}
+          </p>
+        }
+        <h1 class="font-display text-6xl leading-[0.88] font-black tracking-[0.015em] uppercase">
+          {{ 'campaigns.list.title' | translate }}<span class="text-primary" aria-hidden="true">.</span>
+        </h1>
+      </div>
+
+      <div class="flex flex-wrap gap-2">
+        <a arc-button arcType="outline" routerLink="/settings">
+          <arc-icon arcType="settings" />
+          {{ 'nav.items.settings' | translate }}
+        </a>
+        @if (campaigns().length > 0) {
+          <button arc-button type="button" (click)="openCreateSheet()">
+            <arc-icon arcType="plus" />
+            {{ 'campaigns.list.create' | translate }}
+          </button>
+        }
+      </div>
+    </header>
+
+    @if (errorMessage(); as message) {
+      <arc-alert
+        arcType="destructive"
+        arcIcon="circle-alert"
+        [arcTitle]="'campaigns.list.loadError' | translate"
+        [arcDescription]="message"
+      />
+    }
+
+    @if (!isLoading() && !errorMessage()) {
+      @if (campaigns().length === 0) {
+        <arc-empty
+          class="border border-dashed border-border bg-card/60"
+          arcIcon="book-open"
+          [arcTitle]="'campaigns.list.emptyTitle' | translate"
+          [arcDescription]="'campaigns.list.emptyDescription' | translate"
+          [arcActions]="[createAction]"
+        />
+        <ng-template #createAction>
+          <button arc-button type="button" (click)="openCreateSheet()">
+            <arc-icon arcType="plus" />
+            {{ 'campaigns.list.create' | translate }}
+          </button>
+        </ng-template>
+      } @else {
+        <ul class="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          @for (campaign of campaigns(); track campaign.slug) {
+            <li>
+              <a
+                [routerLink]="['/campaigns', campaign.slug]"
+                class="flex h-full flex-col gap-3 border border-border bg-card p-5 transition-colors hover:border-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+              >
+                <h2 class="font-display text-3xl leading-none font-extrabold tracking-[0.02em] uppercase">
+                  {{ campaign.name }}<span class="text-primary" aria-hidden="true">.</span>
+                </h2>
+                @if (campaign.description) {
+                  <p class="line-clamp-3 text-sm text-muted-foreground">{{ campaign.description }}</p>
+                }
+                <p class="mt-auto truncate text-[10px] font-semibold tracking-[0.12em] text-muted-foreground uppercase">
+                  {{ campaign.slug }}
+                </p>
+              </a>
+            </li>
+          }
+        </ul>
+      }
+    }
+  </div>
+</main>
