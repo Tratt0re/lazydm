@@ -54,6 +54,10 @@
       "general": {
         "title": "Général",
         "description": "Définir l'apparence et le comportement de l'application dans tout l'espace de travail."
+      },
+      "templates": {
+        "title": "Modèles",
+        "description": "Le modèle utilisé par chaque type de note, et la bibliothèque de modèles."
       }
     },
     "general": {
@@ -75,7 +79,62 @@
         }
       }
     },
-    "sidebarAriaLabel": "Sections des paramètres"
+    "sidebarAriaLabel": "Sections des paramètres",
+    "templates": {
+      "loadError": "Impossible de charger les modèles",
+      "createError": "Impossible de créer le modèle",
+      "customized": "Copié dans {{path}}",
+      "sources": {
+        "builtin": "Intégré",
+        "vault": "Vault"
+      },
+      "rules": {
+        "title": "Modèles de cette campagne",
+        "description": "Les nouvelles notes de {{campaign}} partent de ces modèles. Automatique utilise _templates/<type>.md s’il existe, sinon le modèle intégré.",
+        "automatic": "Automatique",
+        "missing": "Manquant : {{path}}",
+        "noCampaignTitle": "Aucune campagne ouverte",
+        "noCampaignDescription": "Ouvrez une campagne, puis revenez ici pour choisir le modèle de chaque type de note.",
+        "saved": "Choix du modèle enregistré",
+        "saveError": "Impossible d’enregistrer le choix du modèle"
+      },
+      "library": {
+        "title": "Bibliothèque de modèles",
+        "description": "Modèles du vault, de chaque système du compendium et de chaque campagne. Les modèles intégrés sont en lecture seule.",
+        "empty": "Sélectionnez un modèle pour le voir ou le modifier."
+      },
+      "editor": {
+        "builtInHint": "Intégré · lecture seule",
+        "customize": "Personnaliser",
+        "save": "Enregistrer",
+        "saved": "Modèle enregistré",
+        "saveError": "Impossible d’enregistrer le modèle",
+        "conflict": "Le modèle a changé sur le disque.",
+        "reload": "Recharger"
+      },
+      "create": {
+        "button": "Nouveau modèle",
+        "title": "Nouveau modèle",
+        "description": "Crée un modèle dans _templates/ à la racine du vault.",
+        "nameLabel": "Nom",
+        "namePlaceholder": "ex. Monstre boss",
+        "startFromLabel": "Partir de",
+        "empty": "Modèle vide",
+        "fromBuiltIn": "Intégré : {{section}}",
+        "submit": "Créer",
+        "cancel": "Annuler"
+      },
+      "delete": {
+        "button": "Supprimer",
+        "title": "Supprimer {{name}} ?",
+        "description": "{{path}} sera supprimé définitivement. Les campagnes qui l’utilisent repassent en automatique.",
+        "confirm": "Supprimer",
+        "cancel": "Annuler",
+        "done": "{{name}} supprimé",
+        "error": "Impossible de supprimer le modèle"
+      },
+      "placeholders": "Espaces réservés"
+    }
   },
   "vault": {
     "setup": {

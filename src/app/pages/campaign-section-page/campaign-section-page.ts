@@ -154,7 +154,12 @@ export class CampaignSectionPage {
 
   private async createNote(title: string, type: string): Promise<boolean> {
     try {
-      const note = await this.documentService.create({ folder: this.folderPath(), title, type });
+      const note = await this.documentService.create({
+        folder: this.folderPath(),
+        title,
+        type,
+        section: this.translateService.instant(this.sectionLabelKey()),
+      });
       const noteSlug = note.path.split('/').pop()!.replace(/\.md$/i, '');
       await this.router.navigateByUrl(`${this.scopeRoute()}/${this.sectionKey()}/${noteSlug}`);
       return true;

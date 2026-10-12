@@ -54,6 +54,10 @@
       "general": {
         "title": "General",
         "description": "Set how the app looks and behaves across your workspace."
+      },
+      "templates": {
+        "title": "Templates",
+        "description": "Which template each note type uses, and the template library."
       }
     },
     "general": {
@@ -75,7 +79,62 @@
         }
       }
     },
-    "sidebarAriaLabel": "Settings sections"
+    "sidebarAriaLabel": "Settings sections",
+    "templates": {
+      "loadError": "Could not load the templates",
+      "createError": "Could not create the template",
+      "customized": "Copied to {{path}}",
+      "sources": {
+        "builtin": "Built-in",
+        "vault": "Vault"
+      },
+      "rules": {
+        "title": "Templates for this campaign",
+        "description": "New notes in {{campaign}} start from these templates. Automatic uses _templates/<type>.md when it exists, otherwise the built-in.",
+        "automatic": "Automatic",
+        "missing": "Missing: {{path}}",
+        "noCampaignTitle": "No campaign open",
+        "noCampaignDescription": "Open a campaign, then come back here to choose which template each note type uses.",
+        "saved": "Template choice saved",
+        "saveError": "Could not save the template choice"
+      },
+      "library": {
+        "title": "Template library",
+        "description": "Templates of the vault, of each compendium system and of each campaign. Built-ins are read-only.",
+        "empty": "Select a template to view or edit it."
+      },
+      "editor": {
+        "builtInHint": "Built-in · read-only",
+        "customize": "Customize",
+        "save": "Save",
+        "saved": "Template saved",
+        "saveError": "Could not save the template",
+        "conflict": "The template changed on disk.",
+        "reload": "Reload"
+      },
+      "create": {
+        "button": "New template",
+        "title": "New template",
+        "description": "Creates a template in _templates/ at the vault root.",
+        "nameLabel": "Name",
+        "namePlaceholder": "e.g. Boss monster",
+        "startFromLabel": "Start from",
+        "empty": "Empty template",
+        "fromBuiltIn": "Built-in: {{section}}",
+        "submit": "Create",
+        "cancel": "Cancel"
+      },
+      "delete": {
+        "button": "Delete",
+        "title": "Delete {{name}}?",
+        "description": "{{path}} will be deleted permanently. Campaigns using it go back to automatic.",
+        "confirm": "Delete",
+        "cancel": "Cancel",
+        "done": "{{name}} deleted",
+        "error": "Could not delete the template"
+      },
+      "placeholders": "Placeholders"
+    }
   },
   "vault": {
     "setup": {

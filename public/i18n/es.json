@@ -54,6 +54,10 @@
       "general": {
         "title": "General",
         "description": "Define cómo se ve y se comporta la app en todo tu espacio de trabajo."
+      },
+      "templates": {
+        "title": "Plantillas",
+        "description": "Qué plantilla usa cada tipo de nota, y la biblioteca de plantillas."
       }
     },
     "general": {
@@ -75,7 +79,62 @@
         }
       }
     },
-    "sidebarAriaLabel": "Secciones de ajustes"
+    "sidebarAriaLabel": "Secciones de ajustes",
+    "templates": {
+      "loadError": "No se pudieron cargar las plantillas",
+      "createError": "No se pudo crear la plantilla",
+      "customized": "Copiada en {{path}}",
+      "sources": {
+        "builtin": "Integrada",
+        "vault": "Vault"
+      },
+      "rules": {
+        "title": "Plantillas de esta campaña",
+        "description": "Las notas nuevas de {{campaign}} parten de estas plantillas. Automático usa _templates/<tipo>.md si existe; si no, la integrada.",
+        "automatic": "Automático",
+        "missing": "Falta: {{path}}",
+        "noCampaignTitle": "Ninguna campaña abierta",
+        "noCampaignDescription": "Abre una campaña y vuelve aquí para elegir qué plantilla usa cada tipo de nota.",
+        "saved": "Elección de plantilla guardada",
+        "saveError": "No se pudo guardar la elección de plantilla"
+      },
+      "library": {
+        "title": "Biblioteca de plantillas",
+        "description": "Plantillas del vault, de cada sistema del compendio y de cada campaña. Las integradas son de solo lectura.",
+        "empty": "Selecciona una plantilla para verla o editarla."
+      },
+      "editor": {
+        "builtInHint": "Integrada · solo lectura",
+        "customize": "Personalizar",
+        "save": "Guardar",
+        "saved": "Plantilla guardada",
+        "saveError": "No se pudo guardar la plantilla",
+        "conflict": "La plantilla cambió en el disco.",
+        "reload": "Recargar"
+      },
+      "create": {
+        "button": "Nueva plantilla",
+        "title": "Nueva plantilla",
+        "description": "Crea una plantilla en _templates/ en la raíz del vault.",
+        "nameLabel": "Nombre",
+        "namePlaceholder": "p. ej. Monstruo jefe",
+        "startFromLabel": "Partir de",
+        "empty": "Plantilla vacía",
+        "fromBuiltIn": "Integrada: {{section}}",
+        "submit": "Crear",
+        "cancel": "Cancelar"
+      },
+      "delete": {
+        "button": "Eliminar",
+        "title": "¿Eliminar {{name}}?",
+        "description": "{{path}} se eliminará definitivamente. Las campañas que la usan vuelven a automático.",
+        "confirm": "Eliminar",
+        "cancel": "Cancelar",
+        "done": "{{name}} eliminada",
+        "error": "No se pudo eliminar la plantilla"
+      },
+      "placeholders": "Marcadores"
+    }
   },
   "vault": {
     "setup": {

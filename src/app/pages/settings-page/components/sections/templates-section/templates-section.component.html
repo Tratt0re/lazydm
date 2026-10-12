@@ -1,0 +1,177 @@
+<div class="flex min-h-0 flex-col gap-5">
+  @if (errorMessage(); as message) {
+    <arc-alert
+      arcType="destructive"
+      arcIcon="circle-alert"
+      [arcTitle]="'settings.templates.loadError' | translate"
+      [arcDescription]="message"
+    />
+  }
+
+  <section class="border border-border bg-card p-4 md:p-5">
+    <h3 class="font-display text-xl font-semibold uppercase tracking-wide">
+      {{ 'settings.templates.rules.title' | translate }}<span class="text-primary" aria-hidden="true">.</span>
+    </h3>
+
+    @if (campaignSlug()) {
+      <p class="mt-1 text-sm text-muted-foreground">
+        {{ 'settings.templates.rules.description' | translate: { campaign: campaignName() } }}
+      </p>
+
+      <div class="mt-4 grid gap-x-6 gap-y-3 xl:grid-cols-2">
+        @for (row of noteTypes(); track row.type) {
+          <div class="grid grid-cols-[8rem_minmax(0,1fr)] items-center gap-3">
+            <label
+              class="font-mono text-xs uppercase tracking-wider text-muted-foreground"
+              [for]="'template-rule-' + row.type"
+            >
+              {{ 'nav.items.' + row.sectionKey | translate }}
+            </label>
+            <arc-select
+              [id]="'template-rule-' + row.type"
+              [arcValue]="getRuleValue(row.type)"
+              (arcSelectionChange)="onRuleChange(row.type, $event)"
+            >
+              <arc-select-item
+                [arcValue]="automaticRule"
+                [arcLabel]="'settings.templates.rules.automatic' | translate"
+              />
+              <arc-select-item
+                [arcValue]="builtInRule"
+                [arcLabel]="'settings.templates.sources.builtin' | translate"
+              />
+              @for (template of campaignOptions(); track template.path) {
+                <arc-select-item [arcValue]="template.path" [arcLabel]="getTemplateOptionLabel(template)" />
+              }
+              @if (isMissingRule(row.type)) {
+                <arc-select-item
+                  [arcValue]="getRuleValue(row.type)"
+                  [arcLabel]="'settings.templates.rules.missing' | translate: { path: getRuleValue(row.type) }"
+                />
+              }
+            </arc-select>
+          </div>
+        }
+      </div>
+    } @else {
+      <arc-alert
+        class="mt-4"
+        arcIcon="circle-alert"
+        [arcTitle]="'settings.templates.rules.noCampaignTitle' | translate"
+        [arcDescription]="'settings.templates.rules.noCampaignDescription' | translate"
+      />
+    }
+  </section>
+
+  <section class="flex min-h-[34rem] flex-1 flex-col border border-border bg-card">
+    <div class="flex flex-wrap items-center justify-between gap-3 border-b border-border p-4 md:px-5">
+      <div>
+        <h3 class="font-display text-xl font-semibold uppercase tracking-wide">
+          {{ 'settings.templates.library.title' | translate }}<span class="text-primary" aria-hidden="true">.</span>
+        </h3>
+        <p class="mt-1 text-sm text-muted-foreground">
+          {{ 'settings.templates.library.description' | translate }}
+        </p>
+      </div>
+      <button arc-button type="button" (click)="openCreateSheet()">
+        <arc-icon arcType="plus" />
+        {{ 'settings.templates.create.button' | translate }}
+      </button>
+    </div>
+
+    <div class="grid min-h-0 flex-1 lg:grid-cols-[16rem_minmax(0,1fr)]">
+      <app-secondary-sidebar
+        class="border-0 border-b lg:border-b-0 lg:border-r"
+        [items]="libraryItems()"
+        [activeKey]="selected()?.key ?? null"
+        [ariaLabel]="'settings.templates.library.title' | translate"
+        (itemSelected)="onLibrarySelected($event)"
+      />
+
+      <div class="flex min-h-0 min-w-0 flex-col">
+        @if (selected(); as current) {
+          <div class="flex flex-wrap items-center justify-between gap-3 border-b border-border px-4 py-3">
+            <div class="min-w-0">
+              <p class="truncate font-display text-lg font-semibold uppercase tracking-wide">
+                {{ selectedTitle() }}<span class="text-primary" aria-hidden="true">.</span>
+              </p>
+              <p class="truncate font-mono text-xs text-muted-foreground">
+                @if (selectedBuiltInType()) {
+                  {{ 'settings.templates.editor.builtInHint' | translate }}
+                } @else {
+                  {{ current.key }}
+                }
+              </p>
+            </div>
+
+            <div class="flex items-center gap-2">
+              <div
+                class="flex items-center gap-1"
+                role="group"
+                [attr.aria-label]="'document.toolbar.modeAriaLabel' | translate"
+              >
+                @for (option of editorModes; track option.value) {
+                  @let isPressed = editorMode() === option.value;
+                  <button
+                    type="button"
+                    arc-button
+                    arcType="ghost"
+                    arcSize="sm"
+                    class="size-9 border"
+                    [class]="isPressed ? 'border-primary bg-raised text-primary' : 'border-transparent text-muted-foreground'"
+                    [attr.aria-pressed]="isPressed"
+                    [attr.aria-label]="option.label | translate"
+                    [arcTooltip]="option.label | translate"
+                    (click)="editorMode.set(option.value)"
+                  >
+                    <arc-icon [arcType]="option.icon" />
+                  </button>
+                }
+              </div>
+
+              @if (selectedBuiltInType()) {
+                <button arc-button type="button" (click)="customize()">
+                  <arc-icon arcType="copy-plus" />
+                  {{ 'settings.templates.editor.customize' | translate }}
+                </button>
+              } @else {
+                <button arc-button type="button" arcType="outline" (click)="confirmDelete()">
+                  <arc-icon arcType="trash" />
+                  {{ 'settings.templates.delete.button' | translate }}
+                </button>
+                <button arc-button type="button" [arcDisabled]="!isDirty() || isSaving()" (click)="save()">
+                  <arc-icon arcType="save" />
+                  {{ 'settings.templates.editor.save' | translate }}
+                </button>
+              }
+            </div>
+          </div>
+
+          <app-code-editor
+            class="min-h-[22rem] flex-1"
+            [documentKey]="current.key"
+            [initialContent]="current.content"
+            [readOnly]="selectedBuiltInType() !== null"
+            [mode]="editorMode()"
+            [sourcePath]="current.key"
+            (contentChange)="editedContent.set($event)"
+            (saveRequested)="save()"
+          />
+        } @else {
+          <p class="m-auto max-w-sm p-6 text-center text-sm text-muted-foreground">
+            {{ 'settings.templates.library.empty' | translate }}
+          </p>
+        }
+
+        <div class="flex flex-wrap items-center gap-2 border-t border-border px-4 py-3">
+          <span class="font-mono text-xs uppercase tracking-wider text-muted-foreground">
+            {{ 'settings.templates.placeholders' | translate }}
+          </span>
+          @for (placeholder of placeholders; track placeholder) {
+            <code class="border border-border bg-recessed px-1.5 py-0.5 font-mono text-xs">{{ placeholder }}</code>
+          }
+        </div>
+      </div>
+    </div>
+  </section>
+</div>

@@ -60,7 +60,7 @@ LazyDM works like **Obsidian**, specialised for Dungeon Masters.
 | --- | --- | --- |
 | `.md` frontmatter | `type`, `title`, `tags`, aliases, game fields (CR, HP…) | ✅ via the cloud folder |
 | `.md` body | content and `[[links]]` | ✅ |
-| `.lazydm/*.json` | template rules, folder/display-name mapping, vault settings | ✅ |
+| `.lazydm/*.json` | template rules (`vault.json` → `templates`, see §6c), folder/display-name mapping, vault settings | ✅ |
 | Local SQLite | rebuildable index + device-local state | ❌ never |
 | Device-local preferences | **theme, language** (renderer `localStorage` via `LocalPreferencesService`), Electron-side settings (`settings-store` userData JSON), current vault (`app_meta.current_vault_id`) | ❌ never |
 
@@ -168,6 +168,30 @@ Planned Electron modules: `vault`, `cloud-readiness`, `campaign`, `document`, `i
 - UI: the Compendium page (from the campaign list and the campaign sidebar) lists systems; a system has its own
   shell (sidebar with the folders it has, overview, section lists and the note editor — rename and links included).
   Compendium pages are outside campaigns, so they have no tab bar.
+
+## 6c. Templates
+
+- A **template** is a plain `.md` file in a `_templates/` folder: at the vault root (`_templates/`), in a compendium
+  system (`compendium/<system>/_templates/`) or in a campaign (`<campaign>/_templates/`, where *Copy to campaign*
+  puts copied templates). Obsidian can use them as they are.
+- **Built-in templates** ship with the app, one per note type (encounters excluded). They are read-only and never
+  written to the vault unasked; *Customize* copies one into `_templates/` to edit it.
+- **Per-campaign choice per note type**, saved in `.lazydm/vault.json` → `templates.campaigns.<slug>.<type>` (a
+  template path or `builtin`; no entry = automatic). Deleting a template removes the choices pointing at it.
+- **Which template a new note gets** (also for *Create note…* from a broken link):
+  1. the campaign's choice for the type;
+  2. a compendium system's own `_templates/<type>.md` (system notes only);
+  3. the vault's `_templates/<type>.md`;
+  4. the built-in; types without one get a minimal frontmatter.
+  A choice whose file is gone falls through to 3–4.
+- **Placeholders**: `{{title}}`, `{{date}}` (YYYY-MM-DD), `{{time}}` (HH:MM), `{{campaign}}` (campaign or system
+  name), `{{section}}` (folder display name, in the UI language), `{{type}}`. Unknown placeholders stay as written;
+  inside the frontmatter values are escaped for YAML strings, so a title with quotes keeps it valid.
+- Template files are excluded from broken links (their links are placeholders).
+- **UI — Settings → Templates**: the per-type choices of the campaign under the sheet (a hint when opened from the
+  campaign list), and the library — built-ins and every `_templates/` folder in the shared secondary sidebar — with
+  the note editor (Live / Source), Save, New template (empty or from a built-in), Delete (confirmed) and Customize.
+  Unsaved edits are saved when another template is selected or the section is left, like notes.
 
 ## 7. Security
 

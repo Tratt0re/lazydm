@@ -54,6 +54,10 @@
       "general": {
         "title": "通用",
         "description": "设置应用在整个工作区中的外观和行为方式。"
+      },
+      "templates": {
+        "title": "模板",
+        "description": "每种笔记类型使用的模板，以及模板库。"
       }
     },
     "general": {
@@ -75,7 +79,62 @@
         }
       }
     },
-    "sidebarAriaLabel": "设置分区"
+    "sidebarAriaLabel": "设置分区",
+    "templates": {
+      "loadError": "无法加载模板",
+      "createError": "无法创建模板",
+      "customized": "已复制到 {{path}}",
+      "sources": {
+        "builtin": "内置",
+        "vault": "库"
+      },
+      "rules": {
+        "title": "本战役的模板",
+        "description": "{{campaign}} 中的新笔记以这些模板开始。“自动”会在 _templates/<类型>.md 存在时使用它，否则使用内置模板。",
+        "automatic": "自动",
+        "missing": "缺失：{{path}}",
+        "noCampaignTitle": "未打开战役",
+        "noCampaignDescription": "请先打开一个战役，再回到这里为每种笔记类型选择模板。",
+        "saved": "模板选择已保存",
+        "saveError": "无法保存模板选择"
+      },
+      "library": {
+        "title": "模板库",
+        "description": "库、每个纲要系统和每个战役的模板。内置模板为只读。",
+        "empty": "选择一个模板以查看或编辑。"
+      },
+      "editor": {
+        "builtInHint": "内置 · 只读",
+        "customize": "自定义",
+        "save": "保存",
+        "saved": "模板已保存",
+        "saveError": "无法保存模板",
+        "conflict": "模板已在磁盘上更改。",
+        "reload": "重新加载"
+      },
+      "create": {
+        "button": "新建模板",
+        "title": "新建模板",
+        "description": "在库根目录的 _templates/ 中创建模板。",
+        "nameLabel": "名称",
+        "namePlaceholder": "例如：首领怪物",
+        "startFromLabel": "起始内容",
+        "empty": "空模板",
+        "fromBuiltIn": "内置：{{section}}",
+        "submit": "创建",
+        "cancel": "取消"
+      },
+      "delete": {
+        "button": "删除",
+        "title": "删除 {{name}}？",
+        "description": "{{path}} 将被永久删除。使用它的战役将恢复为自动。",
+        "confirm": "删除",
+        "cancel": "取消",
+        "done": "{{name}} 已删除",
+        "error": "无法删除模板"
+      },
+      "placeholders": "占位符"
+    }
   },
   "vault": {
     "setup": {

@@ -48,6 +48,15 @@ var require_channels = __commonJS({
         copy: "documents:copy",
         copyPlan: "documents:copyPlan"
       }),
+      templates: Object.freeze({
+        list: "templates:list",
+        builtIn: "templates:builtIn",
+        getRules: "templates:getRules",
+        setRule: "templates:setRule",
+        create: "templates:create",
+        customize: "templates:customize",
+        remove: "templates:remove"
+      }),
       index: Object.freeze({
         getStatus: "index:getStatus",
         rebuild: "index:rebuild"

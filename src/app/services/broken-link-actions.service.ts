@@ -141,6 +141,7 @@ export class BrokenLinkActionsService {
         folder: `${scopePath}/${sectionKey}`,
         title,
         type,
+        section: this.translateService.instant(`nav.items.${sectionKey}`),
       });
       toast.success(
         this.translateService.instant('links.actions.created', { title: created.title }),

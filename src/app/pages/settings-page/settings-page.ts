@@ -11,6 +11,7 @@ import {
 } from '@/components/secondary-sidebar/secondary-sidebar.component';
 import { SettingsSectionHeaderComponent } from './components/settings-section-header/settings-section-header.component';
 import { GeneralSectionComponent } from './components/sections/general-section/general-section.component';
+import { TemplatesSectionComponent } from './components/sections/templates-section/templates-section.component';
 import {
   DEFAULT_SETTINGS_SECTION,
   SETTINGS_NAV_ITEMS,
@@ -25,6 +26,7 @@ import {
     AppSecondarySidebarComponent,
     SettingsSectionHeaderComponent,
     GeneralSectionComponent,
+    TemplatesSectionComponent,
   ],
   template: `
     <section class="grid min-h-0 flex-1 gap-4 p-6 lg:grid-cols-[17.5rem_minmax(0,1fr)] lg:items-stretch">
@@ -46,6 +48,9 @@ import {
         @switch (activeKey()) {
           @case ('general') {
             <app-general-section />
+          }
+          @case ('templates') {
+            <app-templates-section />
           }
         }
       </div>

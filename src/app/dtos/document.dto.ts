@@ -64,6 +64,8 @@ export interface CreateDocumentPayload {
   readonly folder: string;
   readonly title: string;
   readonly type: string;
+  /** Display name of the folder, for the `{{section}}` template placeholder. */
+  readonly section?: string;
 }
 
 export type WriteDocumentResultDto =
@@ -99,6 +101,8 @@ export interface CreateFromLinkPayload {
   readonly folder: string;
   readonly title: string;
   readonly type: string;
+  /** Display name of the folder, for the `{{section}}` template placeholder. */
+  readonly section?: string;
 }
 
 /** An unresolved link written in a note of a campaign. */

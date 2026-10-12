@@ -54,6 +54,10 @@
       "general": {
         "title": "Allgemein",
         "description": "Darstellung der App und Verhalten im gesamten Arbeitsbereich festlegen."
+      },
+      "templates": {
+        "title": "Vorlagen",
+        "description": "Welche Vorlage jeder Notiztyp nutzt, und die Vorlagenbibliothek."
       }
     },
     "general": {
@@ -75,7 +79,62 @@
         }
       }
     },
-    "sidebarAriaLabel": "Einstellungsbereiche"
+    "sidebarAriaLabel": "Einstellungsbereiche",
+    "templates": {
+      "loadError": "Vorlagen konnten nicht geladen werden",
+      "createError": "Vorlage konnte nicht erstellt werden",
+      "customized": "Kopiert nach {{path}}",
+      "sources": {
+        "builtin": "Integriert",
+        "vault": "Vault"
+      },
+      "rules": {
+        "title": "Vorlagen dieser Kampagne",
+        "description": "Neue Notizen in {{campaign}} beginnen mit diesen Vorlagen. Automatisch nutzt _templates/<typ>.md, falls vorhanden, sonst die integrierte.",
+        "automatic": "Automatisch",
+        "missing": "Fehlt: {{path}}",
+        "noCampaignTitle": "Keine Kampagne geöffnet",
+        "noCampaignDescription": "Öffne eine Kampagne und komm dann hierher zurück, um die Vorlage für jeden Notiztyp zu wählen.",
+        "saved": "Vorlagenwahl gespeichert",
+        "saveError": "Vorlagenwahl konnte nicht gespeichert werden"
+      },
+      "library": {
+        "title": "Vorlagenbibliothek",
+        "description": "Vorlagen des Vaults, jedes Kompendium-Systems und jeder Kampagne. Integrierte sind schreibgeschützt.",
+        "empty": "Wähle eine Vorlage, um sie anzusehen oder zu bearbeiten."
+      },
+      "editor": {
+        "builtInHint": "Integriert · schreibgeschützt",
+        "customize": "Anpassen",
+        "save": "Speichern",
+        "saved": "Vorlage gespeichert",
+        "saveError": "Vorlage konnte nicht gespeichert werden",
+        "conflict": "Die Vorlage wurde auf der Festplatte geändert.",
+        "reload": "Neu laden"
+      },
+      "create": {
+        "button": "Neue Vorlage",
+        "title": "Neue Vorlage",
+        "description": "Erstellt eine Vorlage in _templates/ im Vault-Stammordner.",
+        "nameLabel": "Name",
+        "namePlaceholder": "z. B. Boss-Monster",
+        "startFromLabel": "Beginnen mit",
+        "empty": "Leere Vorlage",
+        "fromBuiltIn": "Integriert: {{section}}",
+        "submit": "Erstellen",
+        "cancel": "Abbrechen"
+      },
+      "delete": {
+        "button": "Löschen",
+        "title": "{{name}} löschen?",
+        "description": "{{path}} wird endgültig gelöscht. Kampagnen, die sie nutzen, wechseln zurück auf automatisch.",
+        "confirm": "Löschen",
+        "cancel": "Abbrechen",
+        "done": "{{name}} gelöscht",
+        "error": "Vorlage konnte nicht gelöscht werden"
+      },
+      "placeholders": "Platzhalter"
+    }
   },
   "vault": {
     "setup": {

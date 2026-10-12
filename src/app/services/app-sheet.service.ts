@@ -98,6 +98,11 @@ export class AppSheetService {
    * In-app links still point to `/compendium/...` and `/settings/...`: they open in the sheet, over the
    * page that was shown (the campaign list when there was none).
    */
+  /** Path of the page under the sheet (primary outlet), e.g. `campaigns/lost-mine/monsters`. */
+  underlyingPath(): string {
+    return getOutletPath(this.router.parseUrl(this.router.url), 'primary');
+  }
+
   toSheetUrl(url: string): UrlTree {
     const target = this.router.parseUrl(url);
     const current = this.router.parseUrl(this.router.url);

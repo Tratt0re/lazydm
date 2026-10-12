@@ -19,6 +19,7 @@ export enum APIChannel {
   COMPENDIUM = 'compendium',
   DOCUMENTS = 'documents',
   ENCOUNTERS = 'encounters',
+  TEMPLATES = 'templates',
   VAULT = 'vault',
   WINDOW = 'window',
   WORKSPACE = 'workspace',
@@ -65,6 +66,15 @@ export interface ElectronIpcClient {
   };
   readonly encounters: {
     readonly list: OptionalIpcRequest<void, { rows: any[] }>;
+  };
+  readonly templates: {
+    readonly list: OptionalIpcRequest<void, DTO.TemplateListDto>;
+    readonly builtIn: IpcRequest<{ type: string }, { type: string; content: string }>;
+    readonly getRules: IpcRequest<{ campaign: string }, { rules: DTO.TemplateRulesDto }>;
+    readonly setRule: IpcRequest<DTO.SetTemplateRulePayload, { rules: DTO.TemplateRulesDto }>;
+    readonly create: IpcRequest<DTO.CreateTemplatePayload, { path: string }>;
+    readonly customize: IpcRequest<{ type: string }, { path: string }>;
+    readonly remove: IpcRequest<{ path: string }, { path: string }>;
   };
   readonly vault: {
     readonly getCurrent: OptionalIpcRequest<void, DTO.VaultStateDto>;

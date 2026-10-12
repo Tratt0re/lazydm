@@ -8,20 +8,14 @@ const {
   safeWriteFileAtomic,
 } = require('../utils/file-utils');
 const { parseMarkdownDocument } = require('../utils/markdown-parse');
+const templateModel = require('./template.model');
 
 const MARKDOWN_EXTENSION = '.md';
-const TEMPLATES_DIR_NAME = '_templates';
 
 function assertMarkdownPath(relativePath) {
   if (path.posix.extname(relativePath).toLocaleLowerCase() !== MARKDOWN_EXTENSION) {
     throw new Error(`Only markdown notes can be opened as documents: ${relativePath}`);
   }
-}
-
-function toLocalDateString(date = new Date()) {
-  const month = String(date.getMonth() + 1).padStart(2, '0');
-  const day = String(date.getDate()).padStart(2, '0');
-  return `${date.getFullYear()}-${month}-${day}`;
 }
 
 async function readDocument(rootPath, relativePath) {
@@ -126,35 +120,31 @@ async function copyVaultFile(rootPath, fromPath, toPath) {
   return { status: 'copied', path: toPath };
 }
 
-/** Template of a note type (`_templates/monster.md`), with Obsidian's `{{title}}`, `{{date}}` and `{{time}}` filled in. */
-async function readTemplate(rootPath, type, title) {
-  const templatePath = resolveInsideVault(rootPath, `${TEMPLATES_DIR_NAME}/${type}${MARKDOWN_EXTENSION}`);
-  if (!fs.existsSync(templatePath)) {
-    return null;
-  }
-
-  const now = new Date();
-  const time = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
-  const template = await fs.promises.readFile(templatePath, 'utf8');
-  return template
-    .replace(/\{\{\s*title\s*\}\}/g, title)
-    .replace(/\{\{\s*date\s*\}\}/g, toLocalDateString(now))
-    .replace(/\{\{\s*time\s*\}\}/g, time);
-}
-
 function buildDefaultNote(type, title) {
   return `---\n${YAML.stringify({ type, title })}---\n# ${title}\n`;
 }
 
-/** Creates `<folder>/<slug>.md` from the template of its type, or with a minimal frontmatter. */
-async function createDocument(rootPath, { folderPath, slug, title, type }) {
+/**
+ * Creates `<folder>/<slug>.md` from the template of its type (see `templateModel.resolveTemplate`), or with
+ * a minimal frontmatter when the type has none. `section` is the folder's display name for `{{section}}`.
+ */
+async function createDocument(rootPath, { folderPath, slug, title, type, section }) {
   const relativePath = `${folderPath.replace(/\/+$/, '')}/${slug}${MARKDOWN_EXTENSION}`;
   const absolutePath = resolveInsideVault(rootPath, relativePath);
   if (fs.existsSync(absolutePath)) {
     throw new Error(`A note named "${slug}${MARKDOWN_EXTENSION}" already exists in ${folderPath}.`);
   }
 
-  const content = (await readTemplate(rootPath, type, title)) ?? buildDefaultNote(type, title);
+  const template = await templateModel.resolveTemplate(rootPath, { folderPath, type });
+  const content =
+    template === null
+      ? buildDefaultNote(type, title)
+      : templateModel.applyPlaceholders(template, {
+          title,
+          type,
+          campaign: await templateModel.readScopeName(rootPath, folderPath),
+          section: section || path.posix.basename(folderPath),
+        });
   await fs.promises.mkdir(path.dirname(absolutePath), { recursive: true });
   safeWriteFileAtomic(absolutePath, content);
 

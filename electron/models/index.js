@@ -2,6 +2,7 @@ const appMetaModel = require('./app-meta.model');
 const campaignModel = require('./campaign.model');
 const compendiumModel = require('./compendium.model');
 const documentModel = require('./document.model');
+const templateModel = require('./template.model');
 const cloudReadinessModel = require('./cloud-readiness.model');
 const vaultIndexModel = require('./vault-index.model');
 const vaultModel = require('./vault.model');
@@ -13,6 +14,7 @@ module.exports = {
   cloudReadinessModel,
   compendiumModel,
   documentModel,
+  templateModel,
   vaultIndexModel,
   vaultModel,
   workspaceModel,

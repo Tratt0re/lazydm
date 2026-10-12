@@ -201,6 +201,7 @@ export class SystemHomePage {
         folder: `${system.path}/${sectionKey}`,
         title,
         type,
+        section: this.translateService.instant(`nav.items.${sectionKey}`),
       });
       await this.compendiumService.refreshActive();
       const noteSlug = note.path.split('/').pop()!.replace(/\.md$/i, '');

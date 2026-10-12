@@ -108,7 +108,7 @@ function listIncomingLinks(targetPath) {
     .all(targetPath);
 }
 
-/** Links written in the notes of a campaign that resolve to no file. */
+/** Links written in the notes of a campaign that resolve to no file (templates excluded: their links are placeholders). */
 function listBrokenLinks(campaign) {
   return getVaultIndexDatabase()
     .prepare(
@@ -117,6 +117,7 @@ function listBrokenLinks(campaign) {
        FROM links l
        JOIN files s ON s.id = l.source_file_id
        WHERE s.campaign = ? AND l.target_file_id IS NULL AND l.target_name <> ''
+         AND s.path NOT LIKE '%/!_templates/%' ESCAPE '!'
        ORDER BY s.title COLLATE NOCASE, s.path, l.line, l.id`,
     )
     .all(campaign);

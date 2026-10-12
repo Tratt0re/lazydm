@@ -54,6 +54,10 @@
       "general": {
         "title": "Generali",
         "description": "Definisci l'aspetto e il comportamento dell'app in tutto il tuo spazio di lavoro."
+      },
+      "templates": {
+        "title": "Modelli",
+        "description": "Quale modello usa ogni tipo di nota, e la libreria dei modelli."
       }
     },
     "general": {
@@ -75,7 +79,62 @@
         }
       }
     },
-    "sidebarAriaLabel": "Sezioni delle impostazioni"
+    "sidebarAriaLabel": "Sezioni delle impostazioni",
+    "templates": {
+      "loadError": "Impossibile caricare i modelli",
+      "createError": "Impossibile creare il modello",
+      "customized": "Copiato in {{path}}",
+      "sources": {
+        "builtin": "Predefinito",
+        "vault": "Vault"
+      },
+      "rules": {
+        "title": "Modelli di questa campagna",
+        "description": "Le nuove note di {{campaign}} partono da questi modelli. Automatico usa _templates/<tipo>.md se esiste, altrimenti il predefinito.",
+        "automatic": "Automatico",
+        "missing": "Mancante: {{path}}",
+        "noCampaignTitle": "Nessuna campagna aperta",
+        "noCampaignDescription": "Apri una campagna, poi torna qui per scegliere quale modello usa ogni tipo di nota.",
+        "saved": "Scelta del modello salvata",
+        "saveError": "Impossibile salvare la scelta del modello"
+      },
+      "library": {
+        "title": "Libreria dei modelli",
+        "description": "Modelli del vault, di ogni sistema del compendio e di ogni campagna. I predefiniti sono in sola lettura.",
+        "empty": "Seleziona un modello per vederlo o modificarlo."
+      },
+      "editor": {
+        "builtInHint": "Predefinito · sola lettura",
+        "customize": "Personalizza",
+        "save": "Salva",
+        "saved": "Modello salvato",
+        "saveError": "Impossibile salvare il modello",
+        "conflict": "Il modello è cambiato sul disco.",
+        "reload": "Ricarica"
+      },
+      "create": {
+        "button": "Nuovo modello",
+        "title": "Nuovo modello",
+        "description": "Crea un modello in _templates/ nella radice del vault.",
+        "nameLabel": "Nome",
+        "namePlaceholder": "es. Mostro boss",
+        "startFromLabel": "Parti da",
+        "empty": "Modello vuoto",
+        "fromBuiltIn": "Predefinito: {{section}}",
+        "submit": "Crea",
+        "cancel": "Annulla"
+      },
+      "delete": {
+        "button": "Elimina",
+        "title": "Eliminare {{name}}?",
+        "description": "{{path}} sarà eliminato definitivamente. Le campagne che lo usano tornano su automatico.",
+        "confirm": "Elimina",
+        "cancel": "Annulla",
+        "done": "{{name}} eliminato",
+        "error": "Impossibile eliminare il modello"
+      },
+      "placeholders": "Segnaposto"
+    }
   },
   "vault": {
     "setup": {

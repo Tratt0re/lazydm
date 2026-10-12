@@ -84,7 +84,14 @@ function create(payload) {
     throw new Error('payload.title must contain at least one letter or number.');
   }
 
-  return documentModel.createDocument(vaultController.getReadyVaultPath(), { folderPath, slug, title, type });
+  const section = normalizeOptionalString(body.section, 'payload.section', { allowNull: true }) ?? null;
+  return documentModel.createDocument(vaultController.getReadyVaultPath(), {
+    folderPath,
+    slug,
+    title,
+    type,
+    section,
+  });
 }
 
 function requireIndexOpen() {
@@ -304,7 +311,8 @@ async function createFromLink(payload) {
     throw new Error(`Link not found in ${sourcePath}: ${raw}`);
   }
 
-  const created = await documentModel.createDocument(vaultPath, { folderPath, slug, title, type });
+  const section = normalizeOptionalString(body.section, 'payload.section', { allowNull: true }) ?? null;
+  const created = await documentModel.createDocument(vaultPath, { folderPath, slug, title, type, section });
 
   if (link.targetName.toLocaleLowerCase() !== slug) {
     const rewritten = rewriteLinks(
