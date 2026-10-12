@@ -356,6 +356,24 @@
 }
 
 /* Nordic Relic engraved rule: hairline, bronze diamond, hairline. Header/body separator in dialogs. */
+/* Full-page sheets (Compendium, Settings) slide up over the current page. */
+@keyframes arc-app-sheet-in {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+}
+
+.app-sheet-enter {
+  animation: arc-app-sheet-in 200ms ease-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .app-sheet-enter {
+    animation: none;
+  }
+}
+
 /* Tab being dragged in the campaign tab bar (the CDK renders the preview under <body>). */
 .arc-tab-drag-preview {
   background: var(--raised);

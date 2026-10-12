@@ -13,14 +13,6 @@
       </div>
 
       <div class="flex flex-wrap gap-2">
-        <a arc-button arcType="outline" routerLink="/compendium">
-          <arc-icon arcType="library-big" />
-          {{ 'nav.items.compendium' | translate }}
-        </a>
-        <a arc-button arcType="outline" routerLink="/settings">
-          <arc-icon arcType="settings" />
-          {{ 'nav.items.settings' | translate }}
-        </a>
         @if (campaigns().length > 0) {
           <button arc-button type="button" (click)="openCreateSheet()">
             <arc-icon arcType="plus" />

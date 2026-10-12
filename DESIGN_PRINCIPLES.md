@@ -179,9 +179,17 @@ Planned Electron modules: `vault`, `cloud-readiness`, `campaign`, `document`, `i
 ## 8. UI and navigation
 
 - **First start** → vault setup page (select or create the root folder). Until a vault exists, every route redirects there.
+- **Title bar** (app header, every page): drag area, app name, **Compendium** and **Settings**, window buttons.
+  macOS keeps the native traffic lights inset into it (`titleBarStyle: 'hiddenInset'`); Windows/Linux use a
+  frameless window with the app's own minimize / maximize-restore / close (double-click the bar = maximize).
+- **Compendium and Settings are full-page sheets**, not pages of the campaign navigation: they open over the
+  current page (named router outlet `overlay`), the campaign and its tabs stay as they are, and closing (×, Escape,
+  Cmd/Ctrl+W, or the same title-bar button) brings it back. Each sheet reopens where it was left. Links to
+  `/compendium/...` or `/settings/...` open in the sheet. Inside, a system keeps its own sidebar and toolbar; sheet
+  pages have their own toolbar context, so they never touch the campaign toolbar or tab titles.
+- Sheets (and dialogs) share one header: big condensed title, engraved divider, square close button.
 - **Campaign list** → grid of campaigns; when empty, a CTA message with a *Create campaign* button.
-- **Campaign layout** → current shell with the sidebar: campaign sections, *Settings*, and right below it a link
-  button **Back to campaigns**.
+- **Campaign layout** → shell with the sidebar: campaign sections and **Back to campaigns**.
 - **Tab bar** above the header bar, browser-like, one set of tabs per campaign, restored per device
   (`workspace` table of the vault index; at most 30 tabs, each tab's URL stays inside its campaign).
   - Each tab has its **own back/forward history** (max 50 entries); navigating inside a tab drops its forward entries.

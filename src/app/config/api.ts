@@ -75,6 +75,13 @@ export interface ElectronIpcClient {
   };
   readonly window: {
     readonly reload: OptionalIpcRequest<void, void>;
+    readonly getState: OptionalIpcRequest<
+      void,
+      { platform: string; isMaximized: boolean; isFullscreen: boolean }
+    >;
+    readonly minimize: OptionalIpcRequest<void, void>;
+    readonly toggleMaximize: OptionalIpcRequest<void, { isMaximized: boolean }>;
+    readonly close: OptionalIpcRequest<void, void>;
   };
   readonly workspace: {
     readonly get: IpcRequest<{ campaign: string }, DTO.WorkspaceDto | null>;

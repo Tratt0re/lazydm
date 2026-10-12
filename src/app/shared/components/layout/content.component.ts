@@ -8,7 +8,7 @@ import { mergeClasses } from '@/shared/utils/merge-classes';
 @Component({
   selector: 'arc-content',
   template: `
-    <main>
+    <main class="flex flex-1 flex-col">
       <ng-content />
     </main>
   `,

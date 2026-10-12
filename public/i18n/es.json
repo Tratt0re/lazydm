@@ -40,6 +40,13 @@
         "uk": "Українська",
         "zh": "中文"
       }
+    },
+    "sheetsAriaLabel": "Paneles de la app",
+    "window": {
+      "minimize": "Minimizar",
+      "maximize": "Maximizar",
+      "restore": "Restaurar",
+      "close": "Cerrar ventana"
     }
   },
   "settings": {
@@ -362,5 +369,8 @@
       "description": "Este archivo enlaza a archivos que {{target}} no tiene: {{files}}. Los que ya tiene no se vuelven a copiar.",
       "include": "Copiar también los archivos enlazados ({{count}})"
     }
+  },
+  "common": {
+    "close": "Cerrar"
   }
 }

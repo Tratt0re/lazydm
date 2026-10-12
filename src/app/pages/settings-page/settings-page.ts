@@ -22,8 +22,8 @@ import {
     GeneralSectionComponent,
   ],
   template: `
-    <section class="grid min-h-full gap-4 lg:min-h-[calc(100dvh-(7.5rem+var(--app-shell-header-offset)))] lg:grid-cols-[17.5rem_minmax(0,1fr)] lg:items-stretch">
-      <div class="min-h-0 lg:sticky lg:top-0 lg:self-start lg:h-[calc(100dvh-(7.5rem+var(--app-shell-header-offset)))] lg:overflow-hidden">
+    <section class="grid min-h-0 flex-1 gap-4 p-6 lg:grid-cols-[17.5rem_minmax(0,1fr)] lg:items-stretch">
+      <div class="min-h-0 lg:overflow-hidden">
         <app-contextual-sidebar
           [items]="navItems"
           [activeKey]="activeKey()"
@@ -46,6 +46,9 @@ import {
     </section>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {
+    class: 'flex min-h-0 flex-1 flex-col',
+  },
 })
 export class SettingsPage implements OnInit, OnDestroy {
   private readonly activatedRoute = inject(ActivatedRoute);

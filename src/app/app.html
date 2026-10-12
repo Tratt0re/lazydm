@@ -1,2 +1,8 @@
-<router-outlet />
+<div class="flex h-dvh flex-col" style="--app-shell-header-offset: 2.5rem">
+  <app-header />
+  <div class="relative min-h-0 flex-1 overflow-auto">
+    <router-outlet />
+    <router-outlet name="overlay" />
+  </div>
+</div>
 <arc-toast [closeButton]="true" />

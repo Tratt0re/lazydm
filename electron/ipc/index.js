@@ -12,7 +12,8 @@ function registerIpcHandlers() {
   const { IPC_HANDLERS } = require('./handlers');
 
   for (const [channel, handler] of Object.entries(IPC_HANDLERS)) {
-    ipcMain.handle(channel, async (_event, payload) => handler(payload));
+    // The event comes second so window controls can act on the window that asked; most handlers ignore it.
+    ipcMain.handle(channel, async (event, payload) => handler(payload, event));
   }
 
   handlersRegistered = true;

@@ -40,6 +40,13 @@
         "uk": "Українська",
         "zh": "中文"
       }
+    },
+    "sheetsAriaLabel": "Panneaux de l’app",
+    "window": {
+      "minimize": "Réduire",
+      "maximize": "Agrandir",
+      "restore": "Restaurer",
+      "close": "Fermer la fenêtre"
     }
   },
   "settings": {
@@ -362,5 +369,8 @@
       "description": "Ce fichier pointe vers des fichiers que {{target}} n’a pas : {{files}}. Ceux qu’il a déjà ne sont pas recopiés.",
       "include": "Copier aussi les fichiers liés ({{count}})"
     }
+  },
+  "common": {
+    "close": "Fermer"
   }
 }

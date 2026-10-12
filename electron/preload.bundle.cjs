@@ -69,7 +69,11 @@ var require_channels = __commonJS({
         close: "vault:close"
       }),
       window: Object.freeze({
-        reload: "window:reload"
+        reload: "window:reload",
+        getState: "window:getState",
+        minimize: "window:minimize",
+        toggleMaximize: "window:toggleMaximize",
+        close: "window:close"
       }),
       workspace: Object.freeze({
         get: "workspace:get",

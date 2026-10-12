@@ -13,8 +13,9 @@ const WORKSPACE_MAX_TABS = 30;
 const WORKSPACE_MAX_HISTORY = 50;
 const WORKSPACE_SAVE_DELAY_MS = 400;
 
+/** Path of the main page: drops query, fragment and the sheet outlet (`/x(overlay:compendium)`). */
 function toPath(url: string): string {
-  return url.split(/[?#]/)[0];
+  return url.split(/[?#(]/)[0].replace(/\/$/, '') || '/';
 }
 
 function getCampaignSlug(url: string): string | null {

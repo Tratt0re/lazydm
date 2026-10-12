@@ -40,6 +40,13 @@
         "uk": "Українська",
         "zh": "中文"
       }
+    },
+    "sheetsAriaLabel": "App-Bereiche",
+    "window": {
+      "minimize": "Minimieren",
+      "maximize": "Maximieren",
+      "restore": "Wiederherstellen",
+      "close": "Fenster schließen"
     }
   },
   "settings": {
@@ -362,5 +369,8 @@
       "description": "Diese Datei verlinkt auf Dateien, die {{target}} nicht hat: {{files}}. Bereits vorhandene werden nicht erneut kopiert.",
       "include": "Auch die verlinkten Dateien kopieren ({{count}})"
     }
+  },
+  "common": {
+    "close": "Schließen"
   }
 }

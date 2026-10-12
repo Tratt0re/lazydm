@@ -1,36 +1,15 @@
-<main class="min-h-full">
-  <div class="mx-auto flex w-full max-w-6xl flex-col gap-6 p-6 md:p-10">
-    <header class="flex flex-wrap items-end justify-between gap-4 border-b border-border pb-6">
-      <div class="min-w-0">
-        @if (vaultName()) {
-          <p
-            class="mb-2 truncate text-[10px] font-semibold tracking-[0.16em] text-primary uppercase"
-          >
-            {{ vaultName() }}
-          </p>
-        }
-        <h1 class="font-display text-6xl leading-[0.88] font-black tracking-[0.015em] uppercase">
-          {{ 'compendium.list.title' | translate
-          }}<span class="text-primary" aria-hidden="true">.</span>
-        </h1>
-        <p class="mt-3 max-w-2xl text-sm text-muted-foreground">
-          {{ 'compendium.list.description' | translate }}
-        </p>
-      </div>
-
-      <div class="flex flex-wrap gap-2">
-        <a arc-button arcType="outline" routerLink="/campaigns">
-          <arc-icon arcType="arrow-left" />
-          {{ 'nav.items.backToCampaigns' | translate }}
-        </a>
-        @if (systems().length > 0) {
-          <button arc-button type="button" (click)="openCreateSheet()">
-            <arc-icon arcType="plus" />
-            {{ 'compendium.list.create' | translate }}
-          </button>
-        }
-      </div>
-    </header>
+<div class="mx-auto flex w-full max-w-6xl flex-col gap-6 p-6">
+    <div class="flex flex-wrap items-start justify-between gap-4">
+      <p class="max-w-2xl text-sm text-muted-foreground">
+        {{ 'compendium.list.description' | translate }}
+      </p>
+      @if (systems().length > 0) {
+        <button arc-button type="button" (click)="openCreateSheet()">
+          <arc-icon arcType="plus" />
+          {{ 'compendium.list.create' | translate }}
+        </button>
+      }
+    </div>
 
     @if (errorMessage(); as message) {
       <arc-alert
@@ -102,4 +81,3 @@
       }
     }
   </div>
-</main>

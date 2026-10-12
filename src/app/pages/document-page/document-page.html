@@ -8,8 +8,7 @@
     />
   </div>
 } @else if (!isLoading()) {
-  <!-- Window height minus tab bar, toolbar and content padding, like the settings page. -->
-  <div class="flex h-[calc(100dvh-(10rem+var(--app-shell-header-offset)))] min-h-80">
+  <div class="flex min-h-80 flex-1">
     <div class="flex h-full min-h-0 min-w-0 flex-1 flex-col gap-2 p-4">
       @if (isDirty()) {
         <p class="shrink-0 text-[10px] font-semibold tracking-[0.12em] text-primary uppercase">

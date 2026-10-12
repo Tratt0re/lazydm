@@ -1,3 +1,84 @@
-<arc-header [arcHeight]="32" class="justify-end gap-1.5 window-drag">
-  <span class="sr-only">{{ 'common.titleBar' | translate }}</span>
-</arc-header>
+<header
+  class="window-drag flex h-10 items-center gap-3 border-b border-border bg-recessed pr-1"
+  [class.pl-20]="isMac && !isFullscreen()"
+  [class.pl-4]="!isMac || isFullscreen()"
+  (dblclick)="onDoubleClick($event)"
+>
+  <span
+    class="pointer-events-none font-display text-xl leading-none font-extrabold tracking-[0.03em] text-foreground-strong uppercase select-none"
+  >
+    LazyDM<span class="text-primary" aria-hidden="true">.</span>
+  </span>
+
+  <span class="flex-1"></span>
+
+  @if (vault()) {
+    <nav
+      class="window-no-drag flex items-center gap-1"
+      [attr.aria-label]="'header.sheetsAriaLabel' | translate"
+    >
+      <button
+        type="button"
+        arc-button
+        arcType="ghost"
+        arcSize="sm"
+        class="h-8 font-mono text-[11px] tracking-[0.04em] normal-case"
+        [class.text-primary]="sheets.activeKind() === 'compendium'"
+        [attr.aria-pressed]="sheets.activeKind() === 'compendium'"
+        (click)="sheets.toggle('compendium')"
+      >
+        <arc-icon arcType="library-big" />
+        {{ 'nav.items.compendium' | translate }}
+      </button>
+      <button
+        type="button"
+        arc-button
+        arcType="ghost"
+        arcSize="sm"
+        class="h-8 font-mono text-[11px] tracking-[0.04em] normal-case"
+        [class.text-primary]="sheets.activeKind() === 'settings'"
+        [attr.aria-pressed]="sheets.activeKind() === 'settings'"
+        (click)="sheets.toggle('settings')"
+      >
+        <arc-icon arcType="settings" />
+        {{ 'nav.items.settings' | translate }}
+      </button>
+    </nav>
+  }
+
+  @if (isDesktop && !isMac) {
+    <div class="window-no-drag ml-2 flex h-full items-stretch border-l border-border">
+      <button
+        type="button"
+        class="flex w-11 cursor-pointer items-center justify-center text-muted-foreground transition-colors duration-150 hover:bg-accent hover:text-foreground focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-ring [&_svg]:size-4"
+        [attr.aria-label]="'header.window.minimize' | translate"
+        [arcTooltip]="'header.window.minimize' | translate"
+        (click)="minimize()"
+      >
+        <arc-icon arcType="minus" />
+      </button>
+      <button
+        type="button"
+        class="flex w-11 cursor-pointer items-center justify-center text-muted-foreground transition-colors duration-150 hover:bg-accent hover:text-foreground focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-ring [&_svg]:size-3.5"
+        [attr.aria-label]="
+          (isMaximized() ? 'header.window.restore' : 'header.window.maximize') | translate
+        "
+        [arcTooltip]="
+          (isMaximized() ? 'header.window.restore' : 'header.window.maximize') | translate
+        "
+        (click)="toggleMaximize()"
+      >
+        <arc-icon [arcType]="isMaximized() ? 'copy' : 'square'" />
+      </button>
+      <button
+        type="button"
+        class="flex w-11 cursor-pointer items-center justify-center text-muted-foreground transition-colors duration-150 hover:bg-destructive hover:text-destructive-foreground focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-ring [&_svg]:size-4"
+        [attr.aria-label]="'header.window.close' | translate"
+        [arcTooltip]="'header.window.close' | translate"
+        (click)="close()"
+      >
+        <arc-icon arcType="x" />
+      </button>
+    </div>
+  }
+</header>

@@ -40,6 +40,13 @@
         "uk": "Українська",
         "zh": "中文"
       }
+    },
+    "sheetsAriaLabel": "App sheets",
+    "window": {
+      "minimize": "Minimize",
+      "maximize": "Maximize",
+      "restore": "Restore",
+      "close": "Close window"
     }
   },
   "settings": {
@@ -362,5 +369,8 @@
       "description": "This file links to files {{target}} doesn't have: {{files}}. Files it already has are not copied again.",
       "include": "Also copy the linked files ({{count}})"
     }
+  },
+  "common": {
+    "close": "Close"
   }
 }

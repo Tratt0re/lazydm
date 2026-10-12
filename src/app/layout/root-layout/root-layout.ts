@@ -8,19 +8,15 @@ import {
   signal,
   ViewEncapsulation,
 } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
-import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
-import { filter, map } from 'rxjs';
+import { RouterOutlet } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 import { LayoutImports } from '@/shared/components/layout/layout.imports';
 import { VaultSyncStatusComponent } from '@/components/vault-sync-status/vault-sync-status.component';
-import { Header } from '../header/header';
 import { Sidebar } from '../sidebar/sidebar';
 import { TabBar } from '../tab-bar/tab-bar';
 import { Toolbar } from '../toolbar/toolbar';
 import { MenuConfiguration, type MenuSectionConfig } from '@/config/menu.config';
 import { CampaignService } from '@/services/campaign.service';
-import { CompendiumService } from '@/services/compendium.service';
 import { ToolbarContextService } from '@/services/toolbar-context.service';
 import { detectSmallScreenViewport } from '@/shared/utils';
 
@@ -30,7 +26,6 @@ import { detectSmallScreenViewport } from '@/shared/utils';
     ...LayoutImports,
     RouterOutlet,
     TranslatePipe,
-    Header,
     Toolbar,
     Sidebar,
     TabBar,
@@ -49,23 +44,9 @@ export class RootLayout implements OnInit, OnDestroy {
   protected readonly isFullscreen = signal(false);
   protected readonly isSmallScreen = signal(detectSmallScreenViewport());
   private readonly campaignService = inject(CampaignService);
-  private readonly compendiumService = inject(CompendiumService);
-  private readonly currentUrl = toSignal(
-    inject(Router).events.pipe(
-      filter((event): event is NavigationEnd => event instanceof NavigationEnd),
-      map((event) => event.urlAfterRedirects),
-    ),
-    { initialValue: inject(Router).url },
+  protected readonly menuSections = computed<readonly MenuSectionConfig[]>(() =>
+    MenuConfiguration.forCampaign(this.campaignService.activeCampaign()?.slug ?? null),
   );
-  protected readonly menuSections = computed<readonly MenuSectionConfig[]>(() => {
-    const system = this.compendiumService.activeSystem();
-    if (system && this.currentUrl().startsWith(`/compendium/${system.slug}`)) {
-      return MenuConfiguration.forSystem(system.slug, system.folders);
-    }
-
-    return MenuConfiguration.forCampaign(this.campaignService.activeCampaign()?.slug ?? null);
-  });
-  protected readonly headerOffset = computed(() => (this.isFullscreen() ? '2rem' : '0rem'));
   protected readonly showSidebarOverlay = computed(
     () => this.isSmallScreen() && !this.sidebarCollapsed(),
   );

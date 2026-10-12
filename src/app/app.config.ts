@@ -1,5 +1,5 @@
 import { ApplicationConfig, provideBrowserGlobalErrorListeners } from '@angular/core';
-import { provideRouter } from '@angular/router';
+import { provideRouter, withRouterConfig } from '@angular/router';
 import { provideEchartsCore } from 'ngx-echarts';
 
 import { echarts } from '@/config/echarts.config';
@@ -10,7 +10,8 @@ import { provideArcTech } from '@/shared/core/provider/providearctech';
 export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
-    provideRouter(routes),
+    // Compendium system pages read their scope from route data set above them (inside the sheet).
+    provideRouter(routes, withRouterConfig({ paramsInheritanceStrategy: 'always' })),
     provideI18n(),
     provideArcTech(),
     provideEchartsCore({ echarts }),

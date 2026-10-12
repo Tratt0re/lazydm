@@ -50,6 +50,9 @@ function stripFrontmatterFence(content: string): string {
     AppDocumentPreviewComponent,
   ],
   templateUrl: './document-page.html',
+  host: {
+    class: 'flex min-h-0 flex-1 flex-col',
+  },
 })
 export class DocumentPage {
   private readonly route = inject(ActivatedRoute);
@@ -331,7 +334,9 @@ export class DocumentPage {
 
       const oldRoute = toInAppNoteRoute(document.path);
       const newRoute = toInAppNoteRoute(result.path);
-      if (oldRoute && newRoute && oldRoute !== newRoute) {
+      if (oldRoute && newRoute && oldRoute !== newRoute && this.scope()?.kind === 'system') {
+        await this.router.navigateByUrl(newRoute, { replaceUrl: true });
+      } else if (oldRoute && newRoute && oldRoute !== newRoute) {
         await this.workspace.replaceUrl(oldRoute, newRoute);
       } else {
         const renamed = await this.documentService.read(result.path);

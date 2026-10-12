@@ -14,6 +14,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { CAMPAIGN_SECTIONS } from '@/config/menu.config';
 import type { WorkspaceTabDto } from '@/dtos';
 import { BROKEN_LINKS_ROUTE_SEGMENT } from '@/pages/broken-links-page/broken-links-page';
+import { AppSheetService } from '@/services/app-sheet.service';
 import { WorkspaceService } from '@/services/workspace.service';
 import { ArcTechButtonComponent } from '@/shared/components/button';
 import { ArcTechIconComponent } from '@/shared/components/icon';
@@ -46,6 +47,7 @@ type TabBarMenuTarget =
 })
 export class TabBar {
   protected readonly workspace = inject(WorkspaceService);
+  private readonly sheets = inject(AppSheetService);
   private readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
   private readonly contextMenuTrigger = viewChild.required(CdkContextMenuTrigger);
 
@@ -60,7 +62,10 @@ export class TabBar {
       'action' in payload &&
       payload.action === 'closeTab'
     ) {
-      if (this.workspace.isVisible()) {
+      // Over a full-page sheet, Cmd/Ctrl+W closes the sheet, not the campaign tab underneath.
+      if (this.sheets.isOpen()) {
+        void this.sheets.close();
+      } else if (this.workspace.isVisible()) {
         void this.workspace.closeTab();
       }
     }
@@ -211,7 +216,7 @@ export class TabBar {
 
   @HostListener('document:keydown', ['$event'])
   protected onKeyDown(event: KeyboardEvent): void {
-    if (!this.workspace.isVisible() || event.altKey) {
+    if (!this.workspace.isVisible() || this.sheets.isOpen() || event.altKey) {
       return;
     }
 

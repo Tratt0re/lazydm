@@ -40,6 +40,13 @@
         "uk": "Українська",
         "zh": "中文"
       }
+    },
+    "sheetsAriaLabel": "Pannelli dell'app",
+    "window": {
+      "minimize": "Riduci a icona",
+      "maximize": "Ingrandisci",
+      "restore": "Ripristina",
+      "close": "Chiudi finestra"
     }
   },
   "settings": {
@@ -362,5 +369,8 @@
       "description": "Questo file rimanda a file che {{target}} non ha: {{files}}. Quelli già presenti non vengono copiati di nuovo.",
       "include": "Copia anche i file collegati ({{count}})"
     }
+  },
+  "common": {
+    "close": "Chiudi"
   }
 }

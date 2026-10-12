@@ -5,11 +5,12 @@ import { RouterOutlet } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { map, startWith } from 'rxjs';
 
+import { Header } from '@/layout/header/header';
 import { ArcTechToastComponent } from '@/shared/components/toast';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, ArcTechToastComponent],
+  imports: [RouterOutlet, Header, ArcTechToastComponent],
   templateUrl: './app.html',
   styleUrl: './app.css',
 })

@@ -61,8 +61,6 @@ export class MenuConfiguration {
       label: '',
       placement: 'bottom',
       items: [
-        { label: 'nav.items.compendium', icon: 'library-big', path: '/compendium', exact: true },
-        { label: 'nav.items.settings', icon: 'settings', path: '/settings' },
         { label: 'nav.items.backToCampaigns', icon: 'arrow-left', path: '/campaigns', exact: true },
       ],
     };
@@ -116,9 +114,7 @@ export class MenuConfiguration {
         label: '',
         placement: 'bottom',
         items: [
-          { label: 'nav.items.backToCompendium', icon: 'library-big', path: '/compendium', exact: true },
-          { label: 'nav.items.settings', icon: 'settings', path: '/settings' },
-          { label: 'nav.items.backToCampaigns', icon: 'arrow-left', path: '/campaigns', exact: true },
+          { label: 'nav.items.backToCompendium', icon: 'arrow-left', path: '/compendium', exact: true },
         ],
       },
     ];

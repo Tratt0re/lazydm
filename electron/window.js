@@ -8,6 +8,8 @@ const DEV_SERVER_URL = process.env.ELECTRON_RENDERER_URL ?? 'http://localhost:42
 const RENDERER_BUILD_SEGMENTS = ['dist', 'lazydm', 'browser'];
 const PRODUCTION_MODE_FLAGS = new Set(['--prod', '--production']);
 const openWindows = new Set();
+/** Centres the macOS traffic lights in the 40px title bar of the app. */
+const TRAFFIC_LIGHT_POSITION = Object.freeze({ x: 16, y: 13 });
 
 function resolveAppPath(...segments) {
   return path.join(app.getAppPath(), ...segments);
@@ -65,6 +67,15 @@ function initMainWindow(isDev, iconPath = null) {
     windowOptions.icon = iconPath;
   }
 
+  // The app draws its own title bar: macOS keeps the native traffic lights inset into it,
+  // the other platforms get a frameless window and the app's own window buttons.
+  if (isMac) {
+    windowOptions.titleBarStyle = 'hiddenInset';
+    windowOptions.trafficLightPosition = TRAFFIC_LIGHT_POSITION;
+  } else {
+    windowOptions.frame = false;
+  }
+
   return new BrowserWindow(windowOptions);
 }
 
@@ -75,6 +86,16 @@ function emitFullscreenState(mainWindow) {
 
   mainWindow.webContents.send('window:fullscreenChanged', {
     isFullscreen: mainWindow.isFullScreen(),
+  });
+}
+
+function emitMaximizedState(mainWindow) {
+  if (mainWindow.isDestroyed() || mainWindow.webContents.isDestroyed()) {
+    return;
+  }
+
+  mainWindow.webContents.send('window:maximizedChanged', {
+    isMaximized: mainWindow.isMaximized(),
   });
 }
 
@@ -96,6 +117,9 @@ function registerWindowLifecycle(mainWindow) {
   mainWindow.on('leave-full-screen', () => {
     emitFullscreenState(mainWindow);
   });
+
+  mainWindow.on('maximize', () => emitMaximizedState(mainWindow));
+  mainWindow.on('unmaximize', () => emitMaximizedState(mainWindow));
 
   mainWindow.on('closed', () => {
     openWindows.delete(mainWindow);

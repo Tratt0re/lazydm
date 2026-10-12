@@ -65,6 +65,10 @@ const IPC_HANDLERS = Object.freeze({
   [CHANNELS.vault.close]: vaultController.close,
 
   [CHANNELS.window.reload]: windowController.reload,
+  [CHANNELS.window.getState]: windowController.getState,
+  [CHANNELS.window.minimize]: windowController.minimize,
+  [CHANNELS.window.toggleMaximize]: windowController.toggleMaximize,
+  [CHANNELS.window.close]: windowController.close,
 
   [CHANNELS.workspace.get]: workspaceController.get,
   [CHANNELS.workspace.save]: workspaceController.save,

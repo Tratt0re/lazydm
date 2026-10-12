@@ -1,13 +1,89 @@
-import { Routes } from '@angular/router';
+import type { Routes, UrlMatchResult, UrlSegment } from '@angular/router';
 
+import { openInSheetGuard } from '@/guards/app-sheet.guard';
 import { CAMPAIGN_SLUG_PARAM, campaignGuard } from '@/guards/campaign.guard';
 import { documentLeaveGuard } from '@/guards/document-leave.guard';
 import { SYSTEM_SLUG_PARAM, systemGuard } from '@/guards/system.guard';
 import { vaultGuard } from '@/guards/vault.guard';
 import { RootLayout } from '@/layout/root-layout/root-layout';
+import { APP_SHEET_OUTLET, APP_SHEET_TITLE_ROUTE_DATA } from '@/services/app-sheet.service';
 import { NOTE_SCOPE_ROUTE_DATA } from '@/services/note-scope.service';
 
+function matchSheetPaths(segments: UrlSegment[]): UrlMatchResult | null {
+  return ['compendium', 'settings'].includes(segments[0]?.path ?? '') ? { consumed: segments } : null;
+}
+
+/** The note pages of a compendium system, inside the Compendium sheet. */
+const SYSTEM_SHEET_ROUTES: Routes = [
+  {
+    path: '',
+    pathMatch: 'full',
+    loadComponent: () =>
+      import('./pages/system-home-page/system-home-page').then((m) => m.SystemHomePage),
+  },
+  {
+    path: 'broken-links',
+    loadComponent: () =>
+      import('./pages/broken-links-page/broken-links-page').then((m) => m.BrokenLinksPage),
+  },
+  {
+    path: ':section',
+    children: [
+      {
+        path: '',
+        pathMatch: 'full',
+        loadComponent: () =>
+          import('./pages/campaign-section-page/campaign-section-page').then(
+            (m) => m.CampaignSectionPage,
+          ),
+      },
+      {
+        path: ':note',
+        canDeactivate: [documentLeaveGuard],
+        loadComponent: () => import('./pages/document-page/document-page').then((m) => m.DocumentPage),
+      },
+    ],
+  },
+];
+
 export const routes: Routes = [
+  {
+    path: 'compendium',
+    outlet: APP_SHEET_OUTLET,
+    canMatch: [vaultGuard],
+    data: { [APP_SHEET_TITLE_ROUTE_DATA]: 'compendium.list.title' },
+    loadComponent: () => import('./layout/app-sheet/app-sheet').then((m) => m.AppSheet),
+    children: [
+      {
+        path: '',
+        pathMatch: 'full',
+        loadComponent: () =>
+          import('./pages/compendium-page/compendium-page').then((m) => m.CompendiumPage),
+      },
+      {
+        path: `:${SYSTEM_SLUG_PARAM}`,
+        canActivate: [systemGuard],
+        data: { [NOTE_SCOPE_ROUTE_DATA]: 'system' },
+        loadComponent: () =>
+          import('./layout/system-sheet-layout/system-sheet-layout').then((m) => m.SystemSheetLayout),
+        children: SYSTEM_SHEET_ROUTES,
+      },
+    ],
+  },
+  {
+    path: 'settings',
+    outlet: APP_SHEET_OUTLET,
+    canMatch: [vaultGuard],
+    data: { [APP_SHEET_TITLE_ROUTE_DATA]: 'nav.items.settings' },
+    loadComponent: () => import('./layout/app-sheet/app-sheet').then((m) => m.AppSheet),
+    children: [
+      { path: '', pathMatch: 'full', redirectTo: 'general' },
+      {
+        path: ':section',
+        loadComponent: () => import('./pages/settings-page/settings-page').then((m) => m.SettingsPage),
+      },
+    ],
+  },
   {
     path: 'setup',
     loadComponent: () => import('./pages/vault-setup-page/vault-setup-page').then((m) => m.VaultSetupPage),
@@ -17,6 +93,8 @@ export const routes: Routes = [
     canMatch: [vaultGuard],
     children: [
       { path: '', pathMatch: 'full', redirectTo: 'campaigns' },
+      // Compendium and Settings links open in the full-page sheet over the current page.
+      { matcher: matchSheetPaths, canActivate: [openInSheetGuard], children: [] },
       {
         path: 'campaigns',
         pathMatch: 'full',
@@ -24,52 +102,9 @@ export const routes: Routes = [
           import('./pages/campaign-list-page/campaign-list-page').then((m) => m.CampaignListPage),
       },
       {
-        path: 'compendium',
-        pathMatch: 'full',
-        loadComponent: () =>
-          import('./pages/compendium-page/compendium-page').then((m) => m.CompendiumPage),
-      },
-      {
         path: '',
         component: RootLayout,
         children: [
-          {
-            path: `compendium/:${SYSTEM_SLUG_PARAM}`,
-            canActivate: [systemGuard],
-            data: { [NOTE_SCOPE_ROUTE_DATA]: 'system' },
-            children: [
-              {
-                path: '',
-                pathMatch: 'full',
-                loadComponent: () =>
-                  import('./pages/system-home-page/system-home-page').then((m) => m.SystemHomePage),
-              },
-              {
-                path: 'broken-links',
-                loadComponent: () =>
-                  import('./pages/broken-links-page/broken-links-page').then((m) => m.BrokenLinksPage),
-              },
-              {
-                path: ':section',
-                children: [
-                  {
-                    path: '',
-                    pathMatch: 'full',
-                    loadComponent: () =>
-                      import('./pages/campaign-section-page/campaign-section-page').then(
-                        (m) => m.CampaignSectionPage,
-                      ),
-                  },
-                  {
-                    path: ':note',
-                    canDeactivate: [documentLeaveGuard],
-                    loadComponent: () =>
-                      import('./pages/document-page/document-page').then((m) => m.DocumentPage),
-                  },
-                ],
-              },
-            ],
-          },
           {
             path: `campaigns/:${CAMPAIGN_SLUG_PARAM}`,
             canActivate: [campaignGuard],
@@ -105,11 +140,6 @@ export const routes: Routes = [
                 ],
               },
             ],
-          },
-          { path: 'settings', pathMatch: 'full', redirectTo: 'settings/general' },
-          {
-            path: 'settings/:section',
-            loadComponent: () => import('./pages/settings-page/settings-page').then((m) => m.SettingsPage),
           },
         ],
       },
