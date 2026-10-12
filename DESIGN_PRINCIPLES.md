@@ -140,7 +140,7 @@ Planned Electron modules: `vault`, `cloud-readiness`, `campaign`, `document`, `i
   in the per-campaign **Broken links** page (`/campaigns/<slug>/broken-links`). The overview shows an alert with a
   *Review* button only when the campaign has broken links.
 - **Fixing a broken link** (menu on each broken link: in the note panel, on the broken links page, and on the
-  broken link itself in the preview — click or Enter/Space):
+  broken link itself in the live preview and reading view — click or Enter/Space):
   - *Remove link, keep text*: every occurrence of that link in the note becomes its label (or what it pointed to).
   - *Create note…*: title (suggested from the link) and folder (the link's folder, else the source note's section);
     the note is created from its template and opened. Encounters are not offered as a folder (see below). If its kebab file name differs from the link text, the link is
@@ -219,7 +219,21 @@ Planned Electron modules: `vault`, `cloud-readiness`, `campaign`, `document`, `i
   in the toolbar, so a restored tab always tells where it points.
 - **Leaving a note with unsaved edits autosaves it** (tab switch, link, sidebar). If the save hits a conflict or an
   error, the navigation is cancelled and the conflict sheet / error toast is shown.
-- **Editor**: CodeMirror 6, markdown source with live preview (Obsidian-like). Reading mode renders sanitized markdown.
+- **Editor**: CodeMirror 6 with three views, switched by three toggle buttons in the toolbar (not a segmented
+  control). The view is remembered **per note on this device** (`document_view_modes` local preference, the most
+  recent 500 notes; a new note opens in Live preview), so moving between notes always shows each one as left.
+  - **Live preview** (default, Obsidian-like): the note stays editable and is shown rendered; the markdown syntax of
+    an element comes back only while the cursor is on it. Headings, emphasis, code, quotes, lists, task checkboxes
+    (clickable), images, links, tables, callouts and frontmatter (as a properties box) are rendered. The note opens
+    with the cursor below the frontmatter.
+  - **Source**: the raw markdown in the mono font, syntax highlighted.
+  - **Reading**: read-only, sanitized HTML (markdown-it + DOMPurify).
+  - **Links behave like links**: pointer cursor, a click opens the note (Cmd/Ctrl-click opens it in a new tab), an
+    external link opens in the browser, a broken link opens the fix menu. Clicking a link never moves the cursor.
+    The editor re-resolves its links on every index update.
+  - **Dividers** (`---`) render as a small primary `◇` at the start of the line followed by the plain rule.
+  - **Callouts** (`> [!type] Title`): note/info (default), tip/success, warning, danger/error — left accent bar in
+    the status colour, mono uppercase title.
 
 ## 9. ArcTechUI visual style (Nordic Relic)
 
@@ -289,6 +303,7 @@ variant keys and configuration stay as they are.
 | 7 | Link maintenance: backlinks panel, rename with link refactoring, broken links page |
 | 8 | Compendium: systems, copy to/from campaigns, scope-limited links |
 | 8.1 | Template rules: per-campaign template choice per note type, built-in defaults, placeholders |
+| 8.2 | Editor views: Live preview / Source / Reading, remembered per note; clickable links; tables, callouts, properties, `◇` dividers |
 
 ## 12. Open decisions
 

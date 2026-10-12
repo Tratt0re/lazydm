@@ -1,7 +1,9 @@
+import DOMPurify from 'dompurify';
 import MarkdownIt, {
   type Env,
   type MarkdownIt as MarkdownItInstance,
   type RendererRule,
+  type StateCore,
   type StateInline,
   type Token,
 } from 'markdown-it';
@@ -11,6 +13,18 @@ import type { DocumentLinkDto } from '@/dtos';
 const WIKILINK_PATTERN = /^(!?)\[\[([^[\]\n]+?)\]\]/;
 const IMAGE_EXTENSION_PATTERN = /\.(png|jpe?g|gif|webp|svg|avif)$/i;
 const ASSET_PROTOCOL = 'lazydm-asset://vault';
+/** Obsidian callout header: `> [!warning] Optional title` (`+` / `-` fold markers are accepted). */
+const CALLOUT_PATTERN = /^\[!([A-Za-z][\w-]*)\][+-]?[ \t]*(.*)$/;
+
+const SANITIZE_OPTIONS: { readonly ADD_TAGS: string[]; readonly ADD_ATTR: string[] } = {
+  ADD_TAGS: ['img'],
+  ADD_ATTR: ['loading', 'target', 'rel'],
+};
+
+/** URL of a vault file served by the app's asset protocol (images in notes, embeds). */
+export function toAssetUrl(vaultPath: string): string {
+  return `${ASSET_PROTOCOL}/${vaultPath.split('/').map(encodeURIComponent).join('/')}`;
+}
 
 export interface RenderMarkdownOptions {
   /** Links of the document, in the exact order `parseMarkdownDocument` found them (electron side). */
@@ -93,7 +107,7 @@ function renderWikilinkToken(token: Token): string {
   );
 
   if (isEmbed && resolvedPath && IMAGE_EXTENSION_PATTERN.test(resolvedPath)) {
-    const src = `${ASSET_PROTOCOL}/${resolvedPath.split('/').map(encodeURIComponent).join('/')}`;
+    const src = toAssetUrl(resolvedPath);
     return `<img class="arc-embed-image" src="${src}" alt="${displayText}" loading="lazy" />`;
   }
 
@@ -163,10 +177,66 @@ function headingPermalinkRule(originalRule: RendererRule): RendererRule {
 const renderTokenAsIs: RendererRule = (tokens, index, options, _env, self) =>
   self.renderToken(tokens, index, options);
 
+interface CalloutMeta {
+  readonly calloutType: string;
+  readonly calloutTitle: string;
+}
+
+/**
+ * Turns `> [!type] Title` blockquotes into callouts: runs after block parsing (before inline parsing),
+ * drops the header line from the quote and marks the open/close tokens for the renderer.
+ */
+function calloutRule(state: StateCore): void {
+  const tokens = state.tokens;
+  for (let index = 0; index < tokens.length; index++) {
+    const inlineToken = tokens[index + 2];
+    if (
+      tokens[index].type !== 'blockquote_open' ||
+      tokens[index + 1]?.type !== 'paragraph_open' ||
+      inlineToken?.type !== 'inline'
+    ) {
+      continue;
+    }
+
+    const [headerLine, ...bodyLines] = inlineToken.content.split('\n');
+    const match = CALLOUT_PATTERN.exec(headerLine.trim());
+    if (!match) {
+      continue;
+    }
+
+    const calloutType = match[1].toLocaleLowerCase();
+    tokens[index].meta = { calloutType, calloutTitle: match[2] || calloutType } satisfies CalloutMeta;
+    inlineToken.content = bodyLines.join('\n');
+
+    let depth = 0;
+    for (let closeIndex = index; closeIndex < tokens.length; closeIndex++) {
+      depth += tokens[closeIndex].type === 'blockquote_open' ? 1 : tokens[closeIndex].type === 'blockquote_close' ? -1 : 0;
+      if (depth === 0) {
+        tokens[closeIndex].meta = { calloutType };
+        break;
+      }
+    }
+  }
+}
+
 function createRenderer(): MarkdownItInstance {
   const md = new MarkdownIt({ html: false, linkify: true, breaks: false, typographer: false });
   md.inline.ruler.before('link', 'wikilink', wikilinkRule);
   md.renderer.rules['wikilink'] = (tokens, index) => renderWikilinkToken(tokens[index]);
+
+  md.core.ruler.after('block', 'callout', calloutRule);
+  const defaultBlockquoteOpen = md.renderer.rules['blockquote_open'] ?? renderTokenAsIs;
+  const defaultBlockquoteClose = md.renderer.rules['blockquote_close'] ?? renderTokenAsIs;
+  md.renderer.rules['blockquote_open'] = (tokens, index, options, env, self) => {
+    const meta = tokens[index].meta as CalloutMeta | null;
+    return meta?.calloutTitle
+      ? `<div class="arc-callout" data-callout="${escapeHtml(meta.calloutType)}"><div class="arc-callout-title">${escapeHtml(meta.calloutTitle)}</div><div class="arc-callout-body">`
+      : defaultBlockquoteOpen(tokens, index, options, env, self);
+  };
+  md.renderer.rules['blockquote_close'] = (tokens, index, options, env, self) =>
+    (tokens[index].meta as CalloutMeta | null)?.calloutType
+      ? '</div></div>'
+      : defaultBlockquoteClose(tokens, index, options, env, self);
 
   const defaultHeadingOpen = md.renderer.rules['heading_open'] ?? renderTokenAsIs;
   md.renderer.rules['heading_open'] = headingPermalinkRule(defaultHeadingOpen);
@@ -187,4 +257,9 @@ const markdownRenderer = createRenderer();
 export function renderMarkdownBody(body: string, options: RenderMarkdownOptions): string {
   const env = { links: [...options.links], sourcePath: options.sourcePath } as unknown as Env;
   return markdownRenderer.render(body, env);
+}
+
+/** `renderMarkdownBody` sanitized for `innerHTML` (reading view, live-preview widgets). */
+export function renderMarkdownToSafeHtml(body: string, options: RenderMarkdownOptions): string {
+  return DOMPurify.sanitize(renderMarkdownBody(body, options), SANITIZE_OPTIONS);
 }

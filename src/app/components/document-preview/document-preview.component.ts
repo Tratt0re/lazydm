@@ -1,4 +1,3 @@
-import { CdkContextMenuTrigger } from '@angular/cdk/menu';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -6,26 +5,17 @@ import {
   inject,
   input,
   output,
-  signal,
   viewChild,
 } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Router } from '@angular/router';
-import { TranslatePipe } from '@ngx-translate/core';
-import DOMPurify from 'dompurify';
 
+import { AppBrokenLinkMenuComponent } from '@/components/broken-link-menu/broken-link-menu.component';
 import type { BrokenLinkFixRequest } from '@/components/document-links-panel/document-links-panel.component';
 import type { DocumentLinkDto } from '@/dtos';
-import { ArcTechIconComponent } from '@/shared/components/icon';
-import { ArcTechMenuImports } from '@/shared/components/menu';
-import { renderMarkdownBody } from './document-preview.markdown';
+import { renderMarkdownToSafeHtml } from './document-preview.markdown';
 
 const BROKEN_LINK_SELECTOR = '[data-broken-raw]';
-
-const SANITIZE_OPTIONS: { readonly ADD_TAGS: string[]; readonly ADD_ATTR: string[] } = {
-  ADD_TAGS: ['img'],
-  ADD_ATTR: ['loading', 'target', 'rel'],
-};
 
 /**
  * Reading mode for a note: renders its markdown body as sanitized HTML, with `[[wikilinks]]`
@@ -35,7 +25,7 @@ const SANITIZE_OPTIONS: { readonly ADD_TAGS: string[]; readonly ADD_ATTR: string
  */
 @Component({
   selector: 'app-document-preview',
-  imports: [TranslatePipe, ArcTechIconComponent, ArcTechMenuImports],
+  imports: [AppBrokenLinkMenuComponent],
   template: `<div
       class="arc-markdown-body"
       [innerHTML]="renderedHtml()"
@@ -43,25 +33,7 @@ const SANITIZE_OPTIONS: { readonly ADD_TAGS: string[]; readonly ADD_ATTR: string
       (keydown)="onContentKeyDown($event)"
     ></div>
 
-    <span
-      class="hidden"
-      arc-context-menu
-      [arcContextMenuTriggerFor]="brokenLinkMenu"
-      aria-hidden="true"
-    ></span>
-
-    <ng-template #brokenLinkMenu>
-      <div arc-menu-content class="w-56">
-        <button type="button" arc-menu-item (click)="emitFix('create')">
-          <arc-icon arcType="plus" />
-          {{ 'links.actions.create' | translate }}
-        </button>
-        <button type="button" arc-menu-item (click)="emitFix('remove')">
-          <arc-icon arcType="unlink" />
-          {{ 'links.actions.remove' | translate }}
-        </button>
-      </div>
-    </ng-template>`,
+    <app-broken-link-menu (fixBrokenLink)="fixBrokenLink.emit($event)" />`,
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     class: 'block h-full min-h-0 w-full overflow-auto border border-input bg-card p-6',
@@ -70,8 +42,7 @@ const SANITIZE_OPTIONS: { readonly ADD_TAGS: string[]; readonly ADD_ATTR: string
 export class AppDocumentPreviewComponent {
   private readonly sanitizer = inject(DomSanitizer);
   private readonly router = inject(Router);
-  private readonly brokenLinkMenuTrigger = viewChild.required(CdkContextMenuTrigger);
-  private readonly menuLink = signal<DocumentLinkDto | null>(null);
+  private readonly brokenLinkMenu = viewChild.required(AppBrokenLinkMenuComponent);
 
   /** A broken `[[link]]` of the preview should be fixed (create the note, or keep only its text). */
   readonly fixBrokenLink = output<BrokenLinkFixRequest>();
@@ -80,19 +51,10 @@ export class AppDocumentPreviewComponent {
   readonly sourcePath = input.required<string>();
 
   protected readonly renderedHtml = computed(() => {
-    const html = renderMarkdownBody(this.body(), {
-      links: this.links(),
-      sourcePath: this.sourcePath(),
-    });
-    return this.sanitizer.bypassSecurityTrustHtml(DOMPurify.sanitize(html, SANITIZE_OPTIONS));
+    return this.sanitizer.bypassSecurityTrustHtml(
+      renderMarkdownToSafeHtml(this.body(), { links: this.links(), sourcePath: this.sourcePath() }),
+    );
   });
-
-  protected emitFix(action: BrokenLinkFixRequest['action']): void {
-    const link = this.menuLink();
-    if (link) {
-      this.fixBrokenLink.emit({ action, link });
-    }
-  }
 
   protected onContentKeyDown(event: KeyboardEvent): void {
     const brokenLink = (event.target as HTMLElement).closest<HTMLElement>(BROKEN_LINK_SELECTOR);
@@ -122,16 +84,11 @@ export class AppDocumentPreviewComponent {
   }
 
   private openBrokenLinkMenu(element: HTMLElement, x: number, y: number): void {
-    this.menuLink.set({
-      raw: element.dataset['brokenRaw'] ?? '',
-      kind: 'wikilink',
-      targetName: element.dataset['brokenTarget'] ?? '',
-      heading: null,
-      resolvedPath: null,
-    });
-
-    const trigger = this.brokenLinkMenuTrigger();
-    trigger.close();
-    trigger.open({ x, y });
+    this.brokenLinkMenu().open(
+      element.dataset['brokenRaw'] ?? '',
+      element.dataset['brokenTarget'] ?? '',
+      x,
+      y,
+    );
   }
 }

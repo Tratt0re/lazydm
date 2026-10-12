@@ -19,15 +19,21 @@
       <div class="min-h-0 flex-1">
         <app-code-editor
           #editor
-          [hidden]="mode() !== 'write'"
+          [hidden]="mode() === 'reading'"
           class="h-full"
+          [mode]="mode() === 'source' ? 'source' : 'live'"
+          [links]="editorLinks()"
+          [sourcePath]="document()?.path ?? ''"
           [documentKey]="notePath()"
           [initialContent]="document()?.content ?? ''"
           [placeholderText]="'document.editorPlaceholder' | translate"
           (contentChange)="editedContent.set($event)"
           (saveRequested)="save()"
+          (linkOpen)="openRoute($event)"
+          (brokenLinkOpen)="openBrokenLinkMenu($event)"
         />
-        @if (mode() === 'preview') {
+        <app-broken-link-menu (fixBrokenLink)="onFixBrokenLink($event)" />
+        @if (mode() === 'reading') {
           <app-document-preview
             class="h-full"
             [body]="previewBody()"

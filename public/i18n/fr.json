@@ -213,8 +213,9 @@
     "unsavedChanges": "Modifications non enregistrées",
     "editorPlaceholder": "Commencez à écrire…",
     "toolbar": {
-      "write": "Écrire",
-      "preview": "Aperçu",
+      "live": "Aperçu en direct",
+      "source": "Source",
+      "reading": "Lecture",
       "save": "Enregistrer",
       "modeAriaLabel": "Basculer entre écriture et lecture de cette note",
       "links": "Liens",

@@ -517,10 +517,74 @@
   padding: 0;
 }
 
+/* Divider: a small ◇ in primary at the start of the line, then the plain rule. */
 .arc-markdown-body hr {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  height: auto;
   border: none;
-  border-top: 1px solid var(--border);
   margin: 1.6em 0;
+  overflow: visible;
+}
+
+.arc-markdown-body hr::before {
+  content: '\25C7';
+  color: var(--primary);
+  font-size: 12px;
+  line-height: 1;
+}
+
+.arc-markdown-body hr::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
+/* Callouts (`> [!type] Title`): note/info, tip/success, warning, danger/error; unknown types look like note. */
+.arc-markdown-body .arc-callout {
+  --arc-callout-color: var(--info);
+  margin: 0.8em 0;
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--arc-callout-color);
+  background: color-mix(in oklch, var(--arc-callout-color) 6%, var(--card));
+  padding: 0.6em 1em;
+}
+
+.arc-markdown-body .arc-callout[data-callout='tip'],
+.arc-markdown-body .arc-callout[data-callout='success'],
+.arc-markdown-body .arc-callout[data-callout='check'],
+.arc-markdown-body .arc-callout[data-callout='done'] {
+  --arc-callout-color: var(--success);
+}
+
+.arc-markdown-body .arc-callout[data-callout='warning'],
+.arc-markdown-body .arc-callout[data-callout='caution'],
+.arc-markdown-body .arc-callout[data-callout='attention'] {
+  --arc-callout-color: var(--warning);
+}
+
+.arc-markdown-body .arc-callout[data-callout='danger'],
+.arc-markdown-body .arc-callout[data-callout='error'],
+.arc-markdown-body .arc-callout[data-callout='bug'] {
+  --arc-callout-color: var(--destructive);
+}
+
+.arc-markdown-body .arc-callout-title {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--arc-callout-color);
+}
+
+.arc-markdown-body .arc-callout-body > :first-child {
+  margin-top: 0.3em;
+}
+
+.arc-markdown-body .arc-callout-body > :last-child {
+  margin-bottom: 0;
 }
 
 .arc-markdown-body table {

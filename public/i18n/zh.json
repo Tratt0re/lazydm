@@ -213,8 +213,9 @@
     "unsavedChanges": "有未保存的更改",
     "editorPlaceholder": "开始编写……",
     "toolbar": {
-      "write": "编写",
-      "preview": "预览",
+      "live": "实时预览",
+      "source": "源码",
+      "reading": "阅读",
       "save": "保存",
       "modeAriaLabel": "在编写和阅读此笔记之间切换",
       "links": "链接",

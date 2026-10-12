@@ -11,10 +11,10 @@ import {
   viewChild,
 } from '@angular/core';
 import { defaultKeymap, history, historyKeymap } from '@codemirror/commands';
-import { markdown } from '@codemirror/lang-markdown';
+import { markdown, markdownLanguage } from '@codemirror/lang-markdown';
 import { HighlightStyle, syntaxHighlighting } from '@codemirror/language';
 import { languages } from '@codemirror/language-data';
-import { EditorState } from '@codemirror/state';
+import { Compartment, EditorState, type Extension } from '@codemirror/state';
 import {
   Decoration,
   type DecorationSet,
@@ -26,9 +26,26 @@ import {
 } from '@codemirror/view';
 import { tags } from '@lezer/highlight';
 
+import type { DocumentLinkDto } from '@/dtos';
+import { findFrontmatterEnd, livePreview, setLivePreviewContext } from './live-preview';
+
+/** `live`: Obsidian-like live preview (rendered while editable); `source`: plain markdown. */
+export type CodeEditorMode = 'live' | 'source';
+
+/** A broken link clicked in the live preview, with where to open its fix menu. */
+export interface CodeEditorBrokenLinkEvent {
+  readonly raw: string;
+  readonly targetName: string;
+  readonly x: number;
+  readonly y: number;
+}
+
+/** Links of the live preview and of its rendered blocks (tables, callouts). */
+const LIVE_LINK_SELECTOR = '.cm-lp-link, .cm-lp-block a[data-route], .cm-lp-block [data-broken-raw]';
+
 /**
- * Wraps CodeMirror 6 as the markdown source editor. Colours come from the ArcTechUI CSS
- * variables, so the editor follows the active theme without any extra wiring.
+ * Wraps CodeMirror 6 as the markdown editor, in live preview (default) or source mode. Colours come
+ * from the ArcTechUI CSS variables, so the editor follows the active theme without extra wiring.
  */
 @Component({
   selector: 'app-code-editor',
@@ -42,23 +59,44 @@ export class AppCodeEditorComponent implements OnDestroy {
   private readonly host = viewChild.required<ElementRef<HTMLDivElement>>('host');
   private view: EditorView | null = null;
   private previousDocumentKey: string | null = null;
+  private readonly modeCompartment = new Compartment();
 
   /** Identifies the open note; the editor content resets whenever this changes (switching notes). */
   readonly documentKey = input.required<string>();
   readonly initialContent = input('');
   readonly readOnly = input(false, { transform: booleanAttribute });
   readonly placeholderText = input('');
+  readonly mode = input<CodeEditorMode>('live');
+  /** Resolved links of the note (vault index), for the live preview's links and embeds. */
+  readonly links = input<readonly DocumentLinkDto[]>([]);
+  readonly sourcePath = input('');
 
   readonly contentChange = output<string>();
   readonly saveRequested = output<void>();
+  /** A link of the live preview was clicked: its in-app route. */
+  readonly linkOpen = output<string>();
+  readonly brokenLinkOpen = output<CodeEditorBrokenLinkEvent>();
 
   constructor() {
     afterNextRender(() => this.createView());
 
     effect(() => {
+      const extensions = this.modeExtensions(this.mode());
+      this.view?.dispatch({ effects: this.modeCompartment.reconfigure(extensions) });
+      this.syncLinks();
+    });
+
+    effect(() => {
+      this.links();
+      this.sourcePath();
+      this.syncLinks();
+    });
+
+    effect(() => {
       const key = this.documentKey();
       if (this.previousDocumentKey !== null && this.previousDocumentKey !== key) {
         this.view?.setState(this.buildState(this.initialContent()));
+        this.syncLinks();
       }
 
       this.previousDocumentKey = key;
@@ -66,6 +104,9 @@ export class AppCodeEditorComponent implements OnDestroy {
   }
 
   ngOnDestroy(): void {
+    const host = this.host().nativeElement;
+    host.removeEventListener('mousedown', this.handleLinkMouseDown, true);
+    host.removeEventListener('click', this.handleLinkClick, true);
     this.view?.destroy();
   }
 
@@ -76,6 +117,7 @@ export class AppCodeEditorComponent implements OnDestroy {
    */
   replaceContent(content: string): void {
     this.view?.setState(this.buildState(content));
+    this.syncLinks();
   }
 
   /** Places the cursor at a given line (1-based), used when a backlink points at a heading. */
@@ -92,15 +134,71 @@ export class AppCodeEditorComponent implements OnDestroy {
   }
 
   private createView(): void {
-    this.view = new EditorView({
-      parent: this.host().nativeElement,
-      state: this.buildState(this.initialContent()),
+    const host = this.host().nativeElement;
+    this.view = new EditorView({ parent: host, state: this.buildState(this.initialContent()) });
+    this.syncLinks();
+
+    // Capture phase: CodeMirror would otherwise move the cursor into the link (showing its source).
+    host.addEventListener('mousedown', this.handleLinkMouseDown, true);
+    host.addEventListener('click', this.handleLinkClick, true);
+  }
+
+  private syncLinks(): void {
+    this.view?.dispatch({
+      effects: setLivePreviewContext.of({ links: this.links(), sourcePath: this.sourcePath() }),
     });
   }
 
+  private modeExtensions(mode: CodeEditorMode): Extension {
+    return mode === 'live'
+      ? [livePreview(), syntaxHighlighting(liveHighlightStyle)]
+      : [wikilinkHighlightPlugin, syntaxHighlighting(markdownHighlightStyle), sourceTheme];
+  }
+
+  private getLiveLink(event: MouseEvent): HTMLElement | null {
+    if (this.mode() !== 'live' || event.button !== 0) {
+      return null;
+    }
+
+    return (event.target as HTMLElement).closest<HTMLElement>(LIVE_LINK_SELECTOR);
+  }
+
+  private readonly handleLinkMouseDown = (event: MouseEvent) => {
+    if (this.getLiveLink(event)) {
+      event.preventDefault();
+      event.stopPropagation();
+    }
+  };
+
+  /** Click opens the link; Cmd/Ctrl-click is left to the tab bar (opens it in a new tab). */
+  private readonly handleLinkClick = (event: MouseEvent) => {
+    const link = this.getLiveLink(event);
+    if (!link || event.metaKey || event.ctrlKey) {
+      return;
+    }
+
+    event.preventDefault();
+    event.stopPropagation();
+    if (link.dataset['brokenRaw'] !== undefined) {
+      this.brokenLinkOpen.emit({
+        raw: link.dataset['brokenRaw'],
+        targetName: link.dataset['brokenTarget'] ?? '',
+        x: event.clientX,
+        y: event.clientY,
+      });
+    } else if (link.dataset['route']) {
+      this.linkOpen.emit(link.dataset['route']);
+    } else if (link.dataset['href']) {
+      window.open(link.dataset['href'], '_blank', 'noopener');
+    }
+  };
+
   private buildState(content: string) {
+    // Open below the frontmatter, so the live preview shows it as properties until the cursor goes there.
+    const frontmatterEnd = findFrontmatterEnd(EditorState.create({ doc: content }));
     return EditorState.create({
       doc: content,
+      selection: { anchor: frontmatterEnd > 0 ? Math.min(frontmatterEnd + 1, content.length) : 0 },
       extensions: [
         history(),
         keymap.of([
@@ -115,9 +213,8 @@ export class AppCodeEditorComponent implements OnDestroy {
           ...defaultKeymap,
           ...historyKeymap,
         ]),
-        markdown({ codeLanguages: languages }),
-        wikilinkHighlightPlugin,
-        syntaxHighlighting(markdownHighlightStyle),
+        markdown({ base: markdownLanguage, codeLanguages: languages }),
+        this.modeCompartment.of(this.modeExtensions(this.mode())),
         editorTheme,
         EditorView.lineWrapping,
         EditorView.editable.of(!this.readOnly()),
@@ -174,10 +271,28 @@ const markdownHighlightStyle = HighlightStyle.define([
   { tag: tags.list, color: 'var(--primary)' },
 ]);
 
+/** Live preview: inline styles only; headings and blocks are styled by the live preview itself. */
+const liveHighlightStyle = HighlightStyle.define([
+  { tag: tags.strong, fontWeight: '700' },
+  { tag: tags.emphasis, fontStyle: 'italic' },
+  { tag: tags.strikethrough, textDecoration: 'line-through' },
+  { tag: tags.url, color: 'var(--muted-foreground)' },
+  { tag: tags.monospace, fontFamily: 'var(--font-mono)' },
+  { tag: tags.processingInstruction, color: 'var(--muted-foreground)' },
+]);
+
+/** Source mode: the whole note in the mono font, markdown syntax visible. */
+const sourceTheme = EditorView.theme({
+  '.cm-content': {
+    fontFamily: 'var(--font-mono)',
+    fontSize: '13px',
+    padding: '16px',
+  },
+});
+
 const editorTheme = EditorView.theme({
   '&': {
     height: '100%',
-    fontSize: '13px',
     color: 'var(--foreground)',
     backgroundColor: 'var(--recessed)',
   },
@@ -185,12 +300,9 @@ const editorTheme = EditorView.theme({
     outline: 'none',
   },
   '.cm-content': {
-    fontFamily: 'var(--font-mono)',
     caretColor: 'var(--primary)',
-    padding: '16px',
   },
   '.cm-scroller': {
-    fontFamily: 'var(--font-mono)',
     lineHeight: '1.65',
   },
   '.cm-gutters': {

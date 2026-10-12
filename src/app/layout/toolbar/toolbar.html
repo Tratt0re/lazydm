@@ -41,6 +41,28 @@
       }
 
       @if (itemNavigation(); as item) {
+        @if (item.type === 'toggles') {
+          <div class="flex items-center gap-1" role="group" [attr.aria-label]="item.ariaLabel ?? null">
+            @for (option of item.options; track option.value) {
+              @let isPressed = item.value() === option.value;
+              <button
+                type="button"
+                arc-button
+                arcType="ghost"
+                arcSize="sm"
+                class="size-9 border"
+                [class]="isPressed ? 'border-primary bg-raised text-primary' : 'border-transparent text-muted-foreground'"
+                [attr.aria-pressed]="isPressed"
+                [attr.aria-label]="option.label | translate"
+                arcPosition="bottom"
+                [arcTooltip]="option.label | translate"
+                (click)="onItemNavigationChange(item, option.value)"
+              >
+                <arc-icon [arcType]="option.icon" />
+              </button>
+            }
+          </div>
+        } @else {
         <div class="flex items-center gap-2">
           <arc-segmented
             [arcDefaultValue]="item.defaultValue ?? ''"
@@ -57,6 +79,7 @@
             }
           </arc-segmented>
         </div>
+        }
       }
     </div>
   </div>

@@ -1,0 +1,731 @@
+import { ensureSyntaxTree, syntaxTree } from '@codemirror/language';
+import {
+  type EditorState,
+  type Extension,
+  type Range,
+  StateEffect,
+  StateField,
+} from '@codemirror/state';
+import { Decoration, type DecorationSet, EditorView, WidgetType } from '@codemirror/view';
+
+import {
+  renderMarkdownToSafeHtml,
+  toAssetUrl,
+  toInAppNoteRoute,
+} from '@/components/document-preview/document-preview.markdown';
+import type { DocumentLinkDto } from '@/dtos';
+
+/** What the live preview needs besides the text: the note's resolved links (from the vault index). */
+export interface LivePreviewContext {
+  readonly links: readonly DocumentLinkDto[];
+  readonly sourcePath: string;
+}
+
+/** Updates the links the live preview resolves `[[wikilinks]]` and embeds with. */
+export const setLivePreviewContext = StateEffect.define<LivePreviewContext>();
+
+const WIKILINK_PATTERN = /(!?)\[\[([^[\]\n]+?)\]\]/g;
+const IMAGE_PATTERN = /\.(png|jpe?g|gif|webp|svg|avif)$/i;
+const CALLOUT_HEADER_PATTERN = /^\s*>\s*\[![A-Za-z][\w-]*\]/;
+const FRONTMATTER_CLOSE = new Set(['---', '...']);
+const BULLET_MARKS = new Set(['-', '*', '+']);
+const INLINE_MARKS: Readonly<Record<string, string>> = {
+  Emphasis: 'EmphasisMark',
+  StrongEmphasis: 'EmphasisMark',
+  Strikethrough: 'StrikethroughMark',
+  InlineCode: 'CodeMark',
+};
+
+const contextField = StateField.define<LivePreviewContext>({
+  create: () => ({ links: [], sourcePath: '' }),
+  update(value, transaction) {
+    for (const effect of transaction.effects) {
+      if (effect.is(setLivePreviewContext)) {
+        return effect.value;
+      }
+    }
+    return value;
+  },
+});
+
+// ---------------------------------------------------------------------------------------------
+// Widgets
+// ---------------------------------------------------------------------------------------------
+
+/** Divider: the simple ornament (◇ then the line). */
+class DividerWidget extends WidgetType {
+  override eq(): boolean {
+    return true;
+  }
+
+  toDOM(): HTMLElement {
+    const element = document.createElement('span');
+    element.className = 'cm-lp-hr';
+    element.setAttribute('aria-hidden', 'true');
+    element.textContent = '◇';
+    return element;
+  }
+}
+
+class BulletWidget extends WidgetType {
+  override eq(): boolean {
+    return true;
+  }
+
+  toDOM(): HTMLElement {
+    const element = document.createElement('span');
+    element.className = 'cm-lp-bullet';
+    element.textContent = '•';
+    return element;
+  }
+}
+
+/** `[ ]` / `[x]` of a task: a real checkbox that edits the marker. */
+class TaskWidget extends WidgetType {
+  constructor(
+    private readonly checked: boolean,
+    private readonly markerFrom: number,
+  ) {
+    super();
+  }
+
+  override eq(other: TaskWidget): boolean {
+    return other.checked === this.checked && other.markerFrom === this.markerFrom;
+  }
+
+  toDOM(view: EditorView): HTMLElement {
+    const input = document.createElement('input');
+    input.type = 'checkbox';
+    input.className = 'cm-lp-task';
+    input.checked = this.checked;
+    input.addEventListener('mousedown', (event) => event.preventDefault());
+    input.addEventListener('click', (event) => {
+      event.preventDefault();
+      view.dispatch({
+        changes: {
+          from: this.markerFrom + 1,
+          to: this.markerFrom + 2,
+          insert: this.checked ? ' ' : 'x',
+        },
+      });
+    });
+    return input;
+  }
+}
+
+class ImageWidget extends WidgetType {
+  constructor(
+    private readonly src: string,
+    private readonly alt: string,
+  ) {
+    super();
+  }
+
+  override eq(other: ImageWidget): boolean {
+    return other.src === this.src && other.alt === this.alt;
+  }
+
+  toDOM(): HTMLElement {
+    const image = document.createElement('img');
+    image.className = 'cm-lp-image';
+    image.src = this.src;
+    image.alt = this.alt;
+    image.loading = 'lazy';
+    return image;
+  }
+}
+
+/**
+ * A rendered block (table, callout) or the frontmatter properties: clicking anywhere but on a link
+ * puts the cursor inside it, which turns it back into editable source.
+ */
+class BlockWidget extends WidgetType {
+  constructor(
+    private readonly key: string,
+    private readonly build: () => HTMLElement,
+    private readonly revealAt: number,
+  ) {
+    super();
+  }
+
+  override eq(other: BlockWidget): boolean {
+    return other.key === this.key && other.revealAt === this.revealAt;
+  }
+
+  toDOM(view: EditorView): HTMLElement {
+    const element = this.build();
+    element.addEventListener('mousedown', (event) => {
+      if ((event.target as HTMLElement).closest('a, [data-broken-raw]')) {
+        return;
+      }
+
+      event.preventDefault();
+      view.dispatch({ selection: { anchor: this.revealAt } });
+      view.focus();
+    });
+    return element;
+  }
+}
+
+function renderHtmlBlock(html: string, className: string): () => HTMLElement {
+  return () => {
+    const element = document.createElement('div');
+    element.className = `cm-lp-block arc-markdown-body ${className}`;
+    element.innerHTML = html;
+    return element;
+  };
+}
+
+function renderProperties(entries: readonly (readonly [string, string])[]): () => HTMLElement {
+  return () => {
+    const element = document.createElement('div');
+    element.className = 'cm-lp-block cm-lp-properties';
+    for (const [key, value] of entries) {
+      const keyElement = document.createElement('span');
+      keyElement.className = 'cm-lp-property-key';
+      keyElement.textContent = key;
+      const valueElement = document.createElement('span');
+      valueElement.className = 'cm-lp-property-value';
+      valueElement.textContent = value;
+      element.append(keyElement, valueElement);
+    }
+    return element;
+  };
+}
+
+// ---------------------------------------------------------------------------------------------
+// Decorations
+// ---------------------------------------------------------------------------------------------
+
+interface DecorationContext {
+  readonly state: EditorState;
+  readonly context: LivePreviewContext;
+  readonly ranges: Range<Decoration>[];
+  /** Ranges replaced by a block widget: nothing else is decorated inside them. */
+  readonly blocks: [number, number][];
+}
+
+const hidden = Decoration.replace({});
+
+/** Whether the selection touches a range (its source is then shown for editing). */
+function isTouched(state: EditorState, from: number, to: number): boolean {
+  return state.selection.ranges.some((range) => range.from <= to && range.to >= from);
+}
+
+/** Whether the selection is on one of the lines of a range. */
+function isOnLines(state: EditorState, from: number, to: number): boolean {
+  const firstLine = state.doc.lineAt(from).number;
+  const lastLine = state.doc.lineAt(to).number;
+  return state.selection.ranges.some(
+    (range) =>
+      state.doc.lineAt(range.from).number <= lastLine &&
+      state.doc.lineAt(range.to).number >= firstLine,
+  );
+}
+
+function isInBlock(blocks: readonly [number, number][], position: number): boolean {
+  return blocks.some(([from, to]) => position >= from && position <= to);
+}
+
+function findLink(context: LivePreviewContext, raw: string): DocumentLinkDto | null {
+  return context.links.find((link) => link.raw === raw) ?? null;
+}
+
+/** Links of a snippet, in order, as the markdown renderer pairs them (tables and callouts). */
+function linksForSnippet(context: LivePreviewContext, text: string): DocumentLinkDto[] {
+  return [...text.matchAll(WIKILINK_PATTERN)].map(
+    (match) =>
+      findLink(context, match[2]) ?? {
+        raw: match[2],
+        kind: match[1] ? 'embed' : 'wikilink',
+        targetName: match[2].split(/[|#]/)[0].trim(),
+        heading: null,
+        resolvedPath: null,
+      },
+  );
+}
+
+/** Attributes of a rendered link: in-app route, broken-link menu trigger, or nothing to open. */
+function linkAttributes(
+  context: LivePreviewContext,
+  link: DocumentLinkDto | null,
+  raw: string,
+): { className: string; attributes: Record<string, string> } {
+  if (!link?.resolvedPath) {
+    return {
+      className: 'cm-lp-link cm-lp-link-broken',
+      attributes: {
+        'data-broken-raw': raw,
+        'data-broken-target': link?.targetName ?? raw.split(/[|#]/)[0].trim(),
+        title: link?.targetName ?? raw,
+      },
+    };
+  }
+
+  const route =
+    link.resolvedPath === context.sourcePath ? null : toInAppNoteRoute(link.resolvedPath);
+  return route
+    ? { className: 'cm-lp-link', attributes: { 'data-route': route, title: link.resolvedPath } }
+    : { className: 'cm-lp-link cm-lp-link-plain', attributes: { title: link.resolvedPath } };
+}
+
+/** End offset of the YAML header at the top of the note (its closing `---` line), or 0 without one. */
+export function findFrontmatterEnd(state: EditorState): number {
+  if (state.doc.line(1).text.trim() !== '---' || state.doc.lines < 2) {
+    return 0;
+  }
+
+  for (let lineNumber = 2; lineNumber <= state.doc.lines; lineNumber++) {
+    const line = state.doc.line(lineNumber);
+    if (FRONTMATTER_CLOSE.has(line.text.trim())) {
+      return line.to;
+    }
+  }
+
+  return 0;
+}
+
+/** The YAML header at the top of the note, shown as a properties box. */
+function decorateFrontmatter(target: DecorationContext): number {
+  const { state } = target;
+  const end = findFrontmatterEnd(state);
+  if (end === 0) {
+    return 0;
+  }
+
+  const firstLine = state.doc.line(1);
+  const closeLine = state.doc.lineAt(end);
+  if (!isOnLines(state, 0, end)) {
+    const entries = state.doc
+      .sliceString(firstLine.to + 1, closeLine.from)
+      .split('\n')
+      .map((entry) => /^([^:#\s][^:]*):\s?(.*)$/.exec(entry))
+      .filter((match): match is RegExpExecArray => match !== null)
+      .map((match) => [match[1].trim(), match[2].trim()] as const);
+    target.ranges.push(
+      Decoration.replace({
+        block: true,
+        widget: new BlockWidget(
+          `fm:${state.doc.sliceString(0, end)}`,
+          renderProperties(entries),
+          firstLine.to,
+        ),
+      }).range(0, end),
+    );
+    target.blocks.push([0, end]);
+  } else {
+    for (let position = 0; position <= end;) {
+      const frontmatterLine = state.doc.lineAt(position);
+      target.ranges.push(
+        Decoration.line({ class: 'cm-lp-frontmatter' }).range(frontmatterLine.from),
+      );
+      position = frontmatterLine.to + 1;
+    }
+  }
+
+  return end;
+}
+
+function decorateSyntax(target: DecorationContext, frontmatterEnd: number): void {
+  const { state, ranges, blocks, context } = target;
+  const tree = ensureSyntaxTree(state, state.doc.length, 100) ?? syntaxTree(state);
+
+  tree.iterate({
+    enter: (node) => {
+      if (frontmatterEnd > 0 && node.to <= frontmatterEnd) {
+        return false;
+      }
+
+      const name = node.name;
+
+      if (name.startsWith('ATXHeading')) {
+        const level = Number(name.slice('ATXHeading'.length)) || 1;
+        ranges.push(
+          Decoration.line({ class: `cm-lp-heading cm-lp-h${level}` }).range(
+            state.doc.lineAt(node.from).from,
+          ),
+        );
+        if (!isOnLines(state, node.from, node.to)) {
+          for (const mark of node.node.getChildren('HeaderMark')) {
+            const hideTo = state.sliceDoc(mark.to, mark.to + 1) === ' ' ? mark.to + 1 : mark.to;
+            ranges.push(hidden.range(mark.from, hideTo));
+          }
+        }
+        return;
+      }
+
+      const inlineMark = INLINE_MARKS[name];
+      if (inlineMark) {
+        if (name === 'InlineCode') {
+          ranges.push(Decoration.mark({ class: 'cm-lp-inline-code' }).range(node.from, node.to));
+        }
+        if (!isTouched(state, node.from, node.to)) {
+          for (const mark of node.node.getChildren(inlineMark)) {
+            ranges.push(hidden.range(mark.from, mark.to));
+          }
+        }
+        return name === 'InlineCode' ? false : undefined;
+      }
+
+      if (name === 'Link' || name === 'Image') {
+        const marks = node.node.getChildren('LinkMark');
+        const url = node.node.getChild('URL');
+        // Only `[text](url)`: bare brackets (like the inside of a `[[wikilink]]`) are not links here.
+        if (!url || marks.length < 2 || isTouched(state, node.from, node.to)) {
+          return false;
+        }
+
+        const href = state.sliceDoc(url.from, url.to);
+        if (name === 'Image') {
+          const link = findLink(context, href);
+          const src = /^https?:/i.test(href)
+            ? href
+            : link?.resolvedPath
+              ? toAssetUrl(link.resolvedPath)
+              : '';
+          if (src) {
+            ranges.push(
+              Decoration.replace({
+                widget: new ImageWidget(src, state.sliceDoc(marks[0].to, marks[1].from)),
+              }).range(node.from, node.to),
+            );
+          }
+          return false;
+        }
+
+        const textFrom = marks[0].to;
+        const textTo = marks[1].from;
+        ranges.push(hidden.range(node.from, textFrom), hidden.range(textTo, node.to));
+        if (textTo > textFrom) {
+          const external = /^[a-z][a-z0-9+.-]*:/i.test(href);
+          const { className, attributes } = external
+            ? { className: 'cm-lp-link', attributes: { 'data-href': href, title: href } }
+            : linkAttributes(context, findLink(context, href), href);
+          ranges.push(
+            Decoration.mark({ tagName: 'a', class: className, attributes }).range(textFrom, textTo),
+          );
+        }
+        return false;
+      }
+
+      if (name === 'Blockquote') {
+        const firstLine = state.doc.lineAt(node.from);
+        const end = state.doc.lineAt(node.to).to;
+        if (CALLOUT_HEADER_PATTERN.test(firstLine.text) && !isOnLines(state, node.from, end)) {
+          const text = state.sliceDoc(firstLine.from, end);
+          const html = renderMarkdownToSafeHtml(text, {
+            links: linksForSnippet(context, text),
+            sourcePath: context.sourcePath,
+          });
+          ranges.push(
+            Decoration.replace({
+              block: true,
+              widget: new BlockWidget(
+                `callout:${text}`,
+                renderHtmlBlock(html, 'cm-lp-callout'),
+                firstLine.to,
+              ),
+            }).range(firstLine.from, end),
+          );
+          blocks.push([firstLine.from, end]);
+          return false;
+        }
+
+        for (let position = firstLine.from; position <= end;) {
+          const line = state.doc.lineAt(position);
+          ranges.push(Decoration.line({ class: 'cm-lp-quote' }).range(line.from));
+          position = line.to + 1;
+        }
+        if (!isOnLines(state, node.from, end)) {
+          node.node.cursor().iterate((child) => {
+            if (child.name === 'QuoteMark') {
+              const hideTo =
+                state.sliceDoc(child.to, child.to + 1) === ' ' ? child.to + 1 : child.to;
+              ranges.push(hidden.range(child.from, hideTo));
+            }
+          });
+        }
+        return;
+      }
+
+      if (name === 'HorizontalRule') {
+        if (!isOnLines(state, node.from, node.to)) {
+          ranges.push(
+            Decoration.replace({ widget: new DividerWidget() }).range(node.from, node.to),
+          );
+        }
+        return false;
+      }
+
+      if (name === 'Table') {
+        const from = state.doc.lineAt(node.from).from;
+        const to = state.doc.lineAt(node.to).to;
+        if (!isOnLines(state, from, to)) {
+          const text = state.sliceDoc(from, to);
+          const html = renderMarkdownToSafeHtml(text, {
+            links: linksForSnippet(context, text),
+            sourcePath: context.sourcePath,
+          });
+          ranges.push(
+            Decoration.replace({
+              block: true,
+              widget: new BlockWidget(
+                `table:${text}`,
+                renderHtmlBlock(html, 'cm-lp-table'),
+                state.doc.lineAt(from).to,
+              ),
+            }).range(from, to),
+          );
+          blocks.push([from, to]);
+        }
+        return false;
+      }
+
+      if (name === 'FencedCode' || name === 'CodeBlock') {
+        const firstLineFrom = state.doc.lineAt(node.from).from;
+        const lastLineFrom = state.doc.lineAt(node.to).from;
+        for (let position = firstLineFrom; position <= node.to;) {
+          const line = state.doc.lineAt(position);
+          const isFence =
+            name === 'FencedCode' && (line.from === firstLineFrom || line.from === lastLineFrom);
+          ranges.push(
+            Decoration.line({
+              class: isFence ? 'cm-lp-codeblock cm-lp-codefence' : 'cm-lp-codeblock',
+            }).range(line.from),
+          );
+          position = line.to + 1;
+        }
+        return false;
+      }
+
+      if (name === 'ListMark') {
+        const text = state.sliceDoc(node.from, node.to);
+        if (BULLET_MARKS.has(text) && !isOnLines(state, node.from, node.to)) {
+          // A task shows only its checkbox: its `- ` goes away instead of becoming a bullet.
+          const isTask = node.node.nextSibling?.name === 'Task';
+          const end = isTask && state.sliceDoc(node.to, node.to + 1) === ' ' ? node.to + 1 : node.to;
+          ranges.push(
+            (isTask ? Decoration.replace({}) : Decoration.replace({ widget: new BulletWidget() })).range(
+              node.from,
+              end,
+            ),
+          );
+        }
+        return;
+      }
+
+      if (name === 'TaskMarker') {
+        if (!isTouched(state, node.from, node.to)) {
+          const checked = /x/i.test(state.sliceDoc(node.from, node.to));
+          ranges.push(
+            Decoration.replace({ widget: new TaskWidget(checked, node.from) }).range(
+              node.from,
+              node.to,
+            ),
+          );
+        }
+        return;
+      }
+
+      return;
+    },
+  });
+}
+
+/** `[[wikilinks]]` and `![[embeds]]`, which the markdown grammar does not know about. */
+function decorateWikilinks(target: DecorationContext, frontmatterEnd: number): void {
+  const { state, ranges, blocks, context } = target;
+  const tree = syntaxTree(state);
+  const text = state.doc.toString();
+
+  for (const match of text.matchAll(WIKILINK_PATTERN)) {
+    const from = match.index;
+    const to = from + match[0].length;
+    if (from < frontmatterEnd || isInBlock(blocks, from)) {
+      continue;
+    }
+
+    if (tree.resolveInner(from, 1).name.includes('Code')) {
+      continue;
+    }
+
+    const isEmbed = match[1] === '!';
+    const raw = match[2];
+    if (isTouched(state, from, to)) {
+      ranges.push(Decoration.mark({ class: 'cm-wikilink' }).range(from, to));
+      continue;
+    }
+
+    const link = findLink(context, raw);
+    if (isEmbed && link?.resolvedPath && IMAGE_PATTERN.test(link.resolvedPath)) {
+      ranges.push(
+        Decoration.replace({
+          widget: new ImageWidget(toAssetUrl(link.resolvedPath), raw),
+        }).range(from, to),
+      );
+      continue;
+    }
+
+    const innerFrom = from + match[1].length + 2;
+    const innerTo = to - 2;
+    const pipeIndex = raw.indexOf('|');
+    const labelFrom = pipeIndex >= 0 ? innerFrom + pipeIndex + 1 : innerFrom;
+    ranges.push(hidden.range(from, labelFrom), hidden.range(innerTo, to));
+
+    if (innerTo > labelFrom) {
+      const { className, attributes } = linkAttributes(context, link, raw);
+      ranges.push(
+        Decoration.mark({
+          tagName: 'a',
+          class: isEmbed ? `${className} cm-lp-embed` : className,
+          attributes,
+        }).range(labelFrom, innerTo),
+      );
+    }
+  }
+}
+
+function buildDecorations(state: EditorState): DecorationSet {
+  const target: DecorationContext = {
+    state,
+    context: state.field(contextField),
+    ranges: [],
+    blocks: [],
+  };
+  const frontmatterEnd = decorateFrontmatter(target);
+  decorateSyntax(target, frontmatterEnd);
+  decorateWikilinks(target, frontmatterEnd);
+  return Decoration.set(target.ranges, true);
+}
+
+const livePreviewField = StateField.define<DecorationSet>({
+  create: (state) => buildDecorations(state),
+  update(decorations, transaction) {
+    const isContextChange = transaction.effects.some((effect) => effect.is(setLivePreviewContext));
+    if (
+      transaction.docChanged ||
+      transaction.selection ||
+      isContextChange ||
+      syntaxTree(transaction.state) !== syntaxTree(transaction.startState)
+    ) {
+      return buildDecorations(transaction.state);
+    }
+
+    return decorations;
+  },
+  provide: (field) => EditorView.decorations.from(field),
+});
+
+const livePreviewTheme = EditorView.theme({
+  '.cm-content': {
+    fontFamily: 'var(--font-sans)',
+    fontSize: '15px',
+    lineHeight: '1.65',
+    padding: '24px 28px',
+  },
+  '.cm-lp-heading': {
+    color: 'var(--foreground-strong)',
+    fontFamily: 'var(--font-display)',
+    fontWeight: '800',
+    letterSpacing: '0.02em',
+    textTransform: 'uppercase',
+    lineHeight: '1.15',
+  },
+  '.cm-lp-h1': { fontSize: '2.1em', paddingTop: '0.4em' },
+  '.cm-lp-h2': { fontSize: '1.65em', paddingTop: '0.35em' },
+  '.cm-lp-h3': { fontSize: '1.35em', paddingTop: '0.3em' },
+  '.cm-lp-h4, .cm-lp-h5, .cm-lp-h6': { fontSize: '1.1em', paddingTop: '0.25em' },
+  '.cm-lp-link': {
+    color: 'var(--primary)',
+    cursor: 'pointer',
+    textDecoration: 'underline',
+    textDecorationColor: 'color-mix(in oklch, var(--primary) 45%, transparent)',
+    textUnderlineOffset: '3px',
+  },
+  '.cm-lp-link:hover': { color: 'var(--highlight)' },
+  '.cm-lp-link-plain': { cursor: 'default' },
+  '.cm-lp-link-broken': {
+    color: 'var(--destructive)',
+    textDecorationStyle: 'dashed',
+    textDecorationColor: 'var(--destructive)',
+  },
+  '.cm-lp-inline-code': {
+    fontFamily: 'var(--font-mono)',
+    fontSize: '0.88em',
+    backgroundColor: 'var(--raised)',
+    padding: '1px 4px',
+  },
+  '.cm-lp-quote': {
+    borderLeft: '3px solid var(--border-strong)',
+    paddingLeft: '12px !important',
+    color: 'var(--foreground-secondary)',
+  },
+  '.cm-lp-codeblock': {
+    fontFamily: 'var(--font-mono)',
+    fontSize: '13px',
+    backgroundColor: 'var(--card)',
+    paddingLeft: '12px !important',
+  },
+  '.cm-lp-codefence': { color: 'var(--muted-foreground)' },
+  '.cm-lp-frontmatter': { fontFamily: 'var(--font-mono)', fontSize: '13px' },
+  '.cm-lp-bullet': { color: 'var(--primary)', fontWeight: '700', padding: '0 2px' },
+  '.cm-lp-task': {
+    width: '14px',
+    height: '14px',
+    margin: '0 4px 0 0',
+    verticalAlign: '-2px',
+    accentColor: 'var(--primary)',
+    cursor: 'pointer',
+  },
+  '.cm-lp-image': {
+    display: 'inline-block',
+    maxWidth: '100%',
+    margin: '4px 0',
+    border: '1px solid var(--border)',
+  },
+  '.cm-lp-hr': {
+    display: 'inline-flex',
+    alignItems: 'center',
+    gap: '10px',
+    width: '100%',
+    color: 'var(--primary)',
+    fontSize: '12px',
+    verticalAlign: 'middle',
+  },
+  '.cm-lp-hr::after': {
+    content: '""',
+    flex: '1',
+    height: '1px',
+    backgroundColor: 'var(--border)',
+  },
+  // Rendered HTML must not inherit the editor's `break-spaces` (it would show its newlines as blank lines).
+  '.cm-lp-block': { margin: '6px 0', cursor: 'text', whiteSpace: 'normal' },
+  '.cm-lp-properties': {
+    display: 'grid',
+    gridTemplateColumns: 'minmax(6rem, max-content) 1fr',
+    border: '1px solid var(--border)',
+    backgroundColor: 'var(--card)',
+    fontSize: '13px',
+  },
+  '.cm-lp-property-key': {
+    padding: '6px 12px',
+    fontFamily: 'var(--font-mono)',
+    fontSize: '11px',
+    letterSpacing: '0.06em',
+    textTransform: 'uppercase',
+    color: 'var(--muted-foreground)',
+    borderBottom: '1px solid var(--border-subtle)',
+  },
+  '.cm-lp-property-value': {
+    padding: '6px 12px',
+    borderBottom: '1px solid var(--border-subtle)',
+  },
+});
+
+/**
+ * Obsidian-like live preview for the markdown editor: the text stays editable, its markdown is shown
+ * rendered, and the syntax of an element comes back while the cursor is on it. Links open on click.
+ */
+export function livePreview(): Extension {
+  return [contextField, livePreviewField, livePreviewTheme];
+}

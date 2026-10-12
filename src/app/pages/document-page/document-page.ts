@@ -1,11 +1,15 @@
-import { Component, computed, effect, inject, signal, viewChild } from '@angular/core';
+import { Component, DestroyRef, computed, effect, inject, signal, viewChild } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { map } from 'rxjs';
 import { toast } from 'ngx-sonner';
 
-import { AppCodeEditorComponent } from '@/components/code-editor/code-editor.component';
+import { AppBrokenLinkMenuComponent } from '@/components/broken-link-menu/broken-link-menu.component';
+import {
+  AppCodeEditorComponent,
+  type CodeEditorBrokenLinkEvent,
+} from '@/components/code-editor/code-editor.component';
 import {
   AppDocumentLinksPanelComponent,
   type BrokenLinkFixRequest,
@@ -15,11 +19,12 @@ import { toInAppNoteRoute } from '@/components/document-preview/document-preview
 import { AppSheetFormService } from '@/components/sheet-form/sheet-form.service';
 import type { AppSheetField } from '@/components/sheet-form/sheet-form.types';
 import { CAMPAIGN_SECTION_PARAM } from '@/pages/campaign-section-page/campaign-section-page';
-import type { BacklinkDto, DocumentDto } from '@/dtos';
+import type { BacklinkDto, DocumentDto, DocumentLinkDto } from '@/dtos';
 import { BrokenLinkActionsService } from '@/services/broken-link-actions.service';
 import { CopyToService } from '@/services/copy-to.service';
 import { getNoteScopeKind, NoteScopeService } from '@/services/note-scope.service';
 import { DocumentService } from '@/services/document.service';
+import type { DocumentViewMode } from '@/config/local-preferences.config';
 import { LocalPreferencesService } from '@/services/local-preferences.service';
 import { ToolbarContextService } from '@/services/toolbar-context.service';
 import { WorkspaceService } from '@/services/workspace.service';
@@ -29,7 +34,6 @@ import { ArcTechSheetService } from '@/shared/components/sheet';
 
 export const DOCUMENT_NOTE_PARAM = 'note';
 
-type DocumentViewMode = 'write' | 'preview';
 
 const RENAME_PREVIEW_MAX_TITLES = 5;
 
@@ -40,11 +44,14 @@ function stripFrontmatterFence(content: string): string {
   return content.replace(FRONTMATTER_FENCE_PATTERN, '');
 }
 
+const INDEX_UPDATED_EVENT = 'index:updated';
+
 @Component({
   selector: 'app-document-page',
   imports: [
     TranslatePipe,
     ArcTechAlertComponent,
+    AppBrokenLinkMenuComponent,
     AppCodeEditorComponent,
     AppDocumentLinksPanelComponent,
     AppDocumentPreviewComponent,
@@ -69,6 +76,7 @@ export class DocumentPage {
   private readonly brokenLinkActions = inject(BrokenLinkActionsService);
   private readonly copyTo = inject(CopyToService);
   private readonly editor = viewChild(AppCodeEditorComponent);
+  private readonly brokenLinkMenu = viewChild(AppBrokenLinkMenuComponent);
   private loadToken = 0;
 
   private readonly sectionKey = toSignal(
@@ -87,7 +95,9 @@ export class DocumentPage {
 
   protected readonly document = signal<DocumentDto | null>(null);
   protected readonly editedContent = signal('');
-  protected readonly mode = signal<DocumentViewMode>('write');
+  protected readonly mode = signal<DocumentViewMode>('live');
+  /** Links the live editor resolves with; refreshed when the vault index re-reads this note. */
+  protected readonly editorLinks = signal<readonly DocumentLinkDto[]>([]);
   protected readonly isLoading = signal(true);
   protected readonly isSaving = signal(false);
   protected readonly errorMessage = signal<string | null>(null);
@@ -99,6 +109,11 @@ export class DocumentPage {
   protected readonly previewBody = computed(() => stripFrontmatterFence(this.editedContent()));
 
   constructor() {
+    window.electronAPI?.onIpcEvent?.(INDEX_UPDATED_EVENT, this.handleIndexUpdated);
+    inject(DestroyRef).onDestroy(() =>
+      window.electronAPI?.offIpcEvent?.(INDEX_UPDATED_EVENT, this.handleIndexUpdated),
+    );
+
     effect((onCleanup) => {
       const scope = this.scope();
       if (!scope) {
@@ -116,17 +131,15 @@ export class DocumentPage {
           ],
           itemNavigation: {
             id: 'document-mode',
-            type: 'segmented',
-            defaultValue: 'write',
+            type: 'toggles',
             ariaLabel: this.translateService.instant('document.toolbar.modeAriaLabel'),
             options: [
-              { value: 'write', label: this.translateService.instant('document.toolbar.write') },
-              {
-                value: 'preview',
-                label: this.translateService.instant('document.toolbar.preview'),
-              },
+              { value: 'live', label: 'document.toolbar.live', icon: 'pencil-line' },
+              { value: 'source', label: 'document.toolbar.source', icon: 'code' },
+              { value: 'reading', label: 'document.toolbar.reading', icon: 'book-open' },
             ],
-            change: (value) => this.mode.set(value as DocumentViewMode),
+            value: () => this.mode(),
+            change: (value) => this.setMode(value as DocumentViewMode),
           },
           itemActions: [
             {
@@ -217,6 +230,40 @@ export class DocumentPage {
       await this.copyTo.openCopySheet(document.path);
     }
   }
+
+  /** Live / Source / Reading, remembered for this note on this device. */
+  protected setMode(mode: DocumentViewMode): void {
+    this.mode.set(mode);
+    const document = this.document();
+    if (document) {
+      this.localPreferences.setDocumentViewMode(document.path, mode);
+    }
+  }
+
+  protected openRoute(route: string): void {
+    void this.router.navigateByUrl(route);
+  }
+
+  protected openBrokenLinkMenu(event: CodeEditorBrokenLinkEvent): void {
+    this.brokenLinkMenu()?.open(event.raw, event.targetName, event.x, event.y);
+  }
+
+  /** The vault index changed (this note, or a note its links point to): re-resolve the editor links. */
+  private readonly handleIndexUpdated = () => {
+    const document = this.document();
+    if (!document) {
+      return;
+    }
+
+    this.documentService
+      .links(document.path)
+      .then((links) => {
+        if (this.document()?.path === document.path) {
+          this.editorLinks.set([...links.outgoingLinks, ...links.brokenLinks]);
+        }
+      })
+      .catch((error: unknown) => console.warn('[app] Failed to refresh note links:', error));
+  };
 
   protected toggleLinksPanel(): void {
     const isOpen = !this.isLinksPanelOpen();
@@ -332,6 +379,7 @@ export class DocumentPage {
         });
       }
 
+      this.localPreferences.setDocumentViewMode(result.path, this.mode());
       const oldRoute = toInAppNoteRoute(document.path);
       const newRoute = toInAppNoteRoute(result.path);
       if (oldRoute && newRoute && oldRoute !== newRoute && this.scope()?.kind === 'system') {
@@ -446,7 +494,8 @@ export class DocumentPage {
       if (token === this.loadToken) {
         this.document.set(document);
         this.editedContent.set(document.content);
-        this.mode.set('write');
+        this.editorLinks.set(document.links);
+        this.mode.set(this.localPreferences.getDocumentViewMode(document.path));
       }
     } catch (error) {
       if (token === this.loadToken) {

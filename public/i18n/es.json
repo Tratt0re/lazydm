@@ -213,8 +213,9 @@
     "unsavedChanges": "Cambios sin guardar",
     "editorPlaceholder": "Empieza a escribir…",
     "toolbar": {
-      "write": "Escribir",
-      "preview": "Vista previa",
+      "live": "Vista previa en vivo",
+      "source": "Código fuente",
+      "reading": "Lectura",
       "save": "Guardar",
       "modeAriaLabel": "Alternar entre escribir y leer esta nota",
       "links": "Enlaces",

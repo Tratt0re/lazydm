@@ -2,10 +2,14 @@ import { isPlatformBrowser } from '@angular/common';
 import { Injectable, PLATFORM_ID, inject, signal } from '@angular/core';
 
 import {
+  DOCUMENT_VIEW_MODES,
+  type DocumentViewMode,
   LOCAL_PREFERENCE_DEFAULTS,
   LocalPreferenceKey,
   type ThemePreference,
 } from '@/config/local-preferences.config';
+
+const DOCUMENT_VIEW_MODES_MAX_ENTRIES = 500;
 
 @Injectable({
   providedIn: 'root',
@@ -85,6 +89,35 @@ export class LocalPreferencesService {
 
   setDocumentLinksPanelOpen(isOpen: boolean): void {
     this.setText(LocalPreferenceKey.DOCUMENT_LINKS_PANEL_OPEN, isOpen ? '1' : '0');
+  }
+
+  /** View chosen for a note on this device (live preview when never chosen). */
+  getDocumentViewMode(path: string): DocumentViewMode {
+    return this.readDocumentViewModes()[path] ?? 'live';
+  }
+
+  /** Remembers the view of a note; only the most recent notes are kept. */
+  setDocumentViewMode(path: string, mode: DocumentViewMode): void {
+    const modes = this.readDocumentViewModes();
+    delete modes[path];
+    modes[path] = mode;
+    const entries = Object.entries(modes).slice(-DOCUMENT_VIEW_MODES_MAX_ENTRIES);
+    this.setText(LocalPreferenceKey.DOCUMENT_VIEW_MODES, JSON.stringify(Object.fromEntries(entries)));
+  }
+
+  private readDocumentViewModes(): Record<string, DocumentViewMode> {
+    try {
+      const parsed: unknown = JSON.parse(this.getText(LocalPreferenceKey.DOCUMENT_VIEW_MODES) ?? '{}');
+      if (!parsed || typeof parsed !== 'object') {
+        return {};
+      }
+
+      return Object.fromEntries(
+        Object.entries(parsed).filter(([, mode]) => DOCUMENT_VIEW_MODES.includes(mode as DocumentViewMode)),
+      ) as Record<string, DocumentViewMode>;
+    } catch {
+      return {};
+    }
   }
 
   private getText(key: LocalPreferenceKey): string | undefined {

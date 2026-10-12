@@ -213,8 +213,9 @@
     "unsavedChanges": "Unsaved changes",
     "editorPlaceholder": "Start writing…",
     "toolbar": {
-      "write": "Write",
-      "preview": "Preview",
+      "live": "Live preview",
+      "source": "Source",
+      "reading": "Reading",
       "save": "Save",
       "modeAriaLabel": "Switch between writing and reading this note",
       "links": "Links",

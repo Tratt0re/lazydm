@@ -8,6 +8,7 @@ import { ArcTechDividerComponent } from '@/shared/components/divider';
 import { ArcTechIconComponent } from '@/shared/components/icon';
 import { ArcTechSegmentedComponent, ArcTechSegmentedItemComponent } from '@/shared/components/segmented';
 import { ArcTechSelectImports } from '@/shared/components/select';
+import { ArcTechTooltipImports } from '@/shared/components/tooltip';
 import { HeaderComponent } from '@/shared/components/layout/header.component';
 import type {
   ToolbarAction,
@@ -31,6 +32,7 @@ import type {
     ArcTechSegmentedComponent,
     ArcTechSegmentedItemComponent,
     ...ArcTechSelectImports,
+    ...ArcTechTooltipImports,
   ],
   templateUrl: './toolbar.html',
   encapsulation: ViewEncapsulation.None,

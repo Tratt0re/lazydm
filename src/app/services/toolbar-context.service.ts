@@ -58,9 +58,26 @@ export interface ToolbarSelectItem {
   readonly change: ToolbarSelectChangeHandler;
 }
 
-export type ToolbarItem = ToolbarSegmentedItem | ToolbarSelectItem;
+export type ToolbarItem = ToolbarSegmentedItem | ToolbarToggleGroupItem | ToolbarSelectItem;
 export type ToolbarItemAction = ToolbarAction | ToolbarSelectItem;
-export type ToolbarItemNavigation = ToolbarSegmentedItem;
+/** One button of a toggle group: icon with its label as tooltip. */
+export interface ToolbarToggleOption {
+  readonly value: string;
+  readonly label: string;
+  readonly icon: ArcTechIcon;
+}
+
+/** Toggle buttons where exactly one is pressed (e.g. the note views). */
+export interface ToolbarToggleGroupItem {
+  readonly id: string;
+  readonly type: 'toggles';
+  readonly ariaLabel?: string;
+  readonly options: readonly ToolbarToggleOption[];
+  readonly value: () => string;
+  readonly change: ToolbarSegmentedChangeHandler;
+}
+
+export type ToolbarItemNavigation = ToolbarSegmentedItem | ToolbarToggleGroupItem;
 
 export interface ToolbarAction {
   readonly id: string;
@@ -204,7 +221,7 @@ export class ToolbarContextService {
     return 'type' in item && item.type === 'select';
   }
 
-  private isToolbarNavigationItem(item: ToolbarItem): item is ToolbarItemNavigation {
+  private isToolbarNavigationItem(item: ToolbarItem): item is ToolbarSegmentedItem {
     return item.type === 'segmented';
   }
 

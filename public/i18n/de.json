@@ -213,8 +213,9 @@
     "unsavedChanges": "Nicht gespeicherte Änderungen",
     "editorPlaceholder": "Beginne zu schreiben…",
     "toolbar": {
-      "write": "Schreiben",
-      "preview": "Vorschau",
+      "live": "Live-Vorschau",
+      "source": "Quelltext",
+      "reading": "Lesen",
       "save": "Speichern",
       "modeAriaLabel": "Zwischen Schreiben und Lesen dieser Notiz wechseln",
       "links": "Links",
