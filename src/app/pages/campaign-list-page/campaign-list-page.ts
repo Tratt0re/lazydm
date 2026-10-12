@@ -5,7 +5,9 @@ import { toast } from 'ngx-sonner';
 
 import { AppSheetFormService } from '@/components/sheet-form/sheet-form.service';
 import type { AppSheetField } from '@/components/sheet-form/sheet-form.types';
+import { Toolbar } from '@/layout/toolbar/toolbar';
 import { CampaignService } from '@/services/campaign.service';
+import type { ToolbarItemAction, ToolbarTitleBreadcrumbItem } from '@/services/toolbar-context.service';
 import { VaultService } from '@/services/vault.service';
 import { ArcTechAlertComponent } from '@/shared/components/alert';
 import { ArcTechButtonComponent } from '@/shared/components/button';
@@ -35,6 +37,7 @@ const CREATE_CAMPAIGN_FIELDS: readonly AppSheetField[] = [
   selector: 'app-campaign-list-page',
   imports: [
     RouterLink,
+    Toolbar,
     TranslatePipe,
     ArcTechAlertComponent,
     ArcTechButtonComponent,
@@ -53,6 +56,22 @@ export class CampaignListPage implements OnInit {
   protected readonly campaigns = this.campaignService.campaigns;
   protected readonly vaultName = computed(() => this.vaultService.currentVault()?.name ?? '');
   protected readonly isLoading = signal(true);
+  /** Same toolbar as the other pages: vault name as the path, "New campaign" as its action. */
+  protected readonly titleBreadcrumbs = computed<readonly ToolbarTitleBreadcrumbItem[]>(() =>
+    this.vaultName() ? [{ label: this.vaultName(), translate: false }] : [],
+  );
+  protected readonly toolbarActions = computed<readonly ToolbarItemAction[]>(() =>
+    this.campaigns().length > 0
+      ? [
+          {
+            id: 'create-campaign',
+            label: 'campaigns.list.create',
+            icon: 'plus',
+            action: () => this.openCreateSheet(),
+          },
+        ]
+      : [],
+  );
   protected readonly errorMessage = signal<string | null>(null);
 
   ngOnInit(): void {

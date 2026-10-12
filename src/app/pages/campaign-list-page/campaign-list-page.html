@@ -1,26 +1,13 @@
-<main class="min-h-full">
-  <div class="mx-auto flex w-full max-w-6xl flex-col gap-6 p-6 md:p-10">
-    <header class="flex flex-wrap items-end justify-between gap-4 border-b border-border pb-6">
-      <div class="min-w-0">
-        @if (vaultName()) {
-          <p class="mb-2 truncate text-[10px] font-semibold tracking-[0.16em] text-primary uppercase">
-            {{ vaultName() }}
-          </p>
-        }
-        <h1 class="font-display text-6xl leading-[0.88] font-black tracking-[0.015em] uppercase">
-          {{ 'campaigns.list.title' | translate }}<span class="text-primary" aria-hidden="true">.</span>
-        </h1>
-      </div>
+<app-toolbar
+  [showSidebarToggle]="false"
+  title="campaigns.list.title"
+  titleMode="breadcrumb"
+  [titleBreadcrumbs]="titleBreadcrumbs()"
+  [itemActions]="toolbarActions()"
+></app-toolbar>
 
-      <div class="flex flex-wrap gap-2">
-        @if (campaigns().length > 0) {
-          <button arc-button type="button" (click)="openCreateSheet()">
-            <arc-icon arcType="plus" />
-            {{ 'campaigns.list.create' | translate }}
-          </button>
-        }
-      </div>
-    </header>
+<main class="min-h-0">
+  <div class="mx-auto flex w-full max-w-6xl flex-col gap-6 p-6 md:p-10">
 
     @if (errorMessage(); as message) {
       <arc-alert

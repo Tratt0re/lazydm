@@ -7,7 +7,9 @@
     <div class="flex min-w-0 items-center gap-4">
       @if (title(); as title) {
         <div class="flex min-w-0 items-center gap-2">
-          <arc-divider arcOrientation="vertical" arcSpacing="sm" class="h-6"></arc-divider>
+          @if (showSidebarToggle()) {
+            <arc-divider arcOrientation="vertical" arcSpacing="sm" class="h-6"></arc-divider>
+          }
           <div class="flex min-w-0 flex-col justify-center gap-1">
             @if (hasTitleBreadcrumbs()) {
               <nav [attr.aria-label]="'breadcrumb.ariaLabel' | translate" class="min-w-0">
@@ -107,7 +109,7 @@
   </div>
 
   <!-- Bottom edge: the Nordic Relic ornamental rule instead of a plain border. -->
-  <div class="arc-ornament-rule absolute inset-x-0 bottom-0 z-10 translate-y-1/2" aria-hidden="true">
+  <div class="arc-ornament-rule absolute inset-x-4 bottom-0 z-10 translate-y-1/2" aria-hidden="true">
     <span>◇</span><span>✣</span><span>◇</span>
   </div>
 </arc-header>
