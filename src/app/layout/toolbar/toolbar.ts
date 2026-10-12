@@ -43,6 +43,8 @@ export class Toolbar {
   readonly itemActions = input<readonly ToolbarItemAction[]>([]);
   readonly itemNavigation = input<ToolbarItemNavigation | null>(null);
   readonly sidebarToggle = output<void>();
+  /** Hidden where the page has no collapsible sidebar (compendium system inside its sheet). */
+  readonly showSidebarToggle = input(true);
 
   protected onSidebarToggle(): void {
     this.sidebarToggle.emit();

@@ -11,6 +11,8 @@ export const APP_SHEET_TITLE_ROUTE_DATA = 'sheetTitle';
 export type AppSheetKind = 'compendium' | 'settings';
 
 const APP_SHEET_KINDS: readonly AppSheetKind[] = ['compendium', 'settings'];
+/** Length of the closing slide (`.app-sheet-leave` in styles.css). */
+const SHEET_CLOSE_ANIMATION_MS = 260;
 const DEFAULT_SHEET_PATHS: Readonly<Record<AppSheetKind, string>> = {
   compendium: 'compendium',
   settings: 'settings/general',
@@ -30,6 +32,7 @@ function getOutletPath(tree: UrlTree, outlet: string): string {
 export class AppSheetService {
   private readonly router = inject(Router);
   private readonly sheetPathSignal = signal('');
+  private readonly isClosingSignal = signal(false);
   private readonly lastPaths: Partial<Record<AppSheetKind, string>> = {};
 
   /** Path inside the sheet outlet, e.g. `compendium/my-system/monsters`; empty when closed. */
@@ -39,6 +42,8 @@ export class AppSheetService {
     return APP_SHEET_KINDS.find((item) => item === kind) ?? null;
   });
   readonly isOpen = computed(() => this.activeKind() !== null);
+  /** True while the sheet slides back up, before its route is left. */
+  readonly isClosing = this.isClosingSignal.asReadonly();
 
   constructor() {
     this.router.events
@@ -71,8 +76,22 @@ export class AppSheetService {
     await this.router.navigate(['/', { outlets: { [APP_SHEET_OUTLET]: sheetPath.split('/') } }]);
   }
 
+  /** Slides the sheet up like a gate, then leaves its route. */
   async close(): Promise<void> {
-    await this.router.navigate(['/', { outlets: { [APP_SHEET_OUTLET]: null } }]);
+    if (!this.isOpen() || this.isClosingSignal()) {
+      return;
+    }
+
+    const reduceMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? false;
+    this.isClosingSignal.set(true);
+    try {
+      if (!reduceMotion) {
+        await new Promise((resolve) => setTimeout(resolve, SHEET_CLOSE_ANIMATION_MS));
+      }
+      await this.router.navigate(['/', { outlets: { [APP_SHEET_OUTLET]: null } }]);
+    } finally {
+      this.isClosingSignal.set(false);
+    }
   }
 
   /**

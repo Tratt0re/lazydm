@@ -356,20 +356,30 @@
 }
 
 /* Nordic Relic engraved rule: hairline, bronze diamond, hairline. Header/body separator in dialogs. */
-/* Full-page sheets (Compendium, Settings) slide up over the current page. */
-@keyframes arc-app-sheet-in {
+/* Full-page sheets (Compendium, Settings) open like a gate: down from under the title bar, back up to close. */
+@keyframes arc-app-sheet-open {
   from {
-    opacity: 0;
-    transform: translateY(16px);
+    transform: translateY(-100%);
+  }
+}
+
+@keyframes arc-app-sheet-close {
+  to {
+    transform: translateY(-100%);
   }
 }
 
 .app-sheet-enter {
-  animation: arc-app-sheet-in 200ms ease-out;
+  animation: arc-app-sheet-open 320ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.app-sheet-enter.app-sheet-leave {
+  animation: arc-app-sheet-close 260ms cubic-bezier(0.4, 0, 1, 1) forwards;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .app-sheet-enter {
+  .app-sheet-enter,
+  .app-sheet-enter.app-sheet-leave {
     animation: none;
   }
 }

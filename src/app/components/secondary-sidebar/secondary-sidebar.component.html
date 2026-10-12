@@ -1,0 +1,109 @@
+<nav class="flex flex-col" [attr.aria-label]="ariaLabel() || null">
+  @for (item of items(); track item.key) {
+    @if (item.children) {
+      @let isOpen = isExpanded(item);
+      <button
+        type="button"
+        class="flex w-full cursor-pointer items-start gap-2 border-b border-border px-3 py-3 text-left text-foreground transition-colors duration-150 hover:bg-accent focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-ring"
+        [attr.aria-expanded]="isOpen"
+        (click)="toggle(item)"
+      >
+        <arc-icon
+          arcType="chevron-right"
+          class="mt-px size-3.5 shrink-0 text-primary transition-transform duration-150"
+          [class.rotate-90]="isOpen"
+          aria-hidden="true"
+        />
+        <span class="min-w-0 flex-1">
+          <ng-container
+            [ngTemplateOutlet]="itemText"
+            [ngTemplateOutletContext]="{ $implicit: item }"
+          />
+        </span>
+      </button>
+      @if (isOpen) {
+        <div class="ml-[15px] border-b border-l border-border py-1 pl-2">
+          @for (child of item.children; track child.key) {
+            <ng-container
+              [ngTemplateOutlet]="row"
+              [ngTemplateOutletContext]="{ $implicit: child, isChild: true }"
+            />
+          }
+        </div>
+      }
+    } @else {
+      <ng-container
+        [ngTemplateOutlet]="row"
+        [ngTemplateOutletContext]="{ $implicit: item, isChild: false }"
+      />
+    }
+  }
+</nav>
+
+<ng-template #row let-item let-isChild="isChild">
+  @let isActive = item.key === activeKey();
+  @let rowClass =
+    'flex w-full cursor-pointer items-start gap-2 text-left transition-colors duration-150 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-ring ' +
+    (isChild ? 'px-2.5 py-2 ' : 'border-b border-border px-3 py-3 ') +
+    (isActive
+      ? 'border-l-3 border-l-primary bg-raised text-foreground-strong ' +
+        (isChild ? 'pl-[7px]' : 'pl-[9px]')
+      : 'text-foreground-secondary hover:bg-accent hover:text-foreground');
+  @if (item.route) {
+    <a [routerLink]="item.route" [class]="rowClass" [attr.aria-current]="isActive ? 'page' : null">
+      <ng-container
+        [ngTemplateOutlet]="rowContent"
+        [ngTemplateOutletContext]="{ $implicit: item, isChild }"
+      />
+    </a>
+  } @else {
+    <button
+      type="button"
+      [class]="rowClass"
+      [attr.aria-current]="isActive ? 'page' : null"
+      (click)="select(item)"
+    >
+      <ng-container
+        [ngTemplateOutlet]="rowContent"
+        [ngTemplateOutletContext]="{ $implicit: item, isChild }"
+      />
+    </button>
+  }
+</ng-template>
+
+<ng-template #rowContent let-item let-isChild="isChild">
+  @if (item.icon) {
+    <arc-icon
+      [arcType]="item.icon"
+      class="mt-px size-3.5 shrink-0"
+      [class.text-primary]="item.key === activeKey()"
+      aria-hidden="true"
+    />
+  }
+  <span class="min-w-0 flex-1">
+    <ng-container
+      [ngTemplateOutlet]="itemText"
+      [ngTemplateOutletContext]="{ $implicit: item, isChild }"
+    />
+  </span>
+</ng-template>
+
+<ng-template #itemText let-item let-isChild="isChild">
+  @let label = item.translate === false ? item.label : (item.label | translate);
+  <span
+    class="block truncate font-semibold tracking-[0.06em] uppercase"
+    [class.text-xs]="!isChild"
+    [class.text-[11px]]="isChild"
+    [attr.title]="label"
+  >
+    {{ label }}
+    @if (!isChild) {
+      <span class="text-primary" aria-hidden="true">.</span>
+    }
+  </span>
+  @if (item.description) {
+    <span class="mt-1 line-clamp-2 block text-xs leading-5 text-muted-foreground">
+      {{ item.translate === false ? item.description : (item.description | translate) }}
+    </span>
+  }
+</ng-template>

@@ -1,6 +1,8 @@
 <arc-header [arcHeight]="64" class="justify-between gap-4">
   <div class="flex min-w-0 items-center gap-2">
-    <app-sidebar-toggle [sidebarCollapsed]="sidebarCollapsed()" (toggle)="onSidebarToggle()"></app-sidebar-toggle>
+    @if (showSidebarToggle()) {
+      <app-sidebar-toggle [sidebarCollapsed]="sidebarCollapsed()" (toggle)="onSidebarToggle()"></app-sidebar-toggle>
+    }
 
     <div class="flex min-w-0 items-center gap-4">
       @if (title(); as title) {

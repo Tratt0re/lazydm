@@ -62,5 +62,6 @@ export class CompendiumService extends BaseIpcService<APIChannel.COMPENDIUM> {
     if (system) {
       await this.activate(system.slug);
     }
+    await this.loadSystems();
   }
 }

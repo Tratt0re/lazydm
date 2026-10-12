@@ -56,17 +56,28 @@ export const routes: Routes = [
     children: [
       {
         path: '',
-        pathMatch: 'full',
         loadComponent: () =>
-          import('./pages/compendium-page/compendium-page').then((m) => m.CompendiumPage),
-      },
-      {
-        path: `:${SYSTEM_SLUG_PARAM}`,
-        canActivate: [systemGuard],
-        data: { [NOTE_SCOPE_ROUTE_DATA]: 'system' },
-        loadComponent: () =>
-          import('./layout/system-sheet-layout/system-sheet-layout').then((m) => m.SystemSheetLayout),
-        children: SYSTEM_SHEET_ROUTES,
+          import('./layout/compendium-sheet-layout/compendium-sheet-layout').then(
+            (m) => m.CompendiumSheetLayout,
+          ),
+        children: [
+          {
+            path: '',
+            pathMatch: 'full',
+            loadComponent: () =>
+              import('./pages/compendium-page/compendium-page').then((m) => m.CompendiumPage),
+          },
+          {
+            path: `:${SYSTEM_SLUG_PARAM}`,
+            canActivate: [systemGuard],
+            data: { [NOTE_SCOPE_ROUTE_DATA]: 'system' },
+            loadComponent: () =>
+              import('./layout/system-sheet-layout/system-sheet-layout').then(
+                (m) => m.SystemSheetLayout,
+              ),
+            children: SYSTEM_SHEET_ROUTES,
+          },
+        ],
       },
     ],
   },

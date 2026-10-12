@@ -185,9 +185,15 @@ Planned Electron modules: `vault`, `cloud-readiness`, `campaign`, `document`, `i
 - **Compendium and Settings are full-page sheets**, not pages of the campaign navigation: they open over the
   current page (named router outlet `overlay`), the campaign and its tabs stay as they are, and closing (×, Escape,
   Cmd/Ctrl+W, or the same title-bar button) brings it back. Each sheet reopens where it was left. Links to
-  `/compendium/...` or `/settings/...` open in the sheet. Inside, a system keeps its own sidebar and toolbar; sheet
+  `/compendium/...` or `/settings/...` open in the sheet. Inside, a system has its own toolbar and appears in the sheet's cascading sidebar; sheet
   pages have their own toolbar context, so they never touch the campaign toolbar or tab titles.
 - Sheets (and dialogs) share one header: big condensed title, engraved divider, square close button.
+- Sheets open like a **gate**: they slide down from under the title bar and slide back up when closed
+  (no motion with *reduce motion*).
+- **Secondary sidebars** (Settings, Compendium) share one component: the Nordic Relic sidebar tabs with cascading
+  branches (recessed panel, rows split by 1px lines, active row raised with a 3px bronze marker) carrying the
+  settings-style title with its dot and a description. The Compendium one is a tree: *All systems*, then each
+  system with its overview and the folders it has.
 - **Campaign list** → grid of campaigns; when empty, a CTA message with a *Create campaign* button.
 - **Campaign layout** → shell with the sidebar: campaign sections and **Back to campaigns**.
 - **Tab bar** above the header bar, browser-like, one set of tabs per campaign, restored per device
