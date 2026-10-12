@@ -25,12 +25,18 @@ LazyDM works like **Obsidian**, specialised for Dungeon Masters.
 ├── compendium/                        vault-wide content shared across campaigns (monsters, spells…)
 └── <campaign-slug>/                   one folder per campaign
     ├── campaign.md                    campaign card: display name, cover, description
-    ├── assets/                        every non-.md file: images, maps, pdfs, sounds…
-    ├── scenes/
-    ├── characters/
-    ├── monsters/
-    ├── encounters/
-    └── sessions/
+    ├── scenes/                        type: scene
+    ├── characters/                    type: character
+    ├── monsters/                      type: monster
+    ├── spells/                        type: spell
+    ├── items/                         type: item
+    ├── quests/                        type: quest
+    ├── locations/                     type: location
+    ├── world/                         type: world (lore, factions, history, deities)
+    ├── encounters/                    special linkable files, format to be designed (see §12)
+    ├── handouts/                      type: handout (letters, clues; may embed images from assets/)
+    ├── sessions/                      type: session
+    └── assets/                        every non-.md file: images, maps, pdfs, sounds…
 ```
 
 - **Folder and file names are slugs**: lowercase kebab-case, `-` instead of spaces
@@ -38,7 +44,9 @@ LazyDM works like **Obsidian**, specialised for Dungeon Masters.
 - The **human-readable name** lives in the content (`campaign.md` frontmatter / `title`), never in the folder name.
 - A note's **`type` in its frontmatter decides what it is**; folders are only the default location.
   Moving files between folders must never break anything.
-- Further default folders (`locations/`, `items/`, `lore/`) may be added later.
+- The folder list lives in `CAMPAIGN_SECTION_DIR_NAMES` (Electron) and `CAMPAIGN_SECTIONS` (Angular), kept in the
+  same order (the sidebar order). Opening a campaign creates any missing default folder (empty, never moving or
+  renaming anything), so campaigns made with an older folder set get the new ones.
 - A map is an image in `assets/` plus a `.md` card that embeds it.
 
 ## 3. Where data lives

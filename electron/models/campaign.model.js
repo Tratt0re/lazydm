@@ -10,7 +10,13 @@ const CAMPAIGN_SECTION_DIR_NAMES = Object.freeze([
   'scenes',
   'characters',
   'monsters',
+  'spells',
+  'items',
+  'quests',
+  'locations',
+  'world',
   'encounters',
+  'handouts',
   'sessions',
   'assets',
 ]);
@@ -89,15 +95,22 @@ function buildCampaignNote({ name, description }) {
   return `---\n${YAML.stringify(frontmatter)}---\n${body}`;
 }
 
-/** Creates the campaign folder with its `campaign.md` note and the default section folders. */
-async function createCampaign(rootPath, { slug, name, description }) {
-  await fs.promises.mkdir(resolveInsideVault(rootPath, slug));
-
+/**
+ * Creates the default section folders that are missing (campaigns made with an older folder set get the
+ * new ones when opened). Existing folders and their content are never touched.
+ */
+async function ensureSectionFolders(rootPath, slug) {
   for (const sectionDirName of CAMPAIGN_SECTION_DIR_NAMES) {
     await fs.promises.mkdir(resolveInsideVault(rootPath, `${slug}/${sectionDirName}`), {
       recursive: true,
     });
   }
+}
+
+/** Creates the campaign folder with its `campaign.md` note and the default section folders. */
+async function createCampaign(rootPath, { slug, name, description }) {
+  await fs.promises.mkdir(resolveInsideVault(rootPath, slug));
+  await ensureSectionFolders(rootPath, slug);
 
   safeWriteFileAtomic(
     getCampaignFilePath(rootPath, slug),
@@ -110,6 +123,7 @@ module.exports = {
   CAMPAIGN_SECTION_DIR_NAMES,
   campaignFolderExists,
   createCampaign,
+  ensureSectionFolders,
   listCampaigns,
   readCampaign,
 };

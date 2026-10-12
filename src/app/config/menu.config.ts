@@ -26,7 +26,13 @@ export const CAMPAIGN_SECTIONS: readonly CampaignSectionConfig[] = [
   { key: 'scenes', icon: 'clapperboard', noteType: 'scene' },
   { key: 'characters', icon: 'users', noteType: 'character' },
   { key: 'monsters', icon: 'skull', noteType: 'monster' },
+  { key: 'spells', icon: 'sparkles', noteType: 'spell' },
+  { key: 'items', icon: 'backpack', noteType: 'item' },
+  { key: 'quests', icon: 'scroll-text', noteType: 'quest' },
+  { key: 'locations', icon: 'map-pin', noteType: 'location' },
+  { key: 'world', icon: 'globe', noteType: 'world' },
   { key: 'encounters', icon: 'swords', noteType: 'encounter' },
+  { key: 'handouts', icon: 'mail-open', noteType: 'handout' },
   { key: 'sessions', icon: 'calendar', noteType: 'session' },
   { key: 'assets', icon: 'image', noteType: null },
 ];

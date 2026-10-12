@@ -16,7 +16,13 @@
       "sessions": "Sessions",
       "assets": "Assets",
       "backToCampaigns": "Back to campaigns",
-      "broken-links": "Broken links"
+      "broken-links": "Broken links",
+      "spells": "Spells",
+      "items": "Items",
+      "quests": "Quests",
+      "locations": "Locations",
+      "world": "World",
+      "handouts": "Handouts"
     }
   },
   "header": {
@@ -140,24 +146,6 @@
     "sections": {
       "emptyTitle": "No {{section}} yet",
       "emptyDescription": "Notes you add to the {{folder}} folder of your vault appear here.",
-      "scenes": {
-        "description": "Locations, events and moments to run at the table."
-      },
-      "characters": {
-        "description": "Player characters and NPCs."
-      },
-      "monsters": {
-        "description": "Stat blocks and creature notes."
-      },
-      "encounters": {
-        "description": "Combats and challenges, ready to run."
-      },
-      "sessions": {
-        "description": "Prep and recaps of each session."
-      },
-      "assets": {
-        "description": "Images, maps, PDFs and sounds."
-      },
       "newNote": {
         "create": "New note",
         "title": "New note",
@@ -166,7 +154,43 @@
         "submit": "Create note",
         "cancel": "Cancel"
       },
-      "loadError": "Couldn't load this section"
+      "loadError": "Couldn't load this section",
+      "scenes": {
+        "description": "Events and moments to run at the table."
+      },
+      "characters": {
+        "description": "Player characters and NPCs."
+      },
+      "monsters": {
+        "description": "Stat blocks and creature notes."
+      },
+      "spells": {
+        "description": "Spells, rituals and magical effects."
+      },
+      "items": {
+        "description": "Gear, treasure and magic items."
+      },
+      "quests": {
+        "description": "Quests, hooks and their objectives."
+      },
+      "locations": {
+        "description": "Places, dungeons, towns and regions."
+      },
+      "world": {
+        "description": "Lore, factions, history and deities."
+      },
+      "encounters": {
+        "description": "Combats and challenges, ready to run."
+      },
+      "handouts": {
+        "description": "Letters, clues and texts to give to the players."
+      },
+      "sessions": {
+        "description": "Prep and recaps of each session."
+      },
+      "assets": {
+        "description": "Images, maps, PDFs and sounds."
+      }
     }
   },
   "document": {

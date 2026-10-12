@@ -13,9 +13,16 @@ async function list() {
 async function get(payload) {
   const body = ensurePlainObject(payload, 'payload');
   const slug = requireString(body.slug, 'payload.slug');
-  const campaign = await campaignModel.readCampaign(vaultController.getReadyVaultPath(), slug);
+  const vaultPath = vaultController.getReadyVaultPath();
+  const campaign = await campaignModel.readCampaign(vaultPath, slug);
   if (!campaign) {
     throw new Error(`Campaign not found: ${slug}`);
+  }
+
+  try {
+    await campaignModel.ensureSectionFolders(vaultPath, slug);
+  } catch (error) {
+    console.warn('[electron] Failed to create missing section folders ->', slug, error);
   }
 
   return campaign;

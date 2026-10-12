@@ -16,7 +16,13 @@
       "sessions": "团次",
       "assets": "素材",
       "backToCampaigns": "返回战役列表",
-      "broken-links": "失效链接"
+      "broken-links": "失效链接",
+      "spells": "法术",
+      "items": "物品",
+      "quests": "任务",
+      "locations": "地点",
+      "world": "世界",
+      "handouts": "玩家资料"
     }
   },
   "header": {
@@ -140,24 +146,6 @@
     "sections": {
       "emptyTitle": "{{section}}中还没有内容",
       "emptyDescription": "你添加到资料库 {{folder}} 文件夹中的笔记会显示在这里。",
-      "scenes": {
-        "description": "在桌上进行的地点、事件和时刻。"
-      },
-      "characters": {
-        "description": "玩家角色和非玩家角色。"
-      },
-      "monsters": {
-        "description": "数据块和生物笔记。"
-      },
-      "encounters": {
-        "description": "随时可用的战斗和挑战。"
-      },
-      "sessions": {
-        "description": "每次团次的准备和回顾。"
-      },
-      "assets": {
-        "description": "图片、地图、PDF 和音效。"
-      },
       "newNote": {
         "create": "新建笔记",
         "title": "新建笔记",
@@ -166,7 +154,43 @@
         "submit": "创建笔记",
         "cancel": "取消"
       },
-      "loadError": "无法加载此分区"
+      "loadError": "无法加载此分区",
+      "scenes": {
+        "description": "在桌边进行的事件与时刻。"
+      },
+      "characters": {
+        "description": "玩家角色和非玩家角色。"
+      },
+      "monsters": {
+        "description": "数据块和生物笔记。"
+      },
+      "spells": {
+        "description": "法术、仪式与魔法效果。"
+      },
+      "items": {
+        "description": "装备、宝藏与魔法物品。"
+      },
+      "quests": {
+        "description": "任务、钩子及其目标。"
+      },
+      "locations": {
+        "description": "地点、地城、城镇与区域。"
+      },
+      "world": {
+        "description": "背景设定、阵营、历史与神祇。"
+      },
+      "encounters": {
+        "description": "随时可用的战斗和挑战。"
+      },
+      "handouts": {
+        "description": "交给玩家的信件、线索与文本。"
+      },
+      "sessions": {
+        "description": "每次团次的准备和回顾。"
+      },
+      "assets": {
+        "description": "图片、地图、PDF 和音效。"
+      }
     }
   },
   "document": {

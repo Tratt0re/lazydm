@@ -16,7 +16,13 @@
       "sessions": "Sitzungen",
       "assets": "Dateien",
       "backToCampaigns": "Zurück zu den Kampagnen",
-      "broken-links": "Defekte Links"
+      "broken-links": "Defekte Links",
+      "spells": "Zauber",
+      "items": "Gegenstände",
+      "quests": "Quests",
+      "locations": "Orte",
+      "world": "Welt",
+      "handouts": "Handouts"
     }
   },
   "header": {
@@ -140,24 +146,6 @@
     "sections": {
       "emptyTitle": "Noch keine Einträge in {{section}}",
       "emptyDescription": "Notizen im Ordner {{folder}} deines Vaults erscheinen hier.",
-      "scenes": {
-        "description": "Orte, Ereignisse und Momente für den Spieltisch."
-      },
-      "characters": {
-        "description": "Spielercharaktere und NSCs."
-      },
-      "monsters": {
-        "description": "Werteblöcke und Kreaturennotizen."
-      },
-      "encounters": {
-        "description": "Kämpfe und Herausforderungen, bereit zum Spielen."
-      },
-      "sessions": {
-        "description": "Vorbereitung und Rückblicke jeder Sitzung."
-      },
-      "assets": {
-        "description": "Bilder, Karten, PDFs und Sounds."
-      },
       "newNote": {
         "create": "Neue Notiz",
         "title": "Neue Notiz",
@@ -166,7 +154,43 @@
         "submit": "Notiz erstellen",
         "cancel": "Abbrechen"
       },
-      "loadError": "Dieser Bereich konnte nicht geladen werden"
+      "loadError": "Dieser Bereich konnte nicht geladen werden",
+      "scenes": {
+        "description": "Ereignisse und Momente für den Spieltisch."
+      },
+      "characters": {
+        "description": "Spielercharaktere und NSCs."
+      },
+      "monsters": {
+        "description": "Werteblöcke und Kreaturennotizen."
+      },
+      "spells": {
+        "description": "Zauber, Rituale und magische Effekte."
+      },
+      "items": {
+        "description": "Ausrüstung, Schätze und magische Gegenstände."
+      },
+      "quests": {
+        "description": "Quests, Aufhänger und ihre Ziele."
+      },
+      "locations": {
+        "description": "Orte, Dungeons, Städte und Regionen."
+      },
+      "world": {
+        "description": "Hintergrund, Fraktionen, Geschichte und Gottheiten."
+      },
+      "encounters": {
+        "description": "Kämpfe und Herausforderungen, bereit zum Spielen."
+      },
+      "handouts": {
+        "description": "Briefe, Hinweise und Texte für die Spieler."
+      },
+      "sessions": {
+        "description": "Vorbereitung und Rückblicke jeder Sitzung."
+      },
+      "assets": {
+        "description": "Bilder, Karten, PDFs und Sounds."
+      }
     }
   },
   "document": {

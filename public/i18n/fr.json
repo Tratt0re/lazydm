@@ -16,7 +16,13 @@
       "sessions": "Sessions",
       "assets": "Ressources",
       "backToCampaigns": "Retour aux campagnes",
-      "broken-links": "Liens cassés"
+      "broken-links": "Liens cassés",
+      "spells": "Sorts",
+      "items": "Objets",
+      "quests": "Quêtes",
+      "locations": "Lieux",
+      "world": "Monde",
+      "handouts": "Documents joueurs"
     }
   },
   "header": {
@@ -140,24 +146,6 @@
     "sections": {
       "emptyTitle": "Aucun élément dans {{section}}",
       "emptyDescription": "Les notes que vous ajoutez au dossier {{folder}} de votre vault apparaissent ici.",
-      "scenes": {
-        "description": "Lieux, événements et moments à jouer à la table."
-      },
-      "characters": {
-        "description": "Personnages joueurs et PNJ."
-      },
-      "monsters": {
-        "description": "Blocs de statistiques et notes de créatures."
-      },
-      "encounters": {
-        "description": "Combats et défis, prêts à jouer."
-      },
-      "sessions": {
-        "description": "Préparation et comptes rendus de chaque session."
-      },
-      "assets": {
-        "description": "Images, cartes, PDF et sons."
-      },
       "newNote": {
         "create": "Nouvelle note",
         "title": "Nouvelle note",
@@ -166,7 +154,43 @@
         "submit": "Créer la note",
         "cancel": "Annuler"
       },
-      "loadError": "Impossible de charger cette section"
+      "loadError": "Impossible de charger cette section",
+      "scenes": {
+        "description": "Événements et moments à jouer à la table."
+      },
+      "characters": {
+        "description": "Personnages joueurs et PNJ."
+      },
+      "monsters": {
+        "description": "Blocs de statistiques et notes de créatures."
+      },
+      "spells": {
+        "description": "Sorts, rituels et effets magiques."
+      },
+      "items": {
+        "description": "Équipement, trésors et objets magiques."
+      },
+      "quests": {
+        "description": "Quêtes, accroches et leurs objectifs."
+      },
+      "locations": {
+        "description": "Lieux, donjons, villes et régions."
+      },
+      "world": {
+        "description": "Univers, factions, histoire et divinités."
+      },
+      "encounters": {
+        "description": "Combats et défis, prêts à jouer."
+      },
+      "handouts": {
+        "description": "Lettres, indices et textes à remettre aux joueurs."
+      },
+      "sessions": {
+        "description": "Préparation et comptes rendus de chaque session."
+      },
+      "assets": {
+        "description": "Images, cartes, PDF et sons."
+      }
     }
   },
   "document": {
