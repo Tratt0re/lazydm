@@ -4,12 +4,6 @@
   [class.pl-4]="!isMac || isFullscreen()"
   (dblclick)="onDoubleClick($event)"
 >
-  <span
-    class="pointer-events-none font-display text-xl leading-none font-extrabold tracking-[0.03em] text-foreground-strong uppercase select-none"
-  >
-    LazyDM<span class="text-primary" aria-hidden="true">.</span>
-  </span>
-
   <span class="flex-1"></span>
 
   @if (vault()) {

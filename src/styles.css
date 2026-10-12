@@ -391,6 +391,35 @@
   box-shadow: 0 12px 25px #0005;
 }
 
+/* Ornamental rule (Nordic Relic "engraved geometry"): bronze bar, three marks, then a hairline. */
+.arc-ornament-rule {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  pointer-events: none;
+}
+
+.arc-ornament-rule::before {
+  content: '';
+  flex: none;
+  width: 68px;
+  height: 5px;
+  background: var(--primary);
+}
+
+.arc-ornament-rule::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
+.arc-ornament-rule > span {
+  color: var(--primary);
+  font-size: 12px;
+  line-height: 1;
+}
+
 .arc-engraved-divider {
   display: flex;
   align-items: center;

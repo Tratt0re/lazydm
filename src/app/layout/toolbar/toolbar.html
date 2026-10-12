@@ -1,4 +1,4 @@
-<arc-header [arcHeight]="64" class="justify-between gap-4">
+<arc-header [arcHeight]="64" class="relative justify-between gap-4 border-b-0">
   <div class="flex min-w-0 items-center gap-2">
     @if (showSidebarToggle()) {
       <app-sidebar-toggle [sidebarCollapsed]="sidebarCollapsed()" (toggle)="onSidebarToggle()"></app-sidebar-toggle>
@@ -104,5 +104,10 @@
         </button>
       }
     }
+  </div>
+
+  <!-- Bottom edge: the Nordic Relic ornamental rule instead of a plain border. -->
+  <div class="arc-ornament-rule absolute inset-x-0 bottom-0 z-10 translate-y-1/2" aria-hidden="true">
+    <span>◇</span><span>✣</span><span>◇</span>
   </div>
 </arc-header>

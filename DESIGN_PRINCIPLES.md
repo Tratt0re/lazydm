@@ -179,7 +179,9 @@ Planned Electron modules: `vault`, `cloud-readiness`, `campaign`, `document`, `i
 ## 8. UI and navigation
 
 - **First start** → vault setup page (select or create the root folder). Until a vault exists, every route redirects there.
-- **Title bar** (app header, every page): drag area, app name, **Compendium** and **Settings**, window buttons.
+- **Title bar** (app header, every page): drag area, **Compendium** and **Settings**, window buttons (no app name).
+- The **toolbar's bottom edge** is the ornamental rule from *engraved geometry* (bronze bar, ◇ ✣ ◇, hairline) —
+  `.arc-ornament-rule`, the one dominant marker of that module.
   macOS keeps the native traffic lights inset into it (`titleBarStyle: 'hiddenInset'`); Windows/Linux use a
   frameless window with the app's own minimize / maximize-restore / close (double-click the bar = maximize).
 - **Compendium and Settings are full-page sheets**, not pages of the campaign navigation: they open over the
