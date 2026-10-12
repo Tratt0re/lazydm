@@ -1,12 +1,15 @@
 import { Component, computed, DestroyRef, effect, inject, signal } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 
-import { toInAppNoteRoute } from '@/components/document-preview/document-preview.markdown';
+import {
+  parseVaultFilePath,
+  toInAppNoteRoute,
+} from '@/components/document-preview/document-preview.markdown';
 import type { BrokenLinkDto } from '@/dtos';
 import { BrokenLinkActionsService } from '@/services/broken-link-actions.service';
-import { CampaignService } from '@/services/campaign.service';
 import { DocumentService } from '@/services/document.service';
+import { getNoteScopeKind, NoteScopeService } from '@/services/note-scope.service';
 import { ToolbarContextService } from '@/services/toolbar-context.service';
 import { ArcTechAlertComponent } from '@/shared/components/alert';
 import { ArcTechEmptyComponent } from '@/shared/components/empty';
@@ -39,7 +42,10 @@ interface BrokenLinkGroup {
   templateUrl: './broken-links-page.html',
 })
 export class BrokenLinksPage {
-  private readonly campaignService = inject(CampaignService);
+  /** A campaign, or a compendium system (both list their broken links here). */
+  private readonly scope = inject(NoteScopeService).scopeOf(
+    getNoteScopeKind(inject(ActivatedRoute)),
+  );
   private readonly documentService = inject(DocumentService);
   private readonly toolbarContext = inject(ToolbarContextService);
   protected readonly brokenLinkActions = inject(BrokenLinkActionsService);
@@ -55,7 +61,7 @@ export class BrokenLinksPage {
         sourcePath: link.sourcePath,
         title: link.sourceTitle ?? link.sourcePath.split('/').pop() ?? link.sourcePath,
         route: toInAppNoteRoute(link.sourcePath),
-        sectionLabel: `nav.items.${link.sourcePath.split('/')[1] ?? ''}`,
+        sectionLabel: `nav.items.${parseVaultFilePath(link.sourcePath)?.section ?? ''}`,
         links: [],
       };
       groups.set(link.sourcePath, { ...group, links: [...group.links, link] });
@@ -65,16 +71,16 @@ export class BrokenLinksPage {
   });
 
   private readonly handleIndexUpdated = () => {
-    const campaign = this.campaignService.activeCampaign();
-    if (campaign) {
-      void this.load(campaign.slug);
+    const scope = this.scope();
+    if (scope) {
+      void this.load(scope.rootPath);
     }
   };
 
   constructor() {
     effect((onCleanup) => {
-      const campaign = this.campaignService.activeCampaign();
-      if (!campaign) {
+      const scope = this.scope();
+      if (!scope) {
         return;
       }
 
@@ -82,12 +88,10 @@ export class BrokenLinksPage {
         this.toolbarContext.activate({
           title: 'links.broken.title',
           titleMode: 'breadcrumb',
-          titleBreadcrumbs: [
-            { label: campaign.name, path: `/campaigns/${campaign.slug}`, translate: false },
-          ],
+          titleBreadcrumbs: [{ label: scope.name, path: scope.routeBase, translate: false }],
         }),
       );
-      void this.load(campaign.slug);
+      void this.load(scope.rootPath);
     });
 
     window.electronAPI?.onIpcEvent?.(INDEX_UPDATED_EVENT, this.handleIndexUpdated);
@@ -96,12 +100,12 @@ export class BrokenLinksPage {
     );
   }
 
-  private async load(campaignSlug: string): Promise<void> {
+  private async load(scopePath: string): Promise<void> {
     const token = ++this.loadToken;
     this.errorMessage.set(null);
 
     try {
-      const rows = await this.documentService.listBrokenLinks(campaignSlug);
+      const rows = await this.documentService.listBrokenLinks(scopePath);
       if (token === this.loadToken) {
         this.rows.set(rows);
       }

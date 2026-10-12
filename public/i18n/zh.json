@@ -345,7 +345,22 @@
       "error": "无法复制",
       "existsTitle": "名称已被占用",
       "existsDescription": "{{path}} 已存在。请为副本选择其他名称。",
-      "fileNameLabel": "文件名"
+      "fileNameLabel": "文件名",
+      "next": "继续",
+      "doneWithLinked": "已复制到 {{target}}（+{{count}} 个关联）"
+    },
+    "import": {
+      "fromCompendium": "从纲要导入",
+      "fromCampaign": "从战役导入",
+      "description": "从 {{section}} 文件夹中选择一个文件复制到 {{target}}。原文件保持不变。",
+      "fileLabel": "文件",
+      "emptyCompendium": "纲要的 {{section}} 中还没有内容。",
+      "emptyCampaigns": "你的战役的 {{section}} 中还没有内容。"
+    },
+    "linked": {
+      "title": "关联文件",
+      "description": "此文件链接到 {{target}} 中没有的文件：{{files}}。已存在的文件不会再次复制。",
+      "include": "同时复制关联文件（{{count}}）"
     }
   }
 }

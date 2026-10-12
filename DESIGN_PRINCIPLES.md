@@ -156,6 +156,14 @@ Planned Electron modules: `vault`, `cloud-readiness`, `campaign`, `document`, `i
   no move. The folder comes from the note `type` (same names as the campaign sections; unknown types → `notes/`),
   other files go to `assets/`, templates to `_templates/` — created when missing. A taken name never overwrites:
   the user picks another file name.
+- **Import** button in every folder, next to *New note*: *Import from compendium* in a campaign folder (the same
+  folder of every system), *Import from campaign* in a system folder (the same folder of every campaign).
+- **Linked files come along on request**: before any copy or import LazyDM collects what the file links to,
+  transitively, that the target does **not** already have (a file with the same link name in the target campaign or
+  system, which is what makes the link resolve there). Files the target has stop the cascade. If anything is missing
+  the user chooses whether to copy it too (default on, list shown); otherwise the option does not appear.
+- Systems have their own **Broken links** page and overview alert; the fix menu (create note / remove link) works
+  there like in campaigns.
 - Deleting a system is **permanent** (folder and every file in it), after a confirmation showing the file count.
 - UI: the Compendium page (from the campaign list and the campaign sidebar) lists systems; a system has its own
   shell (sidebar with the folders it has, overview, section lists and the note editor — rename and links included).

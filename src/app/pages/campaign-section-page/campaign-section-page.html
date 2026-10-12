@@ -1,13 +1,17 @@
 @if (section(); as section) {
   <div class="mx-auto flex w-full max-w-5xl flex-col gap-4 p-6">
-    @if (section.noteType) {
-      <div class="flex justify-end">
+    <div class="flex flex-wrap justify-end gap-2">
+      <button arc-button arcType="outline" type="button" (click)="openImportSheet()">
+        <arc-icon arcType="library-big" />
+        {{ importLabel() | translate }}
+      </button>
+      @if (section.noteType) {
         <button arc-button type="button" (click)="openCreateSheet()">
           <arc-icon arcType="plus" />
           {{ 'campaigns.sections.newNote.create' | translate }}
         </button>
-      </div>
-    }
+      }
+    </div>
 
     @if (errorMessage(); as message) {
       <arc-alert

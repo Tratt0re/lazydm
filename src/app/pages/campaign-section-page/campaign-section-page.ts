@@ -72,6 +72,9 @@ export class CampaignSectionPage {
   protected readonly sectionLabelKey = computed(() => `nav.items.${this.sectionKey()}`);
   protected readonly folderPath = computed(() => `${this.scope()?.rootPath ?? ''}/${this.sectionKey()}`);
   protected readonly scopeRoute = computed(() => this.scope()?.routeBase ?? '');
+  protected readonly importLabel = computed(() =>
+    this.scope()?.kind === 'system' ? 'compendium.import.fromCampaign' : 'compendium.import.fromCompendium',
+  );
 
   protected readonly files = signal<readonly DocumentFileListItemDto[]>([]);
   protected readonly isLoading = signal(true);
@@ -110,6 +113,15 @@ export class CampaignSectionPage {
 
   protected toNoteSlug(file: DocumentFileListItemDto): string {
     return file.name;
+  }
+
+  /** Copies a file of the same folder from the other side (compendium ↔ campaign) into this folder. */
+  protected openImportSheet(): void {
+    const scope = this.scope();
+    const section = this.section();
+    if (scope && section) {
+      void this.copyTo.openImportSheet(scope, section.key, () => void this.loadFiles(this.folderPath()));
+    }
   }
 
   protected openCreateSheet(): void {

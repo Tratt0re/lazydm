@@ -345,7 +345,22 @@
       "error": "No se pudo copiar",
       "existsTitle": "Nombre ya usado",
       "existsDescription": "{{path}} ya existe. Elige otro nombre para la copia.",
-      "fileNameLabel": "Nombre de archivo"
+      "fileNameLabel": "Nombre de archivo",
+      "next": "Continuar",
+      "doneWithLinked": "Copiado a {{target}} (+{{count}} enlazados)"
+    },
+    "import": {
+      "fromCompendium": "Importar del compendio",
+      "fromCampaign": "Importar de una campaña",
+      "description": "Elige un archivo de las carpetas {{section}} para copiarlo en {{target}}. El original se queda donde está.",
+      "fileLabel": "Archivo",
+      "emptyCompendium": "El compendio aún no tiene nada en {{section}}.",
+      "emptyCampaigns": "Tus campañas aún no tienen nada en {{section}}."
+    },
+    "linked": {
+      "title": "Archivos enlazados",
+      "description": "Este archivo enlaza a archivos que {{target}} no tiene: {{files}}. Los que ya tiene no se vuelven a copiar.",
+      "include": "Copiar también los archivos enlazados ({{count}})"
     }
   }
 }

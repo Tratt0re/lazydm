@@ -122,6 +122,18 @@ function listBrokenLinks(campaign) {
     .all(campaign);
 }
 
+/**
+ * Whether a scope (campaign or `compendium/<system>`) already has a file with this link name: a link
+ * resolving by name there would find it, so there is no need to copy another one in.
+ */
+function hasFileNamed(scope, name) {
+  return Boolean(
+    getVaultIndexDatabase()
+      .prepare('SELECT 1 FROM files WHERE campaign IS ? AND name = ? COLLATE NOCASE LIMIT 1')
+      .get(scope, name),
+  );
+}
+
 function countFiles() {
   return getVaultIndexDatabase().prepare('SELECT COUNT(*) AS total FROM files').get().total;
 }
@@ -299,6 +311,8 @@ module.exports = {
   deleteAll,
   deletePath,
   getFileKind,
+  getFileName,
+  hasFileNamed,
   getFileState,
   listBrokenLinks,
   listFileStates,

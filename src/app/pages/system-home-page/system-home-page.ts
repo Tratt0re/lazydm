@@ -1,4 +1,4 @@
-import { Component, computed, effect, inject } from '@angular/core';
+import { Component, computed, effect, inject, signal } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { toast } from 'ngx-sonner';
@@ -8,6 +8,7 @@ import { CAMPAIGN_SECTIONS, COMPENDIUM_EXTRA_SECTIONS } from '@/config/menu.conf
 import { CompendiumService } from '@/services/compendium.service';
 import { DocumentService } from '@/services/document.service';
 import { ToolbarContextService } from '@/services/toolbar-context.service';
+import { ArcTechAlertComponent } from '@/shared/components/alert';
 import { ArcTechButtonComponent } from '@/shared/components/button';
 import { ArcTechEmptyComponent } from '@/shared/components/empty';
 import { ArcTechIconComponent } from '@/shared/components/icon';
@@ -20,6 +21,7 @@ const NOTE_SECTIONS = CAMPAIGN_SECTIONS.filter((section) => section.noteType !==
   imports: [
     RouterLink,
     TranslatePipe,
+    ArcTechAlertComponent,
     ArcTechButtonComponent,
     ArcTechEmptyComponent,
     ArcTechIconComponent,
@@ -38,6 +40,25 @@ const NOTE_SECTIONS = CAMPAIGN_SECTIONS.filter((section) => section.noteType !==
             </button>
           }
         </div>
+
+        @if (brokenLinkCount() > 0) {
+          <arc-alert
+            arcType="destructive"
+            arcIcon="unlink"
+            [arcTitle]="'links.broken.alertTitle' | translate: { count: brokenLinkCount() }"
+            [arcDescription]="'links.broken.cardDescription' | translate"
+          >
+            <a
+              arc-button
+              arcType="outline"
+              arcSize="sm"
+              class="shrink-0"
+              [routerLink]="['/compendium', system.slug, 'broken-links']"
+            >
+              {{ 'links.broken.review' | translate }}
+            </a>
+          </arc-alert>
+        }
 
         @if (sections().length === 0) {
           <arc-empty
@@ -87,6 +108,7 @@ export class SystemHomePage {
   private readonly router = inject(Router);
 
   protected readonly system = this.compendiumService.activeSystem;
+  protected readonly brokenLinkCount = signal(0);
   /** Folders the system has, in campaign section order. */
   protected readonly sections = computed(() => {
     const folders = this.system()?.folders ?? [];
@@ -99,6 +121,10 @@ export class SystemHomePage {
     effect((onCleanup) => {
       const system = this.system();
       if (system) {
+        this.documentService
+          .listBrokenLinks(system.path)
+          .then((rows) => this.brokenLinkCount.set(rows.length))
+          .catch((error: unknown) => console.warn('[app] Failed to count broken links:', error));
         onCleanup(
           this.toolbarContext.activate({
             title: system.name,

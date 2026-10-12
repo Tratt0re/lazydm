@@ -345,7 +345,22 @@
       "error": "Kopieren fehlgeschlagen",
       "existsTitle": "Name bereits vergeben",
       "existsDescription": "{{path}} existiert bereits. Wähle einen anderen Namen für die Kopie.",
-      "fileNameLabel": "Dateiname"
+      "fileNameLabel": "Dateiname",
+      "next": "Weiter",
+      "doneWithLinked": "Nach {{target}} kopiert (+{{count}} verlinkte)"
+    },
+    "import": {
+      "fromCompendium": "Aus dem Kompendium importieren",
+      "fromCampaign": "Aus einer Kampagne importieren",
+      "description": "Wähle eine Datei aus den Ordnern {{section}}, die nach {{target}} kopiert wird. Das Original bleibt, wo es ist.",
+      "fileLabel": "Datei",
+      "emptyCompendium": "Das Kompendium hat noch nichts in {{section}}.",
+      "emptyCampaigns": "Deine Kampagnen haben noch nichts in {{section}}."
+    },
+    "linked": {
+      "title": "Verlinkte Dateien",
+      "description": "Diese Datei verlinkt auf Dateien, die {{target}} nicht hat: {{files}}. Bereits vorhandene werden nicht erneut kopiert.",
+      "include": "Auch die verlinkten Dateien kopieren ({{count}})"
     }
   }
 }

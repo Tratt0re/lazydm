@@ -45,7 +45,8 @@ var require_channels = __commonJS({
         brokenLinks: "documents:brokenLinks",
         unlink: "documents:unlink",
         createFromLink: "documents:createFromLink",
-        copy: "documents:copy"
+        copy: "documents:copy",
+        copyPlan: "documents:copyPlan"
       }),
       index: Object.freeze({
         getStatus: "index:getStatus",

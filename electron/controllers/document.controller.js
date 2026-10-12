@@ -164,12 +164,18 @@ async function links(payload) {
 /** Unresolved links written in the notes of a campaign. */
 function brokenLinks(payload) {
   const body = ensurePlainObject(payload, 'payload');
-  const campaign = requireString(body.campaign, 'payload.campaign');
-  if (campaign.includes('/') || !vaultModel.isCampaignDirName(campaign)) {
-    throw new Error(`payload.campaign is not a campaign folder: ${campaign}`);
+  const scope = requireString(body.campaign, 'payload.campaign');
+  const [rootDir, systemDir, ...rest] = scope.split('/');
+  const isSystem =
+    rootDir === compendiumModel.COMPENDIUM_DIR_NAME &&
+    rest.length === 0 &&
+    Boolean(systemDir) &&
+    compendiumModel.isSystemDirName(systemDir);
+  if (!isSystem && (scope.includes('/') || !vaultModel.isCampaignDirName(scope))) {
+    throw new Error(`payload.campaign is not a campaign or compendium system: ${scope}`);
   }
 
-  return { rows: indexerController.isOpen() ? vaultIndexModel.listBrokenLinks(campaign) : [] };
+  return { rows: indexerController.isOpen() ? vaultIndexModel.listBrokenLinks(scope) : [] };
 }
 
 /**
@@ -364,6 +370,49 @@ async function getCopyFolder(vaultPath, relativePath) {
   return campaignModel.NOTE_TYPE_DIR_NAMES[document.type] ?? UNTYPED_NOTES_DIR_NAME;
 }
 
+const LINKED_COPY_MAX_FILES = 200;
+
+/**
+ * Files a copy would leave behind: everything the file links to, transitively, that the target does not
+ * already have (by link name). Files the target has stop the cascade: their own links resolve there.
+ */
+function collectMissingLinkedFiles(sourcePath, target) {
+  const visited = new Set([sourcePath]);
+  const pending = [sourcePath];
+  const missing = [];
+
+  while (pending.length > 0 && missing.length < LINKED_COPY_MAX_FILES) {
+    for (const link of vaultIndexModel.listOutgoingLinks(pending.shift())) {
+      const linkedPath = link.resolvedPath;
+      if (!linkedPath || visited.has(linkedPath)) {
+        continue;
+      }
+
+      visited.add(linkedPath);
+      if (vaultIndexModel.hasFileNamed(target, vaultIndexModel.getFileName(linkedPath))) {
+        continue;
+      }
+
+      missing.push({ path: linkedPath, title: link.resolvedTitle ?? path.posix.basename(linkedPath) });
+      if (vaultIndexModel.getFileKind(linkedPath) === 'md') {
+        pending.push(linkedPath);
+      }
+    }
+  }
+
+  return missing;
+}
+
+/** What copying a file to a target would also need: its linked files the target is missing. */
+async function copyPlan(payload) {
+  const body = ensurePlainObject(payload, 'payload');
+  const relativePath = requirePath(body);
+  const target = requireString(body.target, 'payload.target');
+  await requireCopyTarget(vaultController.getReadyVaultPath(), target);
+
+  return { linked: indexerController.isOpen() ? collectMissingLinkedFiles(relativePath, target) : [] };
+}
+
 /**
  * Copies a note, asset or template into a campaign or a compendium system (the original stays). The
  * folder comes from the note type and is created on demand. Never overwrites: a taken name returns
@@ -374,6 +423,7 @@ async function copy(payload) {
   const relativePath = requirePath(body);
   const target = requireString(body.target, 'payload.target');
   const fileName = normalizeOptionalString(body.fileName, 'payload.fileName', { allowNull: true });
+  const includeLinked = normalizeOptionalBooleanFlag(body.includeLinked, 'payload.includeLinked') === 1;
 
   const vaultPath = vaultController.getReadyVaultPath();
   await requireCopyTarget(vaultPath, target);
@@ -390,17 +440,33 @@ async function copy(payload) {
     return { status: 'exists', path: targetPath };
   }
 
+  const linkedFiles = includeLinked && indexerController.isOpen() ? collectMissingLinkedFiles(relativePath, target) : [];
   const result = await documentModel.copyVaultFile(vaultPath, relativePath, targetPath);
-  if (result.status === 'copied' && indexerController.isOpen()) {
-    await indexerController.reindexPaths([targetPath]);
+  if (result.status !== 'copied') {
+    return { ...result, linkedPaths: [] };
   }
 
-  return result;
+  const linkedPaths = [];
+  for (const linkedFile of linkedFiles) {
+    const extension = path.posix.extname(linkedFile.path);
+    const linkedTargetPath = `${target}/${await getCopyFolder(vaultPath, linkedFile.path)}/${path.posix.basename(linkedFile.path, extension)}${extension}`;
+    const linkedResult = await documentModel.copyVaultFile(vaultPath, linkedFile.path, linkedTargetPath);
+    if (linkedResult.status === 'copied') {
+      linkedPaths.push(linkedTargetPath);
+    }
+  }
+
+  if (indexerController.isOpen()) {
+    await indexerController.reindexPaths([targetPath, ...linkedPaths]);
+  }
+
+  return { ...result, linkedPaths };
 }
 
 module.exports = {
   brokenLinks,
   copy,
+  copyPlan,
   createFromLink,
   create,
   links,

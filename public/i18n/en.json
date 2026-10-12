@@ -345,7 +345,22 @@
       "error": "Couldn't copy",
       "existsTitle": "Name already taken",
       "existsDescription": "{{path}} already exists. Choose another name for the copy.",
-      "fileNameLabel": "File name"
+      "fileNameLabel": "File name",
+      "next": "Continue",
+      "doneWithLinked": "Copied to {{target}} (+{{count}} linked)"
+    },
+    "import": {
+      "fromCompendium": "Import from compendium",
+      "fromCampaign": "Import from campaign",
+      "description": "Choose a file from the {{section}} folders to copy into {{target}}. The original stays where it is.",
+      "fileLabel": "File",
+      "emptyCompendium": "The compendium has nothing in {{section}} yet.",
+      "emptyCampaigns": "Your campaigns have nothing in {{section}} yet."
+    },
+    "linked": {
+      "title": "Linked files",
+      "description": "This file links to files {{target}} doesn't have: {{files}}. Files it already has are not copied again.",
+      "include": "Also copy the linked files ({{count}})"
     }
   }
 }

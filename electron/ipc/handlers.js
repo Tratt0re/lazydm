@@ -46,6 +46,7 @@ const IPC_HANDLERS = Object.freeze({
   [CHANNELS.documents.unlink]: documentController.unlink,
   [CHANNELS.documents.createFromLink]: documentController.createFromLink,
   [CHANNELS.documents.copy]: documentController.copy,
+  [CHANNELS.documents.copyPlan]: documentController.copyPlan,
 
   [CHANNELS.index.getStatus]: indexerController.getStatus,
   [CHANNELS.index.rebuild]: indexerController.rebuild,

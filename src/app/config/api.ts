@@ -61,6 +61,7 @@ export interface ElectronIpcClient {
     readonly unlink: IpcRequest<DTO.UnlinkPayload, { path: string; linkCount: number }>;
     readonly createFromLink: IpcRequest<DTO.CreateFromLinkPayload, DTO.DocumentDto>;
     readonly copy: IpcRequest<DTO.CopyDocumentPayload, DTO.CopyDocumentResultDto>;
+    readonly copyPlan: IpcRequest<{ path: string; target: string }, DTO.CopyPlanDto>;
   };
   readonly encounters: {
     readonly list: OptionalIpcRequest<void, { rows: any[] }>;

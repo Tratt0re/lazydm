@@ -21,8 +21,15 @@ export interface CopyDocumentPayload {
   readonly target: string;
   /** Other file name (without extension) when the original one is taken. */
   readonly fileName?: string | null;
+  /** Also copy the linked files the target is missing (see `CopyPlanDto`). */
+  readonly includeLinked?: boolean;
+}
+
+/** Files a copy would also need: what the file links to (transitively) that the target does not have. */
+export interface CopyPlanDto {
+  readonly linked: readonly { readonly path: string; readonly title: string }[];
 }
 
 export type CopyDocumentResultDto =
-  | { readonly status: 'copied'; readonly path: string }
-  | { readonly status: 'exists'; readonly path: string };
+  | { readonly status: 'copied'; readonly path: string; readonly linkedPaths: readonly string[] }
+  | { readonly status: 'exists'; readonly path: string; readonly linkedPaths: readonly string[] };

@@ -36,6 +36,7 @@ const CHANNELS = Object.freeze({
     unlink: 'documents:unlink',
     createFromLink: 'documents:createFromLink',
     copy: 'documents:copy',
+    copyPlan: 'documents:copyPlan',
   }),
   index: Object.freeze({
     getStatus: 'index:getStatus',

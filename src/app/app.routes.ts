@@ -45,6 +45,11 @@ export const routes: Routes = [
                   import('./pages/system-home-page/system-home-page').then((m) => m.SystemHomePage),
               },
               {
+                path: 'broken-links',
+                loadComponent: () =>
+                  import('./pages/broken-links-page/broken-links-page').then((m) => m.BrokenLinksPage),
+              },
+              {
                 path: ':section',
                 children: [
                   {

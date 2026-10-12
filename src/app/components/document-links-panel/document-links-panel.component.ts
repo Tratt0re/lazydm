@@ -112,10 +112,10 @@ export class AppDocumentLinksPanelComponent {
 
     return [...files.values()].sort((left, right) => left.title.localeCompare(right.title));
   });
-  /** The campaign-wide list exists for campaigns only (compendium systems have none). */
+  /** Broken links page of the note's campaign or compendium system. */
   protected readonly brokenLinksRoute = computed(() => {
     const location = parseVaultFilePath(this.path());
-    return location && !location.scopePath.includes('/') ? `${location.scopeRoute}/broken-links` : null;
+    return location ? `${location.scopeRoute}/broken-links` : null;
   });
 
   private readonly handleIndexUpdated = () => void this.load(this.path());

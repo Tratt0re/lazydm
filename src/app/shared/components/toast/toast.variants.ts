@@ -42,6 +42,10 @@ export const toastClasses = {
     '!size-7 !rounded-none !border !border-border !bg-transparent',
     '!text-muted-foreground hover:!bg-accent hover:!text-foreground focus-visible:!outline-2 focus-visible:!outline-ring',
   ),
+  actionButton: mergeClasses(
+    '!h-7 !rounded-none !border !border-primary !bg-transparent !px-2.5 !font-mono !text-[10px]',
+    '!font-semibold !tracking-[0.06em] !text-primary !uppercase hover:!bg-primary hover:!text-primary-foreground',
+  ),
   success: '!border-success [&_[data-icon]]:text-success',
   error: '!border-destructive [&_[data-icon]]:text-destructive',
   warning: '!border-warning [&_[data-icon]]:text-warning',

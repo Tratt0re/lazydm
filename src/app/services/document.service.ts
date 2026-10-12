@@ -5,6 +5,7 @@ import type {
   BrokenLinkDto,
   CopyDocumentPayload,
   CopyDocumentResultDto,
+  CopyPlanDto,
   CreateDocumentPayload,
   CreateFromLinkPayload,
   DocumentDto,
@@ -62,6 +63,10 @@ export class DocumentService extends BaseIpcService<APIChannel.DOCUMENTS> {
 
   copy(payload: CopyDocumentPayload): Promise<CopyDocumentResultDto> {
     return this.ipcClient.copy(payload);
+  }
+
+  copyPlan(path: string, target: string): Promise<CopyPlanDto> {
+    return this.ipcClient.copyPlan({ path, target });
   }
 
   createFromLink(payload: CreateFromLinkPayload): Promise<DocumentDto> {
