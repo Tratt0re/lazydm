@@ -13,7 +13,10 @@ import {
 import { RouterLink } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 
-import { toInAppNoteRoute } from '@/components/document-preview/document-preview.markdown';
+import {
+  parseVaultFilePath,
+  toInAppNoteRoute,
+} from '@/components/document-preview/document-preview.markdown';
 import type { DocumentLinkDto, DocumentLinksDto } from '@/dtos';
 import { DocumentService } from '@/services/document.service';
 import { ArcTechBadgeComponent } from '@/shared/components/badge';
@@ -81,7 +84,7 @@ export class AppDocumentLinksPanelComponent {
         path,
         title: title || getFileName(path),
         route: toInAppNoteRoute(path),
-        sectionLabel: `nav.items.${path.split('/')[1] ?? ''}`,
+        sectionLabel: `nav.items.${parseVaultFilePath(path)?.section ?? ''}`,
         isFrom: false,
         isTo: false,
         snippets: [],
@@ -109,9 +112,11 @@ export class AppDocumentLinksPanelComponent {
 
     return [...files.values()].sort((left, right) => left.title.localeCompare(right.title));
   });
-  protected readonly brokenLinksRoute = computed(
-    () => `/campaigns/${this.path().split('/')[0]}/broken-links`,
-  );
+  /** The campaign-wide list exists for campaigns only (compendium systems have none). */
+  protected readonly brokenLinksRoute = computed(() => {
+    const location = parseVaultFilePath(this.path());
+    return location && !location.scopePath.includes('/') ? `${location.scopeRoute}/broken-links` : null;
+  });
 
   private readonly handleIndexUpdated = () => void this.load(this.path());
 

@@ -1,5 +1,11 @@
 const path = require('node:path');
-const { documentModel, vaultIndexModel, vaultModel } = require('../models');
+const {
+  campaignModel,
+  compendiumModel,
+  documentModel,
+  vaultIndexModel,
+  vaultModel,
+} = require('../models');
 const {
   getLinkPlainText,
   parseMarkdownDocument,
@@ -323,8 +329,78 @@ async function createFromLink(payload) {
   return created;
 }
 
+const TEMPLATES_DIR_NAME = '_templates';
+const ASSETS_DIR_NAME = 'assets';
+const UNTYPED_NOTES_DIR_NAME = 'notes';
+
+/** A copy target: a campaign (`lost-mine`) or a compendium system (`compendium/my-system`). */
+async function requireCopyTarget(vaultPath, target) {
+  const segments = target.split('/');
+  if (segments[0] === compendiumModel.COMPENDIUM_DIR_NAME && segments.length === 2) {
+    if (!compendiumModel.isSystemDirName(segments[1]) || !(await compendiumModel.readSystem(vaultPath, segments[1]))) {
+      throw new Error(`Compendium system not found: ${segments[1]}`);
+    }
+    return target;
+  }
+
+  if (segments.length !== 1 || !vaultModel.isCampaignDirName(target) || !(await campaignModel.readCampaign(vaultPath, target))) {
+    throw new Error(`Campaign not found: ${target}`);
+  }
+  return target;
+}
+
+/** Folder of the target the copy goes to: templates stay templates, files go to assets, notes follow their type. */
+async function getCopyFolder(vaultPath, relativePath) {
+  const segments = relativePath.split('/');
+  if (segments.slice(0, -1).includes(TEMPLATES_DIR_NAME)) {
+    return TEMPLATES_DIR_NAME;
+  }
+
+  if (path.posix.extname(relativePath).toLocaleLowerCase() !== MARKDOWN_EXTENSION) {
+    return ASSETS_DIR_NAME;
+  }
+
+  const document = await documentModel.readDocument(vaultPath, relativePath);
+  return campaignModel.NOTE_TYPE_DIR_NAMES[document.type] ?? UNTYPED_NOTES_DIR_NAME;
+}
+
+/**
+ * Copies a note, asset or template into a campaign or a compendium system (the original stays). The
+ * folder comes from the note type and is created on demand. Never overwrites: a taken name returns
+ * `{ status: 'exists' }` so the user can pick another `fileName` (without extension).
+ */
+async function copy(payload) {
+  const body = ensurePlainObject(payload, 'payload');
+  const relativePath = requirePath(body);
+  const target = requireString(body.target, 'payload.target');
+  const fileName = normalizeOptionalString(body.fileName, 'payload.fileName', { allowNull: true });
+
+  const vaultPath = vaultController.getReadyVaultPath();
+  await requireCopyTarget(vaultPath, target);
+
+  const extension = path.posix.extname(relativePath);
+  const baseName = fileName ? toSlug(fileName) : path.posix.basename(relativePath, extension);
+  if (baseName.length === 0) {
+    throw new Error('payload.fileName must contain at least one letter or number.');
+  }
+
+  const folder = await getCopyFolder(vaultPath, relativePath);
+  const targetPath = `${target}/${folder}/${baseName}${extension}`;
+  if (targetPath === relativePath) {
+    return { status: 'exists', path: targetPath };
+  }
+
+  const result = await documentModel.copyVaultFile(vaultPath, relativePath, targetPath);
+  if (result.status === 'copied' && indexerController.isOpen()) {
+    await indexerController.reindexPaths([targetPath]);
+  }
+
+  return result;
+}
+
 module.exports = {
   brokenLinks,
+  copy,
   createFromLink,
   create,
   links,

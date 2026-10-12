@@ -27,6 +27,13 @@ var require_channels = __commonJS({
         skipWait: "cloud:skipWait",
         recheck: "cloud:recheck"
       }),
+      compendium: Object.freeze({
+        list: "compendium:list",
+        get: "compendium:get",
+        create: "compendium:create",
+        countFiles: "compendium:countFiles",
+        remove: "compendium:remove"
+      }),
       documents: Object.freeze({
         list: "documents:list",
         read: "documents:read",
@@ -37,7 +44,8 @@ var require_channels = __commonJS({
         links: "documents:links",
         brokenLinks: "documents:brokenLinks",
         unlink: "documents:unlink",
-        createFromLink: "documents:createFromLink"
+        createFromLink: "documents:createFromLink",
+        copy: "documents:copy"
       }),
       index: Object.freeze({
         getStatus: "index:getStatus",

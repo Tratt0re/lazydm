@@ -18,14 +18,23 @@ function getFileName(relativePath) {
     : baseName;
 }
 
-/** The campaign is the first folder of the path, unless it is a vault-level folder (`compendium`, `_templates`). */
+const COMPENDIUM_DIR_NAME = 'compendium';
+
+/**
+ * Scope of a file (stored in `files.campaign`): links only resolve inside it. A campaign folder
+ * (`lost-mine`), a compendium system (`compendium/my-system`), or null for other vault-level files.
+ */
 function getCampaignSlug(relativePath) {
   const segments = relativePath.split('/');
   if (segments.length < 2) {
     return null;
   }
 
-  const [rootDir] = segments;
+  const [rootDir, systemDir] = segments;
+  if (rootDir === COMPENDIUM_DIR_NAME) {
+    return segments.length > 2 ? `${COMPENDIUM_DIR_NAME}/${systemDir}` : null;
+  }
+
   return isCampaignDirName(rootDir) ? rootDir : null;
 }
 
@@ -251,8 +260,9 @@ function deleteAll() {
 }
 
 /**
- * Re-resolves every link target. Order of preference: exact path, path suffix (`monsters/grimlock`),
- * then by name — same campaign first, then vault-level files (compendium), then the shortest path.
+ * Re-resolves every link target, only among the files of the source's own scope (its campaign, or its
+ * compendium system): a campaign never resolves into the compendium or another campaign. Order of
+ * preference: exact path, path suffix (`monsters/grimlock`), then by name, then the shortest path.
  * Heading-only links (`[[#Treasure]]`) point to their own file.
  */
 function resolveLinks() {
@@ -264,6 +274,7 @@ function resolveLinks() {
            SELECT f.id
            FROM files f, files s
            WHERE s.id = links.source_file_id
+             AND f.campaign IS s.campaign
              AND (
                f.path = links.target_path
                OR f.path = links.target_path || '.md'
@@ -275,8 +286,6 @@ function resolveLinks() {
              (f.path = links.target_path OR f.path = links.target_path || '.md') DESC,
              (substr(f.path, -length('/' || links.target_path)) = '/' || links.target_path
                OR substr(f.path, -length('/' || links.target_path || '.md')) = '/' || links.target_path || '.md') DESC,
-             (f.campaign IS s.campaign) DESC,
-             (f.campaign IS NULL) DESC,
              length(f.path) ASC
            LIMIT 1
          )

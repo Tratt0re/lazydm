@@ -37,6 +37,23 @@ export const CAMPAIGN_SECTIONS: readonly CampaignSectionConfig[] = [
   { key: 'assets', icon: 'image', noteType: null },
 ];
 
+/**
+ * Folders that can exist in a compendium system besides the campaign sections: notes whose type has no
+ * section of its own are copied to `notes/`.
+ */
+export const COMPENDIUM_EXTRA_SECTIONS: readonly CampaignSectionConfig[] = [
+  { key: 'notes', icon: 'file-text', noteType: null },
+];
+
+/** Every folder a campaign or a compendium system can show, by key. */
+export function findSection(key: string): CampaignSectionConfig | null {
+  return (
+    CAMPAIGN_SECTIONS.find((section) => section.key === key) ??
+    COMPENDIUM_EXTRA_SECTIONS.find((section) => section.key === key) ??
+    null
+  );
+}
+
 export class MenuConfiguration {
   /** Sidebar menu: the sections of the active campaign, then settings and the way back to the campaign list. */
   static forCampaign(campaignSlug: string | null): readonly MenuSectionConfig[] {
@@ -44,6 +61,7 @@ export class MenuConfiguration {
       label: '',
       placement: 'bottom',
       items: [
+        { label: 'nav.items.compendium', icon: 'library-big', path: '/compendium', exact: true },
         { label: 'nav.items.settings', icon: 'settings', path: '/settings' },
         { label: 'nav.items.backToCampaigns', icon: 'arrow-left', path: '/campaigns', exact: true },
       ],
@@ -72,6 +90,37 @@ export class MenuConfiguration {
         ],
       },
       bottomSection,
+    ];
+  }
+
+  /** Sidebar menu of a compendium system: its overview and the folders it currently has, in campaign order. */
+  static forSystem(systemSlug: string, folders: readonly string[]): readonly MenuSectionConfig[] {
+    const systemPath = `/compendium/${systemSlug}`;
+    const sections = [...CAMPAIGN_SECTIONS, ...COMPENDIUM_EXTRA_SECTIONS].filter((section) =>
+      folders.includes(section.key),
+    );
+
+    return [
+      {
+        label: 'nav.sections.system',
+        items: [
+          { label: 'nav.items.overview', icon: 'layout-dashboard', path: systemPath, exact: true },
+          ...sections.map((section) => ({
+            label: `nav.items.${section.key}`,
+            icon: section.icon,
+            path: `${systemPath}/${section.key}`,
+          })),
+        ],
+      },
+      {
+        label: '',
+        placement: 'bottom',
+        items: [
+          { label: 'nav.items.backToCompendium', icon: 'library-big', path: '/compendium', exact: true },
+          { label: 'nav.items.settings', icon: 'settings', path: '/settings' },
+          { label: 'nav.items.backToCampaigns', icon: 'arrow-left', path: '/campaigns', exact: true },
+        ],
+      },
     ];
   }
 

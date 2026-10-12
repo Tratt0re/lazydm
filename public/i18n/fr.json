@@ -2,7 +2,8 @@
   "nav": {
     "sections": {
       "main": "Menu",
-      "campaign": "Campagne"
+      "campaign": "Campagne",
+      "system": "Système"
     },
     "items": {
       "home": "Accueil",
@@ -22,7 +23,10 @@
       "quests": "Quêtes",
       "locations": "Lieux",
       "world": "Monde",
-      "handouts": "Documents joueurs"
+      "handouts": "Documents joueurs",
+      "compendium": "Compendium",
+      "backToCompendium": "Retour au compendium",
+      "notes": "Notes"
     }
   },
   "header": {
@@ -190,6 +194,9 @@
       },
       "assets": {
         "description": "Images, cartes, PDF et sons."
+      },
+      "notes": {
+        "description": "Notes sans section propre."
       }
     }
   },
@@ -282,6 +289,63 @@
       "createError": "Impossible de créer la note",
       "removed": "Lien retiré — le texte reste dans la note",
       "removeError": "Impossible de retirer le lien"
+    }
+  },
+  "compendium": {
+    "list": {
+      "title": "Compendium",
+      "description": "Du matériel partagé par toutes les campagnes. Copiez ici des notes et fichiers depuis une campagne, ou créez-les directement, puis recopiez-les dans n’importe quelle campagne.",
+      "create": "Nouveau système",
+      "emptyTitle": "Votre compendium est vide",
+      "emptyDescription": "Créez un système : un dossier partagé pour un jeu, un univers ou tout ce que vous réutilisez d’une campagne à l’autre.",
+      "loadError": "Impossible de charger le compendium",
+      "noFolders": "Vide"
+    },
+    "create": {
+      "title": "Nouveau système",
+      "description": "LazyDM crée un dossier dans le compendium de votre coffre. Ses dossiers apparaissent au fil des notes et fichiers ajoutés.",
+      "nameLabel": "Nom",
+      "namePlaceholder": "Mes règles D&D",
+      "nameDescription": "Le dossier porte ce nom, avec des tirets à la place des espaces.",
+      "descriptionLabel": "Description",
+      "descriptionPlaceholder": "Ce que rassemble ce système",
+      "submit": "Créer le système",
+      "cancel": "Annuler",
+      "error": "Impossible de créer le système"
+    },
+    "delete": {
+      "action": "Supprimer {{name}}",
+      "title": "Supprimer {{name}} ?",
+      "description": "{{path}} et les {{count}} fichiers qu’il contient seront supprimés définitivement. Les campagnes ne sont pas touchées.",
+      "confirm": "Supprimer définitivement",
+      "cancel": "Annuler",
+      "done": "{{name}} supprimé",
+      "error": "Impossible de supprimer le système"
+    },
+    "system": {
+      "description": "Matériel partagé : copiez ici des notes et fichiers depuis une campagne, ou créez-les directement.",
+      "newNote": "Nouvelle note",
+      "typeLabel": "Type",
+      "emptyTitle": "Rien ici pour l’instant",
+      "emptyDescription": "Créez une note, ou utilisez « Copier dans le compendium » sur une note ou un fichier d’une campagne. Les dossiers apparaissent au fur et à mesure.",
+      "createError": "Impossible de créer la note"
+    },
+    "copy": {
+      "toCompendium": "Copier dans le compendium",
+      "toCampaign": "Copier dans une campagne",
+      "description": "Une copie de {{name}} est créée ; l’original reste où il est.",
+      "systemLabel": "Système",
+      "campaignLabel": "Campagne",
+      "submit": "Copier",
+      "cancel": "Annuler",
+      "noSystems": "Créez d’abord un système dans le compendium.",
+      "noCampaigns": "Créez d’abord une campagne.",
+      "done": "Copié dans {{target}}",
+      "open": "Ouvrir",
+      "error": "Impossible de copier",
+      "existsTitle": "Nom déjà utilisé",
+      "existsDescription": "{{path}} existe déjà. Choisissez un autre nom pour la copie.",
+      "fileNameLabel": "Nom du fichier"
     }
   }
 }

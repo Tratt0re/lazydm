@@ -22,7 +22,10 @@ LazyDM works like **Obsidian**, specialised for Dungeon Masters.
 │   ├── vault.json                     vault settings, template rules, folder/display-name mapping
 │   └── …
 ├── _templates/                        note templates (scene.md, monster.md, character.md…)
-├── compendium/                        vault-wide content shared across campaigns (monsters, spells…)
+├── compendium/                        cross-campaign material, one folder per "system"
+│   └── <system-slug>/                 created by the user (a game, a setting, anything reused)
+│       ├── system.md                  system card: display name, description
+│       └── <folders on demand>        sessions/, monsters/, assets/, notes/… appear with their first file
 └── <campaign-slug>/                   one folder per campaign
     ├── campaign.md                    campaign card: display name, cover, description
     ├── scenes/                        type: scene
@@ -118,7 +121,9 @@ Planned Electron modules: `vault`, `cloud-readiness`, `campaign`, `document`, `i
 ## 6. Links
 
 - Obsidian syntax: `[[note-name]]`, `[[note-name|label]]`, `[[note-name#heading]]`, embeds `![[image.png]]`.
-- Resolution by file name, campaign first, then `compendium/`.
+- Resolution happens **only inside the link's own scope**: a campaign, or a compendium system. A campaign never
+  resolves into the compendium or another campaign (copy what you need instead). The index stores the scope in
+  `files.campaign` (`lost-mine`, `compendium/my-system`).
 - **Rename** (note toolbar → *Rename*): the new title gives the new kebab-case file name in the same folder;
   `title:` and the `# Heading` (if it still shows the old title) are updated. The sheet previews the notes linking
   here; with *Update links* (default on) every link the index resolved to the note is rewritten, keeping its form
@@ -141,6 +146,20 @@ Planned Electron modules: `vault`, `cloud-readiness`, `campaign`, `document`, `i
     the note is created from its template and opened. Encounters are not offered as a folder (see below). If its kebab file name differs from the link text, the link is
     rewritten to it with the old text kept as alias (`[[klarg-the-bugbear|Klarg the Bugbear]]`).
 - Moving notes between sections and deleting notes are not available yet.
+
+## 6b. Compendium
+
+- The compendium is a **cross-campaign shelf** with no fixed structure: it holds **systems**, each a folder the user
+  creates (*New system*: name → kebab-case folder + `system.md`). A system starts empty.
+- Notes, assets and templates get into a system by **copy** from a campaign (*Copy to compendium*) or by creating
+  them there; they get out by **copy** to a campaign (*Copy to campaign*). **The original always stays**; there is
+  no move. The folder comes from the note `type` (same names as the campaign sections; unknown types → `notes/`),
+  other files go to `assets/`, templates to `_templates/` — created when missing. A taken name never overwrites:
+  the user picks another file name.
+- Deleting a system is **permanent** (folder and every file in it), after a confirmation showing the file count.
+- UI: the Compendium page (from the campaign list and the campaign sidebar) lists systems; a system has its own
+  shell (sidebar with the folders it has, overview, section lists and the note editor — rename and links included).
+  Compendium pages are outside campaigns, so they have no tab bar.
 
 ## 7. Security
 
@@ -241,7 +260,8 @@ variant keys and configuration stay as they are.
 | 6 | Tab bar |
 | 6.1 | Tab bar usability: context menus, breadcrumb, drag to sort, overview tab rules, page-tabs style |
 | 7 | Link maintenance: backlinks panel, rename with link refactoring, broken links page |
-| 8 | Compendium and template rules |
+| 8 | Compendium: systems, copy to/from campaigns, scope-limited links |
+| 8.1 | Template rules: per-campaign template choice per note type, built-in defaults, placeholders |
 
 ## 12. Open decisions
 

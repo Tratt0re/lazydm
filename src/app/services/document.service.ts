@@ -3,6 +3,8 @@ import { Injectable } from '@angular/core';
 import { APIChannel } from '@/config/api';
 import type {
   BrokenLinkDto,
+  CopyDocumentPayload,
+  CopyDocumentResultDto,
   CreateDocumentPayload,
   CreateFromLinkPayload,
   DocumentDto,
@@ -56,6 +58,10 @@ export class DocumentService extends BaseIpcService<APIChannel.DOCUMENTS> {
 
   unlink(payload: UnlinkPayload): Promise<{ path: string; linkCount: number }> {
     return this.ipcClient.unlink(payload);
+  }
+
+  copy(payload: CopyDocumentPayload): Promise<CopyDocumentResultDto> {
+    return this.ipcClient.copy(payload);
   }
 
   createFromLink(payload: CreateFromLinkPayload): Promise<DocumentDto> {

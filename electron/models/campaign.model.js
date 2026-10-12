@@ -21,6 +21,21 @@ const CAMPAIGN_SECTION_DIR_NAMES = Object.freeze([
   'assets',
 ]);
 
+/** Folder a note of a given `type` goes to (campaigns and compendium systems share these names). */
+const NOTE_TYPE_DIR_NAMES = Object.freeze({
+  scene: 'scenes',
+  character: 'characters',
+  monster: 'monsters',
+  spell: 'spells',
+  item: 'items',
+  quest: 'quests',
+  location: 'locations',
+  world: 'world',
+  encounter: 'encounters',
+  handout: 'handouts',
+  session: 'sessions',
+});
+
 function getCampaignFilePath(rootPath, slug) {
   return resolveInsideVault(rootPath, `${slug}/${CAMPAIGN_FILE_NAME}`);
 }
@@ -121,6 +136,7 @@ async function createCampaign(rootPath, { slug, name, description }) {
 
 module.exports = {
   CAMPAIGN_SECTION_DIR_NAMES,
+  NOTE_TYPE_DIR_NAMES,
   campaignFolderExists,
   createCampaign,
   ensureSectionFolders,

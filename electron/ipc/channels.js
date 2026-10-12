@@ -17,6 +17,13 @@ const CHANNELS = Object.freeze({
     skipWait: 'cloud:skipWait',
     recheck: 'cloud:recheck',
   }),
+  compendium: Object.freeze({
+    list: 'compendium:list',
+    get: 'compendium:get',
+    create: 'compendium:create',
+    countFiles: 'compendium:countFiles',
+    remove: 'compendium:remove',
+  }),
   documents: Object.freeze({
     list: 'documents:list',
     read: 'documents:read',
@@ -28,6 +35,7 @@ const CHANNELS = Object.freeze({
     brokenLinks: 'documents:brokenLinks',
     unlink: 'documents:unlink',
     createFromLink: 'documents:createFromLink',
+    copy: 'documents:copy',
   }),
   index: Object.freeze({
     getStatus: 'index:getStatus',

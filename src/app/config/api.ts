@@ -16,6 +16,7 @@ export enum APIChannel {
   CAMPAIGNS = 'campaigns',
   CHARACTERS = 'characters',
   CLOUD = 'cloud',
+  COMPENDIUM = 'compendium',
   DOCUMENTS = 'documents',
   ENCOUNTERS = 'encounters',
   VAULT = 'vault',
@@ -41,6 +42,13 @@ export interface ElectronIpcClient {
     readonly skipWait: OptionalIpcRequest<void, DTO.CloudReadinessStatusDto>;
     readonly recheck: OptionalIpcRequest<void, DTO.CloudReadinessStatusDto>;
   };
+  readonly compendium: {
+    readonly list: OptionalIpcRequest<void, { rows: DTO.CompendiumSystemDto[] }>;
+    readonly get: IpcRequest<{ slug: string }, DTO.CompendiumSystemDto>;
+    readonly create: IpcRequest<DTO.CreateCompendiumSystemPayload, DTO.CompendiumSystemDto>;
+    readonly countFiles: IpcRequest<{ slug: string }, { count: number }>;
+    readonly remove: IpcRequest<{ slug: string }, { slug: string }>;
+  };
   readonly documents: {
     readonly list: IpcRequest<DTO.ListDocumentsPayload, { rows: DTO.DocumentFileListItemDto[] }>;
     readonly read: IpcRequest<DTO.ReadDocumentPayload, DTO.DocumentDto>;
@@ -52,6 +60,7 @@ export interface ElectronIpcClient {
     readonly brokenLinks: IpcRequest<{ campaign: string }, { rows: DTO.BrokenLinkDto[] }>;
     readonly unlink: IpcRequest<DTO.UnlinkPayload, { path: string; linkCount: number }>;
     readonly createFromLink: IpcRequest<DTO.CreateFromLinkPayload, DTO.DocumentDto>;
+    readonly copy: IpcRequest<DTO.CopyDocumentPayload, DTO.CopyDocumentResultDto>;
   };
   readonly encounters: {
     readonly list: OptionalIpcRequest<void, { rows: any[] }>;

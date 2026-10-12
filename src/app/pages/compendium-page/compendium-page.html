@@ -1,0 +1,105 @@
+<main class="min-h-full">
+  <div class="mx-auto flex w-full max-w-6xl flex-col gap-6 p-6 md:p-10">
+    <header class="flex flex-wrap items-end justify-between gap-4 border-b border-border pb-6">
+      <div class="min-w-0">
+        @if (vaultName()) {
+          <p
+            class="mb-2 truncate text-[10px] font-semibold tracking-[0.16em] text-primary uppercase"
+          >
+            {{ vaultName() }}
+          </p>
+        }
+        <h1 class="font-display text-6xl leading-[0.88] font-black tracking-[0.015em] uppercase">
+          {{ 'compendium.list.title' | translate
+          }}<span class="text-primary" aria-hidden="true">.</span>
+        </h1>
+        <p class="mt-3 max-w-2xl text-sm text-muted-foreground">
+          {{ 'compendium.list.description' | translate }}
+        </p>
+      </div>
+
+      <div class="flex flex-wrap gap-2">
+        <a arc-button arcType="outline" routerLink="/campaigns">
+          <arc-icon arcType="arrow-left" />
+          {{ 'nav.items.backToCampaigns' | translate }}
+        </a>
+        @if (systems().length > 0) {
+          <button arc-button type="button" (click)="openCreateSheet()">
+            <arc-icon arcType="plus" />
+            {{ 'compendium.list.create' | translate }}
+          </button>
+        }
+      </div>
+    </header>
+
+    @if (errorMessage(); as message) {
+      <arc-alert
+        arcType="destructive"
+        arcIcon="circle-alert"
+        [arcTitle]="'compendium.list.loadError' | translate"
+        [arcDescription]="message"
+      />
+    }
+
+    @if (!isLoading() && !errorMessage()) {
+      @if (systems().length === 0) {
+        <arc-empty
+          class="border border-dashed border-border bg-card/60"
+          arcIcon="library-big"
+          [arcTitle]="'compendium.list.emptyTitle' | translate"
+          [arcDescription]="'compendium.list.emptyDescription' | translate"
+          [arcActions]="[createAction]"
+        />
+        <ng-template #createAction>
+          <button arc-button type="button" (click)="openCreateSheet()">
+            <arc-icon arcType="plus" />
+            {{ 'compendium.list.create' | translate }}
+          </button>
+        </ng-template>
+      } @else {
+        <ul class="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          @for (system of systems(); track system.slug) {
+            <li class="relative">
+              <a
+                [routerLink]="['/compendium', system.slug]"
+                class="flex h-full flex-col gap-3 border border-border bg-card p-5 pr-14 transition-colors hover:border-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+              >
+                <h2
+                  class="font-display text-3xl leading-none font-extrabold tracking-[0.02em] uppercase"
+                >
+                  {{ system.name }}<span class="text-primary" aria-hidden="true">.</span>
+                </h2>
+                @if (system.description) {
+                  <p class="line-clamp-3 text-sm text-muted-foreground">{{ system.description }}</p>
+                }
+                <p
+                  class="mt-auto truncate font-mono text-[10px] font-semibold tracking-[0.08em] text-muted-foreground uppercase"
+                >
+                  @if (getFolderLabels(system).length > 0) {
+                    @for (label of getFolderLabels(system); track label; let isLast = $last) {
+                      {{ label | translate }}{{ isLast ? '' : ' · ' }}
+                    }
+                  } @else {
+                    {{ 'compendium.list.noFolders' | translate }}
+                  }
+                </p>
+              </a>
+              <button
+                type="button"
+                arc-button
+                arcType="ghost"
+                arcSize="sm"
+                class="absolute top-3 right-3 size-8 text-muted-foreground hover:text-destructive"
+                [attr.aria-label]="'compendium.delete.action' | translate: { name: system.name }"
+                [arcTooltip]="'compendium.delete.action' | translate: { name: system.name }"
+                (click)="confirmDelete(system)"
+              >
+                <arc-icon arcType="trash" />
+              </button>
+            </li>
+          }
+        </ul>
+      }
+    }
+  </div>
+</main>

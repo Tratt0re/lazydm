@@ -2,7 +2,8 @@
   "nav": {
     "sections": {
       "main": "菜单",
-      "campaign": "战役"
+      "campaign": "战役",
+      "system": "系统"
     },
     "items": {
       "home": "主页",
@@ -22,7 +23,10 @@
       "quests": "任务",
       "locations": "地点",
       "world": "世界",
-      "handouts": "玩家资料"
+      "handouts": "玩家资料",
+      "compendium": "纲要",
+      "backToCompendium": "返回纲要",
+      "notes": "笔记"
     }
   },
   "header": {
@@ -190,6 +194,9 @@
       },
       "assets": {
         "description": "图片、地图、PDF 和音效。"
+      },
+      "notes": {
+        "description": "没有专属分区的笔记。"
       }
     }
   },
@@ -282,6 +289,63 @@
       "createError": "无法创建笔记",
       "removed": "已移除链接 — 文本保留在笔记中",
       "removeError": "无法移除链接"
+    }
+  },
+  "compendium": {
+    "list": {
+      "title": "纲要",
+      "description": "所有战役共享的资料。从战役中复制笔记和文件到这里，或直接创建，并可复制回任意战役。",
+      "create": "新建系统",
+      "emptyTitle": "你的纲要是空的",
+      "emptyDescription": "创建一个系统——用于某个游戏、某个世界或任何跨战役复用内容的共享文件夹。",
+      "loadError": "无法加载纲要",
+      "noFolders": "空"
+    },
+    "create": {
+      "title": "新建系统",
+      "description": "LazyDM 会在你的库的纲要中创建一个文件夹。添加笔记和文件时，其子文件夹会自动出现。",
+      "nameLabel": "名称",
+      "namePlaceholder": "我的 D&D 规则",
+      "nameDescription": "文件夹以此命名，空格替换为连字符。",
+      "descriptionLabel": "描述",
+      "descriptionPlaceholder": "这个系统收集什么",
+      "submit": "创建系统",
+      "cancel": "取消",
+      "error": "无法创建系统"
+    },
+    "delete": {
+      "action": "删除 {{name}}",
+      "title": "删除 {{name}}？",
+      "description": "{{path}} 及其中的 {{count}} 个文件将被永久删除。战役不受影响。",
+      "confirm": "永久删除",
+      "cancel": "取消",
+      "done": "已删除 {{name}}",
+      "error": "无法删除系统"
+    },
+    "system": {
+      "description": "共享资料：从战役中复制笔记和文件到这里，或直接创建。",
+      "newNote": "新建笔记",
+      "typeLabel": "类型",
+      "emptyTitle": "这里还什么都没有",
+      "emptyDescription": "创建一篇笔记，或在战役的笔记或文件上使用“复制到纲要”。文件夹会随着添加内容而出现。",
+      "createError": "无法创建笔记"
+    },
+    "copy": {
+      "toCompendium": "复制到纲要",
+      "toCampaign": "复制到战役",
+      "description": "将创建 {{name}} 的副本；原文件保持不变。",
+      "systemLabel": "系统",
+      "campaignLabel": "战役",
+      "submit": "复制",
+      "cancel": "取消",
+      "noSystems": "请先在纲要中创建一个系统。",
+      "noCampaigns": "请先创建一个战役。",
+      "done": "已复制到 {{target}}",
+      "open": "打开",
+      "error": "无法复制",
+      "existsTitle": "名称已被占用",
+      "existsDescription": "{{path}} 已存在。请为副本选择其他名称。",
+      "fileNameLabel": "文件名"
     }
   }
 }

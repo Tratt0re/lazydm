@@ -6,15 +6,17 @@ import { map } from 'rxjs';
 
 import { AppSheetFormService } from '@/components/sheet-form/sheet-form.service';
 import type { AppSheetField } from '@/components/sheet-form/sheet-form.types';
-import { CAMPAIGN_SECTIONS } from '@/config/menu.config';
+import { findSection } from '@/config/menu.config';
 import type { DocumentFileListItemDto } from '@/dtos';
-import { CampaignService } from '@/services/campaign.service';
+import { getNoteScopeKind, NoteScopeService } from '@/services/note-scope.service';
+import { CopyToService } from '@/services/copy-to.service';
 import { DocumentService } from '@/services/document.service';
 import { ToolbarContextService } from '@/services/toolbar-context.service';
 import { ArcTechAlertComponent } from '@/shared/components/alert';
 import { ArcTechButtonComponent } from '@/shared/components/button';
 import { ArcTechEmptyComponent } from '@/shared/components/empty';
 import { ArcTechIconComponent } from '@/shared/components/icon';
+import { ArcTechTooltipImports } from '@/shared/components/tooltip';
 
 export const CAMPAIGN_SECTION_PARAM = 'section';
 
@@ -45,17 +47,20 @@ function formatFileSize(sizeInBytes: number): string {
     ArcTechButtonComponent,
     ArcTechEmptyComponent,
     ArcTechIconComponent,
+    ArcTechTooltipImports,
   ],
   templateUrl: './campaign-section-page.html',
 })
 export class CampaignSectionPage {
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
-  private readonly campaignService = inject(CampaignService);
+  /** A campaign, or a compendium system (the same page lists both). */
+  private readonly scope = inject(NoteScopeService).scopeOf(getNoteScopeKind(this.route));
   private readonly documentService = inject(DocumentService);
   private readonly sheetFormService = inject(AppSheetFormService);
   private readonly translateService = inject(TranslateService);
   private readonly toolbarContext = inject(ToolbarContextService);
+  protected readonly copyTo = inject(CopyToService);
 
   private readonly sectionKey = toSignal(
     this.route.paramMap.pipe(map((params) => params.get(CAMPAIGN_SECTION_PARAM) ?? '')),
@@ -63,14 +68,10 @@ export class CampaignSectionPage {
   );
   private loadToken = 0;
 
-  protected readonly section = computed(
-    () => CAMPAIGN_SECTIONS.find((section) => section.key === this.sectionKey()) ?? null,
-  );
+  protected readonly section = computed(() => findSection(this.sectionKey()));
   protected readonly sectionLabelKey = computed(() => `nav.items.${this.sectionKey()}`);
-  protected readonly folderPath = computed(
-    () => `${this.campaignService.activeCampaign()?.slug ?? ''}/${this.sectionKey()}`,
-  );
-  protected readonly campaignSlug = computed(() => this.campaignService.activeCampaign()?.slug ?? '');
+  protected readonly folderPath = computed(() => `${this.scope()?.rootPath ?? ''}/${this.sectionKey()}`);
+  protected readonly scopeRoute = computed(() => this.scope()?.routeBase ?? '');
 
   protected readonly files = signal<readonly DocumentFileListItemDto[]>([]);
   protected readonly isLoading = signal(true);
@@ -80,14 +81,14 @@ export class CampaignSectionPage {
 
   constructor() {
     effect((onCleanup) => {
-      const campaign = this.campaignService.activeCampaign();
+      const scope = this.scope();
       const section = this.section();
-      if (!campaign) {
+      if (!scope) {
         return;
       }
 
       if (!section) {
-        void this.router.navigate(['/campaigns', campaign.slug]);
+        void this.router.navigateByUrl(scope.routeBase);
         return;
       }
 
@@ -95,13 +96,16 @@ export class CampaignSectionPage {
         this.toolbarContext.activate({
           title: this.sectionLabelKey(),
           titleMode: 'breadcrumb',
-          titleBreadcrumbs: [
-            { label: campaign.name, path: `/campaigns/${campaign.slug}`, translate: false },
-          ],
+          titleBreadcrumbs: [{ label: scope.name, path: scope.routeBase, translate: false }],
         }),
       );
-      void this.loadFiles(`${campaign.slug}/${section.key}`);
+      void this.loadFiles(`${scope.rootPath}/${section.key}`);
     });
+  }
+
+  /** Label of the copy action of this page's files: to the compendium, or (inside a system) to a campaign. */
+  protected copyLabel(file: DocumentFileListItemDto): string {
+    return this.copyTo.isInCompendium(file.path) ? 'compendium.copy.toCampaign' : 'compendium.copy.toCompendium';
   }
 
   protected toNoteSlug(file: DocumentFileListItemDto): string {
@@ -140,7 +144,7 @@ export class CampaignSectionPage {
     try {
       const note = await this.documentService.create({ folder: this.folderPath(), title, type });
       const noteSlug = note.path.split('/').pop()!.replace(/\.md$/i, '');
-      await this.router.navigate(['/campaigns', this.campaignSlug(), this.sectionKey(), noteSlug]);
+      await this.router.navigateByUrl(`${this.scopeRoute()}/${this.sectionKey()}/${noteSlug}`);
       return true;
     } catch (error) {
       this.errorMessage.set(error instanceof Error ? error.message : String(error));

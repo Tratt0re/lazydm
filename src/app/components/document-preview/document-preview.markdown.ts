@@ -45,17 +45,44 @@ function slugifyHeading(text: string): string {
     .replace(/\s+/g, '-');
 }
 
-/** Vault paths look like `<campaign>/<section>/<name>.md`; only that shape is browsable in-app so far. */
-/** In-app route of a campaign note (`<campaign>/<section>/<note>.md`), null for anything else. */
-export function toInAppNoteRoute(resolvedPath: string): string | null {
-  const segments = resolvedPath.split('/');
-  if (segments.length !== 3 || !segments[2].toLocaleLowerCase().endsWith('.md')) {
+const COMPENDIUM_DIR_NAME = 'compendium';
+
+/** Where a vault file sits: its scope (campaign or compendium system), section folder and file name. */
+export interface VaultFileLocation {
+  /** `lost-mine` or `compendium/my-system`. */
+  readonly scopePath: string;
+  /** In-app route of the scope: `/campaigns/lost-mine` or `/compendium/my-system`. */
+  readonly scopeRoute: string;
+  readonly section: string;
+  /** File name without `.md` for notes, with its extension for other files. */
+  readonly name: string;
+  readonly isNote: boolean;
+}
+
+/** Browsable shapes: `<campaign>/<section>/<file>` and `compendium/<system>/<section>/<file>`. */
+export function parseVaultFilePath(path: string): VaultFileLocation | null {
+  const segments = path.split('/');
+  const isCompendium = segments[0] === COMPENDIUM_DIR_NAME;
+  if (segments.length !== (isCompendium ? 4 : 3)) {
     return null;
   }
 
-  const [campaignSlug, section, fileName] = segments;
-  const noteSlug = fileName.slice(0, -'.md'.length);
-  return `/campaigns/${campaignSlug}/${section}/${noteSlug}`;
+  const [section, fileName] = segments.slice(-2);
+  const scopePath = segments.slice(0, -2).join('/');
+  const isNote = fileName.toLocaleLowerCase().endsWith('.md');
+  return {
+    scopePath,
+    scopeRoute: isCompendium ? `/${scopePath}` : `/campaigns/${scopePath}`,
+    section,
+    name: isNote ? fileName.slice(0, -'.md'.length) : fileName,
+    isNote,
+  };
+}
+
+/** In-app route of a note of a campaign or of a compendium system, null for anything else. */
+export function toInAppNoteRoute(resolvedPath: string): string | null {
+  const location = parseVaultFilePath(resolvedPath);
+  return location?.isNote ? `${location.scopeRoute}/${location.section}/${location.name}` : null;
 }
 
 function renderWikilinkToken(token: Token): string {

@@ -32,7 +32,7 @@
             <li class="border-b border-border last:border-b-0">
               @if (file.kind === 'md') {
                 <a
-                  [routerLink]="['/campaigns', campaignSlug(), section.key, toNoteSlug(file)]"
+                  [routerLink]="[scopeRoute(), section.key, toNoteSlug(file)]"
                   class="flex items-center justify-between gap-4 p-4 transition-colors hover:bg-accent/60 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-ring"
                 >
                   <span class="flex min-w-0 items-center gap-3">
@@ -51,8 +51,22 @@
                     <arc-icon arcType="image" class="size-4 shrink-0" />
                     <span class="truncate text-sm">{{ file.name }}</span>
                   </span>
-                  <span class="shrink-0 text-[10px] font-semibold tracking-[0.1em] uppercase">
-                    {{ formatFileSize(file.size) }}
+                  <span class="flex shrink-0 items-center gap-3">
+                    <span class="text-[10px] font-semibold tracking-[0.1em] uppercase">
+                      {{ formatFileSize(file.size) }}
+                    </span>
+                    <button
+                      type="button"
+                      arc-button
+                      arcType="ghost"
+                      arcSize="sm"
+                      class="size-8"
+                      [attr.aria-label]="copyLabel(file) | translate"
+                      [arcTooltip]="copyLabel(file) | translate"
+                      (click)="copyTo.openCopySheet(file.path)"
+                    >
+                      <arc-icon arcType="copy-plus" />
+                    </button>
                   </span>
                 </div>
               }

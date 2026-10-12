@@ -2,7 +2,8 @@
   "nav": {
     "sections": {
       "main": "Menú",
-      "campaign": "Campaña"
+      "campaign": "Campaña",
+      "system": "Sistema"
     },
     "items": {
       "home": "Inicio",
@@ -22,7 +23,10 @@
       "quests": "Misiones",
       "locations": "Lugares",
       "world": "Mundo",
-      "handouts": "Material para jugadores"
+      "handouts": "Material para jugadores",
+      "compendium": "Compendio",
+      "backToCompendium": "Volver al compendio",
+      "notes": "Notas"
     }
   },
   "header": {
@@ -190,6 +194,9 @@
       },
       "assets": {
         "description": "Imágenes, mapas, PDF y sonidos."
+      },
+      "notes": {
+        "description": "Notas sin una sección propia."
       }
     }
   },
@@ -282,6 +289,63 @@
       "createError": "No se pudo crear la nota",
       "removed": "Enlace quitado — el texto se queda en la nota",
       "removeError": "No se pudo quitar el enlace"
+    }
+  },
+  "compendium": {
+    "list": {
+      "title": "Compendio",
+      "description": "Material compartido por todas las campañas. Copia aquí notas y archivos desde una campaña, o créalos directamente, y vuelve a copiarlos en cualquier campaña.",
+      "create": "Nuevo sistema",
+      "emptyTitle": "Tu compendio está vacío",
+      "emptyDescription": "Crea un sistema: una carpeta compartida para un juego, un mundo o todo lo que reutilizas entre campañas.",
+      "loadError": "No se pudo cargar el compendio",
+      "noFolders": "Vacío"
+    },
+    "create": {
+      "title": "Nuevo sistema",
+      "description": "LazyDM crea una carpeta en el compendio de tu bóveda. Sus carpetas aparecen a medida que añades notas y archivos.",
+      "nameLabel": "Nombre",
+      "namePlaceholder": "Mis reglas de D&D",
+      "nameDescription": "La carpeta se llama así, con guiones en lugar de espacios.",
+      "descriptionLabel": "Descripción",
+      "descriptionPlaceholder": "Qué reúne este sistema",
+      "submit": "Crear sistema",
+      "cancel": "Cancelar",
+      "error": "No se pudo crear el sistema"
+    },
+    "delete": {
+      "action": "Eliminar {{name}}",
+      "title": "¿Eliminar {{name}}?",
+      "description": "{{path}} y los {{count}} archivos que contiene se eliminarán definitivamente. Las campañas no se ven afectadas.",
+      "confirm": "Eliminar definitivamente",
+      "cancel": "Cancelar",
+      "done": "{{name}} eliminado",
+      "error": "No se pudo eliminar el sistema"
+    },
+    "system": {
+      "description": "Material compartido: copia aquí notas y archivos desde una campaña, o créalos directamente.",
+      "newNote": "Nueva nota",
+      "typeLabel": "Tipo",
+      "emptyTitle": "Aún no hay nada",
+      "emptyDescription": "Crea una nota, o usa «Copiar al compendio» en una nota o archivo de una campaña. Las carpetas aparecen al añadir cosas.",
+      "createError": "No se pudo crear la nota"
+    },
+    "copy": {
+      "toCompendium": "Copiar al compendio",
+      "toCampaign": "Copiar a una campaña",
+      "description": "Se crea una copia de {{name}}; el original se queda donde está.",
+      "systemLabel": "Sistema",
+      "campaignLabel": "Campaña",
+      "submit": "Copiar",
+      "cancel": "Cancelar",
+      "noSystems": "Crea primero un sistema en el compendio.",
+      "noCampaigns": "Crea primero una campaña.",
+      "done": "Copiado a {{target}}",
+      "open": "Abrir",
+      "error": "No se pudo copiar",
+      "existsTitle": "Nombre ya usado",
+      "existsDescription": "{{path}} ya existe. Elige otro nombre para la copia.",
+      "fileNameLabel": "Nombre de archivo"
     }
   }
 }

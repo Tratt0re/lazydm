@@ -107,6 +107,25 @@ async function renameDocumentFile(rootPath, fromPath, toPath) {
   await fs.promises.rename(fromAbsolutePath, toAbsolutePath);
 }
 
+/**
+ * Copies a vault file (note or asset) to another vault path without ever overwriting: returns
+ * `{ status: 'exists' }` when the target is taken.
+ */
+async function copyVaultFile(rootPath, fromPath, toPath) {
+  const toAbsolutePath = resolveInsideVault(rootPath, toPath);
+  if (fs.existsSync(toAbsolutePath)) {
+    return { status: 'exists', path: toPath };
+  }
+
+  await fs.promises.mkdir(path.dirname(toAbsolutePath), { recursive: true });
+  await fs.promises.copyFile(
+    resolveInsideVault(rootPath, fromPath),
+    toAbsolutePath,
+    fs.constants.COPYFILE_EXCL,
+  );
+  return { status: 'copied', path: toPath };
+}
+
 /** Template of a note type (`_templates/monster.md`), with Obsidian's `{{title}}`, `{{date}}` and `{{time}}` filled in. */
 async function readTemplate(rootPath, type, title) {
   const templatePath = resolveInsideVault(rootPath, `${TEMPLATES_DIR_NAME}/${type}${MARKDOWN_EXTENSION}`);
@@ -143,6 +162,7 @@ async function createDocument(rootPath, { folderPath, slug, title, type }) {
 }
 
 module.exports = {
+  copyVaultFile,
   createDocument,
   readDocument,
   renameDocumentFile,

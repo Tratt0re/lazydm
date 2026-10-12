@@ -2,6 +2,7 @@ const appMetaController = require('./app-meta.controller');
 const assetController = require('./asset.controller');
 const campaignController = require('./campaign.controller');
 const cloudReadinessController = require('./cloud-readiness.controller');
+const compendiumController = require('./compendium.controller');
 const documentController = require('./document.controller');
 const indexerController = require('./indexer.controller');
 const resetController = require('./reset.controller');
@@ -15,6 +16,7 @@ module.exports = {
   assetController,
   campaignController,
   cloudReadinessController,
+  compendiumController,
   documentController,
   indexerController,
   resetController,

@@ -2,6 +2,7 @@ const {
   appMetaController,
   campaignController,
   cloudReadinessController,
+  compendiumController,
   documentController,
   indexerController,
   resetController,
@@ -28,6 +29,12 @@ const IPC_HANDLERS = Object.freeze({
   [CHANNELS.cloud.skipWait]: cloudReadinessController.skipWait,
   [CHANNELS.cloud.recheck]: cloudReadinessController.recheck,
 
+  [CHANNELS.compendium.list]: compendiumController.list,
+  [CHANNELS.compendium.get]: compendiumController.get,
+  [CHANNELS.compendium.create]: compendiumController.create,
+  [CHANNELS.compendium.countFiles]: compendiumController.countFiles,
+  [CHANNELS.compendium.remove]: compendiumController.remove,
+
   [CHANNELS.documents.list]: documentController.list,
   [CHANNELS.documents.read]: documentController.read,
   [CHANNELS.documents.write]: documentController.write,
@@ -38,6 +45,7 @@ const IPC_HANDLERS = Object.freeze({
   [CHANNELS.documents.brokenLinks]: documentController.brokenLinks,
   [CHANNELS.documents.unlink]: documentController.unlink,
   [CHANNELS.documents.createFromLink]: documentController.createFromLink,
+  [CHANNELS.documents.copy]: documentController.copy,
 
   [CHANNELS.index.getStatus]: indexerController.getStatus,
   [CHANNELS.index.rebuild]: indexerController.rebuild,

@@ -88,12 +88,14 @@
       }
     </ul>
 
-    <a
-      [routerLink]="brokenLinksRoute()"
-      class="mt-1 flex items-center gap-2 border border-transparent px-3 py-2 font-mono text-[11px] font-semibold tracking-[0.04em] text-primary transition-colors duration-150 hover:border-border/60 hover:bg-muted/40 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-ring"
-    >
-      {{ 'document.links.allBroken' | translate }}
-    </a>
+    @if (brokenLinksRoute(); as route) {
+      <a
+        [routerLink]="route"
+        class="mt-1 flex items-center gap-2 border border-transparent px-3 py-2 font-mono text-[11px] font-semibold tracking-[0.04em] text-primary transition-colors duration-150 hover:border-border/60 hover:bg-muted/40 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-ring"
+      >
+        {{ 'document.links.allBroken' | translate }}
+      </a>
+    }
   }
 </div>
 

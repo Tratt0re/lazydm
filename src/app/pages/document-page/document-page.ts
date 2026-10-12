@@ -17,7 +17,8 @@ import type { AppSheetField } from '@/components/sheet-form/sheet-form.types';
 import { CAMPAIGN_SECTION_PARAM } from '@/pages/campaign-section-page/campaign-section-page';
 import type { BacklinkDto, DocumentDto } from '@/dtos';
 import { BrokenLinkActionsService } from '@/services/broken-link-actions.service';
-import { CampaignService } from '@/services/campaign.service';
+import { CopyToService } from '@/services/copy-to.service';
+import { getNoteScopeKind, NoteScopeService } from '@/services/note-scope.service';
 import { DocumentService } from '@/services/document.service';
 import { LocalPreferencesService } from '@/services/local-preferences.service';
 import { ToolbarContextService } from '@/services/toolbar-context.service';
@@ -52,8 +53,9 @@ function stripFrontmatterFence(content: string): string {
 })
 export class DocumentPage {
   private readonly route = inject(ActivatedRoute);
+  /** A campaign, or a compendium system (the same page edits notes of both). */
+  protected readonly scope = inject(NoteScopeService).scopeOf(getNoteScopeKind(this.route));
   private readonly router = inject(Router);
-  private readonly campaignService = inject(CampaignService);
   private readonly documentService = inject(DocumentService);
   private readonly sheetService = inject(ArcTechSheetService);
   private readonly translateService = inject(TranslateService);
@@ -62,6 +64,7 @@ export class DocumentPage {
   private readonly localPreferences = inject(LocalPreferencesService);
   private readonly workspace = inject(WorkspaceService);
   private readonly brokenLinkActions = inject(BrokenLinkActionsService);
+  private readonly copyTo = inject(CopyToService);
   private readonly editor = viewChild(AppCodeEditorComponent);
   private loadToken = 0;
 
@@ -76,7 +79,7 @@ export class DocumentPage {
 
   protected readonly notePath = computed(
     () =>
-      `${this.campaignService.activeCampaign()?.slug ?? ''}/${this.sectionKey()}/${this.noteSlug()}.md`,
+      `${this.scope()?.rootPath ?? ''}/${this.sectionKey()}/${this.noteSlug()}.md`,
   );
 
   protected readonly document = signal<DocumentDto | null>(null);
@@ -94,19 +97,19 @@ export class DocumentPage {
 
   constructor() {
     effect((onCleanup) => {
-      const campaign = this.campaignService.activeCampaign();
-      if (!campaign) {
+      const scope = this.scope();
+      if (!scope) {
         return;
       }
 
-      const campaignPath = `/campaigns/${campaign.slug}`;
+      const scopePath = scope.routeBase;
       onCleanup(
         this.toolbarContext.activate({
           title: this.document()?.title ?? this.noteSlug(),
           titleMode: 'breadcrumb',
           titleBreadcrumbs: [
-            { label: campaign.name, path: campaignPath, translate: false },
-            { label: `nav.items.${this.sectionKey()}`, path: `${campaignPath}/${this.sectionKey()}` },
+            { label: scope.name, path: scopePath, translate: false },
+            { label: `nav.items.${this.sectionKey()}`, path: `${scopePath}/${this.sectionKey()}` },
           ],
           itemNavigation: {
             id: 'document-mode',
@@ -129,6 +132,16 @@ export class DocumentPage {
               icon: 'panel-right',
               buttonType: 'outline',
               action: () => this.toggleLinksPanel(),
+            },
+            {
+              id: 'copy',
+              label: this.translateService.instant(
+                scope.kind === 'system' ? 'compendium.copy.toCampaign' : 'compendium.copy.toCompendium',
+              ),
+              icon: 'copy-plus',
+              buttonType: 'outline',
+              disabled: () => !this.document() || this.isSaving(),
+              action: () => this.copyToOtherScope(),
             },
             {
               id: 'rename',
@@ -191,6 +204,14 @@ export class DocumentPage {
       return false;
     } finally {
       this.isSaving.set(false);
+    }
+  }
+
+  /** Copies the note to the compendium (from a campaign) or to a campaign (from a system); saved first. */
+  protected async copyToOtherScope(): Promise<void> {
+    const document = this.document();
+    if (document && (!this.isDirty() || (await this.save()))) {
+      await this.copyTo.openCopySheet(document.path);
     }
   }
 
@@ -402,12 +423,7 @@ export class DocumentPage {
       this.editedContent.set(document.content);
 
       const copySlug = copy.path.split('/').pop()!.replace(/\.md$/i, '');
-      await this.router.navigate([
-        '/campaigns',
-        this.campaignService.activeCampaign()?.slug,
-        this.sectionKey(),
-        copySlug,
-      ]);
+      await this.router.navigateByUrl(`${this.scope()?.routeBase ?? ''}/${this.sectionKey()}/${copySlug}`);
     } catch (error) {
       toast.error(this.translateService.instant('document.toast.saveError'), {
         description: error instanceof Error ? error.message : String(error),

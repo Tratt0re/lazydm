@@ -3,7 +3,10 @@ import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { toast } from 'ngx-sonner';
 
-import { toInAppNoteRoute } from '@/components/document-preview/document-preview.markdown';
+import {
+  parseVaultFilePath,
+  toInAppNoteRoute,
+} from '@/components/document-preview/document-preview.markdown';
 import { AppSheetFormService } from '@/components/sheet-form/sheet-form.service';
 import { CAMPAIGN_SECTIONS } from '@/config/menu.config';
 import { DocumentService } from '@/services/document.service';
@@ -58,7 +61,9 @@ export class BrokenLinkActionsService {
 
   /** Asks title and folder, creates the note, then opens it in the current tab. */
   openCreateSheet(link: BrokenLinkTarget): void {
-    const [campaignSlug, sourceSection] = link.sourcePath.split('/');
+    const sourceLocation = parseVaultFilePath(link.sourcePath);
+    const scopePath = sourceLocation?.scopePath ?? link.sourcePath.split('/')[0];
+    const sourceSection = sourceLocation?.section;
     const linkFolder = link.raw.split(/[|#]/)[0].split('/').slice(-2, -1)[0];
     const defaultSection =
       NOTE_SECTIONS.find((section) => section.key === linkFolder) ??
@@ -105,7 +110,7 @@ export class BrokenLinkActionsService {
             NOTE_SECTIONS.find((item) => item.key === values['section']) ?? defaultSection;
           void this.createNote(
             link,
-            campaignSlug,
+            scopePath,
             section.key,
             section.noteType ?? '',
             String(values['title'] ?? ''),
@@ -124,7 +129,7 @@ export class BrokenLinkActionsService {
 
   private async createNote(
     link: BrokenLinkTarget,
-    campaignSlug: string,
+    scopePath: string,
     sectionKey: string,
     type: string,
     title: string,
@@ -133,7 +138,7 @@ export class BrokenLinkActionsService {
       const created = await this.documentService.createFromLink({
         sourcePath: link.sourcePath,
         raw: link.raw,
-        folder: `${campaignSlug}/${sectionKey}`,
+        folder: `${scopePath}/${sectionKey}`,
         title,
         type,
       });

@@ -2,7 +2,8 @@
   "nav": {
     "sections": {
       "main": "Menü",
-      "campaign": "Kampagne"
+      "campaign": "Kampagne",
+      "system": "System"
     },
     "items": {
       "home": "Startseite",
@@ -22,7 +23,10 @@
       "quests": "Quests",
       "locations": "Orte",
       "world": "Welt",
-      "handouts": "Handouts"
+      "handouts": "Handouts",
+      "compendium": "Kompendium",
+      "backToCompendium": "Zurück zum Kompendium",
+      "notes": "Notizen"
     }
   },
   "header": {
@@ -190,6 +194,9 @@
       },
       "assets": {
         "description": "Bilder, Karten, PDFs und Sounds."
+      },
+      "notes": {
+        "description": "Notizen ohne eigenen Bereich."
       }
     }
   },
@@ -282,6 +289,63 @@
       "createError": "Die Notiz konnte nicht erstellt werden",
       "removed": "Link entfernt — der Text bleibt in der Notiz",
       "removeError": "Der Link konnte nicht entfernt werden"
+    }
+  },
+  "compendium": {
+    "list": {
+      "title": "Kompendium",
+      "description": "Material, das alle Kampagnen teilen. Kopiere Notizen und Dateien aus einer Kampagne hierher oder erstelle sie direkt, und kopiere sie in jede Kampagne zurück.",
+      "create": "Neues System",
+      "emptyTitle": "Dein Kompendium ist leer",
+      "emptyDescription": "Erstelle ein System – einen gemeinsamen Ordner für ein Spiel, eine Welt oder alles, was du in mehreren Kampagnen nutzt.",
+      "loadError": "Das Kompendium konnte nicht geladen werden",
+      "noFolders": "Leer"
+    },
+    "create": {
+      "title": "Neues System",
+      "description": "LazyDM erstellt einen Ordner im Kompendium deines Vaults. Seine Ordner entstehen, sobald du Notizen und Dateien hinzufügst.",
+      "nameLabel": "Name",
+      "namePlaceholder": "Meine D&D-Regeln",
+      "nameDescription": "Der Ordner wird danach benannt, mit Bindestrichen statt Leerzeichen.",
+      "descriptionLabel": "Beschreibung",
+      "descriptionPlaceholder": "Was dieses System sammelt",
+      "submit": "System erstellen",
+      "cancel": "Abbrechen",
+      "error": "Das System konnte nicht erstellt werden"
+    },
+    "delete": {
+      "action": "{{name}} löschen",
+      "title": "{{name}} löschen?",
+      "description": "{{path}} und die {{count}} Dateien darin werden endgültig gelöscht. Kampagnen sind nicht betroffen.",
+      "confirm": "Endgültig löschen",
+      "cancel": "Abbrechen",
+      "done": "{{name}} gelöscht",
+      "error": "Das System konnte nicht gelöscht werden"
+    },
+    "system": {
+      "description": "Gemeinsames Material: kopiere Notizen und Dateien aus einer Kampagne hierher oder erstelle sie direkt.",
+      "newNote": "Neue Notiz",
+      "typeLabel": "Typ",
+      "emptyTitle": "Noch nichts hier",
+      "emptyDescription": "Erstelle eine Notiz oder nutze „Ins Kompendium kopieren“ bei einer Notiz oder Datei einer Kampagne. Ordner entstehen beim Hinzufügen.",
+      "createError": "Die Notiz konnte nicht erstellt werden"
+    },
+    "copy": {
+      "toCompendium": "Ins Kompendium kopieren",
+      "toCampaign": "In eine Kampagne kopieren",
+      "description": "Es wird eine Kopie von {{name}} erstellt; das Original bleibt, wo es ist.",
+      "systemLabel": "System",
+      "campaignLabel": "Kampagne",
+      "submit": "Kopieren",
+      "cancel": "Abbrechen",
+      "noSystems": "Erstelle zuerst ein System im Kompendium.",
+      "noCampaigns": "Erstelle zuerst eine Kampagne.",
+      "done": "Nach {{target}} kopiert",
+      "open": "Öffnen",
+      "error": "Kopieren fehlgeschlagen",
+      "existsTitle": "Name bereits vergeben",
+      "existsDescription": "{{path}} existiert bereits. Wähle einen anderen Namen für die Kopie.",
+      "fileNameLabel": "Dateiname"
     }
   }
 }

@@ -2,7 +2,8 @@
   "nav": {
     "sections": {
       "main": "Menu",
-      "campaign": "Campaign"
+      "campaign": "Campaign",
+      "system": "System"
     },
     "items": {
       "home": "Home",
@@ -22,7 +23,10 @@
       "quests": "Quests",
       "locations": "Locations",
       "world": "World",
-      "handouts": "Handouts"
+      "handouts": "Handouts",
+      "compendium": "Compendium",
+      "backToCompendium": "Back to compendium",
+      "notes": "Notes"
     }
   },
   "header": {
@@ -190,6 +194,9 @@
       },
       "assets": {
         "description": "Images, maps, PDFs and sounds."
+      },
+      "notes": {
+        "description": "Notes without a section of their own."
       }
     }
   },
@@ -282,6 +289,63 @@
       "createError": "Couldn't create the note",
       "removed": "Link removed — its text stays in the note",
       "removeError": "Couldn't remove the link"
+    }
+  },
+  "compendium": {
+    "list": {
+      "title": "Compendium",
+      "description": "Material shared by every campaign. Copy notes and files here from a campaign, or create them directly, and copy them back into any campaign.",
+      "create": "New system",
+      "emptyTitle": "Your compendium is empty",
+      "emptyDescription": "Create a system — a shared folder for a game, a setting or anything you reuse across campaigns.",
+      "loadError": "Couldn't load the compendium",
+      "noFolders": "Empty"
+    },
+    "create": {
+      "title": "New system",
+      "description": "LazyDM creates a folder in the compendium of your vault. Its folders appear as you add notes and files.",
+      "nameLabel": "Name",
+      "namePlaceholder": "My D&D rules",
+      "nameDescription": "The folder is named after it, with dashes instead of spaces.",
+      "descriptionLabel": "Description",
+      "descriptionPlaceholder": "What this system collects",
+      "submit": "Create system",
+      "cancel": "Cancel",
+      "error": "Couldn't create the system"
+    },
+    "delete": {
+      "action": "Delete {{name}}",
+      "title": "Delete {{name}}?",
+      "description": "{{path}} and the {{count}} files in it will be deleted permanently. Campaigns are not affected.",
+      "confirm": "Delete permanently",
+      "cancel": "Cancel",
+      "done": "{{name}} deleted",
+      "error": "Couldn't delete the system"
+    },
+    "system": {
+      "description": "Shared material: copy notes and files here from a campaign, or create them directly.",
+      "newNote": "New note",
+      "typeLabel": "Type",
+      "emptyTitle": "Nothing here yet",
+      "emptyDescription": "Create a note, or use “Copy to compendium” on a note or file of a campaign. Folders appear as you add things.",
+      "createError": "Couldn't create the note"
+    },
+    "copy": {
+      "toCompendium": "Copy to compendium",
+      "toCampaign": "Copy to campaign",
+      "description": "A copy of {{name}} is made; the original stays where it is.",
+      "systemLabel": "System",
+      "campaignLabel": "Campaign",
+      "submit": "Copy",
+      "cancel": "Cancel",
+      "noSystems": "Create a system in the compendium first.",
+      "noCampaigns": "Create a campaign first.",
+      "done": "Copied to {{target}}",
+      "open": "Open",
+      "error": "Couldn't copy",
+      "existsTitle": "Name already taken",
+      "existsDescription": "{{path}} already exists. Choose another name for the copy.",
+      "fileNameLabel": "File name"
     }
   }
 }
