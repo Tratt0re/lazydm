@@ -9,6 +9,7 @@
         class="size-7"
         [arcDisabled]="!workspace.canGoBack()"
         [attr.aria-label]="'tabs.back' | translate"
+        arcPosition="bottom"
         [arcTooltip]="'tabs.back' | translate"
         (click)="workspace.goBack()"
       >
@@ -22,6 +23,7 @@
         class="size-7"
         [arcDisabled]="!workspace.canGoForward()"
         [attr.aria-label]="'tabs.forward' | translate"
+        arcPosition="bottom"
         [arcTooltip]="'tabs.forward' | translate"
         (click)="workspace.goForward()"
       >
@@ -98,6 +100,7 @@
         class="size-7"
         [arcDisabled]="!workspace.canOpenTab()"
         [attr.aria-label]="'tabs.new' | translate"
+        arcPosition="bottom"
         [arcTooltip]="'tabs.new' | translate"
         (click)="workspace.openTab()"
       >

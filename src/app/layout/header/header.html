@@ -52,6 +52,7 @@
         type="button"
         class="flex w-11 cursor-pointer items-center justify-center text-muted-foreground transition-colors duration-150 hover:bg-accent hover:text-foreground focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-ring [&_svg]:size-4"
         [attr.aria-label]="'header.window.minimize' | translate"
+        arcPosition="bottom"
         [arcTooltip]="'header.window.minimize' | translate"
         (click)="minimize()"
       >
@@ -63,6 +64,7 @@
         [attr.aria-label]="
           (isMaximized() ? 'header.window.restore' : 'header.window.maximize') | translate
         "
+        arcPosition="bottom"
         [arcTooltip]="
           (isMaximized() ? 'header.window.restore' : 'header.window.maximize') | translate
         "
@@ -74,6 +76,7 @@
         type="button"
         class="flex w-11 cursor-pointer items-center justify-center text-muted-foreground transition-colors duration-150 hover:bg-destructive hover:text-destructive-foreground focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-ring [&_svg]:size-4"
         [attr.aria-label]="'header.window.close' | translate"
+        arcPosition="bottom"
         [arcTooltip]="'header.window.close' | translate"
         (click)="close()"
       >

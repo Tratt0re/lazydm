@@ -253,7 +253,8 @@ variant keys and configuration stay as they are.
   - Tables: raised mono headers; selected row is the raised surface.
   - Toasts follow the *notification banner*: card surface, 1px border in the state colour, uppercase title, mono
     description, square close button on the right.
-  - Tooltips: raised surface with a bronze border.
+  - Tooltips: raised surface with a bronze border. Everything from the toolbar up (title bar, tab bar, toolbar)
+    shows its tooltips **below** the element (`arcPosition="bottom"`), never over the window edge.
 - **No decorative text or glyphs** from the reference demo (runes, mottos, fake archive codes, background grids…).
   Lucide icons stay.
 - Changes to components are **look only**: variant keys, inputs, outputs and behaviour stay stable.
