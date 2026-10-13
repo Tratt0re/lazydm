@@ -17,7 +17,7 @@ LazyDM is a desktop application built with Electron and Angular that helps dunge
 ## Tech Stack
 
 - **Framework**: Angular 21+ (Standalone Components)
-- **Desktop**: Electron 40+
+- **Desktop**: Electron 44+
 - **Styling**: Tailwind CSS 4+
 - **Database**: Better-SQLite3 (local-first)
 - **State Management**: RxJS + Angular Signals

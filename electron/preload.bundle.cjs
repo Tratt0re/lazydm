@@ -258,7 +258,7 @@ var require_package = __commonJS({
         "@tailwindcss/postcss": "^4.1.18",
         "@types/semver": "^7.7.1",
         concurrently: "^9.2.1",
-        electron: "^40.4.0",
+        electron: "^44.7.0",
         "electron-builder": "^26.7.0",
         electronmon: "^2.0.4",
         jsdom: "^27.1.0",

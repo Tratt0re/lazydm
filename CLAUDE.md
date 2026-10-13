@@ -1,6 +1,6 @@
 # CLAUDE.md
 
-LazyDM — an Obsidian-like desktop app for Dungeon Masters (Electron 40 + Angular 21 + Tailwind 4).
+LazyDM — an Obsidian-like desktop app for Dungeon Masters (Electron 44 + Angular 21 + Tailwind 4).
 Content lives in `.md` files inside a user-owned vault folder; SQLite is only a local, rebuildable index.
 
 **Read [`DESIGN_PRINCIPLES.md`](DESIGN_PRINCIPLES.md) before designing or changing anything.** It is the source of
