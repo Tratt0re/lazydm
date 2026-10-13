@@ -120,12 +120,17 @@
           [arcSize]="item.buttonSize ?? 'sm'"
           [arcShape]="item.buttonShape ?? 'default'"
           [arcDisabled]="isActionDisabled(item)"
+          [attr.aria-label]="item.iconOnly ? (item.label | translate) : null"
+          arcPosition="bottom"
+          [arcTooltip]="item.iconOnly ? (item.label | translate) : ''"
           (click)="onActionClick(item)"
         >
           @if (item.icon) {
             <arc-icon [arcType]="item.icon" class="size-4" />
           }
-          <span>{{ item.label | translate }}</span>
+          @if (!item.iconOnly) {
+            <span>{{ item.label | translate }}</span>
+          }
         </button>
       }
     }

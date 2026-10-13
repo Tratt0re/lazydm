@@ -257,8 +257,10 @@ Planned Electron modules: `vault`, `cloud-readiness`, `campaign`, `document`, `i
   in the toolbar, so a restored tab always tells where it points.
 - **Leaving a note with unsaved edits autosaves it** (tab switch, link, sidebar). If the save hits a conflict or an
   error, the navigation is cancelled and the conflict sheet / error toast is shown.
-- **Editor**: CodeMirror 6 with three views, switched by three toggle buttons in the toolbar (not a segmented
-  control). The view is remembered **per note on this device** (`document_view_modes` local preference, the most
+- **Note toolbar**: the note actions (*Links*, *Copy to compendium / campaign*, *Rename*, *Save*) are square icon
+  buttons (tooltip and accessible name from the label).
+- **Editor**: CodeMirror 6 with three views, switched by three toggle buttons in a row above the editor (not a
+  segmented control); the *Unsaved changes* label sits at the right end of that row. The view is remembered **per note on this device** (`document_view_modes` local preference, the most
   recent 500 notes; a new note opens in Live preview), so moving between notes always shows each one as left.
   - **Live preview** (default, Obsidian-like): the note stays editable and is shown rendered; the markdown syntax of
     an element comes back only while the cursor is on it. Headings, emphasis, code, quotes, lists, task checkboxes

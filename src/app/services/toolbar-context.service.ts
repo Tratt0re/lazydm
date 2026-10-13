@@ -86,6 +86,8 @@ export interface ToolbarAction {
   readonly buttonType?: ArcTechButtonTypeVariants;
   readonly buttonSize?: ArcTechButtonSizeVariants;
   readonly buttonShape?: ArcTechButtonShapeVariants;
+  /** Square icon button: the label becomes its tooltip and accessible name. */
+  readonly iconOnly?: boolean;
   readonly disabled?: ToolbarActionDisabled;
   readonly action: ToolbarActionHandler;
 }

@@ -29,11 +29,13 @@ import { LocalPreferencesService } from '@/services/local-preferences.service';
 import { ToolbarContextService } from '@/services/toolbar-context.service';
 import { WorkspaceService } from '@/services/workspace.service';
 import { ArcTechAlertComponent } from '@/shared/components/alert';
+import { ArcTechButtonComponent } from '@/shared/components/button';
+import { ArcTechIconComponent, type ArcTechIcon } from '@/shared/components/icon';
 import type { ArcTechSheetRef } from '@/shared/components/sheet';
 import { ArcTechSheetService } from '@/shared/components/sheet';
+import { ArcTechTooltipImports } from '@/shared/components/tooltip';
 
 export const DOCUMENT_NOTE_PARAM = 'note';
-
 
 const RENAME_PREVIEW_MAX_TITLES = 5;
 
@@ -51,6 +53,9 @@ const INDEX_UPDATED_EVENT = 'index:updated';
   imports: [
     TranslatePipe,
     ArcTechAlertComponent,
+    ArcTechButtonComponent,
+    ArcTechIconComponent,
+    ...ArcTechTooltipImports,
     AppBrokenLinkMenuComponent,
     AppCodeEditorComponent,
     AppDocumentLinksPanelComponent,
@@ -89,13 +94,22 @@ export class DocumentPage {
   );
 
   protected readonly notePath = computed(
-    () =>
-      `${this.scope()?.rootPath ?? ''}/${this.sectionKey()}/${this.noteSlug()}.md`,
+    () => `${this.scope()?.rootPath ?? ''}/${this.sectionKey()}/${this.noteSlug()}.md`,
   );
 
   protected readonly document = signal<DocumentDto | null>(null);
   protected readonly editedContent = signal('');
   protected readonly mode = signal<DocumentViewMode>('live');
+  /** Editor views, switched by the toggle buttons above the editor. */
+  protected readonly editorModes: readonly {
+    value: DocumentViewMode;
+    label: string;
+    icon: ArcTechIcon;
+  }[] = [
+    { value: 'live', label: 'document.toolbar.live', icon: 'pencil-line' },
+    { value: 'source', label: 'document.toolbar.source', icon: 'code' },
+    { value: 'reading', label: 'document.toolbar.reading', icon: 'book-open' },
+  ];
   /** Links the live editor resolves with; refreshed when the vault index re-reads this note. */
   protected readonly editorLinks = signal<readonly DocumentLinkDto[]>([]);
   /** Files of the note's scope the editor suggests while a link is typed; refreshed with the index. */
@@ -131,41 +145,34 @@ export class DocumentPage {
             { label: scope.name, path: scopePath, translate: false },
             { label: `nav.items.${this.sectionKey()}`, path: `${scopePath}/${this.sectionKey()}` },
           ],
-          itemNavigation: {
-            id: 'document-mode',
-            type: 'toggles',
-            ariaLabel: this.translateService.instant('document.toolbar.modeAriaLabel'),
-            options: [
-              { value: 'live', label: 'document.toolbar.live', icon: 'pencil-line' },
-              { value: 'source', label: 'document.toolbar.source', icon: 'code' },
-              { value: 'reading', label: 'document.toolbar.reading', icon: 'book-open' },
-            ],
-            value: () => this.mode(),
-            change: (value) => this.setMode(value as DocumentViewMode),
-          },
           itemActions: [
             {
               id: 'links',
               label: this.translateService.instant('document.toolbar.links'),
               icon: 'panel-right',
               buttonType: 'outline',
+              iconOnly: true,
               action: () => this.toggleLinksPanel(),
             },
             {
               id: 'copy',
               label: this.translateService.instant(
-                scope.kind === 'system' ? 'compendium.copy.toCampaign' : 'compendium.copy.toCompendium',
+                scope.kind === 'system'
+                  ? 'compendium.copy.toCampaign'
+                  : 'compendium.copy.toCompendium',
               ),
               icon: 'copy-plus',
               buttonType: 'outline',
+              iconOnly: true,
               disabled: () => !this.document() || this.isSaving(),
               action: () => this.copyToOtherScope(),
             },
             {
               id: 'rename',
               label: this.translateService.instant('document.toolbar.rename'),
-              icon: 'pencil-line',
+              icon: 'text-cursor-input',
               buttonType: 'outline',
+              iconOnly: true,
               disabled: () => !this.document() || this.isSaving(),
               action: () => this.openRenameSheet(),
             },
@@ -173,6 +180,7 @@ export class DocumentPage {
               id: 'save',
               label: this.translateService.instant('document.toolbar.save'),
               icon: 'save',
+              iconOnly: true,
               disabled: () => !this.isDirty() || this.isSaving(),
               action: async () => {
                 await this.save();
@@ -320,7 +328,9 @@ export class DocumentPage {
     }
 
     const sourceTitles = [
-      ...new Map(backlinks.map((link) => [link.sourcePath, link.sourceTitle ?? link.sourcePath])).values(),
+      ...new Map(
+        backlinks.map((link) => [link.sourcePath, link.sourceTitle ?? link.sourcePath]),
+      ).values(),
     ];
     const listedTitles = sourceTitles.slice(0, RENAME_PREVIEW_MAX_TITLES).join(', ');
     const hiddenCount = sourceTitles.length - RENAME_PREVIEW_MAX_TITLES;
@@ -363,14 +373,16 @@ export class DocumentPage {
         if (!isSubmitting) {
           isSubmitting = true;
           const values = form.getValues();
-          void this.renameNote(document, String(values['title'] ?? ''), values['updateLinks'] !== false).then(
-            (isRenamed) => {
-              isSubmitting = false;
-              if (isRenamed) {
-                sheetRef.close();
-              }
-            },
-          );
+          void this.renameNote(
+            document,
+            String(values['title'] ?? ''),
+            values['updateLinks'] !== false,
+          ).then((isRenamed) => {
+            isSubmitting = false;
+            if (isRenamed) {
+              sheetRef.close();
+            }
+          });
         }
 
         return false;
@@ -378,7 +390,11 @@ export class DocumentPage {
     });
   }
 
-  private async renameNote(document: DocumentDto, title: string, updateLinks: boolean): Promise<boolean> {
+  private async renameNote(
+    document: DocumentDto,
+    title: string,
+    updateLinks: boolean,
+  ): Promise<boolean> {
     try {
       const result = await this.documentService.rename({ path: document.path, title, updateLinks });
       toast.success(
@@ -490,7 +506,9 @@ export class DocumentPage {
       this.editedContent.set(document.content);
 
       const copySlug = copy.path.split('/').pop()!.replace(/\.md$/i, '');
-      await this.router.navigateByUrl(`${this.scope()?.routeBase ?? ''}/${this.sectionKey()}/${copySlug}`);
+      await this.router.navigateByUrl(
+        `${this.scope()?.routeBase ?? ''}/${this.sectionKey()}/${copySlug}`,
+      );
     } catch (error) {
       toast.error(this.translateService.instant('document.toast.saveError'), {
         description: error instanceof Error ? error.message : String(error),
