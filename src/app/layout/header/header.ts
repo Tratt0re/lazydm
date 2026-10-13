@@ -37,8 +37,8 @@ export class Header {
     this.isFullscreen.set(this.readFlag(payload, 'isFullscreen'));
 
   constructor() {
-    window.electronAPI?.ipcClient.window
-      .getState()
+    window.electronAPI?.ipcClient?.window
+      ?.getState()
       .then((state) => {
         this.isMaximized.set(state.isMaximized);
         this.isFullscreen.set(state.isFullscreen);
@@ -54,15 +54,15 @@ export class Header {
   }
 
   protected minimize(): void {
-    void window.electronAPI?.ipcClient.window.minimize();
+    void window.electronAPI?.ipcClient?.window.minimize();
   }
 
   protected toggleMaximize(): void {
-    void window.electronAPI?.ipcClient.window.toggleMaximize();
+    void window.electronAPI?.ipcClient?.window.toggleMaximize();
   }
 
   protected close(): void {
-    void window.electronAPI?.ipcClient.window.close();
+    void window.electronAPI?.ipcClient?.window.close();
   }
 
   /** macOS handles the title bar double-click itself; frameless windows elsewhere need it here. */
