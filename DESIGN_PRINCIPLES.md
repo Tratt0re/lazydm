@@ -124,6 +124,12 @@ Planned Electron modules: `vault`, `cloud-readiness`, `campaign`, `document`, `i
 - Resolution happens **only inside the link's own scope**: a campaign, or a compendium system. A campaign never
   resolves into the compendium or another campaign (copy what you need instead). The index stores the scope in
   `files.campaign` (`lost-mine`, `compendium/my-system`).
+- **Link suggestions** (editor, live and source mode): typing `[[`, `![[` or `[label](` opens a list below the cursor
+  with the files of the note's own scope (templates excluded), filtered on title, name and path as the target is
+  typed; links list notes first, embeds list assets first. Picking one writes a link that resolves: the bare name,
+  or the scope-relative path when two files share the name (`[[monsters/goblin]]`); markdown links get the path
+  relative to the note (`../assets/map.png`). The closing `]]` / `)` is added unless already there. The list comes
+  from the index (`documents:linkTargets`) and follows index updates.
 - **Rename** (note toolbar → *Rename*): the new title gives the new kebab-case file name in the same folder;
   `title:` and the `# Heading` (if it still shows the old title) are updated. The sheet previews the notes linking
   here; with *Update links* (default on) every link the index resolved to the note is rewritten, keeping its form

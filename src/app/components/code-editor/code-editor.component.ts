@@ -26,7 +26,8 @@ import {
 } from '@codemirror/view';
 import { tags } from '@lezer/highlight';
 
-import type { DocumentLinkDto } from '@/dtos';
+import type { DocumentLinkDto, LinkTargetDto } from '@/dtos';
+import { linkCompletion, setLinkCompletionContext } from './link-completion';
 import { findFrontmatterEnd, livePreview, setLivePreviewContext } from './live-preview';
 
 /** `live`: Obsidian-like live preview (rendered while editable); `source`: plain markdown. */
@@ -69,6 +70,8 @@ export class AppCodeEditorComponent implements OnDestroy {
   readonly mode = input<CodeEditorMode>('live');
   /** Resolved links of the note (vault index), for the live preview's links and embeds. */
   readonly links = input<readonly DocumentLinkDto[]>([]);
+  /** Files of the note's scope, suggested while a link is typed (none: no suggestions). */
+  readonly linkTargets = input<readonly LinkTargetDto[]>([]);
   readonly sourcePath = input('');
 
   readonly contentChange = output<string>();
@@ -88,6 +91,7 @@ export class AppCodeEditorComponent implements OnDestroy {
 
     effect(() => {
       this.links();
+      this.linkTargets();
       this.sourcePath();
       this.syncLinks();
     });
@@ -145,7 +149,10 @@ export class AppCodeEditorComponent implements OnDestroy {
 
   private syncLinks(): void {
     this.view?.dispatch({
-      effects: setLivePreviewContext.of({ links: this.links(), sourcePath: this.sourcePath() }),
+      effects: [
+        setLivePreviewContext.of({ links: this.links(), sourcePath: this.sourcePath() }),
+        setLinkCompletionContext.of({ targets: this.linkTargets(), sourcePath: this.sourcePath() }),
+      ],
     });
   }
 
@@ -214,6 +221,7 @@ export class AppCodeEditorComponent implements OnDestroy {
           ...historyKeymap,
         ]),
         markdown({ base: markdownLanguage, codeLanguages: languages }),
+        linkCompletion(),
         this.modeCompartment.of(this.modeExtensions(this.mode())),
         editorTheme,
         EditorView.lineWrapping,

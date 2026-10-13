@@ -58,6 +58,7 @@ export interface ElectronIpcClient {
     readonly create: IpcRequest<DTO.CreateDocumentPayload, DTO.DocumentDto>;
     readonly rename: IpcRequest<DTO.RenameDocumentPayload, DTO.RenameDocumentResultDto>;
     readonly links: IpcRequest<DTO.ReadDocumentPayload, DTO.DocumentLinksDto>;
+    readonly linkTargets: IpcRequest<{ sourcePath: string }, { rows: DTO.LinkTargetDto[] }>;
     readonly brokenLinks: IpcRequest<{ campaign: string }, { rows: DTO.BrokenLinkDto[] }>;
     readonly unlink: IpcRequest<DTO.UnlinkPayload, { path: string; linkCount: number }>;
     readonly createFromLink: IpcRequest<DTO.CreateFromLinkPayload, DTO.DocumentDto>;

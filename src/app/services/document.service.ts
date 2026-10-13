@@ -11,6 +11,7 @@ import type {
   DocumentDto,
   DocumentFileListItemDto,
   DocumentLinksDto,
+  LinkTargetDto,
   RenameDocumentPayload,
   RenameDocumentResultDto,
   SaveDocumentCopyPayload,
@@ -55,6 +56,12 @@ export class DocumentService extends BaseIpcService<APIChannel.DOCUMENTS> {
 
   links(path: string): Promise<DocumentLinksDto> {
     return this.ipcClient.links({ path });
+  }
+
+  /** Files of the note's own scope its links can point to (the editor's link suggestions). */
+  async linkTargets(sourcePath: string): Promise<readonly LinkTargetDto[]> {
+    const { rows } = await this.ipcClient.linkTargets({ sourcePath });
+    return rows;
   }
 
   unlink(payload: UnlinkPayload): Promise<{ path: string; linkCount: number }> {

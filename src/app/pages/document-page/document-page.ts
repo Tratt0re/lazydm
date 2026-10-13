@@ -19,7 +19,7 @@ import { toInAppNoteRoute } from '@/components/document-preview/document-preview
 import { AppSheetFormService } from '@/components/sheet-form/sheet-form.service';
 import type { AppSheetField } from '@/components/sheet-form/sheet-form.types';
 import { CAMPAIGN_SECTION_PARAM } from '@/pages/campaign-section-page/campaign-section-page';
-import type { BacklinkDto, DocumentDto, DocumentLinkDto } from '@/dtos';
+import type { BacklinkDto, DocumentDto, DocumentLinkDto, LinkTargetDto } from '@/dtos';
 import { BrokenLinkActionsService } from '@/services/broken-link-actions.service';
 import { CopyToService } from '@/services/copy-to.service';
 import { getNoteScopeKind, NoteScopeService } from '@/services/note-scope.service';
@@ -98,6 +98,8 @@ export class DocumentPage {
   protected readonly mode = signal<DocumentViewMode>('live');
   /** Links the live editor resolves with; refreshed when the vault index re-reads this note. */
   protected readonly editorLinks = signal<readonly DocumentLinkDto[]>([]);
+  /** Files of the note's scope the editor suggests while a link is typed; refreshed with the index. */
+  protected readonly linkTargets = signal<readonly LinkTargetDto[]>([]);
   protected readonly isLoading = signal(true);
   protected readonly isSaving = signal(false);
   protected readonly errorMessage = signal<string | null>(null);
@@ -263,7 +265,19 @@ export class DocumentPage {
         }
       })
       .catch((error: unknown) => console.warn('[app] Failed to refresh note links:', error));
+    this.loadLinkTargets(document.path);
   };
+
+  private loadLinkTargets(notePath: string): void {
+    this.documentService
+      .linkTargets(notePath)
+      .then((targets) => {
+        if (this.document()?.path === notePath) {
+          this.linkTargets.set(targets);
+        }
+      })
+      .catch((error: unknown) => console.warn('[app] Failed to load link suggestions:', error));
+  }
 
   protected toggleLinksPanel(): void {
     const isOpen = !this.isLinksPanelOpen();
@@ -495,6 +509,8 @@ export class DocumentPage {
         this.document.set(document);
         this.editedContent.set(document.content);
         this.editorLinks.set(document.links);
+        this.linkTargets.set([]);
+        this.loadLinkTargets(document.path);
         this.mode.set(this.localPreferences.getDocumentViewMode(document.path));
       }
     } catch (error) {

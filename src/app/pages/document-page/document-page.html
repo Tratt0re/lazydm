@@ -23,6 +23,7 @@
           class="h-full"
           [mode]="mode() === 'source' ? 'source' : 'live'"
           [links]="editorLinks()"
+          [linkTargets]="linkTargets()"
           [sourcePath]="document()?.path ?? ''"
           [documentKey]="notePath()"
           [initialContent]="document()?.content ?? ''"

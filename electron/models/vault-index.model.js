@@ -123,6 +123,18 @@ function listBrokenLinks(campaign) {
     .all(campaign);
 }
 
+/** Files a link written in a scope can resolve to (templates excluded), for the editor's link suggestions. */
+function listScopeFiles(scope) {
+  return getVaultIndexDatabase()
+    .prepare(
+      `SELECT path, name, kind, type, title
+       FROM files
+       WHERE campaign IS ? AND path NOT LIKE '%/!_templates/%' ESCAPE '!'
+       ORDER BY title COLLATE NOCASE, path`,
+    )
+    .all(scope);
+}
+
 /**
  * Whether a scope (campaign or `compendium/<system>`) already has a file with this link name: a link
  * resolving by name there would find it, so there is no need to copy another one in.
@@ -311,6 +323,7 @@ module.exports = {
   countFiles,
   deleteAll,
   deletePath,
+  getCampaignSlug,
   getFileKind,
   getFileName,
   hasFileNamed,
@@ -320,6 +333,7 @@ module.exports = {
   listFolderFiles,
   listIncomingLinks,
   listOutgoingLinks,
+  listScopeFiles,
   resolveLinks,
   saveFile,
   touchFile,

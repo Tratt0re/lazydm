@@ -168,6 +168,20 @@ async function links(payload) {
   };
 }
 
+/** Files the note's links can resolve to (its own campaign or system only): the editor's link suggestions. */
+function linkTargets(payload) {
+  const body = ensurePlainObject(payload, 'payload');
+  const sourcePath = requirePath(body, 'sourcePath');
+  if (!indexerController.isOpen()) {
+    return { rows: [] };
+  }
+
+  const scope = vaultIndexModel.getCampaignSlug(sourcePath);
+  return {
+    rows: vaultIndexModel.listScopeFiles(scope).filter((file) => file.path !== sourcePath),
+  };
+}
+
 /** Unresolved links written in the notes of a campaign. */
 function brokenLinks(payload) {
   const body = ensurePlainObject(payload, 'payload');
@@ -477,6 +491,7 @@ module.exports = {
   copyPlan,
   createFromLink,
   create,
+  linkTargets,
   links,
   list,
   read,

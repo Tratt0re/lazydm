@@ -13,6 +13,16 @@ export interface DocumentFileListItemDto {
   readonly tags: readonly string[];
 }
 
+/** A file a note's links can point to (same campaign or system), offered by the editor's link suggestions. */
+export interface LinkTargetDto {
+  readonly path: string;
+  /** Link name: file name without extension for notes, full file name for assets. */
+  readonly name: string;
+  readonly kind: DocumentFileKind;
+  readonly type: string | null;
+  readonly title: string;
+}
+
 export type DocumentLinkKind = 'wikilink' | 'embed' | 'markdown';
 
 export interface DocumentLinkDto {
