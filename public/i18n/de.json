@@ -26,7 +26,8 @@
       "handouts": "Handouts",
       "compendium": "Kompendium",
       "backToCompendium": "Zurück zum Kompendium",
-      "notes": "Notizen"
+      "notes": "Notizen",
+      "templates": "Vorlagen"
     }
   },
   "header": {
@@ -57,7 +58,7 @@
       },
       "templates": {
         "title": "Vorlagen",
-        "description": "Welche Vorlage jeder Notiztyp nutzt, und die Vorlagenbibliothek."
+        "description": "Welche Vorlage jeder Notiztyp in dieser Kampagne nutzt."
       }
     },
     "general": {
@@ -96,11 +97,10 @@
         "noCampaignTitle": "Keine Kampagne geöffnet",
         "noCampaignDescription": "Öffne eine Kampagne und komm dann hierher zurück, um die Vorlage für jeden Notiztyp zu wählen.",
         "saved": "Vorlagenwahl gespeichert",
-        "saveError": "Vorlagenwahl konnte nicht gespeichert werden"
+        "saveError": "Vorlagenwahl konnte nicht gespeichert werden",
+        "openLibrary": "Vorlagenbibliothek öffnen"
       },
       "library": {
-        "title": "Vorlagenbibliothek",
-        "description": "Vorlagen des Vaults, jedes Kompendium-Systems und jeder Kampagne. Integrierte sind schreibgeschützt.",
         "empty": "Wähle eine Vorlage, um sie anzusehen oder zu bearbeiten."
       },
       "editor": {
@@ -264,6 +264,10 @@
       },
       "notes": {
         "description": "Notizen ohne eigenen Bereich."
+      },
+      "template": {
+        "label": "Vorlage",
+        "ariaLabel": "Vorlage für neue Notizen in diesem Bereich"
       }
     }
   },
@@ -436,5 +440,11 @@
   },
   "common": {
     "close": "Schließen"
+  },
+  "templates": {
+    "library": {
+      "title": "Vorlagenbibliothek",
+      "usedIn": "Verwendet in {{campaign}} für"
+    }
   }
 }

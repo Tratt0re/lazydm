@@ -2,19 +2,20 @@ import { computed, inject, Injectable, signal } from '@angular/core';
 import { NavigationEnd, Router, type UrlTree } from '@angular/router';
 import { filter } from 'rxjs';
 
-/** Router outlet of the full-page sheets (Compendium, Settings), drawn over the current page. */
+/** Router outlet of the full-page sheets (Compendium, Templates, Settings), drawn over the current page. */
 export const APP_SHEET_OUTLET = 'overlay';
 
 /** Route data key with the i18n key of the sheet title. */
 export const APP_SHEET_TITLE_ROUTE_DATA = 'sheetTitle';
 
-export type AppSheetKind = 'compendium' | 'settings';
+export type AppSheetKind = 'compendium' | 'templates' | 'settings';
 
-const APP_SHEET_KINDS: readonly AppSheetKind[] = ['compendium', 'settings'];
+const APP_SHEET_KINDS: readonly AppSheetKind[] = ['compendium', 'templates', 'settings'];
 /** Length of the closing slide (`.app-sheet-leave` in styles.css). */
 const SHEET_CLOSE_ANIMATION_MS = 260;
 const DEFAULT_SHEET_PATHS: Readonly<Record<AppSheetKind, string>> = {
   compendium: 'compendium',
+  templates: 'templates',
   settings: 'settings/general',
 };
 

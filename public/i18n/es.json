@@ -26,7 +26,8 @@
       "handouts": "Material para jugadores",
       "compendium": "Compendio",
       "backToCompendium": "Volver al compendio",
-      "notes": "Notas"
+      "notes": "Notas",
+      "templates": "Plantillas"
     }
   },
   "header": {
@@ -57,7 +58,7 @@
       },
       "templates": {
         "title": "Plantillas",
-        "description": "Qué plantilla usa cada tipo de nota, y la biblioteca de plantillas."
+        "description": "Qué plantilla usa cada tipo de nota en esta campaña."
       }
     },
     "general": {
@@ -96,11 +97,10 @@
         "noCampaignTitle": "Ninguna campaña abierta",
         "noCampaignDescription": "Abre una campaña y vuelve aquí para elegir qué plantilla usa cada tipo de nota.",
         "saved": "Elección de plantilla guardada",
-        "saveError": "No se pudo guardar la elección de plantilla"
+        "saveError": "No se pudo guardar la elección de plantilla",
+        "openLibrary": "Abrir la biblioteca de plantillas"
       },
       "library": {
-        "title": "Biblioteca de plantillas",
-        "description": "Plantillas del vault, de cada sistema del compendio y de cada campaña. Las integradas son de solo lectura.",
         "empty": "Selecciona una plantilla para verla o editarla."
       },
       "editor": {
@@ -264,6 +264,10 @@
       },
       "notes": {
         "description": "Notas sin una sección propia."
+      },
+      "template": {
+        "label": "Plantilla",
+        "ariaLabel": "Plantilla para las notas nuevas de esta sección"
       }
     }
   },
@@ -436,5 +440,11 @@
   },
   "common": {
     "close": "Cerrar"
+  },
+  "templates": {
+    "library": {
+      "title": "Biblioteca de plantillas",
+      "usedIn": "Usada en {{campaign}} para"
+    }
   }
 }

@@ -1,19 +1,77 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
 
 import { APIChannel } from '@/config/api';
-import type { CreateTemplatePayload, TemplateListDto, TemplateRulesDto } from '@/dtos';
+import type { CreateTemplatePayload, TemplateDto, TemplateListDto, TemplateRulesDto } from '@/dtos';
 import { BaseIpcService } from '@/services/base-ipc.service';
 
 /** Rule value of a campaign that picked the built-in template of a note type. */
 export const BUILT_IN_TEMPLATE_RULE = 'builtin';
+/** Select value for "no choice" (never stored): the vault's `_templates/<type>.md`, else the built-in. */
+export const AUTOMATIC_TEMPLATE_RULE = 'auto';
+
+/** One choice of a template select: Automatic, Built-in, or a template file. */
+export interface TemplateRuleOption {
+  readonly value: string;
+  readonly label: string;
+}
 
 /** Note templates: the vault library, the built-ins, and the per-campaign choice per note type. */
 @Injectable({
   providedIn: 'root',
 })
 export class TemplateService extends BaseIpcService<APIChannel.TEMPLATES> {
+  private readonly translateService = inject(TranslateService);
+
   constructor() {
     super(APIChannel.TEMPLATES);
+  }
+
+  /** Templates a campaign can pick: the vault's, every compendium system's and its own (not other campaigns'). */
+  getCampaignTemplates(templates: readonly TemplateDto[], campaign: string): readonly TemplateDto[] {
+    return templates.filter((template) => template.source !== 'campaign' || template.scope === campaign);
+  }
+
+  /** `monster · D&D 5e`, `session-recap · Vault`. */
+  getTemplateLabel(template: TemplateDto): string {
+    const source =
+      template.scopeName ?? this.translateService.instant('settings.templates.sources.vault');
+    return `${template.name} · ${source}`;
+  }
+
+  /**
+   * Choices of a campaign's template select for a note type: Automatic, Built-in, its templates, and the
+   * current choice when its file is gone (so the select is never blank).
+   */
+  getRuleOptions(
+    templates: readonly TemplateDto[],
+    campaign: string,
+    currentRule: string | undefined,
+  ): readonly TemplateRuleOption[] {
+    const campaignTemplates = this.getCampaignTemplates(templates, campaign);
+    const options: TemplateRuleOption[] = [
+      {
+        value: AUTOMATIC_TEMPLATE_RULE,
+        label: this.translateService.instant('settings.templates.rules.automatic'),
+      },
+      {
+        value: BUILT_IN_TEMPLATE_RULE,
+        label: this.translateService.instant('settings.templates.sources.builtin'),
+      },
+      ...campaignTemplates.map((template) => ({
+        value: template.path,
+        label: this.getTemplateLabel(template),
+      })),
+    ];
+
+    if (currentRule && !options.some((option) => option.value === currentRule)) {
+      options.push({
+        value: currentRule,
+        label: this.translateService.instant('settings.templates.rules.missing', { path: currentRule }),
+      });
+    }
+
+    return options;
   }
 
   list(): Promise<TemplateListDto> {

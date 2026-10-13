@@ -68,7 +68,8 @@ async function setRule(payload) {
   const vaultPath = vaultController.getReadyVaultPath();
   const campaign = await requireCampaign(vaultPath, body.campaign);
   const type = requireNoteType(body.type);
-  const template = normalizeOptionalString(body.template, 'payload.template', { allowNull: true }) ?? null;
+  const template =
+    normalizeOptionalString(body.template, 'payload.template', { allowNull: true }) ?? null;
   const value =
     template === null || template === templateModel.BUILT_IN_RULE
       ? template
@@ -88,7 +89,11 @@ async function create(payload) {
 
   const type = body.type == null ? null : requireNoteType(body.type);
   const content = type ? templateModel.BUILT_IN_TEMPLATES[type] : EMPTY_TEMPLATE;
-  const templatePath = await templateModel.createTemplate(vaultController.getReadyVaultPath(), slug, content);
+  const templatePath = await templateModel.createTemplate(
+    vaultController.getReadyVaultPath(),
+    slug,
+    content,
+  );
   await reindex([templatePath]);
   return { path: templatePath };
 }

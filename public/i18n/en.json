@@ -26,7 +26,8 @@
       "handouts": "Handouts",
       "compendium": "Compendium",
       "backToCompendium": "Back to compendium",
-      "notes": "Notes"
+      "notes": "Notes",
+      "templates": "Templates"
     }
   },
   "header": {
@@ -57,7 +58,7 @@
       },
       "templates": {
         "title": "Templates",
-        "description": "Which template each note type uses, and the template library."
+        "description": "Which template each note type uses in this campaign."
       }
     },
     "general": {
@@ -96,11 +97,10 @@
         "noCampaignTitle": "No campaign open",
         "noCampaignDescription": "Open a campaign, then come back here to choose which template each note type uses.",
         "saved": "Template choice saved",
-        "saveError": "Could not save the template choice"
+        "saveError": "Could not save the template choice",
+        "openLibrary": "Open template library"
       },
       "library": {
-        "title": "Template library",
-        "description": "Templates of the vault, of each compendium system and of each campaign. Built-ins are read-only.",
         "empty": "Select a template to view or edit it."
       },
       "editor": {
@@ -264,6 +264,10 @@
       },
       "notes": {
         "description": "Notes without a section of their own."
+      },
+      "template": {
+        "label": "Template",
+        "ariaLabel": "Template for new notes in this section"
       }
     }
   },
@@ -436,5 +440,11 @@
   },
   "common": {
     "close": "Close"
+  },
+  "templates": {
+    "library": {
+      "title": "Template library",
+      "usedIn": "Used in {{campaign}} for"
+    }
   }
 }

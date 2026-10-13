@@ -30,6 +30,19 @@
         arcType="ghost"
         arcSize="sm"
         class="h-8 font-mono text-[11px] tracking-[0.04em] normal-case"
+        [class.text-primary]="sheets.activeKind() === 'templates'"
+        [attr.aria-pressed]="sheets.activeKind() === 'templates'"
+        (click)="sheets.toggle('templates')"
+      >
+        <arc-icon arcType="layout-template" />
+        {{ 'nav.items.templates' | translate }}
+      </button>
+      <button
+        type="button"
+        arc-button
+        arcType="ghost"
+        arcSize="sm"
+        class="h-8 font-mono text-[11px] tracking-[0.04em] normal-case"
         [class.text-primary]="sheets.activeKind() === 'settings'"
         [attr.aria-pressed]="sheets.activeKind() === 'settings'"
         (click)="sheets.toggle('settings')"

@@ -1,0 +1,136 @@
+<section class="grid min-h-0 flex-1 gap-4 p-6 lg:grid-cols-[17.5rem_minmax(0,1fr)]">
+  <div class="flex min-h-0 flex-col gap-3">
+    <button arc-button type="button" arcFull (click)="openCreateSheet()">
+      <arc-icon arcType="plus" />
+      {{ 'settings.templates.create.button' | translate }}
+    </button>
+    <app-secondary-sidebar
+      class="min-h-0 flex-1"
+      [items]="libraryItems()"
+      [activeKey]="selected()?.key ?? null"
+      [ariaLabel]="'templates.library.title' | translate"
+      (itemSelected)="onLibrarySelected($event)"
+    />
+  </div>
+
+  <div class="flex min-h-[34rem] min-w-0 flex-col border border-border bg-card">
+    @if (errorMessage(); as message) {
+      <arc-alert
+        class="m-4"
+        arcType="destructive"
+        arcIcon="circle-alert"
+        [arcTitle]="'settings.templates.loadError' | translate"
+        [arcDescription]="message"
+      />
+    }
+
+    @if (selected(); as current) {
+      <div class="flex flex-wrap items-center justify-between gap-3 border-b border-border px-4 py-3">
+        <div class="min-w-0">
+          <h2 class="truncate font-display text-xl font-semibold tracking-wide uppercase">
+            {{ selectedTitle() }}<span class="text-primary" aria-hidden="true">.</span>
+          </h2>
+          <p class="truncate font-mono text-xs text-muted-foreground">
+            @if (selectedBuiltInType()) {
+              {{ 'settings.templates.editor.builtInHint' | translate }}
+            } @else {
+              {{ current.key }}
+            }
+          </p>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <div
+            class="flex items-center gap-1"
+            role="group"
+            [attr.aria-label]="'document.toolbar.modeAriaLabel' | translate"
+          >
+            @for (option of editorModes; track option.value) {
+              @let isPressed = editorMode() === option.value;
+              <button
+                type="button"
+                arc-button
+                arcType="ghost"
+                arcSize="sm"
+                class="size-9 border"
+                [class]="isPressed ? 'border-primary bg-raised text-primary' : 'border-transparent text-muted-foreground'"
+                [attr.aria-pressed]="isPressed"
+                [attr.aria-label]="option.label | translate"
+                [arcTooltip]="option.label | translate"
+                (click)="editorMode.set(option.value)"
+              >
+                <arc-icon [arcType]="option.icon" />
+              </button>
+            }
+          </div>
+
+          @if (selectedBuiltInType()) {
+            <button arc-button type="button" (click)="customize()">
+              <arc-icon arcType="copy-plus" />
+              {{ 'settings.templates.editor.customize' | translate }}
+            </button>
+          } @else {
+            <button arc-button type="button" arcType="outline" (click)="confirmDelete()">
+              <arc-icon arcType="trash" />
+              {{ 'settings.templates.delete.button' | translate }}
+            </button>
+            <button arc-button type="button" [arcDisabled]="!isDirty() || isSaving()" (click)="save()">
+              <arc-icon arcType="save" />
+              {{ 'settings.templates.editor.save' | translate }}
+            </button>
+          }
+        </div>
+      </div>
+
+      @if (canLink()) {
+        <div class="flex flex-wrap items-center gap-2 border-b border-border bg-recessed px-4 py-3">
+          <span class="mr-1 font-mono text-xs tracking-wider text-muted-foreground uppercase">
+            {{ 'templates.library.usedIn' | translate: { campaign: campaignName() } }}
+          </span>
+          @for (row of noteTypes(); track row.type) {
+            @let linked = isLinked(row.type);
+            <button
+              type="button"
+              arc-button
+              arcType="ghost"
+              arcSize="sm"
+              class="h-8 border px-2.5 font-mono text-[11px] tracking-[0.04em]"
+              [class]="linked ? 'border-primary bg-raised text-primary' : 'border-input text-muted-foreground'"
+              [attr.aria-pressed]="linked"
+              (click)="toggleLink(row.type)"
+            >
+              @if (linked) {
+                <arc-icon arcType="check" class="size-3.5" />
+              }
+              {{ 'nav.items.' + row.sectionKey | translate }}
+            </button>
+          }
+        </div>
+      }
+
+      <app-code-editor
+        class="min-h-[22rem] flex-1"
+        [documentKey]="current.key"
+        [initialContent]="current.content"
+        [readOnly]="selectedBuiltInType() !== null"
+        [mode]="editorMode()"
+        [sourcePath]="current.key"
+        (contentChange)="editedContent.set($event)"
+        (saveRequested)="save()"
+      />
+    } @else {
+      <p class="m-auto max-w-sm p-6 text-center text-sm text-muted-foreground">
+        {{ 'settings.templates.library.empty' | translate }}
+      </p>
+    }
+
+    <div class="flex flex-wrap items-center gap-2 border-t border-border px-4 py-3">
+      <span class="font-mono text-xs tracking-wider text-muted-foreground uppercase">
+        {{ 'settings.templates.placeholders' | translate }}
+      </span>
+      @for (placeholder of placeholders; track placeholder) {
+        <code class="border border-border bg-recessed px-1.5 py-0.5 font-mono text-xs">{{ placeholder }}</code>
+      }
+    </div>
+  </div>
+</section>

@@ -26,7 +26,8 @@
       "handouts": "玩家资料",
       "compendium": "纲要",
       "backToCompendium": "返回纲要",
-      "notes": "笔记"
+      "notes": "笔记",
+      "templates": "模板"
     }
   },
   "header": {
@@ -57,7 +58,7 @@
       },
       "templates": {
         "title": "模板",
-        "description": "每种笔记类型使用的模板，以及模板库。"
+        "description": "本战役中每种笔记类型使用的模板。"
       }
     },
     "general": {
@@ -96,11 +97,10 @@
         "noCampaignTitle": "未打开战役",
         "noCampaignDescription": "请先打开一个战役，再回到这里为每种笔记类型选择模板。",
         "saved": "模板选择已保存",
-        "saveError": "无法保存模板选择"
+        "saveError": "无法保存模板选择",
+        "openLibrary": "打开模板库"
       },
       "library": {
-        "title": "模板库",
-        "description": "库、每个纲要系统和每个战役的模板。内置模板为只读。",
         "empty": "选择一个模板以查看或编辑。"
       },
       "editor": {
@@ -264,6 +264,10 @@
       },
       "notes": {
         "description": "没有专属分区的笔记。"
+      },
+      "template": {
+        "label": "模板",
+        "ariaLabel": "此分区新笔记使用的模板"
       }
     }
   },
@@ -436,5 +440,11 @@
   },
   "common": {
     "close": "关闭"
+  },
+  "templates": {
+    "library": {
+      "title": "模板库",
+      "usedIn": "在 {{campaign}} 中用于"
+    }
   }
 }

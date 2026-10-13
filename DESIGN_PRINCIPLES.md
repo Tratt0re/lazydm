@@ -188,10 +188,18 @@ Planned Electron modules: `vault`, `cloud-readiness`, `campaign`, `document`, `i
   name), `{{section}}` (folder display name, in the UI language), `{{type}}`. Unknown placeholders stay as written;
   inside the frontmatter values are escaped for YAML strings, so a title with quotes keeps it valid.
 - Template files are excluded from broken links (their links are placeholders).
-- **UI — Settings → Templates**: the per-type choices of the campaign under the sheet (a hint when opened from the
-  campaign list), and the library — built-ins and every `_templates/` folder in the shared secondary sidebar — with
-  the note editor (Live / Source), Save, New template (empty or from a built-in), Delete (confirmed) and Customize.
-  Unsaved edits are saved when another template is selected or the section is left, like notes.
+- **UI**, three places, all writing the same `vault.json` choices:
+  - **Templates sheet** (header button, next to Compendium and Settings): the library — built-ins and every
+    `_templates/` folder in the shared secondary sidebar — with the note editor (Live / Source), Save, New template
+    (empty or from a built-in), Delete (confirmed) and Customize. Over a campaign, the selected template file shows
+    *Used in <campaign> for* with one toggle per note type to link / unlink it. Unsaved edits are saved when another
+    template is selected or the sheet is left, like notes.
+  - **Settings → Templates**: the per-type choices of the campaign under the sheet (a hint when opened from the
+    campaign list) and a button that opens the Templates sheet.
+  - **Campaign section pages**: a *Template* select in the toolbar for the section's note type (Automatic, Built-in,
+    the vault's, the systems' and the campaign's own templates).
+- **Section pages keep their actions in the toolbar** (template select, *Import*, *New note*), never in a button
+  row above the list — the same rule as every other page.
 
 ## 7. Security
 

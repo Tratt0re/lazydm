@@ -2,16 +2,22 @@ import { Component, computed, effect, inject, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { toast } from 'ngx-sonner';
 import { map } from 'rxjs';
 
 import { AppSheetFormService } from '@/components/sheet-form/sheet-form.service';
 import type { AppSheetField } from '@/components/sheet-form/sheet-form.types';
 import { findSection } from '@/config/menu.config';
-import type { DocumentFileListItemDto } from '@/dtos';
+import type { DocumentFileListItemDto, TemplateDto, TemplateRulesDto } from '@/dtos';
+import { AppSheetService } from '@/services/app-sheet.service';
 import { getNoteScopeKind, NoteScopeService } from '@/services/note-scope.service';
 import { CopyToService } from '@/services/copy-to.service';
 import { DocumentService } from '@/services/document.service';
-import { ToolbarContextService } from '@/services/toolbar-context.service';
+import {
+  AUTOMATIC_TEMPLATE_RULE,
+  TemplateService,
+} from '@/services/template.service';
+import { ToolbarContextService, type ToolbarItemAction } from '@/services/toolbar-context.service';
 import { ArcTechAlertComponent } from '@/shared/components/alert';
 import { ArcTechButtonComponent } from '@/shared/components/button';
 import { ArcTechEmptyComponent } from '@/shared/components/empty';
@@ -60,7 +66,14 @@ export class CampaignSectionPage {
   private readonly sheetFormService = inject(AppSheetFormService);
   private readonly translateService = inject(TranslateService);
   private readonly toolbarContext = inject(ToolbarContextService);
+  private readonly templateService = inject(TemplateService);
+  private readonly appSheetService = inject(AppSheetService);
   protected readonly copyTo = inject(CopyToService);
+
+  /** Templates and the campaign's choices, for the template select of the toolbar (campaigns only). */
+  private readonly templates = signal<readonly TemplateDto[]>([]);
+  private readonly templateTypes = signal<readonly string[]>([]);
+  private readonly templateRules = signal<TemplateRulesDto>({});
 
   private readonly sectionKey = toSignal(
     this.route.paramMap.pipe(map((params) => params.get(CAMPAIGN_SECTION_PARAM) ?? '')),
@@ -95,15 +108,113 @@ export class CampaignSectionPage {
         return;
       }
 
+      void this.loadFiles(`${scope.rootPath}/${section.key}`);
+    });
+
+    effect((onCleanup) => {
+      const scope = this.scope();
+      const section = this.section();
+      if (!scope || !section) {
+        return;
+      }
+
       onCleanup(
         this.toolbarContext.activate({
           title: this.sectionLabelKey(),
           titleMode: 'breadcrumb',
           titleBreadcrumbs: [{ label: scope.name, path: scope.routeBase, translate: false }],
+          itemActions: this.buildToolbarActions(),
         }),
       );
-      void this.loadFiles(`${scope.rootPath}/${section.key}`);
     });
+
+    // Template choices can change in the Templates sheet or in Settings: reload when no sheet is over the page.
+    effect(() => {
+      const scope = this.scope();
+      if (scope?.kind === 'campaign' && this.appSheetService.activeKind() === null) {
+        void this.loadTemplates(scope.rootPath);
+      }
+    });
+  }
+
+  /** Template select (campaign folders of a note type), Import, New note. */
+  private buildToolbarActions(): readonly ToolbarItemAction[] {
+    const scope = this.scope();
+    const section = this.section();
+    const noteType = section?.noteType ?? null;
+    const actions: ToolbarItemAction[] = [];
+
+    if (scope?.kind === 'campaign' && noteType && this.templateTypes().includes(noteType)) {
+      const campaign = scope.rootPath;
+      actions.push({
+        id: 'section-template',
+        type: 'select',
+        label: 'campaigns.sections.template.label',
+        ariaLabel: this.translateService.instant('campaigns.sections.template.ariaLabel'),
+        class: 'w-56',
+        value: () => this.templateRules()[noteType] ?? AUTOMATIC_TEMPLATE_RULE,
+        options: this.templateService.getRuleOptions(
+          this.templates(),
+          campaign,
+          this.templateRules()[noteType],
+        ),
+        change: (value) => this.setTemplateRule(campaign, noteType, value),
+      });
+    }
+
+    actions.push({
+      id: 'section-import',
+      label: this.importLabel(),
+      icon: 'library-big',
+      buttonType: 'outline',
+      action: () => this.openImportSheet(),
+    });
+
+    if (noteType) {
+      actions.push({
+        id: 'section-new-note',
+        label: 'campaigns.sections.newNote.create',
+        icon: 'plus',
+        action: () => this.openCreateSheet(),
+      });
+    }
+
+    return actions;
+  }
+
+  private async setTemplateRule(campaign: string, type: string, value: string): Promise<void> {
+    if (value === (this.templateRules()[type] ?? AUTOMATIC_TEMPLATE_RULE)) {
+      return;
+    }
+
+    try {
+      this.templateRules.set(
+        await this.templateService.setRule(
+          campaign,
+          type,
+          value === AUTOMATIC_TEMPLATE_RULE ? null : value,
+        ),
+      );
+      toast.success(this.translateService.instant('settings.templates.rules.saved'));
+    } catch (error) {
+      toast.error(this.translateService.instant('settings.templates.rules.saveError'), {
+        description: error instanceof Error ? error.message : String(error),
+      });
+    }
+  }
+
+  private async loadTemplates(campaign: string): Promise<void> {
+    try {
+      const [library, rules] = await Promise.all([
+        this.templateService.list(),
+        this.templateService.getRules(campaign),
+      ]);
+      this.templates.set(library.rows);
+      this.templateTypes.set(library.types);
+      this.templateRules.set(rules);
+    } catch (error) {
+      console.warn('[app] Failed to load the templates:', campaign, error);
+    }
   }
 
   /** Label of the copy action of this page's files: to the compendium, or (inside a system) to a campaign. */

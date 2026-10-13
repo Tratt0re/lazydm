@@ -122,7 +122,11 @@ function isTemplatePath(relativePath) {
     return segments[1] === TEMPLATES_DIR_NAME && segments[0] !== COMPENDIUM_DIR_NAME;
   }
 
-  return segments.length === 4 && segments[0] === COMPENDIUM_DIR_NAME && segments[2] === TEMPLATES_DIR_NAME;
+  return (
+    segments.length === 4 &&
+    segments[0] === COMPENDIUM_DIR_NAME &&
+    segments[2] === TEMPLATES_DIR_NAME
+  );
 }
 
 async function listTemplateFiles(rootPath, folderPath) {
@@ -133,13 +137,20 @@ async function listTemplateFiles(rootPath, folderPath) {
 
   const entries = await fs.promises.readdir(absolutePath, { withFileTypes: true });
   return entries
-    .filter((entry) => entry.isFile() && entry.name.endsWith(MARKDOWN_EXTENSION) && !entry.name.startsWith('.'))
+    .filter(
+      (entry) =>
+        entry.isFile() && entry.name.endsWith(MARKDOWN_EXTENSION) && !entry.name.startsWith('.'),
+    )
     .map((entry) => `${folderPath}/${entry.name}`)
     .sort((left, right) => left.localeCompare(right));
 }
 
 function toTemplateRow(templatePath, source) {
-  return { path: templatePath, name: path.posix.basename(templatePath, MARKDOWN_EXTENSION), ...source };
+  return {
+    path: templatePath,
+    name: path.posix.basename(templatePath, MARKDOWN_EXTENSION),
+    ...source,
+  };
 }
 
 /** Every template of the vault: vault-level first, then each compendium system, then each campaign. */
@@ -152,7 +163,11 @@ async function listTemplates(rootPath) {
     const files = await listTemplateFiles(rootPath, `${system.path}/${TEMPLATES_DIR_NAME}`);
     rows.push(
       ...files.map((templatePath) =>
-        toTemplateRow(templatePath, { source: 'system', scope: system.path, scopeName: system.name }),
+        toTemplateRow(templatePath, {
+          source: 'system',
+          scope: system.path,
+          scopeName: system.name,
+        }),
       ),
     );
   }
@@ -161,7 +176,11 @@ async function listTemplates(rootPath) {
     const files = await listTemplateFiles(rootPath, `${campaign.slug}/${TEMPLATES_DIR_NAME}`);
     rows.push(
       ...files.map((templatePath) =>
-        toTemplateRow(templatePath, { source: 'campaign', scope: campaign.slug, scopeName: campaign.name }),
+        toTemplateRow(templatePath, {
+          source: 'campaign',
+          scope: campaign.slug,
+          scopeName: campaign.name,
+        }),
       ),
     );
   }
@@ -187,7 +206,8 @@ function readCampaignRules(rootPath, campaignSlug) {
 /** Updates the vault config with `update(campaigns)` on its `templates.campaigns` map (empty entries dropped). */
 function updateCampaignRules(rootPath, update) {
   const config = readVaultConfig(rootPath) ?? {};
-  const templates = config.templates && typeof config.templates === 'object' ? config.templates : {};
+  const templates =
+    config.templates && typeof config.templates === 'object' ? config.templates : {};
   const campaigns = { ...(templates.campaigns ?? {}) };
   update(campaigns);
   for (const [slug, rules] of Object.entries(campaigns)) {
@@ -238,7 +258,9 @@ function templateExists(rootPath, templatePath) {
 function getScopeOfFolder(folderPath) {
   const segments = folderPath.split('/').filter(Boolean);
   if (segments[0] === COMPENDIUM_DIR_NAME) {
-    return segments.length > 1 ? { kind: 'system', slug: segments[1], path: `${COMPENDIUM_DIR_NAME}/${segments[1]}` } : null;
+    return segments.length > 1
+      ? { kind: 'system', slug: segments[1], path: `${COMPENDIUM_DIR_NAME}/${segments[1]}` }
+      : null;
   }
 
   return segments.length > 0 ? { kind: 'campaign', slug: segments[0], path: segments[0] } : null;
@@ -284,7 +306,9 @@ async function readScopeName(rootPath, folderPath) {
   }
 
   const card =
-    scope.kind === 'system' ? await readSystem(rootPath, scope.slug) : await readCampaign(rootPath, scope.slug);
+    scope.kind === 'system'
+      ? await readSystem(rootPath, scope.slug)
+      : await readCampaign(rootPath, scope.slug);
   return card?.name ?? scope.slug;
 }
 

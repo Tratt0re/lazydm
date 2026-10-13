@@ -10,7 +10,9 @@ import { APP_SHEET_OUTLET, APP_SHEET_TITLE_ROUTE_DATA } from '@/services/app-she
 import { NOTE_SCOPE_ROUTE_DATA } from '@/services/note-scope.service';
 
 function matchSheetPaths(segments: UrlSegment[]): UrlMatchResult | null {
-  return ['compendium', 'settings'].includes(segments[0]?.path ?? '') ? { consumed: segments } : null;
+  return ['compendium', 'templates', 'settings'].includes(segments[0]?.path ?? '')
+    ? { consumed: segments }
+    : null;
 }
 
 /** The note pages of a compendium system, inside the Compendium sheet. */
@@ -82,6 +84,22 @@ export const routes: Routes = [
     ],
   },
   {
+    path: 'templates',
+    outlet: APP_SHEET_OUTLET,
+    canMatch: [vaultGuard],
+    data: { [APP_SHEET_TITLE_ROUTE_DATA]: 'nav.items.templates' },
+    loadComponent: () => import('./layout/app-sheet/app-sheet').then((m) => m.AppSheet),
+    children: [
+      {
+        path: '',
+        loadComponent: () =>
+          import('./pages/template-library-page/template-library-page').then(
+            (m) => m.TemplateLibraryPage,
+          ),
+      },
+    ],
+  },
+  {
     path: 'settings',
     outlet: APP_SHEET_OUTLET,
     canMatch: [vaultGuard],
@@ -104,7 +122,7 @@ export const routes: Routes = [
     canMatch: [vaultGuard],
     children: [
       { path: '', pathMatch: 'full', redirectTo: 'campaigns' },
-      // Compendium and Settings links open in the full-page sheet over the current page.
+      // Compendium, Templates and Settings links open in the full-page sheet over the current page.
       { matcher: matchSheetPaths, canActivate: [openInSheetGuard], children: [] },
       {
         path: 'campaigns',
