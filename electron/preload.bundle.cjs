@@ -1,7 +1,11 @@
 "use strict";
 var __getOwnPropNames = Object.getOwnPropertyNames;
 var __commonJS = (cb, mod) => function __require() {
-  return mod || (0, cb[__getOwnPropNames(cb)[0]])((mod = { exports: {} }).exports, mod), mod.exports;
+  try {
+    return mod || (0, cb[__getOwnPropNames(cb)[0]])((mod = { exports: {} }).exports, mod), mod.exports;
+  } catch (e) {
+    throw mod = 0, e;
+  }
 };
 
 // electron/ipc/channels.js
@@ -212,12 +216,12 @@ var require_package = __commonJS({
       },
       dependencies: {
         "@angular/cdk": "^21.1.4",
-        "@angular/common": "^21.1.0",
-        "@angular/compiler": "^21.1.0",
-        "@angular/core": "^21.1.0",
-        "@angular/forms": "^21.1.0",
-        "@angular/platform-browser": "^21.1.0",
-        "@angular/router": "^21.1.0",
+        "@angular/common": "^21.2.25",
+        "@angular/compiler": "^21.2.25",
+        "@angular/core": "^21.2.25",
+        "@angular/forms": "^21.2.25",
+        "@angular/platform-browser": "^21.2.25",
+        "@angular/router": "^21.2.25",
         "@codemirror/commands": "^6.11.1",
         "@codemirror/lang-markdown": "^6.5.2",
         "@codemirror/language": "^6.13.1",
@@ -250,7 +254,7 @@ var require_package = __commonJS({
       devDependencies: {
         "@angular/build": "^21.1.4",
         "@angular/cli": "^21.1.4",
-        "@angular/compiler-cli": "^21.1.0",
+        "@angular/compiler-cli": "^21.2.25",
         "@electron/rebuild": "^4.0.3",
         "@tailwindcss/postcss": "^4.1.18",
         "@types/semver": "^7.7.1",
