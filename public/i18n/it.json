@@ -207,7 +207,18 @@
       },
       "codeMap": {
         "label": "Mappa del codice",
-        "description": "Una piccola mappa di tutta la nota a destra, con i titoli H1–H3 come etichette. Clicca o trascina per scorrere, clicca un titolo per raggiungerlo."
+        "description": "Una mappa dell'intera nota a destra, nell'editor e nella vista Lettura: ogni elemento con il suo colore, i titoli H1–H3 come etichette. Clicca o trascina per scorrere, usa la rotella sopra, clicca un titolo per raggiungerlo.",
+        "legend": {
+          "heading": "Titoli",
+          "text": "Testo",
+          "list": "Elenchi",
+          "code": "Codice",
+          "quote": "Citazioni e callout",
+          "table": "Tabelle",
+          "embed": "Immagini e incorporati",
+          "frontmatter": "Proprietà",
+          "rule": "Separatori"
+        }
       },
       "lineNumbers": {
         "label": "Numeri di riga",

@@ -207,7 +207,18 @@
       },
       "codeMap": {
         "label": "Carte du code",
-        "description": "Une petite carte de toute la note à droite, avec les titres H1–H3 en étiquettes. Cliquez ou faites glisser pour défiler, cliquez sur un titre pour y aller."
+        "description": "Une carte de toute la note à droite, dans l'éditeur et en vue Lecture : chaque élément dans sa couleur, les titres H1–H3 en étiquettes. Cliquez ou faites glisser pour défiler, utilisez la molette dessus, cliquez sur un titre pour y aller.",
+        "legend": {
+          "heading": "Titres",
+          "text": "Texte",
+          "list": "Listes",
+          "code": "Code",
+          "quote": "Citations et callouts",
+          "table": "Tableaux",
+          "embed": "Images et intégrations",
+          "frontmatter": "Propriétés",
+          "rule": "Séparateurs"
+        }
       },
       "lineNumbers": {
         "label": "Numéros de ligne",

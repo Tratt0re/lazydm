@@ -207,7 +207,18 @@
       },
       "codeMap": {
         "label": "Mapa del código",
-        "description": "Un pequeño mapa de toda la nota a la derecha, con los títulos H1–H3 como etiquetas. Haz clic o arrastra para desplazarte, haz clic en un título para ir a él."
+        "description": "Un mapa de toda la nota a la derecha, en el editor y en la vista Lectura: cada elemento con su color, los títulos H1–H3 como etiquetas. Haz clic o arrastra para desplazarte, usa la rueda encima, haz clic en un título para ir a él.",
+        "legend": {
+          "heading": "Títulos",
+          "text": "Texto",
+          "list": "Listas",
+          "code": "Código",
+          "quote": "Citas y callouts",
+          "table": "Tablas",
+          "embed": "Imágenes e incrustaciones",
+          "frontmatter": "Propiedades",
+          "rule": "Separadores"
+        }
       },
       "lineNumbers": {
         "label": "Números de línea",

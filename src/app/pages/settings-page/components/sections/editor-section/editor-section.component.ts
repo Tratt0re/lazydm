@@ -2,6 +2,7 @@ import { NgTemplateOutlet } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 
+import { CODE_MAP_COLORS, type CodeMapKind } from '@/components/code-map/code-map';
 import {
   DOCUMENT_VIEW_MODES,
   type DocumentViewMode,
@@ -50,6 +51,11 @@ export class EditorSectionComponent {
   protected readonly settings = this.localPreferences.editorSettings;
   protected readonly textSizes = EDITOR_TEXT_SIZES;
   protected readonly viewModes = DOCUMENT_VIEW_MODES;
+  /** The code map's colours, shown under its switch. */
+  protected readonly codeMapLegend = (Object.keys(CODE_MAP_COLORS) as CodeMapKind[]).map((kind) => ({
+    kind,
+    color: `var(${CODE_MAP_COLORS[kind]})`,
+  }));
   protected readonly displayRows: readonly EditorFlagRow[] = [
     flagRow('codeMap'),
     flagRow('lineNumbers'),

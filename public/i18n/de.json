@@ -207,7 +207,18 @@
       },
       "codeMap": {
         "label": "Code-Map",
-        "description": "Eine kleine Karte der ganzen Notiz rechts, mit den Überschriften H1–H3 als Beschriftung. Klicken oder ziehen zum Scrollen, eine Überschrift anklicken, um hinzuspringen."
+        "description": "Eine Karte der ganzen Notiz rechts, im Editor und in der Leseansicht: jedes Element in eigener Farbe, H1–H3 als Beschriftung. Klicken oder ziehen zum Scrollen, Mausrad darüber nutzen, eine Überschrift anklicken, um hinzuspringen.",
+        "legend": {
+          "heading": "Überschriften",
+          "text": "Text",
+          "list": "Listen",
+          "code": "Code",
+          "quote": "Zitate & Callouts",
+          "table": "Tabellen",
+          "embed": "Bilder & Einbettungen",
+          "frontmatter": "Eigenschaften",
+          "rule": "Trennlinien"
+        }
       },
       "lineNumbers": {
         "label": "Zeilennummern",

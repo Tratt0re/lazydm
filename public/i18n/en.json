@@ -207,7 +207,18 @@
       },
       "codeMap": {
         "label": "Code map",
-        "description": "A small map of the whole note on the right, with H1–H3 headings as labels. Click or drag it to scroll, click a heading to jump to it."
+        "description": "A map of the whole note on the right, in the editor and in Reading view: each element in its own colour, H1–H3 as labels. Click or drag it to scroll, use the wheel over it, click a heading to jump to it.",
+        "legend": {
+          "heading": "Headings",
+          "text": "Text",
+          "list": "Lists",
+          "code": "Code",
+          "quote": "Quotes & callouts",
+          "table": "Tables",
+          "embed": "Images & embeds",
+          "frontmatter": "Properties",
+          "rule": "Rules"
+        }
       },
       "lineNumbers": {
         "label": "Line numbers",
