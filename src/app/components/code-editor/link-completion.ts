@@ -74,7 +74,12 @@ function linkCompletions(context: CompletionContext): CompletionResult | null {
       filter: false,
       options: rankTargets(targets, context.state.sliceDoc(from, context.pos), isEmbed).map(
         (target) =>
-          toOption(target, scopePrefix, getWikilinkTarget(target, scopePrefix, duplicateNames), ']]'),
+          toOption(
+            target,
+            scopePrefix,
+            getWikilinkTarget(target, scopePrefix, duplicateNames),
+            ']]',
+          ),
       ),
     };
   }
@@ -105,7 +110,9 @@ function toOption(
 ): Completion {
   return {
     label: target.title || target.name,
-    detail: target.path.startsWith(scopePrefix) ? target.path.slice(scopePrefix.length) : target.path,
+    detail: target.path.startsWith(scopePrefix)
+      ? target.path.slice(scopePrefix.length)
+      : target.path,
     apply: (view, completion, from, to) => {
       const hasClosing = view.state.sliceDoc(to, to + closing.length) === closing;
       const insert = hasClosing ? linkTarget : `${linkTarget}${closing}`;

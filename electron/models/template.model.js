@@ -210,7 +210,10 @@ function readCampaignRules(rootPath, campaignSlug) {
     return {};
   }
 
-  const types = new Set([...TEMPLATE_NOTE_TYPES, ...listCampaignTemplateTypes(rootPath, campaignSlug)]);
+  const types = new Set([
+    ...TEMPLATE_NOTE_TYPES,
+    ...listCampaignTemplateTypes(rootPath, campaignSlug),
+  ]);
   return Object.fromEntries(
     Object.entries(rules).filter(
       ([type, value]) => types.has(type) && (value === BUILT_IN_RULE || isTemplatePath(value)),

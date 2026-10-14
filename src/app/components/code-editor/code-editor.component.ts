@@ -42,7 +42,8 @@ export interface CodeEditorBrokenLinkEvent {
 }
 
 /** Links of the live preview and of its rendered blocks (tables, callouts). */
-const LIVE_LINK_SELECTOR = '.cm-lp-link, .cm-lp-block a[data-route], .cm-lp-block [data-broken-raw]';
+const LIVE_LINK_SELECTOR =
+  '.cm-lp-link, .cm-lp-block a[data-route], .cm-lp-block [data-broken-raw]';
 
 /**
  * Wraps CodeMirror 6 as the markdown editor, in live preview (default) or source mode. Colours come

@@ -31,7 +31,9 @@ function escapeRegExp(text) {
 /** Campaign folders and compendium systems (`lost-mine`, `compendium/dnd-5e`): where sections live. */
 async function listScopeDirs(rootPath) {
   const scopes = [];
-  const rootEntries = await fs.promises.readdir(resolveInsideVault(rootPath), { withFileTypes: true });
+  const rootEntries = await fs.promises.readdir(resolveInsideVault(rootPath), {
+    withFileTypes: true,
+  });
   for (const entry of rootEntries) {
     if (entry.isDirectory() && isCampaignDirName(entry.name)) {
       scopes.push(entry.name);
@@ -205,10 +207,18 @@ async function migrateVault(rootPath) {
 
   for (const rename of RENAMED_SECTIONS) {
     for (const scopeDir of scopeDirs) {
-      await moveFolder(rootPath, `${scopeDir}/${rename.fromDir}`, `${scopeDir}/${rename.toDir}`, report);
+      await moveFolder(
+        rootPath,
+        `${scopeDir}/${rename.fromDir}`,
+        `${scopeDir}/${rename.toDir}`,
+        report,
+      );
     }
 
-    const templateDirs = [TEMPLATES_DIR_NAME, ...scopeDirs.map((dir) => `${dir}/${TEMPLATES_DIR_NAME}`)];
+    const templateDirs = [
+      TEMPLATES_DIR_NAME,
+      ...scopeDirs.map((dir) => `${dir}/${TEMPLATES_DIR_NAME}`),
+    ];
     for (const templatesDir of templateDirs) {
       renameTemplateFile(rootPath, templatesDir, rename, report, renamedTemplates);
     }

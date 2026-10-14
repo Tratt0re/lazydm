@@ -53,7 +53,10 @@ async function list(payload) {
   const isDirect = normalizeOptionalBooleanFlag(body.direct, 'payload.direct') ?? false;
   const prefix = `${folder.replace(/\/+$/, '')}/`;
   const files = indexerController.isOpen() ? vaultIndexModel.listFolderFiles(folder) : [];
-  const subfolders = await documentModel.listSubfolders(vaultController.getReadyVaultPath(), folder);
+  const subfolders = await documentModel.listSubfolders(
+    vaultController.getReadyVaultPath(),
+    folder,
+  );
 
   return {
     rows: isDirect ? files.filter((file) => !file.path.slice(prefix.length).includes('/')) : files,
@@ -96,21 +99,29 @@ async function createFolder(payload) {
     throw new Error('payload.name must contain at least one letter or number.');
   }
 
-  return { path: await documentModel.createFolder(vaultPath, `${location.scope}/${section.key}/${slug}`), name: slug };
+  return {
+    path: await documentModel.createFolder(vaultPath, `${location.scope}/${section.key}/${slug}`),
+    name: slug,
+  };
 }
 
 /** `type` and `subtype` of a note's frontmatter (no sub-type removes it), the rest of the file kept. */
 function withTypeAndSubtype(content, type, subtype) {
   const typed = setFrontmatterField(content, 'type', type);
-  return subtype ? setFrontmatterField(typed, 'subtype', subtype) : removeFrontmatterField(typed, 'subtype');
+  return subtype
+    ? setFrontmatterField(typed, 'subtype', subtype)
+    : removeFrontmatterField(typed, 'subtype');
 }
 
 /** Review fix: sets a note's type and sub-type (frontmatter only; conflict-checked like a save). */
 async function setType(payload) {
   const body = ensurePlainObject(payload, 'payload');
   const relativePath = requirePath(body);
-  const type = requireString(body.type, 'payload.type', { maxLength: DOCUMENT_TYPE_MAX_LENGTH }).toLocaleLowerCase();
-  const subtype = normalizeOptionalString(body.subtype, 'payload.subtype', { allowNull: true }) || null;
+  const type = requireString(body.type, 'payload.type', {
+    maxLength: DOCUMENT_TYPE_MAX_LENGTH,
+  }).toLocaleLowerCase();
+  const subtype =
+    normalizeOptionalString(body.subtype, 'payload.subtype', { allowNull: true }) || null;
   const vaultPath = vaultController.getReadyVaultPath();
   const current = await documentModel.readDocument(vaultPath, relativePath);
   const content = withTypeAndSubtype(current.content, type, subtype);
@@ -118,7 +129,12 @@ async function setType(payload) {
     return { path: relativePath };
   }
 
-  const result = await documentModel.writeDocument(vaultPath, relativePath, content, current.contentHash);
+  const result = await documentModel.writeDocument(
+    vaultPath,
+    relativePath,
+    content,
+    current.contentHash,
+  );
   if (result.status !== 'saved') {
     throw new Error(`${relativePath} changed meanwhile, so it was not updated.`);
   }

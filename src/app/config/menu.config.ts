@@ -8,6 +8,8 @@ export interface MenuItemConfig {
   readonly icon: ArcTechIcon;
   readonly path: string;
   readonly exact?: boolean;
+  /** Set for a campaign section: lets the sidebar show it as a collapsible folder tree. */
+  readonly sectionKey?: string;
 }
 
 export interface MenuSectionConfig {
@@ -23,6 +25,7 @@ function toSectionMenuItem(section: AppSection, basePath: string): MenuItemConfi
     translate: section.customLabel === null,
     icon: section.icon,
     path: `${basePath}/${section.key}`,
+    sectionKey: section.key,
   };
 }
 

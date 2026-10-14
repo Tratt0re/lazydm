@@ -615,5 +615,9 @@
       "submit": "Añadir sección",
       "done": "{{name}} añadida a las secciones"
     }
+  },
+  "sidebar": {
+    "collapseSection": "Contraer {{section}}",
+    "expandSection": "Ver archivos de {{section}}"
   }
 }

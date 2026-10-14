@@ -11,11 +11,7 @@ import { BrokenLinksPage } from '@/pages/broken-links-page/broken-links-page';
 import { DocumentService } from '@/services/document.service';
 import { getNoteScopeKind, NoteScopeService } from '@/services/note-scope.service';
 import { countReviewItems, ReviewService } from '@/services/review.service';
-import {
-  CUSTOM_SECTION_ICONS,
-  SectionService,
-  toSubfolderLabel,
-} from '@/services/section.service';
+import { CUSTOM_SECTION_ICONS, SectionService, toSubfolderLabel } from '@/services/section.service';
 import { ToolbarContextService } from '@/services/toolbar-context.service';
 import { WorkspaceService } from '@/services/workspace.service';
 import { ArcTechAlertComponent } from '@/shared/components/alert';
@@ -275,7 +271,10 @@ export class ReviewPage {
     const fixes = notes.map((note) => this.folderFix(note));
     const preview = fixes
       .slice(0, FIX_ALL_PREVIEW_MAX)
-      .map((fix) => `• ${fix.note.path} → type: ${fix.type}${fix.subtype ? `, subtype: ${fix.subtype}` : ''}`)
+      .map(
+        (fix) =>
+          `• ${fix.note.path} → type: ${fix.type}${fix.subtype ? `, subtype: ${fix.subtype}` : ''}`,
+      )
       .join('\n');
     const more = fixes.length - FIX_ALL_PREVIEW_MAX;
 
@@ -368,7 +367,9 @@ export class ReviewPage {
   ): Promise<boolean> {
     try {
       await this.sectionService.addCustomSection(campaign, section);
-      toast.success(this.translateService.instant('review.addSection.done', { name: section.label }));
+      toast.success(
+        this.translateService.instant('review.addSection.done', { name: section.label }),
+      );
       this.reload();
       return true;
     } catch (error) {

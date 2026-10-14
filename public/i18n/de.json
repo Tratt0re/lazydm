@@ -615,5 +615,9 @@
       "submit": "Bereich hinzufügen",
       "done": "{{name}} zu den Bereichen hinzugefügt"
     }
+  },
+  "sidebar": {
+    "collapseSection": "{{section}} zuklappen",
+    "expandSection": "Dateien in {{section}} anzeigen"
   }
 }

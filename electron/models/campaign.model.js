@@ -12,7 +12,10 @@ const CAMPAIGN_SECTION_DIR_NAMES = Object.freeze(DEFAULT_SECTIONS.map((section) 
 /** Folder a note of a given `type` goes to by default (campaigns and compendium systems share these names). */
 const NOTE_TYPE_DIR_NAMES = Object.freeze(
   Object.fromEntries(
-    DEFAULT_SECTIONS.filter((section) => section.type).map((section) => [section.type, section.key]),
+    DEFAULT_SECTIONS.filter((section) => section.type).map((section) => [
+      section.type,
+      section.key,
+    ]),
   ),
 );
 

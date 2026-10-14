@@ -615,5 +615,9 @@
       "submit": "Додати розділ",
       "done": "{{name}} додано до розділів"
     }
+  },
+  "sidebar": {
+    "collapseSection": "Згорнути {{section}}",
+    "expandSection": "Показати файли у {{section}}"
   }
 }

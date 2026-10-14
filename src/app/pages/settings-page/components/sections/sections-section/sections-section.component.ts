@@ -1,4 +1,10 @@
-import { CdkDrag, type CdkDragDrop, CdkDragHandle, CdkDropList, moveItemInArray } from '@angular/cdk/drag-drop';
+import {
+  CdkDrag,
+  type CdkDragDrop,
+  CdkDragHandle,
+  CdkDropList,
+  moveItemInArray,
+} from '@angular/cdk/drag-drop';
 import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { toast } from 'ngx-sonner';
@@ -7,11 +13,7 @@ import { AppSheetFormService } from '@/components/sheet-form/sheet-form.service'
 import type { CustomSectionPayload, SectionSettingsPayload } from '@/dtos';
 import { AppSheetService } from '@/services/app-sheet.service';
 import { CampaignService } from '@/services/campaign.service';
-import {
-  type AppSection,
-  CUSTOM_SECTION_ICONS,
-  SectionService,
-} from '@/services/section.service';
+import { type AppSection, CUSTOM_SECTION_ICONS, SectionService } from '@/services/section.service';
 import { ArcTechAlertComponent } from '@/shared/components/alert';
 import { ArcTechAlertDialogService } from '@/shared/components/alert-dialog';
 import { ArcTechButtonComponent } from '@/shared/components/button';

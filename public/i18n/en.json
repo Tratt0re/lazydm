@@ -615,5 +615,9 @@
       "submit": "Add section",
       "done": "{{name}} added to the sections"
     }
+  },
+  "sidebar": {
+    "collapseSection": "Collapse {{section}}",
+    "expandSection": "Show files in {{section}}"
   }
 }

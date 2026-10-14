@@ -36,29 +36,111 @@
 
             @for (item of section.items; track item.path) {
               @let itemLabel = item.translate === false ? item.label : (item.label | translate);
-              <a
-                [routerLink]="item.path"
-                (click)="onMenuItemClick()"
-                [attr.tabindex]="isSmallScreenCollapsed() ? -1 : null"
-                routerLinkActive=""
-                [routerLinkActiveOptions]="{ exact: item.exact ?? false }"
-                #routeLinkActive="routerLinkActive"
-                [arcTooltip]="sidebarCollapsed() ? itemLabel : null"
-                arcPosition="right"
-                [attr.aria-label]="itemLabel"
-                [class]="navItemClasses(routeLinkActive.isActive)"
-              >
-                <arc-icon [arcType]="item.icon" class="size-4 shrink-0" />
-                <span
-                  [class]="
-                    'overflow-hidden whitespace-nowrap transition-[opacity,width] duration-200 ease-out ' +
-                    (sidebarCollapsed() ? 'w-0 opacity-0' : 'w-auto opacity-100')
-                  "
-                  [attr.aria-hidden]="sidebarCollapsed()"
+              @let isSection = !!item.sectionKey && !sidebarCollapsed();
+              @let isSectionExpanded = isSection && isExpanded(item.sectionKey!);
+              <div class="flex items-center gap-1">
+                <a
+                  [routerLink]="item.path"
+                  (click)="onMenuItemClick()"
+                  [attr.tabindex]="isSmallScreenCollapsed() ? -1 : null"
+                  routerLinkActive=""
+                  [routerLinkActiveOptions]="{ exact: item.exact ?? false }"
+                  #routeLinkActive="routerLinkActive"
+                  [arcTooltip]="sidebarCollapsed() ? itemLabel : null"
+                  arcPosition="right"
+                  [attr.aria-label]="itemLabel"
+                  [class]="navItemClasses(routeLinkActive.isActive) + ' min-w-0 flex-1'"
                 >
-                  {{ itemLabel }}
-                </span>
-              </a>
+                  <arc-icon [arcType]="item.icon" class="size-4 shrink-0" />
+                  <span
+                    [class]="
+                      'overflow-hidden whitespace-nowrap transition-[opacity,width] duration-200 ease-out ' +
+                      (sidebarCollapsed() ? 'w-0 opacity-0' : 'w-auto opacity-100')
+                    "
+                    [attr.aria-hidden]="sidebarCollapsed()"
+                  >
+                    {{ itemLabel }}
+                  </span>
+                </a>
+                @if (isSection) {
+                  <button
+                    type="button"
+                    class="flex size-10 shrink-0 items-center justify-center text-sidebar-foreground transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+                    [attr.aria-expanded]="isSectionExpanded"
+                    [attr.aria-label]="
+                      (isSectionExpanded ? 'sidebar.collapseSection' : 'sidebar.expandSection')
+                        | translate: { section: itemLabel }
+                    "
+                    (click)="toggleSection(item)"
+                  >
+                    <arc-icon [arcType]="isSectionExpanded ? 'chevron-down' : 'chevron-right'" class="size-4" />
+                  </button>
+                }
+              </div>
+
+              @if (isSectionExpanded) {
+                <div class="mb-1 flex flex-col gap-0.5 border-l border-sidebar-border pl-3">
+                  @for (folder of sectionFolders(item.sectionKey!); track folder.name) {
+                    @let folderKey = item.sectionKey + '/' + folder.name;
+                    @let isFolderExpanded = isExpanded(folderKey);
+                    <div class="flex items-center gap-1">
+                      <button
+                        type="button"
+                        class="flex size-7 shrink-0 items-center justify-center text-sidebar-foreground transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+                        [attr.aria-expanded]="isFolderExpanded"
+                        [attr.aria-label]="
+                          (isFolderExpanded ? 'campaigns.sections.collapseFolder' : 'campaigns.sections.expandFolder')
+                            | translate: { folder: toSubfolderLabel(folder.name) }
+                        "
+                        (click)="toggleFolder(item.sectionKey!, folder.name)"
+                      >
+                        <arc-icon [arcType]="isFolderExpanded ? 'chevron-down' : 'chevron-right'" class="size-3.5" />
+                      </button>
+                      <a
+                        [routerLink]="item.path"
+                        [queryParams]="{ folder: folder.name }"
+                        (click)="onMenuItemClick()"
+                        routerLinkActive=""
+                        #folderLinkActive="routerLinkActive"
+                        [class]="navItemClasses(folderLinkActive.isActive) + ' h-8 min-w-0 flex-1 gap-2 text-[10px]'"
+                      >
+                        <arc-icon arcType="folder" class="size-3.5 shrink-0" />
+                        <span class="truncate">{{ toSubfolderLabel(folder.name) }}</span>
+                      </a>
+                    </div>
+
+                    @if (isFolderExpanded) {
+                      <div class="flex flex-col gap-0.5 border-l border-sidebar-border pl-5">
+                        @for (file of folder.files; track file.path) {
+                          <a
+                            [routerLink]="noteRoute(file)"
+                            (click)="onMenuItemClick()"
+                            routerLinkActive=""
+                            #fileLinkActive="routerLinkActive"
+                            [class]="navItemClasses(fileLinkActive.isActive) + ' h-8 min-w-0 gap-2 text-[10px]'"
+                          >
+                            <arc-icon [arcType]="file.kind === 'md' ? 'file-text' : 'image'" class="size-3.5 shrink-0" />
+                            <span class="truncate">{{ file.kind === 'md' ? file.title : file.name }}</span>
+                          </a>
+                        }
+                      </div>
+                    }
+                  }
+
+                  @for (file of sectionFiles(item.sectionKey!); track file.path) {
+                    <a
+                      [routerLink]="noteRoute(file)"
+                      (click)="onMenuItemClick()"
+                      routerLinkActive=""
+                      #rootFileLinkActive="routerLinkActive"
+                      [class]="navItemClasses(rootFileLinkActive.isActive) + ' h-8 min-w-0 gap-2 pl-9 text-[10px]'"
+                    >
+                      <arc-icon [arcType]="file.kind === 'md' ? 'file-text' : 'image'" class="size-3.5 shrink-0" />
+                      <span class="truncate">{{ file.kind === 'md' ? file.title : file.name }}</span>
+                    </a>
+                  }
+                </div>
+              }
             }
           </arc-sidebar-group>
         }
