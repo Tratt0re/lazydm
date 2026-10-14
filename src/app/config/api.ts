@@ -52,7 +52,7 @@ export interface ElectronIpcClient {
     readonly remove: IpcRequest<{ slug: string }, { slug: string }>;
   };
   readonly documents: {
-    readonly list: IpcRequest<DTO.ListDocumentsPayload, { rows: DTO.DocumentFileListItemDto[] }>;
+    readonly list: IpcRequest<DTO.ListDocumentsPayload, DTO.ListDocumentsResultDto>;
     readonly read: IpcRequest<DTO.ReadDocumentPayload, DTO.DocumentDto>;
     readonly write: IpcRequest<DTO.WriteDocumentPayload, DTO.WriteDocumentResultDto>;
     readonly saveCopy: IpcRequest<DTO.SaveDocumentCopyPayload, DTO.DocumentDto>;
@@ -63,6 +63,7 @@ export interface ElectronIpcClient {
     readonly brokenLinks: IpcRequest<{ campaign: string }, { rows: DTO.BrokenLinkDto[] }>;
     readonly unlink: IpcRequest<DTO.UnlinkPayload, { path: string; linkCount: number }>;
     readonly createFromLink: IpcRequest<DTO.CreateFromLinkPayload, DTO.DocumentDto>;
+    readonly createFolder: IpcRequest<{ folder: string; name: string }, { path: string; name: string }>;
     readonly copy: IpcRequest<DTO.CopyDocumentPayload, DTO.CopyDocumentResultDto>;
     readonly copyPlan: IpcRequest<{ path: string; target: string }, DTO.CopyPlanDto>;
   };

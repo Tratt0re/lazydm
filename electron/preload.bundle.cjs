@@ -50,6 +50,7 @@ var require_channels = __commonJS({
         brokenLinks: "documents:brokenLinks",
         unlink: "documents:unlink",
         createFromLink: "documents:createFromLink",
+        createFolder: "documents:createFolder",
         copy: "documents:copy",
         copyPlan: "documents:copyPlan"
       }),

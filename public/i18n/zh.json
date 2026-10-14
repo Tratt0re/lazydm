@@ -330,7 +330,18 @@
         "label": "模板",
         "ariaLabel": "此分区新笔记使用的模板"
       },
-      "customDescription": "你自己的分区。"
+      "customDescription": "你自己的分区。",
+      "newFolder": {
+        "button": "新建文件夹",
+        "title": "新建文件夹",
+        "description": "{{section}} 的子文件夹：其名称会成为其中笔记的子类型（frontmatter 中的 subtype:）。仅限一层。",
+        "nameLabel": "名称",
+        "namePlaceholder": "例如：人类",
+        "submit": "创建文件夹",
+        "error": "无法创建文件夹"
+      },
+      "folderFiles": "{{count}} 个文件",
+      "foldersAriaLabel": "子文件夹"
     }
   },
   "document": {

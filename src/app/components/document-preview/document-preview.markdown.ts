@@ -68,6 +68,8 @@ export interface VaultFileLocation {
   /** In-app route of the scope: `/campaigns/lost-mine` or `/compendium/my-system`. */
   readonly scopeRoute: string;
   readonly section: string;
+  /** Sub-folder of the section (the note's sub-type), null directly in the section. */
+  readonly subfolder: string | null;
   /** File name without `.md` for notes, with its extension for other files. */
   readonly name: string;
   readonly isNote: boolean;
@@ -77,17 +79,20 @@ export interface VaultFileLocation {
 export function parseVaultFilePath(path: string): VaultFileLocation | null {
   const segments = path.split('/');
   const isCompendium = segments[0] === COMPENDIUM_DIR_NAME;
-  if (segments.length !== (isCompendium ? 4 : 3)) {
+  const scopeDepth = isCompendium ? 2 : 1;
+  // `<scope>/<section>/<file>` or one sub-folder deeper; deeper files are not shown by the app.
+  if (segments.length !== scopeDepth + 2 && segments.length !== scopeDepth + 3) {
     return null;
   }
 
-  const [section, fileName] = segments.slice(-2);
-  const scopePath = segments.slice(0, -2).join('/');
+  const scopePath = segments.slice(0, scopeDepth).join('/');
+  const fileName = segments[segments.length - 1];
   const isNote = fileName.toLocaleLowerCase().endsWith('.md');
   return {
     scopePath,
     scopeRoute: isCompendium ? `/${scopePath}` : `/campaigns/${scopePath}`,
-    section,
+    section: segments[scopeDepth],
+    subfolder: segments.length === scopeDepth + 3 ? segments[scopeDepth + 1] : null,
     name: isNote ? fileName.slice(0, -'.md'.length) : fileName,
     isNote,
   };
@@ -96,7 +101,12 @@ export function parseVaultFilePath(path: string): VaultFileLocation | null {
 /** In-app route of a note of a campaign or of a compendium system, null for anything else. */
 export function toInAppNoteRoute(resolvedPath: string): string | null {
   const location = parseVaultFilePath(resolvedPath);
-  return location?.isNote ? `${location.scopeRoute}/${location.section}/${location.name}` : null;
+  if (!location?.isNote) {
+    return null;
+  }
+
+  const folder = location.subfolder ? `${location.section}/${location.subfolder}` : location.section;
+  return `${location.scopeRoute}/${folder}/${location.name}`;
 }
 
 function renderWikilinkToken(token: Token): string {

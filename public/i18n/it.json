@@ -330,7 +330,18 @@
         "label": "Modello",
         "ariaLabel": "Modello per le nuove note di questa sezione"
       },
-      "customDescription": "Una sezione tutta tua."
+      "customDescription": "Una sezione tutta tua.",
+      "newFolder": {
+        "button": "Nuova cartella",
+        "title": "Nuova cartella",
+        "description": "Una sottocartella di {{section}}: il suo nome diventa il sottotipo delle note che contiene (subtype: nel frontmatter). Un solo livello.",
+        "nameLabel": "Nome",
+        "namePlaceholder": "es. Umani",
+        "submit": "Crea cartella",
+        "error": "Impossibile creare la cartella"
+      },
+      "folderFiles": "{{count}} file",
+      "foldersAriaLabel": "Sottocartelle"
     }
   },
   "document": {

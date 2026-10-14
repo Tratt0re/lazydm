@@ -73,6 +73,10 @@ LazyDM works like **Obsidian**, specialised for Dungeon Masters.
   the sub-folder slug). New notes created inside a sub-folder get both. Sub-folders share the section's template
   (one template per section; per-sub-type templates may come later). Deeper folders are **ignored** (their files
   are not listed in sections) and reported (see *Review* below).
+  The section page lists its sub-folders (with file counts) above its notes; a sub-folder opens on the same page
+  (`/<section>?folder=<name>`, breadcrumb `CAMPAIGN / SECTION /`), where *New note* creates notes in it and *New
+  folder* is not offered (one level). A note in a sub-folder opens at `/<section>/<sub-folder>/<note>` with the
+  breadcrumb `CAMPAIGN / SECTION / SUB-FOLDER /`. Sections without notes (assets) have no sub-folders.
 - **Enemies** (formerly *Monsters*): folder `enemies/`, type `enemy`. `type: monster` is still read as `enemy`, so
   old files coming back through sync are not misplaced. A one-time migration (vault format version in
   `vault.json`) renames `monsters/` → `enemies/` in campaigns and systems and rewrites `type:`, the template rules,

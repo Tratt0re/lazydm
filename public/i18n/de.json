@@ -330,7 +330,18 @@
         "label": "Vorlage",
         "ariaLabel": "Vorlage für neue Notizen in diesem Bereich"
       },
-      "customDescription": "Ein eigener Bereich."
+      "customDescription": "Ein eigener Bereich.",
+      "newFolder": {
+        "button": "Neuer Ordner",
+        "title": "Neuer Ordner",
+        "description": "Ein Unterordner von {{section}}: Sein Name wird zum Untertyp der Notizen darin (subtype: im Frontmatter). Nur eine Ebene.",
+        "nameLabel": "Name",
+        "namePlaceholder": "z. B. Menschen",
+        "submit": "Ordner erstellen",
+        "error": "Der Ordner konnte nicht erstellt werden"
+      },
+      "folderFiles": "{{count}} Dateien",
+      "foldersAriaLabel": "Unterordner"
     }
   },
   "document": {

@@ -10,6 +10,7 @@ import type {
   CreateFromLinkPayload,
   DocumentDto,
   DocumentFileListItemDto,
+  DocumentFolderDto,
   DocumentLinksDto,
   LinkTargetDto,
   RenameDocumentPayload,
@@ -32,6 +33,20 @@ export class DocumentService extends BaseIpcService<APIChannel.DOCUMENTS> {
   async listFolder(folder: string): Promise<readonly DocumentFileListItemDto[]> {
     const { rows } = await this.ipcClient.list({ folder });
     return rows;
+  }
+
+  /** Files directly in a folder and its sub-folders (a section's sub-types), for the section page. */
+  async listFolderEntries(folder: string): Promise<{
+    files: readonly DocumentFileListItemDto[];
+    folders: readonly DocumentFolderDto[];
+  }> {
+    const { rows, folders } = await this.ipcClient.list({ folder, direct: true });
+    return { files: rows, folders };
+  }
+
+  /** New sub-folder of a section (`name` is turned into the folder slug); returns its slug. */
+  async createFolder(folder: string, name: string): Promise<string> {
+    return (await this.ipcClient.createFolder({ folder, name })).name;
   }
 
   read(path: string): Promise<DocumentDto> {

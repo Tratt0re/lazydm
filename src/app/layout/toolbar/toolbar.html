@@ -19,7 +19,11 @@
                   @for (item of titleBreadcrumbs(); track item.path ?? item.label) {
                     <li class="flex min-w-0 items-center gap-1.5">
                       @if (item.path) {
-                        <a [routerLink]="item.path" class="truncate transition-colors hover:text-primary">
+                        <a
+                          [routerLink]="item.path"
+                          [queryParams]="item.queryParams ?? null"
+                          class="truncate transition-colors hover:text-primary"
+                        >
                           {{ isBreadcrumbLabelTranslated(item) ? (item.label | translate) : item.label }}
                         </a>
                       } @else {

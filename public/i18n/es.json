@@ -330,7 +330,18 @@
         "label": "Plantilla",
         "ariaLabel": "Plantilla para las notas nuevas de esta sección"
       },
-      "customDescription": "Una sección propia."
+      "customDescription": "Una sección propia.",
+      "newFolder": {
+        "button": "Nueva carpeta",
+        "title": "Nueva carpeta",
+        "description": "Una subcarpeta de {{section}}: su nombre se convierte en el subtipo de las notas que contiene (subtype: en el frontmatter). Un solo nivel.",
+        "nameLabel": "Nombre",
+        "namePlaceholder": "p. ej. Humanos",
+        "submit": "Crear carpeta",
+        "error": "No se pudo crear la carpeta"
+      },
+      "folderFiles": "{{count}} archivos",
+      "foldersAriaLabel": "Subcarpetas"
     }
   },
   "document": {

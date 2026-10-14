@@ -30,6 +30,7 @@ const RESERVED_NOTE_TYPES = Object.freeze(['campaign', 'system', 'monster']);
 const SECTION_LABEL_MAX_LENGTH = 40;
 const CUSTOM_SECTIONS_MAX = 30;
 const DEFAULT_CUSTOM_ICON = 'folder';
+const COMPENDIUM_DIR_NAME = 'compendium';
 
 function isPlainObject(value) {
   return Boolean(value) && typeof value === 'object' && !Array.isArray(value);
@@ -96,7 +97,9 @@ function listCampaignSections(rootPath, campaignSlug) {
 
   return sections
     .map((section, index) => ({ section, index }))
-    .sort((left, right) => rank(left.section.key) - rank(right.section.key) || left.index - right.index)
+    .sort(
+      (left, right) => rank(left.section.key) - rank(right.section.key) || left.index - right.index,
+    )
     .map(({ section }) => ({ ...section, isHidden: settings.hidden.includes(section.key) }));
 }
 
@@ -222,6 +225,32 @@ function findSectionKeyForType(rootPath, scope, type) {
   return sections.find((section) => section.type === type)?.key ?? null;
 }
 
+/**
+ * Where a folder sits in the section layout: `<scope>/<section>` or one sub-folder below it,
+ * `<scope>/<section>/<sub-folder>` (scope: a campaign or `compendium/<system>`). Null for anything else
+ * (vault root, scope root, deeper folders).
+ */
+function parseSectionFolder(folderPath) {
+  const segments = String(folderPath ?? '').replace(/\/+$/, '').split('/').filter(Boolean);
+  const depth = segments[0] === COMPENDIUM_DIR_NAME ? 2 : 1;
+  if (segments.length !== depth + 1 && segments.length !== depth + 2) {
+    return null;
+  }
+
+  return {
+    scope: segments.slice(0, depth).join('/'),
+    section: segments[depth],
+    subfolder: segments[depth + 1] ?? null,
+  };
+}
+
+/** Sections of a scope: a campaign's (custom ones included) or a compendium system's (defaults and `notes/`). */
+function listScopeSections(rootPath, scope) {
+  return scope.includes('/')
+    ? [...DEFAULT_SECTIONS, ...COMPENDIUM_EXTRA_SECTIONS]
+    : listCampaignSections(rootPath, scope);
+}
+
 module.exports = {
   COMPENDIUM_EXTRA_SECTIONS,
   DEFAULT_SECTIONS,
@@ -229,6 +258,8 @@ module.exports = {
   listCampaignNoteTypes,
   listCampaignSections,
   listNoteTypes,
+  listScopeSections,
+  parseSectionFolder,
   readCampaignSectionSettings,
   saveCampaignSectionSettings,
 };

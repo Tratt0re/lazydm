@@ -7,7 +7,7 @@ const {
   resolveInsideVault,
   safeWriteFileAtomic,
 } = require('../utils/file-utils');
-const { parseMarkdownDocument } = require('../utils/markdown-parse');
+const { parseMarkdownDocument, setFrontmatterField } = require('../utils/markdown-parse');
 const templateModel = require('./template.model');
 
 const MARKDOWN_EXTENSION = '.md';
@@ -128,7 +128,7 @@ function buildDefaultNote(type, title) {
  * Creates `<folder>/<slug>.md` from the template of its type (see `templateModel.resolveTemplate`), or with
  * a minimal frontmatter when the type has none. `section` is the folder's display name for `{{section}}`.
  */
-async function createDocument(rootPath, { folderPath, slug, title, type, section }) {
+async function createDocument(rootPath, { folderPath, slug, title, type, section, subtype = null }) {
   const relativePath = `${folderPath.replace(/\/+$/, '')}/${slug}${MARKDOWN_EXTENSION}`;
   const absolutePath = resolveInsideVault(rootPath, relativePath);
   if (fs.existsSync(absolutePath)) {
@@ -146,14 +146,46 @@ async function createDocument(rootPath, { folderPath, slug, title, type, section
           section: section || path.posix.basename(folderPath),
         });
   await fs.promises.mkdir(path.dirname(absolutePath), { recursive: true });
-  safeWriteFileAtomic(absolutePath, content);
+  // A note created in a sub-folder of its section gets the sub-folder as its sub-type.
+  safeWriteFileAtomic(absolutePath, subtype ? setFrontmatterField(content, 'subtype', subtype) : content);
 
   return readDocument(rootPath, relativePath);
+}
+
+/** Sub-folders of a vault folder (hidden and `_` folders left out), by name; none when it does not exist yet. */
+async function listSubfolders(rootPath, folderPath) {
+  try {
+    const entries = await fs.promises.readdir(resolveInsideVault(rootPath, folderPath), {
+      withFileTypes: true,
+    });
+    return entries
+      .filter((entry) => entry.isDirectory() && !/^[._]/.test(entry.name))
+      .map((entry) => entry.name)
+      .sort((left, right) => left.localeCompare(right));
+  } catch (error) {
+    if (error?.code === 'ENOENT') {
+      return [];
+    }
+    throw error;
+  }
+}
+
+/** Creates an empty folder (and the folders above it); refuses a name that is taken. */
+async function createFolder(rootPath, folderPath) {
+  const absolutePath = resolveInsideVault(rootPath, folderPath);
+  if (fs.existsSync(absolutePath)) {
+    throw new Error(`A folder named "${path.posix.basename(folderPath)}" already exists.`);
+  }
+
+  await fs.promises.mkdir(absolutePath, { recursive: true });
+  return folderPath;
 }
 
 module.exports = {
   copyVaultFile,
   createDocument,
+  createFolder,
+  listSubfolders,
   readDocument,
   renameDocumentFile,
   saveDocumentCopy,

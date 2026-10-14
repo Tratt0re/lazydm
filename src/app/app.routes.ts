@@ -13,7 +13,15 @@ import { NOTE_SCOPE_ROUTE_DATA } from '@/services/note-scope.service';
 const RENAMED_SECTION_ROUTES: Routes = [
   { path: 'monsters', pathMatch: 'full', redirectTo: 'enemies' },
   { path: 'monsters/:note', redirectTo: 'enemies/:note' },
+  { path: 'monsters/:subfolder/:note', redirectTo: 'enemies/:subfolder/:note' },
 ];
+
+/** A note: directly in its section (`:note`) or in one of its sub-folders (`:subfolder/:note`). */
+const NOTE_ROUTES: Routes = [':note', ':subfolder/:note'].map((path) => ({
+  path,
+  canDeactivate: [documentLeaveGuard],
+  loadComponent: () => import('./pages/document-page/document-page').then((m) => m.DocumentPage),
+}));
 
 function matchSheetPaths(segments: UrlSegment[]): UrlMatchResult | null {
   return ['compendium', 'templates', 'settings'].includes(segments[0]?.path ?? '')
@@ -46,11 +54,7 @@ const SYSTEM_SHEET_ROUTES: Routes = [
             (m) => m.CampaignSectionPage,
           ),
       },
-      {
-        path: ':note',
-        canDeactivate: [documentLeaveGuard],
-        loadComponent: () => import('./pages/document-page/document-page').then((m) => m.DocumentPage),
-      },
+      ...NOTE_ROUTES,
     ],
   },
 ];
@@ -116,13 +120,15 @@ export const routes: Routes = [
       { path: '', pathMatch: 'full', redirectTo: 'general' },
       {
         path: ':section',
-        loadComponent: () => import('./pages/settings-page/settings-page').then((m) => m.SettingsPage),
+        loadComponent: () =>
+          import('./pages/settings-page/settings-page').then((m) => m.SettingsPage),
       },
     ],
   },
   {
     path: 'setup',
-    loadComponent: () => import('./pages/vault-setup-page/vault-setup-page').then((m) => m.VaultSetupPage),
+    loadComponent: () =>
+      import('./pages/vault-setup-page/vault-setup-page').then((m) => m.VaultSetupPage),
   },
   {
     path: '',
@@ -149,12 +155,16 @@ export const routes: Routes = [
                 path: '',
                 pathMatch: 'full',
                 loadComponent: () =>
-                  import('./pages/campaign-home-page/campaign-home-page').then((m) => m.CampaignHomePage),
+                  import('./pages/campaign-home-page/campaign-home-page').then(
+                    (m) => m.CampaignHomePage,
+                  ),
               },
               {
                 path: 'broken-links',
                 loadComponent: () =>
-                  import('./pages/broken-links-page/broken-links-page').then((m) => m.BrokenLinksPage),
+                  import('./pages/broken-links-page/broken-links-page').then(
+                    (m) => m.BrokenLinksPage,
+                  ),
               },
               ...RENAMED_SECTION_ROUTES,
               {
@@ -168,12 +178,7 @@ export const routes: Routes = [
                         (m) => m.CampaignSectionPage,
                       ),
                   },
-                  {
-                    path: ':note',
-                    canDeactivate: [documentLeaveGuard],
-                    loadComponent: () =>
-                      import('./pages/document-page/document-page').then((m) => m.DocumentPage),
-                  },
+                  ...NOTE_ROUTES,
                 ],
               },
             ],

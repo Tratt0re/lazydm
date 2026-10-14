@@ -24,7 +24,7 @@ import { BrokenLinkActionsService } from '@/services/broken-link-actions.service
 import { CopyToService } from '@/services/copy-to.service';
 import { getNoteScopeKind, NoteScopeService } from '@/services/note-scope.service';
 import { DocumentService } from '@/services/document.service';
-import { SectionService } from '@/services/section.service';
+import { SectionService, toSubfolderLabel } from '@/services/section.service';
 import type { DocumentViewMode } from '@/config/local-preferences.config';
 import { LocalPreferencesService } from '@/services/local-preferences.service';
 import { ToolbarContextService } from '@/services/toolbar-context.service';
@@ -37,6 +37,8 @@ import { ArcTechSheetService } from '@/shared/components/sheet';
 import { ArcTechTooltipImports } from '@/shared/components/tooltip';
 
 export const DOCUMENT_NOTE_PARAM = 'note';
+/** Sub-folder of the section the note is in (its sub-type), when it is in one. */
+export const DOCUMENT_SUBFOLDER_PARAM = 'subfolder';
 
 const RENAME_PREVIEW_MAX_TITLES = 5;
 
@@ -95,9 +97,15 @@ export class DocumentPage {
     { initialValue: '' },
   );
 
-  protected readonly notePath = computed(
-    () => `${this.scope()?.rootPath ?? ''}/${this.sectionKey()}/${this.noteSlug()}.md`,
+  private readonly subfolder = toSignal(
+    this.route.paramMap.pipe(map((params) => params.get(DOCUMENT_SUBFOLDER_PARAM))),
+    { initialValue: null },
   );
+
+  protected readonly notePath = computed(() => {
+    const folder = this.subfolder() ? `${this.sectionKey()}/${this.subfolder()}` : this.sectionKey();
+    return `${this.scope()?.rootPath ?? ''}/${folder}/${this.noteSlug()}.md`;
+  });
 
   protected readonly document = signal<DocumentDto | null>(null);
   protected readonly editedContent = signal('');
@@ -150,6 +158,7 @@ export class DocumentPage {
               path: `${scopePath}/${this.sectionKey()}`,
               translate: false,
             },
+            ...this.subfolderBreadcrumbs(`${scopePath}/${this.sectionKey()}`),
           ],
           itemActions: [
             {
@@ -200,6 +209,21 @@ export class DocumentPage {
     effect(() => {
       void this.loadDocument(this.notePath());
     });
+  }
+
+  /** The sub-folder crumb (`CAMPAIGN / ENEMIES / HUMANS /`): the section page showing that sub-folder. */
+  private subfolderBreadcrumbs(sectionPath: string) {
+    const subfolder = this.subfolder();
+    return subfolder
+      ? [
+          {
+            label: toSubfolderLabel(subfolder),
+            path: sectionPath,
+            queryParams: { folder: subfolder },
+            translate: false,
+          },
+        ]
+      : [];
   }
 
   /** Autosave when leaving the note (tab switch, link, sidebar); a conflict or error keeps the user here. */

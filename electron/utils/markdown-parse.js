@@ -30,7 +30,9 @@ function splitFrontmatter(text) {
     return { frontmatterText: null, bodyLines: lines, bodyStartLine: 1 };
   }
 
-  const closeIndex = lines.findIndex((line, index) => index > 0 && FRONTMATTER_CLOSE.has(line.trim()));
+  const closeIndex = lines.findIndex(
+    (line, index) => index > 0 && FRONTMATTER_CLOSE.has(line.trim()),
+  );
   if (closeIndex === -1) {
     return { frontmatterText: null, bodyLines: lines, bodyStartLine: 1 };
   }
@@ -69,7 +71,11 @@ function normalizeTag(value) {
 }
 
 function toTagList(value) {
-  const rawTags = Array.isArray(value) ? value : typeof value === 'string' ? value.split(/[,\s]+/) : [];
+  const rawTags = Array.isArray(value)
+    ? value
+    : typeof value === 'string'
+      ? value.split(/[,\s]+/)
+      : [];
   return rawTags.map(normalizeTag).filter((tag) => tag.length > 0);
 }
 
@@ -182,7 +188,8 @@ function parseMarkdownDocument(text, options = {}) {
 
   const frontmatterTitle = typeof frontmatter.title === 'string' ? frontmatter.title.trim() : '';
   const firstTopHeading = headings.find((heading) => heading.level === 1);
-  const rawType = typeof frontmatter.type === 'string' ? frontmatter.type.trim().toLocaleLowerCase() : '';
+  const rawType =
+    typeof frontmatter.type === 'string' ? frontmatter.type.trim().toLocaleLowerCase() : '';
   const type = LEGACY_NOTE_TYPES[rawType] ?? rawType;
 
   return {
@@ -260,9 +267,17 @@ function rewriteLinks(text, replace, options = {}) {
 
       const newRaw = replace(parseWikilink(match[1] === '!', match[2], index + 1));
       if (newRaw && typeof newRaw === 'object') {
-        replacements.push({ start: match.index, end: match.index + match[0].length, text: newRaw.text });
+        replacements.push({
+          start: match.index,
+          end: match.index + match[0].length,
+          text: newRaw.text,
+        });
       } else if (typeof newRaw === 'string' && newRaw !== match[2]) {
-        replacements.push({ start: match.index, end: match.index + match[0].length, text: `${match[1]}[[${newRaw}]]` });
+        replacements.push({
+          start: match.index,
+          end: match.index + match[0].length,
+          text: `${match[1]}[[${newRaw}]]`,
+        });
       }
     }
 
@@ -274,7 +289,11 @@ function rewriteLinks(text, replace, options = {}) {
       const link = parseMarkdownLink(match[1] === '!', match[2], match[3], sourceDir, index + 1);
       const newRaw = link ? replace(link) : null;
       if (newRaw && typeof newRaw === 'object') {
-        replacements.push({ start: match.index, end: match.index + match[0].length, text: newRaw.text });
+        replacements.push({
+          start: match.index,
+          end: match.index + match[0].length,
+          text: newRaw.text,
+        });
       } else if (typeof newRaw === 'string' && newRaw !== match[3]) {
         const hrefStart = match[0].indexOf(match[3], match[0].indexOf('](') + 2);
         const text = `${match[0].slice(0, hrefStart)}${newRaw}${match[0].slice(hrefStart + match[3].length)}`;
@@ -285,7 +304,10 @@ function rewriteLinks(text, replace, options = {}) {
     count += replacements.length;
     return replacements
       .sort((left, right) => right.start - left.start)
-      .reduce((line, { start, end, text }) => `${line.slice(0, start)}${text}${line.slice(end)}`, rawLine);
+      .reduce(
+        (line, { start, end, text }) => `${line.slice(0, start)}${text}${line.slice(end)}`,
+        rawLine,
+      );
   });
 
   return { content: `${bom}${rewrittenLines.join(newline)}`, count };
@@ -357,7 +379,9 @@ function renameLinkFolder(link, oldDir, newDir, parents) {
   const linkPath = hashIndex < 0 ? target : target.slice(0, hashIndex);
   const suffix = link.raw.slice(linkPath.length);
   const segments = linkPath.split('/');
-  const relativeStart = segments.findIndex((segment) => segment.trim() !== '..' && segment.trim() !== '.');
+  const relativeStart = segments.findIndex(
+    (segment) => segment.trim() !== '..' && segment.trim() !== '.',
+  );
   let isChanged = false;
   const renamed = segments.map((segment, index) => {
     const parent = segments
@@ -373,6 +397,34 @@ function renameLinkFolder(link, oldDir, newDir, parents) {
   });
 
   return isChanged ? `${renamed.join('/')}${suffix}` : null;
+}
+
+/**
+ * Sets `key: value` in the frontmatter, keeping every other line as written: an existing key gets the new
+ * value, a new key goes right after `type:` (else at the end). A note without frontmatter gets one.
+ */
+function setFrontmatterField(text, key, value) {
+  const newline = detectNewline(text);
+  const [bom, content] = splitBom(text);
+  const lines = normalizeNewlines(content).split('\n');
+  const { frontmatterText, bodyStartLine } = splitFrontmatter(content);
+  const entry = `${key}: ${YAML.stringify(value).trim()}`;
+  if (frontmatterText === null) {
+    return `${bom}${[FRONTMATTER_OPEN, entry, FRONTMATTER_OPEN, ...lines].join(newline)}`;
+  }
+
+  const closeIndex = bodyStartLine - 2;
+  const findKey = (pattern) =>
+    lines.findIndex((line, index) => index > 0 && index < closeIndex && pattern.test(line));
+  const existingIndex = findKey(new RegExp(`^${key}\\s*:`));
+  if (existingIndex >= 0) {
+    lines[existingIndex] = entry;
+  } else {
+    const typeIndex = findKey(/^type\s*:/);
+    lines.splice(typeIndex >= 0 ? typeIndex + 1 : closeIndex, 0, entry);
+  }
+
+  return `${bom}${lines.join(newline)}`;
 }
 
 /** Text a link leaves behind when it is removed: its label, else what it points to. */
@@ -406,7 +458,10 @@ function replaceDocumentTitle(text, oldTitle, newTitle) {
 
   if (frontmatterText !== null) {
     const frontmatter = YAML.parseDocument(frontmatterText);
-    if (frontmatter.errors.length === 0 && (frontmatter.contents === null || YAML.isMap(frontmatter.contents))) {
+    if (
+      frontmatter.errors.length === 0 &&
+      (frontmatter.contents === null || YAML.isMap(frontmatter.contents))
+    ) {
       frontmatter.set('title', newTitle);
       const frontmatterLines = frontmatter.toString().replace(/\n$/, '').split('\n');
       outputLines = [lines[0], ...frontmatterLines, ...lines.slice(bodyStartLine - 2)];
@@ -444,4 +499,5 @@ module.exports = {
   renameLinkTarget,
   replaceDocumentTitle,
   rewriteLinks,
+  setFrontmatterField,
 };

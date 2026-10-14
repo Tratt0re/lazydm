@@ -53,6 +53,12 @@ export const CUSTOM_SECTION_ICONS: readonly SectionIcon[] = [
 
 const FALLBACK_SECTION_ICON: SectionIcon = 'folder';
 
+/** Display name of a sub-folder (a sub-type): `humans` → `Humans`, `fire-giants` → `Fire giants`. */
+export function toSubfolderLabel(name: string): string {
+  const words = name.replace(/[-_]+/g, ' ').trim();
+  return words.charAt(0).toLocaleUpperCase() + words.slice(1);
+}
+
 function toIcon(icon: string): SectionIcon {
   return icon in ARCTECH_ICONS ? (icon as SectionIcon) : FALLBACK_SECTION_ICON;
 }
@@ -87,7 +93,9 @@ export class SectionService extends BaseIpcService<APIChannel.SECTIONS> {
     { initialValue: this.translateService.getCurrentLang() ?? 'en' },
   );
   private readonly defaultsSignal = signal<SectionDefaultsDto>({ campaign: [], compendium: [] });
-  private readonly loadedSignal = signal<{ slug: string; rows: readonly SectionDto[] } | null>(null);
+  private readonly loadedSignal = signal<{ slug: string; rows: readonly SectionDto[] } | null>(
+    null,
+  );
 
   /** Every section of the active campaign (hidden ones included), in its sidebar order. */
   readonly campaignSections = computed<readonly AppSection[]>(() => {

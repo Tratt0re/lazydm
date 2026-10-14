@@ -52,6 +52,19 @@ export interface DocumentDto {
 
 export interface ListDocumentsPayload {
   readonly folder: string;
+  /** Only the files directly in the folder (not those of its sub-folders). */
+  readonly direct?: boolean;
+}
+
+/** A sub-folder of a section (a sub-type of its notes), with the number of files it holds. */
+export interface DocumentFolderDto {
+  readonly name: string;
+  readonly fileCount: number;
+}
+
+export interface ListDocumentsResultDto {
+  readonly rows: DocumentFileListItemDto[];
+  readonly folders: DocumentFolderDto[];
 }
 
 export interface ReadDocumentPayload {

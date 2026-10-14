@@ -19,6 +19,8 @@ export type ToolbarTitleMode = 'default' | 'breadcrumb';
 export interface ToolbarTitleBreadcrumbItem {
   readonly label: string;
   readonly path?: string;
+  /** Query of the link (a section page showing one of its sub-folders: `{ folder: 'humans' }`). */
+  readonly queryParams?: Readonly<Record<string, string>>;
   readonly translate?: boolean;
 }
 
@@ -144,7 +146,9 @@ export class ToolbarContextService {
     const itemNavigation = this.itemNavigationState();
     return [
       ...(itemNavigation ? [itemNavigation] : []),
-      ...this.itemActionsState().filter((item): item is ToolbarSelectItem => this.isToolbarSelectItem(item)),
+      ...this.itemActionsState().filter((item): item is ToolbarSelectItem =>
+        this.isToolbarSelectItem(item),
+      ),
     ];
   });
 
@@ -173,7 +177,9 @@ export class ToolbarContextService {
     };
   }
 
-  private normalizeConfig(config: ToolbarContextConfig | readonly ToolbarAction[]): NormalizedToolbarContextConfig {
+  private normalizeConfig(
+    config: ToolbarContextConfig | readonly ToolbarAction[],
+  ): NormalizedToolbarContextConfig {
     if (this.isToolbarActionsConfig(config)) {
       return {
         title: null,
@@ -186,13 +192,17 @@ export class ToolbarContextService {
 
     const contextConfig = config as ToolbarContextConfig;
     const legacyItems = contextConfig.items ?? [];
-    const legacyItemActions = legacyItems.filter((item): item is ToolbarSelectItem => this.isToolbarSelectItem(item));
+    const legacyItemActions = legacyItems.filter((item): item is ToolbarSelectItem =>
+      this.isToolbarSelectItem(item),
+    );
     const legacyItemNavigations = legacyItems.filter((item): item is ToolbarSegmentedItem =>
       this.isToolbarNavigationItem(item),
     );
 
     if (legacyItemNavigations.length > 1) {
-      console.warn('[toolbar] Only one `itemNavigation` is supported. Extra segmented items are ignored.');
+      console.warn(
+        '[toolbar] Only one `itemNavigation` is supported. Extra segmented items are ignored.',
+      );
     }
 
     const titleMode = contextConfig.titleMode ?? 'default';
@@ -204,7 +214,10 @@ export class ToolbarContextService {
       title: contextConfig.title ?? null,
       titleMode: resolvedTitleMode,
       titleBreadcrumbs,
-      itemActions: contextConfig.itemActions ?? [...(contextConfig.actions ?? []), ...legacyItemActions],
+      itemActions: contextConfig.itemActions ?? [
+        ...(contextConfig.actions ?? []),
+        ...legacyItemActions,
+      ],
       itemNavigation: contextConfig.itemNavigation ?? legacyItemNavigations[0] ?? null,
     };
   }
@@ -239,6 +252,7 @@ export class ToolbarContextService {
       .map((item) => ({
         label: item.label,
         path: item.path && item.path.trim().length > 0 ? item.path : undefined,
+        queryParams: item.queryParams,
         translate: item.translate ?? true,
       }));
   }

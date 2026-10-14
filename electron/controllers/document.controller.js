@@ -38,11 +38,65 @@ function requireContent(body) {
   return requireString(body.content, 'payload.content', { trim: false, allowEmpty: true });
 }
 
-/** Files of a campaign section folder (empty while the vault index is not open yet). */
-function list(payload) {
+/**
+ * Files of a folder (and of its sub-folders, unless `direct`) from the index — empty while it is not open
+ * yet — and its sub-folders from the disk (an empty one exists before its first file), with file counts.
+ */
+async function list(payload) {
   const body = ensurePlainObject(payload, 'payload');
   const folder = requirePath(body, 'folder');
-  return { rows: indexerController.isOpen() ? vaultIndexModel.listFolderFiles(folder) : [] };
+  const isDirect = normalizeOptionalBooleanFlag(body.direct, 'payload.direct') ?? false;
+  const prefix = `${folder.replace(/\/+$/, '')}/`;
+  const files = indexerController.isOpen() ? vaultIndexModel.listFolderFiles(folder) : [];
+  const subfolders = await documentModel.listSubfolders(vaultController.getReadyVaultPath(), folder);
+
+  return {
+    rows: isDirect ? files.filter((file) => !file.path.slice(prefix.length).includes('/')) : files,
+    folders: subfolders.map((name) => ({
+      name,
+      fileCount: files.filter((file) => file.path.startsWith(`${prefix}${name}/`)).length,
+    })),
+  };
+}
+
+const FOLDER_NAME_MAX_LENGTH = 60;
+
+/**
+ * New sub-folder of a section: one level deep, in a section that holds notes. The folder name is the
+ * sub-type its notes get (`enemies/humans/` → `subtype: humans`).
+ */
+async function createFolder(payload) {
+  const body = ensurePlainObject(payload, 'payload');
+  const folder = requirePath(body, 'folder');
+  const name = requireString(body.name, 'payload.name', { maxLength: FOLDER_NAME_MAX_LENGTH });
+  const location = sectionModel.parseSectionFolder(folder);
+  if (!location || location.subfolder !== null) {
+    throw new Error('Sub-folders can only be created directly inside a section.');
+  }
+
+  const vaultPath = vaultController.getReadyVaultPath();
+  await requireCopyTarget(vaultPath, location.scope);
+  const section = sectionModel
+    .listScopeSections(vaultPath, location.scope)
+    .find((item) => item.key === location.section);
+  if (!section) {
+    throw new Error(`Not a section: ${folder}`);
+  }
+  if (!section.type) {
+    throw new Error(`The ${section.key} section holds no notes, so it has no sub-folders.`);
+  }
+
+  const slug = toSlug(name);
+  if (slug.length === 0) {
+    throw new Error('payload.name must contain at least one letter or number.');
+  }
+
+  return { path: await documentModel.createFolder(vaultPath, `${location.scope}/${section.key}/${slug}`), name: slug };
+}
+
+/** Sub-type of a note created in `folderPath`: the sub-folder of its section, if it is in one. */
+function getSubtypeOfFolder(folderPath) {
+  return sectionModel.parseSectionFolder(folderPath)?.subfolder ?? null;
 }
 
 async function read(payload) {
@@ -104,6 +158,7 @@ function create(payload) {
     title,
     type,
     section,
+    subtype: getSubtypeOfFolder(folderPath),
   });
 }
 
@@ -370,6 +425,7 @@ async function createFromLink(payload) {
     title,
     type,
     section,
+    subtype: getSubtypeOfFolder(folderPath),
   });
 
   if (link.targetName.toLocaleLowerCase() !== slug) {
@@ -445,11 +501,16 @@ async function getCopyFolder(vaultPath, relativePath, target) {
 
   const document = await documentModel.readDocument(vaultPath, relativePath);
   const sourceScope = vaultIndexModel.getCampaignSlug(relativePath);
-  return (
+  const sectionFolder =
     sectionModel.findSectionKeyForType(vaultPath, target, document.type) ??
-    sectionModel.findSectionKeyForType(vaultPath, sourceScope, document.type) ??
-    UNTYPED_NOTES_DIR_NAME
-  );
+    sectionModel.findSectionKeyForType(vaultPath, sourceScope, document.type);
+  if (!sectionFolder) {
+    return UNTYPED_NOTES_DIR_NAME;
+  }
+
+  // The sub-folder (sub-type) comes along: `enemies/humans/x.md` → `<target>/enemies/humans/`.
+  const subfolder = sectionModel.parseSectionFolder(path.posix.dirname(relativePath))?.subfolder;
+  return subfolder ? `${sectionFolder}/${subfolder}` : sectionFolder;
 }
 
 const LINKED_COPY_MAX_FILES = 200;
@@ -562,6 +623,7 @@ module.exports = {
   brokenLinks,
   copy,
   copyPlan,
+  createFolder,
   createFromLink,
   create,
   linkTargets,

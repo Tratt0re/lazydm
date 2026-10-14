@@ -330,7 +330,18 @@
         "label": "Шаблон",
         "ariaLabel": "Шаблон для нових нотаток у цьому розділі"
       },
-      "customDescription": "Ваш власний розділ."
+      "customDescription": "Ваш власний розділ.",
+      "newFolder": {
+        "button": "Нова тека",
+        "title": "Нова тека",
+        "description": "Підтека розділу {{section}}: її назва стає підтипом нотаток у ній (subtype: у frontmatter). Лише один рівень.",
+        "nameLabel": "Назва",
+        "namePlaceholder": "напр. Люди",
+        "submit": "Створити теку",
+        "error": "Не вдалося створити теку"
+      },
+      "folderFiles": "файлів: {{count}}",
+      "foldersAriaLabel": "Підтеки"
     }
   },
   "document": {

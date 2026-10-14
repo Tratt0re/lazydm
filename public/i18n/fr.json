@@ -330,7 +330,18 @@
         "label": "Modèle",
         "ariaLabel": "Modèle des nouvelles notes de cette section"
       },
-      "customDescription": "Une section à vous."
+      "customDescription": "Une section à vous.",
+      "newFolder": {
+        "button": "Nouveau dossier",
+        "title": "Nouveau dossier",
+        "description": "Un sous-dossier de {{section}} : son nom devient le sous-type des notes qu’il contient (subtype: dans le frontmatter). Un seul niveau.",
+        "nameLabel": "Nom",
+        "namePlaceholder": "ex. Humains",
+        "submit": "Créer le dossier",
+        "error": "Impossible de créer le dossier"
+      },
+      "folderFiles": "{{count}} fichiers",
+      "foldersAriaLabel": "Sous-dossiers"
     }
   },
   "document": {

@@ -7,12 +7,18 @@ import { map } from 'rxjs';
 
 import { AppSheetFormService } from '@/components/sheet-form/sheet-form.service';
 import type { AppSheetField } from '@/components/sheet-form/sheet-form.types';
-import type { DocumentFileListItemDto, TemplateDto, TemplateRulesDto } from '@/dtos';
+import { toInAppNoteRoute } from '@/components/document-preview/document-preview.markdown';
+import type {
+  DocumentFileListItemDto,
+  DocumentFolderDto,
+  TemplateDto,
+  TemplateRulesDto,
+} from '@/dtos';
 import { AppSheetService } from '@/services/app-sheet.service';
 import { getNoteScopeKind, NoteScopeService } from '@/services/note-scope.service';
 import { CopyToService } from '@/services/copy-to.service';
 import { DocumentService } from '@/services/document.service';
-import { SectionService } from '@/services/section.service';
+import { SectionService, toSubfolderLabel } from '@/services/section.service';
 import {
   AUTOMATIC_TEMPLATE_RULE,
   TemplateService,
@@ -25,6 +31,8 @@ import { ArcTechIconComponent } from '@/shared/components/icon';
 import { ArcTechTooltipImports } from '@/shared/components/tooltip';
 
 export const CAMPAIGN_SECTION_PARAM = 'section';
+/** Query parameter of the sub-folder the section page shows (`?folder=humans`). */
+export const SECTION_FOLDER_QUERY_PARAM = 'folder';
 
 const NEW_NOTE_TITLE_FIELD: AppSheetField = {
   id: 'title',
@@ -79,6 +87,13 @@ export class CampaignSectionPage {
     this.route.paramMap.pipe(map((params) => params.get(CAMPAIGN_SECTION_PARAM) ?? '')),
     { initialValue: '' },
   );
+  /** Sub-folder shown (one level inside the section), from `?folder=`; null shows the section itself. */
+  protected readonly subfolder = toSignal(
+    this.route.queryParamMap.pipe(
+      map((params) => params.get(SECTION_FOLDER_QUERY_PARAM)?.trim() || null),
+    ),
+    { initialValue: null },
+  );
   private loadToken = 0;
 
   private readonly sectionService = inject(SectionService);
@@ -92,13 +107,25 @@ export class CampaignSectionPage {
     const section = this.section();
     return section ? this.sectionService.labelOf(section) : this.sectionKey();
   });
-  protected readonly folderPath = computed(() => `${this.scope()?.rootPath ?? ''}/${this.sectionKey()}`);
+  /** Name the page shows: the sub-folder's when one is open, else the section's. */
+  protected readonly pageLabel = computed(() => {
+    const subfolder = this.subfolder();
+    return subfolder ? toSubfolderLabel(subfolder) : this.sectionLabel();
+  });
+  protected readonly folderPath = computed(() => {
+    const sectionPath = `${this.scope()?.rootPath ?? ''}/${this.sectionKey()}`;
+    const subfolder = this.subfolder();
+    return subfolder ? `${sectionPath}/${subfolder}` : sectionPath;
+  });
   protected readonly scopeRoute = computed(() => this.scope()?.routeBase ?? '');
   protected readonly importLabel = computed(() =>
     this.scope()?.kind === 'system' ? 'compendium.import.fromCampaign' : 'compendium.import.fromCompendium',
   );
 
   protected readonly files = signal<readonly DocumentFileListItemDto[]>([]);
+  /** Sub-folders of the section (sub-types); empty inside a sub-folder (one level only). */
+  protected readonly folders = signal<readonly DocumentFolderDto[]>([]);
+  protected readonly toSubfolderLabel = toSubfolderLabel;
   protected readonly isLoading = signal(true);
   protected readonly errorMessage = signal<string | null>(null);
 
@@ -117,7 +144,7 @@ export class CampaignSectionPage {
         return;
       }
 
-      void this.loadFiles(`${scope.rootPath}/${section.key}`);
+      void this.loadFiles(this.folderPath());
     });
 
     effect((onCleanup) => {
@@ -129,9 +156,20 @@ export class CampaignSectionPage {
 
       onCleanup(
         this.toolbarContext.activate({
-          title: this.sectionLabel(),
+          title: this.pageLabel(),
           titleMode: 'breadcrumb',
-          titleBreadcrumbs: [{ label: scope.name, path: scope.routeBase, translate: false }],
+          titleBreadcrumbs: [
+            { label: scope.name, path: scope.routeBase, translate: false },
+            ...(this.subfolder()
+              ? [
+                  {
+                    label: this.sectionLabel(),
+                    path: `${scope.routeBase}/${section.key}`,
+                    translate: false,
+                  },
+                ]
+              : []),
+          ],
           itemActions: this.buildToolbarActions(),
         }),
       );
@@ -180,6 +218,17 @@ export class CampaignSectionPage {
       buttonType: 'outline',
       action: () => this.openImportSheet(),
     });
+
+    // Sub-folders are sub-types of the section's notes, one level deep.
+    if (noteType && !this.subfolder()) {
+      actions.push({
+        id: 'section-new-folder',
+        label: 'campaigns.sections.newFolder.button',
+        icon: 'folder',
+        buttonType: 'outline',
+        action: () => this.openCreateFolderSheet(),
+      });
+    }
 
     if (noteType) {
       actions.push({
@@ -233,8 +282,44 @@ export class CampaignSectionPage {
     return this.copyTo.isInCompendium(file.path) ? 'compendium.copy.toCampaign' : 'compendium.copy.toCompendium';
   }
 
-  protected toNoteSlug(file: DocumentFileListItemDto): string {
-    return file.name;
+  protected noteRoute(file: DocumentFileListItemDto): string {
+    return toInAppNoteRoute(file.path) ?? this.scopeRoute();
+  }
+
+  /** New sub-folder of the section, then opens it. */
+  protected openCreateFolderSheet(): void {
+    let isSubmitting = false;
+    const sheetRef = this.sheetFormService.open({
+      arcTitle: this.translateService.instant('campaigns.sections.newFolder.title'),
+      arcDescription: this.translateService.instant('campaigns.sections.newFolder.description', {
+        section: this.sectionLabel(),
+      }),
+      arcOkText: this.translateService.instant('campaigns.sections.newFolder.submit'),
+      arcCancelText: this.translateService.instant('campaigns.sections.newNote.cancel'),
+      fields: [
+        {
+          id: 'name',
+          type: 'input',
+          label: 'campaigns.sections.newFolder.nameLabel',
+          placeholder: 'campaigns.sections.newFolder.namePlaceholder',
+          required: true,
+          translate: true,
+        },
+      ],
+      onSubmit: (form) => {
+        if (!isSubmitting) {
+          isSubmitting = true;
+          void this.createFolder(String(form.getValues()['name'] ?? '')).then((isCreated) => {
+            isSubmitting = false;
+            if (isCreated) {
+              sheetRef.close();
+            }
+          });
+        }
+
+        return false;
+      },
+    });
   }
 
   /** Copies a file of the same folder from the other side (compendium ↔ campaign) into this folder. */
@@ -282,11 +367,30 @@ export class CampaignSectionPage {
         type,
         section: this.sectionLabel(),
       });
-      const noteSlug = note.path.split('/').pop()!.replace(/\.md$/i, '');
-      await this.router.navigateByUrl(`${this.scopeRoute()}/${this.sectionKey()}/${noteSlug}`);
+      await this.router.navigateByUrl(toInAppNoteRoute(note.path) ?? this.scopeRoute());
       return true;
     } catch (error) {
       this.errorMessage.set(error instanceof Error ? error.message : String(error));
+      return false;
+    }
+  }
+
+  private async createFolder(name: string): Promise<boolean> {
+    const section = this.section();
+    if (!section) {
+      return false;
+    }
+
+    try {
+      const folder = await this.documentService.createFolder(this.folderPath(), name);
+      await this.router.navigate([this.scopeRoute(), section.key], {
+        queryParams: { [SECTION_FOLDER_QUERY_PARAM]: folder },
+      });
+      return true;
+    } catch (error) {
+      toast.error(this.translateService.instant('campaigns.sections.newFolder.error'), {
+        description: error instanceof Error ? error.message : String(error),
+      });
       return false;
     }
   }
@@ -297,9 +401,10 @@ export class CampaignSectionPage {
     this.errorMessage.set(null);
 
     try {
-      const rows = await this.documentService.listFolder(folder);
+      const { files, folders } = await this.documentService.listFolderEntries(folder);
       if (token === this.loadToken) {
-        this.files.set(rows);
+        this.files.set(files);
+        this.folders.set(this.subfolder() ? [] : folders);
       }
     } catch (error) {
       if (token === this.loadToken) {

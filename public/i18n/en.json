@@ -330,7 +330,18 @@
         "label": "Template",
         "ariaLabel": "Template for new notes in this section"
       },
-      "customDescription": "A section of your own."
+      "customDescription": "A section of your own.",
+      "newFolder": {
+        "button": "New folder",
+        "title": "New folder",
+        "description": "A sub-folder of {{section}}: its name becomes the sub-type of the notes in it (subtype: in the frontmatter). One level only.",
+        "nameLabel": "Name",
+        "namePlaceholder": "e.g. Humans",
+        "submit": "Create folder",
+        "error": "Couldn't create the folder"
+      },
+      "folderFiles": "{{count}} files",
+      "foldersAriaLabel": "Sub-folders"
     }
   },
   "document": {

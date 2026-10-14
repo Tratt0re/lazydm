@@ -6,7 +6,7 @@ import { filter } from 'rxjs';
 import { APIChannel } from '@/config/api';
 import type { WorkspaceTabDto } from '@/dtos';
 import { BaseIpcService } from '@/services/base-ipc.service';
-import { SectionService } from '@/services/section.service';
+import { SectionService, toSubfolderLabel } from '@/services/section.service';
 import { ToolbarContextService } from '@/services/toolbar-context.service';
 
 const CAMPAIGN_URL_PATTERN = /^\/campaigns\/([^/?#]+)/;
@@ -26,6 +26,11 @@ function getCampaignSlug(url: string): string | null {
 
 function getTabUrl(tab: WorkspaceTabDto): string {
   return tab.history[tab.historyIndex];
+}
+
+/** The URL without its query and fragment (`/campaigns/x/enemies?folder=humans` → `/campaigns/x/enemies`). */
+function getTabPath(tab: WorkspaceTabDto): string {
+  return getTabUrl(tab).split(/[?#]/)[0];
 }
 
 function createTab(url: string, title = ''): WorkspaceTabDto {
@@ -101,14 +106,15 @@ export class WorkspaceService extends BaseIpcService<APIChannel.WORKSPACE> {
 
   /** Section folder of the tab's current page (`enemies`…), null on the overview. */
   getTabSection(tab: WorkspaceTabDto): string | null {
-    return getTabUrl(tab).split('/')[3] ?? null;
+    return getTabPath(tab).split('/')[3] ?? null;
   }
 
   /** Label of a tab that has not been shown yet: the section name, or the note file name. */
   getFallbackTitle(tab: WorkspaceTabDto): string {
-    const segments = getTabUrl(tab).split('/').filter(Boolean);
+    const segments = getTabPath(tab).split('/').filter(Boolean);
     if (segments.length === 3) {
-      return this.sectionService.labelOfKey(segments[2]);
+      const folder = new URLSearchParams(getTabUrl(tab).split('?')[1] ?? '').get('folder');
+      return folder ? toSubfolderLabel(folder) : this.sectionService.labelOfKey(segments[2]);
     }
 
     return segments.length > 3 ? decodeURIComponent(segments[segments.length - 1]) : '';
