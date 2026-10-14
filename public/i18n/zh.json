@@ -623,7 +623,6 @@
   "search": {
     "placeholder": "搜索当前活动…",
     "label": "搜索当前活动",
-    "shortcut": "⌘K",
     "searching": "搜索中…",
     "noResults": "没有找到\"{{term}}\"的结果",
     "resultsLabel": "搜索结果",

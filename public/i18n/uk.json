@@ -623,7 +623,6 @@
   "search": {
     "placeholder": "Пошук у кампанії…",
     "label": "Пошук у кампанії",
-    "shortcut": "⌘K",
     "searching": "Пошук…",
     "noResults": "Немає результатів для «{{term}}»",
     "resultsLabel": "Результати пошуку",

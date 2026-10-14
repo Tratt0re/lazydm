@@ -65,8 +65,14 @@ export interface ElectronIpcClient {
     readonly brokenLinks: IpcRequest<{ campaign: string }, { rows: DTO.BrokenLinkDto[] }>;
     readonly unlink: IpcRequest<DTO.UnlinkPayload, { path: string; linkCount: number }>;
     readonly createFromLink: IpcRequest<DTO.CreateFromLinkPayload, DTO.DocumentDto>;
-    readonly createFolder: IpcRequest<{ folder: string; name: string }, { path: string; name: string }>;
-    readonly setType: IpcRequest<{ path: string; type: string; subtype: string | null }, { path: string }>;
+    readonly createFolder: IpcRequest<
+      { folder: string; name: string },
+      { path: string; name: string }
+    >;
+    readonly setType: IpcRequest<
+      { path: string; type: string; subtype: string | null },
+      { path: string }
+    >;
     readonly move: IpcRequest<{ path: string; folder: string }, DTO.MoveDocumentResultDto>;
     readonly reveal: IpcRequest<{ path: string }, { path: string }>;
     readonly copy: IpcRequest<DTO.CopyDocumentPayload, DTO.CopyDocumentResultDto>;
@@ -79,10 +85,7 @@ export interface ElectronIpcClient {
     readonly list: IpcRequest<{ scope: string }, DTO.ReviewDto>;
   };
   readonly search: {
-    readonly query: IpcRequest<
-      { campaign: string; term: string },
-      { rows: DTO.SearchResultDto[] }
-    >;
+    readonly query: IpcRequest<{ campaign: string; term: string }, { rows: DTO.SearchResultDto[] }>;
   };
   readonly sections: {
     readonly list: IpcRequest<{ campaign: string }, { rows: DTO.SectionDto[] }>;

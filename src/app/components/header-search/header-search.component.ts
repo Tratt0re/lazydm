@@ -19,6 +19,30 @@ import { ArcTechIconComponent } from '@/shared/components/icon';
 /** Milliseconds to wait after the user stops typing before firing a search. */
 const DEBOUNCE_MS = 150;
 
+/** A piece of a result snippet: matched words are `isMatch`. */
+interface SnippetPart {
+  readonly text: string;
+  readonly isMatch: boolean;
+}
+
+/** A search result that opens a note, with its route and its snippet split for highlighting. */
+interface SearchHit extends SearchResultDto {
+  readonly route: string;
+  readonly snippetParts: readonly SnippetPart[];
+}
+
+/** Splits an FTS5 snippet on its `<m>…</m>` markers (rendered as text, never as HTML). */
+function toSnippetParts(snippet: string): readonly SnippetPart[] {
+  return snippet
+    .split(/(<m>[\s\S]*?<\/m>)/)
+    .filter(Boolean)
+    .map((part) =>
+      part.startsWith('<m>') && part.endsWith('</m>')
+        ? { text: part.slice(3, -4), isMatch: true }
+        : { text: part, isMatch: false },
+    );
+}
+
 /**
  * Floating search bar in the header. Searches the active campaign (titles + full text, FTS5).
  * Cmd/Ctrl+K focuses it from anywhere on the page.
@@ -35,7 +59,7 @@ export class HeaderSearchComponent {
   @ViewChild('searchInput') inputRef!: ElementRef<HTMLInputElement>;
 
   protected readonly query = signal('');
-  protected readonly results = signal<readonly SearchResultDto[]>([]);
+  protected readonly results = signal<readonly SearchHit[]>([]);
   protected readonly isLoading = signal(false);
   protected readonly isOpen = signal(false);
   protected readonly activeIndex = signal(-1);
@@ -43,6 +67,7 @@ export class HeaderSearchComponent {
   private readonly searchService = inject(SearchService);
   private readonly campaignService = inject(CampaignService);
   private readonly router = inject(Router);
+  protected readonly shortcutLabel = window.electronAPI?.platform === 'darwin' ? '⌘K' : 'Ctrl K';
   private debounceTimer?: ReturnType<typeof setTimeout>;
 
   constructor() {
@@ -91,20 +116,13 @@ export class HeaderSearchComponent {
     }
   }
 
+  /** The dropdown keeps the focus in the input (mousedown prevented), so a blur means leaving the search. */
   protected onBlur(): void {
-    // Small delay lets pointer-down on a result row fire before we close.
-    setTimeout(() => this.close(), 150);
+    this.close();
   }
 
-  protected noteRoute(result: SearchResultDto): string | null {
-    return toInAppNoteRoute(result.path);
-  }
-
-  protected navigate(result: SearchResultDto): void {
-    const route = toInAppNoteRoute(result.path);
-    if (route) {
-      void this.router.navigateByUrl(route);
-    }
+  protected navigate(hit: SearchHit): void {
+    void this.router.navigateByUrl(hit.route);
     this.close();
   }
 
@@ -132,11 +150,23 @@ export class HeaderSearchComponent {
     }
     try {
       const rows = await this.searchService.query(campaign, term);
-      this.results.set(rows);
+      if (this.query().trim() !== term) {
+        return; // a newer search is on its way
+      }
+      const hits: SearchHit[] = [];
+      for (const row of rows) {
+        const route = toInAppNoteRoute(row.path);
+        if (route) {
+          hits.push({ ...row, route, snippetParts: toSnippetParts(row.snippet ?? '') });
+        }
+      }
+      this.results.set(hits);
     } catch {
       this.results.set([]);
     } finally {
-      this.isLoading.set(false);
+      if (this.query().trim() === term) {
+        this.isLoading.set(false);
+      }
     }
   }
 }

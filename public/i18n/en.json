@@ -623,7 +623,6 @@
   "search": {
     "placeholder": "Search campaign…",
     "label": "Search campaign",
-    "shortcut": "⌘K",
     "searching": "Searching…",
     "noResults": "No results for \"{{term}}\"",
     "resultsLabel": "Search results",

@@ -623,7 +623,6 @@
   "search": {
     "placeholder": "Rechercher dans la campagne…",
     "label": "Rechercher dans la campagne",
-    "shortcut": "⌘K",
     "searching": "Recherche en cours…",
     "noResults": "Aucun résultat pour « {{term}} »",
     "resultsLabel": "Résultats de recherche",
