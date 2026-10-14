@@ -9,15 +9,7 @@ const LABEL_HEIGHTS: Readonly<Record<CodeMapHeading['level'], number>> = { 1: 14
 
 /** The markdown elements the map tells apart, each with its own colour. */
 export type CodeMapKind =
-  | 'heading'
-  | 'text'
-  | 'list'
-  | 'code'
-  | 'quote'
-  | 'table'
-  | 'embed'
-  | 'frontmatter'
-  | 'rule';
+  'heading' | 'text' | 'list' | 'code' | 'quote' | 'table' | 'embed' | 'frontmatter' | 'rule';
 
 /** Theme token of each kind (both themes define them), in the order of the Settings legend. */
 export const CODE_MAP_COLORS: Readonly<Record<CodeMapKind, string>> = {
@@ -186,7 +178,10 @@ export class CodeMap {
       }
     }
 
-    const x = 6 + (Math.min(block.indent, 16) / CODE_MAP_FULL_LINE) * usable + (block.kind === 'quote' ? 4 : 0);
+    const x =
+      6 +
+      (Math.min(block.indent, 16) / CODE_MAP_FULL_LINE) * usable +
+      (block.kind === 'quote' ? 4 : 0);
     const rows = Math.max(1, Math.round(block.height / Math.max(lineHeight, 1)));
     const rowHeight = height / rows;
     const perRow = Math.max(1, Math.ceil(block.chars / rows));
@@ -222,7 +217,9 @@ export class CodeMap {
       }
     }
 
-    const key = shown.map((label) => `${label.id}:${label.level}:${label.y}:${label.text}`).join('|');
+    const key = shown
+      .map((label) => `${label.id}:${label.level}:${label.y}:${label.text}`)
+      .join('|');
     if (key === this.labelKey) {
       return;
     }
@@ -302,6 +299,7 @@ export class CodeMap {
   private scrollToMapY(clientY: number): void {
     const scroller = this.source.scroller;
     const mapY = clientY - this.dom.getBoundingClientRect().top;
-    scroller.scrollTop = mapY / this.scale + this.source.contentOffset() - scroller.clientHeight / 2;
+    scroller.scrollTop =
+      mapY / this.scale + this.source.contentOffset() - scroller.clientHeight / 2;
   }
 }
