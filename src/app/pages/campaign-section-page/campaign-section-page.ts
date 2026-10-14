@@ -19,13 +19,13 @@ import { AppSheetService } from '@/services/app-sheet.service';
 import { getNoteScopeKind, NoteScopeService } from '@/services/note-scope.service';
 import { CopyToService } from '@/services/copy-to.service';
 import { DocumentService } from '@/services/document.service';
+import { FileMoveService, type MoveSection } from '@/services/file-move.service';
 import { SectionService, toSubfolderLabel } from '@/services/section.service';
 import {
   AUTOMATIC_TEMPLATE_RULE,
   TemplateService,
 } from '@/services/template.service';
 import { ToolbarContextService, type ToolbarItemAction } from '@/services/toolbar-context.service';
-import { WorkspaceService } from '@/services/workspace.service';
 import { ArcTechAlertComponent } from '@/shared/components/alert';
 import { ArcTechButtonComponent } from '@/shared/components/button';
 import { ArcTechEmptyComponent } from '@/shared/components/empty';
@@ -41,12 +41,6 @@ export const SECTION_FOLDER_QUERY_PARAM = 'folder';
 interface SectionTreeFolder extends DocumentFolderDto {
   readonly files: readonly DocumentFileListItemDto[];
 }
-
-/** Menu label of *Reveal* on each system (the file manager's own name). */
-const REVEAL_LABELS: Readonly<Record<string, string>> = {
-  darwin: 'campaigns.sections.reveal.mac',
-  win32: 'campaigns.sections.reveal.windows',
-};
 
 const NEW_NOTE_TITLE_FIELD: AppSheetField = {
   id: 'title',
@@ -93,7 +87,6 @@ export class CampaignSectionPage {
   private readonly templateService = inject(TemplateService);
   private readonly appSheetService = inject(AppSheetService);
   protected readonly copyTo = inject(CopyToService);
-  private readonly workspace = inject(WorkspaceService);
 
   /** Templates and the campaign's choices, for the template select of the toolbar (campaigns only). */
   private readonly templates = signal<readonly TemplateDto[]>([]);
@@ -159,8 +152,8 @@ export class CampaignSectionPage {
   /** File being dragged, and the folder it would land in (`''`: the section itself). */
   protected readonly draggedPath = signal<string | null>(null);
   protected readonly dropTarget = signal<string | null>(null);
-  protected readonly revealLabel =
-    REVEAL_LABELS[window.electronAPI?.platform ?? ''] ?? 'campaigns.sections.reveal.other';
+  private readonly fileMove = inject(FileMoveService);
+  protected readonly revealLabel = this.fileMove.revealLabel;
   protected readonly toSubfolderLabel = toSubfolderLabel;
   protected readonly isLoading = signal(true);
   protected readonly errorMessage = signal<string | null>(null);
@@ -372,56 +365,11 @@ export class CampaignSectionPage {
 
   /** Move to the section itself or one of its sub-folders. */
   protected openMoveSheet(file: DocumentFileListItemDto): void {
-    const current = this.folderOf(file.path);
-    const targets = [
-      { value: '', label: this.translateService.instant('campaigns.sections.move.mainFolder', { section: this.sectionLabel() }) },
-      ...this.tree().folders.map((folder) => ({ value: folder.name, label: toSubfolderLabel(folder.name) })),
-    ].filter((target) => target.value !== current);
-    if (targets.length === 0) {
-      toast.info(this.translateService.instant('campaigns.sections.move.noFolders'));
-      return;
-    }
-
-    let isSubmitting = false;
-    const sheetRef = this.sheetFormService.open({
-      arcTitle: this.translateService.instant('review.move.title', {
-        title: file.kind === 'md' ? file.title : file.name,
-      }),
-      arcDescription: this.translateService.instant('campaigns.sections.move.description'),
-      arcOkText: this.translateService.instant('review.move.submit'),
-      arcCancelText: this.translateService.instant('review.cancel'),
-      fields: [
-        {
-          id: 'folder',
-          type: 'select',
-          label: 'campaigns.sections.move.folderLabel',
-          value: targets[0].value,
-          required: false,
-          translate: true,
-          options: targets.map((target) => ({ ...target, icon: 'folder', translate: false })),
-        },
-      ],
-      onSubmit: (form) => {
-        if (!isSubmitting) {
-          isSubmitting = true;
-          const target = String(form.getValues()['folder'] ?? targets[0].value);
-          void this.moveFile(file.path, target).then(() => {
-            isSubmitting = false;
-            sheetRef.close();
-          });
-        }
-
-        return false;
-      },
-    });
+    this.fileMove.openMoveSheet(file, this.moveSection(), () => void this.loadTree(this.sectionPath()));
   }
 
   protected reveal(path: string): void {
-    this.documentService.reveal(path).catch((error: unknown) =>
-      toast.error(this.translateService.instant('campaigns.sections.reveal.error'), {
-        description: error instanceof Error ? error.message : String(error),
-      }),
-    );
+    this.fileMove.reveal(path);
   }
 
   protected folderPathOf(name: string): string {
@@ -546,42 +494,20 @@ export class CampaignSectionPage {
 
   /** Sub-folder a file of the section is in (`''` directly in the section). */
   private folderOf(path: string): string {
-    const parts = path.slice(this.sectionPath().length + 1).split('/');
-    return parts.length > 1 ? parts[0] : '';
+    return this.fileMove.folderOf(path, this.sectionPath());
+  }
+
+  private moveSection(): MoveSection {
+    return {
+      path: this.sectionPath(),
+      label: this.sectionLabel(),
+      folders: this.tree().folders.map((folder) => folder.name),
+    };
   }
 
   private async moveFile(path: string, target: string): Promise<void> {
-    if (this.folderOf(path) === target) {
-      return;
-    }
-
-    const folder = target ? `${this.sectionPath()}/${target}` : this.sectionPath();
-    try {
-      const result = await this.documentService.move(path, folder);
-      const oldRoute = toInAppNoteRoute(path);
-      const newRoute = toInAppNoteRoute(result.path);
-      if (oldRoute && newRoute) {
-        await this.workspace.replaceUrl(oldRoute, newRoute);
-      }
-
-      toast.success(
-        this.translateService.instant('campaigns.sections.move.done', {
-          name: path.split('/').pop(),
-          folder: target ? toSubfolderLabel(target) : this.sectionLabel(),
-        }),
-        result.failedPaths.length > 0
-          ? {
-              description: this.translateService.instant('review.move.failedLinks', {
-                paths: result.failedPaths.join(', '),
-              }),
-            }
-          : undefined,
-      );
+    if (await this.fileMove.move(path, this.moveSection(), target)) {
       await this.loadTree(this.sectionPath());
-    } catch (error) {
-      toast.error(this.translateService.instant('review.move.error'), {
-        description: error instanceof Error ? error.message : String(error),
-      });
     }
   }
 
