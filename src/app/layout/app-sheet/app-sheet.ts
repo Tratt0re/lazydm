@@ -46,7 +46,8 @@ import { ArcTechIconComponent } from '@/shared/components/icon';
       </header>
       <div class="arc-engraved-divider mx-6 mt-2 shrink-0" aria-hidden="true"><span></span></div>
 
-      <div class="relative flex min-h-0 flex-1 flex-col overflow-auto">
+      <!-- Wide screens: the page scrolls its own columns, so a secondary sidebar stays in place. -->
+      <div class="relative flex min-h-0 flex-1 flex-col overflow-auto lg:overflow-hidden">
         <router-outlet />
       </div>
     </section>

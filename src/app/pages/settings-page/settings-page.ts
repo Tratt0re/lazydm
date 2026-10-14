@@ -41,7 +41,7 @@ import {
         />
       </div>
 
-      <div class="flex min-w-0 min-h-0 flex-col gap-4">
+      <div class="flex min-w-0 min-h-0 flex-col gap-4 lg:overflow-y-auto">
         <app-settings-section-header
           [titleKey]="activeItem().label"
           [descriptionKey]="activeItem().description"
