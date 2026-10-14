@@ -1,73 +1,82 @@
 <header
-  class="window-drag flex h-10 items-center gap-3 border-b border-border bg-recessed pr-1"
+  class="window-drag grid h-10 grid-cols-[1fr_auto_1fr] items-center border-b border-border bg-recessed"
   [class.pl-20]="isMac && !isFullscreen()"
   [class.pl-4]="!isMac || isFullscreen()"
   (dblclick)="onDoubleClick($event)"
 >
-  <span class="flex-1"></span>
+  <!-- left column: drag area spacer -->
+  <span></span>
 
+  <!-- center column: search bar (only when a vault is open) -->
   @if (vault()) {
-    <nav
-      class="window-no-drag flex items-center gap-1"
-      [attr.aria-label]="'header.sheetsAriaLabel' | translate"
-    >
-      @for (sheet of sheetButtons; track sheet.kind) {
-        @let isOpen = sheets.activeKind() === sheet.kind;
+    <app-header-search class="window-no-drag" />
+  }
+
+  <!-- right column: sheet buttons + window controls -->
+  <div class="flex items-center justify-end">
+    @if (vault()) {
+      <nav
+        class="window-no-drag flex items-center gap-1 px-1"
+        [attr.aria-label]="'header.sheetsAriaLabel' | translate"
+      >
+        @for (sheet of sheetButtons; track sheet.kind) {
+          @let isOpen = sheets.activeKind() === sheet.kind;
+          <button
+            type="button"
+            arc-button
+            arcType="ghost"
+            arcSize="sm"
+            class="size-8"
+            [class.text-primary]="isOpen"
+            [attr.aria-pressed]="isOpen"
+            [attr.aria-label]="sheet.label | translate"
+            arcPosition="bottom"
+            [arcTooltip]="sheet.label | translate"
+            (click)="sheets.toggle(sheet.kind)"
+          >
+            <arc-icon [arcType]="sheet.icon" />
+          </button>
+        }
+      </nav>
+    }
+
+    @if (isDesktop && !isMac) {
+      <div class="window-no-drag flex h-full items-stretch border-l border-border">
         <button
           type="button"
-          arc-button
-          arcType="ghost"
-          arcSize="sm"
-          class="size-8"
-          [class.text-primary]="isOpen"
-          [attr.aria-pressed]="isOpen"
-          [attr.aria-label]="sheet.label | translate"
+          class="flex w-11 cursor-pointer items-center justify-center text-muted-foreground transition-colors duration-150 hover:bg-accent hover:text-foreground focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-ring [&_svg]:size-4"
+          [attr.aria-label]="'header.window.minimize' | translate"
           arcPosition="bottom"
-          [arcTooltip]="sheet.label | translate"
-          (click)="sheets.toggle(sheet.kind)"
+          [arcTooltip]="'header.window.minimize' | translate"
+          (click)="minimize()"
         >
-          <arc-icon [arcType]="sheet.icon" />
+          <arc-icon arcType="minus" />
         </button>
-      }
-    </nav>
-  }
-
-  @if (isDesktop && !isMac) {
-    <div class="window-no-drag ml-2 flex h-full items-stretch border-l border-border">
-      <button
-        type="button"
-        class="flex w-11 cursor-pointer items-center justify-center text-muted-foreground transition-colors duration-150 hover:bg-accent hover:text-foreground focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-ring [&_svg]:size-4"
-        [attr.aria-label]="'header.window.minimize' | translate"
-        arcPosition="bottom"
-        [arcTooltip]="'header.window.minimize' | translate"
-        (click)="minimize()"
-      >
-        <arc-icon arcType="minus" />
-      </button>
-      <button
-        type="button"
-        class="flex w-11 cursor-pointer items-center justify-center text-muted-foreground transition-colors duration-150 hover:bg-accent hover:text-foreground focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-ring [&_svg]:size-3.5"
-        [attr.aria-label]="
-          (isMaximized() ? 'header.window.restore' : 'header.window.maximize') | translate
-        "
-        arcPosition="bottom"
-        [arcTooltip]="
-          (isMaximized() ? 'header.window.restore' : 'header.window.maximize') | translate
-        "
-        (click)="toggleMaximize()"
-      >
-        <arc-icon [arcType]="isMaximized() ? 'copy' : 'square'" />
-      </button>
-      <button
-        type="button"
-        class="flex w-11 cursor-pointer items-center justify-center text-muted-foreground transition-colors duration-150 hover:bg-destructive hover:text-destructive-foreground focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-ring [&_svg]:size-4"
-        [attr.aria-label]="'header.window.close' | translate"
-        arcPosition="bottom"
-        [arcTooltip]="'header.window.close' | translate"
-        (click)="close()"
-      >
-        <arc-icon arcType="x" />
-      </button>
-    </div>
-  }
+        <button
+          type="button"
+          class="flex w-11 cursor-pointer items-center justify-center text-muted-foreground transition-colors duration-150 hover:bg-accent hover:text-foreground focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-ring [&_svg]:size-3.5"
+          [attr.aria-label]="
+            (isMaximized() ? 'header.window.restore' : 'header.window.maximize') | translate
+          "
+          arcPosition="bottom"
+          [arcTooltip]="
+            (isMaximized() ? 'header.window.restore' : 'header.window.maximize') | translate
+          "
+          (click)="toggleMaximize()"
+        >
+          <arc-icon [arcType]="isMaximized() ? 'copy' : 'square'" />
+        </button>
+        <button
+          type="button"
+          class="flex w-11 cursor-pointer items-center justify-center text-muted-foreground transition-colors duration-150 hover:bg-destructive hover:text-destructive-foreground focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-ring [&_svg]:size-4"
+          [attr.aria-label]="'header.window.close' | translate"
+          arcPosition="bottom"
+          [arcTooltip]="'header.window.close' | translate"
+          (click)="close()"
+        >
+          <arc-icon arcType="x" />
+        </button>
+      </div>
+    }
+  </div>
 </header>

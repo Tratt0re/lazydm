@@ -7,6 +7,7 @@ const {
   indexerController,
   resetController,
   reviewController,
+  searchController,
   sectionController,
   templateController,
   updateController,
@@ -57,6 +58,7 @@ const IPC_HANDLERS = Object.freeze({
   [CHANNELS.documents.copyPlan]: documentController.copyPlan,
 
   [CHANNELS.review.list]: reviewController.list,
+  [CHANNELS.search.query]: searchController.query,
   [CHANNELS.sections.list]: sectionController.list,
   [CHANNELS.sections.defaults]: sectionController.defaults,
   [CHANNELS.sections.save]: sectionController.save,

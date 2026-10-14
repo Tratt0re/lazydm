@@ -7,6 +7,7 @@ const documentController = require('./document.controller');
 const indexerController = require('./indexer.controller');
 const resetController = require('./reset.controller');
 const reviewController = require('./review.controller');
+const searchController = require('./search.controller');
 const sectionController = require('./section.controller');
 const templateController = require('./template.controller');
 const updateController = require('./update.controller');
@@ -24,6 +25,7 @@ module.exports = {
   indexerController,
   resetController,
   reviewController,
+  searchController,
   sectionController,
   templateController,
   updateController,

@@ -619,5 +619,14 @@
   "sidebar": {
     "collapseSection": "折叠 {{section}}",
     "expandSection": "显示 {{section}} 中的文件"
+  },
+  "search": {
+    "placeholder": "搜索当前活动…",
+    "label": "搜索当前活动",
+    "shortcut": "⌘K",
+    "searching": "搜索中…",
+    "noResults": "没有找到\"{{term}}\"的结果",
+    "resultsLabel": "搜索结果",
+    "hint": "↑↓ 导航 · Enter 打开 · Esc 关闭"
   }
 }

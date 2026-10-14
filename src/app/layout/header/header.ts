@@ -1,6 +1,7 @@
 import { Component, DestroyRef, inject, signal, ViewEncapsulation } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 
+import { HeaderSearchComponent } from '@/components/header-search/header-search.component';
 import { type AppSheetKind, AppSheetService } from '@/services/app-sheet.service';
 import { VaultService } from '@/services/vault.service';
 import { ArcTechButtonComponent } from '@/shared/components/button';
@@ -16,7 +17,13 @@ const FULLSCREEN_CHANGED_EVENT = 'window:fullscreenChanged';
  */
 @Component({
   selector: 'app-header',
-  imports: [TranslatePipe, ArcTechButtonComponent, ArcTechIconComponent, ArcTechTooltipImports],
+  imports: [
+    TranslatePipe,
+    ArcTechButtonComponent,
+    ArcTechIconComponent,
+    ArcTechTooltipImports,
+    HeaderSearchComponent,
+  ],
   templateUrl: './header.html',
   encapsulation: ViewEncapsulation.None,
   host: {

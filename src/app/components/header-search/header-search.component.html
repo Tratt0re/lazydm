@@ -1,0 +1,100 @@
+<div class="relative">
+  <div
+    class="flex h-7 items-center gap-1.5 border border-input bg-background px-2.5 transition-[border-color,width]"
+    [class.w-64]="!isOpen()"
+    [class.w-80]="isOpen()"
+    [class.border-ring]="isOpen()"
+  >
+    <arc-icon
+      arcType="search"
+      class="size-3.5 shrink-0 text-muted-foreground"
+      aria-hidden="true"
+    />
+    <input
+      #searchInput
+      type="search"
+      autocomplete="off"
+      spellcheck="false"
+      class="h-full flex-1 bg-transparent font-mono text-[11px] tracking-[0.04em] text-foreground placeholder:text-muted-foreground focus:outline-none [&::-webkit-search-cancel-button]:hidden"
+      [placeholder]="'search.placeholder' | translate"
+      [attr.aria-label]="'search.label' | translate"
+      [value]="query()"
+      (input)="onInput($event)"
+      (focus)="isOpen.set(true)"
+      (blur)="onBlur()"
+      (keydown)="onKeydown($event)"
+      role="combobox"
+      [attr.aria-expanded]="isOpen() && (results().length > 0 || isLoading())"
+      aria-autocomplete="list"
+      aria-haspopup="listbox"
+    />
+    @if (query()) {
+      <span class="shrink-0 select-none font-mono text-[9px] text-muted-foreground">ESC</span>
+    } @else {
+      <span
+        class="shrink-0 select-none font-mono text-[9px] text-muted-foreground"
+        aria-hidden="true"
+      >{{ 'search.shortcut' | translate }}</span>
+    }
+  </div>
+
+  @if (isOpen() && (isLoading() || query())) {
+    <div
+      class="absolute left-1/2 top-full z-[100] mt-1 w-[420px] -translate-x-1/2 border border-border bg-card shadow-xl"
+      role="listbox"
+      [attr.aria-label]="'search.resultsLabel' | translate"
+    >
+      @if (isLoading()) {
+        <div class="flex items-center gap-2 px-3 py-2.5 font-mono text-[11px] text-muted-foreground">
+          <arc-icon arcType="loader-circle" class="size-3.5 animate-spin" aria-hidden="true" />
+          {{ 'search.searching' | translate }}
+        </div>
+      } @else if (results().length === 0) {
+        <div class="px-3 py-2.5 font-mono text-[11px] text-muted-foreground">
+          {{ 'search.noResults' | translate: { term: query() } }}
+        </div>
+      } @else {
+        <ul class="max-h-80 overflow-y-auto py-1">
+          @for (result of results(); track result.path; let i = $index) {
+            @let isActive = activeIndex() === i;
+            @let route = noteRoute(result);
+            @if (route) {
+              <li role="option" [attr.aria-selected]="isActive">
+                <a
+                  [routerLink]="route"
+                  (click)="close()"
+                  class="flex flex-col gap-0.5 px-3 py-2 transition-colors"
+                  [class.bg-accent]="isActive"
+                  [class.text-accent-foreground]="isActive"
+                >
+                  <span class="flex items-center gap-2 font-mono text-[11px] font-semibold tracking-[0.04em]">
+                    <arc-icon
+                      [arcType]="result.kind === 'md' ? 'file-text' : 'image'"
+                      class="size-3.5 shrink-0 text-muted-foreground"
+                      aria-hidden="true"
+                    />
+                    {{ result.title }}
+                    @if (result.type) {
+                      <span class="ml-auto shrink-0 text-[9px] uppercase tracking-widest text-muted-foreground">
+                        {{ result.type }}
+                      </span>
+                    }
+                  </span>
+                  @if (result.snippet) {
+                    <span
+                      class="pl-5 font-sans text-[10px] leading-snug text-muted-foreground line-clamp-1"
+                      [innerHTML]="result.snippet"
+                    ></span>
+                  }
+                </a>
+              </li>
+            }
+          }
+        </ul>
+        <div class="border-t border-border px-3 py-1.5 font-mono text-[9px] text-muted-foreground">
+          {{ 'search.hint' | translate }}
+        </div>
+      }
+    </div>
+  }
+</div>

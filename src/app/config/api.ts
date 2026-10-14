@@ -22,6 +22,7 @@ export enum APIChannel {
   REVIEW = 'review',
   SECTIONS = 'sections',
   TEMPLATES = 'templates',
+  SEARCH = 'search',
   VAULT = 'vault',
   WINDOW = 'window',
   WORKSPACE = 'workspace',
@@ -76,6 +77,12 @@ export interface ElectronIpcClient {
   };
   readonly review: {
     readonly list: IpcRequest<{ scope: string }, DTO.ReviewDto>;
+  };
+  readonly search: {
+    readonly query: IpcRequest<
+      { campaign: string; term: string },
+      { rows: DTO.SearchResultDto[] }
+    >;
   };
   readonly sections: {
     readonly list: IpcRequest<{ campaign: string }, { rows: DTO.SectionDto[] }>;

@@ -3,6 +3,7 @@ export * from './compendium.dto';
 export * from './cloud-readiness.dto';
 export * from './document.dto';
 export * from './review.dto';
+export * from './search.dto';
 export * from './section.dto';
 export * from './template.dto';
 export * from './vault.dto';

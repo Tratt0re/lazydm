@@ -46,6 +46,9 @@ const CHANNELS = Object.freeze({
   review: Object.freeze({
     list: 'review:list',
   }),
+  search: Object.freeze({
+    query: 'search:query',
+  }),
   sections: Object.freeze({
     list: 'sections:list',
     defaults: 'sections:defaults',

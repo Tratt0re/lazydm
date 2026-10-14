@@ -60,6 +60,9 @@ var require_channels = __commonJS({
       review: Object.freeze({
         list: "review:list"
       }),
+      search: Object.freeze({
+        query: "search:query"
+      }),
       sections: Object.freeze({
         list: "sections:list",
         defaults: "sections:defaults",

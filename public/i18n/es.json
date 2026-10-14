@@ -619,5 +619,14 @@
   "sidebar": {
     "collapseSection": "Contraer {{section}}",
     "expandSection": "Ver archivos de {{section}}"
+  },
+  "search": {
+    "placeholder": "Buscar en la campaña…",
+    "label": "Buscar en la campaña",
+    "shortcut": "⌘K",
+    "searching": "Buscando…",
+    "noResults": "Sin resultados para «{{term}}»",
+    "resultsLabel": "Resultados de búsqueda",
+    "hint": "↑↓ Navegar · Enter abrir · Esc cerrar"
   }
 }

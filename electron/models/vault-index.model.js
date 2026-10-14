@@ -159,6 +159,43 @@ function hasFileNamed(scope, name) {
   );
 }
 
+/**
+ * Full-text search within a campaign (or compendium scope). Searches both title and body.
+ * @param {string|null} scope - Campaign slug (e.g. `lost-mine`) or `compendium/<system>`, or null for all.
+ * @param {string} term - Raw user input; sanitised and converted to a prefix FTS5 query.
+ * @returns {{ path: string, title: string, kind: string, type: string|null, snippet: string }[]}
+ */
+function searchFiles(scope, term) {
+  // Sanitise: strip FTS5 operators, collapse whitespace, require at least one word.
+  const words = term
+    .replace(/["""''*^():\-]/g, ' ')
+    .trim()
+    .split(/\s+/)
+    .filter(Boolean);
+  if (words.length === 0) {
+    return [];
+  }
+  // Each word as a quoted prefix term — safe against special chars, still allows partial matches.
+  const query = words.map((w) => `"${w.replace(/"/g, ' ')}"*`).join(' ');
+
+  return getVaultIndexDatabase()
+    .prepare(
+      `SELECT f.path,
+              COALESCE(f.title, f.name) AS title,
+              f.kind,
+              f.type,
+              snippet(files_fts, 1, '<m>', '</m>', '…', 20) AS snippet
+       FROM files_fts
+       JOIN files f ON files_fts.rowid = f.id
+       WHERE (? IS NULL OR f.campaign IS ?)
+         AND f.path NOT LIKE '%/!_templates/%' ESCAPE '!'
+         AND files_fts MATCH ?
+       ORDER BY rank
+       LIMIT 20`,
+    )
+    .all(scope, scope, query);
+}
+
 function countFiles() {
   return getVaultIndexDatabase().prepare('SELECT COUNT(*) AS total FROM files').get().total;
 }
@@ -334,6 +371,7 @@ function resolveLinks() {
 module.exports = {
   countFiles,
   deleteAll,
+  searchFiles,
   deletePath,
   getCampaignSlug,
   getFileKind,
