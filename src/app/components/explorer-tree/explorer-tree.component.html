@@ -14,7 +14,7 @@
       [class]="rowClass(isActive(node.route), isTop) + ' gap-1.5 pr-3 pl-[28px]'"
       [attr.aria-current]="isActive(node.route) ? 'page' : null"
     >
-      <arc-icon [arcType]="node.icon" class="size-4 shrink-0" />
+      <arc-icon [arcType]="node.icon" class="size-4 shrink-0 text-sidebar-primary" />
       <span class="truncate">{{ label }}</span>
     </a>
   } @else {
@@ -37,7 +37,7 @@
           [class.rotate-90]="isOpen"
           aria-hidden="true"
         />
-        <arc-icon [arcType]="node.icon" class="size-4 shrink-0" aria-hidden="true" />
+        <arc-icon [arcType]="node.icon" class="size-4 shrink-0 text-sidebar-primary" aria-hidden="true" />
         <span class="truncate">{{ label }}</span>
       </button>
       <ng-container
@@ -94,7 +94,7 @@
                     [class.rotate-90]="isFolderOpen"
                     aria-hidden="true"
                   />
-                  <arc-icon arcType="folder" class="size-4 shrink-0" aria-hidden="true" />
+                  <arc-icon arcType="folder" class="size-4 shrink-0 text-sidebar-primary" aria-hidden="true" />
                   <span class="truncate">{{ folderLabel }}</span>
                 </button>
                 <ng-container
@@ -167,7 +167,7 @@
     [arcContextMenuTriggerFor]="fileMenu"
     [style.cursor]="'pointer'"
   >
-    <arc-icon [arcType]="isNote ? 'file-text' : 'image'" class="size-3.5 shrink-0" aria-hidden="true" />
+    <arc-icon [arcType]="isNote ? 'file-text' : 'image'" class="size-3.5 shrink-0 text-sidebar-primary" aria-hidden="true" />
     <span class="truncate">{{ isNote ? file.title : file.name }}</span>
   </a>
 
