@@ -627,7 +627,7 @@
   },
   "explorer": {
     "openPage": "打开页面",
-    "openPageOf": "打开 {{name}}",
+    "openPageOf": "前往 {{name}} 主页",
     "empty": "空文件夹"
   }
 }

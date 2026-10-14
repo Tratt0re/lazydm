@@ -10,6 +10,7 @@ import {
 } from '@/config/local-preferences.config';
 
 const DOCUMENT_VIEW_MODES_MAX_ENTRIES = 500;
+const EXPLORER_EXPANDED_MAX_ENTRIES = 50;
 
 @Injectable({
   providedIn: 'root',
@@ -103,6 +104,28 @@ export class LocalPreferencesService {
     modes[path] = mode;
     const entries = Object.entries(modes).slice(-DOCUMENT_VIEW_MODES_MAX_ENTRIES);
     this.setText(LocalPreferenceKey.DOCUMENT_VIEW_MODES, JSON.stringify(Object.fromEntries(entries)));
+  }
+
+  /** Folders left open in an explorer sidebar (`campaign:<slug>`, `compendium`), per device. */
+  getExplorerExpanded(stateKey: string): readonly string[] {
+    const keys = this.readExplorerExpanded()[stateKey];
+    return Array.isArray(keys) ? keys.filter((key): key is string => typeof key === 'string') : [];
+  }
+
+  /** Remembers the open folders of an explorer; only the most recent explorers are kept. */
+  setExplorerExpanded(stateKey: string, keys: readonly string[]): void {
+    const all = this.readExplorerExpanded();
+    delete all[stateKey];
+    all[stateKey] = [...keys];
+    const entries = Object.entries(all).slice(-EXPLORER_EXPANDED_MAX_ENTRIES);
+    this.setJson(LocalPreferenceKey.EXPLORER_EXPANDED, Object.fromEntries(entries));
+  }
+
+  private readExplorerExpanded(): Record<string, unknown> {
+    const parsed = this.getJson<unknown>(LocalPreferenceKey.EXPLORER_EXPANDED);
+    return parsed && typeof parsed === 'object' && !Array.isArray(parsed)
+      ? { ...(parsed as Record<string, unknown>) }
+      : {};
   }
 
   private readDocumentViewModes(): Record<string, DocumentViewMode> {

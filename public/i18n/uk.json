@@ -627,7 +627,7 @@
   },
   "explorer": {
     "openPage": "Відкрити сторінку",
-    "openPageOf": "Відкрити {{name}}",
+    "openPageOf": "Перейти на головну {{name}}",
     "empty": "Порожня тека"
   }
 }

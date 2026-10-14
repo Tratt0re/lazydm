@@ -627,7 +627,7 @@
   },
   "explorer": {
     "openPage": "Apri pagina",
-    "openPageOf": "Apri {{name}}",
+    "openPageOf": "Vai alla home di {{name}}",
     "empty": "Cartella vuota"
   }
 }

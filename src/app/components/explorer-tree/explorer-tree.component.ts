@@ -21,7 +21,9 @@ import type { DocumentFileListItemDto, DocumentFolderDto } from '@/dtos';
 import { CopyToService } from '@/services/copy-to.service';
 import { DocumentService } from '@/services/document.service';
 import { FileMoveService } from '@/services/file-move.service';
+import { LocalPreferencesService } from '@/services/local-preferences.service';
 import { toSubfolderLabel } from '@/services/section.service';
+import { WorkspaceService } from '@/services/workspace.service';
 import { ArcTechIconComponent, type ArcTechIcon } from '@/shared/components/icon';
 import { ArcTechMenuImports } from '@/shared/components/menu';
 import { ArcTechTooltipImports } from '@/shared/components/tooltip';
@@ -57,7 +59,7 @@ interface SectionTree {
  * Explorer sidebar (campaign shell, Compendium sheet): a file tree like a code editor's. Folder rows expand on
  * click; the ↗ button on their right opens the folder's page. Files open the note. Right-click: *Move to…* and
  * *Reveal* on files (*Copy to…* on assets), *Open page* and *Reveal* on folders. The folder holding the open page
- * expands by itself.
+ * expands by itself; with a `stateKey` the open folders are remembered on this device.
  */
 @Component({
   selector: 'app-explorer-tree',
@@ -71,9 +73,6 @@ interface SectionTree {
   ],
   templateUrl: './explorer-tree.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  host: {
-    class: 'block',
-  },
 })
 export class AppExplorerTreeComponent {
   private readonly router = inject(Router);
@@ -81,12 +80,16 @@ export class AppExplorerTreeComponent {
   private readonly translateService = inject(TranslateService);
   protected readonly fileMove = inject(FileMoveService);
   protected readonly copyTo = inject(CopyToService);
+  protected readonly workspace = inject(WorkspaceService);
+  private readonly localPreferences = inject(LocalPreferencesService);
   protected readonly toSubfolderLabel = toSubfolderLabel;
 
   readonly nodes = input.required<readonly ExplorerNode[]>();
   /** Router outlet whose URL marks the active row: `primary` (campaign) or the sheet outlet (Compendium). */
   readonly outlet = input('primary');
   readonly ariaLabel = input('');
+  /** Remembers the open folders under this key (`campaign:<slug>`, `compendium`); null keeps them in memory. */
+  readonly stateKey = input<string | null>(null);
 
   /** A link of the tree was followed (lets a small-screen sidebar close itself). */
   readonly navigated = output<void>();
@@ -113,6 +116,8 @@ export class AppExplorerTreeComponent {
   private readonly expandedKeys = signal<ReadonlySet<string>>(new Set());
   /** Loaded section trees, by section path. */
   private readonly trees = signal<ReadonlyMap<string, SectionTree>>(new Map());
+  /** Section paths being loaded (not a signal: only guards against loading twice). */
+  private readonly loadingPaths = new Set<string>();
 
   private readonly handleIndexUpdated = () => {
     for (const path of this.trees().keys()) {
@@ -126,11 +131,45 @@ export class AppExplorerTreeComponent {
       window.electronAPI?.offIpcEvent?.('index:updated', this.handleIndexUpdated),
     );
 
+    // The folders left open last time (before revealing the open page, which adds to them).
+    effect(() => {
+      const stateKey = this.stateKey();
+      untracked(() =>
+        this.expandedKeys.set(
+          new Set(stateKey ? this.localPreferences.getExplorerExpanded(stateKey) : []),
+        ),
+      );
+    });
+
     // Reveal the open page: expand every folder on its way (on navigation only, so a collapse sticks).
     effect(() => {
       const location = this.location();
       const nodes = this.nodes();
       untracked(() => this.revealLocation(nodes, location.path, location.folder));
+    });
+
+    effect(() => {
+      const keys = this.expandedKeys();
+      const stateKey = untracked(() => this.stateKey());
+      if (stateKey) {
+        this.localPreferences.setExplorerExpanded(stateKey, [...keys]);
+      }
+    });
+
+    // Every open section shows its files: load the ones not loaded yet.
+    effect(() => {
+      const keys = this.expandedKeys();
+      const trees = this.trees();
+      const visit = (items: readonly ExplorerNode[]) => {
+        for (const node of items) {
+          if (node.children) {
+            visit(node.children);
+          } else if (node.path && keys.has(node.key) && !trees.has(node.path)) {
+            void this.loadTree(node.path);
+          }
+        }
+      };
+      visit(this.nodes());
     });
   }
 
@@ -141,7 +180,7 @@ export class AppExplorerTreeComponent {
   /** A row: top-level rows in the sidebar's label style, nested ones lighter; the active one raised in bronze. */
   protected rowClass(isActive: boolean, isTop: boolean): string {
     return mergeClasses(
-      'flex h-8 min-w-0 items-center border-l-2 font-mono text-[11px] tracking-[0.04em] transition-colors duration-150 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-ring',
+      'group flex h-8 min-w-0 items-center border-l-2 font-mono text-[11px] tracking-[0.04em] transition-colors duration-150 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-ring',
       isTop ? 'h-10 font-semibold' : 'font-medium',
       isActive
         ? 'border-l-sidebar-primary bg-raised text-sidebar-primary'
@@ -153,15 +192,17 @@ export class AppExplorerTreeComponent {
     return this.expandedKeys().has(key);
   }
 
-  protected toggle(key: string, sectionPath?: string): void {
+  protected toggle(key: string): void {
     const next = new Set(this.expandedKeys());
     if (!next.delete(key)) {
       next.add(key);
-      if (sectionPath && !this.trees().has(sectionPath)) {
-        void this.loadTree(sectionPath);
-      }
     }
     this.expandedKeys.set(next);
+  }
+
+  /** New tabs hold campaign pages only (the Compendium opens in its sheet). */
+  protected canOpenInTab(route: string | null): route is string {
+    return !!route && this.workspace.isCampaignUrl(route);
   }
 
   protected treeOf(node: ExplorerNode): SectionTree | null {
@@ -178,7 +219,10 @@ export class AppExplorerTreeComponent {
   }
 
   /** The sub-folder of the section a file is in (`null` directly in it): where an asset row links to. */
-  protected folderQueryOf(node: ExplorerNode, file: DocumentFileListItemDto): Record<string, string> {
+  protected folderQueryOf(
+    node: ExplorerNode,
+    file: DocumentFileListItemDto,
+  ): Record<string, string> {
     const folder = node.path ? this.fileMove.folderOf(file.path, node.path) : '';
     return folder ? { [FOLDER_QUERY_PARAM]: folder } : {};
   }
@@ -206,7 +250,11 @@ export class AppExplorerTreeComponent {
     );
   }
 
-  private revealLocation(nodes: readonly ExplorerNode[], path: string, folder: string | null): void {
+  private revealLocation(
+    nodes: readonly ExplorerNode[],
+    path: string,
+    folder: string | null,
+  ): void {
     const keys = new Set(this.expandedKeys());
     const visit = (items: readonly ExplorerNode[]) => {
       for (const node of items) {
@@ -224,15 +272,15 @@ export class AppExplorerTreeComponent {
         }
 
         // A section: open on its notes and sub-folder pages, not on the section page itself.
-        const rest = path.slice(node.route.length + 1).split('/').filter(Boolean);
+        const rest = path
+          .slice(node.route.length + 1)
+          .split('/')
+          .filter(Boolean);
         const subfolder = rest.length === 2 ? rest[0] : path === node.route ? folder : null;
         if (rest.length > 0 || subfolder) {
           keys.add(node.key);
           if (subfolder) {
             keys.add(`${node.key}/${subfolder}`);
-          }
-          if (node.path && !this.trees().has(node.path)) {
-            void this.loadTree(node.path);
           }
         }
       }
@@ -245,6 +293,11 @@ export class AppExplorerTreeComponent {
   }
 
   private async loadTree(path: string): Promise<void> {
+    if (this.loadingPaths.has(path)) {
+      return;
+    }
+
+    this.loadingPaths.add(path);
     try {
       const tree = await this.documentService.listSectionTree(path);
       const next = new Map(this.trees());
@@ -252,6 +305,8 @@ export class AppExplorerTreeComponent {
       this.trees.set(next);
     } catch (error) {
       console.warn('[app] Failed to load the explorer folder:', path, error);
+    } finally {
+      this.loadingPaths.delete(path);
     }
   }
 }

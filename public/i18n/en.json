@@ -627,7 +627,7 @@
   },
   "explorer": {
     "openPage": "Open page",
-    "openPageOf": "Open {{name}}",
+    "openPageOf": "Go to {{name}} home",
     "empty": "Empty folder"
   }
 }

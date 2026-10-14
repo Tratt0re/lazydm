@@ -76,6 +76,11 @@ export class Sidebar {
       })),
     );
   });
+  /** Where the explorer remembers its open folders: one entry per campaign. */
+  protected readonly explorerStateKey = computed(() => {
+    const slug = this.campaignService.activeCampaign()?.slug;
+    return slug ? `campaign:${slug}` : null;
+  });
   protected readonly bottomMenuSections = computed(() =>
     this.menuSections().filter((section) => section.placement === 'bottom'),
   );

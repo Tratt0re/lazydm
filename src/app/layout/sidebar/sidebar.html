@@ -55,6 +55,7 @@
             } @else {
               <app-explorer-tree
                 [nodes]="topExplorerNodes()[index]"
+                [stateKey]="explorerStateKey() && explorerStateKey() + ':' + section.label"
                 [ariaLabel]="section.label | translate"
                 (navigated)="onMenuItemClick()"
               />

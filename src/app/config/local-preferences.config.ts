@@ -5,6 +5,7 @@ export enum LocalPreferenceKey {
   ONBOARDING_COMPLETED = 'onboarding_completed',
   DOCUMENT_LINKS_PANEL_OPEN = 'document_links_panel_open',
   DOCUMENT_VIEW_MODES = 'document_view_modes',
+  EXPLORER_EXPANDED = 'explorer_expanded',
 }
 
 /** How a note is shown: live preview (editable, rendered), raw source, or read-only reading view. */

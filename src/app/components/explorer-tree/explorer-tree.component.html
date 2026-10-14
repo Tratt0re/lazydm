@@ -23,12 +23,13 @@
       [class]="rowClass(isActive(node.route), isTop)"
       arc-context-menu
       [arcContextMenuTriggerFor]="folderMenu"
+      [style.cursor]="'pointer'"
     >
       <button
         type="button"
         class="flex h-full min-w-0 flex-1 cursor-pointer items-center gap-1.5 pl-1.5 text-left focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-ring"
         [attr.aria-expanded]="isOpen"
-        (click)="toggle(node.key, node.children ? undefined : node.path)"
+        (click)="toggle(node.key)"
       >
         <arc-icon
           arcType="chevron-right"
@@ -79,6 +80,7 @@
                 [class]="rowClass(isActive(node.route, folder.name), false)"
                 arc-context-menu
                 [arcContextMenuTriggerFor]="subfolderMenu"
+                [style.cursor]="'pointer'"
               >
                 <button
                   type="button"
@@ -163,13 +165,34 @@
     [attr.title]="isNote ? file.title : file.name"
     arc-context-menu
     [arcContextMenuTriggerFor]="fileMenu"
+    [style.cursor]="'pointer'"
   >
     <arc-icon [arcType]="isNote ? 'file-text' : 'image'" class="size-3.5 shrink-0" aria-hidden="true" />
     <span class="truncate">{{ isNote ? file.title : file.name }}</span>
   </a>
 
   <ng-template #fileMenu>
-    <div arc-menu-content class="w-56">
+    <div arc-menu-content class="w-60">
+      @if (isNote && canOpenInTab(route)) {
+        <button
+          type="button"
+          arc-menu-item
+          [arcDisabled]="!workspace.canOpenTab()"
+          (click)="workspace.openTab(route)"
+        >
+          <arc-icon arcType="plus" />
+          {{ 'tabs.menu.openInNewTab' | translate }}
+        </button>
+        <button
+          type="button"
+          arc-menu-item
+          [arcDisabled]="!workspace.canOpenTab()"
+          (click)="workspace.openTab(route, { background: true })"
+        >
+          <arc-icon arcType="copy-plus" />
+          {{ 'tabs.menu.openInBackground' | translate }}
+        </button>
+      }
       <button type="button" arc-menu-item (click)="openMoveSheet(node, file)">
         <arc-icon arcType="move-right" />
         {{ 'campaigns.sections.move.menu' | translate }}
@@ -194,7 +217,7 @@
     [routerLink]="route"
     [queryParams]="query"
     (click)="navigated.emit()"
-    class="flex size-7 shrink-0 items-center justify-center text-muted-foreground transition-colors hover:bg-sidebar-accent hover:text-sidebar-primary focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-ring"
+    class="flex size-7 shrink-0 items-center justify-center text-muted-foreground opacity-0 transition-[color,background-color,opacity] group-hover:opacity-100 focus-visible:opacity-100 hover:bg-sidebar-accent hover:text-sidebar-primary focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-ring"
     [attr.aria-label]="'explorer.openPageOf' | translate: { name }"
     arcPosition="right"
     [arcTooltip]="'explorer.openPageOf' | translate: { name }"

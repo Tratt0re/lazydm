@@ -627,7 +627,7 @@
   },
   "explorer": {
     "openPage": "Abrir página",
-    "openPageOf": "Abrir {{name}}",
+    "openPageOf": "Ir al inicio de {{name}}",
     "empty": "Carpeta vacía"
   }
 }
