@@ -1,35 +1,94 @@
-<nav class="flex flex-col" [attr.aria-label]="ariaLabel() || null">
+<!-- Narrow screens: one bar with the current item; it expands the list in place. -->
+<button
+  type="button"
+  class="flex w-full cursor-pointer items-center gap-2 px-3 py-3 text-left text-foreground transition-colors duration-150 hover:bg-accent focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-ring lg:hidden"
+  [class.border-b]="isBarOpen()"
+  [class.border-border]="isBarOpen()"
+  [attr.aria-expanded]="isBarOpen()"
+  (click)="isBarOpen.set(!isBarOpen())"
+>
+  <arc-icon
+    arcType="chevron-right"
+    class="size-3.5 shrink-0 text-primary transition-transform duration-150"
+    [class.rotate-90]="isBarOpen()"
+    aria-hidden="true"
+  />
+  <span class="min-w-0 flex-1 truncate text-xs font-semibold tracking-[0.06em] uppercase">
+    @if (barTitle(); as title) {
+      <span class="text-muted-foreground">{{ title | translate }} · </span>
+    }
+    {{ activeLabel() || ariaLabel() }}<span class="text-primary" aria-hidden="true">.</span>
+  </span>
+</button>
+
+<nav
+  [class]="'flex-col ' + (isBarOpen() ? 'flex' : 'hidden lg:flex')"
+  [attr.aria-label]="ariaLabel() || null"
+>
   @for (item of items(); track item.key) {
     @if (item.children) {
       @let isOpen = isExpanded(item);
-      <button
-        type="button"
-        class="flex w-full cursor-pointer items-start gap-2 border-b border-border px-3 py-3 text-left text-foreground transition-colors duration-150 hover:bg-accent focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-ring"
-        [attr.aria-expanded]="isOpen"
-        (click)="toggle(item)"
-      >
-        <arc-icon
-          arcType="chevron-right"
-          class="mt-px size-3.5 shrink-0 text-primary transition-transform duration-150"
-          [class.rotate-90]="isOpen"
-          aria-hidden="true"
-        />
-        <span class="min-w-0 flex-1">
-          <ng-container
-            [ngTemplateOutlet]="itemText"
-            [ngTemplateOutletContext]="{ $implicit: item }"
+      @if (variant() === 'groups') {
+        <button
+          type="button"
+          class="flex w-full cursor-pointer items-center gap-2 border-b border-border px-3 py-2 text-left font-mono text-[10px] font-semibold tracking-[0.1em] text-muted-foreground uppercase transition-colors duration-150 hover:bg-accent hover:text-foreground focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-ring"
+          [attr.aria-expanded]="isOpen"
+          (click)="toggle(item)"
+        >
+          <arc-icon
+            arcType="chevron-right"
+            class="size-3 shrink-0 text-primary transition-transform duration-150"
+            [class.rotate-90]="isOpen"
+            aria-hidden="true"
           />
-        </span>
-      </button>
-      @if (isOpen) {
-        <div class="ml-[15px] border-b border-l border-border py-1 pl-2">
-          @for (child of item.children; track child.key) {
-            <ng-container
-              [ngTemplateOutlet]="row"
-              [ngTemplateOutletContext]="{ $implicit: child, isChild: true }"
-            />
+          @if (item.icon) {
+            <arc-icon [arcType]="item.icon" class="size-3.5 shrink-0" aria-hidden="true" />
           }
-        </div>
+          <span class="min-w-0 flex-1 truncate">
+            {{ item.translate === false ? item.label : (item.label | translate) }}
+          </span>
+          <span class="shrink-0">{{ item.children.length }}</span>
+        </button>
+        @if (isOpen) {
+          <div class="border-b border-border py-1">
+            @for (child of item.children; track child.key) {
+              <ng-container
+                [ngTemplateOutlet]="row"
+                [ngTemplateOutletContext]="{ $implicit: child, isChild: true }"
+              />
+            }
+          </div>
+        }
+      } @else {
+        <button
+          type="button"
+          class="flex w-full cursor-pointer items-start gap-2 border-b border-border px-3 py-3 text-left text-foreground transition-colors duration-150 hover:bg-accent focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-ring"
+          [attr.aria-expanded]="isOpen"
+          (click)="toggle(item)"
+        >
+          <arc-icon
+            arcType="chevron-right"
+            class="mt-px size-3.5 shrink-0 text-primary transition-transform duration-150"
+            [class.rotate-90]="isOpen"
+            aria-hidden="true"
+          />
+          <span class="min-w-0 flex-1">
+            <ng-container
+              [ngTemplateOutlet]="itemText"
+              [ngTemplateOutletContext]="{ $implicit: item }"
+            />
+          </span>
+        </button>
+        @if (isOpen) {
+          <div class="ml-[15px] border-b border-l border-border py-1 pl-2">
+            @for (child of item.children; track child.key) {
+              <ng-container
+                [ngTemplateOutlet]="row"
+                [ngTemplateOutletContext]="{ $implicit: child, isChild: true }"
+              />
+            }
+          </div>
+        }
       }
     } @else {
       <ng-container
@@ -42,18 +101,24 @@
 
 <ng-template #row let-item let-isChild="isChild">
   @let isActive = item.key === activeKey();
+  @let isGroupRow = isChild && variant() === 'groups';
   @let rowClass =
     'flex w-full cursor-pointer items-start gap-2 text-left transition-colors duration-150 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-ring ' +
-    (isChild ? 'px-2.5 py-2 ' : 'border-b border-border px-3 py-3 ') +
+    (isGroupRow ? 'px-3 py-1.5 ' : isChild ? 'px-2.5 py-2 ' : 'border-b border-border px-3 py-3 ') +
     (isActive
       ? 'border-l-3 border-l-primary bg-raised text-foreground-strong ' +
-        (isChild ? 'pl-[7px]' : 'pl-[9px]')
+        (isGroupRow ? 'pl-[9px]' : isChild ? 'pl-[7px]' : 'pl-[9px]')
       : 'text-foreground-secondary hover:bg-accent hover:text-foreground');
   @if (item.route) {
-    <a [routerLink]="item.route" [class]="rowClass" [attr.aria-current]="isActive ? 'page' : null">
+    <a
+      [routerLink]="item.route"
+      [class]="rowClass"
+      [attr.aria-current]="isActive ? 'page' : null"
+      (click)="isBarOpen.set(false)"
+    >
       <ng-container
         [ngTemplateOutlet]="rowContent"
-        [ngTemplateOutletContext]="{ $implicit: item, isChild }"
+        [ngTemplateOutletContext]="{ $implicit: item, isChild, isGroupRow }"
       />
     </a>
   } @else {
@@ -65,13 +130,13 @@
     >
       <ng-container
         [ngTemplateOutlet]="rowContent"
-        [ngTemplateOutletContext]="{ $implicit: item, isChild }"
+        [ngTemplateOutletContext]="{ $implicit: item, isChild, isGroupRow }"
       />
     </button>
   }
 </ng-template>
 
-<ng-template #rowContent let-item let-isChild="isChild">
+<ng-template #rowContent let-item let-isChild="isChild" let-isGroupRow="isGroupRow">
   @if (item.icon) {
     <arc-icon
       [arcType]="item.icon"
@@ -83,27 +148,32 @@
   <span class="min-w-0 flex-1">
     <ng-container
       [ngTemplateOutlet]="itemText"
-      [ngTemplateOutletContext]="{ $implicit: item, isChild }"
+      [ngTemplateOutletContext]="{ $implicit: item, isChild, isGroupRow }"
     />
   </span>
 </ng-template>
 
-<ng-template #itemText let-item let-isChild="isChild">
+<ng-template #itemText let-item let-isChild="isChild" let-isGroupRow="isGroupRow">
   @let label = item.translate === false ? item.label : (item.label | translate);
+  @let description =
+    item.description ? (item.translate === false ? item.description : (item.description | translate)) : null;
   <span
-    class="block truncate font-semibold tracking-[0.06em] uppercase"
+    class="block truncate font-semibold"
+    [class.uppercase]="!isGroupRow"
+    [class.tracking-[0.06em]]="!isGroupRow"
     [class.text-xs]="!isChild"
-    [class.text-[11px]]="isChild"
-    [attr.title]="label"
+    [class.text-[11px]]="isChild && !isGroupRow"
+    [class.text-[13px]]="isGroupRow"
+    [attr.title]="isGroupRow && description ? description : label"
   >
     {{ label }}
     @if (!isChild) {
       <span class="text-primary" aria-hidden="true">.</span>
     }
   </span>
-  @if (item.description) {
+  @if (description && !isGroupRow) {
     <span class="mt-1 line-clamp-2 block text-xs leading-5 text-muted-foreground">
-      {{ item.translate === false ? item.description : (item.description | translate) }}
+      {{ description }}
     </span>
   }
 </ng-template>

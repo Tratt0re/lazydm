@@ -1,14 +1,16 @@
-<section class="grid min-h-0 flex-1 gap-4 p-6 lg:grid-cols-[17.5rem_minmax(0,1fr)]">
-  <div class="flex min-h-0 flex-col gap-3">
+<section class="grid min-h-0 flex-1 content-start gap-4 p-6 lg:grid-cols-[17.5rem_minmax(0,1fr)] lg:content-normal">
+  <div class="flex flex-col gap-3 lg:min-h-0">
     <button arc-button type="button" arcFull (click)="openCreateSheet()">
       <arc-icon arcType="plus" />
       {{ 'settings.templates.create.button' | translate }}
     </button>
     <app-secondary-sidebar
-      class="min-h-0 flex-1"
+      class="lg:min-h-0 lg:flex-1"
       [items]="libraryItems()"
       [activeKey]="selected()?.key ?? null"
       [ariaLabel]="'templates.library.title' | translate"
+      variant="groups"
+      barTitle="nav.items.templates"
       (itemSelected)="onLibrarySelected($event)"
     />
   </div>

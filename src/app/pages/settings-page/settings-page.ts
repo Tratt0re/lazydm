@@ -31,12 +31,13 @@ import {
     TemplatesSectionComponent,
   ],
   template: `
-    <section class="grid min-h-0 flex-1 gap-4 p-6 lg:grid-cols-[17.5rem_minmax(0,1fr)] lg:items-stretch">
-      <div class="min-h-0 lg:overflow-hidden">
+    <section class="grid min-h-0 flex-1 content-start gap-4 p-6 lg:grid-cols-[17.5rem_minmax(0,1fr)] lg:content-normal lg:items-stretch">
+      <div class="lg:min-h-0 lg:overflow-hidden">
         <app-secondary-sidebar
           [items]="sidebarItems"
           [activeKey]="activeKey()"
           [ariaLabel]="'settings.sidebarAriaLabel' | translate"
+          barTitle="nav.items.settings"
           (itemSelected)="onSectionSelected($any($event.key))"
         />
       </div>

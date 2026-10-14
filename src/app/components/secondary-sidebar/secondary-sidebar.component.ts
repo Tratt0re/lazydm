@@ -3,13 +3,15 @@ import {
   Component,
   computed,
   effect,
+  inject,
   input,
   output,
   signal,
+  untracked,
 } from '@angular/core';
 import { NgTemplateOutlet } from '@angular/common';
 import { RouterLink } from '@angular/router';
-import { TranslatePipe } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
 import { ArcTechIconComponent } from '@/shared/components/icon';
 import type { ArcTechIcon } from '@/shared/components/icon';
@@ -28,9 +30,12 @@ export interface SecondarySidebarItem {
 }
 
 /**
- * Secondary sidebar of the full-page sheets (Settings, Compendium): the Nordic Relic sidebar tabs with
- * cascading branches — recessed panel, rows split by 1px lines, the active row raised with a 3px bronze
- * marker — carrying the settings-style title (with its dot) and description.
+ * Sidebar of the full-page sheets: the Nordic Relic sidebar tabs — recessed panel, rows split by 1px lines, the
+ * active row raised with a 3px bronze marker.
+ * - `cascade` (contextual, Settings): branches carry the settings-style title (with its dot) and description.
+ * - `groups` (tab-based, Templates): branches are light collapsible section headers with a count, open by default.
+ * Below the two-column breakpoint it collapses into one bar showing the current item; clicking it expands the list
+ * in place, choosing an item collapses it again.
  */
 @Component({
   selector: 'app-secondary-sidebar',
@@ -38,17 +43,36 @@ export interface SecondarySidebarItem {
   templateUrl: './secondary-sidebar.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
-    class: 'flex h-full min-h-0 flex-col overflow-y-auto border border-border bg-recessed',
+    class: 'flex min-h-0 flex-col overflow-y-auto border border-border bg-recessed lg:h-full',
   },
 })
 export class AppSecondarySidebarComponent {
   readonly items = input.required<readonly SecondarySidebarItem[]>();
   readonly activeKey = input<string | null>(null);
   readonly ariaLabel = input('');
+  readonly variant = input<'cascade' | 'groups'>('cascade');
+  /** i18n key shown before the current item in the narrow-screen bar (`SETTINGS · GENERAL.`). */
+  readonly barTitle = input<string | null>(null);
 
   readonly itemSelected = output<SecondarySidebarItem>();
 
-  private readonly expandedKeys = signal<ReadonlySet<string>>(new Set());
+  private readonly translateService = inject(TranslateService);
+  /** Branches toggled by the user: opened ones in `cascade`, closed ones in `groups` (open by default). */
+  private readonly toggledKeys = signal<ReadonlySet<string>>(new Set());
+  /** Narrow screens only: the list is shown under the bar. */
+  protected readonly isBarOpen = signal(false);
+  /** Label of the active item, for the narrow-screen bar. */
+  protected readonly activeLabel = computed(() => {
+    const key = this.activeKey();
+    const item = this.items()
+      .flatMap((entry) => [entry, ...(entry.children ?? [])])
+      .find((entry) => entry.key === key);
+    if (!item) {
+      return '';
+    }
+
+    return item.translate === false ? item.label : this.translateService.instant(item.label);
+  });
   /** Branch holding the active item: kept open so the active row is always visible. */
   private readonly activeBranchKey = computed(
     () =>
@@ -59,31 +83,42 @@ export class AppSecondarySidebarComponent {
   constructor() {
     effect(() => {
       const branchKey = this.activeBranchKey();
-      if (branchKey && !this.expandedKeys().has(branchKey)) {
-        this.expandedKeys.update((keys) => new Set([...keys, branchKey]));
+      if (branchKey) {
+        untracked(() => this.setExpanded(branchKey, true));
       }
     });
   }
 
   protected isExpanded(item: SecondarySidebarItem): boolean {
-    return this.expandedKeys().has(item.key);
+    return this.toggledKeys().has(item.key) !== (this.variant() === 'groups');
   }
 
   protected toggle(item: SecondarySidebarItem): void {
-    this.expandedKeys.update((keys) => {
-      const next = new Set(keys);
-      if (next.has(item.key)) {
-        next.delete(item.key);
-      } else {
-        next.add(item.key);
-      }
-      return next;
-    });
+    this.setExpanded(item.key, !this.isExpanded(item));
   }
 
   protected select(item: SecondarySidebarItem): void {
+    this.isBarOpen.set(false);
     if (item.key !== this.activeKey()) {
       this.itemSelected.emit(item);
     }
+  }
+
+  private setExpanded(key: string, isExpanded: boolean): void {
+    // In `groups` a key in the set means closed; in `cascade` it means open.
+    const isInSet = isExpanded !== (this.variant() === 'groups');
+    if (this.toggledKeys().has(key) === isInSet) {
+      return;
+    }
+
+    this.toggledKeys.update((keys) => {
+      const next = new Set(keys);
+      if (isInSet) {
+        next.add(key);
+      } else {
+        next.delete(key);
+      }
+      return next;
+    });
   }
 }
