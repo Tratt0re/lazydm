@@ -294,10 +294,18 @@ Planned Electron modules: `vault`, `cloud-readiness`, `campaign`, `document`, `i
 - Sheets (and dialogs) share one header: big condensed title, engraved divider, square close button.
 - Sheets open like a **gate**: they slide down from under the title bar and slide back up when closed
   (no motion with *reduce motion*).
-- **Secondary sidebars** (Settings, Compendium) share one component: the Nordic Relic sidebar tabs with cascading
-  branches (recessed panel, rows split by 1px lines, active row raised with a 3px bronze marker) carrying the
-  settings-style title with its dot and a description. The Compendium one is a tree: *All systems*, then each
-  system with its overview and the folders it has.
+- **Sidebars**, three kinds:
+  - **Explorer** (campaign shell, Compendium sheet): a file tree like a code editor's. Folders (sections,
+    sub-folders, compendium systems) expand on row click; a ↗ button on the right opens the folder's page. Files
+    open the note. Right-click: *Move to…* and *Reveal* on files (plus *Copy to…* on assets), *Open page* and
+    *Reveal* on folders. The Compendium one starts with *All systems*, then each system (↗ = its overview) with
+    the folders it has.
+  - **Contextual** (Settings): the Nordic Relic sidebar tabs with cascading branches (recessed panel, rows split
+    by 1px lines, active row raised with a 3px bronze marker) carrying the settings-style title with its dot and
+    a description.
+  - **Tab-based** (Templates): the same tabs grouped into collapsible sections (light header with a count).
+  - Below the two-column breakpoint the contextual and tab-based sidebars collapse into one bar showing the
+    current item; clicking it expands the list in place, choosing an item collapses it again.
 - **Campaign list** → grid of campaigns; when empty, a CTA message with a *Create campaign* button.
 - **Campaign layout** → shell with the sidebar: the campaign's sections (its settings applied, §2a) and
   **Back to campaigns**. Section settings live in Settings (per campaign, like the template choices).
