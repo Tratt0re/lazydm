@@ -10,9 +10,11 @@ const {
 const {
   getLinkPlainText,
   parseMarkdownDocument,
+  removeFrontmatterField,
   renameLinkTarget,
   replaceDocumentTitle,
   rewriteLinks,
+  setFrontmatterField,
 } = require('../utils/markdown-parse');
 const { toSlug } = require('../utils/string-sanitize');
 const indexerController = require('./indexer.controller');
@@ -92,6 +94,159 @@ async function createFolder(payload) {
   }
 
   return { path: await documentModel.createFolder(vaultPath, `${location.scope}/${section.key}/${slug}`), name: slug };
+}
+
+/** `type` and `subtype` of a note's frontmatter (no sub-type removes it), the rest of the file kept. */
+function withTypeAndSubtype(content, type, subtype) {
+  const typed = setFrontmatterField(content, 'type', type);
+  return subtype ? setFrontmatterField(typed, 'subtype', subtype) : removeFrontmatterField(typed, 'subtype');
+}
+
+/** Review fix: sets a note's type and sub-type (frontmatter only; conflict-checked like a save). */
+async function setType(payload) {
+  const body = ensurePlainObject(payload, 'payload');
+  const relativePath = requirePath(body);
+  const type = requireString(body.type, 'payload.type', { maxLength: DOCUMENT_TYPE_MAX_LENGTH }).toLocaleLowerCase();
+  const subtype = normalizeOptionalString(body.subtype, 'payload.subtype', { allowNull: true }) || null;
+  const vaultPath = vaultController.getReadyVaultPath();
+  const current = await documentModel.readDocument(vaultPath, relativePath);
+  const content = withTypeAndSubtype(current.content, type, subtype);
+  if (content === current.content) {
+    return { path: relativePath };
+  }
+
+  const result = await documentModel.writeDocument(vaultPath, relativePath, content, current.contentHash);
+  if (result.status !== 'saved') {
+    throw new Error(`${relativePath} changed meanwhile, so it was not updated.`);
+  }
+
+  await indexerController.reindexPaths([relativePath]);
+  return { path: relativePath };
+}
+
+/** Relative markdown link from a folder to a vault file, `#heading` of the old link kept. */
+function toMarkdownHref(fromDir, targetPath, oldRaw) {
+  const hashIndex = oldRaw.indexOf('#');
+  const suffix = hashIndex < 0 ? '' : oldRaw.slice(hashIndex);
+  const relative = path.posix.relative(fromDir, targetPath);
+  return `${encodeURI(relative).replace(/\(/g, '%28').replace(/\)/g, '%29')}${suffix}`;
+}
+
+/**
+ * New raw target of a link to a moved note: markdown links get the new relative path, wikilinks written as
+ * a path get the new scope-relative path (`.md`, `#heading`, `|alias` kept). Bare names stay: they resolve
+ * wherever the note is.
+ */
+function retargetMovedLink(link, sourcePath, newPath, scope) {
+  if (link.syntax === 'markdown') {
+    return toMarkdownHref(path.posix.dirname(sourcePath), newPath, link.raw);
+  }
+
+  const pipeIndex = link.raw.indexOf('|');
+  const target = pipeIndex < 0 ? link.raw : link.raw.slice(0, pipeIndex);
+  const hashIndex = target.indexOf('#');
+  const linkPath = hashIndex < 0 ? target : target.slice(0, hashIndex);
+  if (!linkPath.includes('/')) {
+    return null;
+  }
+
+  const scopeRelative = newPath.slice(scope.length + 1);
+  const hasExtension = linkPath.trim().toLocaleLowerCase().endsWith(MARKDOWN_EXTENSION);
+  const newLinkPath = hasExtension ? scopeRelative : scopeRelative.slice(0, -MARKDOWN_EXTENSION.length);
+  return `${newLinkPath}${link.raw.slice(linkPath.length)}`;
+}
+
+/**
+ * Moves a note into a section (or sub-folder) of its own campaign or system: the file keeps its name, its
+ * `type` / `subtype` follow the destination, its own relative links are recomputed, and every link the index
+ * resolved to it is rewritten like *Rename* does (each write conflict-checked; failures are reported).
+ */
+async function move(payload) {
+  const body = ensurePlainObject(payload, 'payload');
+  const relativePath = requirePath(body);
+  const folder = requirePath(body, 'folder').replace(/\/+$/, '');
+  requireIndexOpen();
+
+  const vaultPath = vaultController.getReadyVaultPath();
+  const location = sectionModel.parseSectionFolder(folder);
+  const scope = vaultIndexModel.getCampaignSlug(relativePath);
+  if (!location || location.scope !== scope) {
+    throw new Error('A note can only move to a section of its own campaign or system.');
+  }
+
+  const section = sectionModel
+    .listScopeSections(vaultPath, scope)
+    .find((item) => item.key === location.section);
+  if (!section?.type) {
+    throw new Error(`Not a section for notes: ${folder}`);
+  }
+
+  const newPath = `${folder}/${path.posix.basename(relativePath)}`;
+  if (newPath === relativePath) {
+    return { path: newPath, updatedPaths: [], failedPaths: [], linkCount: 0 };
+  }
+
+  const current = await documentModel.readDocument(vaultPath, relativePath);
+  const resolvedByRaw = new Map(
+    vaultIndexModel
+      .listOutgoingLinks(relativePath)
+      .filter((link) => link.resolvedPath)
+      .map((link) => [link.raw, link.resolvedPath === relativePath ? newPath : link.resolvedPath]),
+  );
+  const ownContent = rewriteLinks(
+    withTypeAndSubtype(current.content, section.type, location.subfolder),
+    (link) =>
+      link.syntax === 'markdown' && resolvedByRaw.has(link.raw)
+        ? toMarkdownHref(path.posix.dirname(newPath), resolvedByRaw.get(link.raw), link.raw)
+        : null,
+    { sourcePath: relativePath },
+  ).content;
+
+  const rawsBySource = groupRawsBySource(vaultIndexModel.listIncomingLinks(relativePath));
+  await documentModel.renameDocumentFile(vaultPath, relativePath, newPath);
+  if (ownContent !== current.content) {
+    await documentModel.writeDocument(vaultPath, newPath, ownContent, current.contentHash);
+  }
+
+  const updatedPaths = [];
+  const failedPaths = [];
+  let linkCount = 0;
+  for (const [sourcePath, raws] of rawsBySource) {
+    if (sourcePath === relativePath) {
+      continue;
+    }
+
+    try {
+      const source = await documentModel.readDocument(vaultPath, sourcePath);
+      const rewritten = rewriteLinks(
+        source.content,
+        (link) => (raws.has(link.raw) ? retargetMovedLink(link, sourcePath, newPath, scope) : null),
+        { sourcePath },
+      );
+      if (rewritten.count === 0) {
+        continue;
+      }
+
+      const result = await documentModel.writeDocument(
+        vaultPath,
+        sourcePath,
+        rewritten.content,
+        source.contentHash,
+      );
+      if (result.status === 'saved') {
+        updatedPaths.push(sourcePath);
+        linkCount += rewritten.count;
+      } else {
+        failedPaths.push(sourcePath);
+      }
+    } catch (error) {
+      console.warn('[electron] Failed to update links ->', sourcePath, error);
+      failedPaths.push(sourcePath);
+    }
+  }
+
+  await indexerController.reindexPaths([relativePath, newPath, ...updatedPaths]);
+  return { path: newPath, updatedPaths, failedPaths, linkCount };
 }
 
 /** Sub-type of a note created in `folderPath`: the sub-folder of its section, if it is in one. */
@@ -629,9 +784,11 @@ module.exports = {
   linkTargets,
   links,
   list,
+  move,
   read,
   rename,
   saveCopy,
+  setType,
   unlink,
   write,
 };

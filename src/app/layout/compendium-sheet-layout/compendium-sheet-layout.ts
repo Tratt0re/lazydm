@@ -79,7 +79,7 @@ export class CompendiumSheetLayout implements OnInit {
       return ALL_SYSTEMS_KEY;
     }
 
-    return folder && folder !== 'broken-links' ? `${system}/${folder}` : `${system}/`;
+    return folder && folder !== 'review' ? `${system}/${folder}` : `${system}/`;
   });
 
   ngOnInit(): void {

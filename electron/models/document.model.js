@@ -98,6 +98,7 @@ async function renameDocumentFile(rootPath, fromPath, toPath) {
     throw new Error(`A note named "${path.posix.basename(toPath)}" already exists in ${path.posix.dirname(toPath)}.`);
   }
 
+  await fs.promises.mkdir(path.dirname(toAbsolutePath), { recursive: true });
   await fs.promises.rename(fromAbsolutePath, toAbsolutePath);
 }
 

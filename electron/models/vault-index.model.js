@@ -135,6 +135,18 @@ function listScopeFiles(scope) {
     .all(scope);
 }
 
+/** Notes of a scope (templates excluded) with their type and frontmatter sub-type, for the Review page. */
+function listScopeNotes(scope) {
+  return getVaultIndexDatabase()
+    .prepare(
+      `SELECT path, type, title, json_extract(frontmatter_json, '$.subtype') AS subtype
+       FROM files
+       WHERE campaign IS ? AND kind = 'md' AND path NOT LIKE '%/!_templates/%' ESCAPE '!'
+       ORDER BY path`,
+    )
+    .all(scope);
+}
+
 /**
  * Whether a scope (campaign or `compendium/<system>`) already has a file with this link name: a link
  * resolving by name there would find it, so there is no need to copy another one in.
@@ -334,6 +346,7 @@ module.exports = {
   listIncomingLinks,
   listOutgoingLinks,
   listScopeFiles,
+  listScopeNotes,
   resolveLinks,
   saveFile,
   touchFile,

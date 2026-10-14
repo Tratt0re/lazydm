@@ -1,4 +1,4 @@
-<div class="mx-auto flex w-full max-w-5xl flex-col gap-6 p-6">
+<div class="flex w-full flex-col gap-6" [class]="embedded() ? '' : 'mx-auto max-w-5xl p-6'">
   @if (errorMessage(); as message) {
     <arc-alert
       arcType="destructive"
@@ -8,11 +8,13 @@
     />
   } @else if (!isLoading()) {
     @if (groups().length === 0) {
+      @if (!embedded()) {
       <arc-empty
         arcIcon="link"
         [arcTitle]="'links.broken.emptyTitle' | translate"
         [arcDescription]="'links.broken.emptyDescription' | translate"
       />
+      }
     } @else {
       <p class="font-mono text-[11px] font-semibold tracking-[0.04em] text-muted-foreground">
         {{ 'links.broken.summary' | translate: { links: rows().length, notes: groups().length } }}

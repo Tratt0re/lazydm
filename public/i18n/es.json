@@ -519,5 +519,82 @@
       "title": "Biblioteca de plantillas",
       "usedIn": "Usada en {{campaign}} para"
     }
+  },
+  "review": {
+    "title": "Revisión",
+    "loadError": "No se pudo cargar la revisión",
+    "emptyTitle": "Nada que revisar",
+    "emptyDescription": "Cada nota está en la sección de su tipo y cada enlace funciona.",
+    "alertTitle": "{{count}} cosas que revisar",
+    "alertDescription": "Algunas notas, carpetas o enlaces no coinciden con las secciones de esta campaña.",
+    "open": "Revisar",
+    "cancel": "Cancelar",
+    "fixed": "{{count}} notas actualizadas",
+    "fixFailed": "No se pudieron actualizar {{count}} notas (¿cambiadas mientras tanto?)",
+    "groups": {
+      "brokenLinks": {
+        "title": "Enlaces rotos"
+      },
+      "misplaced": {
+        "title": "Notas mal ubicadas",
+        "description": "Su tipo pertenece a otra sección.",
+        "fixAll": "Fijar el tipo de las {{count}}",
+        "detail": "tipo: {{type}} · en {{place}}"
+      },
+      "wrongSubtype": {
+        "title": "Subtipos incorrectos",
+        "description": "Su subtipo no es la subcarpeta en la que están.",
+        "fixAll": "Fijar el subtipo de las {{count}}",
+        "detail": "subtipo: {{subtype}} · en {{place}}"
+      },
+      "untyped": {
+        "title": "Notas sin tipo",
+        "description": "Escritas fuera de LazyDM (Obsidian, Finder…) sin type: en el frontmatter.",
+        "fixAll": "Asignar tipo a las {{count}}",
+        "detail": "sin tipo · en {{place}}"
+      },
+      "outside": {
+        "title": "Fuera de toda sección",
+        "description": "Notas en la raíz de la campaña o en ninguna carpeta de sección."
+      },
+      "unknownFolders": {
+        "title": "Carpetas desconocidas",
+        "description": "Carpetas de esta campaña que no son una de sus secciones. Sus notas no aparecen en la barra lateral."
+      },
+      "tooDeep": {
+        "title": "Carpetas demasiado profundas",
+        "description": "LazyDM usa un nivel de subcarpetas: los archivos de carpetas más profundas no aparecen en las secciones."
+      }
+    },
+    "fix": {
+      "setType": "Fijar tipo {{section}}",
+      "setSubtype": "Fijar subtipo {{subtype}}",
+      "removeSubtype": "Quitar subtipo",
+      "assignType": "Asignar {{place}}",
+      "moveTo": "Mover a {{place}}",
+      "moveToEllipsis": "Mover a…",
+      "addSection": "Añadir como sección"
+    },
+    "fixAll": {
+      "title": "¿Actualizar {{count}} notas?",
+      "description": "Solo cambia el frontmatter (tipo y subtipo); cada escritura se comprueba frente a cambios hechos mientras tanto.",
+      "more": "…y {{count}} más",
+      "confirm": "Actualizar"
+    },
+    "move": {
+      "title": "Mover {{title}}",
+      "description": "La nota conserva su nombre; su tipo sigue a la sección y se actualizan los enlaces que apuntan a ella.",
+      "sectionLabel": "Sección",
+      "submit": "Mover",
+      "done": "{{title}} movida ({{links}} enlaces actualizados)",
+      "failedLinks": "Sin actualizar (cambiadas mientras tanto): {{paths}}",
+      "error": "No se pudo mover la nota"
+    },
+    "addSection": {
+      "title": "Añadir {{folder}} como sección",
+      "description": "La carpeta se convierte en una sección de esta campaña con sus notas; no se mueve ni se renombra nada.",
+      "submit": "Añadir sección",
+      "done": "{{name}} añadida a las secciones"
+    }
   }
 }

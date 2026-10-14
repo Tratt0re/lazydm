@@ -38,10 +38,10 @@ const SYSTEM_SHEET_ROUTES: Routes = [
       import('./pages/system-home-page/system-home-page').then((m) => m.SystemHomePage),
   },
   {
-    path: 'broken-links',
-    loadComponent: () =>
-      import('./pages/broken-links-page/broken-links-page').then((m) => m.BrokenLinksPage),
+    path: 'review',
+    loadComponent: () => import('./pages/review-page/review-page').then((m) => m.ReviewPage),
   },
+  { path: 'broken-links', pathMatch: 'full', redirectTo: 'review' },
   ...RENAMED_SECTION_ROUTES,
   {
     path: ':section',
@@ -160,12 +160,11 @@ export const routes: Routes = [
                   ),
               },
               {
-                path: 'broken-links',
+                path: 'review',
                 loadComponent: () =>
-                  import('./pages/broken-links-page/broken-links-page').then(
-                    (m) => m.BrokenLinksPage,
-                  ),
+                  import('./pages/review-page/review-page').then((m) => m.ReviewPage),
               },
+              { path: 'broken-links', pathMatch: 'full', redirectTo: 'review' },
               ...RENAMED_SECTION_ROUTES,
               {
                 path: ':section',

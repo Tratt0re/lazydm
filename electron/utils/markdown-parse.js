@@ -427,6 +427,22 @@ function setFrontmatterField(text, key, value) {
   return `${bom}${lines.join(newline)}`;
 }
 
+/** Removes `key:` from the frontmatter (single-line values), keeping every other line as written. */
+function removeFrontmatterField(text, key) {
+  const newline = detectNewline(text);
+  const [bom, content] = splitBom(text);
+  const lines = normalizeNewlines(content).split('\n');
+  const { frontmatterText, bodyStartLine } = splitFrontmatter(content);
+  if (frontmatterText === null) {
+    return text;
+  }
+
+  const closeIndex = bodyStartLine - 2;
+  const pattern = new RegExp(`^${key}\\s*:`);
+  const kept = lines.filter((line, index) => !(index > 0 && index < closeIndex && pattern.test(line)));
+  return kept.length === lines.length ? text : `${bom}${kept.join(newline)}`;
+}
+
 /** Text a link leaves behind when it is removed: its label, else what it points to. */
 function getLinkPlainText(link) {
   if (link.label) {
@@ -495,6 +511,7 @@ function replaceDocumentTitle(text, oldTitle, newTitle) {
 module.exports = {
   getLinkPlainText,
   parseMarkdownDocument,
+  removeFrontmatterField,
   renameLinkFolder,
   renameLinkTarget,
   replaceDocumentTitle,

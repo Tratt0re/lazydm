@@ -519,5 +519,82 @@
       "title": "Template library",
       "usedIn": "Used in {{campaign}} for"
     }
+  },
+  "review": {
+    "title": "Review",
+    "loadError": "Couldn't load the review",
+    "emptyTitle": "Nothing to review",
+    "emptyDescription": "Every note is in the section of its type and every link resolves.",
+    "alertTitle": "{{count}} things to review",
+    "alertDescription": "Some notes, folders or links do not match the sections of this campaign.",
+    "open": "Review",
+    "cancel": "Cancel",
+    "fixed": "{{count}} notes updated",
+    "fixFailed": "{{count}} notes couldn't be updated (changed meanwhile?)",
+    "groups": {
+      "brokenLinks": {
+        "title": "Broken links"
+      },
+      "misplaced": {
+        "title": "Misplaced notes",
+        "description": "Their type belongs to another section.",
+        "fixAll": "Set type of all {{count}}",
+        "detail": "type: {{type}} · in {{place}}"
+      },
+      "wrongSubtype": {
+        "title": "Wrong sub-types",
+        "description": "Their sub-type is not the sub-folder they are in.",
+        "fixAll": "Set sub-type of all {{count}}",
+        "detail": "sub-type: {{subtype}} · in {{place}}"
+      },
+      "untyped": {
+        "title": "Notes without a type",
+        "description": "Written outside LazyDM (Obsidian, Finder…) without a type: in the frontmatter.",
+        "fixAll": "Assign type to all {{count}}",
+        "detail": "no type · in {{place}}"
+      },
+      "outside": {
+        "title": "Outside any section",
+        "description": "Notes at the campaign root or in no section folder."
+      },
+      "unknownFolders": {
+        "title": "Unknown folders",
+        "description": "Folders of this campaign that are not one of its sections. Their notes do not show in the sidebar."
+      },
+      "tooDeep": {
+        "title": "Folders too deep",
+        "description": "LazyDM uses one level of sub-folders: files in deeper folders do not appear in sections."
+      }
+    },
+    "fix": {
+      "setType": "Set type to {{section}}",
+      "setSubtype": "Set sub-type to {{subtype}}",
+      "removeSubtype": "Remove sub-type",
+      "assignType": "Assign {{place}}",
+      "moveTo": "Move to {{place}}",
+      "moveToEllipsis": "Move to…",
+      "addSection": "Add as section"
+    },
+    "fixAll": {
+      "title": "Update {{count}} notes?",
+      "description": "Only the frontmatter changes (type and sub-type); every write is checked against changes made meanwhile.",
+      "more": "…and {{count}} more",
+      "confirm": "Update"
+    },
+    "move": {
+      "title": "Move {{title}}",
+      "description": "The note keeps its name; its type follows the section and the links to it are updated.",
+      "sectionLabel": "Section",
+      "submit": "Move",
+      "done": "{{title}} moved ({{links}} links updated)",
+      "failedLinks": "Not updated (changed meanwhile): {{paths}}",
+      "error": "Couldn't move the note"
+    },
+    "addSection": {
+      "title": "Add {{folder}} as a section",
+      "description": "The folder becomes a section of this campaign with its notes; nothing is moved or renamed.",
+      "submit": "Add section",
+      "done": "{{name}} added to the sections"
+    }
   }
 }

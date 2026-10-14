@@ -519,5 +519,82 @@
       "title": "Vorlagenbibliothek",
       "usedIn": "Verwendet in {{campaign}} für"
     }
+  },
+  "review": {
+    "title": "Prüfen",
+    "loadError": "Die Prüfung konnte nicht geladen werden",
+    "emptyTitle": "Nichts zu prüfen",
+    "emptyDescription": "Jede Notiz liegt im Bereich ihres Typs und jeder Link funktioniert.",
+    "alertTitle": "{{count}} Punkte zu prüfen",
+    "alertDescription": "Einige Notizen, Ordner oder Links passen nicht zu den Bereichen dieser Kampagne.",
+    "open": "Prüfen",
+    "cancel": "Abbrechen",
+    "fixed": "{{count}} Notizen aktualisiert",
+    "fixFailed": "{{count}} Notizen konnten nicht aktualisiert werden (zwischenzeitlich geändert?)",
+    "groups": {
+      "brokenLinks": {
+        "title": "Defekte Links"
+      },
+      "misplaced": {
+        "title": "Falsch abgelegte Notizen",
+        "description": "Ihr Typ gehört zu einem anderen Bereich.",
+        "fixAll": "Typ aller {{count}} setzen",
+        "detail": "Typ: {{type}} · in {{place}}"
+      },
+      "wrongSubtype": {
+        "title": "Falsche Untertypen",
+        "description": "Ihr Untertyp ist nicht der Unterordner, in dem sie liegen.",
+        "fixAll": "Untertyp aller {{count}} setzen",
+        "detail": "Untertyp: {{subtype}} · in {{place}}"
+      },
+      "untyped": {
+        "title": "Notizen ohne Typ",
+        "description": "Außerhalb von LazyDM geschrieben (Obsidian, Finder…), ohne type: im Frontmatter.",
+        "fixAll": "Typ allen {{count}} zuweisen",
+        "detail": "kein Typ · in {{place}}"
+      },
+      "outside": {
+        "title": "Außerhalb aller Bereiche",
+        "description": "Notizen im Kampagnenordner selbst oder in keinem Bereichsordner."
+      },
+      "unknownFolders": {
+        "title": "Unbekannte Ordner",
+        "description": "Ordner dieser Kampagne, die keine ihrer Bereiche sind. Ihre Notizen erscheinen nicht in der Seitenleiste."
+      },
+      "tooDeep": {
+        "title": "Zu tiefe Ordner",
+        "description": "LazyDM nutzt eine Ebene von Unterordnern: Dateien in tieferen Ordnern erscheinen nicht in den Bereichen."
+      }
+    },
+    "fix": {
+      "setType": "Typ auf {{section}} setzen",
+      "setSubtype": "Untertyp auf {{subtype}} setzen",
+      "removeSubtype": "Untertyp entfernen",
+      "assignType": "{{place}} zuweisen",
+      "moveTo": "Nach {{place}} verschieben",
+      "moveToEllipsis": "Verschieben nach…",
+      "addSection": "Als Bereich hinzufügen"
+    },
+    "fixAll": {
+      "title": "{{count}} Notizen aktualisieren?",
+      "description": "Nur das Frontmatter ändert sich (Typ und Untertyp); jeder Schreibvorgang wird gegen zwischenzeitliche Änderungen geprüft.",
+      "more": "…und {{count}} weitere",
+      "confirm": "Aktualisieren"
+    },
+    "move": {
+      "title": "{{title}} verschieben",
+      "description": "Die Notiz behält ihren Namen; ihr Typ folgt dem Bereich und die Links darauf werden aktualisiert.",
+      "sectionLabel": "Bereich",
+      "submit": "Verschieben",
+      "done": "{{title}} verschoben ({{links}} Links aktualisiert)",
+      "failedLinks": "Nicht aktualisiert (zwischenzeitlich geändert): {{paths}}",
+      "error": "Die Notiz konnte nicht verschoben werden"
+    },
+    "addSection": {
+      "title": "{{folder}} als Bereich hinzufügen",
+      "description": "Der Ordner wird mit seinen Notizen ein Bereich dieser Kampagne; nichts wird verschoben oder umbenannt.",
+      "submit": "Bereich hinzufügen",
+      "done": "{{name}} zu den Bereichen hinzugefügt"
+    }
   }
 }

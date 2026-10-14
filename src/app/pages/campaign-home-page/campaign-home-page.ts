@@ -3,7 +3,7 @@ import { RouterLink } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 
 import { CampaignService } from '@/services/campaign.service';
-import { DocumentService } from '@/services/document.service';
+import { countReviewItems, ReviewService } from '@/services/review.service';
 import { SectionService } from '@/services/section.service';
 import { ToolbarContextService } from '@/services/toolbar-context.service';
 import { ArcTechAlertComponent } from '@/shared/components/alert';
@@ -20,21 +20,21 @@ import { ArcTechIconComponent } from '@/shared/components/icon';
           <p class="max-w-3xl text-sm text-muted-foreground">{{ campaign.description }}</p>
         }
 
-        @if (brokenLinkCount() > 0) {
+        @if (reviewCount() > 0) {
           <arc-alert
             arcType="destructive"
             arcIcon="unlink"
-            [arcTitle]="'links.broken.alertTitle' | translate: { count: brokenLinkCount() }"
-            [arcDescription]="'links.broken.cardDescription' | translate"
+            [arcTitle]="'review.alertTitle' | translate: { count: reviewCount() }"
+            [arcDescription]="'review.alertDescription' | translate"
           >
             <a
               arc-button
               arcType="outline"
               arcSize="sm"
               class="shrink-0"
-              [routerLink]="['/campaigns', campaign.slug, 'broken-links']"
+              [routerLink]="['/campaigns', campaign.slug, 'review']"
             >
-              {{ 'links.broken.review' | translate }}
+              {{ 'review.open' | translate }}
             </a>
           </arc-alert>
         }
@@ -69,23 +69,24 @@ import { ArcTechIconComponent } from '@/shared/components/icon';
 })
 export class CampaignHomePage {
   private readonly campaignService = inject(CampaignService);
-  private readonly documentService = inject(DocumentService);
+  private readonly reviewService = inject(ReviewService);
   private readonly toolbarContext = inject(ToolbarContextService);
   protected readonly sectionService = inject(SectionService);
 
   protected readonly campaign = this.campaignService.activeCampaign;
   protected readonly sections = this.sectionService.visibleCampaignSections;
-  protected readonly brokenLinkCount = signal(0);
+  /** Things the Review page lists (broken links, misplaced notes, unknown folders…). */
+  protected readonly reviewCount = signal(0);
 
   constructor() {
     effect((onCleanup) => {
       const campaign = this.campaign();
       if (campaign) {
         onCleanup(this.toolbarContext.activate({ title: campaign.name }));
-        this.documentService
-          .listBrokenLinks(campaign.slug)
-          .then((rows) => this.brokenLinkCount.set(rows.length))
-          .catch((error: unknown) => console.warn('[app] Failed to count broken links:', error));
+        this.reviewService
+          .list(campaign.slug)
+          .then((review) => this.reviewCount.set(countReviewItems(review)))
+          .catch((error: unknown) => console.warn('[app] Failed to load the review:', error));
       }
     });
   }

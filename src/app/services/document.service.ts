@@ -13,6 +13,7 @@ import type {
   DocumentFolderDto,
   DocumentLinksDto,
   LinkTargetDto,
+  MoveDocumentResultDto,
   RenameDocumentPayload,
   RenameDocumentResultDto,
   SaveDocumentCopyPayload,
@@ -47,6 +48,16 @@ export class DocumentService extends BaseIpcService<APIChannel.DOCUMENTS> {
   /** New sub-folder of a section (`name` is turned into the folder slug); returns its slug. */
   async createFolder(folder: string, name: string): Promise<string> {
     return (await this.ipcClient.createFolder({ folder, name })).name;
+  }
+
+  /** Sets a note's `type` and `subtype` (null removes it) in its frontmatter. */
+  async setType(path: string, type: string, subtype: string | null): Promise<void> {
+    await this.ipcClient.setType({ path, type, subtype });
+  }
+
+  /** Moves a note into a section folder of its scope; the links resolving to it follow. */
+  move(path: string, folder: string): Promise<MoveDocumentResultDto> {
+    return this.ipcClient.move({ path, folder });
   }
 
   read(path: string): Promise<DocumentDto> {

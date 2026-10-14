@@ -1,3 +1,5 @@
+const fs = require('node:fs');
+const { resolveInsideVault } = require('../utils/file-utils');
 const { toSlug } = require('../utils/string-sanitize');
 const { readVaultConfig, writeVaultConfig } = require('./vault.model');
 
@@ -48,6 +50,19 @@ function toLabel(value) {
 
 function toIcon(value) {
   return typeof value === 'string' && /^[a-z0-9-]{1,40}$/.test(value) ? value : DEFAULT_CUSTOM_ICON;
+}
+
+/** An existing top-level folder of a campaign (not hidden, not `_`), by name. */
+function isCampaignFolder(rootPath, campaignSlug, name) {
+  if (typeof name !== 'string' || !/^[^./_\\][^/\\]*$/.test(name)) {
+    return false;
+  }
+
+  try {
+    return fs.statSync(resolveInsideVault(rootPath, `${campaignSlug}/${name}`)).isDirectory();
+  } catch (_) {
+    return false;
+  }
 }
 
 /** Settings of a campaign as stored, cleaned of anything malformed (the file may be edited by hand). */
@@ -138,7 +153,10 @@ function saveCampaignSectionSettings(rootPath, campaignSlug, input) {
     }
 
     const existing = stored.custom.find((item) => item.key === section.key);
-    const key = existing?.key ?? toSlug(label);
+    // A folder already in the campaign (Review → Add as section) keeps its own name as the section key.
+    const folderKey =
+      !existing && isCampaignFolder(rootPath, campaignSlug, section.key) ? section.key : null;
+    const key = existing?.key ?? folderKey ?? toSlug(label);
     const requestedType = typeof section.type === 'string' ? toSlug(section.type) : '';
     const type = existing?.type ?? (requestedType || key);
     if (!key) {

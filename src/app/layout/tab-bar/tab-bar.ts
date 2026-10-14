@@ -12,7 +12,7 @@ import {
 import { TranslatePipe } from '@ngx-translate/core';
 
 import type { WorkspaceTabDto } from '@/dtos';
-import { BROKEN_LINKS_ROUTE_SEGMENT } from '@/pages/broken-links-page/broken-links-page';
+import { REVIEW_ROUTE_SEGMENT } from '@/pages/review-page/review-page';
 import { AppSheetService } from '@/services/app-sheet.service';
 import { SectionService } from '@/services/section.service';
 import { WorkspaceService } from '@/services/workspace.service';
@@ -145,12 +145,13 @@ export class TabBar {
 
   protected getIcon(tab: WorkspaceTabDto): ArcTechIcon {
     const sectionKey = this.workspace.getTabSection(tab);
-    if (sectionKey === BROKEN_LINKS_ROUTE_SEGMENT) {
-      return 'unlink';
+    if (sectionKey === REVIEW_ROUTE_SEGMENT) {
+      return 'circle-alert';
     }
 
     return (
-      (sectionKey && this.sectionService.findCampaignSection(sectionKey)?.icon) || 'layout-dashboard'
+      (sectionKey && this.sectionService.findCampaignSection(sectionKey)?.icon) ||
+      'layout-dashboard'
     );
   }
 

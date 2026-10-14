@@ -1,0 +1,189 @@
+<div class="mx-auto flex w-full max-w-5xl flex-col gap-6 p-6">
+  @if (errorMessage(); as message) {
+    <arc-alert
+      arcType="destructive"
+      arcIcon="circle-alert"
+      [arcTitle]="'review.loadError' | translate"
+      [arcDescription]="message"
+    />
+  } @else if (!isLoading() && review(); as review) {
+    @if (isClean()) {
+      <arc-empty
+        arcIcon="circle-check"
+        [arcTitle]="'review.emptyTitle' | translate"
+        [arcDescription]="'review.emptyDescription' | translate"
+      />
+    }
+
+    <ng-template #noteTitle let-note>
+      @if (noteRoute(note); as route) {
+        <a [routerLink]="route" class="flex min-w-0 items-center gap-3 hover:text-primary">
+          <arc-icon arcType="file-text" class="size-4 shrink-0 text-primary" />
+          <span class="truncate text-sm font-semibold">{{ note.title }}</span>
+        </a>
+      } @else {
+        <span class="flex min-w-0 items-center gap-3">
+          <arc-icon arcType="file-text" class="size-4 shrink-0 text-muted-foreground" />
+          <span class="truncate text-sm font-semibold">{{ note.title }}</span>
+        </span>
+      }
+    </ng-template>
+
+    @if (review.brokenLinkCount > 0) {
+      <section class="flex flex-col gap-3">
+        <h2 class="font-display text-xl font-semibold tracking-wide uppercase">
+          {{ 'review.groups.brokenLinks.title' | translate }}<span class="text-primary" aria-hidden="true">.</span>
+        </h2>
+        <app-broken-links-page embedded />
+      </section>
+    }
+
+    @for (group of [
+      { key: 'misplaced', notes: review.misplaced },
+      { key: 'wrongSubtype', notes: review.wrongSubtype },
+      { key: 'untyped', notes: review.untyped }
+    ]; track group.key) {
+      @if (group.notes.length > 0) {
+        <section class="flex flex-col gap-3">
+          <div class="flex flex-wrap items-end justify-between gap-3">
+            <div>
+              <h2 class="font-display text-xl font-semibold tracking-wide uppercase">
+                {{ 'review.groups.' + group.key + '.title' | translate }}<span class="text-primary" aria-hidden="true">.</span>
+              </h2>
+              <p class="text-sm text-muted-foreground">{{ 'review.groups.' + group.key + '.description' | translate }}</p>
+            </div>
+            <button arc-button type="button" arcType="outline" arcSize="sm" [arcDisabled]="isFixing()" (click)="confirmFixAll(group.notes)">
+              <arc-icon arcType="check" />
+              {{ 'review.groups.' + group.key + '.fixAll' | translate: { count: group.notes.length } }}
+            </button>
+          </div>
+
+          <ul class="flex flex-col border border-border bg-card">
+            @for (note of group.notes; track note.path) {
+              <li class="flex flex-wrap items-center justify-between gap-3 border-b border-border p-4 last:border-b-0">
+                <div class="flex min-w-0 flex-col gap-1">
+                  <ng-container *ngTemplateOutlet="noteTitle; context: { $implicit: note }" />
+                  <p class="truncate font-mono text-[11px] tracking-[0.04em] text-muted-foreground">
+                    @switch (group.key) {
+                      @case ('misplaced') {
+                        {{ 'review.groups.misplaced.detail' | translate: { type: typeLabel(note.type), place: placeLabel(note) } }}
+                      }
+                      @case ('wrongSubtype') {
+                        {{ 'review.groups.wrongSubtype.detail' | translate: { subtype: note.subtype ?? '—', place: placeLabel(note) } }}
+                      }
+                      @default {
+                        {{ 'review.groups.untyped.detail' | translate: { place: placeLabel(note) } }}
+                      }
+                    }
+                  </p>
+                </div>
+
+                <div class="flex shrink-0 flex-wrap items-center gap-2">
+                  <button arc-button type="button" arcType="outline" arcSize="sm" [arcDisabled]="isFixing()" (click)="matchFolder(note)">
+                    @switch (group.key) {
+                      @case ('misplaced') {
+                        {{ 'review.fix.setType' | translate: { section: sectionLabel(note.section) } }}
+                      }
+                      @case ('wrongSubtype') {
+                        {{ (note.subfolder ? 'review.fix.setSubtype' : 'review.fix.removeSubtype') | translate: { subtype: toSubfolderLabel(note.subfolder ?? '') } }}
+                      }
+                      @default {
+                        {{ 'review.fix.assignType' | translate: { place: placeLabel(note) } }}
+                      }
+                    }
+                  </button>
+                  @if (group.key === 'misplaced' && $any(note).typeSection) {
+                    <button arc-button type="button" arcType="outline" arcSize="sm" [arcDisabled]="isFixing()" (click)="moveToTypeSection($any(note))">
+                      <arc-icon arcType="move-right" />
+                      {{ 'review.fix.moveTo' | translate: { place: sectionLabel($any(note).typeSection) } }}
+                    </button>
+                  }
+                  @if (group.key === 'wrongSubtype' && note.subtype) {
+                    <button arc-button type="button" arcType="outline" arcSize="sm" [arcDisabled]="isFixing()" (click)="moveToSubtypeFolder(note)">
+                      <arc-icon arcType="move-right" />
+                      {{ 'review.fix.moveTo' | translate: { place: sectionLabel(note.section) + ' / ' + toSubfolderLabel(note.subtype) } }}
+                    </button>
+                  }
+                </div>
+              </li>
+            }
+          </ul>
+        </section>
+      }
+    }
+
+    @if (review.outside.length > 0) {
+      <section class="flex flex-col gap-3">
+        <div>
+          <h2 class="font-display text-xl font-semibold tracking-wide uppercase">
+            {{ 'review.groups.outside.title' | translate }}<span class="text-primary" aria-hidden="true">.</span>
+          </h2>
+          <p class="text-sm text-muted-foreground">{{ 'review.groups.outside.description' | translate }}</p>
+        </div>
+        <ul class="flex flex-col border border-border bg-card">
+          @for (note of review.outside; track note.path) {
+            <li class="flex flex-wrap items-center justify-between gap-3 border-b border-border p-4 last:border-b-0">
+              <div class="flex min-w-0 flex-col gap-1">
+                <ng-container *ngTemplateOutlet="noteTitle; context: { $implicit: note }" />
+                <p class="truncate font-mono text-[11px] tracking-[0.04em] text-muted-foreground">{{ note.path }}</p>
+              </div>
+              <button arc-button type="button" arcType="outline" arcSize="sm" [arcDisabled]="isFixing()" (click)="openMoveSheet(note)">
+                <arc-icon arcType="move-right" />
+                {{ 'review.fix.moveToEllipsis' | translate }}
+              </button>
+            </li>
+          }
+        </ul>
+      </section>
+    }
+
+    @if (review.unknownFolders.length > 0) {
+      <section class="flex flex-col gap-3">
+        <div>
+          <h2 class="font-display text-xl font-semibold tracking-wide uppercase">
+            {{ 'review.groups.unknownFolders.title' | translate }}<span class="text-primary" aria-hidden="true">.</span>
+          </h2>
+          <p class="text-sm text-muted-foreground">{{ 'review.groups.unknownFolders.description' | translate }}</p>
+        </div>
+        <ul class="flex flex-col border border-border bg-card">
+          @for (folder of review.unknownFolders; track folder.name) {
+            <li class="flex flex-wrap items-center justify-between gap-3 border-b border-border p-4 last:border-b-0">
+              <span class="flex min-w-0 items-center gap-3">
+                <arc-icon arcType="folder" class="size-4 shrink-0 text-primary" />
+                <span class="truncate font-mono text-sm">{{ folder.name }}/</span>
+                <span class="shrink-0 font-mono text-[11px] text-muted-foreground">
+                  · {{ 'campaigns.sections.folderFiles' | translate: { count: folder.fileCount } }}
+                </span>
+              </span>
+              <button arc-button type="button" arcType="outline" arcSize="sm" (click)="openAddSectionSheet(folder.name)">
+                <arc-icon arcType="plus" />
+                {{ 'review.fix.addSection' | translate }}
+              </button>
+            </li>
+          }
+        </ul>
+      </section>
+    }
+
+    @if (review.tooDeep.length > 0) {
+      <section class="flex flex-col gap-3">
+        <arc-alert
+          arcIcon="circle-alert"
+          [arcTitle]="'review.groups.tooDeep.title' | translate"
+          [arcDescription]="'review.groups.tooDeep.description' | translate"
+        />
+        <ul class="flex flex-col border border-border bg-card">
+          @for (folder of review.tooDeep; track folder.folder) {
+            <li class="flex items-center gap-3 border-b border-border p-4 font-mono text-[11px] last:border-b-0">
+              <arc-icon arcType="folder" class="size-4 shrink-0 text-muted-foreground" />
+              <span class="truncate">{{ folder.folder }}/</span>
+              <span class="ml-auto shrink-0 text-muted-foreground">
+                {{ 'campaigns.sections.folderFiles' | translate: { count: folder.fileCount } }}
+              </span>
+            </li>
+          }
+        </ul>
+      </section>
+    }
+  }
+</div>

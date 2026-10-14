@@ -6,6 +6,7 @@ import { toast } from 'ngx-sonner';
 import { AppSheetFormService } from '@/components/sheet-form/sheet-form.service';
 import { CompendiumService } from '@/services/compendium.service';
 import { DocumentService } from '@/services/document.service';
+import { countReviewItems, ReviewService } from '@/services/review.service';
 import { SectionService } from '@/services/section.service';
 import { ToolbarContextService } from '@/services/toolbar-context.service';
 import { ArcTechAlertComponent } from '@/shared/components/alert';
@@ -40,21 +41,21 @@ import { ArcTechIconComponent } from '@/shared/components/icon';
           }
         </div>
 
-        @if (brokenLinkCount() > 0) {
+        @if (reviewCount() > 0) {
           <arc-alert
             arcType="destructive"
             arcIcon="unlink"
-            [arcTitle]="'links.broken.alertTitle' | translate: { count: brokenLinkCount() }"
-            [arcDescription]="'links.broken.cardDescription' | translate"
+            [arcTitle]="'review.alertTitle' | translate: { count: reviewCount() }"
+            [arcDescription]="'review.alertDescription' | translate"
           >
             <a
               arc-button
               arcType="outline"
               arcSize="sm"
               class="shrink-0"
-              [routerLink]="['/compendium', system.slug, 'broken-links']"
+              [routerLink]="['/compendium', system.slug, 'review']"
             >
-              {{ 'links.broken.review' | translate }}
+              {{ 'review.open' | translate }}
             </a>
           </arc-alert>
         }
@@ -101,6 +102,7 @@ import { ArcTechIconComponent } from '@/shared/components/icon';
 export class SystemHomePage {
   private readonly compendiumService = inject(CompendiumService);
   private readonly documentService = inject(DocumentService);
+  private readonly reviewService = inject(ReviewService);
   private readonly sheetFormService = inject(AppSheetFormService);
   private readonly translateService = inject(TranslateService);
   private readonly toolbarContext = inject(ToolbarContextService);
@@ -112,7 +114,8 @@ export class SystemHomePage {
   );
 
   protected readonly system = this.compendiumService.activeSystem;
-  protected readonly brokenLinkCount = signal(0);
+  /** Things the Review page lists (broken links, misplaced notes, unknown folders…). */
+  protected readonly reviewCount = signal(0);
   /** Folders the system has, in campaign section order. */
   protected readonly sections = computed(() => {
     const folders = this.system()?.folders ?? [];
@@ -123,10 +126,10 @@ export class SystemHomePage {
     effect((onCleanup) => {
       const system = this.system();
       if (system) {
-        this.documentService
-          .listBrokenLinks(system.path)
-          .then((rows) => this.brokenLinkCount.set(rows.length))
-          .catch((error: unknown) => console.warn('[app] Failed to count broken links:', error));
+        this.reviewService
+          .list(system.path)
+          .then((review) => this.reviewCount.set(countReviewItems(review)))
+          .catch((error: unknown) => console.warn('[app] Failed to load the review:', error));
         onCleanup(
           this.toolbarContext.activate({
             title: system.name,

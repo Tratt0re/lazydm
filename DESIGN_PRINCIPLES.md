@@ -94,13 +94,14 @@ LazyDM works like **Obsidian**, specialised for Dungeon Masters.
   | No type | a note written in Obsidian | *Assign type Enemy, sub-type humans* (from its folder) |
   | Outside any section | a note at the campaign root | *Move to…* (pick a section / sub-folder) |
   | Unknown folder | `lost-mine/factions/` | *Add as custom section* (type from the folder name, editable) |
-  | Unknown sub-folder | `enemies/undead/` with notes of another sub-type | *Use as sub-type* (sets `subtype` on its notes) |
+  | Unknown sub-folder | `enemies/undead/` with notes of another sub-type | listed as *Wrong sub-type*: *Fix all* sets `subtype` on its notes |
   | Too deep | `enemies/humans/bandits/` | none: a notice that deeper folders are not used by LazyDM |
 
   *Fix all* per group previews every write first. Fixes are conflict-checked writes. Not checked: assets (no type),
   `campaign.md`, `_templates/`.
-- **Moving a note** (from the Review fixes, later from the note toolbar) moves the file and rewrites the links
-  resolving to it like *Rename* does (path links, relative markdown links); the note keeps its name.
+- **Moving a note** (from the Review fixes, later from the note toolbar) moves the file inside its own campaign or
+  system and rewrites the links resolving to it like *Rename* does (path links, relative markdown links; bare names
+  stay) and its own relative links; the note keeps its name and its `type` / `subtype` follow the destination.
 
 ## 3. Where data lives
 
@@ -214,7 +215,7 @@ Planned Electron modules: `vault`, `cloud-readiness`, `campaign`, `document`, `i
   never overwrites: the user picks another file name.
 - **Copying into a campaign that has no section for the note's type** (custom sections are per campaign): the copy
   goes to the folder the source keeps that type in, and the target's Review page reports it (*Unknown folder* →
-  *Add as custom section*). Planned with 9.3: the copy asks to *Add the <label> section* to that campaign, or to
+  *Add as custom section*). Planned (not built yet): the copy asks to *Add the <label> section* to that campaign, or to
   pick one of its sections — then the copy's type (and sub-type) is set to match.
 - **Import** button in every folder, next to *New note*: *Import from compendium* in a campaign folder (the same
   folder of every system), *Import from campaign* in a system folder (the same folder of every campaign).

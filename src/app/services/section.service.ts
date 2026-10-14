@@ -5,6 +5,7 @@ import { map } from 'rxjs';
 
 import { APIChannel } from '@/config/api';
 import type {
+  CustomSectionPayload,
   DefaultSectionDto,
   SectionDefaultsDto,
   SectionDto,
@@ -52,6 +53,27 @@ export const CUSTOM_SECTION_ICONS: readonly SectionIcon[] = [
 ];
 
 const FALLBACK_SECTION_ICON: SectionIcon = 'folder';
+
+/** Settings payload that saves sections as they are listed (order, hidden, names, custom sections). */
+export function toSectionSettings(rows: readonly AppSection[]): SectionSettingsPayload {
+  return {
+    hidden: rows.filter((row) => row.isHidden).map((row) => row.key),
+    order: rows.map((row) => row.key),
+    labels: Object.fromEntries(
+      rows
+        .filter((row) => !row.isCustom && row.customLabel)
+        .map((row) => [row.key, row.customLabel!]),
+    ),
+    custom: rows
+      .filter((row) => row.isCustom)
+      .map((row) => ({
+        key: row.key,
+        label: row.customLabel ?? row.key,
+        type: row.type ?? undefined,
+        icon: row.icon,
+      })),
+  };
+}
 
 /** Display name of a sub-folder (a sub-type): `humans` → `Humans`, `fire-giants` → `Fire giants`. */
 export function toSubfolderLabel(name: string): string {
@@ -140,6 +162,15 @@ export class SectionService extends BaseIpcService<APIChannel.SECTIONS> {
     const { rows } = await this.ipcClient.save({ campaign, settings });
     this.remember(campaign, rows);
     return rows.map(toAppSection);
+  }
+
+  /** Adds a custom section to a campaign (an existing folder keeps its name as the section folder). */
+  async addCustomSection(
+    campaign: string,
+    section: CustomSectionPayload,
+  ): Promise<readonly AppSection[]> {
+    const settings = toSectionSettings(await this.list(campaign));
+    return this.save(campaign, { ...settings, custom: [...settings.custom, section] });
   }
 
   findCampaignSection(key: string): AppSection | null {

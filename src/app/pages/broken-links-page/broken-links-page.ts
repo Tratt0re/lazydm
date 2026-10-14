@@ -1,4 +1,13 @@
-import { Component, computed, DestroyRef, effect, inject, signal } from '@angular/core';
+import {
+  booleanAttribute,
+  Component,
+  computed,
+  DestroyRef,
+  effect,
+  inject,
+  input,
+  signal,
+} from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 
@@ -26,7 +35,10 @@ interface BrokenLinkGroup {
   readonly links: readonly BrokenLinkDto[];
 }
 
-/** Every link of a campaign that points to a note or file that does not exist, grouped by note. */
+/**
+ * Every link of a campaign that points to a note or file that does not exist, grouped by note. Shown as the
+ * *Broken links* group of the Review page (`embedded`: no toolbar of its own, nothing when there are none).
+ */
 @Component({
   selector: 'app-broken-links-page',
   imports: [
@@ -49,6 +61,8 @@ export class BrokenLinksPage {
   private readonly sectionService = inject(SectionService);
   protected readonly brokenLinkActions = inject(BrokenLinkActionsService);
   private loadToken = 0;
+
+  readonly embedded = input(false, { transform: booleanAttribute });
 
   protected readonly rows = signal<readonly BrokenLinkDto[]>([]);
   protected readonly isLoading = signal(true);
@@ -83,13 +97,15 @@ export class BrokenLinksPage {
         return;
       }
 
-      onCleanup(
-        this.toolbarContext.activate({
-          title: 'links.broken.title',
-          titleMode: 'breadcrumb',
-          titleBreadcrumbs: [{ label: scope.name, path: scope.routeBase, translate: false }],
-        }),
-      );
+      if (!this.embedded()) {
+        onCleanup(
+          this.toolbarContext.activate({
+            title: 'links.broken.title',
+            titleMode: 'breadcrumb',
+            titleBreadcrumbs: [{ label: scope.name, path: scope.routeBase, translate: false }],
+          }),
+        );
+      }
       void this.load(scope.rootPath);
     });
 

@@ -519,5 +519,82 @@
       "title": "Libreria dei modelli",
       "usedIn": "Usato in {{campaign}} per"
     }
+  },
+  "review": {
+    "title": "Revisione",
+    "loadError": "Impossibile caricare la revisione",
+    "emptyTitle": "Niente da rivedere",
+    "emptyDescription": "Ogni nota è nella sezione del suo tipo e ogni link funziona.",
+    "alertTitle": "{{count}} cose da rivedere",
+    "alertDescription": "Alcune note, cartelle o link non corrispondono alle sezioni di questa campagna.",
+    "open": "Rivedi",
+    "cancel": "Annulla",
+    "fixed": "{{count}} note aggiornate",
+    "fixFailed": "Impossibile aggiornare {{count}} note (modificate nel frattempo?)",
+    "groups": {
+      "brokenLinks": {
+        "title": "Link interrotti"
+      },
+      "misplaced": {
+        "title": "Note fuori posto",
+        "description": "Il loro tipo appartiene a un’altra sezione.",
+        "fixAll": "Imposta il tipo di tutte ({{count}})",
+        "detail": "tipo: {{type}} · in {{place}}"
+      },
+      "wrongSubtype": {
+        "title": "Sottotipi errati",
+        "description": "Il loro sottotipo non è la sottocartella in cui si trovano.",
+        "fixAll": "Imposta il sottotipo di tutte ({{count}})",
+        "detail": "sottotipo: {{subtype}} · in {{place}}"
+      },
+      "untyped": {
+        "title": "Note senza tipo",
+        "description": "Scritte fuori da LazyDM (Obsidian, Finder…) senza type: nel frontmatter.",
+        "fixAll": "Assegna il tipo a tutte ({{count}})",
+        "detail": "nessun tipo · in {{place}}"
+      },
+      "outside": {
+        "title": "Fuori da ogni sezione",
+        "description": "Note nella radice della campagna o in nessuna cartella di sezione."
+      },
+      "unknownFolders": {
+        "title": "Cartelle sconosciute",
+        "description": "Cartelle di questa campagna che non sono sue sezioni. Le loro note non compaiono nella barra laterale."
+      },
+      "tooDeep": {
+        "title": "Cartelle troppo profonde",
+        "description": "LazyDM usa un solo livello di sottocartelle: i file nelle cartelle più profonde non compaiono nelle sezioni."
+      }
+    },
+    "fix": {
+      "setType": "Imposta tipo {{section}}",
+      "setSubtype": "Imposta sottotipo {{subtype}}",
+      "removeSubtype": "Rimuovi sottotipo",
+      "assignType": "Assegna {{place}}",
+      "moveTo": "Sposta in {{place}}",
+      "moveToEllipsis": "Sposta in…",
+      "addSection": "Aggiungi come sezione"
+    },
+    "fixAll": {
+      "title": "Aggiornare {{count}} note?",
+      "description": "Cambia solo il frontmatter (tipo e sottotipo); ogni scrittura è verificata rispetto alle modifiche fatte nel frattempo.",
+      "more": "…e altre {{count}}",
+      "confirm": "Aggiorna"
+    },
+    "move": {
+      "title": "Sposta {{title}}",
+      "description": "La nota mantiene il nome; il suo tipo segue la sezione e i link che la puntano vengono aggiornati.",
+      "sectionLabel": "Sezione",
+      "submit": "Sposta",
+      "done": "{{title}} spostata ({{links}} link aggiornati)",
+      "failedLinks": "Non aggiornate (modificate nel frattempo): {{paths}}",
+      "error": "Impossibile spostare la nota"
+    },
+    "addSection": {
+      "title": "Aggiungi {{folder}} come sezione",
+      "description": "La cartella diventa una sezione di questa campagna con le sue note; nulla viene spostato o rinominato.",
+      "submit": "Aggiungi sezione",
+      "done": "{{name}} aggiunta alle sezioni"
+    }
   }
 }

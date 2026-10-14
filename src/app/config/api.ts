@@ -19,6 +19,7 @@ export enum APIChannel {
   COMPENDIUM = 'compendium',
   DOCUMENTS = 'documents',
   ENCOUNTERS = 'encounters',
+  REVIEW = 'review',
   SECTIONS = 'sections',
   TEMPLATES = 'templates',
   VAULT = 'vault',
@@ -64,11 +65,16 @@ export interface ElectronIpcClient {
     readonly unlink: IpcRequest<DTO.UnlinkPayload, { path: string; linkCount: number }>;
     readonly createFromLink: IpcRequest<DTO.CreateFromLinkPayload, DTO.DocumentDto>;
     readonly createFolder: IpcRequest<{ folder: string; name: string }, { path: string; name: string }>;
+    readonly setType: IpcRequest<{ path: string; type: string; subtype: string | null }, { path: string }>;
+    readonly move: IpcRequest<{ path: string; folder: string }, DTO.MoveDocumentResultDto>;
     readonly copy: IpcRequest<DTO.CopyDocumentPayload, DTO.CopyDocumentResultDto>;
     readonly copyPlan: IpcRequest<{ path: string; target: string }, DTO.CopyPlanDto>;
   };
   readonly encounters: {
     readonly list: OptionalIpcRequest<void, { rows: any[] }>;
+  };
+  readonly review: {
+    readonly list: IpcRequest<{ scope: string }, DTO.ReviewDto>;
   };
   readonly sections: {
     readonly list: IpcRequest<{ campaign: string }, { rows: DTO.SectionDto[] }>;
