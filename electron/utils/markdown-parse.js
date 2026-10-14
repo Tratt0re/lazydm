@@ -11,6 +11,8 @@ const INLINE_TAG_PATTERN = /(^|[\s(])#([\p{L}\p{N}_\-/]*[\p{L}_\-/][\p{L}\p{N}_\
 const INLINE_CODE_PATTERN = /`[^`\n]*`/g;
 const URL_SCHEME_PATTERN = /^[a-z][a-z0-9+.-]*:/i;
 const MARKDOWN_EXTENSION = '.md';
+/** Note types that were renamed: old files (synced from another device, Obsidian…) are read as the new type. */
+const LEGACY_NOTE_TYPES = Object.freeze({ monster: 'enemy' });
 
 function isPlainObject(value) {
   return Boolean(value) && typeof value === 'object' && !Array.isArray(value);
@@ -180,7 +182,8 @@ function parseMarkdownDocument(text, options = {}) {
 
   const frontmatterTitle = typeof frontmatter.title === 'string' ? frontmatter.title.trim() : '';
   const firstTopHeading = headings.find((heading) => heading.level === 1);
-  const type = typeof frontmatter.type === 'string' ? frontmatter.type.trim().toLocaleLowerCase() : '';
+  const rawType = typeof frontmatter.type === 'string' ? frontmatter.type.trim().toLocaleLowerCase() : '';
+  const type = LEGACY_NOTE_TYPES[rawType] ?? rawType;
 
   return {
     frontmatter,
@@ -288,7 +291,7 @@ function rewriteLinks(text, replace, options = {}) {
   return { content: `${bom}${rewrittenLines.join(newline)}`, count };
 }
 
-/** Swaps the file name at the end of a link path (`monsters/old.md`, `old`), keeping folders, `.md` and spacing. */
+/** Swaps the file name at the end of a link path (`enemies/old.md`, `old`), keeping folders, `.md` and spacing. */
 function replaceLinkFileName(linkPath, oldName, newName, { encoded = false } = {}) {
   const [, leading, inner, trailing] = linkPath.match(/^(\s*)(.*?)(\s*)$/);
   const nameStart = inner.lastIndexOf('/') + 1;
@@ -337,6 +340,39 @@ function renameLinkTarget(link, oldName, newName) {
   const heading = hashIndex < 0 ? '' : target.slice(hashIndex);
   const renamedPath = replaceLinkFileName(linkPath, oldName, newName);
   return renamedPath === null ? null : `${renamedPath}${heading}${alias}`;
+}
+
+/**
+ * New raw target of a link after a section folder was renamed (`monsters/goblin` → `enemies/goblin`). Only a
+ * folder segment sitting where a section is gets swapped: the folders before it (leading `../` and `./`
+ * dropped) must be one of `parents` (`''` for a scope-relative path, else a campaign or `compendium/<system>`).
+ * The file name, `#heading` and `|alias` are kept. Returns null when the link has no such folder.
+ *
+ * @param {ReadonlySet<string>} parents - Folder paths a section folder can sit under.
+ */
+function renameLinkFolder(link, oldDir, newDir, parents) {
+  const pipeIndex = link.syntax === 'markdown' ? -1 : link.raw.indexOf('|');
+  const target = pipeIndex < 0 ? link.raw : link.raw.slice(0, pipeIndex);
+  const hashIndex = target.indexOf('#');
+  const linkPath = hashIndex < 0 ? target : target.slice(0, hashIndex);
+  const suffix = link.raw.slice(linkPath.length);
+  const segments = linkPath.split('/');
+  const relativeStart = segments.findIndex((segment) => segment.trim() !== '..' && segment.trim() !== '.');
+  let isChanged = false;
+  const renamed = segments.map((segment, index) => {
+    const parent = segments
+      .slice(Math.max(relativeStart, 0), index)
+      .map((part) => part.trim())
+      .join('/');
+    if (index < segments.length - 1 && segment.trim() === oldDir && parents.has(parent)) {
+      isChanged = true;
+      return segment.replace(oldDir, newDir);
+    }
+
+    return segment;
+  });
+
+  return isChanged ? `${renamed.join('/')}${suffix}` : null;
 }
 
 /** Text a link leaves behind when it is removed: its label, else what it points to. */
@@ -404,6 +440,7 @@ function replaceDocumentTitle(text, oldTitle, newTitle) {
 module.exports = {
   getLinkPlainText,
   parseMarkdownDocument,
+  renameLinkFolder,
   renameLinkTarget,
   replaceDocumentTitle,
   rewriteLinks,

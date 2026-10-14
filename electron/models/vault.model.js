@@ -5,7 +5,8 @@ const { resolveInsideVault, safeWriteFileAtomic } = require('../utils/file-utils
 
 const VAULT_CONFIG_DIR_NAME = '.lazydm';
 const VAULT_CONFIG_FILE_NAME = 'vault.json';
-const VAULT_CONFIG_SCHEMA_VERSION = 1;
+/** Vault format version: older vaults are migrated when opened (see vault-migration.model.js). */
+const VAULT_CONFIG_SCHEMA_VERSION = 2;
 const VAULT_DEFAULT_DIR_NAMES = Object.freeze(['_templates', 'compendium']);
 
 const vaultBaseModel = createBaseModel('vaults');
@@ -136,6 +137,7 @@ async function listVaultFiles(rootPath, relativeDir = '') {
 
 module.exports = {
   ...vaultBaseModel,
+  VAULT_CONFIG_SCHEMA_VERSION,
   createDefaultVaultConfig,
   ensureVaultStructure,
   getByPath,

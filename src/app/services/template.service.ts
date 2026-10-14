@@ -32,7 +32,7 @@ export class TemplateService extends BaseIpcService<APIChannel.TEMPLATES> {
     return templates.filter((template) => template.source !== 'campaign' || template.scope === campaign);
   }
 
-  /** `monster · D&D 5e`, `session-recap · Vault`. */
+  /** `enemy · D&D 5e`, `session-recap · Vault`. */
   getTemplateLabel(template: TemplateDto): string {
     const source =
       template.scopeName ?? this.translateService.instant('settings.templates.sources.vault');

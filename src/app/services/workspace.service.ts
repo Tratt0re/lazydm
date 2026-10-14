@@ -97,7 +97,7 @@ export class WorkspaceService extends BaseIpcService<APIChannel.WORKSPACE> {
   /** A campaign always keeps at least one open tab. */
   readonly canCloseTabs = computed(() => this.tabsSignal().length > 1);
 
-  /** Section folder of the tab's current page (`monsters`…), null on the overview. */
+  /** Section folder of the tab's current page (`enemies`…), null on the overview. */
   getTabSection(tab: WorkspaceTabDto): string | null {
     return getTabUrl(tab).split('/')[3] ?? null;
   }

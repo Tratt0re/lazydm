@@ -1,7 +1,7 @@
 const { dialog } = require('electron');
 const path = require('node:path');
 const { randomUUID } = require('node:crypto');
-const { appMetaModel, vaultModel } = require('../models');
+const { appMetaModel, vaultMigrationModel, vaultModel } = require('../models');
 const {
   assertReadableDirectory,
   assertWritableDirectory,
@@ -157,9 +157,26 @@ function open(payload) {
   return { status: VAULT_STATUS.ready, vault };
 }
 
-/** Waits for the cloud client to download the vault notes, then indexes the vault. Runs in the background. */
+/**
+ * Waits for the cloud client to download the vault notes, brings an older vault to the current format, then
+ * indexes the vault. Runs in the background.
+ */
 function startSession(vault) {
-  void cloudReadinessController.prepare(vault).then(() => {
+  void cloudReadinessController.prepare(vault).then(async () => {
+    if (readCurrentVaultId() !== vault.id) {
+      return;
+    }
+
+    try {
+      const report = await vaultMigrationModel.migrateVault(vault.path);
+      if (report) {
+        console.info('[electron] Vault migrated ->', report);
+      }
+    } catch (error) {
+      // Not marked as migrated: the next start tries again. The vault still opens.
+      console.error('[electron] Vault migration failed ->', error);
+    }
+
     if (readCurrentVaultId() === vault.id) {
       indexerController.start(vault);
     }

@@ -9,7 +9,7 @@ const CAMPAIGN_NOTE_TYPE = 'campaign';
 const CAMPAIGN_SECTION_DIR_NAMES = Object.freeze([
   'scenes',
   'characters',
-  'monsters',
+  'enemies',
   'spells',
   'items',
   'quests',
@@ -25,7 +25,7 @@ const CAMPAIGN_SECTION_DIR_NAMES = Object.freeze([
 const NOTE_TYPE_DIR_NAMES = Object.freeze({
   scene: 'scenes',
   character: 'characters',
-  monster: 'monsters',
+  enemy: 'enemies',
   spell: 'spells',
   item: 'items',
   quest: 'quests',

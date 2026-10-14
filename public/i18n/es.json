@@ -13,7 +13,7 @@
       "settings": "Configuración",
       "overview": "Resumen",
       "scenes": "Escenas",
-      "monsters": "Monstruos",
+      "enemies": "Enemigos",
       "sessions": "Sesiones",
       "assets": "Recursos",
       "backToCampaigns": "Volver a las campañas",
@@ -117,7 +117,7 @@
         "title": "Nueva plantilla",
         "description": "Crea una plantilla en _templates/ en la raíz del vault.",
         "nameLabel": "Nombre",
-        "namePlaceholder": "p. ej. Monstruo jefe",
+        "namePlaceholder": "p. ej. Enemigo jefe",
         "startFromLabel": "Partir de",
         "empty": "Plantilla vacía",
         "fromBuiltIn": "Integrada: {{section}}",
@@ -199,7 +199,7 @@
       "title": "Campañas",
       "create": "Nueva campaña",
       "emptyTitle": "Aún no hay campañas",
-      "emptyDescription": "Una campaña es una carpeta de tu vault con escenas, personajes, monstruos, encuentros y sesiones. Crea la primera para empezar a preparar.",
+      "emptyDescription": "Una campaña es una carpeta de tu vault con escenas, personajes, enemigos, encuentros y sesiones. Crea la primera para empezar a preparar.",
       "loadError": "No se pudieron cargar las campañas"
     },
     "create": {
@@ -232,8 +232,8 @@
       "characters": {
         "description": "Personajes jugadores y PNJ."
       },
-      "monsters": {
-        "description": "Estadísticas y notas de criaturas."
+      "enemies": {
+        "description": "Enemigos, sus estadísticas y tácticas."
       },
       "spells": {
         "description": "Conjuros, rituales y efectos mágicos."

@@ -13,7 +13,7 @@
       "settings": "首选项",
       "overview": "概览",
       "scenes": "场景",
-      "monsters": "怪物",
+      "enemies": "敌人",
       "sessions": "团次",
       "assets": "素材",
       "backToCampaigns": "返回战役列表",
@@ -117,7 +117,7 @@
         "title": "新建模板",
         "description": "在库根目录的 _templates/ 中创建模板。",
         "nameLabel": "名称",
-        "namePlaceholder": "例如：首领怪物",
+        "namePlaceholder": "例如：首领敌人",
         "startFromLabel": "起始内容",
         "empty": "空模板",
         "fromBuiltIn": "内置：{{section}}",
@@ -199,7 +199,7 @@
       "title": "战役",
       "create": "新建战役",
       "emptyTitle": "还没有战役",
-      "emptyDescription": "战役是资料库中的一个文件夹，包含场景、角色、怪物、遭遇和团次。创建第一个战役即可开始准备。",
+      "emptyDescription": "战役是资料库中的一个文件夹，包含场景、角色、敌人、遭遇和团次。创建第一个战役即可开始准备。",
       "loadError": "无法加载战役"
     },
     "create": {
@@ -232,8 +232,8 @@
       "characters": {
         "description": "玩家角色和非玩家角色。"
       },
-      "monsters": {
-        "description": "数据块和生物笔记。"
+      "enemies": {
+        "description": "敌人、数据块与战术。"
       },
       "spells": {
         "description": "法术、仪式与魔法效果。"

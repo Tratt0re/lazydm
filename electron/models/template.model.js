@@ -38,7 +38,7 @@ const BUILT_IN_TEMPLATES = Object.freeze({
 
 ## Secrets
 `,
-  monster: `${frontmatter('monster', ['cr', 'hp', 'ac'])}
+  enemy: `${frontmatter('enemy', ['cr', 'hp', 'ac'])}
 ## Description
 
 ## Stats

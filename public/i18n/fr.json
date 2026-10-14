@@ -13,7 +13,7 @@
       "settings": "Paramètres",
       "overview": "Aperçu",
       "scenes": "Scènes",
-      "monsters": "Monstres",
+      "enemies": "Ennemis",
       "sessions": "Sessions",
       "assets": "Ressources",
       "backToCampaigns": "Retour aux campagnes",
@@ -117,7 +117,7 @@
         "title": "Nouveau modèle",
         "description": "Crée un modèle dans _templates/ à la racine du vault.",
         "nameLabel": "Nom",
-        "namePlaceholder": "ex. Monstre boss",
+        "namePlaceholder": "ex. Ennemi boss",
         "startFromLabel": "Partir de",
         "empty": "Modèle vide",
         "fromBuiltIn": "Intégré : {{section}}",
@@ -199,7 +199,7 @@
       "title": "Campagnes",
       "create": "Nouvelle campagne",
       "emptyTitle": "Aucune campagne pour l'instant",
-      "emptyDescription": "Une campagne est un dossier de votre vault avec des scènes, des personnages, des monstres, des rencontres et des sessions. Créez la première pour commencer à préparer.",
+      "emptyDescription": "Une campagne est un dossier de votre vault avec des scènes, des personnages, des ennemis, des rencontres et des sessions. Créez la première pour commencer à préparer.",
       "loadError": "Impossible de charger les campagnes"
     },
     "create": {
@@ -232,8 +232,8 @@
       "characters": {
         "description": "Personnages joueurs et PNJ."
       },
-      "monsters": {
-        "description": "Blocs de statistiques et notes de créatures."
+      "enemies": {
+        "description": "Ennemis, leurs statistiques et tactiques."
       },
       "spells": {
         "description": "Sorts, rituels et effets magiques."

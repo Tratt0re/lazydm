@@ -13,7 +13,7 @@
       "settings": "Einstellungen",
       "overview": "Übersicht",
       "scenes": "Szenen",
-      "monsters": "Monster",
+      "enemies": "Gegner",
       "sessions": "Sitzungen",
       "assets": "Dateien",
       "backToCampaigns": "Zurück zu den Kampagnen",
@@ -117,7 +117,7 @@
         "title": "Neue Vorlage",
         "description": "Erstellt eine Vorlage in _templates/ im Vault-Stammordner.",
         "nameLabel": "Name",
-        "namePlaceholder": "z. B. Boss-Monster",
+        "namePlaceholder": "z. B. Boss-Gegner",
         "startFromLabel": "Beginnen mit",
         "empty": "Leere Vorlage",
         "fromBuiltIn": "Integriert: {{section}}",
@@ -199,7 +199,7 @@
       "title": "Kampagnen",
       "create": "Neue Kampagne",
       "emptyTitle": "Noch keine Kampagnen",
-      "emptyDescription": "Eine Kampagne ist ein Ordner in deinem Vault mit Szenen, Charakteren, Monstern, Begegnungen und Sitzungen. Erstelle die erste, um mit der Vorbereitung zu beginnen.",
+      "emptyDescription": "Eine Kampagne ist ein Ordner in deinem Vault mit Szenen, Charakteren, Gegnern, Begegnungen und Sitzungen. Erstelle die erste, um mit der Vorbereitung zu beginnen.",
       "loadError": "Kampagnen konnten nicht geladen werden"
     },
     "create": {
@@ -232,8 +232,8 @@
       "characters": {
         "description": "Spielercharaktere und NSCs."
       },
-      "monsters": {
-        "description": "Werteblöcke und Kreaturennotizen."
+      "enemies": {
+        "description": "Gegner, ihre Werteblöcke und Taktiken."
       },
       "spells": {
         "description": "Zauber, Rituale und magische Effekte."

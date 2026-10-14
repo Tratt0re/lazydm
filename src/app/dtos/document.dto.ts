@@ -1,7 +1,7 @@
 export type DocumentFileKind = 'md' | 'asset';
 
 export interface DocumentFileListItemDto {
-  /** Vault-relative path, e.g. `lost-mine-of-phandelver/monsters/goblin-boss.md`. */
+  /** Vault-relative path, e.g. `lost-mine-of-phandelver/enemies/goblin-boss.md`. */
   readonly path: string;
   /** File name without extension for notes, full file name for assets. */
   readonly name: string;

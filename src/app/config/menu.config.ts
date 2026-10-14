@@ -25,7 +25,7 @@ export interface CampaignSectionConfig {
 export const CAMPAIGN_SECTIONS: readonly CampaignSectionConfig[] = [
   { key: 'scenes', icon: 'clapperboard', noteType: 'scene' },
   { key: 'characters', icon: 'users', noteType: 'character' },
-  { key: 'monsters', icon: 'skull', noteType: 'monster' },
+  { key: 'enemies', icon: 'skull', noteType: 'enemy' },
   { key: 'spells', icon: 'sparkles', noteType: 'spell' },
   { key: 'items', icon: 'backpack', noteType: 'item' },
   { key: 'quests', icon: 'scroll-text', noteType: 'quest' },

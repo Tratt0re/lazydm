@@ -287,7 +287,7 @@ function deleteAll() {
 /**
  * Re-resolves every link target, only among the files of the source's own scope (its campaign, or its
  * compendium system): a campaign never resolves into the compendium or another campaign. Order of
- * preference: exact path, path suffix (`monsters/grimlock`), then by name, then the shortest path.
+ * preference: exact path, path suffix (`enemies/grimlock`), then by name, then the shortest path.
  * Heading-only links (`[[#Treasure]]`) point to their own file.
  */
 function resolveLinks() {

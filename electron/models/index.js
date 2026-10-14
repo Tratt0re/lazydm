@@ -5,6 +5,7 @@ const documentModel = require('./document.model');
 const templateModel = require('./template.model');
 const cloudReadinessModel = require('./cloud-readiness.model');
 const vaultIndexModel = require('./vault-index.model');
+const vaultMigrationModel = require('./vault-migration.model');
 const vaultModel = require('./vault.model');
 const workspaceModel = require('./workspace.model');
 
@@ -16,6 +17,7 @@ module.exports = {
   documentModel,
   templateModel,
   vaultIndexModel,
+  vaultMigrationModel,
   vaultModel,
   workspaceModel,
 };

@@ -9,6 +9,12 @@ import { RootLayout } from '@/layout/root-layout/root-layout';
 import { APP_SHEET_OUTLET, APP_SHEET_TITLE_ROUTE_DATA } from '@/services/app-sheet.service';
 import { NOTE_SCOPE_ROUTE_DATA } from '@/services/note-scope.service';
 
+/** Sections that were renamed: old URLs (saved tabs, links) open the new section. */
+const RENAMED_SECTION_ROUTES: Routes = [
+  { path: 'monsters', pathMatch: 'full', redirectTo: 'enemies' },
+  { path: 'monsters/:note', redirectTo: 'enemies/:note' },
+];
+
 function matchSheetPaths(segments: UrlSegment[]): UrlMatchResult | null {
   return ['compendium', 'templates', 'settings'].includes(segments[0]?.path ?? '')
     ? { consumed: segments }
@@ -28,6 +34,7 @@ const SYSTEM_SHEET_ROUTES: Routes = [
     loadComponent: () =>
       import('./pages/broken-links-page/broken-links-page').then((m) => m.BrokenLinksPage),
   },
+  ...RENAMED_SECTION_ROUTES,
   {
     path: ':section',
     children: [
@@ -149,6 +156,7 @@ export const routes: Routes = [
                 loadComponent: () =>
                   import('./pages/broken-links-page/broken-links-page').then((m) => m.BrokenLinksPage),
               },
+              ...RENAMED_SECTION_ROUTES,
               {
                 path: ':section',
                 children: [

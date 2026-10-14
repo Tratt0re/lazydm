@@ -13,7 +13,7 @@
       "settings": "Settings",
       "overview": "Overview",
       "scenes": "Scenes",
-      "monsters": "Monsters",
+      "enemies": "Enemies",
       "sessions": "Sessions",
       "assets": "Assets",
       "backToCampaigns": "Back to campaigns",
@@ -117,7 +117,7 @@
         "title": "New template",
         "description": "Creates a template in _templates/ at the vault root.",
         "nameLabel": "Name",
-        "namePlaceholder": "e.g. Boss monster",
+        "namePlaceholder": "e.g. Boss enemy",
         "startFromLabel": "Start from",
         "empty": "Empty template",
         "fromBuiltIn": "Built-in: {{section}}",
@@ -199,7 +199,7 @@
       "title": "Campaigns",
       "create": "New campaign",
       "emptyTitle": "No campaigns yet",
-      "emptyDescription": "A campaign is a folder in your vault with scenes, characters, monsters, encounters and sessions. Create your first one to start preparing.",
+      "emptyDescription": "A campaign is a folder in your vault with scenes, characters, enemies, encounters and sessions. Create your first one to start preparing.",
       "loadError": "Couldn't load the campaigns"
     },
     "create": {
@@ -232,8 +232,8 @@
       "characters": {
         "description": "Player characters and NPCs."
       },
-      "monsters": {
-        "description": "Stat blocks and creature notes."
+      "enemies": {
+        "description": "Foes, their stat blocks and tactics."
       },
       "spells": {
         "description": "Spells, rituals and magical effects."

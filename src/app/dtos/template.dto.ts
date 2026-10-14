@@ -2,7 +2,7 @@
 export type TemplateSource = 'vault' | 'system' | 'campaign';
 
 export interface TemplateDto {
-  /** Vault-relative path (`_templates/monster.md`, `compendium/dnd-5e/_templates/monster.md`…). */
+  /** Vault-relative path (`_templates/enemy.md`, `compendium/dnd-5e/_templates/enemy.md`…). */
   readonly path: string;
   readonly name: string;
   readonly source: TemplateSource;

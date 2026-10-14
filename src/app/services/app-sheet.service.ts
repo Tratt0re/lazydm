@@ -36,7 +36,7 @@ export class AppSheetService {
   private readonly isClosingSignal = signal(false);
   private readonly lastPaths: Partial<Record<AppSheetKind, string>> = {};
 
-  /** Path inside the sheet outlet, e.g. `compendium/my-system/monsters`; empty when closed. */
+  /** Path inside the sheet outlet, e.g. `compendium/my-system/enemies`; empty when closed. */
   readonly sheetPath = this.sheetPathSignal.asReadonly();
   readonly activeKind = computed<AppSheetKind | null>(() => {
     const kind = this.sheetPathSignal().split('/')[0];
@@ -99,7 +99,7 @@ export class AppSheetService {
    * In-app links still point to `/compendium/...` and `/settings/...`: they open in the sheet, over the
    * page that was shown (the campaign list when there was none).
    */
-  /** Path of the page under the sheet (primary outlet), e.g. `campaigns/lost-mine/monsters`. */
+  /** Path of the page under the sheet (primary outlet), e.g. `campaigns/lost-mine/enemies`. */
   underlyingPath(): string {
     return getOutletPath(this.router.parseUrl(this.router.url), 'primary');
   }
