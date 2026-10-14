@@ -21,16 +21,17 @@ LazyDM works like **Obsidian**, specialised for Dungeon Masters.
 ├── .lazydm/                           vault config, synced with the vault (like .obsidian/)
 │   ├── vault.json                     vault settings, template rules, folder/display-name mapping
 │   └── …
-├── _templates/                        note templates (scene.md, monster.md, character.md…)
+├── _templates/                        note templates (scene.md, enemy.md, character.md…)
 ├── compendium/                        cross-campaign material, one folder per "system"
 │   └── <system-slug>/                 created by the user (a game, a setting, anything reused)
 │       ├── system.md                  system card: display name, description
-│       └── <folders on demand>        sessions/, monsters/, assets/, notes/… appear with their first file
-└── <campaign-slug>/                   one folder per campaign
+│       └── <folders on demand>        sessions/, enemies/, assets/, notes/… appear with their first file
+└── <campaign-slug>/                   one folder per campaign (section folders appear with their first file)
     ├── campaign.md                    campaign card: display name, cover, description
     ├── scenes/                        type: scene
     ├── characters/                    type: character
-    ├── monsters/                      type: monster
+    ├── enemies/                       type: enemy
+    │   └── <sub-type>/                one level of sub-folders: subtype: <folder name> (e.g. monsters, humans)
     ├── spells/                        type: spell
     ├── items/                         type: item
     ├── quests/                        type: quest
@@ -39,18 +40,63 @@ LazyDM works like **Obsidian**, specialised for Dungeon Masters.
     ├── encounters/                    special linkable files, format to be designed (see §12)
     ├── handouts/                      type: handout (letters, clues; may embed images from assets/)
     ├── sessions/                      type: session
-    └── assets/                        every non-.md file: images, maps, pdfs, sounds…
+    ├── assets/                        every non-.md file: images, maps, pdfs, sounds…
+    └── <custom sections>/             added per campaign (see §2a), e.g. factions/ → type: faction
 ```
 
 - **Folder and file names are slugs**: lowercase kebab-case, `-` instead of spaces
   (`Lost Mine of Phandelver` → `lost-mine-of-phandelver`).
 - The **human-readable name** lives in the content (`campaign.md` frontmatter / `title`), never in the folder name.
-- A note's **`type` in its frontmatter decides what it is**; folders are only the default location.
-  Moving files between folders must never break anything.
-- The folder list lives in `CAMPAIGN_SECTION_DIR_NAMES` (Electron) and `CAMPAIGN_SECTIONS` (Angular), kept in the
-  same order (the sidebar order). Opening a campaign creates any missing default folder (empty, never moving or
-  renaming anything), so campaigns made with an older folder set get the new ones.
+- A note's **`type` (and optional `subtype`) in its frontmatter decides what it is**, and its folder should agree
+  with it (§2a). When they disagree LazyDM **reports it and offers a fix; it never blocks the note and never moves
+  it on its own**. Links resolve by name, so a note in the wrong folder keeps working.
 - A map is an image in `assets/` plus a `.md` card that embeds it.
+
+## 2a. Sections (campaign folders)
+
+- A **section** is a top-level folder of a campaign bound to one note type: key (folder slug), type, label, icon.
+  The **default sections** are the ones in §2 (Electron owns the list and sends it to Angular, with each campaign's
+  settings applied — no list kept in sync by hand).
+- **Per-campaign settings** in `.lazydm/vault.json` → `sections.campaigns.<slug>`:
+  - `hidden`: default sections not shown in the sidebar (their files stay indexed and linkable; the settings show
+    *hidden, N notes inside*);
+  - `order`: the sidebar order;
+  - `labels`: display names (`characters` → *NPCs*); the folder on disk keeps its name;
+  - `custom`: the campaign's own sections (`{ key: 'factions', type: 'faction', label: 'Factions', icon: 'flag' }`),
+    with a user-written label (not translated). A custom type gets a generic built-in template.
+- **Folders appear on demand**: a section exists from the settings; its folder is created with its first file.
+  Opening a campaign no longer creates empty folders (existing empty ones are left alone).
+- **Folders are never renamed on disk** by LazyDM (renaming a section = changing its label). Hiding is not deleting:
+  LazyDM never deletes a section folder.
+- **Sub-folders**: one level inside a section, created from the section page (*New folder*). A sub-folder is a
+  **sub-type**: notes in `enemies/humans/` have `type: enemy` and `subtype: humans` (a separate frontmatter field,
+  the sub-folder slug). New notes created inside a sub-folder get both. Sub-folders share the section's template
+  (one template per section; per-sub-type templates may come later). Deeper folders are **ignored** (their files
+  are not listed in sections) and reported (see *Review* below).
+- **Enemies** (formerly *Monsters*): folder `enemies/`, type `enemy`. `type: monster` is still read as `enemy`, so
+  old files coming back through sync are not misplaced. A one-time migration (vault format version in
+  `vault.json`) renames `monsters/` → `enemies/` in campaigns and systems and rewrites `type:`, the template rules,
+  `_templates/monster.md` and `[[monsters/…]]` path links.
+- **Review** (per campaign, `/campaigns/<slug>/review`, replacing the *Broken links* page; also per system): every
+  disagreement between files and sections, computed from the index so it follows changes made outside LazyDM
+  (Finder, Obsidian, sync). The overview alert with its *Review* button shows when there is anything to review.
+  Groups, each row with a fix menu (the user chooses; no default fix):
+
+  | Problem | Example | Fixes |
+  | --- | --- | --- |
+  | Broken link | see §6 | *Remove link, keep text* · *Create note…* |
+  | Misplaced: the type belongs to another section | `type: enemy` in `locations/` | *Set type to Location* · *Move to Enemies* |
+  | Wrong sub-type | `subtype: monsters` in `enemies/humans/` | *Set sub-type to humans* · *Move to enemies/monsters* |
+  | No type | a note written in Obsidian | *Assign type Enemy, sub-type humans* (from its folder) |
+  | Outside any section | a note at the campaign root | *Move to…* (pick a section / sub-folder) |
+  | Unknown folder | `lost-mine/factions/` | *Add as custom section* (type from the folder name, editable) |
+  | Unknown sub-folder | `enemies/undead/` with notes of another sub-type | *Use as sub-type* (sets `subtype` on its notes) |
+  | Too deep | `enemies/humans/bandits/` | none: a notice that deeper folders are not used by LazyDM |
+
+  *Fix all* per group previews every write first. Fixes are conflict-checked writes. Not checked: assets (no type),
+  `campaign.md`, `_templates/`.
+- **Moving a note** (from the Review fixes, later from the note toolbar) moves the file and rewrites the links
+  resolving to it like *Rename* does (path links, relative markdown links); the note keeps its name.
 
 ## 3. Where data lives
 
@@ -60,7 +106,7 @@ LazyDM works like **Obsidian**, specialised for Dungeon Masters.
 | --- | --- | --- |
 | `.md` frontmatter | `type`, `title`, `tags`, aliases, game fields (CR, HP…) | ✅ via the cloud folder |
 | `.md` body | content and `[[links]]` | ✅ |
-| `.lazydm/*.json` | template rules (`vault.json` → `templates`, see §6c), folder/display-name mapping, vault settings | ✅ |
+| `.lazydm/*.json` | template rules (`vault.json` → `templates`, see §6c), per-campaign sections (`vault.json` → `sections`, see §2a), vault format version, vault settings | ✅ |
 | Local SQLite | rebuildable index + device-local state | ❌ never |
 | Device-local preferences | **theme, language** (renderer `localStorage` via `LocalPreferencesService`), Electron-side settings (`settings-store` userData JSON), current vault (`app_meta.current_vault_id`) | ❌ never |
 
@@ -127,7 +173,7 @@ Planned Electron modules: `vault`, `cloud-readiness`, `campaign`, `document`, `i
 - **Link suggestions** (editor, live and source mode): typing `[[`, `![[` or `[label](` opens a list below the cursor
   with the files of the note's own scope (templates excluded), filtered on title, name and path as the target is
   typed; links list notes first, embeds list assets first. Picking one writes a link that resolves: the bare name,
-  or the scope-relative path when two files share the name (`[[monsters/goblin]]`); markdown links get the path
+  or the scope-relative path when two files share the name (`[[enemies/goblin]]`); markdown links get the path
   relative to the note (`../assets/map.png`). The closing `]]` / `)` is added unless already there. The list comes
   from the index (`documents:linkTargets`) and follows index updates.
 - **Rename** (note toolbar → *Rename*): the new title gives the new kebab-case file name in the same folder;
@@ -143,15 +189,15 @@ Planned Electron modules: `vault`, `cloud-readiness`, `campaign`, `document`, `i
   (this note links to it), with a tooltip and the linking lines. The note's own broken links appear below only
   when there are some. It follows index updates.
 - Unresolved links are shown as broken, never silently dropped: styled in the preview, listed in the note panel and
-  in the per-campaign **Broken links** page (`/campaigns/<slug>/broken-links`). The overview shows an alert with a
-  *Review* button only when the campaign has broken links.
+  in the per-campaign **Review** page (§2a, the *Broken links* group). The overview shows an alert with a *Review*
+  button only when the campaign has something to review.
 - **Fixing a broken link** (menu on each broken link: in the note panel, on the broken links page, and on the
   broken link itself in the live preview and reading view — click or Enter/Space):
   - *Remove link, keep text*: every occurrence of that link in the note becomes its label (or what it pointed to).
   - *Create note…*: title (suggested from the link) and folder (the link's folder, else the source note's section);
     the note is created from its template and opened. Encounters are not offered as a folder (see below). If its kebab file name differs from the link text, the link is
     rewritten to it with the old text kept as alias (`[[klarg-the-bugbear|Klarg the Bugbear]]`).
-- Moving notes between sections and deleting notes are not available yet.
+- Moving notes between sections: see §2a (*Moving a note*). Deleting notes is not available yet.
 
 ## 6b. Compendium
 
@@ -159,9 +205,12 @@ Planned Electron modules: `vault`, `cloud-readiness`, `campaign`, `document`, `i
   creates (*New system*: name → kebab-case folder + `system.md`). A system starts empty.
 - Notes, assets and templates get into a system by **copy** from a campaign (*Copy to compendium*) or by creating
   them there; they get out by **copy** to a campaign (*Copy to campaign*). **The original always stays**; there is
-  no move. The folder comes from the note `type` (same names as the campaign sections; unknown types → `notes/`),
-  other files go to `assets/`, templates to `_templates/` — created when missing. A taken name never overwrites:
-  the user picks another file name.
+  no move. The folder comes from the note `type` (the source campaign's section for it, sub-folder kept; unknown
+  types → `notes/`), other files go to `assets/`, templates to `_templates/` — created when missing. A taken name
+  never overwrites: the user picks another file name.
+- **Copying into a campaign that has no section for the note's type** (custom sections are per campaign): the copy
+  asks to *Add the <label> section* to that campaign, or to pick one of its sections — then the copy's type (and
+  sub-type) is set to match.
 - **Import** button in every folder, next to *New note*: *Import from compendium* in a campaign folder (the same
   folder of every system), *Import from campaign* in a system folder (the same folder of every campaign).
 - **Linked files come along on request**: before any copy or import LazyDM collects what the file links to,
@@ -237,7 +286,8 @@ Planned Electron modules: `vault`, `cloud-readiness`, `campaign`, `document`, `i
   settings-style title with its dot and a description. The Compendium one is a tree: *All systems*, then each
   system with its overview and the folders it has.
 - **Campaign list** → grid of campaigns; when empty, a CTA message with a *Create campaign* button.
-- **Campaign layout** → shell with the sidebar: campaign sections and **Back to campaigns**.
+- **Campaign layout** → shell with the sidebar: the campaign's sections (its settings applied, §2a) and
+  **Back to campaigns**. Section settings live in Settings (per campaign, like the template choices).
 - **Tab bar** above the header bar, browser-like, one set of tabs per campaign, restored per device
   (`workspace` table of the vault index; at most 30 tabs, each tab's URL stays inside its campaign).
   - Each tab has its **own back/forward history** (max 50 entries); navigating inside a tab drops its forward entries.
@@ -344,6 +394,10 @@ variant keys and configuration stay as they are.
 | 8 | Compendium: systems, copy to/from campaigns, scope-limited links |
 | 8.1 | Template rules: per-campaign template choice per note type, built-in defaults, placeholders |
 | 8.2 | Editor views: Live preview / Source / Reading, remembered per note; clickable links; tables, callouts, properties, `◇` dividers |
+| 9 | Monsters → Enemies: folder, type, template, vault format version + one-time migration |
+| 9.1 | Per-campaign sections: hide, order, labels, custom sections, folders on demand; Electron owns the section list |
+| 9.2 | Sub-folders as sub-types (one level, `subtype` field), *New folder*, breadcrumb, copy keeps the sub-folder |
+| 9.3 | Review page: broken links + misplaced / wrong sub-type / untyped / outside sections / unknown / too-deep folders; move note with link rewrite |
 
 ## 12. Open decisions
 
