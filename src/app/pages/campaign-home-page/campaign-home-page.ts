@@ -2,9 +2,9 @@ import { Component, effect, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 
-import { CAMPAIGN_SECTIONS } from '@/config/menu.config';
 import { CampaignService } from '@/services/campaign.service';
 import { DocumentService } from '@/services/document.service';
+import { SectionService } from '@/services/section.service';
 import { ToolbarContextService } from '@/services/toolbar-context.service';
 import { ArcTechAlertComponent } from '@/shared/components/alert';
 import { ArcTechButtonComponent } from '@/shared/components/button';
@@ -40,7 +40,7 @@ import { ArcTechIconComponent } from '@/shared/components/icon';
         }
 
         <ul class="grid gap-2.5 sm:grid-cols-2 lg:grid-cols-3">
-          @for (section of sections; track section.key) {
+          @for (section of sections(); track section.key) {
             <li>
               <a
                 [routerLink]="['/campaigns', campaign.slug, section.key]"
@@ -48,10 +48,15 @@ import { ArcTechIconComponent } from '@/shared/components/icon';
               >
                 <arc-icon [arcType]="section.icon" class="size-6 text-primary" />
                 <h2 class="text-xs font-bold tracking-[0.08em] uppercase">
-                  {{ 'nav.items.' + section.key | translate }}<span class="text-primary" aria-hidden="true">.</span>
+                  {{ sectionService.labelOf(section) }}<span class="text-primary" aria-hidden="true">.</span>
                 </h2>
                 <p class="text-sm text-muted-foreground">
-                  {{ 'campaigns.sections.' + section.key + '.description' | translate }}
+                  {{
+                    (section.isCustom
+                      ? 'campaigns.sections.customDescription'
+                      : 'campaigns.sections.' + section.key + '.description'
+                    ) | translate
+                  }}
                 </p>
               </a>
             </li>
@@ -66,9 +71,10 @@ export class CampaignHomePage {
   private readonly campaignService = inject(CampaignService);
   private readonly documentService = inject(DocumentService);
   private readonly toolbarContext = inject(ToolbarContextService);
+  protected readonly sectionService = inject(SectionService);
 
   protected readonly campaign = this.campaignService.activeCampaign;
-  protected readonly sections = CAMPAIGN_SECTIONS;
+  protected readonly sections = this.sectionService.visibleCampaignSections;
   protected readonly brokenLinkCount = signal(0);
 
   constructor() {

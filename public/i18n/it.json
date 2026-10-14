@@ -56,6 +56,10 @@
         "title": "Generali",
         "description": "Definisci l'aspetto e il comportamento dell'app in tutto il tuo spazio di lavoro."
       },
+      "sections": {
+        "title": "Sezioni",
+        "description": "Quali sezioni mostra questa campagna, in che ordine e con quali nomi."
+      },
       "templates": {
         "title": "Modelli",
         "description": "Quale modello usa ogni tipo di nota in questa campagna."
@@ -134,6 +138,63 @@
         "error": "Impossibile eliminare il modello"
       },
       "placeholders": "Segnaposto"
+    },
+    "campaignSections": {
+      "title": "Sezioni di questa campagna",
+      "description": "Riordina, rinomina o nascondi le sezioni di {{campaign}}, oppure aggiungine di tue. Le cartelle sul disco non vengono mai rinominate né eliminate: le sezioni nascoste mantengono i loro file.",
+      "add": "Aggiungi sezione",
+      "drag": "Trascina per riordinare",
+      "nameAriaLabel": "Nome di {{name}}",
+      "custom": "personalizzata",
+      "hiddenFiles": "nascosta, contiene {{count}} file",
+      "moveUp": "Sposta su",
+      "moveDown": "Sposta giù",
+      "show": "Mostra {{name}} nella barra laterale",
+      "saveError": "Impossibile salvare le sezioni",
+      "loadError": "Impossibile caricare le sezioni",
+      "noCampaignDescription": "Apri una campagna, poi torna qui per impostarne le sezioni.",
+      "cancel": "Annulla",
+      "create": {
+        "title": "Nuova sezione",
+        "description": "Una sezione solo di questa campagna, con la propria cartella e il proprio tipo di nota.",
+        "submit": "Aggiungi sezione",
+        "nameLabel": "Nome",
+        "namePlaceholder": "es. Fazioni",
+        "iconLabel": "Icona",
+        "typeLabel": "Tipo di nota",
+        "typePlaceholder": "Dal nome",
+        "typeDescription": "Scritto come type: nel frontmatter delle sue note. Lascia vuoto per usare il nome."
+      },
+      "edit": {
+        "title": "Modifica sezione",
+        "description": "Cambia il nome o l’icona. La cartella e il tipo di nota restano invariati, così le note continuano a funzionare.",
+        "submit": "Salva",
+        "typeDescription": "Il tipo di nota di una sezione esistente non può cambiare."
+      },
+      "remove": {
+        "button": "Rimuovi sezione",
+        "title": "Rimuovere {{name}}?",
+        "description": "La sezione esce da questa campagna. La cartella {{folder}} e i suoi file restano nel vault.",
+        "confirm": "Rimuovi"
+      },
+      "icons": {
+        "folder": "Cartella",
+        "flag": "Bandiera",
+        "crown": "Corona",
+        "castle": "Castello",
+        "shield": "Scudo",
+        "swords": "Spade",
+        "skull": "Teschio",
+        "ghost": "Fantasma",
+        "users": "Persone",
+        "landmark": "Monumento",
+        "globe": "Globo",
+        "mountain-snow": "Montagna",
+        "ship": "Nave",
+        "gem": "Gemma",
+        "book-open": "Libro",
+        "feather": "Piuma"
+      }
     }
   },
   "vault": {
@@ -268,7 +329,8 @@
       "template": {
         "label": "Modello",
         "ariaLabel": "Modello per le nuove note di questa sezione"
-      }
+      },
+      "customDescription": "Una sezione tutta tua."
     }
   },
   "document": {

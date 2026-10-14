@@ -17,6 +17,7 @@ import { TabBar } from '../tab-bar/tab-bar';
 import { Toolbar } from '../toolbar/toolbar';
 import { MenuConfiguration, type MenuSectionConfig } from '@/config/menu.config';
 import { CampaignService } from '@/services/campaign.service';
+import { SectionService } from '@/services/section.service';
 import { ToolbarContextService } from '@/services/toolbar-context.service';
 import { detectSmallScreenViewport } from '@/shared/utils';
 
@@ -44,8 +45,12 @@ export class RootLayout implements OnInit, OnDestroy {
   protected readonly isFullscreen = signal(false);
   protected readonly isSmallScreen = signal(detectSmallScreenViewport());
   private readonly campaignService = inject(CampaignService);
+  private readonly sectionService = inject(SectionService);
   protected readonly menuSections = computed<readonly MenuSectionConfig[]>(() =>
-    MenuConfiguration.forCampaign(this.campaignService.activeCampaign()?.slug ?? null),
+    MenuConfiguration.forCampaign(
+      this.campaignService.activeCampaign()?.slug ?? null,
+      this.sectionService.visibleCampaignSections(),
+    ),
   );
   protected readonly showSidebarOverlay = computed(
     () => this.isSmallScreen() && !this.sidebarCollapsed(),

@@ -56,6 +56,10 @@
         "title": "Allgemein",
         "description": "Darstellung der App und Verhalten im gesamten Arbeitsbereich festlegen."
       },
+      "sections": {
+        "title": "Bereiche",
+        "description": "Welche Bereiche diese Kampagne zeigt, in welcher Reihenfolge und mit welchen Namen."
+      },
       "templates": {
         "title": "Vorlagen",
         "description": "Welche Vorlage jeder Notiztyp in dieser Kampagne nutzt."
@@ -134,6 +138,63 @@
         "error": "Vorlage konnte nicht gelöscht werden"
       },
       "placeholders": "Platzhalter"
+    },
+    "campaignSections": {
+      "title": "Bereiche dieser Kampagne",
+      "description": "Ordne, benenne oder blende die Bereiche von {{campaign}} aus oder füge eigene hinzu. Ordner auf der Festplatte werden nie umbenannt oder gelöscht: Ausgeblendete Bereiche behalten ihre Dateien.",
+      "add": "Bereich hinzufügen",
+      "drag": "Zum Sortieren ziehen",
+      "nameAriaLabel": "Name von {{name}}",
+      "custom": "eigener",
+      "hiddenFiles": "ausgeblendet, {{count}} Dateien enthalten",
+      "moveUp": "Nach oben",
+      "moveDown": "Nach unten",
+      "show": "{{name}} in der Seitenleiste zeigen",
+      "saveError": "Die Bereiche konnten nicht gespeichert werden",
+      "loadError": "Die Bereiche konnten nicht geladen werden",
+      "noCampaignDescription": "Öffne eine Kampagne und komm dann hierher zurück, um ihre Bereiche einzurichten.",
+      "cancel": "Abbrechen",
+      "create": {
+        "title": "Neuer Bereich",
+        "description": "Ein Bereich nur dieser Kampagne, mit eigenem Ordner und eigenem Notiztyp.",
+        "submit": "Bereich hinzufügen",
+        "nameLabel": "Name",
+        "namePlaceholder": "z. B. Fraktionen",
+        "iconLabel": "Symbol",
+        "typeLabel": "Notiztyp",
+        "typePlaceholder": "Aus dem Namen",
+        "typeDescription": "Wird als type: in das Frontmatter seiner Notizen geschrieben. Leer lassen, um den Namen zu verwenden."
+      },
+      "edit": {
+        "title": "Bereich bearbeiten",
+        "description": "Ändere den Namen oder das Symbol. Ordner und Notiztyp bleiben gleich, damit die Notizen weiter funktionieren.",
+        "submit": "Speichern",
+        "typeDescription": "Der Notiztyp eines bestehenden Bereichs kann sich nicht ändern."
+      },
+      "remove": {
+        "button": "Bereich entfernen",
+        "title": "{{name}} entfernen?",
+        "description": "Der Bereich verschwindet aus dieser Kampagne. Der Ordner {{folder}} und seine Dateien bleiben im Vault.",
+        "confirm": "Entfernen"
+      },
+      "icons": {
+        "folder": "Ordner",
+        "flag": "Flagge",
+        "crown": "Krone",
+        "castle": "Burg",
+        "shield": "Schild",
+        "swords": "Schwerter",
+        "skull": "Schädel",
+        "ghost": "Geist",
+        "users": "Personen",
+        "landmark": "Wahrzeichen",
+        "globe": "Globus",
+        "mountain-snow": "Berg",
+        "ship": "Schiff",
+        "gem": "Edelstein",
+        "book-open": "Buch",
+        "feather": "Feder"
+      }
     }
   },
   "vault": {
@@ -268,7 +329,8 @@
       "template": {
         "label": "Vorlage",
         "ariaLabel": "Vorlage für neue Notizen in diesem Bereich"
-      }
+      },
+      "customDescription": "Ein eigener Bereich."
     }
   },
   "document": {

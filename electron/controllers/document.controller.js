@@ -3,6 +3,7 @@ const {
   campaignModel,
   compendiumModel,
   documentModel,
+  sectionModel,
   vaultIndexModel,
   vaultModel,
 } = require('../models');
@@ -47,7 +48,10 @@ function list(payload) {
 async function read(payload) {
   const body = ensurePlainObject(payload, 'payload');
   const relativePath = requirePath(body);
-  const document = await documentModel.readDocument(vaultController.getReadyVaultPath(), relativePath);
+  const document = await documentModel.readDocument(
+    vaultController.getReadyVaultPath(),
+    relativePath,
+  );
 
   return {
     ...document,
@@ -70,21 +74,30 @@ function write(payload) {
 
 function saveCopy(payload) {
   const body = ensurePlainObject(payload, 'payload');
-  return documentModel.saveDocumentCopy(vaultController.getReadyVaultPath(), requirePath(body), requireContent(body));
+  return documentModel.saveDocumentCopy(
+    vaultController.getReadyVaultPath(),
+    requirePath(body),
+    requireContent(body),
+  );
 }
 
 function create(payload) {
   const body = ensurePlainObject(payload, 'payload');
   const folderPath = requirePath(body, 'folder');
-  const title = requireString(body.title, 'payload.title', { maxLength: DOCUMENT_TITLE_MAX_LENGTH });
-  const type = toSlug(requireString(body.type, 'payload.type', { maxLength: DOCUMENT_TYPE_MAX_LENGTH }));
+  const title = requireString(body.title, 'payload.title', {
+    maxLength: DOCUMENT_TITLE_MAX_LENGTH,
+  });
+  const type = toSlug(
+    requireString(body.type, 'payload.type', { maxLength: DOCUMENT_TYPE_MAX_LENGTH }),
+  );
 
   const slug = toSlug(title);
   if (slug.length === 0) {
     throw new Error('payload.title must contain at least one letter or number.');
   }
 
-  const section = normalizeOptionalString(body.section, 'payload.section', { allowNull: true }) ?? null;
+  const section =
+    normalizeOptionalString(body.section, 'payload.section', { allowNull: true }) ?? null;
   return documentModel.createDocument(vaultController.getReadyVaultPath(), {
     folderPath,
     slug,
@@ -207,7 +220,9 @@ function brokenLinks(payload) {
 async function rename(payload) {
   const body = ensurePlainObject(payload, 'payload');
   const relativePath = requirePath(body);
-  const title = requireString(body.title, 'payload.title', { maxLength: DOCUMENT_TITLE_MAX_LENGTH });
+  const title = requireString(body.title, 'payload.title', {
+    maxLength: DOCUMENT_TITLE_MAX_LENGTH,
+  });
   const updateLinks = normalizeOptionalBooleanFlag(body.updateLinks, 'payload.updateLinks') !== 0;
 
   const slug = toSlug(title);
@@ -225,7 +240,13 @@ async function rename(payload) {
 
   let ownContent = replaceDocumentTitle(current.content, current.title, title);
   if (isNameChanged) {
-    ownContent = rewriteRenamedLinks(ownContent, relativePath, rawsBySource.get(relativePath), oldName, slug).content;
+    ownContent = rewriteRenamedLinks(
+      ownContent,
+      relativePath,
+      rawsBySource.get(relativePath),
+      oldName,
+      slug,
+    ).content;
     await documentModel.renameDocumentFile(vaultPath, relativePath, newPath);
   }
 
@@ -250,7 +271,12 @@ async function rename(payload) {
           continue;
         }
 
-        const result = await documentModel.writeDocument(vaultPath, sourcePath, rewritten.content, source.contentHash);
+        const result = await documentModel.writeDocument(
+          vaultPath,
+          sourcePath,
+          rewritten.content,
+          source.contentHash,
+        );
         if (result.status === 'saved') {
           updatedPaths.push(sourcePath);
           linkCount += rewritten.count;
@@ -271,7 +297,12 @@ async function rename(payload) {
 
 /** Writes a rewritten note only if it did not change since it was read; throws on a conflict. */
 async function writeRewrittenNote(vaultPath, document, rewritten) {
-  const result = await documentModel.writeDocument(vaultPath, document.path, rewritten.content, document.contentHash);
+  const result = await documentModel.writeDocument(
+    vaultPath,
+    document.path,
+    rewritten.content,
+    document.contentHash,
+  );
   if (result.status !== 'saved') {
     throw new Error(`The note changed meanwhile, try again: ${document.path}`);
   }
@@ -310,8 +341,12 @@ async function createFromLink(payload) {
   const sourcePath = requirePath(body, 'sourcePath');
   const raw = requireString(body.raw, 'payload.raw', { trim: false });
   const folderPath = requirePath(body, 'folder');
-  const title = requireString(body.title, 'payload.title', { maxLength: DOCUMENT_TITLE_MAX_LENGTH });
-  const type = toSlug(requireString(body.type, 'payload.type', { maxLength: DOCUMENT_TYPE_MAX_LENGTH }));
+  const title = requireString(body.title, 'payload.title', {
+    maxLength: DOCUMENT_TITLE_MAX_LENGTH,
+  });
+  const type = toSlug(
+    requireString(body.type, 'payload.type', { maxLength: DOCUMENT_TYPE_MAX_LENGTH }),
+  );
 
   const slug = toSlug(title);
   if (slug.length === 0) {
@@ -320,13 +355,22 @@ async function createFromLink(payload) {
 
   const vaultPath = vaultController.getReadyVaultPath();
   const source = await documentModel.readDocument(vaultPath, sourcePath);
-  const link = parseMarkdownDocument(source.content, { sourcePath }).links.find((item) => item.raw === raw);
+  const link = parseMarkdownDocument(source.content, { sourcePath }).links.find(
+    (item) => item.raw === raw,
+  );
   if (!link) {
     throw new Error(`Link not found in ${sourcePath}: ${raw}`);
   }
 
-  const section = normalizeOptionalString(body.section, 'payload.section', { allowNull: true }) ?? null;
-  const created = await documentModel.createDocument(vaultPath, { folderPath, slug, title, type, section });
+  const section =
+    normalizeOptionalString(body.section, 'payload.section', { allowNull: true }) ?? null;
+  const created = await documentModel.createDocument(vaultPath, {
+    folderPath,
+    slug,
+    title,
+    type,
+    section,
+  });
 
   if (link.targetName.toLocaleLowerCase() !== slug) {
     const rewritten = rewriteLinks(
@@ -365,20 +409,31 @@ const UNTYPED_NOTES_DIR_NAME = 'notes';
 async function requireCopyTarget(vaultPath, target) {
   const segments = target.split('/');
   if (segments[0] === compendiumModel.COMPENDIUM_DIR_NAME && segments.length === 2) {
-    if (!compendiumModel.isSystemDirName(segments[1]) || !(await compendiumModel.readSystem(vaultPath, segments[1]))) {
+    if (
+      !compendiumModel.isSystemDirName(segments[1]) ||
+      !(await compendiumModel.readSystem(vaultPath, segments[1]))
+    ) {
       throw new Error(`Compendium system not found: ${segments[1]}`);
     }
     return target;
   }
 
-  if (segments.length !== 1 || !vaultModel.isCampaignDirName(target) || !(await campaignModel.readCampaign(vaultPath, target))) {
+  if (
+    segments.length !== 1 ||
+    !vaultModel.isCampaignDirName(target) ||
+    !(await campaignModel.readCampaign(vaultPath, target))
+  ) {
     throw new Error(`Campaign not found: ${target}`);
   }
   return target;
 }
 
-/** Folder of the target the copy goes to: templates stay templates, files go to assets, notes follow their type. */
-async function getCopyFolder(vaultPath, relativePath) {
+/**
+ * Folder of the target the copy goes to: templates stay templates, files go to assets, notes follow their
+ * type — the target's section for it (a campaign's custom sections included), else the folder the source
+ * scope keeps that type in (reported on the target's Review page), else `notes/`.
+ */
+async function getCopyFolder(vaultPath, relativePath, target) {
   const segments = relativePath.split('/');
   if (segments.slice(0, -1).includes(TEMPLATES_DIR_NAME)) {
     return TEMPLATES_DIR_NAME;
@@ -389,7 +444,12 @@ async function getCopyFolder(vaultPath, relativePath) {
   }
 
   const document = await documentModel.readDocument(vaultPath, relativePath);
-  return campaignModel.NOTE_TYPE_DIR_NAMES[document.type] ?? UNTYPED_NOTES_DIR_NAME;
+  const sourceScope = vaultIndexModel.getCampaignSlug(relativePath);
+  return (
+    sectionModel.findSectionKeyForType(vaultPath, target, document.type) ??
+    sectionModel.findSectionKeyForType(vaultPath, sourceScope, document.type) ??
+    UNTYPED_NOTES_DIR_NAME
+  );
 }
 
 const LINKED_COPY_MAX_FILES = 200;
@@ -415,7 +475,10 @@ function collectMissingLinkedFiles(sourcePath, target) {
         continue;
       }
 
-      missing.push({ path: linkedPath, title: link.resolvedTitle ?? path.posix.basename(linkedPath) });
+      missing.push({
+        path: linkedPath,
+        title: link.resolvedTitle ?? path.posix.basename(linkedPath),
+      });
       if (vaultIndexModel.getFileKind(linkedPath) === 'md') {
         pending.push(linkedPath);
       }
@@ -432,7 +495,9 @@ async function copyPlan(payload) {
   const target = requireString(body.target, 'payload.target');
   await requireCopyTarget(vaultController.getReadyVaultPath(), target);
 
-  return { linked: indexerController.isOpen() ? collectMissingLinkedFiles(relativePath, target) : [] };
+  return {
+    linked: indexerController.isOpen() ? collectMissingLinkedFiles(relativePath, target) : [],
+  };
 }
 
 /**
@@ -445,7 +510,8 @@ async function copy(payload) {
   const relativePath = requirePath(body);
   const target = requireString(body.target, 'payload.target');
   const fileName = normalizeOptionalString(body.fileName, 'payload.fileName', { allowNull: true });
-  const includeLinked = normalizeOptionalBooleanFlag(body.includeLinked, 'payload.includeLinked') === 1;
+  const includeLinked =
+    normalizeOptionalBooleanFlag(body.includeLinked, 'payload.includeLinked') === 1;
 
   const vaultPath = vaultController.getReadyVaultPath();
   await requireCopyTarget(vaultPath, target);
@@ -456,13 +522,16 @@ async function copy(payload) {
     throw new Error('payload.fileName must contain at least one letter or number.');
   }
 
-  const folder = await getCopyFolder(vaultPath, relativePath);
+  const folder = await getCopyFolder(vaultPath, relativePath, target);
   const targetPath = `${target}/${folder}/${baseName}${extension}`;
   if (targetPath === relativePath) {
     return { status: 'exists', path: targetPath };
   }
 
-  const linkedFiles = includeLinked && indexerController.isOpen() ? collectMissingLinkedFiles(relativePath, target) : [];
+  const linkedFiles =
+    includeLinked && indexerController.isOpen()
+      ? collectMissingLinkedFiles(relativePath, target)
+      : [];
   const result = await documentModel.copyVaultFile(vaultPath, relativePath, targetPath);
   if (result.status !== 'copied') {
     return { ...result, linkedPaths: [] };
@@ -471,8 +540,12 @@ async function copy(payload) {
   const linkedPaths = [];
   for (const linkedFile of linkedFiles) {
     const extension = path.posix.extname(linkedFile.path);
-    const linkedTargetPath = `${target}/${await getCopyFolder(vaultPath, linkedFile.path)}/${path.posix.basename(linkedFile.path, extension)}${extension}`;
-    const linkedResult = await documentModel.copyVaultFile(vaultPath, linkedFile.path, linkedTargetPath);
+    const linkedTargetPath = `${target}/${await getCopyFolder(vaultPath, linkedFile.path, target)}/${path.posix.basename(linkedFile.path, extension)}${extension}`;
+    const linkedResult = await documentModel.copyVaultFile(
+      vaultPath,
+      linkedFile.path,
+      linkedTargetPath,
+    );
     if (linkedResult.status === 'copied') {
       linkedPaths.push(linkedTargetPath);
     }

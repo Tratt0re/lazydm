@@ -13,6 +13,7 @@ import type { CopyPlanDto } from '@/dtos';
 import { CampaignService } from '@/services/campaign.service';
 import { CompendiumService } from '@/services/compendium.service';
 import { DocumentService } from '@/services/document.service';
+import { SectionService } from '@/services/section.service';
 import type { NoteScope } from '@/services/note-scope.service';
 
 interface CopyTarget {
@@ -33,6 +34,7 @@ const LINKED_PREVIEW_MAX_TITLES = 6;
 })
 export class CopyToService {
   private readonly documentService = inject(DocumentService);
+  private readonly sectionService = inject(SectionService);
   private readonly campaignService = inject(CampaignService);
   private readonly compendiumService = inject(CompendiumService);
   private readonly sheetFormService = inject(AppSheetFormService);
@@ -128,7 +130,7 @@ export class CopyToService {
       toast.info(
         this.translateService.instant(
           fromCompendium ? 'compendium.import.emptyCompendium' : 'compendium.import.emptyCampaigns',
-          { section: this.translateService.instant(`nav.items.${sectionKey}`) },
+          { section: this.sectionService.labelOfKey(sectionKey, scope.kind) },
         ),
       );
       return;
@@ -140,7 +142,7 @@ export class CopyToService {
         fromCompendium ? 'compendium.import.fromCompendium' : 'compendium.import.fromCampaign',
       ),
       arcDescription: this.translateService.instant('compendium.import.description', {
-        section: this.translateService.instant(`nav.items.${sectionKey}`),
+        section: this.sectionService.labelOfKey(sectionKey, scope.kind),
         target: scope.name,
       }),
       arcOkText: this.translateService.instant('compendium.copy.next'),

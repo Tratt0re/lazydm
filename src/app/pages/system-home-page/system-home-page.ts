@@ -4,16 +4,15 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { toast } from 'ngx-sonner';
 
 import { AppSheetFormService } from '@/components/sheet-form/sheet-form.service';
-import { CAMPAIGN_SECTIONS, COMPENDIUM_EXTRA_SECTIONS } from '@/config/menu.config';
 import { CompendiumService } from '@/services/compendium.service';
 import { DocumentService } from '@/services/document.service';
+import { SectionService } from '@/services/section.service';
 import { ToolbarContextService } from '@/services/toolbar-context.service';
 import { ArcTechAlertComponent } from '@/shared/components/alert';
 import { ArcTechButtonComponent } from '@/shared/components/button';
 import { ArcTechEmptyComponent } from '@/shared/components/empty';
 import { ArcTechIconComponent } from '@/shared/components/icon';
 
-const NOTE_SECTIONS = CAMPAIGN_SECTIONS.filter((section) => section.noteType !== null);
 
 /** Overview of a compendium system: the folders it has so far, and a way to create notes in it. */
 @Component({
@@ -106,15 +105,18 @@ export class SystemHomePage {
   private readonly translateService = inject(TranslateService);
   private readonly toolbarContext = inject(ToolbarContextService);
   private readonly router = inject(Router);
+  private readonly sectionService = inject(SectionService);
+  /** Folders a note of the system can be created in. */
+  private readonly noteSections = computed(() =>
+    this.sectionService.systemSections().filter((section) => section.type !== null),
+  );
 
   protected readonly system = this.compendiumService.activeSystem;
   protected readonly brokenLinkCount = signal(0);
   /** Folders the system has, in campaign section order. */
   protected readonly sections = computed(() => {
     const folders = this.system()?.folders ?? [];
-    return [...CAMPAIGN_SECTIONS, ...COMPENDIUM_EXTRA_SECTIONS].filter((section) =>
-      folders.includes(section.key),
-    );
+    return this.sectionService.systemSections().filter((section) => folders.includes(section.key));
   });
 
   constructor() {
@@ -138,6 +140,7 @@ export class SystemHomePage {
 
   /** New note: its type decides the folder, which is created when missing. */
   protected openCreateSheet(): void {
+    const noteSections = this.noteSections();
     let isSubmitting = false;
     const sheetRef = this.sheetFormService.open({
       arcTitle: this.translateService.instant('compendium.system.newNote'),
@@ -156,10 +159,10 @@ export class SystemHomePage {
           id: 'section',
           type: 'select',
           label: 'compendium.system.typeLabel',
-          value: NOTE_SECTIONS[0].key,
+          value: noteSections[0]?.key ?? '',
           required: true,
           translate: true,
-          options: NOTE_SECTIONS.map((section) => ({
+          options: noteSections.map((section) => ({
             value: section.key,
             label: `nav.items.${section.key}`,
             icon: section.icon,
@@ -172,11 +175,11 @@ export class SystemHomePage {
           isSubmitting = true;
           const values = form.getValues();
           const section =
-            NOTE_SECTIONS.find((item) => item.key === values['section']) ?? NOTE_SECTIONS[0];
+            noteSections.find((item) => item.key === values['section']) ?? noteSections[0];
           void this.createNote(
             String(values['title'] ?? ''),
             section.key,
-            section.noteType ?? '',
+            section.type ?? '',
           ).then((created) => {
             isSubmitting = false;
             if (created) {

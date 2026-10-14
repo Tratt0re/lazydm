@@ -8,8 +8,8 @@ import {
   toInAppNoteRoute,
 } from '@/components/document-preview/document-preview.markdown';
 import { AppSheetFormService } from '@/components/sheet-form/sheet-form.service';
-import { CAMPAIGN_SECTIONS } from '@/config/menu.config';
 import { DocumentService } from '@/services/document.service';
+import { type AppSection, SectionService } from '@/services/section.service';
 
 /** What the actions need to know about a broken link. */
 export interface BrokenLinkTarget {
@@ -24,9 +24,6 @@ export interface BrokenLinkTarget {
  * not plain notes, so they are left out until they get their own format.
  */
 const NON_NOTE_SECTION_KEYS: readonly string[] = ['encounters'];
-const NOTE_SECTIONS = CAMPAIGN_SECTIONS.filter(
-  (section) => section.noteType !== null && !NON_NOTE_SECTION_KEYS.includes(section.key),
-);
 
 /** `ghost-note` → `Ghost note`; names with spaces are kept as written. */
 function toSuggestedTitle(targetName: string): string {
@@ -47,6 +44,7 @@ export class BrokenLinkActionsService {
   private readonly sheetFormService = inject(AppSheetFormService);
   private readonly translateService = inject(TranslateService);
   private readonly router = inject(Router);
+  private readonly sectionService = inject(SectionService);
 
   async removeLink(link: BrokenLinkTarget): Promise<void> {
     try {
@@ -65,10 +63,14 @@ export class BrokenLinkActionsService {
     const scopePath = sourceLocation?.scopePath ?? link.sourcePath.split('/')[0];
     const sourceSection = sourceLocation?.section;
     const linkFolder = link.raw.split(/[|#]/)[0].split('/').slice(-2, -1)[0];
+    const noteSections = this.getNoteSections(scopePath);
     const defaultSection =
-      NOTE_SECTIONS.find((section) => section.key === linkFolder) ??
-      NOTE_SECTIONS.find((section) => section.key === sourceSection) ??
-      NOTE_SECTIONS[0];
+      noteSections.find((section) => section.key === linkFolder) ??
+      noteSections.find((section) => section.key === sourceSection) ??
+      noteSections[0];
+    if (!defaultSection) {
+      return;
+    }
 
     let isSubmitting = false;
     const sheetRef = this.sheetFormService.open({
@@ -94,11 +96,11 @@ export class BrokenLinkActionsService {
           value: defaultSection.key,
           required: true,
           translate: true,
-          options: NOTE_SECTIONS.map((section) => ({
+          options: noteSections.map((section) => ({
             value: section.key,
-            label: `nav.items.${section.key}`,
+            label: this.sectionService.labelOf(section),
             icon: section.icon,
-            translate: true,
+            translate: false,
           })),
         },
       ],
@@ -107,14 +109,8 @@ export class BrokenLinkActionsService {
           isSubmitting = true;
           const values = form.getValues();
           const section =
-            NOTE_SECTIONS.find((item) => item.key === values['section']) ?? defaultSection;
-          void this.createNote(
-            link,
-            scopePath,
-            section.key,
-            section.noteType ?? '',
-            String(values['title'] ?? ''),
-          ).then((isCreated) => {
+            noteSections.find((item) => item.key === values['section']) ?? defaultSection;
+          void this.createNote(link, scopePath, section, String(values['title'] ?? '')).then((isCreated) => {
             isSubmitting = false;
             if (isCreated) {
               sheetRef.close();
@@ -127,21 +123,30 @@ export class BrokenLinkActionsService {
     });
   }
 
+  /** Sections of the link's campaign (shown ones) or system that hold notes. */
+  private getNoteSections(scopePath: string): readonly AppSection[] {
+    const sections = scopePath.startsWith('compendium/')
+      ? this.sectionService.systemSections()
+      : this.sectionService.visibleCampaignSections();
+    return sections.filter(
+      (section) => section.type !== null && !NON_NOTE_SECTION_KEYS.includes(section.key),
+    );
+  }
+
   private async createNote(
     link: BrokenLinkTarget,
     scopePath: string,
-    sectionKey: string,
-    type: string,
+    section: AppSection,
     title: string,
   ): Promise<boolean> {
     try {
       const created = await this.documentService.createFromLink({
         sourcePath: link.sourcePath,
         raw: link.raw,
-        folder: `${scopePath}/${sectionKey}`,
+        folder: `${scopePath}/${section.key}`,
         title,
-        type,
-        section: this.translateService.instant(`nav.items.${sectionKey}`),
+        type: section.type ?? '',
+        section: this.sectionService.labelOf(section),
       });
       toast.success(
         this.translateService.instant('links.actions.created', { title: created.title }),

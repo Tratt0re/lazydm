@@ -11,11 +11,11 @@ import {
   type SecondarySidebarItem,
 } from '@/components/secondary-sidebar/secondary-sidebar.component';
 import { AppSheetFormService } from '@/components/sheet-form/sheet-form.service';
-import { CAMPAIGN_SECTIONS } from '@/config/menu.config';
 import type { TemplateDto, TemplateRulesDto } from '@/dtos';
 import { AppSheetService } from '@/services/app-sheet.service';
 import { CampaignService } from '@/services/campaign.service';
 import { DocumentService } from '@/services/document.service';
+import { type AppSection, SectionService } from '@/services/section.service';
 import { TemplateService } from '@/services/template.service';
 import { ArcTechAlertComponent } from '@/shared/components/alert';
 import { ArcTechAlertDialogService } from '@/shared/components/alert-dialog';
@@ -37,6 +37,8 @@ const SOURCE_ICONS: Record<TemplateDto['source'], ArcTechIcon> = {
 interface NoteTypeRow {
   readonly type: string;
   readonly sectionKey: string;
+  /** Display name of the section. */
+  readonly label: string;
 }
 
 interface SelectedTemplate {
@@ -75,6 +77,7 @@ export class TemplateLibraryPage implements OnInit {
   private readonly sheetFormService = inject(AppSheetFormService);
   private readonly alertDialogService = inject(ArcTechAlertDialogService);
   private readonly translateService = inject(TranslateService);
+  private readonly sectionService = inject(SectionService);
 
   protected readonly placeholders = PLACEHOLDERS.map((name) => `{{${name}}}`);
   protected readonly editorModes: readonly {
@@ -103,10 +106,19 @@ export class TemplateLibraryPage implements OnInit {
     return campaign?.slug === slug ? campaign.name : (slug ?? '');
   });
 
+  /** Sections of the campaign under the sheet (custom ones included); the defaults without a campaign. */
+  private readonly campaignSections = signal<readonly AppSection[] | null>(null);
   protected readonly noteTypes = computed<readonly NoteTypeRow[]>(() =>
-    CAMPAIGN_SECTIONS.filter(
-      (section) => section.noteType && this.types().includes(section.noteType),
-    ).map((section) => ({ type: section.noteType!, sectionKey: section.key })),
+    (this.campaignSections() ?? this.sectionService.systemSections())
+      .filter(
+        (section) =>
+          section.type !== null && (section.isCustom || this.types().includes(section.type)),
+      )
+      .map((section) => ({
+        type: section.type!,
+        sectionKey: section.key,
+        label: this.sectionService.labelOf(section),
+      })),
   );
 
   protected readonly libraryItems = computed<readonly SecondarySidebarItem[]>(() => {
@@ -116,7 +128,8 @@ export class TemplateLibraryPage implements OnInit {
       icon: 'lock',
       children: this.noteTypes().map((row) => ({
         key: `${BUILT_IN_KEY_PREFIX}${row.type}`,
-        label: `nav.items.${row.sectionKey}`,
+        label: row.label,
+        translate: false,
       })),
     };
 
@@ -163,8 +176,7 @@ export class TemplateLibraryPage implements OnInit {
   protected readonly selectedTitle = computed(() => {
     const type = this.selectedBuiltInType();
     if (type) {
-      const sectionKey = this.noteTypes().find((row) => row.type === type)?.sectionKey ?? type;
-      return this.translateService.instant(`nav.items.${sectionKey}`);
+      return this.noteTypes().find((row) => row.type === type)?.label ?? type;
     }
 
     return this.selectedTemplate()?.name ?? '';
@@ -306,7 +318,7 @@ export class TemplateLibraryPage implements OnInit {
             ...this.noteTypes().map((row) => ({
               value: row.type,
               label: this.translateService.instant('settings.templates.create.fromBuiltIn', {
-                section: this.translateService.instant(`nav.items.${row.sectionKey}`),
+                section: row.label,
               }),
             })),
           ],
@@ -418,10 +430,12 @@ export class TemplateLibraryPage implements OnInit {
     this.errorMessage.set(null);
     try {
       const campaign = this.campaignSlug();
-      const [library, rules] = await Promise.all([
+      const [library, rules, sections] = await Promise.all([
         this.templateService.list(),
         campaign ? this.templateService.getRules(campaign) : Promise.resolve({}),
+        campaign ? this.sectionService.list(campaign) : Promise.resolve(null),
       ]);
+      this.campaignSections.set(sections);
       this.templates.set(library.rows);
       this.types.set(library.types);
       this.rules.set(rules);

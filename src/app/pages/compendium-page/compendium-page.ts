@@ -5,9 +5,9 @@ import { toast } from 'ngx-sonner';
 
 import { AppSheetFormService } from '@/components/sheet-form/sheet-form.service';
 import type { AppSheetField } from '@/components/sheet-form/sheet-form.types';
-import { findSection } from '@/config/menu.config';
 import type { CompendiumSystemDto } from '@/dtos';
 import { CompendiumService } from '@/services/compendium.service';
+import { SectionService } from '@/services/section.service';
 import { VaultService } from '@/services/vault.service';
 import { ArcTechAlertComponent } from '@/shared/components/alert';
 import { ArcTechAlertDialogService } from '@/shared/components/alert-dialog';
@@ -56,6 +56,7 @@ export class CompendiumPage implements OnInit {
   private readonly alertDialogService = inject(ArcTechAlertDialogService);
   private readonly translateService = inject(TranslateService);
   private readonly router = inject(Router);
+  private readonly sectionService = inject(SectionService);
 
   protected readonly systems = this.compendiumService.systems;
   protected readonly vaultName = computed(() => this.vaultService.currentVault()?.name ?? '');
@@ -69,7 +70,7 @@ export class CompendiumPage implements OnInit {
   /** Folder labels of a system, in campaign section order. */
   protected getFolderLabels(system: CompendiumSystemDto): readonly string[] {
     return system.folders
-      .map((folder) => findSection(folder)?.key)
+      .map((folder) => this.sectionService.findSystemSection(folder)?.key)
       .filter((key): key is string => Boolean(key))
       .map((key) => `nav.items.${key}`);
   }

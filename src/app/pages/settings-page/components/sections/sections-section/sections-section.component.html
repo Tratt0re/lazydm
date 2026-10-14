@@ -1,0 +1,151 @@
+<div class="flex min-h-0 flex-col gap-5">
+  @if (errorMessage(); as message) {
+    <arc-alert
+      arcType="destructive"
+      arcIcon="circle-alert"
+      [arcTitle]="'settings.campaignSections.loadError' | translate"
+      [arcDescription]="message"
+    />
+  }
+
+  <section class="border border-border bg-card p-4 md:p-5">
+    <div class="flex flex-wrap items-start justify-between gap-3">
+      <h3 class="font-display text-xl font-semibold uppercase tracking-wide">
+        {{ 'settings.campaignSections.title' | translate }}<span class="text-primary" aria-hidden="true">.</span>
+      </h3>
+      @if (campaignSlug()) {
+        <button arc-button type="button" (click)="openCreateSheet()">
+          <arc-icon arcType="plus" />
+          {{ 'settings.campaignSections.add' | translate }}
+        </button>
+      }
+    </div>
+
+    @if (campaignSlug()) {
+      <p class="mt-1 text-sm text-muted-foreground">
+        {{ 'settings.campaignSections.description' | translate: { campaign: campaignName() } }}
+      </p>
+
+      <ol
+        class="mt-4 flex flex-col border border-border bg-recessed"
+        cdkDropList
+        cdkDropListLockAxis="y"
+        [cdkDropListData]="sections()"
+        [attr.aria-label]="'settings.campaignSections.title' | translate"
+        (cdkDropListDropped)="onDrop($event)"
+      >
+        @for (section of sections(); track section.key; let index = $index; let isFirst = $first; let isLast = $last) {
+          <li
+            cdkDrag
+            cdkDragLockAxis="y"
+            class="flex items-center gap-3 border-b border-border bg-card px-3 py-2 last:border-b-0"
+            [class.opacity-60]="section.isHidden"
+          >
+            <button
+              type="button"
+              cdkDragHandle
+              class="flex size-8 shrink-0 cursor-grab items-center justify-center text-muted-foreground hover:text-foreground active:cursor-grabbing"
+              [attr.aria-label]="'settings.campaignSections.drag' | translate"
+              tabindex="-1"
+            >
+              <arc-icon arcType="grip-vertical" class="size-4" />
+            </button>
+
+            <arc-icon [arcType]="section.icon" class="size-4 shrink-0 text-primary" />
+
+            <div class="flex min-w-0 flex-1 flex-col gap-1">
+              <input
+                arc-input
+                type="text"
+                class="h-9 w-full max-w-xs"
+                maxlength="40"
+                [value]="section.customLabel ?? ''"
+                [placeholder]="defaultLabelOf(section)"
+                [attr.aria-label]="'settings.campaignSections.nameAriaLabel' | translate: { name: labelOf(section) }"
+                (change)="rename(section, $any($event.target))"
+                (keydown.enter)="$any($event.target).blur()"
+              />
+              <p class="truncate font-mono text-[11px] tracking-[0.04em] text-muted-foreground">
+                {{ section.key }}/
+                @if (section.isCustom) {
+                  · {{ 'settings.campaignSections.custom' | translate }} · {{ section.type }}
+                }
+                @if (section.isHidden && section.fileCount > 0) {
+                  · {{ 'settings.campaignSections.hiddenFiles' | translate: { count: section.fileCount } }}
+                }
+              </p>
+            </div>
+
+            <div class="flex shrink-0 items-center gap-1">
+              <button
+                type="button"
+                arc-button
+                arcType="ghost"
+                arcSize="sm"
+                class="size-8"
+                [arcDisabled]="isFirst"
+                [attr.aria-label]="'settings.campaignSections.moveUp' | translate"
+                [arcTooltip]="'settings.campaignSections.moveUp' | translate"
+                (click)="move(index, index - 1)"
+              >
+                <arc-icon arcType="chevron-up" />
+              </button>
+              <button
+                type="button"
+                arc-button
+                arcType="ghost"
+                arcSize="sm"
+                class="size-8"
+                [arcDisabled]="isLast"
+                [attr.aria-label]="'settings.campaignSections.moveDown' | translate"
+                [arcTooltip]="'settings.campaignSections.moveDown' | translate"
+                (click)="move(index, index + 1)"
+              >
+                <arc-icon arcType="chevron-down" />
+              </button>
+              @if (section.isCustom) {
+                <button
+                  type="button"
+                  arc-button
+                  arcType="ghost"
+                  arcSize="sm"
+                  class="size-8"
+                  [attr.aria-label]="'settings.campaignSections.edit.title' | translate"
+                  [arcTooltip]="'settings.campaignSections.edit.title' | translate"
+                  (click)="openEditSheet(section)"
+                >
+                  <arc-icon arcType="pencil" />
+                </button>
+                <button
+                  type="button"
+                  arc-button
+                  arcType="ghost"
+                  arcSize="sm"
+                  class="size-8"
+                  [attr.aria-label]="'settings.campaignSections.remove.button' | translate"
+                  [arcTooltip]="'settings.campaignSections.remove.button' | translate"
+                  (click)="confirmRemove(section)"
+                >
+                  <arc-icon arcType="trash" />
+                </button>
+              }
+              <arc-switch
+                class="ml-2"
+                [arcChecked]="!section.isHidden"
+                [arcAriaLabel]="'settings.campaignSections.show' | translate: { name: labelOf(section) }"
+                (arcCheckedChange)="setVisible(section, $event)"
+              />
+            </div>
+          </li>
+        }
+      </ol>
+    } @else {
+      <arc-alert
+        class="mt-4"
+        arcIcon="circle-alert"
+        [arcTitle]="'settings.templates.rules.noCampaignTitle' | translate"
+        [arcDescription]="'settings.campaignSections.noCampaignDescription' | translate"
+      />
+    }
+  </section>
+</div>

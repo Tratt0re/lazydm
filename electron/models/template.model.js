@@ -3,16 +3,19 @@ const path = require('node:path');
 const { resolveInsideVault, safeWriteFileAtomic } = require('../utils/file-utils');
 const { listCampaigns, readCampaign, NOTE_TYPE_DIR_NAMES } = require('./campaign.model');
 const { COMPENDIUM_DIR_NAME, listSystems, readSystem } = require('./compendium.model');
+const { listCampaignNoteTypes } = require('./section.model');
 const { readVaultConfig, writeVaultConfig } = require('./vault.model');
 
 const TEMPLATES_DIR_NAME = '_templates';
 const MARKDOWN_EXTENSION = '.md';
 /** Rule value of a campaign that picked the built-in template of a type. */
 const BUILT_IN_RULE = 'builtin';
+/** Types whose section is not a note folder (encounters are special files): no template. */
+const NON_TEMPLATE_NOTE_TYPES = Object.freeze(['encounter']);
 
 /** Note types that have a template (encounters are special files, not notes). */
 const TEMPLATE_NOTE_TYPES = Object.freeze(
-  Object.keys(NOTE_TYPE_DIR_NAMES).filter((type) => type !== 'encounter'),
+  Object.keys(NOTE_TYPE_DIR_NAMES).filter((type) => !NON_TEMPLATE_NOTE_TYPES.includes(type)),
 );
 
 function frontmatter(type, fields = []) {
@@ -102,6 +105,18 @@ number:
 ## Loot & XP
 `,
 });
+
+/** Built-in text of a note type; types without one (custom sections) get the bare frontmatter. */
+function getBuiltInTemplate(type) {
+  return BUILT_IN_TEMPLATES[type] ?? frontmatter(type);
+}
+
+/** Note types a campaign can pick a template for: its sections' types (custom ones included). */
+function listCampaignTemplateTypes(rootPath, campaignSlug) {
+  return listCampaignNoteTypes(rootPath, campaignSlug).filter(
+    (type) => !NON_TEMPLATE_NOTE_TYPES.includes(type),
+  );
+}
 
 /** `_templates/x.md`, `<campaign>/_templates/x.md` or `compendium/<system>/_templates/x.md`. */
 function isTemplatePath(relativePath) {
@@ -195,10 +210,10 @@ function readCampaignRules(rootPath, campaignSlug) {
     return {};
   }
 
+  const types = new Set([...TEMPLATE_NOTE_TYPES, ...listCampaignTemplateTypes(rootPath, campaignSlug)]);
   return Object.fromEntries(
     Object.entries(rules).filter(
-      ([type, value]) =>
-        TEMPLATE_NOTE_TYPES.includes(type) && (value === BUILT_IN_RULE || isTemplatePath(value)),
+      ([type, value]) => types.has(type) && (value === BUILT_IN_RULE || isTemplatePath(value)),
     ),
   );
 }
@@ -278,7 +293,7 @@ async function resolveTemplate(rootPath, { folderPath, type }) {
   if (scope?.kind === 'campaign') {
     const rule = readCampaignRules(rootPath, scope.slug)[type];
     if (rule === BUILT_IN_RULE) {
-      return BUILT_IN_TEMPLATES[type] ?? null;
+      return getBuiltInTemplate(type);
     }
 
     if (rule) {
@@ -379,11 +394,13 @@ async function deleteTemplate(rootPath, templatePath) {
 module.exports = {
   BUILT_IN_RULE,
   BUILT_IN_TEMPLATES,
+  NON_TEMPLATE_NOTE_TYPES,
   TEMPLATE_NOTE_TYPES,
   TEMPLATES_DIR_NAME,
   applyPlaceholders,
   createTemplate,
   deleteTemplate,
+  getBuiltInTemplate,
   isTemplatePath,
   listTemplates,
   readCampaignRules,

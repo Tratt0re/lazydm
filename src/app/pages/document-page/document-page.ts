@@ -24,6 +24,7 @@ import { BrokenLinkActionsService } from '@/services/broken-link-actions.service
 import { CopyToService } from '@/services/copy-to.service';
 import { getNoteScopeKind, NoteScopeService } from '@/services/note-scope.service';
 import { DocumentService } from '@/services/document.service';
+import { SectionService } from '@/services/section.service';
 import type { DocumentViewMode } from '@/config/local-preferences.config';
 import { LocalPreferencesService } from '@/services/local-preferences.service';
 import { ToolbarContextService } from '@/services/toolbar-context.service';
@@ -72,6 +73,7 @@ export class DocumentPage {
   protected readonly scope = inject(NoteScopeService).scopeOf(getNoteScopeKind(this.route));
   private readonly router = inject(Router);
   private readonly documentService = inject(DocumentService);
+  private readonly sectionService = inject(SectionService);
   private readonly sheetService = inject(ArcTechSheetService);
   private readonly translateService = inject(TranslateService);
   private readonly toolbarContext = inject(ToolbarContextService);
@@ -143,7 +145,11 @@ export class DocumentPage {
           titleMode: 'breadcrumb',
           titleBreadcrumbs: [
             { label: scope.name, path: scopePath, translate: false },
-            { label: `nav.items.${this.sectionKey()}`, path: `${scopePath}/${this.sectionKey()}` },
+            {
+              label: this.sectionService.labelOfKey(this.sectionKey(), scope.kind),
+              path: `${scopePath}/${this.sectionKey()}`,
+              translate: false,
+            },
           ],
           itemActions: [
             {

@@ -19,6 +19,7 @@ import {
 } from '@/components/document-preview/document-preview.markdown';
 import type { DocumentLinkDto, DocumentLinksDto } from '@/dtos';
 import { DocumentService } from '@/services/document.service';
+import { SectionService } from '@/services/section.service';
 import { ArcTechBadgeComponent } from '@/shared/components/badge';
 import { ArcTechIconComponent } from '@/shared/components/icon';
 import { ArcTechMenuImports } from '@/shared/components/menu';
@@ -69,6 +70,7 @@ function getFileName(path: string): string {
 })
 export class AppDocumentLinksPanelComponent {
   private readonly documentService = inject(DocumentService);
+  private readonly sectionService = inject(SectionService);
   private loadToken = 0;
 
   readonly path = input.required<string>();
@@ -84,7 +86,7 @@ export class AppDocumentLinksPanelComponent {
         path,
         title: title || getFileName(path),
         route: toInAppNoteRoute(path),
-        sectionLabel: `nav.items.${parseVaultFilePath(path)?.section ?? ''}`,
+        sectionLabel: this.sectionService.labelOfPath(path),
         isFrom: false,
         isTo: false,
         snippets: [],

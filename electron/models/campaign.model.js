@@ -2,39 +2,19 @@ const fs = require('node:fs');
 const YAML = require('yaml');
 const { resolveInsideVault, safeWriteFileAtomic } = require('../utils/file-utils');
 const { parseMarkdownDocument } = require('../utils/markdown-parse');
+const { DEFAULT_SECTIONS } = require('./section.model');
 const { isCampaignDirName } = require('./vault.model');
 
 const CAMPAIGN_FILE_NAME = 'campaign.md';
 const CAMPAIGN_NOTE_TYPE = 'campaign';
-const CAMPAIGN_SECTION_DIR_NAMES = Object.freeze([
-  'scenes',
-  'characters',
-  'enemies',
-  'spells',
-  'items',
-  'quests',
-  'locations',
-  'world',
-  'encounters',
-  'handouts',
-  'sessions',
-  'assets',
-]);
+const CAMPAIGN_SECTION_DIR_NAMES = Object.freeze(DEFAULT_SECTIONS.map((section) => section.key));
 
-/** Folder a note of a given `type` goes to (campaigns and compendium systems share these names). */
-const NOTE_TYPE_DIR_NAMES = Object.freeze({
-  scene: 'scenes',
-  character: 'characters',
-  enemy: 'enemies',
-  spell: 'spells',
-  item: 'items',
-  quest: 'quests',
-  location: 'locations',
-  world: 'world',
-  encounter: 'encounters',
-  handout: 'handouts',
-  session: 'sessions',
-});
+/** Folder a note of a given `type` goes to by default (campaigns and compendium systems share these names). */
+const NOTE_TYPE_DIR_NAMES = Object.freeze(
+  Object.fromEntries(
+    DEFAULT_SECTIONS.filter((section) => section.type).map((section) => [section.type, section.key]),
+  ),
+);
 
 function getCampaignFilePath(rootPath, slug) {
   return resolveInsideVault(rootPath, `${slug}/${CAMPAIGN_FILE_NAME}`);
@@ -111,21 +91,11 @@ function buildCampaignNote({ name, description }) {
 }
 
 /**
- * Creates the default section folders that are missing (campaigns made with an older folder set get the
- * new ones when opened). Existing folders and their content are never touched.
+ * Creates the campaign folder with its `campaign.md` note. Section folders appear with their first file
+ * (folders on demand), so an unused section leaves nothing on disk.
  */
-async function ensureSectionFolders(rootPath, slug) {
-  for (const sectionDirName of CAMPAIGN_SECTION_DIR_NAMES) {
-    await fs.promises.mkdir(resolveInsideVault(rootPath, `${slug}/${sectionDirName}`), {
-      recursive: true,
-    });
-  }
-}
-
-/** Creates the campaign folder with its `campaign.md` note and the default section folders. */
 async function createCampaign(rootPath, { slug, name, description }) {
   await fs.promises.mkdir(resolveInsideVault(rootPath, slug));
-  await ensureSectionFolders(rootPath, slug);
 
   safeWriteFileAtomic(
     getCampaignFilePath(rootPath, slug),
@@ -139,7 +109,6 @@ module.exports = {
   NOTE_TYPE_DIR_NAMES,
   campaignFolderExists,
   createCampaign,
-  ensureSectionFolders,
   listCampaigns,
   readCampaign,
 };

@@ -56,6 +56,10 @@
         "title": "General",
         "description": "Set how the app looks and behaves across your workspace."
       },
+      "sections": {
+        "title": "Sections",
+        "description": "Which sections this campaign shows, in which order and with which names."
+      },
       "templates": {
         "title": "Templates",
         "description": "Which template each note type uses in this campaign."
@@ -134,6 +138,63 @@
         "error": "Could not delete the template"
       },
       "placeholders": "Placeholders"
+    },
+    "campaignSections": {
+      "title": "Sections of this campaign",
+      "description": "Reorder, rename or hide the sections of {{campaign}}, or add your own. Folders on disk are never renamed or deleted: hidden sections keep their files.",
+      "add": "Add section",
+      "drag": "Drag to reorder",
+      "nameAriaLabel": "Name of {{name}}",
+      "custom": "custom",
+      "hiddenFiles": "hidden, {{count}} files inside",
+      "moveUp": "Move up",
+      "moveDown": "Move down",
+      "show": "Show {{name}} in the sidebar",
+      "saveError": "Couldn't save the sections",
+      "loadError": "Couldn't load the sections",
+      "noCampaignDescription": "Open a campaign, then come back here to set up its sections.",
+      "cancel": "Cancel",
+      "create": {
+        "title": "New section",
+        "description": "A section of this campaign only, with its own folder and note type.",
+        "submit": "Add section",
+        "nameLabel": "Name",
+        "namePlaceholder": "e.g. Factions",
+        "iconLabel": "Icon",
+        "typeLabel": "Note type",
+        "typePlaceholder": "From the name",
+        "typeDescription": "Written as type: in the frontmatter of its notes. Leave empty to use the name."
+      },
+      "edit": {
+        "title": "Edit section",
+        "description": "Change the name or the icon. The folder and the note type stay as they are, so the notes keep working.",
+        "submit": "Save",
+        "typeDescription": "The note type of an existing section cannot change."
+      },
+      "remove": {
+        "button": "Remove section",
+        "title": "Remove {{name}}?",
+        "description": "The section leaves this campaign. The {{folder}} folder and its files stay in the vault.",
+        "confirm": "Remove"
+      },
+      "icons": {
+        "folder": "Folder",
+        "flag": "Flag",
+        "crown": "Crown",
+        "castle": "Castle",
+        "shield": "Shield",
+        "swords": "Swords",
+        "skull": "Skull",
+        "ghost": "Ghost",
+        "users": "People",
+        "landmark": "Landmark",
+        "globe": "Globe",
+        "mountain-snow": "Mountain",
+        "ship": "Ship",
+        "gem": "Gem",
+        "book-open": "Book",
+        "feather": "Feather"
+      }
     }
   },
   "vault": {
@@ -268,7 +329,8 @@
       "template": {
         "label": "Template",
         "ariaLabel": "Template for new notes in this section"
-      }
+      },
+      "customDescription": "A section of your own."
     }
   },
   "document": {

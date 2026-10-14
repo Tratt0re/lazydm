@@ -19,6 +19,7 @@ export enum APIChannel {
   COMPENDIUM = 'compendium',
   DOCUMENTS = 'documents',
   ENCOUNTERS = 'encounters',
+  SECTIONS = 'sections',
   TEMPLATES = 'templates',
   VAULT = 'vault',
   WINDOW = 'window',
@@ -67,6 +68,14 @@ export interface ElectronIpcClient {
   };
   readonly encounters: {
     readonly list: OptionalIpcRequest<void, { rows: any[] }>;
+  };
+  readonly sections: {
+    readonly list: IpcRequest<{ campaign: string }, { rows: DTO.SectionDto[] }>;
+    readonly defaults: OptionalIpcRequest<void, DTO.SectionDefaultsDto>;
+    readonly save: IpcRequest<
+      { campaign: string; settings: DTO.SectionSettingsPayload },
+      { rows: DTO.SectionDto[] }
+    >;
   };
   readonly templates: {
     readonly list: OptionalIpcRequest<void, DTO.TemplateListDto>;

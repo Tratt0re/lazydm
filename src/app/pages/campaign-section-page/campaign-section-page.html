@@ -14,7 +14,7 @@
         <arc-empty
           class="border border-dashed border-border bg-card/60"
           [arcIcon]="section.icon"
-          [arcTitle]="'campaigns.sections.emptyTitle' | translate: { section: (sectionLabelKey() | translate) }"
+          [arcTitle]="'campaigns.sections.emptyTitle' | translate: { section: sectionLabel() }"
           [arcDescription]="'campaigns.sections.emptyDescription' | translate: { folder: folderPath() }"
         />
       } @else {

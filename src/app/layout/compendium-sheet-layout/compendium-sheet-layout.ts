@@ -6,8 +6,8 @@ import {
   AppSecondarySidebarComponent,
   type SecondarySidebarItem,
 } from '@/components/secondary-sidebar/secondary-sidebar.component';
-import { CAMPAIGN_SECTIONS, COMPENDIUM_EXTRA_SECTIONS } from '@/config/menu.config';
 import { AppSheetService } from '@/services/app-sheet.service';
+import { SectionService } from '@/services/section.service';
 import { CompendiumService } from '@/services/compendium.service';
 
 const ALL_SYSTEMS_KEY = 'all';
@@ -38,6 +38,7 @@ const ALL_SYSTEMS_KEY = 'all';
 export class CompendiumSheetLayout implements OnInit {
   private readonly compendiumService = inject(CompendiumService);
   private readonly sheets = inject(AppSheetService);
+  private readonly sectionService = inject(SectionService);
 
   protected readonly sidebarItems = computed<readonly SecondarySidebarItem[]>(() => [
     {
@@ -58,7 +59,8 @@ export class CompendiumSheetLayout implements OnInit {
           icon: 'layout-dashboard' as const,
           route: `/compendium/${system.slug}`,
         },
-        ...[...CAMPAIGN_SECTIONS, ...COMPENDIUM_EXTRA_SECTIONS]
+        ...this.sectionService
+          .systemSections()
           .filter((section) => system.folders.includes(section.key))
           .map((section) => ({
             key: `${system.slug}/${section.key}`,

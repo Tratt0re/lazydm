@@ -39,6 +39,11 @@ const CHANNELS = Object.freeze({
     copy: 'documents:copy',
     copyPlan: 'documents:copyPlan',
   }),
+  sections: Object.freeze({
+    list: 'sections:list',
+    defaults: 'sections:defaults',
+    save: 'sections:save',
+  }),
   templates: Object.freeze({
     list: 'templates:list',
     builtIn: 'templates:builtIn',

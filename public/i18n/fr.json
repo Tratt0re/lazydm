@@ -56,6 +56,10 @@
         "title": "Général",
         "description": "Définir l'apparence et le comportement de l'application dans tout l'espace de travail."
       },
+      "sections": {
+        "title": "Sections",
+        "description": "Les sections affichées par cette campagne, leur ordre et leurs noms."
+      },
       "templates": {
         "title": "Modèles",
         "description": "Le modèle utilisé par chaque type de note dans cette campagne."
@@ -134,6 +138,63 @@
         "error": "Impossible de supprimer le modèle"
       },
       "placeholders": "Espaces réservés"
+    },
+    "campaignSections": {
+      "title": "Sections de cette campagne",
+      "description": "Réordonnez, renommez ou masquez les sections de {{campaign}}, ou ajoutez les vôtres. Les dossiers sur le disque ne sont jamais renommés ni supprimés : les sections masquées gardent leurs fichiers.",
+      "add": "Ajouter une section",
+      "drag": "Glisser pour réordonner",
+      "nameAriaLabel": "Nom de {{name}}",
+      "custom": "personnalisée",
+      "hiddenFiles": "masquée, {{count}} fichiers à l’intérieur",
+      "moveUp": "Monter",
+      "moveDown": "Descendre",
+      "show": "Afficher {{name}} dans la barre latérale",
+      "saveError": "Impossible d’enregistrer les sections",
+      "loadError": "Impossible de charger les sections",
+      "noCampaignDescription": "Ouvrez une campagne, puis revenez ici pour configurer ses sections.",
+      "cancel": "Annuler",
+      "create": {
+        "title": "Nouvelle section",
+        "description": "Une section propre à cette campagne, avec son propre dossier et son propre type de note.",
+        "submit": "Ajouter la section",
+        "nameLabel": "Nom",
+        "namePlaceholder": "ex. Factions",
+        "iconLabel": "Icône",
+        "typeLabel": "Type de note",
+        "typePlaceholder": "D’après le nom",
+        "typeDescription": "Écrit comme type: dans le frontmatter de ses notes. Laissez vide pour utiliser le nom."
+      },
+      "edit": {
+        "title": "Modifier la section",
+        "description": "Changez le nom ou l’icône. Le dossier et le type de note restent les mêmes, pour que les notes continuent de fonctionner.",
+        "submit": "Enregistrer",
+        "typeDescription": "Le type de note d’une section existante ne peut pas changer."
+      },
+      "remove": {
+        "button": "Retirer la section",
+        "title": "Retirer {{name}} ?",
+        "description": "La section quitte cette campagne. Le dossier {{folder}} et ses fichiers restent dans le vault.",
+        "confirm": "Retirer"
+      },
+      "icons": {
+        "folder": "Dossier",
+        "flag": "Drapeau",
+        "crown": "Couronne",
+        "castle": "Château",
+        "shield": "Bouclier",
+        "swords": "Épées",
+        "skull": "Crâne",
+        "ghost": "Fantôme",
+        "users": "Personnes",
+        "landmark": "Monument",
+        "globe": "Globe",
+        "mountain-snow": "Montagne",
+        "ship": "Navire",
+        "gem": "Gemme",
+        "book-open": "Livre",
+        "feather": "Plume"
+      }
     }
   },
   "vault": {
@@ -268,7 +329,8 @@
       "template": {
         "label": "Modèle",
         "ariaLabel": "Modèle des nouvelles notes de cette section"
-      }
+      },
+      "customDescription": "Une section à vous."
     }
   },
   "document": {

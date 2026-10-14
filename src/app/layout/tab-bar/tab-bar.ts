@@ -11,10 +11,10 @@ import {
 } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 
-import { CAMPAIGN_SECTIONS } from '@/config/menu.config';
 import type { WorkspaceTabDto } from '@/dtos';
 import { BROKEN_LINKS_ROUTE_SEGMENT } from '@/pages/broken-links-page/broken-links-page';
 import { AppSheetService } from '@/services/app-sheet.service';
+import { SectionService } from '@/services/section.service';
 import { WorkspaceService } from '@/services/workspace.service';
 import { ArcTechButtonComponent } from '@/shared/components/button';
 import { ArcTechIconComponent } from '@/shared/components/icon';
@@ -48,6 +48,7 @@ type TabBarMenuTarget =
 export class TabBar {
   protected readonly workspace = inject(WorkspaceService);
   private readonly sheets = inject(AppSheetService);
+  private readonly sectionService = inject(SectionService);
   private readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
   private readonly contextMenuTrigger = viewChild.required(CdkContextMenuTrigger);
 
@@ -149,7 +150,7 @@ export class TabBar {
     }
 
     return (
-      CAMPAIGN_SECTIONS.find((section) => section.key === sectionKey)?.icon ?? 'layout-dashboard'
+      (sectionKey && this.sectionService.findCampaignSection(sectionKey)?.icon) || 'layout-dashboard'
     );
   }
 

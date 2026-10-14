@@ -31,7 +31,7 @@
               class="font-mono text-xs uppercase tracking-wider text-muted-foreground"
               [for]="'template-rule-' + row.type"
             >
-              {{ 'nav.items.' + row.sectionKey | translate }}
+              {{ row.label }}
             </label>
             <arc-select
               [id]="'template-rule-' + row.type"

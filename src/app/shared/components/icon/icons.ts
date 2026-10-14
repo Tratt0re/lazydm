@@ -143,6 +143,17 @@ import {
   Unlink,
   RotateCcw,
   CopyPlus,
+  Folder,
+  Flag,
+  Crown,
+  Castle,
+  Shield,
+  Ship,
+  Gem,
+  Ghost,
+  Tent,
+  Feather,
+  GripVertical,
 } from 'lucide-angular';
 
 export const ARCTECH_ICONS = {
@@ -289,6 +300,17 @@ export const ARCTECH_ICONS = {
   link: Link,
   'rotate-ccw': RotateCcw,
   'copy-plus': CopyPlus,
+  folder: Folder,
+  flag: Flag,
+  crown: Crown,
+  castle: Castle,
+  shield: Shield,
+  ship: Ship,
+  gem: Gem,
+  ghost: Ghost,
+  tent: Tent,
+  feather: Feather,
+  'grip-vertical': GripVertical,
 } as const satisfies Record<string, LucideIconData>;
 
 export declare type ArcTechIcon = keyof typeof ARCTECH_ICONS | LucideIconData;

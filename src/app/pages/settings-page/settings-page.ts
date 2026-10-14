@@ -11,6 +11,7 @@ import {
 } from '@/components/secondary-sidebar/secondary-sidebar.component';
 import { SettingsSectionHeaderComponent } from './components/settings-section-header/settings-section-header.component';
 import { GeneralSectionComponent } from './components/sections/general-section/general-section.component';
+import { SectionsSectionComponent } from './components/sections/sections-section/sections-section.component';
 import { TemplatesSectionComponent } from './components/sections/templates-section/templates-section.component';
 import {
   DEFAULT_SETTINGS_SECTION,
@@ -26,6 +27,7 @@ import {
     AppSecondarySidebarComponent,
     SettingsSectionHeaderComponent,
     GeneralSectionComponent,
+    SectionsSectionComponent,
     TemplatesSectionComponent,
   ],
   template: `
@@ -48,6 +50,9 @@ import {
         @switch (activeKey()) {
           @case ('general') {
             <app-general-section />
+          }
+          @case ('sections') {
+            <app-sections-section />
           }
           @case ('templates') {
             <app-templates-section />

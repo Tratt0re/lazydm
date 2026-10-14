@@ -35,6 +35,7 @@
             </arc-sidebar-group-label>
 
             @for (item of section.items; track item.path) {
+              @let itemLabel = item.translate === false ? item.label : (item.label | translate);
               <a
                 [routerLink]="item.path"
                 (click)="onMenuItemClick()"
@@ -42,9 +43,9 @@
                 routerLinkActive=""
                 [routerLinkActiveOptions]="{ exact: item.exact ?? false }"
                 #routeLinkActive="routerLinkActive"
-                [arcTooltip]="sidebarCollapsed() ? (item.label | translate) : null"
+                [arcTooltip]="sidebarCollapsed() ? itemLabel : null"
                 arcPosition="right"
-                [attr.aria-label]="item.label | translate"
+                [attr.aria-label]="itemLabel"
                 [class]="navItemClasses(routeLinkActive.isActive)"
               >
                 <arc-icon [arcType]="item.icon" class="size-4 shrink-0" />
@@ -55,7 +56,7 @@
                   "
                   [attr.aria-hidden]="sidebarCollapsed()"
                 >
-                  {{ item.label | translate }}
+                  {{ itemLabel }}
                 </span>
               </a>
             }
@@ -82,6 +83,7 @@
               </arc-sidebar-group-label>
 
               @for (item of section.items; track item.path) {
+                @let itemLabel = item.translate === false ? item.label : (item.label | translate);
                 <a
                   [routerLink]="item.path"
                   (click)="onMenuItemClick()"
@@ -89,9 +91,9 @@
                   routerLinkActive=""
                   [routerLinkActiveOptions]="{ exact: item.exact ?? false }"
                   #routeLinkActive="routerLinkActive"
-                  [arcTooltip]="sidebarCollapsed() ? (item.label | translate) : null"
+                  [arcTooltip]="sidebarCollapsed() ? itemLabel : null"
                   arcPosition="right"
-                  [attr.aria-label]="item.label | translate"
+                  [attr.aria-label]="itemLabel"
                   [class]="
                     'flex h-10 items-center rounded-none border px-3 font-mono text-[11px] font-semibold tracking-[0.04em] transition-colors duration-150 ' +
                     (sidebarCollapsed() ? 'justify-center' : 'justify-start gap-3') +
@@ -109,7 +111,7 @@
                     "
                     [attr.aria-hidden]="sidebarCollapsed()"
                   >
-                    {{ item.label | translate }}
+                    {{ itemLabel }}
                   </span>
                 </a>
               }

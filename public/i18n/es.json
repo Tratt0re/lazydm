@@ -56,6 +56,10 @@
         "title": "General",
         "description": "Define cómo se ve y se comporta la app en todo tu espacio de trabajo."
       },
+      "sections": {
+        "title": "Secciones",
+        "description": "Qué secciones muestra esta campaña, en qué orden y con qué nombres."
+      },
       "templates": {
         "title": "Plantillas",
         "description": "Qué plantilla usa cada tipo de nota en esta campaña."
@@ -134,6 +138,63 @@
         "error": "No se pudo eliminar la plantilla"
       },
       "placeholders": "Marcadores"
+    },
+    "campaignSections": {
+      "title": "Secciones de esta campaña",
+      "description": "Reordena, renombra u oculta las secciones de {{campaign}}, o añade las tuyas. Las carpetas del disco nunca se renombran ni se eliminan: las secciones ocultas conservan sus archivos.",
+      "add": "Añadir sección",
+      "drag": "Arrastra para reordenar",
+      "nameAriaLabel": "Nombre de {{name}}",
+      "custom": "propia",
+      "hiddenFiles": "oculta, contiene {{count}} archivos",
+      "moveUp": "Subir",
+      "moveDown": "Bajar",
+      "show": "Mostrar {{name}} en la barra lateral",
+      "saveError": "No se pudieron guardar las secciones",
+      "loadError": "No se pudieron cargar las secciones",
+      "noCampaignDescription": "Abre una campaña y vuelve aquí para configurar sus secciones.",
+      "cancel": "Cancelar",
+      "create": {
+        "title": "Nueva sección",
+        "description": "Una sección solo de esta campaña, con su propia carpeta y su propio tipo de nota.",
+        "submit": "Añadir sección",
+        "nameLabel": "Nombre",
+        "namePlaceholder": "p. ej. Facciones",
+        "iconLabel": "Icono",
+        "typeLabel": "Tipo de nota",
+        "typePlaceholder": "A partir del nombre",
+        "typeDescription": "Se escribe como type: en el frontmatter de sus notas. Déjalo vacío para usar el nombre."
+      },
+      "edit": {
+        "title": "Editar sección",
+        "description": "Cambia el nombre o el icono. La carpeta y el tipo de nota no cambian, así las notas siguen funcionando.",
+        "submit": "Guardar",
+        "typeDescription": "El tipo de nota de una sección existente no puede cambiar."
+      },
+      "remove": {
+        "button": "Quitar sección",
+        "title": "¿Quitar {{name}}?",
+        "description": "La sección sale de esta campaña. La carpeta {{folder}} y sus archivos se quedan en el vault.",
+        "confirm": "Quitar"
+      },
+      "icons": {
+        "folder": "Carpeta",
+        "flag": "Bandera",
+        "crown": "Corona",
+        "castle": "Castillo",
+        "shield": "Escudo",
+        "swords": "Espadas",
+        "skull": "Calavera",
+        "ghost": "Fantasma",
+        "users": "Personas",
+        "landmark": "Monumento",
+        "globe": "Globo",
+        "mountain-snow": "Montaña",
+        "ship": "Barco",
+        "gem": "Gema",
+        "book-open": "Libro",
+        "feather": "Pluma"
+      }
     }
   },
   "vault": {
@@ -268,7 +329,8 @@
       "template": {
         "label": "Plantilla",
         "ariaLabel": "Plantilla para las notas nuevas de esta sección"
-      }
+      },
+      "customDescription": "Una sección propia."
     }
   },
   "document": {

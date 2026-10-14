@@ -6,6 +6,7 @@ import { filter } from 'rxjs';
 import { APIChannel } from '@/config/api';
 import type { WorkspaceTabDto } from '@/dtos';
 import { BaseIpcService } from '@/services/base-ipc.service';
+import { SectionService } from '@/services/section.service';
 import { ToolbarContextService } from '@/services/toolbar-context.service';
 
 const CAMPAIGN_URL_PATTERN = /^\/campaigns\/([^/?#]+)/;
@@ -42,6 +43,7 @@ export class WorkspaceService extends BaseIpcService<APIChannel.WORKSPACE> {
   private readonly router = inject(Router);
   private readonly translateService = inject(TranslateService);
   private readonly toolbarContext = inject(ToolbarContextService);
+  private readonly sectionService = inject(SectionService);
 
   private readonly campaignSlugSignal = signal<string | null>(null);
   private readonly tabsSignal = signal<readonly WorkspaceTabDto[]>([]);
@@ -106,7 +108,7 @@ export class WorkspaceService extends BaseIpcService<APIChannel.WORKSPACE> {
   getFallbackTitle(tab: WorkspaceTabDto): string {
     const segments = getTabUrl(tab).split('/').filter(Boolean);
     if (segments.length === 3) {
-      return this.translateService.instant(`nav.items.${segments[2]}`);
+      return this.sectionService.labelOfKey(segments[2]);
     }
 
     return segments.length > 3 ? decodeURIComponent(segments[segments.length - 1]) : '';

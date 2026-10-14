@@ -2,13 +2,11 @@ import { Component, computed, DestroyRef, effect, inject, signal } from '@angula
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 
-import {
-  parseVaultFilePath,
-  toInAppNoteRoute,
-} from '@/components/document-preview/document-preview.markdown';
+import { toInAppNoteRoute } from '@/components/document-preview/document-preview.markdown';
 import type { BrokenLinkDto } from '@/dtos';
 import { BrokenLinkActionsService } from '@/services/broken-link-actions.service';
 import { DocumentService } from '@/services/document.service';
+import { SectionService } from '@/services/section.service';
 import { getNoteScopeKind, NoteScopeService } from '@/services/note-scope.service';
 import { ToolbarContextService } from '@/services/toolbar-context.service';
 import { ArcTechAlertComponent } from '@/shared/components/alert';
@@ -48,6 +46,7 @@ export class BrokenLinksPage {
   );
   private readonly documentService = inject(DocumentService);
   private readonly toolbarContext = inject(ToolbarContextService);
+  private readonly sectionService = inject(SectionService);
   protected readonly brokenLinkActions = inject(BrokenLinkActionsService);
   private loadToken = 0;
 
@@ -61,7 +60,7 @@ export class BrokenLinksPage {
         sourcePath: link.sourcePath,
         title: link.sourceTitle ?? link.sourcePath.split('/').pop() ?? link.sourcePath,
         route: toInAppNoteRoute(link.sourcePath),
-        sectionLabel: `nav.items.${parseVaultFilePath(link.sourcePath)?.section ?? ''}`,
+        sectionLabel: this.sectionService.labelOfPath(link.sourcePath),
         links: [],
       };
       groups.set(link.sourcePath, { ...group, links: [...group.links, link] });

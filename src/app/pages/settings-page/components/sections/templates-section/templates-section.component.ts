@@ -2,10 +2,10 @@ import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { toast } from 'ngx-sonner';
 
-import { CAMPAIGN_SECTIONS } from '@/config/menu.config';
 import type { TemplateDto, TemplateRulesDto } from '@/dtos';
 import { AppSheetService } from '@/services/app-sheet.service';
 import { CampaignService } from '@/services/campaign.service';
+import { type AppSection, SectionService } from '@/services/section.service';
 import {
   AUTOMATIC_TEMPLATE_RULE,
   TemplateService,
@@ -19,6 +19,8 @@ import { ArcTechSelectImports } from '@/shared/components/select';
 interface NoteTypeRow {
   readonly type: string;
   readonly sectionKey: string;
+  /** Display name of the section. */
+  readonly label: string;
 }
 
 /**
@@ -41,6 +43,7 @@ export class TemplatesSectionComponent implements OnInit {
   private readonly campaignService = inject(CampaignService);
   private readonly appSheetService = inject(AppSheetService);
   private readonly translateService = inject(TranslateService);
+  private readonly sectionService = inject(SectionService);
 
   protected readonly templates = signal<readonly TemplateDto[]>([]);
   protected readonly types = signal<readonly string[]>([]);
@@ -55,10 +58,19 @@ export class TemplatesSectionComponent implements OnInit {
     return campaign?.slug === slug ? campaign.name : (slug ?? '');
   });
 
+  /** Sections of the campaign under the sheet (custom ones included); the defaults without a campaign. */
+  private readonly campaignSections = signal<readonly AppSection[] | null>(null);
   protected readonly noteTypes = computed<readonly NoteTypeRow[]>(() =>
-    CAMPAIGN_SECTIONS.filter(
-      (section) => section.noteType && this.types().includes(section.noteType),
-    ).map((section) => ({ type: section.noteType!, sectionKey: section.key })),
+    (this.campaignSections() ?? this.sectionService.systemSections())
+      .filter(
+        (section) =>
+          section.type !== null && (section.isCustom || this.types().includes(section.type)),
+      )
+      .map((section) => ({
+        type: section.type!,
+        sectionKey: section.key,
+        label: this.sectionService.labelOf(section),
+      })),
   );
 
   ngOnInit(): void {
@@ -109,10 +121,12 @@ export class TemplatesSectionComponent implements OnInit {
     this.errorMessage.set(null);
     try {
       const campaign = this.campaignSlug();
-      const [library, rules] = await Promise.all([
+      const [library, rules, sections] = await Promise.all([
         this.templateService.list(),
         campaign ? this.templateService.getRules(campaign) : Promise.resolve({}),
+        campaign ? this.sectionService.list(campaign) : Promise.resolve(null),
       ]);
+      this.campaignSections.set(sections);
       this.templates.set(library.rows);
       this.types.set(library.types);
       this.rules.set(rules);

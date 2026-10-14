@@ -7,12 +7,12 @@ import { map } from 'rxjs';
 
 import { AppSheetFormService } from '@/components/sheet-form/sheet-form.service';
 import type { AppSheetField } from '@/components/sheet-form/sheet-form.types';
-import { findSection } from '@/config/menu.config';
 import type { DocumentFileListItemDto, TemplateDto, TemplateRulesDto } from '@/dtos';
 import { AppSheetService } from '@/services/app-sheet.service';
 import { getNoteScopeKind, NoteScopeService } from '@/services/note-scope.service';
 import { CopyToService } from '@/services/copy-to.service';
 import { DocumentService } from '@/services/document.service';
+import { SectionService } from '@/services/section.service';
 import {
   AUTOMATIC_TEMPLATE_RULE,
   TemplateService,
@@ -81,8 +81,17 @@ export class CampaignSectionPage {
   );
   private loadToken = 0;
 
-  protected readonly section = computed(() => findSection(this.sectionKey()));
-  protected readonly sectionLabelKey = computed(() => `nav.items.${this.sectionKey()}`);
+  private readonly sectionService = inject(SectionService);
+  protected readonly section = computed(() =>
+    this.scope()?.kind === 'system'
+      ? this.sectionService.findSystemSection(this.sectionKey())
+      : this.sectionService.findCampaignSection(this.sectionKey()),
+  );
+  /** Display name of the section (its custom name, else the translated one). */
+  protected readonly sectionLabel = computed(() => {
+    const section = this.section();
+    return section ? this.sectionService.labelOf(section) : this.sectionKey();
+  });
   protected readonly folderPath = computed(() => `${this.scope()?.rootPath ?? ''}/${this.sectionKey()}`);
   protected readonly scopeRoute = computed(() => this.scope()?.routeBase ?? '');
   protected readonly importLabel = computed(() =>
@@ -120,7 +129,7 @@ export class CampaignSectionPage {
 
       onCleanup(
         this.toolbarContext.activate({
-          title: this.sectionLabelKey(),
+          title: this.sectionLabel(),
           titleMode: 'breadcrumb',
           titleBreadcrumbs: [{ label: scope.name, path: scope.routeBase, translate: false }],
           itemActions: this.buildToolbarActions(),
@@ -141,10 +150,12 @@ export class CampaignSectionPage {
   private buildToolbarActions(): readonly ToolbarItemAction[] {
     const scope = this.scope();
     const section = this.section();
-    const noteType = section?.noteType ?? null;
+    const noteType = section?.type ?? null;
     const actions: ToolbarItemAction[] = [];
 
-    if (scope?.kind === 'campaign' && noteType && this.templateTypes().includes(noteType)) {
+    // Custom sections have no built-in of their own but can still pick a template.
+    const hasTemplates = noteType !== null && (this.templateTypes().includes(noteType) || section?.isCustom);
+    if (scope?.kind === 'campaign' && noteType && hasTemplates) {
       const campaign = scope.rootPath;
       actions.push({
         id: 'section-template',
@@ -237,7 +248,7 @@ export class CampaignSectionPage {
 
   protected openCreateSheet(): void {
     const section = this.section();
-    if (!section?.noteType) {
+    if (!section?.type) {
       return;
     }
 
@@ -250,7 +261,7 @@ export class CampaignSectionPage {
       onSubmit: (form) => {
         if (!isSubmitting) {
           isSubmitting = true;
-          void this.createNote(String(form.getValues()['title'] ?? ''), section.noteType ?? '').then((created) => {
+          void this.createNote(String(form.getValues()['title'] ?? ''), section.type ?? '').then((created) => {
             isSubmitting = false;
             if (created) {
               sheetRef.close();
@@ -269,7 +280,7 @@ export class CampaignSectionPage {
         folder: this.folderPath(),
         title,
         type,
-        section: this.translateService.instant(this.sectionLabelKey()),
+        section: this.sectionLabel(),
       });
       const noteSlug = note.path.split('/').pop()!.replace(/\.md$/i, '');
       await this.router.navigateByUrl(`${this.scopeRoute()}/${this.sectionKey()}/${noteSlug}`);

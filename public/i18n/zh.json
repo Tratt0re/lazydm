@@ -56,6 +56,10 @@
         "title": "通用",
         "description": "设置应用在整个工作区中的外观和行为方式。"
       },
+      "sections": {
+        "title": "分区",
+        "description": "此战役显示哪些分区、它们的顺序和名称。"
+      },
       "templates": {
         "title": "模板",
         "description": "本战役中每种笔记类型使用的模板。"
@@ -134,6 +138,63 @@
         "error": "无法删除模板"
       },
       "placeholders": "占位符"
+    },
+    "campaignSections": {
+      "title": "此战役的分区",
+      "description": "为 {{campaign}} 调整分区的顺序、重命名或隐藏分区，或添加自己的分区。磁盘上的文件夹永远不会被重命名或删除：隐藏的分区会保留其文件。",
+      "add": "添加分区",
+      "drag": "拖动以调整顺序",
+      "nameAriaLabel": "{{name}} 的名称",
+      "custom": "自定义",
+      "hiddenFiles": "已隐藏，包含 {{count}} 个文件",
+      "moveUp": "上移",
+      "moveDown": "下移",
+      "show": "在侧边栏中显示 {{name}}",
+      "saveError": "无法保存分区",
+      "loadError": "无法加载分区",
+      "noCampaignDescription": "请先打开一个战役，然后回到这里设置它的分区。",
+      "cancel": "取消",
+      "create": {
+        "title": "新分区",
+        "description": "仅属于此战役的分区，拥有自己的文件夹和笔记类型。",
+        "submit": "添加分区",
+        "nameLabel": "名称",
+        "namePlaceholder": "例如：阵营",
+        "iconLabel": "图标",
+        "typeLabel": "笔记类型",
+        "typePlaceholder": "根据名称",
+        "typeDescription": "作为 type: 写入其笔记的 frontmatter。留空则使用名称。"
+      },
+      "edit": {
+        "title": "编辑分区",
+        "description": "更改名称或图标。文件夹和笔记类型保持不变，笔记可继续正常使用。",
+        "submit": "保存",
+        "typeDescription": "已有分区的笔记类型不能更改。"
+      },
+      "remove": {
+        "button": "移除分区",
+        "title": "移除 {{name}}？",
+        "description": "该分区将从此战役中移除。{{folder}} 文件夹及其文件会保留在资料库中。",
+        "confirm": "移除"
+      },
+      "icons": {
+        "folder": "文件夹",
+        "flag": "旗帜",
+        "crown": "王冠",
+        "castle": "城堡",
+        "shield": "盾牌",
+        "swords": "双剑",
+        "skull": "骷髅",
+        "ghost": "幽灵",
+        "users": "人物",
+        "landmark": "地标",
+        "globe": "地球",
+        "mountain-snow": "山峰",
+        "ship": "船",
+        "gem": "宝石",
+        "book-open": "书",
+        "feather": "羽毛"
+      }
     }
   },
   "vault": {
@@ -268,7 +329,8 @@
       "template": {
         "label": "模板",
         "ariaLabel": "此分区新笔记使用的模板"
-      }
+      },
+      "customDescription": "你自己的分区。"
     }
   },
   "document": {

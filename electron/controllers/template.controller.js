@@ -1,4 +1,4 @@
-const { campaignModel, templateModel } = require('../models');
+const { campaignModel, sectionModel, templateModel } = require('../models');
 const { toSlug } = require('../utils/string-sanitize');
 const indexerController = require('./indexer.controller');
 const vaultController = require('./vault.controller');
@@ -7,9 +7,11 @@ const { ensurePlainObject, normalizeOptionalString, requireString } = require('.
 const TEMPLATE_NAME_MAX_LENGTH = 80;
 const EMPTY_TEMPLATE = '---\ntitle: "{{title}}"\n---\n# {{title}}\n';
 
+/** A note type with a section somewhere in the vault (custom sections included) that can have a template. */
 function requireNoteType(value, label = 'payload.type') {
   const type = requireString(value, label);
-  if (!templateModel.TEMPLATE_NOTE_TYPES.includes(type)) {
+  const types = sectionModel.listNoteTypes(vaultController.getReadyVaultPath());
+  if (!types.includes(type) || templateModel.NON_TEMPLATE_NOTE_TYPES.includes(type)) {
     throw new Error(`${label} has no template: ${type}`);
   }
 
@@ -52,7 +54,7 @@ async function list() {
 function builtIn(payload) {
   const body = ensurePlainObject(payload, 'payload');
   const type = requireNoteType(body.type);
-  return { type, content: templateModel.BUILT_IN_TEMPLATES[type] };
+  return { type, content: templateModel.getBuiltInTemplate(type) };
 }
 
 async function getRules(payload) {
@@ -88,7 +90,7 @@ async function create(payload) {
   }
 
   const type = body.type == null ? null : requireNoteType(body.type);
-  const content = type ? templateModel.BUILT_IN_TEMPLATES[type] : EMPTY_TEMPLATE;
+  const content = type ? templateModel.getBuiltInTemplate(type) : EMPTY_TEMPLATE;
   const templatePath = await templateModel.createTemplate(
     vaultController.getReadyVaultPath(),
     slug,
@@ -105,7 +107,7 @@ async function customize(payload) {
   const templatePath = await templateModel.createTemplate(
     vaultController.getReadyVaultPath(),
     type,
-    templateModel.BUILT_IN_TEMPLATES[type],
+    templateModel.getBuiltInTemplate(type),
   );
   await reindex([templatePath]);
   return { path: templatePath };

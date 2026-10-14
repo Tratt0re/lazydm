@@ -209,8 +209,9 @@ Planned Electron modules: `vault`, `cloud-readiness`, `campaign`, `document`, `i
   types → `notes/`), other files go to `assets/`, templates to `_templates/` — created when missing. A taken name
   never overwrites: the user picks another file name.
 - **Copying into a campaign that has no section for the note's type** (custom sections are per campaign): the copy
-  asks to *Add the <label> section* to that campaign, or to pick one of its sections — then the copy's type (and
-  sub-type) is set to match.
+  goes to the folder the source keeps that type in, and the target's Review page reports it (*Unknown folder* →
+  *Add as custom section*). Planned with 9.3: the copy asks to *Add the <label> section* to that campaign, or to
+  pick one of its sections — then the copy's type (and sub-type) is set to match.
 - **Import** button in every folder, next to *New note*: *Import from compendium* in a campaign folder (the same
   folder of every system), *Import from campaign* in a system folder (the same folder of every campaign).
 - **Linked files come along on request**: before any copy or import LazyDM collects what the file links to,
@@ -395,7 +396,7 @@ variant keys and configuration stay as they are.
 | 8.1 | Template rules: per-campaign template choice per note type, built-in defaults, placeholders |
 | 8.2 | Editor views: Live preview / Source / Reading, remembered per note; clickable links; tables, callouts, properties, `◇` dividers |
 | 9 | Monsters → Enemies: folder, type, template, vault format version + one-time migration |
-| 9.1 | Per-campaign sections: hide, order, labels, custom sections, folders on demand; Electron owns the section list |
+| 9.1 | Per-campaign sections: hide, order, labels, custom sections, folders on demand; Electron owns the section list (Settings → Sections) |
 | 9.2 | Sub-folders as sub-types (one level, `subtype` field), *New folder*, breadcrumb, copy keeps the sub-folder |
 | 9.3 | Review page: broken links + misplaced / wrong sub-type / untyped / outside sections / unknown / too-deep folders; move note with link rewrite |
 
