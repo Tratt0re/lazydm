@@ -63,6 +63,10 @@
       "templates": {
         "title": "Templates",
         "description": "Which template each note type uses in this campaign."
+      },
+      "editor": {
+        "title": "Editor",
+        "description": "How notes look and behave while you write, on this device."
       }
     },
     "general": {
@@ -193,6 +197,50 @@
         "gem": "Gem",
         "book-open": "Book",
         "feather": "Feather"
+      }
+    },
+    "editor": {
+      "intro": "These choices apply to every note right away, and only on this device.",
+      "groups": {
+        "display": "Display",
+        "behaviour": "Behaviour"
+      },
+      "codeMap": {
+        "label": "Code map",
+        "description": "A small map of the whole note on the right, with H1–H3 headings as labels. Click or drag it to scroll, click a heading to jump to it."
+      },
+      "lineNumbers": {
+        "label": "Line numbers",
+        "description": "Show the line numbers next to the text."
+      },
+      "readableWidth": {
+        "label": "Readable line width",
+        "description": "Keep the text in a centred column instead of using the full width."
+      },
+      "defaultView": {
+        "label": "Default view",
+        "description": "How a note opens the first time. Each note then remembers the view you chose."
+      },
+      "lineWrapping": {
+        "label": "Line wrapping",
+        "description": "Wrap long lines; when off, they scroll sideways (useful for wide tables in Source)."
+      },
+      "highlightActiveLine": {
+        "label": "Highlight current line",
+        "description": "A faint band behind the line the cursor is on."
+      },
+      "spellcheck": {
+        "label": "Spellcheck",
+        "description": "Underline misspelled words. Fantasy names will be flagged too."
+      },
+      "textSize": {
+        "label": "Text size",
+        "description": "Size of the text in the editor and in Reading view.",
+        "options": {
+          "small": "Small",
+          "medium": "Medium",
+          "large": "Large"
+        }
       }
     }
   },

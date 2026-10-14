@@ -306,6 +306,11 @@ Planned Electron modules: `vault`, `cloud-readiness`, `campaign`, `document`, `i
   - **Tab-based** (Templates): the same tabs grouped into collapsible sections (light header with a count).
   - Below the two-column breakpoint the contextual and tab-based sidebars collapse into one bar showing the
     current item; clicking it expands the list in place, choosing an item collapses it again.
+- **Editor settings** (Settings → Editor) are device-local, like theme and language: code map, line numbers,
+  text size (also in Reading), readable line width, default view of notes never opened, line wrapping, current
+  line highlight, spellcheck. The **code map** is our own (no dependency): the whole note at a small scale from
+  the editor's layout, H1–H3 as labels where they are, the visible part framed; click/drag scrolls, a label
+  jumps to its heading. The note page fits the window so the editor scrolls inside it.
 - **Campaign list** → grid of campaigns; when empty, a CTA message with a *Create campaign* button.
 - **Campaign layout** → shell with the sidebar: the campaign's sections (its settings applied, §2a) and
   **Back to campaigns**. Section settings live in Settings (per campaign, like the template choices).

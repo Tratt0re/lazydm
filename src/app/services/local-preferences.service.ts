@@ -4,6 +4,11 @@ import { Injectable, PLATFORM_ID, inject, signal } from '@angular/core';
 import {
   DOCUMENT_VIEW_MODES,
   type DocumentViewMode,
+  EDITOR_READABLE_WIDTH,
+  EDITOR_SETTINGS_DEFAULTS,
+  EDITOR_TEXT_SCALES,
+  EDITOR_TEXT_SIZES,
+  type EditorSettings,
   LOCAL_PREFERENCE_DEFAULTS,
   LocalPreferenceKey,
   type ThemePreference,
@@ -22,6 +27,9 @@ export class LocalPreferencesService {
 
   readonly themePreference = this.themePreferenceSignal.asReadonly();
   readonly languagePreference = this.languagePreferenceSignal.asReadonly();
+  private readonly editorSettingsSignal = signal<EditorSettings>(EDITOR_SETTINGS_DEFAULTS);
+  /** Settings → Editor, on this device. */
+  readonly editorSettings = this.editorSettingsSignal.asReadonly();
 
   init(): void {
     if (!this.isBrowser) {
@@ -32,6 +40,7 @@ export class LocalPreferencesService {
     this.setThemeColor(this.getThemeColor());
     this.setLanguage(this.getLanguage());
     this.setOnboardingCompleted(this.getOnboardingCompleted());
+    this.applyEditorSettings(this.readEditorSettings());
   }
 
   getTheme(): ThemePreference {
@@ -92,9 +101,54 @@ export class LocalPreferencesService {
     this.setText(LocalPreferenceKey.DOCUMENT_LINKS_PANEL_OPEN, isOpen ? '1' : '0');
   }
 
-  /** View chosen for a note on this device (live preview when never chosen). */
+  /** View chosen for a note on this device (the editor's default view when never chosen). */
   getDocumentViewMode(path: string): DocumentViewMode {
-    return this.readDocumentViewModes()[path] ?? 'live';
+    return this.readDocumentViewModes()[path] ?? this.editorSettingsSignal().defaultView;
+  }
+
+  setEditorSetting<K extends keyof EditorSettings>(key: K, value: EditorSettings[K]): void {
+    const settings = this.normalizeEditorSettings({ ...this.editorSettingsSignal(), [key]: value });
+    this.setJson(LocalPreferenceKey.EDITOR_SETTINGS, settings);
+    this.applyEditorSettings(settings);
+  }
+
+  private readEditorSettings(): EditorSettings {
+    return this.normalizeEditorSettings(
+      this.getJson<Partial<Record<keyof EditorSettings, unknown>>>(LocalPreferenceKey.EDITOR_SETTINGS) ?? {},
+    );
+  }
+
+  /** Known values only; anything else (an older or hand-edited entry) falls back to the default. */
+  private normalizeEditorSettings(value: Partial<Record<keyof EditorSettings, unknown>>): EditorSettings {
+    const defaults = EDITOR_SETTINGS_DEFAULTS;
+    const flag = (key: keyof EditorSettings) =>
+      typeof value[key] === 'boolean' ? (value[key] as boolean) : (defaults[key] as boolean);
+    return {
+      codeMap: flag('codeMap'),
+      lineNumbers: flag('lineNumbers'),
+      textSize: EDITOR_TEXT_SIZES.includes(value.textSize as EditorSettings['textSize'])
+        ? (value.textSize as EditorSettings['textSize'])
+        : defaults.textSize,
+      readableWidth: flag('readableWidth'),
+      defaultView: DOCUMENT_VIEW_MODES.includes(value.defaultView as DocumentViewMode)
+        ? (value.defaultView as DocumentViewMode)
+        : defaults.defaultView,
+      spellcheck: flag('spellcheck'),
+      lineWrapping: flag('lineWrapping'),
+      highlightActiveLine: flag('highlightActiveLine'),
+    };
+  }
+
+  /** Text size and column width are CSS variables, shared by the editor views and the reading view. */
+  private applyEditorSettings(settings: EditorSettings): void {
+    this.editorSettingsSignal.set(settings);
+    if (!this.isBrowser) {
+      return;
+    }
+
+    const root = document.documentElement.style;
+    root.setProperty('--editor-text-scale', String(EDITOR_TEXT_SCALES[settings.textSize]));
+    root.setProperty('--editor-max-width', settings.readableWidth ? EDITOR_READABLE_WIDTH : 'none');
   }
 
   /** Remembers the view of a note; only the most recent notes are kept. */

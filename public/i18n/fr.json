@@ -63,6 +63,10 @@
       "templates": {
         "title": "Modèles",
         "description": "Le modèle utilisé par chaque type de note dans cette campagne."
+      },
+      "editor": {
+        "title": "Éditeur",
+        "description": "L'apparence et le comportement des notes pendant l'écriture, sur cet appareil."
       }
     },
     "general": {
@@ -193,6 +197,50 @@
         "gem": "Gemme",
         "book-open": "Livre",
         "feather": "Plume"
+      }
+    },
+    "editor": {
+      "intro": "Ces choix s'appliquent immédiatement à toutes les notes, sur cet appareil uniquement.",
+      "groups": {
+        "display": "Affichage",
+        "behaviour": "Comportement"
+      },
+      "codeMap": {
+        "label": "Carte du code",
+        "description": "Une petite carte de toute la note à droite, avec les titres H1–H3 en étiquettes. Cliquez ou faites glisser pour défiler, cliquez sur un titre pour y aller."
+      },
+      "lineNumbers": {
+        "label": "Numéros de ligne",
+        "description": "Afficher les numéros de ligne à côté du texte."
+      },
+      "readableWidth": {
+        "label": "Largeur de ligne lisible",
+        "description": "Garder le texte dans une colonne centrée au lieu de toute la largeur."
+      },
+      "defaultView": {
+        "label": "Vue par défaut",
+        "description": "Comment une note s'ouvre la première fois. Ensuite chaque note retient la vue choisie."
+      },
+      "lineWrapping": {
+        "label": "Retour à la ligne",
+        "description": "Couper les lignes longues ; désactivé, elles défilent horizontalement (pratique pour les grands tableaux en Source)."
+      },
+      "highlightActiveLine": {
+        "label": "Surligner la ligne courante",
+        "description": "Une bande discrète derrière la ligne du curseur."
+      },
+      "spellcheck": {
+        "label": "Correcteur orthographique",
+        "description": "Souligner les mots mal orthographiés. Les noms de fantasy seront aussi signalés."
+      },
+      "textSize": {
+        "label": "Taille du texte",
+        "description": "Taille du texte dans l'éditeur et en vue Lecture.",
+        "options": {
+          "small": "Petite",
+          "medium": "Moyenne",
+          "large": "Grande"
+        }
       }
     }
   },

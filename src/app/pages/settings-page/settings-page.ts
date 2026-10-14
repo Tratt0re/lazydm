@@ -1,4 +1,12 @@
-import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, computed, effect, inject } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  OnDestroy,
+  OnInit,
+  computed,
+  effect,
+  inject,
+} from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
@@ -10,6 +18,7 @@ import {
   type SecondarySidebarItem,
 } from '@/components/secondary-sidebar/secondary-sidebar.component';
 import { SettingsSectionHeaderComponent } from './components/settings-section-header/settings-section-header.component';
+import { EditorSectionComponent } from './components/sections/editor-section/editor-section.component';
 import { GeneralSectionComponent } from './components/sections/general-section/general-section.component';
 import { SectionsSectionComponent } from './components/sections/sections-section/sections-section.component';
 import { TemplatesSectionComponent } from './components/sections/templates-section/templates-section.component';
@@ -27,11 +36,14 @@ import {
     AppSecondarySidebarComponent,
     SettingsSectionHeaderComponent,
     GeneralSectionComponent,
+    EditorSectionComponent,
     SectionsSectionComponent,
     TemplatesSectionComponent,
   ],
   template: `
-    <section class="grid min-h-0 flex-1 content-start gap-4 p-6 lg:grid-cols-[17.5rem_minmax(0,1fr)] lg:content-normal lg:items-stretch">
+    <section
+      class="grid min-h-0 flex-1 content-start gap-4 p-6 lg:grid-cols-[17.5rem_minmax(0,1fr)] lg:content-normal lg:items-stretch"
+    >
       <div class="lg:min-h-0 lg:overflow-hidden">
         <app-secondary-sidebar
           [items]="sidebarItems"
@@ -51,6 +63,9 @@ import {
         @switch (activeKey()) {
           @case ('general') {
             <app-general-section />
+          }
+          @case ('editor') {
+            <app-editor-section />
           }
           @case ('sections') {
             <app-sections-section />

@@ -63,6 +63,10 @@
       "templates": {
         "title": "模板",
         "description": "本战役中每种笔记类型使用的模板。"
+      },
+      "editor": {
+        "title": "编辑器",
+        "description": "在此设备上，笔记在书写时的外观与行为。"
       }
     },
     "general": {
@@ -193,6 +197,50 @@
         "gem": "宝石",
         "book-open": "书",
         "feather": "羽毛"
+      }
+    },
+    "editor": {
+      "intro": "这些选项立即应用于所有笔记，仅限此设备。",
+      "groups": {
+        "display": "显示",
+        "behaviour": "行为"
+      },
+      "codeMap": {
+        "label": "代码地图",
+        "description": "在右侧显示整篇笔记的缩略图，并以 H1–H3 标题作为标签。点击或拖动即可滚动，点击标题可跳转。"
+      },
+      "lineNumbers": {
+        "label": "行号",
+        "description": "在文本旁显示行号。"
+      },
+      "readableWidth": {
+        "label": "易读行宽",
+        "description": "将文本保持在居中的列中，而不是占满整个宽度。"
+      },
+      "defaultView": {
+        "label": "默认视图",
+        "description": "笔记第一次打开时的视图。之后每篇笔记会记住你选择的视图。"
+      },
+      "lineWrapping": {
+        "label": "自动换行",
+        "description": "长行自动换行；关闭后可横向滚动（适合源码视图中的宽表格）。"
+      },
+      "highlightActiveLine": {
+        "label": "高亮当前行",
+        "description": "在光标所在行后显示淡色背景。"
+      },
+      "spellcheck": {
+        "label": "拼写检查",
+        "description": "为拼写错误的单词加下划线。奇幻名称也会被标出。"
+      },
+      "textSize": {
+        "label": "文字大小",
+        "description": "编辑器和阅读视图中的文字大小。",
+        "options": {
+          "small": "小",
+          "medium": "中",
+          "large": "大"
+        }
       }
     }
   },

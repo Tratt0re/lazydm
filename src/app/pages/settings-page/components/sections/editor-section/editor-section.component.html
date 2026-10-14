@@ -1,0 +1,78 @@
+<div class="space-y-5">
+  <section class="border border-border/60 bg-card p-4 md:p-5">
+    <div class="bg-muted/40 p-3 text-sm text-muted-foreground">
+      {{ 'settings.editor.intro' | translate }}
+    </div>
+
+    <h3 class="mt-5 font-mono text-[11px] font-semibold tracking-[0.1em] text-muted-foreground uppercase">
+      {{ 'settings.editor.groups.display' | translate }}
+    </h3>
+    <div class="mt-2 flex flex-col divide-y divide-border">
+      @for (row of displayRows; track row.key) {
+        <ng-container *ngTemplateOutlet="flag; context: { $implicit: row }" />
+      }
+      <div class="flex flex-wrap items-center justify-between gap-4 py-3">
+        <div class="min-w-0">
+          <p class="text-sm font-medium">{{ 'settings.editor.textSize.label' | translate }}</p>
+          <p class="mt-1 text-xs text-muted-foreground">
+            {{ 'settings.editor.textSize.description' | translate }}
+          </p>
+        </div>
+        <arc-segmented
+          arcSize="sm"
+          [arcDefaultValue]="settings().textSize"
+          [arcAriaLabel]="'settings.editor.textSize.label' | translate"
+          (arcChange)="setTextSize($event)"
+        >
+          @for (size of textSizes; track size) {
+            <arc-segmented-item
+              [value]="size"
+              [label]="'settings.editor.textSize.options.' + size | translate"
+            />
+          }
+        </arc-segmented>
+      </div>
+    </div>
+
+    <h3 class="mt-5 font-mono text-[11px] font-semibold tracking-[0.1em] text-muted-foreground uppercase">
+      {{ 'settings.editor.groups.behaviour' | translate }}
+    </h3>
+    <div class="mt-2 flex flex-col divide-y divide-border">
+      <div class="flex flex-wrap items-center justify-between gap-4 py-3">
+        <div class="min-w-0">
+          <p class="text-sm font-medium">{{ 'settings.editor.defaultView.label' | translate }}</p>
+          <p class="mt-1 text-xs text-muted-foreground">
+            {{ 'settings.editor.defaultView.description' | translate }}
+          </p>
+        </div>
+        <arc-segmented
+          arcSize="sm"
+          [arcDefaultValue]="settings().defaultView"
+          [arcAriaLabel]="'settings.editor.defaultView.label' | translate"
+          (arcChange)="setDefaultView($event)"
+        >
+          @for (mode of viewModes; track mode) {
+            <arc-segmented-item [value]="mode" [label]="'document.toolbar.' + mode | translate" />
+          }
+        </arc-segmented>
+      </div>
+      @for (row of behaviourRows; track row.key) {
+        <ng-container *ngTemplateOutlet="flag; context: { $implicit: row }" />
+      }
+    </div>
+  </section>
+</div>
+
+<ng-template #flag let-row>
+  <div class="flex items-center justify-between gap-4 py-3">
+    <div class="min-w-0">
+      <p class="text-sm font-medium">{{ row.label | translate }}</p>
+      <p class="mt-1 text-xs text-muted-foreground">{{ row.description | translate }}</p>
+    </div>
+    <arc-switch
+      [arcChecked]="isOn(row.key)"
+      [arcAriaLabel]="row.label | translate"
+      (arcCheckedChange)="setFlag(row.key, $event)"
+    />
+  </div>
+</ng-template>

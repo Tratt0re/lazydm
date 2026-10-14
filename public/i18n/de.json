@@ -63,6 +63,10 @@
       "templates": {
         "title": "Vorlagen",
         "description": "Welche Vorlage jeder Notiztyp in dieser Kampagne nutzt."
+      },
+      "editor": {
+        "title": "Editor",
+        "description": "Wie Notizen beim Schreiben aussehen und sich verhalten, auf diesem Gerät."
       }
     },
     "general": {
@@ -193,6 +197,50 @@
         "gem": "Edelstein",
         "book-open": "Buch",
         "feather": "Feder"
+      }
+    },
+    "editor": {
+      "intro": "Diese Einstellungen gelten sofort für alle Notizen, nur auf diesem Gerät.",
+      "groups": {
+        "display": "Anzeige",
+        "behaviour": "Verhalten"
+      },
+      "codeMap": {
+        "label": "Code-Map",
+        "description": "Eine kleine Karte der ganzen Notiz rechts, mit den Überschriften H1–H3 als Beschriftung. Klicken oder ziehen zum Scrollen, eine Überschrift anklicken, um hinzuspringen."
+      },
+      "lineNumbers": {
+        "label": "Zeilennummern",
+        "description": "Zeilennummern neben dem Text anzeigen."
+      },
+      "readableWidth": {
+        "label": "Lesbare Zeilenbreite",
+        "description": "Den Text in einer zentrierten Spalte halten statt die volle Breite zu nutzen."
+      },
+      "defaultView": {
+        "label": "Standardansicht",
+        "description": "Wie eine Notiz beim ersten Mal geöffnet wird. Danach merkt sich jede Notiz die gewählte Ansicht."
+      },
+      "lineWrapping": {
+        "label": "Zeilenumbruch",
+        "description": "Lange Zeilen umbrechen; aus: sie scrollen seitlich (praktisch für breite Tabellen in der Quelle)."
+      },
+      "highlightActiveLine": {
+        "label": "Aktuelle Zeile hervorheben",
+        "description": "Ein dezenter Streifen hinter der Zeile mit dem Cursor."
+      },
+      "spellcheck": {
+        "label": "Rechtschreibprüfung",
+        "description": "Falsch geschriebene Wörter unterstreichen. Auch Fantasy-Namen werden markiert."
+      },
+      "textSize": {
+        "label": "Textgröße",
+        "description": "Größe des Textes im Editor und in der Leseansicht.",
+        "options": {
+          "small": "Klein",
+          "medium": "Mittel",
+          "large": "Groß"
+        }
       }
     }
   },

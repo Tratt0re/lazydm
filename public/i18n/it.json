@@ -63,6 +63,10 @@
       "templates": {
         "title": "Modelli",
         "description": "Quale modello usa ogni tipo di nota in questa campagna."
+      },
+      "editor": {
+        "title": "Editor",
+        "description": "Come appaiono e si comportano le note mentre scrivi, su questo dispositivo."
       }
     },
     "general": {
@@ -193,6 +197,50 @@
         "gem": "Gemma",
         "book-open": "Libro",
         "feather": "Piuma"
+      }
+    },
+    "editor": {
+      "intro": "Queste scelte valgono subito per tutte le note, e solo su questo dispositivo.",
+      "groups": {
+        "display": "Visualizzazione",
+        "behaviour": "Comportamento"
+      },
+      "codeMap": {
+        "label": "Mappa del codice",
+        "description": "Una piccola mappa di tutta la nota a destra, con i titoli H1–H3 come etichette. Clicca o trascina per scorrere, clicca un titolo per raggiungerlo."
+      },
+      "lineNumbers": {
+        "label": "Numeri di riga",
+        "description": "Mostra i numeri di riga accanto al testo."
+      },
+      "readableWidth": {
+        "label": "Larghezza leggibile",
+        "description": "Tieni il testo in una colonna centrata invece di usare tutta la larghezza."
+      },
+      "defaultView": {
+        "label": "Vista predefinita",
+        "description": "Come si apre una nota la prima volta. Poi ogni nota ricorda la vista scelta."
+      },
+      "lineWrapping": {
+        "label": "A capo automatico",
+        "description": "Manda a capo le righe lunghe; se disattivato scorrono in orizzontale (utile per tabelle larghe in Sorgente)."
+      },
+      "highlightActiveLine": {
+        "label": "Evidenzia la riga corrente",
+        "description": "Una leggera fascia dietro la riga del cursore."
+      },
+      "spellcheck": {
+        "label": "Controllo ortografico",
+        "description": "Sottolinea le parole errate. Anche i nomi fantasy verranno segnalati."
+      },
+      "textSize": {
+        "label": "Dimensione del testo",
+        "description": "Dimensione del testo nell'editor e nella vista Lettura.",
+        "options": {
+          "small": "Piccolo",
+          "medium": "Medio",
+          "large": "Grande"
+        }
       }
     }
   },
