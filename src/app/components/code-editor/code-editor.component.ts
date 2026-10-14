@@ -5,6 +5,7 @@ import {
   Component,
   effect,
   ElementRef,
+  inject,
   input,
   OnDestroy,
   output,
@@ -19,14 +20,20 @@ import {
   Decoration,
   type DecorationSet,
   EditorView,
+  highlightActiveLine,
+  highlightActiveLineGutter,
   keymap,
+  lineNumbers,
   MatchDecorator,
   ViewPlugin,
   type ViewUpdate,
 } from '@codemirror/view';
 import { tags } from '@lezer/highlight';
 
+import type { EditorSettings } from '@/config/local-preferences.config';
 import type { DocumentLinkDto, LinkTargetDto } from '@/dtos';
+import { LocalPreferencesService } from '@/services/local-preferences.service';
+import { codeMap } from './code-map';
 import { linkCompletion, setLinkCompletionContext } from './link-completion';
 import { findFrontmatterEnd, livePreview, setLivePreviewContext } from './live-preview';
 
@@ -47,7 +54,8 @@ const LIVE_LINK_SELECTOR =
 
 /**
  * Wraps CodeMirror 6 as the markdown editor, in live preview (default) or source mode. Colours come
- * from the ArcTechUI CSS variables, so the editor follows the active theme without extra wiring.
+ * from the ArcTechUI CSS variables, so the editor follows the active theme without extra wiring; the
+ * Settings → Editor choices (code map, line numbers, wrapping…) apply as soon as they change.
  */
 @Component({
   selector: 'app-code-editor',
@@ -62,6 +70,8 @@ export class AppCodeEditorComponent implements OnDestroy {
   private view: EditorView | null = null;
   private previousDocumentKey: string | null = null;
   private readonly modeCompartment = new Compartment();
+  private readonly settingsCompartment = new Compartment();
+  private readonly editorSettings = inject(LocalPreferencesService).editorSettings;
 
   /** Identifies the open note; the editor content resets whenever this changes (switching notes). */
   readonly documentKey = input.required<string>();
@@ -88,6 +98,11 @@ export class AppCodeEditorComponent implements OnDestroy {
       const extensions = this.modeExtensions(this.mode());
       this.view?.dispatch({ effects: this.modeCompartment.reconfigure(extensions) });
       this.syncLinks();
+    });
+
+    effect(() => {
+      const extensions = settingsExtensions(this.editorSettings());
+      this.view?.dispatch({ effects: this.settingsCompartment.reconfigure(extensions) });
     });
 
     effect(() => {
@@ -225,7 +240,7 @@ export class AppCodeEditorComponent implements OnDestroy {
         linkCompletion(),
         this.modeCompartment.of(this.modeExtensions(this.mode())),
         editorTheme,
-        EditorView.lineWrapping,
+        this.settingsCompartment.of(settingsExtensions(this.editorSettings())),
         EditorView.editable.of(!this.readOnly()),
         EditorView.contentAttributes.of({ 'aria-placeholder': this.placeholderText() }),
         EditorView.updateListener.of((update: ViewUpdate) => {
@@ -236,6 +251,17 @@ export class AppCodeEditorComponent implements OnDestroy {
       ],
     });
   }
+}
+
+/** Settings → Editor, as editor extensions (text size and column width are CSS variables instead). */
+function settingsExtensions(settings: EditorSettings): Extension {
+  return [
+    settings.lineNumbers ? [lineNumbers(), highlightActiveLineGutter()] : [],
+    settings.highlightActiveLine ? highlightActiveLine() : [],
+    settings.lineWrapping ? EditorView.lineWrapping : [],
+    EditorView.contentAttributes.of({ spellcheck: settings.spellcheck ? 'true' : 'false' }),
+    settings.codeMap ? codeMap() : [],
+  ];
 }
 
 const WIKILINK_PATTERN = /!?\[\[[^[\]\n]+?\]\]/g;
@@ -294,7 +320,7 @@ const liveHighlightStyle = HighlightStyle.define([
 const sourceTheme = EditorView.theme({
   '.cm-content': {
     fontFamily: 'var(--font-mono)',
-    fontSize: '13px',
+    fontSize: 'calc(13px * var(--editor-text-scale, 1))',
     padding: '16px',
   },
 });
@@ -310,6 +336,9 @@ const editorTheme = EditorView.theme({
   },
   '.cm-content': {
     caretColor: 'var(--primary)',
+    // Readable line width: a centred column (Settings → Editor); `none` fills the editor.
+    maxWidth: 'var(--editor-max-width, none)',
+    marginInline: 'auto',
   },
   '.cm-scroller': {
     lineHeight: '1.65',

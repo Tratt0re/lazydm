@@ -443,9 +443,17 @@
   transform: rotate(45deg);
 }
 
+/* The note page fills the content area: the editor (and its code map) scrolls inside it, not the page. */
+arc-content > main:has(> app-document-page) {
+  min-height: 0;
+}
+
 /* Reading mode (document-preview). Markdown HTML, so plain selectors rather than Tailwind classes. */
 .arc-markdown-body {
-  font-size: 0.9375rem;
+  /* Text size and readable line width follow Settings → Editor. */
+  max-width: var(--editor-max-width, none);
+  margin-inline: auto;
+  font-size: calc(0.9375rem * var(--editor-text-scale, 1));
   line-height: 1.6;
   color: var(--foreground);
 }

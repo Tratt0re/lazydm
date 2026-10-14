@@ -619,7 +619,7 @@ const livePreviewField = StateField.define<DecorationSet>({
 const livePreviewTheme = EditorView.theme({
   '.cm-content': {
     fontFamily: 'var(--font-sans)',
-    fontSize: '15px',
+    fontSize: 'calc(15px * var(--editor-text-scale, 1))',
     lineHeight: '1.65',
     padding: '24px 28px',
   },
