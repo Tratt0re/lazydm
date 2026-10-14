@@ -341,7 +341,26 @@
         "specialDescription": "{{section}} 的子文件夹，用于整理其中的文件。仅限一层。"
       },
       "folderFiles": "{{count}} 个文件",
-      "foldersAriaLabel": "子文件夹"
+      "foldersAriaLabel": "子文件夹",
+      "move": {
+        "menu": "移动到…",
+        "description": "文件保留其名称；指向它的链接会被更新。",
+        "folderLabel": "文件夹",
+        "mainFolder": "{{section}}（主文件夹）",
+        "noFolders": "此分区还没有子文件夹。",
+        "done": "已将 {{name}} 移动到 {{folder}}",
+        "dropMain": "拖放到此处以移动到 {{section}}"
+      },
+      "reveal": {
+        "mac": "在访达中显示",
+        "windows": "在资源管理器中显示",
+        "other": "在文件管理器中显示",
+        "error": "无法打开文件管理器"
+      },
+      "expandFolder": "显示 {{folder}} 中的文件",
+      "collapseFolder": "隐藏 {{folder}} 中的文件",
+      "emptyFolder": "空文件夹：将文件拖放到这里。",
+      "openFolder": "打开文件夹"
     }
   },
   "document": {

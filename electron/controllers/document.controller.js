@@ -1,4 +1,7 @@
+const fs = require('node:fs');
 const path = require('node:path');
+const { shell } = require('electron');
+const { resolveInsideVault } = require('../utils/file-utils');
 const {
   campaignModel,
   compendiumModel,
@@ -266,6 +269,19 @@ async function move(payload) {
 
   await indexerController.reindexPaths([relativePath, newPath, ...updatedPaths]);
   return { path: newPath, updatedPaths, failedPaths, linkCount };
+}
+
+/** Shows a vault file or folder in the system file manager (Finder, Explorer…). */
+function reveal(payload) {
+  const body = ensurePlainObject(payload, 'payload');
+  const relativePath = requirePath(body);
+  const absolutePath = resolveInsideVault(vaultController.getReadyVaultPath(), relativePath);
+  if (!fs.existsSync(absolutePath)) {
+    throw new Error(`Not found: ${relativePath}`);
+  }
+
+  shell.showItemInFolder(absolutePath);
+  return { path: relativePath };
 }
 
 /** Sub-type of a note created in `folderPath`: the sub-folder of its section, if it is in one. */
@@ -809,6 +825,7 @@ module.exports = {
   move,
   read,
   rename,
+  reveal,
   saveCopy,
   setType,
   unlink,

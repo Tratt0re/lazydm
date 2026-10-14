@@ -67,6 +67,7 @@ export interface ElectronIpcClient {
     readonly createFolder: IpcRequest<{ folder: string; name: string }, { path: string; name: string }>;
     readonly setType: IpcRequest<{ path: string; type: string; subtype: string | null }, { path: string }>;
     readonly move: IpcRequest<{ path: string; folder: string }, DTO.MoveDocumentResultDto>;
+    readonly reveal: IpcRequest<{ path: string }, { path: string }>;
     readonly copy: IpcRequest<DTO.CopyDocumentPayload, DTO.CopyDocumentResultDto>;
     readonly copyPlan: IpcRequest<{ path: string; target: string }, DTO.CopyPlanDto>;
   };

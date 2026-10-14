@@ -341,7 +341,26 @@
         "specialDescription": "Ein Unterordner von {{section}}, um seine Dateien zu ordnen. Nur eine Ebene."
       },
       "folderFiles": "{{count}} Dateien",
-      "foldersAriaLabel": "Unterordner"
+      "foldersAriaLabel": "Unterordner",
+      "move": {
+        "menu": "Verschieben nach…",
+        "description": "Die Datei behält ihren Namen; Links darauf werden aktualisiert.",
+        "folderLabel": "Ordner",
+        "mainFolder": "{{section}} (Hauptordner)",
+        "noFolders": "Dieser Bereich hat noch keine Unterordner.",
+        "done": "{{name}} nach {{folder}} verschoben",
+        "dropMain": "Hier ablegen, um nach {{section}} zu verschieben"
+      },
+      "reveal": {
+        "mac": "Im Finder zeigen",
+        "windows": "Im Explorer zeigen",
+        "other": "Im Dateimanager zeigen",
+        "error": "Der Dateimanager konnte nicht geöffnet werden"
+      },
+      "expandFolder": "Dateien von {{folder}} zeigen",
+      "collapseFolder": "Dateien von {{folder}} ausblenden",
+      "emptyFolder": "Leerer Ordner: Dateien hierher ziehen.",
+      "openFolder": "Ordner öffnen"
     }
   },
   "document": {

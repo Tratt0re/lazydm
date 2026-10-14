@@ -39,6 +39,7 @@ const CHANNELS = Object.freeze({
     createFolder: 'documents:createFolder',
     setType: 'documents:setType',
     move: 'documents:move',
+    reveal: 'documents:reveal',
     copy: 'documents:copy',
     copyPlan: 'documents:copyPlan',
   }),

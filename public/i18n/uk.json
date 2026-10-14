@@ -341,7 +341,26 @@
         "specialDescription": "Підтека розділу {{section}} для впорядкування файлів. Лише один рівень."
       },
       "folderFiles": "файлів: {{count}}",
-      "foldersAriaLabel": "Підтеки"
+      "foldersAriaLabel": "Підтеки",
+      "move": {
+        "menu": "Перемістити до…",
+        "description": "Файл зберігає назву; посилання на нього оновлюються.",
+        "folderLabel": "Тека",
+        "mainFolder": "{{section}} (головна тека)",
+        "noFolders": "У цьому розділі ще немає підтек.",
+        "done": "{{name}} переміщено до {{folder}}",
+        "dropMain": "Відпустіть тут, щоб перемістити до {{section}}"
+      },
+      "reveal": {
+        "mac": "Показати у Finder",
+        "windows": "Показати у Провіднику",
+        "other": "Показати у файловому менеджері",
+        "error": "Не вдалося відкрити файловий менеджер"
+      },
+      "expandFolder": "Показати файли {{folder}}",
+      "collapseFolder": "Сховати файли {{folder}}",
+      "emptyFolder": "Порожня тека: перетягніть сюди файли.",
+      "openFolder": "Відкрити теку"
     }
   },
   "document": {

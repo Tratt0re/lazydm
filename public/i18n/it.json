@@ -341,7 +341,26 @@
         "specialDescription": "Una sottocartella di {{section}} per organizzarne i file. Un solo livello."
       },
       "folderFiles": "{{count}} file",
-      "foldersAriaLabel": "Sottocartelle"
+      "foldersAriaLabel": "Sottocartelle",
+      "move": {
+        "menu": "Sposta in…",
+        "description": "Il file mantiene il nome; i link che lo puntano vengono aggiornati.",
+        "folderLabel": "Cartella",
+        "mainFolder": "{{section}} (cartella principale)",
+        "noFolders": "Questa sezione non ha ancora sottocartelle.",
+        "done": "{{name}} spostato in {{folder}}",
+        "dropMain": "Rilascia qui per spostare in {{section}}"
+      },
+      "reveal": {
+        "mac": "Mostra nel Finder",
+        "windows": "Mostra in Esplora file",
+        "other": "Mostra nel file manager",
+        "error": "Impossibile aprire il file manager"
+      },
+      "expandFolder": "Mostra i file di {{folder}}",
+      "collapseFolder": "Nascondi i file di {{folder}}",
+      "emptyFolder": "Cartella vuota: trascina qui i file.",
+      "openFolder": "Apri cartella"
     }
   },
   "document": {

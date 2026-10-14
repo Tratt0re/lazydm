@@ -1,3 +1,4 @@
+import { NgTemplateOutlet } from '@angular/common';
 import { Component, computed, effect, inject, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
@@ -24,15 +25,28 @@ import {
   TemplateService,
 } from '@/services/template.service';
 import { ToolbarContextService, type ToolbarItemAction } from '@/services/toolbar-context.service';
+import { WorkspaceService } from '@/services/workspace.service';
 import { ArcTechAlertComponent } from '@/shared/components/alert';
 import { ArcTechButtonComponent } from '@/shared/components/button';
 import { ArcTechEmptyComponent } from '@/shared/components/empty';
 import { ArcTechIconComponent } from '@/shared/components/icon';
+import { ArcTechMenuImports } from '@/shared/components/menu';
 import { ArcTechTooltipImports } from '@/shared/components/tooltip';
 
 export const CAMPAIGN_SECTION_PARAM = 'section';
 /** Query parameter of the sub-folder the section page shows (`?folder=humans`). */
 export const SECTION_FOLDER_QUERY_PARAM = 'folder';
+
+/** A sub-folder of the section with the files directly in it. */
+interface SectionTreeFolder extends DocumentFolderDto {
+  readonly files: readonly DocumentFileListItemDto[];
+}
+
+/** Menu label of *Reveal* on each system (the file manager's own name). */
+const REVEAL_LABELS: Readonly<Record<string, string>> = {
+  darwin: 'campaigns.sections.reveal.mac',
+  win32: 'campaigns.sections.reveal.windows',
+};
 
 const NEW_NOTE_TITLE_FIELD: AppSheetField = {
   id: 'title',
@@ -55,8 +69,10 @@ function formatFileSize(sizeInBytes: number): string {
 @Component({
   selector: 'app-campaign-section-page',
   imports: [
+    NgTemplateOutlet,
     RouterLink,
     TranslatePipe,
+    ArcTechMenuImports,
     ArcTechAlertComponent,
     ArcTechButtonComponent,
     ArcTechEmptyComponent,
@@ -77,6 +93,7 @@ export class CampaignSectionPage {
   private readonly templateService = inject(TemplateService);
   private readonly appSheetService = inject(AppSheetService);
   protected readonly copyTo = inject(CopyToService);
+  private readonly workspace = inject(WorkspaceService);
 
   /** Templates and the campaign's choices, for the template select of the toolbar (campaigns only). */
   private readonly templates = signal<readonly TemplateDto[]>([]);
@@ -122,9 +139,28 @@ export class CampaignSectionPage {
     this.scope()?.kind === 'system' ? 'compendium.import.fromCampaign' : 'compendium.import.fromCompendium',
   );
 
-  protected readonly files = signal<readonly DocumentFileListItemDto[]>([]);
-  /** Sub-folders of the section (sub-types); empty inside a sub-folder (one level only). */
-  protected readonly folders = signal<readonly DocumentFolderDto[]>([]);
+  /** The section folder (`<scope>/<section>`), whatever sub-folder is open. */
+  private readonly sectionPath = computed(() => `${this.scope()?.rootPath ?? ''}/${this.sectionKey()}`);
+  private readonly tree = signal<{
+    files: readonly DocumentFileListItemDto[];
+    folders: readonly SectionTreeFolder[];
+  }>({ files: [], folders: [] });
+  /** Files shown: those of the open sub-folder, else those directly in the section. */
+  protected readonly files = computed(() => {
+    const subfolder = this.subfolder();
+    const tree = this.tree();
+    return subfolder
+      ? (tree.folders.find((folder) => folder.name === subfolder)?.files ?? [])
+      : tree.files;
+  });
+  /** Sub-folders listed (collapsible, with their files); none inside a sub-folder (one level only). */
+  protected readonly folders = computed(() => (this.subfolder() ? [] : this.tree().folders));
+  protected readonly expandedFolders = signal<ReadonlySet<string>>(new Set());
+  /** File being dragged, and the folder it would land in (`''`: the section itself). */
+  protected readonly draggedPath = signal<string | null>(null);
+  protected readonly dropTarget = signal<string | null>(null);
+  protected readonly revealLabel =
+    REVEAL_LABELS[window.electronAPI?.platform ?? ''] ?? 'campaigns.sections.reveal.other';
   protected readonly toSubfolderLabel = toSubfolderLabel;
   protected readonly isLoading = signal(true);
   protected readonly errorMessage = signal<string | null>(null);
@@ -144,7 +180,7 @@ export class CampaignSectionPage {
         return;
       }
 
-      void this.loadFiles(this.folderPath());
+      void this.loadTree(this.sectionPath());
     });
 
     effect((onCleanup) => {
@@ -282,6 +318,116 @@ export class CampaignSectionPage {
     return this.copyTo.isInCompendium(file.path) ? 'compendium.copy.toCampaign' : 'compendium.copy.toCompendium';
   }
 
+  protected isExpanded(name: string): boolean {
+    return this.expandedFolders().has(name);
+  }
+
+  protected toggleFolder(name: string): void {
+    const next = new Set(this.expandedFolders());
+    if (!next.delete(name)) {
+      next.add(name);
+    }
+    this.expandedFolders.set(next);
+  }
+
+  // --- Drag a file onto a sub-folder (or the section itself) to move it there ------------------------
+
+  protected onDragStart(event: DragEvent, file: DocumentFileListItemDto): void {
+    event.dataTransfer?.setData('text/plain', file.path);
+    if (event.dataTransfer) {
+      event.dataTransfer.effectAllowed = 'move';
+    }
+    this.draggedPath.set(file.path);
+  }
+
+  protected onDragEnd(): void {
+    this.draggedPath.set(null);
+    this.dropTarget.set(null);
+  }
+
+  protected onDragOver(event: DragEvent, target: string): void {
+    const path = this.draggedPath();
+    if (path && this.folderOf(path) !== target) {
+      event.preventDefault();
+      this.dropTarget.set(target);
+    }
+  }
+
+  protected onDragLeave(target: string): void {
+    if (this.dropTarget() === target) {
+      this.dropTarget.set(null);
+    }
+  }
+
+  protected onDrop(event: DragEvent, target: string): void {
+    event.preventDefault();
+    const path = this.draggedPath();
+    this.onDragEnd();
+    if (path) {
+      void this.moveFile(path, target);
+    }
+  }
+
+  // --- Right-click menu ------------------------------------------------------------------------------
+
+  /** Move to the section itself or one of its sub-folders. */
+  protected openMoveSheet(file: DocumentFileListItemDto): void {
+    const current = this.folderOf(file.path);
+    const targets = [
+      { value: '', label: this.translateService.instant('campaigns.sections.move.mainFolder', { section: this.sectionLabel() }) },
+      ...this.tree().folders.map((folder) => ({ value: folder.name, label: toSubfolderLabel(folder.name) })),
+    ].filter((target) => target.value !== current);
+    if (targets.length === 0) {
+      toast.info(this.translateService.instant('campaigns.sections.move.noFolders'));
+      return;
+    }
+
+    let isSubmitting = false;
+    const sheetRef = this.sheetFormService.open({
+      arcTitle: this.translateService.instant('review.move.title', {
+        title: file.kind === 'md' ? file.title : file.name,
+      }),
+      arcDescription: this.translateService.instant('campaigns.sections.move.description'),
+      arcOkText: this.translateService.instant('review.move.submit'),
+      arcCancelText: this.translateService.instant('review.cancel'),
+      fields: [
+        {
+          id: 'folder',
+          type: 'select',
+          label: 'campaigns.sections.move.folderLabel',
+          value: targets[0].value,
+          required: false,
+          translate: true,
+          options: targets.map((target) => ({ ...target, icon: 'folder', translate: false })),
+        },
+      ],
+      onSubmit: (form) => {
+        if (!isSubmitting) {
+          isSubmitting = true;
+          const target = String(form.getValues()['folder'] ?? targets[0].value);
+          void this.moveFile(file.path, target).then(() => {
+            isSubmitting = false;
+            sheetRef.close();
+          });
+        }
+
+        return false;
+      },
+    });
+  }
+
+  protected reveal(path: string): void {
+    this.documentService.reveal(path).catch((error: unknown) =>
+      toast.error(this.translateService.instant('campaigns.sections.reveal.error'), {
+        description: error instanceof Error ? error.message : String(error),
+      }),
+    );
+  }
+
+  protected folderPathOf(name: string): string {
+    return `${this.sectionPath()}/${name}`;
+  }
+
   protected noteRoute(file: DocumentFileListItemDto): string {
     return toInAppNoteRoute(file.path) ?? this.scopeRoute();
   }
@@ -330,7 +476,7 @@ export class CampaignSectionPage {
     const scope = this.scope();
     const section = this.section();
     if (scope && section) {
-      void this.copyTo.openImportSheet(scope, section.key, () => void this.loadFiles(this.folderPath()));
+      void this.copyTo.openImportSheet(scope, section.key, () => void this.loadTree(this.sectionPath()));
     }
   }
 
@@ -398,16 +544,56 @@ export class CampaignSectionPage {
     }
   }
 
-  private async loadFiles(folder: string): Promise<void> {
+  /** Sub-folder a file of the section is in (`''` directly in the section). */
+  private folderOf(path: string): string {
+    const parts = path.slice(this.sectionPath().length + 1).split('/');
+    return parts.length > 1 ? parts[0] : '';
+  }
+
+  private async moveFile(path: string, target: string): Promise<void> {
+    if (this.folderOf(path) === target) {
+      return;
+    }
+
+    const folder = target ? `${this.sectionPath()}/${target}` : this.sectionPath();
+    try {
+      const result = await this.documentService.move(path, folder);
+      const oldRoute = toInAppNoteRoute(path);
+      const newRoute = toInAppNoteRoute(result.path);
+      if (oldRoute && newRoute) {
+        await this.workspace.replaceUrl(oldRoute, newRoute);
+      }
+
+      toast.success(
+        this.translateService.instant('campaigns.sections.move.done', {
+          name: path.split('/').pop(),
+          folder: target ? toSubfolderLabel(target) : this.sectionLabel(),
+        }),
+        result.failedPaths.length > 0
+          ? {
+              description: this.translateService.instant('review.move.failedLinks', {
+                paths: result.failedPaths.join(', '),
+              }),
+            }
+          : undefined,
+      );
+      await this.loadTree(this.sectionPath());
+    } catch (error) {
+      toast.error(this.translateService.instant('review.move.error'), {
+        description: error instanceof Error ? error.message : String(error),
+      });
+    }
+  }
+
+  private async loadTree(sectionPath: string): Promise<void> {
     const token = ++this.loadToken;
     this.isLoading.set(true);
     this.errorMessage.set(null);
 
     try {
-      const { files, folders } = await this.documentService.listFolderEntries(folder);
+      const tree = await this.documentService.listSectionTree(sectionPath);
       if (token === this.loadToken) {
-        this.files.set(files);
-        this.folders.set(this.subfolder() ? [] : folders);
+        this.tree.set(tree);
       }
     } catch (error) {
       if (token === this.loadToken) {

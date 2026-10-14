@@ -341,7 +341,26 @@
         "specialDescription": "A sub-folder of {{section}} to organise its files. One level only."
       },
       "folderFiles": "{{count}} files",
-      "foldersAriaLabel": "Sub-folders"
+      "foldersAriaLabel": "Sub-folders",
+      "move": {
+        "menu": "Move to…",
+        "description": "The file keeps its name; links to it are updated.",
+        "folderLabel": "Folder",
+        "mainFolder": "{{section}} (main folder)",
+        "noFolders": "This section has no sub-folders yet.",
+        "done": "{{name}} moved to {{folder}}",
+        "dropMain": "Drop here to move to {{section}}"
+      },
+      "reveal": {
+        "mac": "Reveal in Finder",
+        "windows": "Show in Explorer",
+        "other": "Show in file manager",
+        "error": "Couldn't open the file manager"
+      },
+      "expandFolder": "Show the files of {{folder}}",
+      "collapseFolder": "Hide the files of {{folder}}",
+      "emptyFolder": "Empty folder: drop files here.",
+      "openFolder": "Open folder"
     }
   },
   "document": {

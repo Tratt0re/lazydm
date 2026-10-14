@@ -341,7 +341,26 @@
         "specialDescription": "Una subcarpeta de {{section}} para organizar sus archivos. Un solo nivel."
       },
       "folderFiles": "{{count}} archivos",
-      "foldersAriaLabel": "Subcarpetas"
+      "foldersAriaLabel": "Subcarpetas",
+      "move": {
+        "menu": "Mover a…",
+        "description": "El archivo conserva su nombre; se actualizan los enlaces a él.",
+        "folderLabel": "Carpeta",
+        "mainFolder": "{{section}} (carpeta principal)",
+        "noFolders": "Esta sección aún no tiene subcarpetas.",
+        "done": "{{name}} movido a {{folder}}",
+        "dropMain": "Suelta aquí para mover a {{section}}"
+      },
+      "reveal": {
+        "mac": "Mostrar en Finder",
+        "windows": "Mostrar en el Explorador",
+        "other": "Mostrar en el gestor de archivos",
+        "error": "No se pudo abrir el gestor de archivos"
+      },
+      "expandFolder": "Mostrar los archivos de {{folder}}",
+      "collapseFolder": "Ocultar los archivos de {{folder}}",
+      "emptyFolder": "Carpeta vacía: suelta aquí los archivos.",
+      "openFolder": "Abrir carpeta"
     }
   },
   "document": {

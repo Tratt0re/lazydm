@@ -45,6 +45,33 @@ export class DocumentService extends BaseIpcService<APIChannel.DOCUMENTS> {
     return { files: rows, folders };
   }
 
+  /**
+   * A section as a tree: the files directly in it, and its sub-folders (from the disk, so empty ones too) each
+   * with its files. Deeper files are left out (one level of sub-folders).
+   */
+  async listSectionTree(folder: string): Promise<{
+    files: readonly DocumentFileListItemDto[];
+    folders: readonly (DocumentFolderDto & { files: readonly DocumentFileListItemDto[] })[];
+  }> {
+    const { rows, folders } = await this.ipcClient.list({ folder });
+    const prefix = `${folder.replace(/\/+$/, '')}/`;
+    const depthOf = (file: DocumentFileListItemDto) => file.path.slice(prefix.length).split('/').length;
+    return {
+      files: rows.filter((file) => depthOf(file) === 1),
+      folders: folders.map((item) => ({
+        ...item,
+        files: rows.filter(
+          (file) => file.path.startsWith(`${prefix}${item.name}/`) && depthOf(file) === 2,
+        ),
+      })),
+    };
+  }
+
+  /** Shows a vault file or folder in Finder / Explorer / the file manager. */
+  async reveal(path: string): Promise<void> {
+    await this.ipcClient.reveal({ path });
+  }
+
   /** New sub-folder of a section (`name` is turned into the folder slug); returns its slug. */
   async createFolder(folder: string, name: string): Promise<string> {
     return (await this.ipcClient.createFolder({ folder, name })).name;

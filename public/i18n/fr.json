@@ -341,7 +341,26 @@
         "specialDescription": "Un sous-dossier de {{section}} pour ranger ses fichiers. Un seul niveau."
       },
       "folderFiles": "{{count}} fichiers",
-      "foldersAriaLabel": "Sous-dossiers"
+      "foldersAriaLabel": "Sous-dossiers",
+      "move": {
+        "menu": "Déplacer vers…",
+        "description": "Le fichier garde son nom ; les liens vers lui sont mis à jour.",
+        "folderLabel": "Dossier",
+        "mainFolder": "{{section}} (dossier principal)",
+        "noFolders": "Cette section n’a pas encore de sous-dossiers.",
+        "done": "{{name}} déplacé vers {{folder}}",
+        "dropMain": "Déposer ici pour déplacer vers {{section}}"
+      },
+      "reveal": {
+        "mac": "Afficher dans le Finder",
+        "windows": "Afficher dans l’Explorateur",
+        "other": "Afficher dans le gestionnaire de fichiers",
+        "error": "Impossible d’ouvrir le gestionnaire de fichiers"
+      },
+      "expandFolder": "Afficher les fichiers de {{folder}}",
+      "collapseFolder": "Masquer les fichiers de {{folder}}",
+      "emptyFolder": "Dossier vide : déposez des fichiers ici.",
+      "openFolder": "Ouvrir le dossier"
     }
   },
   "document": {

@@ -77,6 +77,10 @@ LazyDM works like **Obsidian**, specialised for Dungeon Masters.
   (`/<section>?folder=<name>`, breadcrumb `CAMPAIGN / SECTION /`), where *New note* creates notes in it and *New
   folder* is not offered (one level). A note in a sub-folder opens at `/<section>/<sub-folder>/<note>` with the
   breadcrumb `CAMPAIGN / SECTION / SUB-FOLDER /`.
+- **Section page as a tree**: sub-folders are collapsible rows showing their files inline (their name still opens
+  the sub-folder view). Files can be dragged onto a sub-folder, or onto the *main folder* target shown while
+  dragging, to move them (one section only); right-click a file for *Move to…* (main folder or a sub-folder) and
+  *Reveal in Finder* (*Show in Explorer* / file manager elsewhere), a folder for *Open* and *Reveal*.
 - **Special sections**: *Assets* (any non-`.md` file) and *Encounters* (special files) hold no plain notes — they
   offer *New folder* and *Import* but no *New note*; their sub-folders only organise files (no `subtype`), and the
   Review page does not check them.
