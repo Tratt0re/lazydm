@@ -101,8 +101,7 @@
         "noCampaignTitle": "未打开战役",
         "noCampaignDescription": "请先打开一个战役，再回到这里为每种笔记类型选择模板。",
         "saved": "模板选择已保存",
-        "saveError": "无法保存模板选择",
-        "openLibrary": "打开模板库"
+        "saveError": "无法保存模板选择"
       },
       "library": {
         "empty": "选择一个模板以查看或编辑。"
@@ -338,7 +337,8 @@
         "nameLabel": "名称",
         "namePlaceholder": "例如：人类",
         "submit": "创建文件夹",
-        "error": "无法创建文件夹"
+        "error": "无法创建文件夹",
+        "specialDescription": "{{section}} 的子文件夹，用于整理其中的文件。仅限一层。"
       },
       "folderFiles": "{{count}} 个文件",
       "foldersAriaLabel": "子文件夹"

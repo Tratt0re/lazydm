@@ -12,8 +12,6 @@ import {
   type TemplateRuleOption,
 } from '@/services/template.service';
 import { ArcTechAlertComponent } from '@/shared/components/alert';
-import { ArcTechButtonComponent } from '@/shared/components/button';
-import { ArcTechIconComponent } from '@/shared/components/icon';
 import { ArcTechSelectImports } from '@/shared/components/select';
 
 interface NoteTypeRow {
@@ -25,15 +23,13 @@ interface NoteTypeRow {
 
 /**
  * Settings → Templates: which template each note type uses in the campaign under the sheet (saved in
- * `.lazydm/vault.json`). The templates themselves are managed in the Templates sheet.
+ * `.lazydm/vault.json`). The templates themselves are managed in the Templates sheet (title-bar button).
  */
 @Component({
   selector: 'app-templates-section',
   imports: [
     TranslatePipe,
     ArcTechAlertComponent,
-    ArcTechButtonComponent,
-    ArcTechIconComponent,
     ...ArcTechSelectImports,
   ],
   templateUrl: './templates-section.component.html',
@@ -88,10 +84,6 @@ export class TemplatesSectionComponent implements OnInit {
       this.campaignSlug() ?? '',
       this.rules()[type],
     );
-  }
-
-  protected openLibrary(): void {
-    void this.appSheetService.open('templates');
   }
 
   protected async onRuleChange(type: string, value: string | string[]): Promise<void> {

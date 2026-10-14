@@ -101,8 +101,7 @@
         "noCampaignTitle": "Ninguna campaña abierta",
         "noCampaignDescription": "Abre una campaña y vuelve aquí para elegir qué plantilla usa cada tipo de nota.",
         "saved": "Elección de plantilla guardada",
-        "saveError": "No se pudo guardar la elección de plantilla",
-        "openLibrary": "Abrir la biblioteca de plantillas"
+        "saveError": "No se pudo guardar la elección de plantilla"
       },
       "library": {
         "empty": "Selecciona una plantilla para verla o editarla."
@@ -338,7 +337,8 @@
         "nameLabel": "Nombre",
         "namePlaceholder": "p. ej. Humanos",
         "submit": "Crear carpeta",
-        "error": "No se pudo crear la carpeta"
+        "error": "No se pudo crear la carpeta",
+        "specialDescription": "Una subcarpeta de {{section}} para organizar sus archivos. Un solo nivel."
       },
       "folderFiles": "{{count}} archivos",
       "foldersAriaLabel": "Subcarpetas"

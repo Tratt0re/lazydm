@@ -84,8 +84,8 @@ async function createFolder(payload) {
   if (!section) {
     throw new Error(`Not a section: ${folder}`);
   }
-  if (!section.type) {
-    throw new Error(`The ${section.key} section holds no notes, so it has no sub-folders.`);
+  if (!section.type && !section.isSpecial) {
+    throw new Error(`The ${section.key} folder has no sub-folders.`);
   }
 
   const slug = toSlug(name);
@@ -151,15 +151,48 @@ function retargetMovedLink(link, sourcePath, newPath, scope) {
   }
 
   const scopeRelative = newPath.slice(scope.length + 1);
+  const isNote = newPath.toLocaleLowerCase().endsWith(MARKDOWN_EXTENSION);
   const hasExtension = linkPath.trim().toLocaleLowerCase().endsWith(MARKDOWN_EXTENSION);
-  const newLinkPath = hasExtension ? scopeRelative : scopeRelative.slice(0, -MARKDOWN_EXTENSION.length);
+  // Notes are linked with or without `.md`; other files always by their full file name.
+  const newLinkPath =
+    !isNote || hasExtension ? scopeRelative : scopeRelative.slice(0, -MARKDOWN_EXTENSION.length);
   return `${newLinkPath}${link.raw.slice(linkPath.length)}`;
 }
 
 /**
- * Moves a note into a section (or sub-folder) of its own campaign or system: the file keeps its name, its
- * `type` / `subtype` follow the destination, its own relative links are recomputed, and every link the index
- * resolved to it is rewritten like *Rename* does (each write conflict-checked; failures are reported).
+ * Moves a note file and updates it: `type` / `subtype` follow a note section (special sections keep them),
+ * relative links are recomputed from the new folder. The rewrite is conflict-checked like a save.
+ */
+async function moveNoteFile(vaultPath, relativePath, newPath, section, subfolder) {
+  const current = await documentModel.readDocument(vaultPath, relativePath);
+  const resolvedByRaw = new Map(
+    vaultIndexModel
+      .listOutgoingLinks(relativePath)
+      .filter((link) => link.resolvedPath)
+      .map((link) => [link.raw, link.resolvedPath === relativePath ? newPath : link.resolvedPath]),
+  );
+  const typed = section.isSpecial
+    ? current.content
+    : withTypeAndSubtype(current.content, section.type, subfolder);
+  const ownContent = rewriteLinks(
+    typed,
+    (link) =>
+      link.syntax === 'markdown' && resolvedByRaw.has(link.raw)
+        ? toMarkdownHref(path.posix.dirname(newPath), resolvedByRaw.get(link.raw), link.raw)
+        : null,
+    { sourcePath: relativePath },
+  ).content;
+
+  await documentModel.renameDocumentFile(vaultPath, relativePath, newPath);
+  if (ownContent !== current.content) {
+    await documentModel.writeDocument(vaultPath, newPath, ownContent, current.contentHash);
+  }
+}
+
+/**
+ * Moves a file (note or asset) into a section (or sub-folder) of its own campaign or system: it keeps its
+ * name; a note's `type` / `subtype` follow the destination and its own relative links are recomputed; every
+ * link the index resolved to it is rewritten like *Rename* does (each write conflict-checked; failures reported).
  */
 async function move(payload) {
   const body = ensurePlainObject(payload, 'payload');
@@ -177,8 +210,8 @@ async function move(payload) {
   const section = sectionModel
     .listScopeSections(vaultPath, scope)
     .find((item) => item.key === location.section);
-  if (!section?.type) {
-    throw new Error(`Not a section for notes: ${folder}`);
+  if (!section || (!section.type && !section.isSpecial)) {
+    throw new Error(`Not a section folder: ${folder}`);
   }
 
   const newPath = `${folder}/${path.posix.basename(relativePath)}`;
@@ -186,26 +219,12 @@ async function move(payload) {
     return { path: newPath, updatedPaths: [], failedPaths: [], linkCount: 0 };
   }
 
-  const current = await documentModel.readDocument(vaultPath, relativePath);
-  const resolvedByRaw = new Map(
-    vaultIndexModel
-      .listOutgoingLinks(relativePath)
-      .filter((link) => link.resolvedPath)
-      .map((link) => [link.raw, link.resolvedPath === relativePath ? newPath : link.resolvedPath]),
-  );
-  const ownContent = rewriteLinks(
-    withTypeAndSubtype(current.content, section.type, location.subfolder),
-    (link) =>
-      link.syntax === 'markdown' && resolvedByRaw.has(link.raw)
-        ? toMarkdownHref(path.posix.dirname(newPath), resolvedByRaw.get(link.raw), link.raw)
-        : null,
-    { sourcePath: relativePath },
-  ).content;
-
+  const isNote = relativePath.toLocaleLowerCase().endsWith(MARKDOWN_EXTENSION);
   const rawsBySource = groupRawsBySource(vaultIndexModel.listIncomingLinks(relativePath));
-  await documentModel.renameDocumentFile(vaultPath, relativePath, newPath);
-  if (ownContent !== current.content) {
-    await documentModel.writeDocument(vaultPath, newPath, ownContent, current.contentHash);
+  if (isNote) {
+    await moveNoteFile(vaultPath, relativePath, newPath, section, location.subfolder);
+  } else {
+    await documentModel.moveVaultFile(vaultPath, relativePath, newPath);
   }
 
   const updatedPaths = [];
@@ -251,7 +270,10 @@ async function move(payload) {
 
 /** Sub-type of a note created in `folderPath`: the sub-folder of its section, if it is in one. */
 function getSubtypeOfFolder(folderPath) {
-  return sectionModel.parseSectionFolder(folderPath)?.subfolder ?? null;
+  const location = sectionModel.parseSectionFolder(folderPath);
+  return location && !sectionModel.SPECIAL_SECTION_KEYS.includes(location.section)
+    ? location.subfolder
+    : null;
 }
 
 async function read(payload) {

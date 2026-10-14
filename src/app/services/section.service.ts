@@ -29,6 +29,8 @@ export interface AppSection {
   readonly customLabel: string | null;
   readonly isCustom: boolean;
   readonly isHidden: boolean;
+  /** Assets and encounters: *New folder* and *Import* but no *New note*; sub-folders are not sub-types. */
+  readonly isSpecial: boolean;
   readonly fileCount: number;
 }
 
@@ -94,6 +96,7 @@ function toAppSection(section: DefaultSectionDto | SectionDto): AppSection {
     customLabel: settings?.label ?? null,
     isCustom: settings?.isCustom ?? false,
     isHidden: settings?.isHidden ?? false,
+    isSpecial: section.isSpecial === true,
     fileCount: settings?.fileCount ?? 0,
   };
 }

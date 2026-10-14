@@ -1,10 +1,10 @@
 import { Component, DestroyRef, inject, signal, ViewEncapsulation } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 
-import { AppSheetService } from '@/services/app-sheet.service';
+import { type AppSheetKind, AppSheetService } from '@/services/app-sheet.service';
 import { VaultService } from '@/services/vault.service';
 import { ArcTechButtonComponent } from '@/shared/components/button';
-import { ArcTechIconComponent } from '@/shared/components/icon';
+import { ArcTechIconComponent, type ArcTechIcon } from '@/shared/components/icon';
 import { ArcTechTooltipImports } from '@/shared/components/tooltip';
 
 const MAXIMIZED_CHANGED_EVENT = 'window:maximizedChanged';
@@ -25,6 +25,16 @@ const FULLSCREEN_CHANGED_EVENT = 'window:fullscreenChanged';
 })
 export class Header {
   protected readonly sheets = inject(AppSheetService);
+  /** Title-bar buttons of the full-page sheets: icon only, the name is the tooltip. */
+  protected readonly sheetButtons: readonly {
+    kind: AppSheetKind;
+    label: string;
+    icon: ArcTechIcon;
+  }[] = [
+    { kind: 'compendium', label: 'nav.items.compendium', icon: 'library-big' },
+    { kind: 'templates', label: 'nav.items.templates', icon: 'layout-template' },
+    { kind: 'settings', label: 'nav.items.settings', icon: 'settings' },
+  ];
   protected readonly vault = inject(VaultService).currentVault;
   protected readonly isDesktop = Boolean(window.electronAPI);
   protected readonly isMac = window.electronAPI?.platform === 'darwin';

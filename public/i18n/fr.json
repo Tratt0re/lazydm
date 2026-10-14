@@ -101,8 +101,7 @@
         "noCampaignTitle": "Aucune campagne ouverte",
         "noCampaignDescription": "Ouvrez une campagne, puis revenez ici pour choisir le modèle de chaque type de note.",
         "saved": "Choix du modèle enregistré",
-        "saveError": "Impossible d’enregistrer le choix du modèle",
-        "openLibrary": "Ouvrir la bibliothèque de modèles"
+        "saveError": "Impossible d’enregistrer le choix du modèle"
       },
       "library": {
         "empty": "Sélectionnez un modèle pour le voir ou le modifier."
@@ -338,7 +337,8 @@
         "nameLabel": "Nom",
         "namePlaceholder": "ex. Humains",
         "submit": "Créer le dossier",
-        "error": "Impossible de créer le dossier"
+        "error": "Impossible de créer le dossier",
+        "specialDescription": "Un sous-dossier de {{section}} pour ranger ses fichiers. Un seul niveau."
       },
       "folderFiles": "{{count}} fichiers",
       "foldersAriaLabel": "Sous-dossiers"

@@ -16,11 +16,19 @@ const DEFAULT_SECTIONS = Object.freeze([
   { key: 'quests', type: 'quest', icon: 'scroll-text' },
   { key: 'locations', type: 'location', icon: 'map-pin' },
   { key: 'world', type: 'world', icon: 'globe' },
-  { key: 'encounters', type: 'encounter', icon: 'swords' },
+  { key: 'encounters', type: 'encounter', icon: 'swords', isSpecial: true },
   { key: 'handouts', type: 'handout', icon: 'mail-open' },
   { key: 'sessions', type: 'session', icon: 'calendar' },
-  { key: 'assets', type: null, icon: 'image' },
+  { key: 'assets', type: null, icon: 'image', isSpecial: true },
 ]);
+
+/**
+ * Sections that do not hold plain notes (encounters are special files, assets are any other file): no
+ * *New note*, and their sub-folders only organise files — they are not sub-types.
+ */
+const SPECIAL_SECTION_KEYS = Object.freeze(
+  DEFAULT_SECTIONS.filter((section) => section.isSpecial).map((section) => section.key),
+);
 
 /** Folders a compendium system can have besides the default sections: notes whose type has no section. */
 const COMPENDIUM_EXTRA_SECTIONS = Object.freeze([{ key: 'notes', type: null, icon: 'file-text' }]);
@@ -100,10 +108,11 @@ function listCampaignSections(rootPath, campaignSlug) {
   const sections = [
     ...DEFAULT_SECTIONS.map((section) => ({
       ...section,
+      isSpecial: section.isSpecial === true,
       label: settings.labels[section.key] ?? null,
       isCustom: false,
     })),
-    ...settings.custom.map((section) => ({ ...section, isCustom: true })),
+    ...settings.custom.map((section) => ({ ...section, isSpecial: false, isCustom: true })),
   ];
   const rank = (key) => {
     const index = settings.order.indexOf(key);
@@ -272,6 +281,7 @@ function listScopeSections(rootPath, scope) {
 module.exports = {
   COMPENDIUM_EXTRA_SECTIONS,
   DEFAULT_SECTIONS,
+  SPECIAL_SECTION_KEYS,
   findSectionKeyForType,
   listCampaignNoteTypes,
   listCampaignSections,

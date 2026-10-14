@@ -90,8 +90,8 @@ async function list(payload) {
     }
 
     const section = sectionByKey.get(segments[0]);
-    if (!section || !section.type || /^[._]/.test(segments[0])) {
-      continue; // unknown folders are listed as folders below; assets and notes/ hold no typed notes
+    if (!section || !section.type || section.isSpecial || /^[._]/.test(segments[0])) {
+      continue; // unknown folders are listed below; special sections (assets, encounters) and notes/ are not typed notes
     }
 
     if (segments.length > 3) {
@@ -100,7 +100,10 @@ async function list(payload) {
       continue;
     }
 
-    const location = { section: section.key, subfolder: segments.length === 3 ? segments[1] : null };
+    const location = {
+      section: section.key,
+      subfolder: segments.length === 3 ? segments[1] : null,
+    };
     if (!item.type) {
       review.untyped.push({ ...item, ...location, sectionType: section.type });
     } else if (item.type !== section.type) {
@@ -111,7 +114,8 @@ async function list(payload) {
         typeSection: sectionKeyOfType(item.type),
       });
     } else if (
-      (item.subtype?.toLocaleLowerCase() ?? null) !== (location.subfolder?.toLocaleLowerCase() ?? null)
+      (item.subtype?.toLocaleLowerCase() ?? null) !==
+      (location.subfolder?.toLocaleLowerCase() ?? null)
     ) {
       review.wrongSubtype.push({ ...item, ...location, sectionType: section.type });
     }
@@ -121,7 +125,10 @@ async function list(payload) {
     const folders = await documentModel.listSubfolders(vaultPath, scope);
     review.unknownFolders = folders
       .filter((name) => !sectionByKey.has(name))
-      .map((name) => ({ name, fileCount: vaultIndexModel.listFolderFiles(`${scope}/${name}`).length }));
+      .map((name) => ({
+        name,
+        fileCount: vaultIndexModel.listFolderFiles(`${scope}/${name}`).length,
+      }));
   }
 
   review.tooDeep = [...deepFolders].map(([folder, fileCount]) => ({ folder, fileCount }));

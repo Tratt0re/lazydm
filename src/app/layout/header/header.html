@@ -11,45 +11,24 @@
       class="window-no-drag flex items-center gap-1"
       [attr.aria-label]="'header.sheetsAriaLabel' | translate"
     >
-      <button
-        type="button"
-        arc-button
-        arcType="ghost"
-        arcSize="sm"
-        class="h-8 font-mono text-[11px] tracking-[0.04em] normal-case"
-        [class.text-primary]="sheets.activeKind() === 'compendium'"
-        [attr.aria-pressed]="sheets.activeKind() === 'compendium'"
-        (click)="sheets.toggle('compendium')"
-      >
-        <arc-icon arcType="library-big" />
-        {{ 'nav.items.compendium' | translate }}
-      </button>
-      <button
-        type="button"
-        arc-button
-        arcType="ghost"
-        arcSize="sm"
-        class="h-8 font-mono text-[11px] tracking-[0.04em] normal-case"
-        [class.text-primary]="sheets.activeKind() === 'templates'"
-        [attr.aria-pressed]="sheets.activeKind() === 'templates'"
-        (click)="sheets.toggle('templates')"
-      >
-        <arc-icon arcType="layout-template" />
-        {{ 'nav.items.templates' | translate }}
-      </button>
-      <button
-        type="button"
-        arc-button
-        arcType="ghost"
-        arcSize="sm"
-        class="h-8 font-mono text-[11px] tracking-[0.04em] normal-case"
-        [class.text-primary]="sheets.activeKind() === 'settings'"
-        [attr.aria-pressed]="sheets.activeKind() === 'settings'"
-        (click)="sheets.toggle('settings')"
-      >
-        <arc-icon arcType="settings" />
-        {{ 'nav.items.settings' | translate }}
-      </button>
+      @for (sheet of sheetButtons; track sheet.kind) {
+        @let isOpen = sheets.activeKind() === sheet.kind;
+        <button
+          type="button"
+          arc-button
+          arcType="ghost"
+          arcSize="sm"
+          class="size-8"
+          [class.text-primary]="isOpen"
+          [attr.aria-pressed]="isOpen"
+          [attr.aria-label]="sheet.label | translate"
+          arcPosition="bottom"
+          [arcTooltip]="sheet.label | translate"
+          (click)="sheets.toggle(sheet.kind)"
+        >
+          <arc-icon [arcType]="sheet.icon" />
+        </button>
+      }
     </nav>
   }
 

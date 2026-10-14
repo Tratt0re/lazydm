@@ -153,6 +153,17 @@ async function createDocument(rootPath, { folderPath, slug, title, type, section
   return readDocument(rootPath, relativePath);
 }
 
+/** Moves any vault file (an asset) to another vault path, creating its folder; never overwrites. */
+async function moveVaultFile(rootPath, fromPath, toPath) {
+  const toAbsolutePath = resolveInsideVault(rootPath, toPath);
+  if (fs.existsSync(toAbsolutePath)) {
+    throw new Error(`A file named "${path.posix.basename(toPath)}" already exists in ${path.posix.dirname(toPath)}.`);
+  }
+
+  await fs.promises.mkdir(path.dirname(toAbsolutePath), { recursive: true });
+  await fs.promises.rename(resolveInsideVault(rootPath, fromPath), toAbsolutePath);
+}
+
 /** Sub-folders of a vault folder (hidden and `_` folders left out), by name; none when it does not exist yet. */
 async function listSubfolders(rootPath, folderPath) {
   try {
@@ -187,6 +198,7 @@ module.exports = {
   createDocument,
   createFolder,
   listSubfolders,
+  moveVaultFile,
   readDocument,
   renameDocumentFile,
   saveDocumentCopy,

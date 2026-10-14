@@ -3,6 +3,8 @@ export interface DefaultSectionDto {
   readonly key: string;
   readonly type: string | null;
   readonly icon: string;
+  /** Assets and encounters: no plain notes; their sub-folders only organise files (not sub-types). */
+  readonly isSpecial?: boolean;
 }
 
 /** A section of a campaign with its settings applied (`.lazydm/vault.json` → `sections.campaigns.<slug>`). */

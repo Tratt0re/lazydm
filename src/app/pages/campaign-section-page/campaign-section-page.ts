@@ -219,8 +219,8 @@ export class CampaignSectionPage {
       action: () => this.openImportSheet(),
     });
 
-    // Sub-folders are sub-types of the section's notes, one level deep.
-    if (noteType && !this.subfolder()) {
+    // One level of sub-folders: sub-types of a section's notes, plain folders in special sections.
+    if ((noteType || section?.isSpecial) && !this.subfolder()) {
       actions.push({
         id: 'section-new-folder',
         label: 'campaigns.sections.newFolder.button',
@@ -230,7 +230,7 @@ export class CampaignSectionPage {
       });
     }
 
-    if (noteType) {
+    if (noteType && !section?.isSpecial) {
       actions.push({
         id: 'section-new-note',
         label: 'campaigns.sections.newNote.create',
@@ -291,9 +291,12 @@ export class CampaignSectionPage {
     let isSubmitting = false;
     const sheetRef = this.sheetFormService.open({
       arcTitle: this.translateService.instant('campaigns.sections.newFolder.title'),
-      arcDescription: this.translateService.instant('campaigns.sections.newFolder.description', {
-        section: this.sectionLabel(),
-      }),
+      arcDescription: this.translateService.instant(
+        this.section()?.isSpecial
+          ? 'campaigns.sections.newFolder.specialDescription'
+          : 'campaigns.sections.newFolder.description',
+        { section: this.sectionLabel() },
+      ),
       arcOkText: this.translateService.instant('campaigns.sections.newFolder.submit'),
       arcCancelText: this.translateService.instant('campaigns.sections.newNote.cancel'),
       fields: [

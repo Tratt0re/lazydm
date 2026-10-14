@@ -101,8 +101,7 @@
         "noCampaignTitle": "No campaign open",
         "noCampaignDescription": "Open a campaign, then come back here to choose which template each note type uses.",
         "saved": "Template choice saved",
-        "saveError": "Could not save the template choice",
-        "openLibrary": "Open template library"
+        "saveError": "Could not save the template choice"
       },
       "library": {
         "empty": "Select a template to view or edit it."
@@ -338,7 +337,8 @@
         "nameLabel": "Name",
         "namePlaceholder": "e.g. Humans",
         "submit": "Create folder",
-        "error": "Couldn't create the folder"
+        "error": "Couldn't create the folder",
+        "specialDescription": "A sub-folder of {{section}} to organise its files. One level only."
       },
       "folderFiles": "{{count}} files",
       "foldersAriaLabel": "Sub-folders"

@@ -101,8 +101,7 @@
         "noCampaignTitle": "Keine Kampagne geöffnet",
         "noCampaignDescription": "Öffne eine Kampagne und komm dann hierher zurück, um die Vorlage für jeden Notiztyp zu wählen.",
         "saved": "Vorlagenwahl gespeichert",
-        "saveError": "Vorlagenwahl konnte nicht gespeichert werden",
-        "openLibrary": "Vorlagenbibliothek öffnen"
+        "saveError": "Vorlagenwahl konnte nicht gespeichert werden"
       },
       "library": {
         "empty": "Wähle eine Vorlage, um sie anzusehen oder zu bearbeiten."
@@ -338,7 +337,8 @@
         "nameLabel": "Name",
         "namePlaceholder": "z. B. Menschen",
         "submit": "Ordner erstellen",
-        "error": "Der Ordner konnte nicht erstellt werden"
+        "error": "Der Ordner konnte nicht erstellt werden",
+        "specialDescription": "Ein Unterordner von {{section}}, um seine Dateien zu ordnen. Nur eine Ebene."
       },
       "folderFiles": "{{count}} Dateien",
       "foldersAriaLabel": "Unterordner"

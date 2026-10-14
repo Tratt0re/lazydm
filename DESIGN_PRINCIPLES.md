@@ -76,7 +76,10 @@ LazyDM works like **Obsidian**, specialised for Dungeon Masters.
   The section page lists its sub-folders (with file counts) above its notes; a sub-folder opens on the same page
   (`/<section>?folder=<name>`, breadcrumb `CAMPAIGN / SECTION /`), where *New note* creates notes in it and *New
   folder* is not offered (one level). A note in a sub-folder opens at `/<section>/<sub-folder>/<note>` with the
-  breadcrumb `CAMPAIGN / SECTION / SUB-FOLDER /`. Sections without notes (assets) have no sub-folders.
+  breadcrumb `CAMPAIGN / SECTION / SUB-FOLDER /`.
+- **Special sections**: *Assets* (any non-`.md` file) and *Encounters* (special files) hold no plain notes — they
+  offer *New folder* and *Import* but no *New note*; their sub-folders only organise files (no `subtype`), and the
+  Review page does not check them.
 - **Enemies** (formerly *Monsters*): folder `enemies/`, type `enemy`. `type: monster` is still read as `enemy`, so
   old files coming back through sync are not misplaced. A one-time migration (vault format version in
   `vault.json`) renames `monsters/` → `enemies/` in campaigns and systems and rewrites `type:`, the template rules,
@@ -256,7 +259,7 @@ Planned Electron modules: `vault`, `cloud-readiness`, `campaign`, `document`, `i
     *Used in <campaign> for* with one toggle per note type to link / unlink it. Unsaved edits are saved when another
     template is selected or the sheet is left, like notes.
   - **Settings → Templates**: the per-type choices of the campaign under the sheet (a hint when opened from the
-    campaign list) and a button that opens the Templates sheet.
+    campaign list); the Templates sheet itself opens from the title bar.
   - **Campaign section pages**: a *Template* select in the toolbar for the section's note type (Automatic, Built-in,
     the vault's, the systems' and the campaign's own templates).
 - **Section pages keep their actions in the toolbar** (template select, *Import*, *New note*), never in a button
@@ -313,6 +316,8 @@ Planned Electron modules: `vault`, `cloud-readiness`, `campaign`, `document`, `i
   in the toolbar, so a restored tab always tells where it points.
 - **Leaving a note with unsaved edits autosaves it** (tab switch, link, sidebar). If the save hits a conflict or an
   error, the navigation is cancelled and the conflict sheet / error toast is shown.
+- **Title bar**: the Compendium, Templates and Settings sheet buttons are square icon buttons (tooltip and
+  accessible name from the label).
 - **Note toolbar**: the note actions (*Links*, *Copy to compendium / campaign*, *Rename*, *Save*) are square icon
   buttons (tooltip and accessible name from the label).
 - **Editor**: CodeMirror 6 with three views, switched by three toggle buttons in a row above the editor (not a
