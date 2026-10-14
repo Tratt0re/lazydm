@@ -1,7 +1,7 @@
 import type { Routes, UrlMatchResult, UrlSegment } from '@angular/router';
 
 import { openInSheetGuard } from '@/guards/app-sheet.guard';
-import { CAMPAIGN_SLUG_PARAM, campaignGuard } from '@/guards/campaign.guard';
+import { CAMPAIGN_SLUG_PARAM, campaignEntryGuard, campaignGuard } from '@/guards/campaign.guard';
 import { documentLeaveGuard } from '@/guards/document-leave.guard';
 import { SYSTEM_SLUG_PARAM, systemGuard } from '@/guards/system.guard';
 import { vaultGuard } from '@/guards/vault.guard';
@@ -154,6 +154,7 @@ export const routes: Routes = [
               {
                 path: '',
                 pathMatch: 'full',
+                canActivate: [campaignEntryGuard],
                 loadComponent: () =>
                   import('./pages/campaign-home-page/campaign-home-page').then(
                     (m) => m.CampaignHomePage,

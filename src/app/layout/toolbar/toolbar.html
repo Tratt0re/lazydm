@@ -16,7 +16,7 @@
                 <ol
                   class="flex items-center gap-1.5 overflow-hidden font-mono text-[10px] leading-none font-semibold tracking-[0.08em] text-muted-foreground uppercase"
                 >
-                  @for (item of titleBreadcrumbs(); track item.path ?? item.label) {
+                  @for (item of titleBreadcrumbs(); track $index) {
                     <li class="flex min-w-0 items-center gap-1.5">
                       @if (item.path) {
                         <a

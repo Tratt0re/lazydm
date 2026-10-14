@@ -120,6 +120,26 @@ export class WorkspaceService extends BaseIpcService<APIChannel.WORKSPACE> {
     return segments.length > 3 ? decodeURIComponent(segments[segments.length - 1]) : '';
   }
 
+  /**
+   * Entering a campaign from outside it through its root: the URL of its saved active tab, so the router can go
+   * there directly instead of showing the Overview first; null when it is the Overview or nothing was saved.
+   */
+  async getEntryUrl(slug: string): Promise<string | null> {
+    if (slug === this.campaignSlugSignal()) {
+      return null;
+    }
+
+    try {
+      const workspace = await this.ipcClient.get({ campaign: slug });
+      const tabs = workspace?.tabs ?? [];
+      const tab = tabs.find((item) => item.id === workspace?.activeTabId) ?? tabs[0];
+      const url = tab ? getTabUrl(tab) : null;
+      return url && toPath(url) !== `/campaigns/${encodeURIComponent(slug)}` ? url : null;
+    } catch {
+      return null;
+    }
+  }
+
   /** Opens a tab; in the background it is only added, otherwise it becomes the active tab. */
   async openTab(
     url = this.getCampaignRoot(),
