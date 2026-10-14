@@ -616,10 +616,7 @@
       "done": "{{name}} aggiunta alle sezioni"
     }
   },
-  "sidebar": {
-    "collapseSection": "Comprimi {{section}}",
-    "expandSection": "Mostra file in {{section}}"
-  },
+  "sidebar": {},
   "search": {
     "placeholder": "Cerca nella campagna…",
     "label": "Cerca nella campagna",
@@ -627,5 +624,10 @@
     "noResults": "Nessun risultato per \"{{term}}\"",
     "resultsLabel": "Risultati della ricerca",
     "hint": "↑↓ Naviga · Invio apri · Esc chiudi"
+  },
+  "explorer": {
+    "openPage": "Apri pagina",
+    "openPageOf": "Apri {{name}}",
+    "empty": "Cartella vuota"
   }
 }

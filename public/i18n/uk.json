@@ -616,10 +616,7 @@
       "done": "{{name}} додано до розділів"
     }
   },
-  "sidebar": {
-    "collapseSection": "Згорнути {{section}}",
-    "expandSection": "Показати файли у {{section}}"
-  },
+  "sidebar": {},
   "search": {
     "placeholder": "Пошук у кампанії…",
     "label": "Пошук у кампанії",
@@ -627,5 +624,10 @@
     "noResults": "Немає результатів для «{{term}}»",
     "resultsLabel": "Результати пошуку",
     "hint": "↑↓ Навігація · Enter відкрити · Esc закрити"
+  },
+  "explorer": {
+    "openPage": "Відкрити сторінку",
+    "openPageOf": "Відкрити {{name}}",
+    "empty": "Порожня тека"
   }
 }

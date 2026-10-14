@@ -616,10 +616,7 @@
       "done": "{{name}} added to the sections"
     }
   },
-  "sidebar": {
-    "collapseSection": "Collapse {{section}}",
-    "expandSection": "Show files in {{section}}"
-  },
+  "sidebar": {},
   "search": {
     "placeholder": "Search campaign…",
     "label": "Search campaign",
@@ -627,5 +624,10 @@
     "noResults": "No results for \"{{term}}\"",
     "resultsLabel": "Search results",
     "hint": "↑↓ Navigate · Enter open · Esc close"
+  },
+  "explorer": {
+    "openPage": "Open page",
+    "openPageOf": "Open {{name}}",
+    "empty": "Empty folder"
   }
 }

@@ -616,10 +616,7 @@
       "done": "已将 {{name}} 添加到分区"
     }
   },
-  "sidebar": {
-    "collapseSection": "折叠 {{section}}",
-    "expandSection": "显示 {{section}} 中的文件"
-  },
+  "sidebar": {},
   "search": {
     "placeholder": "搜索当前活动…",
     "label": "搜索当前活动",
@@ -627,5 +624,10 @@
     "noResults": "没有找到\"{{term}}\"的结果",
     "resultsLabel": "搜索结果",
     "hint": "↑↓ 导航 · Enter 打开 · Esc 关闭"
+  },
+  "explorer": {
+    "openPage": "打开页面",
+    "openPageOf": "打开 {{name}}",
+    "empty": "空文件夹"
   }
 }

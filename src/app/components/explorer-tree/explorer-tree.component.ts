@@ -1,0 +1,257 @@
+import { NgTemplateOutlet } from '@angular/common';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  DestroyRef,
+  computed,
+  effect,
+  inject,
+  input,
+  output,
+  signal,
+  untracked,
+} from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { NavigationEnd, Router, RouterLink } from '@angular/router';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { filter, map } from 'rxjs';
+
+import { toInAppNoteRoute } from '@/components/document-preview/document-preview.markdown';
+import type { DocumentFileListItemDto, DocumentFolderDto } from '@/dtos';
+import { CopyToService } from '@/services/copy-to.service';
+import { DocumentService } from '@/services/document.service';
+import { FileMoveService } from '@/services/file-move.service';
+import { toSubfolderLabel } from '@/services/section.service';
+import { ArcTechIconComponent, type ArcTechIcon } from '@/shared/components/icon';
+import { ArcTechMenuImports } from '@/shared/components/menu';
+import { ArcTechTooltipImports } from '@/shared/components/tooltip';
+import { mergeClasses } from '@/shared/utils/merge-classes';
+
+/** Query parameter of the sub-folder a section page shows (`?folder=humans`). */
+const FOLDER_QUERY_PARAM = 'folder';
+
+/**
+ * A row of the explorer. With `children` it is a static folder (a compendium system and its sections); with a
+ * `path` and no children it is a section folder, loading its sub-folders and files when expanded; with neither it
+ * is a plain link (Overview, All systems).
+ */
+export interface ExplorerNode {
+  readonly key: string;
+  /** i18n key, or the text itself when `translate` is false. */
+  readonly label: string;
+  readonly translate?: boolean;
+  readonly icon: ArcTechIcon;
+  /** Page of the node: the ↗ button and *Open page* go there. */
+  readonly route: string;
+  /** Vault-relative folder (`lost-mine/enemies`, `compendium/srd`): loaded as a section, and *Reveal*. */
+  readonly path?: string;
+  readonly children?: readonly ExplorerNode[];
+}
+
+interface SectionTree {
+  readonly files: readonly DocumentFileListItemDto[];
+  readonly folders: readonly (DocumentFolderDto & { files: readonly DocumentFileListItemDto[] })[];
+}
+
+/**
+ * Explorer sidebar (campaign shell, Compendium sheet): a file tree like a code editor's. Folder rows expand on
+ * click; the ↗ button on their right opens the folder's page. Files open the note. Right-click: *Move to…* and
+ * *Reveal* on files (*Copy to…* on assets), *Open page* and *Reveal* on folders. The folder holding the open page
+ * expands by itself.
+ */
+@Component({
+  selector: 'app-explorer-tree',
+  imports: [
+    NgTemplateOutlet,
+    RouterLink,
+    TranslatePipe,
+    ArcTechIconComponent,
+    ArcTechMenuImports,
+    ArcTechTooltipImports,
+  ],
+  templateUrl: './explorer-tree.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {
+    class: 'block',
+  },
+})
+export class AppExplorerTreeComponent {
+  private readonly router = inject(Router);
+  private readonly documentService = inject(DocumentService);
+  private readonly translateService = inject(TranslateService);
+  protected readonly fileMove = inject(FileMoveService);
+  protected readonly copyTo = inject(CopyToService);
+  protected readonly toSubfolderLabel = toSubfolderLabel;
+
+  readonly nodes = input.required<readonly ExplorerNode[]>();
+  /** Router outlet whose URL marks the active row: `primary` (campaign) or the sheet outlet (Compendium). */
+  readonly outlet = input('primary');
+  readonly ariaLabel = input('');
+
+  /** A link of the tree was followed (lets a small-screen sidebar close itself). */
+  readonly navigated = output<void>();
+
+  private readonly url = toSignal(
+    this.router.events.pipe(
+      filter((event) => event instanceof NavigationEnd),
+      map(() => this.router.url),
+    ),
+    { initialValue: this.router.url },
+  );
+  /** Path of the outlet (`/campaigns/lost-mine/enemies`) and the sub-folder query, if any. */
+  private readonly location = computed(() => {
+    const tree = this.router.parseUrl(this.url());
+    const segments = tree.root.children[this.outlet()]?.segments ?? [];
+    const folder = tree.queryParams[FOLDER_QUERY_PARAM];
+    return {
+      path: `/${segments.map((segment) => segment.path).join('/')}`,
+      folder: typeof folder === 'string' ? folder : null,
+    };
+  });
+
+  /** Expanded rows: node keys, and `<section key>/<sub-folder>` for sub-folders. */
+  private readonly expandedKeys = signal<ReadonlySet<string>>(new Set());
+  /** Loaded section trees, by section path. */
+  private readonly trees = signal<ReadonlyMap<string, SectionTree>>(new Map());
+
+  private readonly handleIndexUpdated = () => {
+    for (const path of this.trees().keys()) {
+      void this.loadTree(path);
+    }
+  };
+
+  constructor() {
+    window.electronAPI?.onIpcEvent?.('index:updated', this.handleIndexUpdated);
+    inject(DestroyRef).onDestroy(() =>
+      window.electronAPI?.offIpcEvent?.('index:updated', this.handleIndexUpdated),
+    );
+
+    // Reveal the open page: expand every folder on its way (on navigation only, so a collapse sticks).
+    effect(() => {
+      const location = this.location();
+      const nodes = this.nodes();
+      untracked(() => this.revealLocation(nodes, location.path, location.folder));
+    });
+  }
+
+  protected labelOf(node: ExplorerNode): string {
+    return node.translate === false ? node.label : this.translateService.instant(node.label);
+  }
+
+  /** A row: top-level rows in the sidebar's label style, nested ones lighter; the active one raised in bronze. */
+  protected rowClass(isActive: boolean, isTop: boolean): string {
+    return mergeClasses(
+      'flex h-8 min-w-0 items-center border-l-2 font-mono text-[11px] tracking-[0.04em] transition-colors duration-150 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-ring',
+      isTop ? 'h-10 font-semibold' : 'font-medium',
+      isActive
+        ? 'border-l-sidebar-primary bg-raised text-sidebar-primary'
+        : 'border-l-transparent text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground',
+    );
+  }
+
+  protected isExpanded(key: string): boolean {
+    return this.expandedKeys().has(key);
+  }
+
+  protected toggle(key: string, sectionPath?: string): void {
+    const next = new Set(this.expandedKeys());
+    if (!next.delete(key)) {
+      next.add(key);
+      if (sectionPath && !this.trees().has(sectionPath)) {
+        void this.loadTree(sectionPath);
+      }
+    }
+    this.expandedKeys.set(next);
+  }
+
+  protected treeOf(node: ExplorerNode): SectionTree | null {
+    return node.path ? (this.trees().get(node.path) ?? null) : null;
+  }
+
+  protected isActive(route: string, folder: string | null = null): boolean {
+    const location = this.location();
+    return location.path === route && location.folder === folder;
+  }
+
+  protected noteRoute(file: DocumentFileListItemDto): string | null {
+    return toInAppNoteRoute(file.path);
+  }
+
+  /** The sub-folder of the section a file is in (`null` directly in it): where an asset row links to. */
+  protected folderQueryOf(node: ExplorerNode, file: DocumentFileListItemDto): Record<string, string> {
+    const folder = node.path ? this.fileMove.folderOf(file.path, node.path) : '';
+    return folder ? { [FOLDER_QUERY_PARAM]: folder } : {};
+  }
+
+  protected copyLabel(file: DocumentFileListItemDto): string {
+    return this.copyTo.isInCompendium(file.path)
+      ? 'compendium.copy.toCampaign'
+      : 'compendium.copy.toCompendium';
+  }
+
+  protected openMoveSheet(node: ExplorerNode, file: DocumentFileListItemDto): void {
+    const path = node.path;
+    if (!path) {
+      return;
+    }
+
+    this.fileMove.openMoveSheet(
+      file,
+      {
+        path,
+        label: this.labelOf(node),
+        folders: this.treeOf(node)?.folders.map((folder) => folder.name) ?? [],
+      },
+      () => void this.loadTree(path),
+    );
+  }
+
+  private revealLocation(nodes: readonly ExplorerNode[], path: string, folder: string | null): void {
+    const keys = new Set(this.expandedKeys());
+    const visit = (items: readonly ExplorerNode[]) => {
+      for (const node of items) {
+        const isInside = path === node.route || path.startsWith(`${node.route}/`);
+        if (!isInside || (!node.children && !node.path)) {
+          continue;
+        }
+
+        if (node.children) {
+          if (path !== node.route) {
+            keys.add(node.key);
+          }
+          visit(node.children);
+          continue;
+        }
+
+        // A section: open on its notes and sub-folder pages, not on the section page itself.
+        const rest = path.slice(node.route.length + 1).split('/').filter(Boolean);
+        const subfolder = rest.length === 2 ? rest[0] : path === node.route ? folder : null;
+        if (rest.length > 0 || subfolder) {
+          keys.add(node.key);
+          if (subfolder) {
+            keys.add(`${node.key}/${subfolder}`);
+          }
+          if (node.path && !this.trees().has(node.path)) {
+            void this.loadTree(node.path);
+          }
+        }
+      }
+    };
+
+    visit(nodes);
+    if (keys.size !== this.expandedKeys().size) {
+      this.expandedKeys.set(keys);
+    }
+  }
+
+  private async loadTree(path: string): Promise<void> {
+    try {
+      const tree = await this.documentService.listSectionTree(path);
+      const next = new Map(this.trees());
+      next.set(path, tree);
+      this.trees.set(next);
+    } catch (error) {
+      console.warn('[app] Failed to load the explorer folder:', path, error);
+    }
+  }
+}

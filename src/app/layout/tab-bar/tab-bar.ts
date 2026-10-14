@@ -101,7 +101,8 @@ export class TabBar {
 
   /** Right-click on a tab or on a campaign link opens the matching menu. */
   private readonly handleContextMenu = (event: MouseEvent) => {
-    if (!this.workspace.isVisible()) {
+    // Rows with their own right-click menu (explorer, section page) keep it.
+    if (!this.workspace.isVisible() || (event.target as Element | null)?.closest?.('[arc-context-menu]')) {
       return;
     }
 

@@ -616,10 +616,7 @@
       "done": "{{name}} zu den Bereichen hinzugefügt"
     }
   },
-  "sidebar": {
-    "collapseSection": "{{section}} zuklappen",
-    "expandSection": "Dateien in {{section}} anzeigen"
-  },
+  "sidebar": {},
   "search": {
     "placeholder": "Kampagne durchsuchen…",
     "label": "Kampagne durchsuchen",
@@ -627,5 +624,10 @@
     "noResults": "Keine Ergebnisse für „{{term}}\"",
     "resultsLabel": "Suchergebnisse",
     "hint": "↑↓ Navigieren · Enter öffnen · Esc schließen"
+  },
+  "explorer": {
+    "openPage": "Seite öffnen",
+    "openPageOf": "{{name}} öffnen",
+    "empty": "Leerer Ordner"
   }
 }
