@@ -1,5 +1,12 @@
 @if (section(); as section) {
-  <div class="mx-auto flex w-full max-w-5xl flex-col gap-4 p-6">
+  <!-- On the Assets section, files from the file manager can be dropped anywhere on the page. -->
+  <div
+    class="mx-auto flex w-full max-w-5xl flex-col gap-4 p-6 outline-2 -outline-offset-2 transition-[outline-color]"
+    [class]="isFileDragOverPage() ? 'outline-dashed outline-primary' : 'outline-transparent'"
+    (dragover)="onPageDragOver($event)"
+    (dragleave)="onPageDragLeave($event)"
+    (drop)="onPageDrop($event)"
+  >
     @if (errorMessage(); as message) {
       <arc-alert
         arcType="destructive"

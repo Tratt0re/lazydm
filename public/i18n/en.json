@@ -771,6 +771,15 @@
       "clashes": "Some names are already taken in the main folder — rename those files first",
       "done": "Folder {{name}} moved to the Trash",
       "error": "Couldn't delete the folder"
+    },
+    "importFromDisk": {
+      "button": "Import from disk",
+      "title": "Import from disk",
+      "description": "Images, PDFs and audio files are copied into {{folder}}. Your originals stay where they are.",
+      "dropHint": "Drop files here from Finder or your file manager — or drop them anywhere on the Assets page.",
+      "types": "PNG · JPG · GIF · WEBP · SVG · AVIF · PDF · MP3 · WAV · OGG · M4A · FLAC",
+      "select": "Select files…",
+      "skipped": "Not images, PDFs or audio — skipped"
     }
   }
 }

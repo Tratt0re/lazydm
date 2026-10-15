@@ -288,7 +288,7 @@ export class DocumentPage {
       void this.saveAssets(document.path, async () => {
         const saved: SavedAssetDto[] = [];
         for (const file of files) {
-          saved.push(await this.assetService.save(document.path, file));
+          saved.push(await this.assetService.save({ sourcePath: document.path }, file));
         }
         return saved;
       });
@@ -299,7 +299,7 @@ export class DocumentPage {
   protected importFiles(): void {
     const document = this.document();
     if (document) {
-      void this.saveAssets(document.path, () => this.assetService.importFiles(document.path));
+      void this.saveAssets(document.path, () => this.assetService.importFiles({ sourcePath: document.path }));
     }
   }
 

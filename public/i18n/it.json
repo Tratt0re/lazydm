@@ -771,6 +771,15 @@
       "clashes": "Alcuni nomi sono già presenti nella cartella principale — rinomina prima quei file",
       "done": "Cartella {{name}} spostata nel Cestino",
       "error": "Impossibile eliminare la cartella"
+    },
+    "importFromDisk": {
+      "button": "Importa dal disco",
+      "title": "Importa dal disco",
+      "description": "Immagini, PDF e file audio vengono copiati in {{folder}}. Gli originali restano dove sono.",
+      "dropHint": "Trascina qui i file dal Finder o dal gestore file, oppure rilasciali ovunque nella pagina Risorse.",
+      "types": "PNG · JPG · GIF · WEBP · SVG · AVIF · PDF · MP3 · WAV · OGG · M4A · FLAC",
+      "select": "Seleziona file…",
+      "skipped": "Non sono immagini, PDF o audio: ignorati"
     }
   }
 }

@@ -771,6 +771,15 @@
       "clashes": "Certains noms existent déjà dans le dossier principal — renommez d’abord ces fichiers",
       "done": "Dossier {{name}} mis à la Corbeille",
       "error": "Impossible de supprimer le dossier"
+    },
+    "importFromDisk": {
+      "button": "Importer depuis le disque",
+      "title": "Importer depuis le disque",
+      "description": "Les images, PDF et fichiers audio sont copiés dans {{folder}}. Vos originaux restent où ils sont.",
+      "dropHint": "Déposez ici des fichiers du Finder ou de votre gestionnaire de fichiers — ou n’importe où sur la page Ressources.",
+      "types": "PNG · JPG · GIF · WEBP · SVG · AVIF · PDF · MP3 · WAV · OGG · M4A · FLAC",
+      "select": "Choisir des fichiers…",
+      "skipped": "Ni images, ni PDF, ni audio — ignorés"
     }
   }
 }

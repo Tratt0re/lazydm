@@ -771,6 +771,15 @@
       "clashes": "Einige Namen gibt es im Hauptordner schon — benenne diese Dateien zuerst um",
       "done": "Ordner {{name}} in den Papierkorb verschoben",
       "error": "Der Ordner konnte nicht gelöscht werden"
+    },
+    "importFromDisk": {
+      "button": "Von Festplatte importieren",
+      "title": "Von Festplatte importieren",
+      "description": "Bilder, PDFs und Audiodateien werden nach {{folder}} kopiert. Deine Originale bleiben, wo sie sind.",
+      "dropHint": "Ziehe Dateien aus dem Finder oder Dateimanager hierher — oder lege sie irgendwo auf der Assets-Seite ab.",
+      "types": "PNG · JPG · GIF · WEBP · SVG · AVIF · PDF · MP3 · WAV · OGG · M4A · FLAC",
+      "select": "Dateien auswählen…",
+      "skipped": "Keine Bilder, PDFs oder Audiodateien — übersprungen"
     }
   }
 }

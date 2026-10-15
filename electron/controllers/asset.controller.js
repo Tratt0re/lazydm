@@ -4,7 +4,7 @@ const { dialog, net, protocol } = require('electron');
 const { pathToFileURL } = require('node:url');
 const { formatTimestampForFilename, resolveInsideVault } = require('../utils/file-utils');
 const { toSlug } = require('../utils/string-sanitize');
-const { documentModel, vaultIndexModel } = require('../models');
+const { documentModel, sectionModel, vaultIndexModel } = require('../models');
 const indexerController = require('./indexer.controller');
 const vaultController = require('./vault.controller');
 const { ensurePlainObject, normalizeOptionalString, requireString } = require('./utils');
@@ -100,6 +100,24 @@ function getAssetsFolder(sourcePath) {
 }
 
 /**
+ * Where media files of a request go: `folder` (the Assets section of a scope or one of its sub-folders, from
+ * the section page) or else the assets of the note `sourcePath` is (a paste, *Import file…* in the editor).
+ */
+function resolveAssetTarget(body) {
+  if (body.folder === undefined) {
+    return getAssetsFolder(requireString(body.sourcePath, 'payload.sourcePath'));
+  }
+
+  const folder = requireString(body.folder, 'payload.folder').replace(/\/+$/, '');
+  const location = sectionModel.parseSectionFolder(folder);
+  if (!location || location.section !== ASSETS_DIR_NAME) {
+    throw new Error(`Not the Assets section or one of its sub-folders: ${folder}`);
+  }
+
+  return { scope: location.scope, folder };
+}
+
+/**
  * The link that resolves to a new asset: its file name, or its scope-relative path when another file of
  * the scope has the same name (as the editor's link suggestions do).
  */
@@ -143,14 +161,14 @@ async function findIdenticalAsset(vaultPath, scope, bytes) {
  * screenshot), adding `-<timestamp>` when the name is taken; then indexes it so links resolve right away. A file
  * identical to an asset already in the scope is not saved again: that asset is returned (`isReused`).
  */
-async function saveAsset(sourcePath, fileName, mimeType, bytes) {
+async function saveAsset(target, fileName, mimeType, bytes) {
   if (bytes.byteLength === 0 || bytes.byteLength > ASSET_MAX_BYTES) {
     throw new Error(`Media files must be between 1 byte and ${ASSET_MAX_BYTES / 1024 / 1024} MB.`);
   }
 
   const vaultPath = vaultController.getReadyVaultPath();
   const { kind, extension } = getMediaType(fileName, mimeType);
-  const { scope, folder } = getAssetsFolder(sourcePath);
+  const { scope, folder } = target;
   const identicalPath = await findIdenticalAsset(vaultPath, scope, bytes);
   if (identicalPath) {
     return { path: identicalPath, linkTarget: getLinkTarget(scope, identicalPath), kind, isReused: true };
@@ -184,10 +202,13 @@ async function saveAsset(sourcePath, fileName, mimeType, bytes) {
   return { path: result.path, linkTarget: getLinkTarget(scope, result.path), kind, isReused: false };
 }
 
-/** A media file pasted into a note: `{ sourcePath, name, mimeType, bytes }` → the saved asset. */
+/**
+ * A media file pasted into a note or dropped on the Assets section: `{ sourcePath | folder, name, mimeType,
+ * bytes }` → the saved asset.
+ */
 async function save(payload) {
   const body = ensurePlainObject(payload, 'payload');
-  const sourcePath = requireString(body.sourcePath, 'payload.sourcePath');
+  const target = resolveAssetTarget(body);
   const name =
     normalizeOptionalString(body.name, 'payload.name', {
       allowEmpty: true,
@@ -199,14 +220,16 @@ async function save(payload) {
     throw new Error('payload.bytes must be the file content.');
   }
 
-  return saveAsset(sourcePath, name, mimeType, body.bytes);
+  return saveAsset(target, name, mimeType, body.bytes);
 }
 
-/** Media files picked in the system file dialog, saved as assets of the note's scope (none if cancelled). */
+/**
+ * Media files picked in the system file dialog, saved in the request's target (see `resolveAssetTarget`);
+ * none if cancelled.
+ */
 async function importFiles(payload) {
   const body = ensurePlainObject(payload, 'payload');
-  const sourcePath = requireString(body.sourcePath, 'payload.sourcePath');
-  getAssetsFolder(sourcePath);
+  const target = resolveAssetTarget(body);
 
   const result = await dialog.showOpenDialog({
     properties: ['openFile', 'multiSelections'],
@@ -226,7 +249,7 @@ async function importFiles(payload) {
     }
 
     const bytes = await fs.promises.readFile(filePath);
-    files.push(await saveAsset(sourcePath, path.basename(filePath), '', bytes));
+    files.push(await saveAsset(target, path.basename(filePath), '', bytes));
   }
   return { files };
 }

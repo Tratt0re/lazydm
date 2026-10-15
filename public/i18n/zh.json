@@ -771,6 +771,15 @@
       "clashes": "主文件夹中已有同名文件——请先重命名这些文件",
       "done": "文件夹 {{name}} 已移到废纸篓",
       "error": "无法删除文件夹"
+    },
+    "importFromDisk": {
+      "button": "从磁盘导入",
+      "title": "从磁盘导入",
+      "description": "图片、PDF 和音频文件会被复制到 {{folder}}。原文件保留在原处。",
+      "dropHint": "将文件从访达或文件管理器拖到这里，或拖到资源页面的任意位置。",
+      "types": "PNG · JPG · GIF · WEBP · SVG · AVIF · PDF · MP3 · WAV · OGG · M4A · FLAC",
+      "select": "选择文件…",
+      "skipped": "不是图片、PDF 或音频，已跳过"
     }
   }
 }

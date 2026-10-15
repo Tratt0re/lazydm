@@ -9,7 +9,13 @@ import {
 } from '@/components/document-preview/document-preview.markdown';
 import { AppSheetFormService } from '@/components/sheet-form/sheet-form.service';
 import type { AppSheetField } from '@/components/sheet-form/sheet-form.types';
-import type { BacklinkDto, DeleteFolderMode, DocumentFileListItemDto } from '@/dtos';
+import type {
+  BacklinkDto,
+  DeleteFolderMode,
+  DocumentFileListItemDto,
+  SavedAssetDto,
+} from '@/dtos';
+import { AssetService } from '@/services/asset.service';
 import { DocumentService } from '@/services/document.service';
 import { WorkspaceService } from '@/services/workspace.service';
 
@@ -25,11 +31,63 @@ export class FileActionsService {
   private readonly sheetFormService = inject(AppSheetFormService);
   private readonly translateService = inject(TranslateService);
   private readonly workspace = inject(WorkspaceService);
+  private readonly assetService = inject(AssetService);
   /**
    * Files deleted in this session, until a page opens a file at that path again: a note page still showing
    * one (deleted from the explorer, say) must not save it back when it is left.
    */
   private readonly deletedPaths = new Set<string>();
+
+  /**
+   * Saves media files in a folder of the Assets section (dropped files, or picked in the system dialog when
+   * `files` is not given); other files are skipped with a warning. Says where they went; false when nothing
+   * was saved (cancelled, nothing usable, or an error, shown).
+   */
+  async saveMediaToFolder(folder: string, files?: readonly File[]): Promise<boolean> {
+    const mediaFiles = files?.filter((file) => this.assetService.isMediaFile(file));
+    const skipped = files?.filter((file) => !this.assetService.isMediaFile(file)) ?? [];
+    if (skipped.length > 0) {
+      toast.warning(this.translateService.instant('files.importFromDisk.skipped'), {
+        description: skipped.map((file) => file.name).join(', '),
+      });
+    }
+    if (mediaFiles && mediaFiles.length === 0) {
+      return false;
+    }
+
+    let saved: readonly SavedAssetDto[];
+    try {
+      if (mediaFiles) {
+        const results: SavedAssetDto[] = [];
+        for (const file of mediaFiles) {
+          results.push(await this.assetService.save({ folder }, file));
+        }
+        saved = results;
+      } else {
+        saved = await this.assetService.importFiles({ folder });
+      }
+    } catch (error) {
+      toast.error(this.translateService.instant('document.assets.saveError'), {
+        description: error instanceof Error ? error.message : String(error),
+      });
+      return false;
+    }
+
+    if (saved.length === 0) {
+      return false;
+    }
+
+    // Files identical to an asset already there were not saved again (the toast says where that one is).
+    const titleKey = saved.every((asset) => asset.isReused)
+      ? 'document.assets.reused'
+      : saved.length === 1
+        ? 'document.assets.savedOne'
+        : 'document.assets.savedMany';
+    toast.success(this.translateService.instant(titleKey, { count: saved.length }), {
+      description: saved.map((asset) => asset.path).join(', '),
+    });
+    return true;
+  }
 
   isDeleted(path: string): boolean {
     return this.deletedPaths.has(path);
@@ -320,7 +378,11 @@ export class FileActionsService {
   }
 
   /** Deletes a sub-folder; false when it did not happen (name clashes or an error, both shown). */
-  private async deleteFolder(path: string, mode: DeleteFolderMode, rewriteLinks: boolean): Promise<boolean> {
+  private async deleteFolder(
+    path: string,
+    mode: DeleteFolderMode,
+    rewriteLinks: boolean,
+  ): Promise<boolean> {
     // Moving: open notes inside are saved first, so their edits move with them.
     if (mode === 'moveToMain') {
       for (const [notePath, save] of this.openNoteSavers) {
@@ -368,7 +430,10 @@ export class FileActionsService {
       }
       for (const deletedPath of result.deleted) {
         this.deletedPaths.add(deletedPath);
-        await this.followInTabs(toInAppNoteRoute(deletedPath) ?? toInAppAssetRoute(deletedPath), sectionRoute);
+        await this.followInTabs(
+          toInAppNoteRoute(deletedPath) ?? toInAppAssetRoute(deletedPath),
+          sectionRoute,
+        );
       }
       if (sectionRoute) {
         await this.followInTabs(

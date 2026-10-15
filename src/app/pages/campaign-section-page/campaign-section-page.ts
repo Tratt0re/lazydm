@@ -6,6 +6,10 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { toast } from 'ngx-sonner';
 import { map } from 'rxjs';
 
+import {
+  AppAssetImportSheetComponent,
+  type AssetImportSheetData,
+} from '@/components/asset-import-sheet/asset-import-sheet.component';
 import { AppSheetFormService } from '@/components/sheet-form/sheet-form.service';
 import type { AppSheetField } from '@/components/sheet-form/sheet-form.types';
 import {
@@ -34,11 +38,14 @@ import { ArcTechButtonComponent } from '@/shared/components/button';
 import { ArcTechEmptyComponent } from '@/shared/components/empty';
 import { ArcTechIconComponent, type ArcTechIcon } from '@/shared/components/icon';
 import { ArcTechMenuImports } from '@/shared/components/menu';
+import { ArcTechSheetService } from '@/shared/components/sheet';
 import { ArcTechTooltipImports } from '@/shared/components/tooltip';
 
 export const CAMPAIGN_SECTION_PARAM = 'section';
 /** Query parameter of the sub-folder the section page shows (`?folder=humans`). */
 export const SECTION_FOLDER_QUERY_PARAM = 'folder';
+/** The Assets section (any non-note file): files from the file manager can be imported or dropped there. */
+const ASSETS_SECTION_KEY = 'assets';
 
 /** A sub-folder of the section with the files directly in it. */
 interface SectionTreeFolder extends DocumentFolderDto {
@@ -159,8 +166,12 @@ export class CampaignSectionPage {
   /** File being dragged, and the folder it would land in (`''`: the section itself). */
   protected readonly draggedPath = signal<string | null>(null);
   protected readonly dropTarget = signal<string | null>(null);
+  /** Files from the file manager dragged over the Assets section page (not over a sub-folder row). */
+  protected readonly isFileDragOverPage = signal(false);
+  protected readonly isAssetsSection = computed(() => this.section()?.key === ASSETS_SECTION_KEY);
   private readonly fileMove = inject(FileMoveService);
   private readonly fileActions = inject(FileActionsService);
+  private readonly sheetService = inject(ArcTechSheetService);
   private readonly assetService = inject(AssetService);
   protected readonly revealLabel = this.fileMove.revealLabel;
   protected readonly toSubfolderLabel = toSubfolderLabel;
@@ -247,6 +258,16 @@ export class CampaignSectionPage {
           this.templateRules()[noteType],
         ),
         change: (value) => this.setTemplateRule(campaign, noteType, value),
+      });
+    }
+
+    if (section?.key === ASSETS_SECTION_KEY) {
+      actions.push({
+        id: 'section-import-disk',
+        label: 'files.importFromDisk.button',
+        icon: 'file-up',
+        buttonType: 'outline',
+        action: () => this.openImportFromDiskSheet(),
       });
     }
 
@@ -351,6 +372,15 @@ export class CampaignSectionPage {
   }
 
   protected onDragOver(event: DragEvent, target: string): void {
+    if (this.isFileDrop(event)) {
+      event.preventDefault();
+      event.stopPropagation();
+      event.dataTransfer!.dropEffect = 'copy';
+      this.isFileDragOverPage.set(false);
+      this.dropTarget.set(target);
+      return;
+    }
+
     const path = this.draggedPath();
     if (path && this.folderOf(path) !== target) {
       event.preventDefault();
@@ -365,11 +395,75 @@ export class CampaignSectionPage {
   }
 
   protected onDrop(event: DragEvent, target: string): void {
+    if (this.isFileDrop(event)) {
+      event.preventDefault();
+      event.stopPropagation();
+      this.dropTarget.set(null);
+      void this.saveDroppedFiles(event, this.folderPathOf(target));
+      return;
+    }
+
     event.preventDefault();
     const path = this.draggedPath();
     this.onDragEnd();
     if (path) {
       void this.moveFile(path, target);
+    }
+  }
+
+  // --- Files from the file manager dropped on the Assets section -----------------------------------
+
+  /** Files dragged anywhere on the page go to the folder it shows (sub-folder rows take their own). */
+  protected onPageDragOver(event: DragEvent): void {
+    if (this.isFileDrop(event)) {
+      event.preventDefault();
+      event.dataTransfer!.dropEffect = 'copy';
+      this.isFileDragOverPage.set(true);
+    }
+  }
+
+  protected onPageDragLeave(event: DragEvent): void {
+    // Leaving for a child of the page is not leaving the page.
+    if (!(event.currentTarget as HTMLElement).contains(event.relatedTarget as Node | null)) {
+      this.isFileDragOverPage.set(false);
+    }
+  }
+
+  protected onPageDrop(event: DragEvent): void {
+    if (this.isFileDrop(event)) {
+      event.preventDefault();
+      this.isFileDragOverPage.set(false);
+      void this.saveDroppedFiles(event, this.folderPath());
+    }
+  }
+
+  /** *Import from disk* (Assets section): a sheet with a drop zone and *Select files*, into this folder. */
+  protected openImportFromDiskSheet(): void {
+    this.sheetService.create<AppAssetImportSheetComponent, AssetImportSheetData>({
+      arcTitle: this.translateService.instant('files.importFromDisk.title'),
+      arcDescription: this.translateService.instant('files.importFromDisk.description', {
+        folder: this.folderPath(),
+      }),
+      arcContent: AppAssetImportSheetComponent,
+      arcData: { folder: this.folderPath(), onImported: () => void this.loadTree(this.sectionPath()) },
+      arcOkText: null,
+      arcCancelText: this.translateService.instant('document.rename.cancel'),
+    });
+  }
+
+  /** Files from the file manager on the Assets section (a row being moved is not one of those). */
+  private isFileDrop(event: DragEvent): boolean {
+    return (
+      this.isAssetsSection() &&
+      this.draggedPath() === null &&
+      !!event.dataTransfer?.types.includes('Files')
+    );
+  }
+
+  private async saveDroppedFiles(event: DragEvent, folder: string): Promise<void> {
+    const files = [...(event.dataTransfer?.files ?? [])];
+    if (files.length > 0 && (await this.fileActions.saveMediaToFolder(folder, files))) {
+      await this.loadTree(this.sectionPath());
     }
   }
 

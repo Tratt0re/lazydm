@@ -5,7 +5,7 @@ import {
   toAssetUrl,
 } from '@/components/document-preview/document-preview.markdown';
 import { APIChannel } from '@/config/api';
-import type { AssetKind, SavedAssetDto } from '@/dtos';
+import type { AssetKind, AssetTarget, SavedAssetDto } from '@/dtos';
 import { BaseIpcService } from '@/services/base-ipc.service';
 
 /** Note audio is meant for short sounds: a longer file is still saved, with a warning. */
@@ -42,10 +42,10 @@ export class AssetService extends BaseIpcService<APIChannel.ASSETS> {
     return MEDIA_TYPE_PATTERN.test(file.type);
   }
 
-  /** Saves a pasted file in the assets of the note's scope; returns where it went and how to link it. */
-  async save(sourcePath: string, file: File): Promise<SavedAssetDto> {
+  /** Saves a pasted or dropped file in its target; returns where it went and how to link it. */
+  async save(target: AssetTarget, file: File): Promise<SavedAssetDto> {
     return this.ipcClient.save({
-      sourcePath,
+      ...target,
       name: file.name,
       mimeType: file.type,
       bytes: new Uint8Array(await file.arrayBuffer()),
@@ -53,8 +53,8 @@ export class AssetService extends BaseIpcService<APIChannel.ASSETS> {
   }
 
   /** Lets the user pick media files on disk and saves them as assets (none when the dialog is cancelled). */
-  async importFiles(sourcePath: string): Promise<readonly SavedAssetDto[]> {
-    return (await this.ipcClient.import({ sourcePath })).files;
+  async importFiles(target: AssetTarget): Promise<readonly SavedAssetDto[]> {
+    return (await this.ipcClient.import(target)).files;
   }
 
   /** Length of a saved audio asset in seconds (null when it cannot be read). */
