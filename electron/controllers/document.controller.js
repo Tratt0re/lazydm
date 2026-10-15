@@ -717,7 +717,9 @@ async function deleteFolder(payload) {
 
   const prefix = `${folderPath}/`;
   const sectionPath = `${location.scope}/${location.section}`;
-  const files = vaultIndexModel.listScopeFiles(location.scope).filter((file) => file.path.startsWith(prefix));
+  const files = vaultIndexModel
+    .listScopeFiles(location.scope)
+    .filter((file) => file.path.startsWith(prefix));
   const moved = [];
   const updatedPaths = new Set();
   const failedPaths = new Set();
@@ -757,19 +759,27 @@ async function deleteFolder(payload) {
     }
 
     const rawsBySource = new Map(
-      [...isNoteByRawBySource].map(([sourcePath, isNoteByRaw]) => [sourcePath, new Set(isNoteByRaw.keys())]),
+      [...isNoteByRawBySource].map(([sourcePath, isNoteByRaw]) => [
+        sourcePath,
+        new Set(isNoteByRaw.keys()),
+      ]),
     );
-    const result = await rewriteIncomingLinks(vaultPath, rawsBySource, null, (content, sourcePath) => {
-      const isNoteByRaw = isNoteByRawBySource.get(sourcePath);
-      return rewriteLinks(
-        content,
-        (link) =>
-          isNoteByRaw.has(link.raw)
-            ? { text: getDeletedLinkText(link, isNoteByRaw.get(link.raw)) }
-            : null,
-        { sourcePath },
-      );
-    });
+    const result = await rewriteIncomingLinks(
+      vaultPath,
+      rawsBySource,
+      null,
+      (content, sourcePath) => {
+        const isNoteByRaw = isNoteByRawBySource.get(sourcePath);
+        return rewriteLinks(
+          content,
+          (link) =>
+            isNoteByRaw.has(link.raw)
+              ? { text: getDeletedLinkText(link, isNoteByRaw.get(link.raw)) }
+              : null,
+          { sourcePath },
+        );
+      },
+    );
     result.updatedPaths.forEach((item) => updatedPaths.add(item));
     result.failedPaths.forEach((item) => failedPaths.add(item));
     linkCount = result.linkCount;
