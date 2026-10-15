@@ -49,6 +49,7 @@ var require_channels = __commonJS({
         saveCopy: "documents:saveCopy",
         create: "documents:create",
         rename: "documents:rename",
+        renameAsset: "documents:renameAsset",
         links: "documents:links",
         linkTargets: "documents:linkTargets",
         brokenLinks: "documents:brokenLinks",

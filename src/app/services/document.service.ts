@@ -14,6 +14,7 @@ import type {
   DocumentLinksDto,
   LinkTargetDto,
   MoveDocumentResultDto,
+  RenameAssetPayload,
   RenameDocumentPayload,
   RenameDocumentResultDto,
   SaveDocumentCopyPayload,
@@ -105,6 +106,11 @@ export class DocumentService extends BaseIpcService<APIChannel.DOCUMENTS> {
 
   rename(payload: RenameDocumentPayload): Promise<RenameDocumentResultDto> {
     return this.ipcClient.rename(payload);
+  }
+
+  /** Renames an asset (the extension stays) and, by default, the links and embeds pointing to it. */
+  renameAsset(payload: RenameAssetPayload): Promise<RenameDocumentResultDto> {
+    return this.ipcClient.renameAsset(payload);
   }
 
   links(path: string): Promise<DocumentLinksDto> {

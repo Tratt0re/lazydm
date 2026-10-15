@@ -518,44 +518,102 @@ async function rename(payload) {
     await documentModel.writeDocument(vaultPath, newPath, ownContent, current.contentHash);
   }
 
+  const { updatedPaths, failedPaths, linkCount } =
+    updateLinks && isNameChanged
+      ? await rewriteIncomingLinks(vaultPath, rawsBySource, relativePath, (content, sourcePath, raws) =>
+          rewriteRenamedLinks(content, sourcePath, raws, oldName, slug),
+        )
+      : { updatedPaths: [], failedPaths: [], linkCount: 0 };
+
+  await indexerController.reindexPaths([relativePath, newPath, ...updatedPaths]);
+
+  return { path: newPath, updatedPaths, failedPaths, linkCount };
+}
+
+/**
+ * Rewrites the links the index resolved to a file in every note linking to it (`rewrite` returns
+ * `{ content, count }` for a note's content and its raw links to the file). `skipPath` (the file itself) is
+ * left out. Each write is conflict-checked like a save: notes changed meanwhile are reported, not overwritten.
+ */
+async function rewriteIncomingLinks(vaultPath, rawsBySource, skipPath, rewrite) {
   const updatedPaths = [];
   const failedPaths = [];
   let linkCount = 0;
 
-  if (updateLinks && isNameChanged) {
-    for (const [sourcePath, raws] of rawsBySource) {
-      if (sourcePath === relativePath) {
+  for (const [sourcePath, raws] of rawsBySource) {
+    if (sourcePath === skipPath) {
+      continue;
+    }
+
+    try {
+      const source = await documentModel.readDocument(vaultPath, sourcePath);
+      const rewritten = rewrite(source.content, sourcePath, raws);
+      if (rewritten.count === 0) {
         continue;
       }
 
-      try {
-        const source = await documentModel.readDocument(vaultPath, sourcePath);
-        const rewritten = rewriteRenamedLinks(source.content, sourcePath, raws, oldName, slug);
-        if (rewritten.count === 0) {
-          continue;
-        }
-
-        const result = await documentModel.writeDocument(
-          vaultPath,
-          sourcePath,
-          rewritten.content,
-          source.contentHash,
-        );
-        if (result.status === 'saved') {
-          updatedPaths.push(sourcePath);
-          linkCount += rewritten.count;
-        } else {
-          failedPaths.push(sourcePath);
-        }
-      } catch (error) {
-        console.warn('[electron] Failed to update links ->', sourcePath, error);
+      const result = await documentModel.writeDocument(
+        vaultPath,
+        sourcePath,
+        rewritten.content,
+        source.contentHash,
+      );
+      if (result.status === 'saved') {
+        updatedPaths.push(sourcePath);
+        linkCount += rewritten.count;
+      } else {
         failedPaths.push(sourcePath);
       }
+    } catch (error) {
+      console.warn('[electron] Failed to update links ->', sourcePath, error);
+      failedPaths.push(sourcePath);
     }
   }
 
-  await indexerController.reindexPaths([relativePath, newPath, ...updatedPaths]);
+  return { updatedPaths, failedPaths, linkCount };
+}
 
+/**
+ * Renames an asset (image, PDF, audio…): the new name gives the slug, the extension stays, the folder too.
+ * With `updateLinks`, the links and embeds resolving to it are rewritten like a note rename's.
+ */
+async function renameAsset(payload) {
+  const body = ensurePlainObject(payload, 'payload');
+  const relativePath = requirePath(body);
+  const name = requireString(body.name, 'payload.name', { maxLength: DOCUMENT_TITLE_MAX_LENGTH });
+  const updateLinks = normalizeOptionalBooleanFlag(body.updateLinks, 'payload.updateLinks') !== 0;
+  if (vaultIndexModel.getFileKind(relativePath) === 'md') {
+    throw new Error(`Not an asset: ${relativePath}`);
+  }
+
+  const extension = path.posix.extname(relativePath);
+  // A name typed with the extension (`map.png`) keeps it once, not twice.
+  const typedName = name.toLocaleLowerCase().endsWith(extension.toLocaleLowerCase())
+    ? name.slice(0, -extension.length)
+    : name;
+  const slug = toSlug(typedName);
+  if (slug.length === 0) {
+    throw new Error('payload.name must contain at least one letter or number.');
+  }
+
+  requireIndexOpen();
+  const vaultPath = vaultController.getReadyVaultPath();
+  const oldName = path.posix.basename(relativePath);
+  const newName = `${slug}${extension.toLocaleLowerCase()}`;
+  const newPath = path.posix.join(path.posix.dirname(relativePath), newName);
+  if (newPath === relativePath) {
+    return { path: relativePath, updatedPaths: [], failedPaths: [], linkCount: 0 };
+  }
+
+  const rawsBySource = groupRawsBySource(vaultIndexModel.listIncomingLinks(relativePath));
+  await documentModel.moveVaultFile(vaultPath, relativePath, newPath);
+  const { updatedPaths, failedPaths, linkCount } = updateLinks
+    ? await rewriteIncomingLinks(vaultPath, rawsBySource, relativePath, (content, sourcePath, raws) =>
+        rewriteRenamedLinks(content, sourcePath, raws, oldName, newName),
+      )
+    : { updatedPaths: [], failedPaths: [], linkCount: 0 };
+
+  await indexerController.reindexPaths([relativePath, newPath, ...updatedPaths]);
   return { path: newPath, updatedPaths, failedPaths, linkCount };
 }
 
@@ -841,6 +899,7 @@ module.exports = {
   move,
   read,
   rename,
+  renameAsset,
   reveal,
   saveCopy,
   setType,

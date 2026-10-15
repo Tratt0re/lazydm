@@ -15,4 +15,6 @@ export interface SavedAssetDto {
   /** What `![[…]]` needs to resolve to it: the file name, or its scope-relative path when the name is taken. */
   readonly linkTarget: string;
   readonly kind: AssetKind;
+  /** An identical file was already in the scope's assets: that one is linked, nothing was saved. */
+  readonly isReused: boolean;
 }

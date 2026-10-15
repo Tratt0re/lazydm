@@ -135,6 +135,14 @@ function listScopeFiles(scope) {
     .all(scope);
 }
 
+/** Assets of a scope with a given size in bytes: the candidates a new asset could be a copy of. */
+function listScopeAssetsOfSize(scope, size) {
+  return getVaultIndexDatabase()
+    .prepare(`SELECT path FROM files WHERE campaign IS ? AND kind = 'asset' AND size = ? ORDER BY path`)
+    .all(scope, size)
+    .map((row) => row.path);
+}
+
 /** Notes of a scope (templates excluded) with their type and frontmatter sub-type, for the Review page. */
 function listScopeNotes(scope) {
   return getVaultIndexDatabase()
@@ -383,6 +391,7 @@ module.exports = {
   listFolderFiles,
   listIncomingLinks,
   listOutgoingLinks,
+  listScopeAssetsOfSize,
   listScopeFiles,
   listScopeNotes,
   resolveLinks,

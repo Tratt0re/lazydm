@@ -1,12 +1,18 @@
 import { Injectable } from '@angular/core';
 
-import { toAssetUrl } from '@/components/document-preview/document-preview.markdown';
+import {
+  IMAGE_EXTENSION_PATTERN,
+  toAssetUrl,
+} from '@/components/document-preview/document-preview.markdown';
 import { APIChannel } from '@/config/api';
-import type { SavedAssetDto } from '@/dtos';
+import type { AssetKind, SavedAssetDto } from '@/dtos';
 import { BaseIpcService } from '@/services/base-ipc.service';
 
 /** Note audio is meant for short sounds: a longer file is still saved, with a warning. */
 export const NOTE_AUDIO_MAX_SECONDS = 30;
+
+const PDF_EXTENSION_PATTERN = /\.pdf$/i;
+const AUDIO_EXTENSION_PATTERN = /\.(mp3|wav|ogg|m4a|flac)$/i;
 
 /** Types of the files a paste saves as assets (images, PDFs, audio); anything else pastes as usual. */
 const MEDIA_TYPE_PATTERN = /^(image\/|audio\/|application\/pdf$)/;
@@ -18,6 +24,17 @@ const MEDIA_TYPE_PATTERN = /^(image\/|audio\/|application\/pdf$)/;
 export class AssetService extends BaseIpcService<APIChannel.ASSETS> {
   constructor() {
     super(APIChannel.ASSETS);
+  }
+
+  /** What a vault file is, from its extension: image, PDF, audio, or null for anything else. */
+  getAssetKind(path: string): AssetKind | null {
+    if (IMAGE_EXTENSION_PATTERN.test(path)) {
+      return 'image';
+    }
+    if (PDF_EXTENSION_PATTERN.test(path)) {
+      return 'pdf';
+    }
+    return AUDIO_EXTENSION_PATTERN.test(path) ? 'audio' : null;
   }
 
   /** Whether a pasted file is a media file LazyDM saves as an asset. */

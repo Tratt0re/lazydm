@@ -423,7 +423,15 @@
       "expandFolder": "Dateien von {{folder}} zeigen",
       "collapseFolder": "Dateien von {{folder}} ausblenden",
       "emptyFolder": "Leerer Ordner: Dateien hierher ziehen.",
-      "openFolder": "Ordner öffnen"
+      "openFolder": "Ordner öffnen",
+      "renameAsset": {
+        "menu": "Umbenennen…",
+        "title": "{{name}} umbenennen",
+        "nameLabel": "Name",
+        "noBacklinks": "Keine Notiz verlinkt diese Datei.",
+        "done": "Umbenannt in {{name}} — {{links}} Links in {{notes}} Notizen aktualisiert",
+        "error": "Die Datei konnte nicht umbenannt werden"
+      }
     }
   },
   "document": {
@@ -508,7 +516,8 @@
       "savedMany": "{{count}} Dateien in den Assets gespeichert",
       "saveError": "Die Datei konnte nicht gespeichert werden",
       "longAudio": "{{name}} ist länger als {{seconds}} Sekunden",
-      "longAudioDescription": "Notiz-Audio ist für kurze Klänge gedacht. Die Datei ist gespeichert und wird trotzdem abgespielt."
+      "longAudioDescription": "Notiz-Audio ist für kurze Klänge gedacht. Die Datei ist gespeichert und wird trotzdem abgespielt.",
+      "reused": "Bereits in den Assets"
     }
   },
   "tabs": {

@@ -146,6 +146,14 @@ export interface RenameDocumentPayload {
   readonly updateLinks?: boolean;
 }
 
+/** Renames an asset: `name` gives the new file name (slug), the extension stays. */
+export interface RenameAssetPayload {
+  readonly path: string;
+  readonly name: string;
+  /** Rewrite the links and embeds pointing to it (default true). */
+  readonly updateLinks?: boolean;
+}
+
 export interface RenameDocumentResultDto {
   readonly path: string;
   readonly updatedPaths: readonly string[];

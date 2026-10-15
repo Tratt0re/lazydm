@@ -318,11 +318,14 @@ export class DocumentPage {
     if (this.document()?.path === notePath) {
       this.editor()?.insertEmbeds(saved.map((asset) => asset.linkTarget));
     }
+    // Files identical to an asset already there were not saved again: that one is linked instead.
+    const titleKey = saved.every((asset) => asset.isReused)
+      ? 'document.assets.reused'
+      : saved.length === 1
+        ? 'document.assets.savedOne'
+        : 'document.assets.savedMany';
     toast.success(
-      this.translateService.instant(
-        saved.length === 1 ? 'document.assets.savedOne' : 'document.assets.savedMany',
-        { count: saved.length },
-      ),
+      this.translateService.instant(titleKey, { count: saved.length }),
       { description: saved.map((asset) => asset.path).join(', ') },
     );
 

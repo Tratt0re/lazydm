@@ -116,8 +116,32 @@ function getLinkTarget(scope, relativePath) {
 }
 
 /**
+ * An asset of the scope with exactly these bytes (same size first, then same content), or null. Without the
+ * index nothing can be compared, so nothing is found.
+ */
+async function findIdenticalAsset(vaultPath, scope, bytes) {
+  if (!indexerController.isOpen()) {
+    return null;
+  }
+
+  const content = Buffer.from(bytes.buffer, bytes.byteOffset, bytes.byteLength);
+  for (const candidatePath of vaultIndexModel.listScopeAssetsOfSize(scope, bytes.byteLength)) {
+    try {
+      const candidate = await fs.promises.readFile(resolveInsideVault(vaultPath, candidatePath));
+      if (candidate.equals(content)) {
+        return candidatePath;
+      }
+    } catch (_) {
+      // gone or unreadable meanwhile: not a match
+    }
+  }
+  return null;
+}
+
+/**
  * Saves media bytes in the scope's `assets/` as a slug of the original name (`pasted-<timestamp>` for a
- * screenshot), adding `-<timestamp>` when the name is taken; then indexes it so links resolve right away.
+ * screenshot), adding `-<timestamp>` when the name is taken; then indexes it so links resolve right away. A file
+ * identical to an asset already in the scope is not saved again: that asset is returned (`isReused`).
  */
 async function saveAsset(sourcePath, fileName, mimeType, bytes) {
   if (bytes.byteLength === 0 || bytes.byteLength > ASSET_MAX_BYTES) {
@@ -127,6 +151,11 @@ async function saveAsset(sourcePath, fileName, mimeType, bytes) {
   const vaultPath = vaultController.getReadyVaultPath();
   const { kind, extension } = getMediaType(fileName, mimeType);
   const { scope, folder } = getAssetsFolder(sourcePath);
+  const identicalPath = await findIdenticalAsset(vaultPath, scope, bytes);
+  if (identicalPath) {
+    return { path: identicalPath, linkTarget: getLinkTarget(scope, identicalPath), kind, isReused: true };
+  }
+
   const timestamp = formatTimestampForFilename();
   const baseName =
     !fileName || PASTED_IMAGE_NAME_PATTERN.test(fileName)
@@ -152,7 +181,7 @@ async function saveAsset(sourcePath, fileName, mimeType, bytes) {
   }
 
   await indexerController.reindexPaths([result.path]);
-  return { path: result.path, linkTarget: getLinkTarget(scope, result.path), kind };
+  return { path: result.path, linkTarget: getLinkTarget(scope, result.path), kind, isReused: false };
 }
 
 /** A media file pasted into a note: `{ sourcePath, name, mimeType, bytes }` → the saved asset. */

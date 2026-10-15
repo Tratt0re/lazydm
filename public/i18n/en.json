@@ -423,7 +423,15 @@
       "expandFolder": "Show the files of {{folder}}",
       "collapseFolder": "Hide the files of {{folder}}",
       "emptyFolder": "Empty folder: drop files here.",
-      "openFolder": "Open folder"
+      "openFolder": "Open folder",
+      "renameAsset": {
+        "menu": "Rename…",
+        "title": "Rename {{name}}",
+        "nameLabel": "Name",
+        "noBacklinks": "No note links to this file.",
+        "done": "Renamed to {{name}} — {{links}} links updated in {{notes}} notes",
+        "error": "Couldn't rename the file"
+      }
     }
   },
   "document": {
@@ -508,7 +516,8 @@
       "savedMany": "{{count}} files saved to assets",
       "saveError": "Couldn't save the file",
       "longAudio": "{{name}} is longer than {{seconds}} seconds",
-      "longAudioDescription": "Note audio is meant for short sounds. It is saved and will still play."
+      "longAudioDescription": "Note audio is meant for short sounds. It is saved and will still play.",
+      "reused": "Already in assets"
     }
   },
   "tabs": {

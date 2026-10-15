@@ -35,6 +35,7 @@ const CHANNELS = Object.freeze({
     saveCopy: 'documents:saveCopy',
     create: 'documents:create',
     rename: 'documents:rename',
+    renameAsset: 'documents:renameAsset',
     links: 'documents:links',
     linkTargets: 'documents:linkTargets',
     brokenLinks: 'documents:brokenLinks',

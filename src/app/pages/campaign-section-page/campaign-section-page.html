@@ -39,15 +39,39 @@
             }
           </a>
         } @else {
-          <div class="flex items-center justify-between gap-4 p-4 text-muted-foreground" [class.pl-14]="isNested">
+          <div class="flex items-center justify-between gap-4 px-4 py-2 text-muted-foreground" [class.pl-14]="isNested">
             <span class="flex min-w-0 items-center gap-3">
-              <arc-icon arcType="image" class="size-4 shrink-0" />
-              <span class="truncate text-sm">{{ file.name }}</span>
+              @if (thumbnailUrl(file); as thumbnail) {
+                <img
+                  [src]="thumbnail"
+                  alt=""
+                  loading="lazy"
+                  draggable="false"
+                  class="size-10 shrink-0 border border-border bg-recessed object-cover"
+                />
+              } @else {
+                <span class="flex size-10 shrink-0 items-center justify-center border border-border bg-recessed">
+                  <arc-icon [arcType]="assetIcon(file)" class="size-4 text-primary" />
+                </span>
+              }
+              <span class="truncate text-sm text-foreground">{{ file.name }}</span>
             </span>
             <span class="flex shrink-0 items-center gap-3">
               <span class="text-[10px] font-semibold tracking-[0.1em] uppercase">
                 {{ formatFileSize(file.size) }}
               </span>
+              <button
+                type="button"
+                arc-button
+                arcType="ghost"
+                arcSize="sm"
+                class="size-8"
+                [attr.aria-label]="'campaigns.sections.renameAsset.menu' | translate"
+                [arcTooltip]="'campaigns.sections.renameAsset.menu' | translate"
+                (click)="openRenameAssetSheet(file)"
+              >
+                <arc-icon arcType="text-cursor-input" />
+              </button>
               <button
                 type="button"
                 arc-button
@@ -66,6 +90,12 @@
 
         <ng-template #fileMenu>
           <div arc-menu-content class="w-56">
+            @if (file.kind !== 'md') {
+              <button type="button" arc-menu-item (click)="openRenameAssetSheet(file)">
+                <arc-icon arcType="text-cursor-input" />
+                {{ 'campaigns.sections.renameAsset.menu' | translate }}
+              </button>
+            }
             <button type="button" arc-menu-item (click)="openMoveSheet(file)">
               <arc-icon arcType="move-right" />
               {{ 'campaigns.sections.move.menu' | translate }}

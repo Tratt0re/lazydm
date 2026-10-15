@@ -423,7 +423,15 @@
       "expandFolder": "显示 {{folder}} 中的文件",
       "collapseFolder": "隐藏 {{folder}} 中的文件",
       "emptyFolder": "空文件夹：将文件拖放到这里。",
-      "openFolder": "打开文件夹"
+      "openFolder": "打开文件夹",
+      "renameAsset": {
+        "menu": "重命名…",
+        "title": "重命名 {{name}}",
+        "nameLabel": "名称",
+        "noBacklinks": "没有笔记链接到此文件。",
+        "done": "已重命名为 {{name}} — 已更新 {{notes}} 篇笔记中的 {{links}} 个链接",
+        "error": "无法重命名文件"
+      }
     }
   },
   "document": {
@@ -508,7 +516,8 @@
       "savedMany": "已将 {{count}} 个文件保存到资源",
       "saveError": "无法保存文件",
       "longAudio": "{{name}} 超过 {{seconds}} 秒",
-      "longAudioDescription": "笔记音频适用于短音效。文件已保存，仍可播放。"
+      "longAudioDescription": "笔记音频适用于短音效。文件已保存，仍可播放。",
+      "reused": "已在资源中"
     }
   },
   "tabs": {

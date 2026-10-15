@@ -423,7 +423,15 @@
       "expandFolder": "Afficher les fichiers de {{folder}}",
       "collapseFolder": "Masquer les fichiers de {{folder}}",
       "emptyFolder": "Dossier vide : déposez des fichiers ici.",
-      "openFolder": "Ouvrir le dossier"
+      "openFolder": "Ouvrir le dossier",
+      "renameAsset": {
+        "menu": "Renommer…",
+        "title": "Renommer {{name}}",
+        "nameLabel": "Nom",
+        "noBacklinks": "Aucune note ne renvoie à ce fichier.",
+        "done": "Renommé en {{name}} — {{links}} liens mis à jour dans {{notes}} notes",
+        "error": "Impossible de renommer le fichier"
+      }
     }
   },
   "document": {
@@ -508,7 +516,8 @@
       "savedMany": "{{count}} fichiers enregistrés dans les ressources",
       "saveError": "Impossible d'enregistrer le fichier",
       "longAudio": "{{name}} dure plus de {{seconds}} secondes",
-      "longAudioDescription": "L'audio des notes est prévu pour des sons courts. Il est enregistré et sera tout de même lu."
+      "longAudioDescription": "L'audio des notes est prévu pour des sons courts. Il est enregistré et sera tout de même lu.",
+      "reused": "Déjà dans les ressources"
     }
   },
   "tabs": {

@@ -173,6 +173,8 @@ import {
   TriangleAlert,
   OctagonAlert,
   SeparatorHorizontal,
+  File,
+  FileMusic,
 } from 'lucide-angular';
 
 export const ARCTECH_ICONS = {
@@ -349,6 +351,8 @@ export const ARCTECH_ICONS = {
   'triangle-alert': TriangleAlert,
   'octagon-alert': OctagonAlert,
   'separator-horizontal': SeparatorHorizontal,
+  file: File,
+  'file-music': FileMusic,
 } as const satisfies Record<string, LucideIconData>;
 
 export declare type ArcTechIcon = keyof typeof ARCTECH_ICONS | LucideIconData;

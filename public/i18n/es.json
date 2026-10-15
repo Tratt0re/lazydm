@@ -423,7 +423,15 @@
       "expandFolder": "Mostrar los archivos de {{folder}}",
       "collapseFolder": "Ocultar los archivos de {{folder}}",
       "emptyFolder": "Carpeta vacía: suelta aquí los archivos.",
-      "openFolder": "Abrir carpeta"
+      "openFolder": "Abrir carpeta",
+      "renameAsset": {
+        "menu": "Renombrar…",
+        "title": "Renombrar {{name}}",
+        "nameLabel": "Nombre",
+        "noBacklinks": "Ninguna nota enlaza este archivo.",
+        "done": "Renombrado a {{name}} — {{links}} enlaces actualizados en {{notes}} notas",
+        "error": "No se pudo renombrar el archivo"
+      }
     }
   },
   "document": {
@@ -508,7 +516,8 @@
       "savedMany": "{{count}} archivos guardados en recursos",
       "saveError": "No se pudo guardar el archivo",
       "longAudio": "{{name}} dura más de {{seconds}} segundos",
-      "longAudioDescription": "El audio de las notas está pensado para sonidos cortos. Se ha guardado y se reproducirá igualmente."
+      "longAudioDescription": "El audio de las notas está pensado para sonidos cortos. Se ha guardado y se reproducirá igualmente.",
+      "reused": "Ya está en recursos"
     }
   },
   "tabs": {

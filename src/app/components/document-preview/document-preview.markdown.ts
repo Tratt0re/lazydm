@@ -11,7 +11,7 @@ import MarkdownIt, {
 import type { DocumentLinkDto } from '@/dtos';
 
 const WIKILINK_PATTERN = /^(!?)\[\[([^[\]\n]+?)\]\]/;
-const IMAGE_EXTENSION_PATTERN = /\.(png|jpe?g|gif|webp|svg|avif)$/i;
+export const IMAGE_EXTENSION_PATTERN = /\.(png|jpe?g|gif|webp|svg|avif)$/i;
 const ASSET_PROTOCOL = 'lazydm-asset://vault';
 /** Obsidian callout header: `> [!warning] Optional title` (`+` / `-` fold markers are accepted). */
 const CALLOUT_PATTERN = /^\[!([A-Za-z][\w-]*)\][+-]?[ \t]*(.*)$/;

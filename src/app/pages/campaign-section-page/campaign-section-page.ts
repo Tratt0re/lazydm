@@ -8,7 +8,10 @@ import { map } from 'rxjs';
 
 import { AppSheetFormService } from '@/components/sheet-form/sheet-form.service';
 import type { AppSheetField } from '@/components/sheet-form/sheet-form.types';
-import { toInAppNoteRoute } from '@/components/document-preview/document-preview.markdown';
+import {
+  toAssetUrl,
+  toInAppNoteRoute,
+} from '@/components/document-preview/document-preview.markdown';
 import type {
   DocumentFileListItemDto,
   DocumentFolderDto,
@@ -16,9 +19,11 @@ import type {
   TemplateRulesDto,
 } from '@/dtos';
 import { AppSheetService } from '@/services/app-sheet.service';
+import { AssetService } from '@/services/asset.service';
 import { getNoteScopeKind, NoteScopeService } from '@/services/note-scope.service';
 import { CopyToService } from '@/services/copy-to.service';
 import { DocumentService } from '@/services/document.service';
+import { FileActionsService } from '@/services/file-actions.service';
 import { FileMoveService, type MoveSection } from '@/services/file-move.service';
 import { SectionService, toSubfolderLabel } from '@/services/section.service';
 import { AUTOMATIC_TEMPLATE_RULE, TemplateService } from '@/services/template.service';
@@ -26,7 +31,7 @@ import { ToolbarContextService, type ToolbarItemAction } from '@/services/toolba
 import { ArcTechAlertComponent } from '@/shared/components/alert';
 import { ArcTechButtonComponent } from '@/shared/components/button';
 import { ArcTechEmptyComponent } from '@/shared/components/empty';
-import { ArcTechIconComponent } from '@/shared/components/icon';
+import { ArcTechIconComponent, type ArcTechIcon } from '@/shared/components/icon';
 import { ArcTechMenuImports } from '@/shared/components/menu';
 import { ArcTechTooltipImports } from '@/shared/components/tooltip';
 
@@ -154,6 +159,8 @@ export class CampaignSectionPage {
   protected readonly draggedPath = signal<string | null>(null);
   protected readonly dropTarget = signal<string | null>(null);
   private readonly fileMove = inject(FileMoveService);
+  private readonly fileActions = inject(FileActionsService);
+  private readonly assetService = inject(AssetService);
   protected readonly revealLabel = this.fileMove.revealLabel;
   protected readonly toSubfolderLabel = toSubfolderLabel;
   protected readonly isLoading = signal(true);
@@ -374,6 +381,22 @@ export class CampaignSectionPage {
       this.moveSection(),
       () => void this.loadTree(this.sectionPath()),
     );
+  }
+
+  /** *Rename* an asset (the extension stays); the list reloads with its new name. */
+  protected openRenameAssetSheet(file: DocumentFileListItemDto): void {
+    void this.fileActions.openRenameAssetSheet(file, () => void this.loadTree(this.sectionPath()));
+  }
+
+  /** Thumbnail of an image asset (served by the asset protocol); null for anything else. */
+  protected thumbnailUrl(file: DocumentFileListItemDto): string | null {
+    return this.assetService.getAssetKind(file.path) === 'image' ? toAssetUrl(file.path) : null;
+  }
+
+  /** Icon of a non-image file of the list: PDF, audio, anything else. */
+  protected assetIcon(file: DocumentFileListItemDto): ArcTechIcon {
+    const kind = this.assetService.getAssetKind(file.path);
+    return kind === 'pdf' ? 'file-text' : kind === 'audio' ? 'file-music' : 'file';
   }
 
   protected reveal(path: string): void {

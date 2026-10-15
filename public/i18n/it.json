@@ -423,7 +423,15 @@
       "expandFolder": "Mostra i file di {{folder}}",
       "collapseFolder": "Nascondi i file di {{folder}}",
       "emptyFolder": "Cartella vuota: trascina qui i file.",
-      "openFolder": "Apri cartella"
+      "openFolder": "Apri cartella",
+      "renameAsset": {
+        "menu": "Rinomina…",
+        "title": "Rinomina {{name}}",
+        "nameLabel": "Nome",
+        "noBacklinks": "Nessuna nota collega questo file.",
+        "done": "Rinominato in {{name}} — {{links}} collegamenti aggiornati in {{notes}} note",
+        "error": "Impossibile rinominare il file"
+      }
     }
   },
   "document": {
@@ -508,7 +516,8 @@
       "savedMany": "{{count}} file salvati nelle risorse",
       "saveError": "Impossibile salvare il file",
       "longAudio": "{{name}} dura più di {{seconds}} secondi",
-      "longAudioDescription": "L'audio delle note è pensato per suoni brevi. Il file è salvato e verrà comunque riprodotto."
+      "longAudioDescription": "L'audio delle note è pensato per suoni brevi. Il file è salvato e verrà comunque riprodotto.",
+      "reused": "Già nelle risorse"
     }
   },
   "tabs": {
