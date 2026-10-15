@@ -39,6 +39,8 @@ export interface EditorSettings {
   readonly spellcheck: boolean;
   readonly lineWrapping: boolean;
   readonly highlightActiveLine: boolean;
+  /** Typing an opening bracket or quote also writes the closing one. */
+  readonly autoClosePairs: boolean;
 }
 
 export const EDITOR_SETTINGS_DEFAULTS: Readonly<EditorSettings> = Object.freeze({
@@ -50,6 +52,7 @@ export const EDITOR_SETTINGS_DEFAULTS: Readonly<EditorSettings> = Object.freeze(
   spellcheck: false,
   lineWrapping: true,
   highlightActiveLine: false,
+  autoClosePairs: false,
 });
 
 export type ThemePreference = 'light' | 'dark' | 'system';

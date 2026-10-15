@@ -240,6 +240,10 @@
         "label": "Aktuelle Zeile hervorheben",
         "description": "Ein dezenter Streifen hinter der Zeile mit dem Cursor."
       },
+      "autoClosePairs": {
+        "label": "Paare automatisch schließen",
+        "description": "Beim Tippen von ( [ { \" oder ` wird auch das schließende Zeichen geschrieben. Markierter Text wird immer umschlossen."
+      },
       "spellcheck": {
         "label": "Rechtschreibprüfung",
         "description": "Falsch geschriebene Wörter unterstreichen. Auch Fantasy-Namen werden markiert."

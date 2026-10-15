@@ -240,6 +240,10 @@
         "label": "Highlight current line",
         "description": "A faint band behind the line the cursor is on."
       },
+      "autoClosePairs": {
+        "label": "Auto-close pairs",
+        "description": "Typing ( [ { \" or ` also writes the closing one. Selected text is always wrapped instead."
+      },
       "spellcheck": {
         "label": "Spellcheck",
         "description": "Underline misspelled words. Fantasy names will be flagged too."

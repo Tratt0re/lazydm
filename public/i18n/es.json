@@ -240,6 +240,10 @@
         "label": "Resaltar la línea actual",
         "description": "Una franja tenue detrás de la línea del cursor."
       },
+      "autoClosePairs": {
+        "label": "Cerrar pares automáticamente",
+        "description": "Al escribir ( [ { \" o ` también se escribe el cierre. El texto seleccionado siempre se envuelve."
+      },
       "spellcheck": {
         "label": "Corrector ortográfico",
         "description": "Subraya las palabras mal escritas. Los nombres de fantasía también se marcarán."

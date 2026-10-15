@@ -34,6 +34,7 @@ import type { EditorSettings } from '@/config/local-preferences.config';
 import type { DocumentLinkDto, LinkTargetDto } from '@/dtos';
 import { LocalPreferencesService } from '@/services/local-preferences.service';
 import { codeMap } from './code-map';
+import { autoClosePairs, formattingKeymap, wrapSelectionOnInput } from './editor-commands';
 import { linkCompletion, setLinkCompletionContext } from './link-completion';
 import { findFrontmatterEnd, livePreview, setLivePreviewContext } from './live-preview';
 
@@ -233,11 +234,13 @@ export class AppCodeEditorComponent implements OnDestroy {
               return true;
             },
           },
+          ...formattingKeymap,
           ...defaultKeymap,
           ...historyKeymap,
         ]),
         markdown({ base: markdownLanguage, codeLanguages: languages }),
         linkCompletion(),
+        wrapSelectionOnInput,
         this.modeCompartment.of(this.modeExtensions(this.mode())),
         editorTheme,
         this.settingsCompartment.of(settingsExtensions(this.editorSettings())),
@@ -261,6 +264,7 @@ function settingsExtensions(settings: EditorSettings): Extension {
     settings.lineWrapping ? EditorView.lineWrapping : [],
     EditorView.contentAttributes.of({ spellcheck: settings.spellcheck ? 'true' : 'false' }),
     settings.codeMap ? codeMap() : [],
+    settings.autoClosePairs ? autoClosePairs() : [],
   ];
 }
 

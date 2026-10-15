@@ -240,6 +240,10 @@
         "label": "高亮当前行",
         "description": "在光标所在行后显示淡色背景。"
       },
+      "autoClosePairs": {
+        "label": "自动闭合成对符号",
+        "description": "输入 ( [ { \" 或 ` 时自动补上闭合符号。选中文本时总是将其包裹。"
+      },
       "spellcheck": {
         "label": "拼写检查",
         "description": "为拼写错误的单词加下划线。奇幻名称也会被标出。"

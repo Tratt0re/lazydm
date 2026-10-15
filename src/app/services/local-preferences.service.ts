@@ -136,6 +136,7 @@ export class LocalPreferencesService {
       spellcheck: flag('spellcheck'),
       lineWrapping: flag('lineWrapping'),
       highlightActiveLine: flag('highlightActiveLine'),
+      autoClosePairs: flag('autoClosePairs'),
     };
   }
 

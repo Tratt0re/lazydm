@@ -64,6 +64,7 @@ export class EditorSectionComponent {
   protected readonly behaviourRows: readonly EditorFlagRow[] = [
     flagRow('lineWrapping'),
     flagRow('highlightActiveLine'),
+    flagRow('autoClosePairs'),
     flagRow('spellcheck'),
   ];
 

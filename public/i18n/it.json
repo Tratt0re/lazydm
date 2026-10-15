@@ -240,6 +240,10 @@
         "label": "Evidenzia la riga corrente",
         "description": "Una leggera fascia dietro la riga del cursore."
       },
+      "autoClosePairs": {
+        "label": "Chiusura automatica delle coppie",
+        "description": "Digitando ( [ { \" o ` viene scritta anche la chiusura. Il testo selezionato viene sempre racchiuso."
+      },
       "spellcheck": {
         "label": "Controllo ortografico",
         "description": "Sottolinea le parole errate. Anche i nomi fantasy verranno segnalati."

@@ -240,6 +240,10 @@
         "label": "Surligner la ligne courante",
         "description": "Une bande discrète derrière la ligne du curseur."
       },
+      "autoClosePairs": {
+        "label": "Fermer les paires automatiquement",
+        "description": "Taper ( [ { \" ou ` écrit aussi la fermeture. Le texte sélectionné est toujours entouré."
+      },
       "spellcheck": {
         "label": "Correcteur orthographique",
         "description": "Souligner les mots mal orthographiés. Les noms de fantasy seront aussi signalés."
