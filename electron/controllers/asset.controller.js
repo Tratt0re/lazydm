@@ -65,7 +65,11 @@ function handleAssetRequests() {
 
       return await net.fetch(pathToFileURL(absolutePath).toString());
     } catch (error) {
-      console.warn('[electron] Asset request refused ->', request.url, error instanceof Error ? error.message : error);
+      console.warn(
+        '[electron] Asset request refused ->',
+        request.url,
+        error instanceof Error ? error.message : error,
+      );
       return new Response('Not found', { status: 404 });
     }
   });
@@ -75,7 +79,9 @@ function handleAssetRequests() {
 function getMediaType(fileName, mimeType) {
   const nameExtension = path.posix.extname(fileName).slice(1).toLocaleLowerCase();
   const extension = nameExtension || MEDIA_EXTENSION_BY_MIME_TYPE[mimeType] || '';
-  const kind = Object.keys(MEDIA_EXTENSIONS).find((key) => MEDIA_EXTENSIONS[key].includes(extension));
+  const kind = Object.keys(MEDIA_EXTENSIONS).find((key) =>
+    MEDIA_EXTENSIONS[key].includes(extension),
+  );
   if (!kind) {
     throw new Error(`Not a supported media file: ${fileName || mimeType || 'unknown'}`);
   }
@@ -103,7 +109,8 @@ function getLinkTarget(scope, relativePath) {
     .listScopeFiles(scope)
     .some(
       (file) =>
-        file.path !== relativePath && file.name.toLocaleLowerCase() === fileName.toLocaleLowerCase(),
+        file.path !== relativePath &&
+        file.name.toLocaleLowerCase() === fileName.toLocaleLowerCase(),
     );
   return isNameTaken ? relativePath.slice(scope.length + 1) : fileName;
 }
@@ -126,7 +133,11 @@ async function saveAsset(sourcePath, fileName, mimeType, bytes) {
       ? `pasted-${timestamp}`
       : toSlug(path.posix.basename(fileName, path.posix.extname(fileName))) || `asset-${timestamp}`;
 
-  let result = await documentModel.writeVaultFile(vaultPath, `${folder}/${baseName}.${extension}`, bytes);
+  let result = await documentModel.writeVaultFile(
+    vaultPath,
+    `${folder}/${baseName}.${extension}`,
+    bytes,
+  );
   if (result.status === 'exists') {
     result = await documentModel.writeVaultFile(
       vaultPath,
@@ -135,7 +146,9 @@ async function saveAsset(sourcePath, fileName, mimeType, bytes) {
     );
   }
   if (result.status === 'exists') {
-    throw new Error(`A file named "${path.posix.basename(result.path)}" already exists in ${folder}.`);
+    throw new Error(
+      `A file named "${path.posix.basename(result.path)}" already exists in ${folder}.`,
+    );
   }
 
   await indexerController.reindexPaths([result.path]);
@@ -151,7 +164,8 @@ async function save(payload) {
       allowEmpty: true,
       maxLength: ASSET_NAME_MAX_LENGTH,
     }) ?? '';
-  const mimeType = normalizeOptionalString(body.mimeType, 'payload.mimeType', { allowEmpty: true }) ?? '';
+  const mimeType =
+    normalizeOptionalString(body.mimeType, 'payload.mimeType', { allowEmpty: true }) ?? '';
   if (!(body.bytes instanceof Uint8Array)) {
     throw new Error('payload.bytes must be the file content.');
   }
@@ -177,7 +191,9 @@ async function importFiles(payload) {
   for (const filePath of result.filePaths) {
     const { size } = await fs.promises.stat(filePath);
     if (size > ASSET_MAX_BYTES) {
-      throw new Error(`${path.basename(filePath)} is larger than ${ASSET_MAX_BYTES / 1024 / 1024} MB.`);
+      throw new Error(
+        `${path.basename(filePath)} is larger than ${ASSET_MAX_BYTES / 1024 / 1024} MB.`,
+      );
     }
 
     const bytes = await fs.promises.readFile(filePath);

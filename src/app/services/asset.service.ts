@@ -45,7 +45,8 @@ export class AssetService extends BaseIpcService<APIChannel.ASSETS> {
     return new Promise((resolve) => {
       const audio = new Audio();
       audio.preload = 'metadata';
-      audio.onloadedmetadata = () => resolve(Number.isFinite(audio.duration) ? audio.duration : null);
+      audio.onloadedmetadata = () =>
+        resolve(Number.isFinite(audio.duration) ? audio.duration : null);
       audio.onerror = () => resolve(null);
       audio.src = toAssetUrl(path);
     });
