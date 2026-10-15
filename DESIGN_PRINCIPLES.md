@@ -354,7 +354,8 @@ Planned Electron modules: `vault`, `cloud-readiness`, `campaign`, `document`, `i
   - **Live preview** (default, Obsidian-like): the note stays editable and is shown rendered; the markdown syntax of
     an element comes back only while the cursor is on it. Headings, emphasis, code, quotes, lists, task checkboxes
     (clickable), images, links, tables, callouts and frontmatter (as a properties box) are rendered. The note opens
-    with the cursor below the frontmatter.
+    with the cursor below the frontmatter. An image being edited stays shown, with its `![[…]]` / `![](…)` source
+    on the line below it.
   - **Source**: the raw markdown in the mono font, syntax highlighted.
   - **Reading**: read-only, sanitized HTML (markdown-it + DOMPurify).
   - **Links behave like links**: pointer cursor, a click opens the note (Cmd/Ctrl-click opens it in a new tab), an

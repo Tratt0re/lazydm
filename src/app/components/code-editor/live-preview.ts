@@ -113,21 +113,26 @@ class TaskWidget extends WidgetType {
   }
 }
 
+/**
+ * An embedded image. While its source is being edited (`isEditing`) it stays shown on its own line above
+ * the `![[…]]` / `![](…)` text, so editing the link does not make the image disappear.
+ */
 class ImageWidget extends WidgetType {
   constructor(
     private readonly src: string,
     private readonly alt: string,
+    private readonly isEditing = false,
   ) {
     super();
   }
 
   override eq(other: ImageWidget): boolean {
-    return other.src === this.src && other.alt === this.alt;
+    return other.src === this.src && other.alt === this.alt && other.isEditing === this.isEditing;
   }
 
   toDOM(): HTMLElement {
     const image = document.createElement('img');
-    image.className = 'cm-lp-image';
+    image.className = this.isEditing ? 'cm-lp-image cm-lp-image-editing' : 'cm-lp-image';
     image.src = this.src;
     image.alt = this.alt;
     image.loading = 'lazy';
@@ -371,11 +376,12 @@ function decorateSyntax(target: DecorationContext, frontmatterEnd: number): void
         const marks = node.node.getChildren('LinkMark');
         const url = node.node.getChild('URL');
         // Only `[text](url)`: bare brackets (like the inside of a `[[wikilink]]`) are not links here.
-        if (!url || marks.length < 2 || isTouched(state, node.from, node.to)) {
+        if (!url || marks.length < 2) {
           return false;
         }
 
         const href = state.sliceDoc(url.from, url.to);
+        const isEditing = isTouched(state, node.from, node.to);
         if (name === 'Image') {
           const link = findLink(context, href);
           const src = /^https?:/i.test(href)
@@ -383,13 +389,22 @@ function decorateSyntax(target: DecorationContext, frontmatterEnd: number): void
             : link?.resolvedPath
               ? toAssetUrl(link.resolvedPath)
               : '';
-          if (src) {
+          if (src && isEditing) {
+            const alt = state.sliceDoc(marks[0].to, marks[1].from);
+            ranges.push(
+              Decoration.widget({ widget: new ImageWidget(src, alt, true), side: -1 }).range(node.from),
+            );
+          } else if (src) {
             ranges.push(
               Decoration.replace({
                 widget: new ImageWidget(src, state.sliceDoc(marks[0].to, marks[1].from)),
               }).range(node.from, node.to),
             );
           }
+          return false;
+        }
+
+        if (isEditing) {
           return false;
         }
 
@@ -551,12 +566,20 @@ function decorateWikilinks(target: DecorationContext, frontmatterEnd: number): v
 
     const isEmbed = match[1] === '!';
     const raw = match[2];
+    const link = findLink(context, raw);
     if (isTouched(state, from, to)) {
+      if (isEmbed && link?.resolvedPath && IMAGE_PATTERN.test(link.resolvedPath)) {
+        ranges.push(
+          Decoration.widget({
+            widget: new ImageWidget(toAssetUrl(link.resolvedPath), raw, true),
+            side: -1,
+          }).range(from),
+        );
+      }
       ranges.push(Decoration.mark({ class: 'cm-wikilink' }).range(from, to));
       continue;
     }
 
-    const link = findLink(context, raw);
     if (isEmbed && link?.resolvedPath && IMAGE_PATTERN.test(link.resolvedPath)) {
       ranges.push(
         Decoration.replace({
@@ -682,6 +705,9 @@ const livePreviewTheme = EditorView.theme({
     maxWidth: '100%',
     margin: '4px 0',
     border: '1px solid var(--border)',
+  },
+  '.cm-lp-image-editing': {
+    display: 'block',
   },
   '.cm-lp-hr': {
     display: 'inline-flex',
