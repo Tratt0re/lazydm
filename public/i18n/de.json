@@ -760,6 +760,17 @@
       "description": "Der Ordner wird auf der Festplatte umbenannt; seine {{count}} Dateien behalten ihre Namen, die Notizen erhalten den neuen Untertyp, und Links durch den Ordner werden aktualisiert.",
       "done": "Ordner umbenannt in {{name}}",
       "error": "Der Ordner konnte nicht umbenannt werden"
+    },
+    "deleteFolder": {
+      "title": "{{name}} löschen?",
+      "description": "Der Ordner enthält {{count}} Dateien. Er kommt in den Papierkorb, aus dem du ihn wiederherstellen kannst.",
+      "modeLabel": "Seine Dateien",
+      "moveToMain": "In den Hauptordner verschieben",
+      "deleteFiles": "Ebenfalls löschen",
+      "rewriteLinks": "Beim Löschen: Links darauf in reinen Text umwandeln und Einbettungen entfernen",
+      "clashes": "Einige Namen gibt es im Hauptordner schon — benenne diese Dateien zuerst um",
+      "done": "Ordner {{name}} in den Papierkorb verschoben",
+      "error": "Der Ordner konnte nicht gelöscht werden"
     }
   }
 }

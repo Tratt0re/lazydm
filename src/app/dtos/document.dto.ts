@@ -164,6 +164,25 @@ export interface RenameFolderResultDto {
   readonly linkCount: number;
 }
 
+/** Deleting a sub-folder: its files go with it (`delete`) or move to the section's main folder first. */
+export type DeleteFolderMode = 'delete' | 'moveToMain';
+
+/**
+ * A deleted sub-folder (to the system Trash): the files moved to the main folder or deleted with it; or,
+ * moving them, the names already taken there (nothing was changed).
+ */
+export type DeleteFolderResultDto =
+  | { readonly status: 'clashes'; readonly clashes: readonly string[] }
+  | {
+      readonly status: 'deleted';
+      readonly path: string;
+      readonly moved: readonly { readonly from: string; readonly to: string }[];
+      readonly deleted: readonly string[];
+      readonly updatedPaths: readonly string[];
+      readonly failedPaths: readonly string[];
+      readonly linkCount: number;
+    };
+
 /** Deletes a note or an asset (to the system Trash). */
 export interface DeleteFilePayload {
   readonly path: string;

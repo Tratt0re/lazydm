@@ -232,6 +232,15 @@ export class AppExplorerTreeComponent {
     });
   }
 
+  /** *Delete…* a sub-folder (files moved to the main folder, or deleted too); the tree follows the index. */
+  protected openDeleteFolderSheet(folderPath: string, folder: DocumentFolderDto): void {
+    void this.fileActions.openDeleteFolderSheet({
+      path: folderPath,
+      label: toSubfolderLabel(folder.name),
+      fileCount: folder.fileCount,
+    });
+  }
+
   /** *Rename…* a note (its title) or an asset (its name); the tree follows the index update. */
   protected openRenameSheet(file: DocumentFileListItemDto): void {
     if (file.kind === 'md') {

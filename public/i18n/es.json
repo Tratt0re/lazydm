@@ -760,6 +760,17 @@
       "description": "La carpeta se renombra en el disco; sus {{count}} archivos conservan su nombre, las notas reciben el nuevo subtipo y se actualizan los enlaces que pasan por la carpeta.",
       "done": "Carpeta renombrada a {{name}}",
       "error": "No se pudo renombrar la carpeta"
+    },
+    "deleteFolder": {
+      "title": "¿Eliminar {{name}}?",
+      "description": "La carpeta contiene {{count}} archivos. Va a la Papelera, desde donde puedes restaurarla.",
+      "modeLabel": "Sus archivos",
+      "moveToMain": "Moverlos a la carpeta principal",
+      "deleteFiles": "Eliminarlos también",
+      "rewriteLinks": "Al eliminarlos: convertir sus enlaces en texto plano y quitar sus incrustaciones",
+      "clashes": "Algunos nombres ya existen en la carpeta principal: renombra antes esos archivos",
+      "done": "Carpeta {{name}} movida a la Papelera",
+      "error": "No se pudo eliminar la carpeta"
     }
   }
 }

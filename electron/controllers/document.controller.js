@@ -25,6 +25,7 @@ const indexerController = require('./indexer.controller');
 const vaultController = require('./vault.controller');
 const {
   ensurePlainObject,
+  normalizeEnum,
   normalizeOptionalBooleanFlag,
   normalizeOptionalString,
   requireString,
@@ -603,18 +604,27 @@ async function renameFolder(payload) {
   const sectionPath = `${location.scope}/${location.section}`;
   const newFolderPath = `${sectionPath}/${slug}`;
   if (newFolderPath === folderPath) {
-    return { path: folderPath, name: slug, moved: [], updatedPaths: [], failedPaths: [], linkCount: 0 };
+    return {
+      path: folderPath,
+      name: slug,
+      moved: [],
+      updatedPaths: [],
+      failedPaths: [],
+      linkCount: 0,
+    };
   }
 
   const prefix = `${folderPath}/`;
   const toNewPath = (filePath) =>
     filePath.startsWith(prefix) ? `${newFolderPath}/${filePath.slice(prefix.length)}` : filePath;
-  const files = vaultIndexModel.listScopeFiles(location.scope).filter((file) => file.path.startsWith(prefix));
+  const files = vaultIndexModel
+    .listScopeFiles(location.scope)
+    .filter((file) => file.path.startsWith(prefix));
   // Notes inside the folder move with it: their links are rewritten at their new path.
   const rawsBySource = new Map(
-    [...groupRawsBySource(files.flatMap((file) => vaultIndexModel.listIncomingLinks(file.path)))].map(
-      ([sourcePath, raws]) => [toNewPath(sourcePath), raws],
-    ),
+    [
+      ...groupRawsBySource(files.flatMap((file) => vaultIndexModel.listIncomingLinks(file.path))),
+    ].map(([sourcePath, raws]) => [toNewPath(sourcePath), raws]),
   );
 
   await documentModel.moveVaultFolder(vaultPath, folderPath, newFolderPath);
@@ -645,12 +655,17 @@ async function renameFolder(payload) {
   }
 
   const parents = new Set(['', location.section, sectionPath]);
-  const links = await rewriteIncomingLinks(vaultPath, rawsBySource, null, (content, sourcePath, raws) =>
-    rewriteLinks(
-      content,
-      (link) => (raws?.has(link.raw) ? renameLinkFolder(link, location.subfolder, slug, parents) : null),
-      { sourcePath },
-    ),
+  const links = await rewriteIncomingLinks(
+    vaultPath,
+    rawsBySource,
+    null,
+    (content, sourcePath, raws) =>
+      rewriteLinks(
+        content,
+        (link) =>
+          raws?.has(link.raw) ? renameLinkFolder(link, location.subfolder, slug, parents) : null,
+        { sourcePath },
+      ),
   );
 
   const moved = files.map((file) => ({ from: file.path, to: toNewPath(file.path) }));
@@ -665,6 +680,115 @@ async function renameFolder(payload) {
     updatedPaths: [...new Set([...subtypePaths, ...links.updatedPaths])],
     failedPaths: [...new Set([...failedPaths, ...links.failedPaths])],
     linkCount: links.linkCount,
+  };
+}
+
+/** What a link to a deleted file becomes: its plain text, or nothing for an embedded asset. */
+function getDeletedLinkText(link, isNote) {
+  return !isNote && link.kind === 'embed' ? '' : getLinkPlainText(link);
+}
+
+const FOLDER_DELETE_MODES = new Set(['delete', 'moveToMain']);
+
+/**
+ * Deletes a sub-folder of a section; the folder goes to the system Trash. `mode`:
+ * - `delete`: its files go with it; with `rewriteLinks` the links from notes outside it are handled like a
+ *   file delete (plain text, embeds removed);
+ * - `moveToMain`: its files first move to the section's main folder like *Move to…* (links rewritten, `subtype`
+ *   removed). A file whose name is taken there stops everything: `{ status: 'clashes', clashes }`.
+ */
+async function deleteFolder(payload) {
+  const body = ensurePlainObject(payload, 'payload');
+  const folderPath = requirePath(body, 'folder').replace(/\/+$/, '');
+  const mode = normalizeEnum(body.mode, 'payload.mode', FOLDER_DELETE_MODES);
+  const rewriteLinksToText =
+    normalizeOptionalBooleanFlag(body.rewriteLinks, 'payload.rewriteLinks') !== 0;
+  const location = sectionModel.parseSectionFolder(folderPath);
+  if (!location?.subfolder) {
+    throw new Error(`Not a sub-folder of a section: ${folderPath}`);
+  }
+
+  requireIndexOpen();
+  const vaultPath = vaultController.getReadyVaultPath();
+  const absolutePath = resolveInsideVault(vaultPath, folderPath);
+  if (!fs.existsSync(absolutePath) || !fs.statSync(absolutePath).isDirectory()) {
+    throw new Error(`Not a folder: ${folderPath}`);
+  }
+
+  const prefix = `${folderPath}/`;
+  const sectionPath = `${location.scope}/${location.section}`;
+  const files = vaultIndexModel.listScopeFiles(location.scope).filter((file) => file.path.startsWith(prefix));
+  const moved = [];
+  const updatedPaths = new Set();
+  const failedPaths = new Set();
+  let linkCount = 0;
+
+  if (mode === 'moveToMain') {
+    const names = files.map((file) => path.posix.basename(file.path));
+    const clashes = names.filter(
+      (name, index) =>
+        names.indexOf(name) !== index ||
+        fs.existsSync(resolveInsideVault(vaultPath, `${sectionPath}/${name}`)),
+    );
+    if (clashes.length > 0) {
+      return { status: 'clashes', clashes: [...new Set(clashes)] };
+    }
+
+    // One by one, like *Move to…*: each move re-indexes, so links between these files stay right too.
+    for (const file of files) {
+      const result = await move({ path: file.path, folder: sectionPath });
+      moved.push({ from: file.path, to: result.path });
+      result.updatedPaths.forEach((item) => updatedPaths.add(item));
+      result.failedPaths.forEach((item) => failedPaths.add(item));
+      linkCount += result.linkCount;
+    }
+  } else if (rewriteLinksToText) {
+    // Links from notes outside the folder (its own notes go with it), each raw knowing what it points to.
+    const isNoteByRawBySource = new Map();
+    for (const file of files) {
+      for (const link of vaultIndexModel.listIncomingLinks(file.path)) {
+        if (!link.sourcePath.startsWith(prefix)) {
+          if (!isNoteByRawBySource.has(link.sourcePath)) {
+            isNoteByRawBySource.set(link.sourcePath, new Map());
+          }
+          isNoteByRawBySource.get(link.sourcePath).set(link.raw, file.kind === 'md');
+        }
+      }
+    }
+
+    const rawsBySource = new Map(
+      [...isNoteByRawBySource].map(([sourcePath, isNoteByRaw]) => [sourcePath, new Set(isNoteByRaw.keys())]),
+    );
+    const result = await rewriteIncomingLinks(vaultPath, rawsBySource, null, (content, sourcePath) => {
+      const isNoteByRaw = isNoteByRawBySource.get(sourcePath);
+      return rewriteLinks(
+        content,
+        (link) =>
+          isNoteByRaw.has(link.raw)
+            ? { text: getDeletedLinkText(link, isNoteByRaw.get(link.raw)) }
+            : null,
+        { sourcePath },
+      );
+    });
+    result.updatedPaths.forEach((item) => updatedPaths.add(item));
+    result.failedPaths.forEach((item) => failedPaths.add(item));
+    linkCount = result.linkCount;
+  }
+
+  await shell.trashItem(absolutePath);
+  await indexerController.reindexPaths([
+    ...files.map((file) => file.path),
+    ...moved.map((item) => item.to),
+    ...updatedPaths,
+  ]);
+  return {
+    status: 'deleted',
+    path: folderPath,
+    moved,
+    deleted: mode === 'delete' ? files.map((file) => file.path) : [],
+    updatedPaths: [...updatedPaths],
+    failedPaths: [...failedPaths],
+    linkCount,
   };
 }
 
@@ -696,12 +820,7 @@ async function deleteFile(payload) {
         (content, sourcePath, raws) =>
           rewriteLinks(
             content,
-            (link) => {
-              if (!raws?.has(link.raw)) {
-                return null;
-              }
-              return { text: !isNote && link.kind === 'embed' ? '' : getLinkPlainText(link) };
-            },
+            (link) => (raws?.has(link.raw) ? { text: getDeletedLinkText(link, isNote) } : null),
             { sourcePath },
           ),
       )
@@ -1037,6 +1156,7 @@ module.exports = {
   createFromLink,
   create,
   deleteFile,
+  deleteFolder,
   linkTargets,
   links,
   list,

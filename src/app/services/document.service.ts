@@ -9,6 +9,8 @@ import type {
   CreateDocumentPayload,
   CreateFromLinkPayload,
   DeleteFilePayload,
+  DeleteFolderMode,
+  DeleteFolderResultDto,
   DocumentDto,
   DocumentFileListItemDto,
   DocumentFolderDto,
@@ -123,6 +125,15 @@ export class DocumentService extends BaseIpcService<APIChannel.DOCUMENTS> {
   /** Renames a sub-folder of a section: the folder, its notes' sub-type and the path links through it. */
   renameFolder(folder: string, name: string): Promise<RenameFolderResultDto> {
     return this.ipcClient.renameFolder({ folder, name });
+  }
+
+  /** Deletes a sub-folder (to the system Trash), its files with it or moved to the main folder first. */
+  deleteFolder(
+    folder: string,
+    mode: DeleteFolderMode,
+    rewriteLinks: boolean,
+  ): Promise<DeleteFolderResultDto> {
+    return this.ipcClient.deleteFolder({ folder, mode, rewriteLinks });
   }
 
   links(path: string): Promise<DocumentLinksDto> {

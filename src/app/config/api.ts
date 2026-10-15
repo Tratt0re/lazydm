@@ -68,6 +68,10 @@ export interface ElectronIpcClient {
     readonly renameAsset: IpcRequest<DTO.RenameAssetPayload, DTO.RenameDocumentResultDto>;
     readonly delete: IpcRequest<DTO.DeleteFilePayload, DTO.RenameDocumentResultDto>;
     readonly renameFolder: IpcRequest<{ folder: string; name: string }, DTO.RenameFolderResultDto>;
+    readonly deleteFolder: IpcRequest<
+      { folder: string; mode: DTO.DeleteFolderMode; rewriteLinks: boolean },
+      DTO.DeleteFolderResultDto
+    >;
     readonly links: IpcRequest<DTO.ReadDocumentPayload, DTO.DocumentLinksDto>;
     readonly linkTargets: IpcRequest<{ sourcePath: string }, { rows: DTO.LinkTargetDto[] }>;
     readonly brokenLinks: IpcRequest<{ campaign: string }, { rows: DTO.BrokenLinkDto[] }>;

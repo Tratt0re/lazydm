@@ -760,6 +760,17 @@
       "description": "La cartella viene rinominata sul disco; i suoi {{count}} file mantengono il nome, le note ricevono il nuovo sottotipo e i collegamenti che passano dalla cartella vengono aggiornati.",
       "done": "Cartella rinominata in {{name}}",
       "error": "Impossibile rinominare la cartella"
+    },
+    "deleteFolder": {
+      "title": "Eliminare {{name}}?",
+      "description": "La cartella contiene {{count}} file. Finisce nel Cestino, da cui puoi ripristinarla.",
+      "modeLabel": "I suoi file",
+      "moveToMain": "Spostali nella cartella principale",
+      "deleteFiles": "Eliminali anche loro",
+      "rewriteLinks": "Se li elimini: trasforma i collegamenti in testo semplice e rimuovi gli incorporamenti",
+      "clashes": "Alcuni nomi sono già presenti nella cartella principale — rinomina prima quei file",
+      "done": "Cartella {{name}} spostata nel Cestino",
+      "error": "Impossibile eliminare la cartella"
     }
   }
 }

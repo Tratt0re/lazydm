@@ -80,7 +80,10 @@ async function saveDocumentCopy(rootPath, relativePath, content) {
   assertMarkdownPath(relativePath);
   const directory = path.posix.dirname(relativePath);
   const baseName = path.posix.basename(relativePath, MARKDOWN_EXTENSION);
-  const copyPath = path.posix.join(directory, `${baseName}-copy-${formatTimestampForFilename()}${MARKDOWN_EXTENSION}`);
+  const copyPath = path.posix.join(
+    directory,
+    `${baseName}-copy-${formatTimestampForFilename()}${MARKDOWN_EXTENSION}`,
+  );
 
   safeWriteFileAtomic(resolveInsideVault(rootPath, copyPath), content);
   return readDocument(rootPath, copyPath);
@@ -95,7 +98,9 @@ async function renameDocumentFile(rootPath, fromPath, toPath) {
   const isCaseOnlyRename = fromPath.toLocaleLowerCase() === toPath.toLocaleLowerCase();
 
   if (!isCaseOnlyRename && fs.existsSync(toAbsolutePath)) {
-    throw new Error(`A note named "${path.posix.basename(toPath)}" already exists in ${path.posix.dirname(toPath)}.`);
+    throw new Error(
+      `A note named "${path.posix.basename(toPath)}" already exists in ${path.posix.dirname(toPath)}.`,
+    );
   }
 
   await fs.promises.mkdir(path.dirname(toAbsolutePath), { recursive: true });
@@ -147,7 +152,10 @@ function buildDefaultNote(type, title) {
  * Creates `<folder>/<slug>.md` from the template of its type (see `templateModel.resolveTemplate`), or with
  * a minimal frontmatter when the type has none. `section` is the folder's display name for `{{section}}`.
  */
-async function createDocument(rootPath, { folderPath, slug, title, type, section, subtype = null }) {
+async function createDocument(
+  rootPath,
+  { folderPath, slug, title, type, section, subtype = null },
+) {
   const relativePath = `${folderPath.replace(/\/+$/, '')}/${slug}${MARKDOWN_EXTENSION}`;
   const absolutePath = resolveInsideVault(rootPath, relativePath);
   if (fs.existsSync(absolutePath)) {
@@ -166,7 +174,10 @@ async function createDocument(rootPath, { folderPath, slug, title, type, section
         });
   await fs.promises.mkdir(path.dirname(absolutePath), { recursive: true });
   // A note created in a sub-folder of its section gets the sub-folder as its sub-type.
-  safeWriteFileAtomic(absolutePath, subtype ? setFrontmatterField(content, 'subtype', subtype) : content);
+  safeWriteFileAtomic(
+    absolutePath,
+    subtype ? setFrontmatterField(content, 'subtype', subtype) : content,
+  );
 
   return readDocument(rootPath, relativePath);
 }
@@ -175,7 +186,9 @@ async function createDocument(rootPath, { folderPath, slug, title, type, section
 async function moveVaultFile(rootPath, fromPath, toPath) {
   const toAbsolutePath = resolveInsideVault(rootPath, toPath);
   if (fs.existsSync(toAbsolutePath)) {
-    throw new Error(`A file named "${path.posix.basename(toPath)}" already exists in ${path.posix.dirname(toPath)}.`);
+    throw new Error(
+      `A file named "${path.posix.basename(toPath)}" already exists in ${path.posix.dirname(toPath)}.`,
+    );
   }
 
   await fs.promises.mkdir(path.dirname(toAbsolutePath), { recursive: true });
@@ -190,7 +203,9 @@ async function moveVaultFolder(rootPath, fromPath, toPath) {
     throw new Error(`Not a folder: ${fromPath}`);
   }
   if (fs.existsSync(toAbsolutePath)) {
-    throw new Error(`A folder named "${path.posix.basename(toPath)}" already exists in ${path.posix.dirname(toPath)}.`);
+    throw new Error(
+      `A folder named "${path.posix.basename(toPath)}" already exists in ${path.posix.dirname(toPath)}.`,
+    );
   }
 
   await fs.promises.rename(fromAbsolutePath, toAbsolutePath);

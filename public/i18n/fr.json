@@ -760,6 +760,17 @@
       "description": "Le dossier est renommé sur le disque ; ses {{count}} fichiers gardent leur nom, les notes reçoivent le nouveau sous-type et les liens passant par le dossier sont mis à jour.",
       "done": "Dossier renommé en {{name}}",
       "error": "Impossible de renommer le dossier"
+    },
+    "deleteFolder": {
+      "title": "Supprimer {{name}} ?",
+      "description": "Le dossier contient {{count}} fichiers. Il va dans la Corbeille, d’où vous pouvez le restaurer.",
+      "modeLabel": "Ses fichiers",
+      "moveToMain": "Les déplacer dans le dossier principal",
+      "deleteFiles": "Les supprimer aussi",
+      "rewriteLinks": "En les supprimant : transformer leurs liens en texte brut et retirer leurs intégrations",
+      "clashes": "Certains noms existent déjà dans le dossier principal — renommez d’abord ces fichiers",
+      "done": "Dossier {{name}} mis à la Corbeille",
+      "error": "Impossible de supprimer le dossier"
     }
   }
 }

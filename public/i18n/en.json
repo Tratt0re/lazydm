@@ -760,6 +760,17 @@
       "description": "The folder is renamed on disk; its {{count}} files keep their names, the notes get the new sub-type, and links through the folder are updated.",
       "done": "Folder renamed to {{name}}",
       "error": "Couldn't rename the folder"
+    },
+    "deleteFolder": {
+      "title": "Delete {{name}}?",
+      "description": "The folder holds {{count}} files. It goes to the Trash, where you can restore it.",
+      "modeLabel": "Its files",
+      "moveToMain": "Move them to the main folder",
+      "deleteFiles": "Delete them too",
+      "rewriteLinks": "When deleting them: turn links to them into plain text and remove their embeds",
+      "clashes": "Some names are already taken in the main folder — rename those files first",
+      "done": "Folder {{name}} moved to the Trash",
+      "error": "Couldn't delete the folder"
     }
   }
 }

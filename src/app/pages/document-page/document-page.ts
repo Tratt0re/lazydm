@@ -17,12 +17,7 @@ import {
 import { AppDocumentPreviewComponent } from '@/components/document-preview/document-preview.component';
 import { toInAppNoteRoute } from '@/components/document-preview/document-preview.markdown';
 import { CAMPAIGN_SECTION_PARAM } from '@/pages/campaign-section-page/campaign-section-page';
-import type {
-  DocumentDto,
-  DocumentLinkDto,
-  LinkTargetDto,
-  SavedAssetDto,
-} from '@/dtos';
+import type { DocumentDto, DocumentLinkDto, LinkTargetDto, SavedAssetDto } from '@/dtos';
 import { AssetService, NOTE_AUDIO_MAX_SECONDS } from '@/services/asset.service';
 import { FileActionsService } from '@/services/file-actions.service';
 import { BrokenLinkActionsService } from '@/services/broken-link-actions.service';

@@ -9,7 +9,7 @@ import {
 } from '@/components/document-preview/document-preview.markdown';
 import { AppSheetFormService } from '@/components/sheet-form/sheet-form.service';
 import type { AppSheetField } from '@/components/sheet-form/sheet-form.types';
-import type { BacklinkDto, DocumentFileListItemDto } from '@/dtos';
+import type { BacklinkDto, DeleteFolderMode, DocumentFileListItemDto } from '@/dtos';
 import { DocumentService } from '@/services/document.service';
 import { WorkspaceService } from '@/services/workspace.service';
 
@@ -246,6 +246,142 @@ export class FileActionsService {
         description: error instanceof Error ? error.message : String(error),
       });
       return null;
+    }
+  }
+
+  /**
+   * *Delete…* a sub-folder, after a confirmation with its file count: **move its files to the main folder**
+   * (default; links rewritten, sub-type removed; a name taken there stops it, listed, the sheet stays open)
+   * or **delete them too** (links to them turned into plain text / embeds removed, unless unticked). The
+   * folder goes to the system Trash; tabs on its files follow them or go to the section page.
+   */
+  async openDeleteFolderSheet(
+    folder: { readonly path: string; readonly label: string; readonly fileCount: number },
+    onDeleted?: () => void,
+  ): Promise<void> {
+    let isSubmitting = false;
+    const sheetRef = this.sheetFormService.open({
+      arcTitle: this.translateService.instant('files.deleteFolder.title', { name: folder.label }),
+      arcDescription: this.translateService.instant('files.deleteFolder.description', {
+        count: folder.fileCount,
+      }),
+      arcOkText: this.translateService.instant('files.delete.submit'),
+      arcOkDestructive: true,
+      arcCancelText: this.translateService.instant('document.rename.cancel'),
+      fields: [
+        {
+          id: 'mode',
+          type: 'select',
+          label: 'files.deleteFolder.modeLabel',
+          value: 'moveToMain',
+          required: true,
+          translate: true,
+          options: [
+            {
+              value: 'moveToMain',
+              label: this.translateService.instant('files.deleteFolder.moveToMain'),
+              icon: 'move-right',
+              translate: false,
+            },
+            {
+              value: 'delete',
+              label: this.translateService.instant('files.deleteFolder.deleteFiles'),
+              icon: 'trash',
+              translate: false,
+            },
+          ],
+        },
+        {
+          id: 'rewriteLinks',
+          type: 'checkbox',
+          value: true,
+          checkboxLabel: this.translateService.instant('files.deleteFolder.rewriteLinks'),
+        },
+      ],
+      onSubmit: (form) => {
+        if (!isSubmitting) {
+          isSubmitting = true;
+          const values = form.getValues();
+          const mode: DeleteFolderMode = values['mode'] === 'delete' ? 'delete' : 'moveToMain';
+          void this.deleteFolder(folder.path, mode, values['rewriteLinks'] !== false).then(
+            (isDeleted) => {
+              isSubmitting = false;
+              if (isDeleted) {
+                sheetRef.close();
+                onDeleted?.();
+              }
+            },
+          );
+        }
+
+        return false;
+      },
+    });
+  }
+
+  /** Deletes a sub-folder; false when it did not happen (name clashes or an error, both shown). */
+  private async deleteFolder(path: string, mode: DeleteFolderMode, rewriteLinks: boolean): Promise<boolean> {
+    // Moving: open notes inside are saved first, so their edits move with them.
+    if (mode === 'moveToMain') {
+      for (const [notePath, save] of this.openNoteSavers) {
+        if (notePath.startsWith(`${path}/`) && !(await save())) {
+          return false;
+        }
+      }
+    }
+
+    try {
+      const result = await this.documentService.deleteFolder(path, mode, rewriteLinks);
+      if (result.status === 'clashes') {
+        toast.error(this.translateService.instant('files.deleteFolder.clashes'), {
+          description: result.clashes.join(', '),
+        });
+        return false;
+      }
+
+      toast.success(
+        this.translateService.instant('files.deleteFolder.done', {
+          name: path.split('/').pop(),
+        }),
+        result.linkCount > 0
+          ? {
+              description: this.translateService.instant('files.delete.linksUpdated', {
+                links: result.linkCount,
+                notes: result.updatedPaths.length,
+              }),
+            }
+          : undefined,
+      );
+      if (result.failedPaths.length > 0) {
+        toast.warning(this.translateService.instant('document.rename.failed'), {
+          description: result.failedPaths.join(', '),
+        });
+      }
+
+      const location = parseVaultFilePath(`${path}/_`);
+      const sectionRoute = location ? `${location.scopeRoute}/${location.section}` : null;
+      for (const { from, to } of result.moved) {
+        await this.followInTabs(
+          toInAppNoteRoute(from) ?? toInAppAssetRoute(from),
+          toInAppNoteRoute(to) ?? toInAppAssetRoute(to),
+        );
+      }
+      for (const deletedPath of result.deleted) {
+        this.deletedPaths.add(deletedPath);
+        await this.followInTabs(toInAppNoteRoute(deletedPath) ?? toInAppAssetRoute(deletedPath), sectionRoute);
+      }
+      if (sectionRoute) {
+        await this.followInTabs(
+          `${sectionRoute}?folder=${encodeURIComponent(path.split('/').pop() ?? '')}`,
+          sectionRoute,
+        );
+      }
+      return true;
+    } catch (error) {
+      toast.error(this.translateService.instant('files.deleteFolder.error'), {
+        description: error instanceof Error ? error.message : String(error),
+      });
+      return false;
     }
   }
 

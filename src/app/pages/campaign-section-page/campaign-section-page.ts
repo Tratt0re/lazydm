@@ -421,6 +421,18 @@ export class CampaignSectionPage {
     );
   }
 
+  /** *Delete…* a sub-folder (its files moved to the main folder, or deleted too); the list reloads. */
+  protected openDeleteFolderSheet(folder: DocumentFolderDto): void {
+    void this.fileActions.openDeleteFolderSheet(
+      {
+        path: this.folderPathOf(folder.name),
+        label: toSubfolderLabel(folder.name),
+        fileCount: folder.fileCount,
+      },
+      () => void this.loadTree(this.sectionPath()),
+    );
+  }
+
   /** *Delete…* a note or an asset (to the system Trash), after a confirmation; the list reloads. */
   protected openDeleteSheet(file: DocumentFileListItemDto): void {
     const isNote = file.kind === 'md';

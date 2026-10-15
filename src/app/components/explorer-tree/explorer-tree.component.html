@@ -124,6 +124,11 @@
                     <arc-icon arcType="folder" />
                     {{ fileMove.revealLabel | translate }}
                   </button>
+                  <div class="-mx-1 my-1 h-px bg-border-subtle" role="separator"></div>
+                  <button type="button" arc-menu-item arcType="destructive" (click)="openDeleteFolderSheet(folderPath, folder)">
+                    <arc-icon arcType="trash" />
+                    {{ 'files.delete.menu' | translate }}
+                  </button>
                 </div>
               </ng-template>
 

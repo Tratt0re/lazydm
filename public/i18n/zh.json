@@ -760,6 +760,17 @@
       "description": "文件夹将在磁盘上重命名；其中 {{count}} 个文件保留原名，笔记获得新的子类型，经过此文件夹的链接会被更新。",
       "done": "文件夹已重命名为 {{name}}",
       "error": "无法重命名文件夹"
+    },
+    "deleteFolder": {
+      "title": "删除 {{name}}？",
+      "description": "文件夹中有 {{count}} 个文件。它将移到废纸篓，可从中恢复。",
+      "modeLabel": "其中的文件",
+      "moveToMain": "移到主文件夹",
+      "deleteFiles": "一并删除",
+      "rewriteLinks": "删除时：将指向它们的链接转为纯文本并移除嵌入",
+      "clashes": "主文件夹中已有同名文件——请先重命名这些文件",
+      "done": "文件夹 {{name}} 已移到废纸篓",
+      "error": "无法删除文件夹"
     }
   }
 }
