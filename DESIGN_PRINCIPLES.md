@@ -504,6 +504,7 @@ variant keys and configuration stay as they are.
 | 12.2 | Media embeds in Live and Reading: audio row with play/stop, PDF row opening the system viewer |
 | 12.3 | Note audio channel (one sound at a time, stops when leaving the note) and player in the view-buttons row |
 | 12.4 | Linked-note preview card (eye button on hover) and the editor reference sheet |
+| 12.5 | Folder right-click menu (explorer and section page): *New note* and *New folder* where the folder allows them |
 
 ## 12. Open decisions
 
