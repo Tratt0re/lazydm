@@ -10,6 +10,7 @@ import { AppSheetFormService } from '@/components/sheet-form/sheet-form.service'
 import type { AppSheetField } from '@/components/sheet-form/sheet-form.types';
 import {
   toAssetUrl,
+  toInAppAssetRoute,
   toInAppNoteRoute,
 } from '@/components/document-preview/document-preview.markdown';
 import type {
@@ -391,6 +392,11 @@ export class CampaignSectionPage {
   /** Thumbnail of an image asset (served by the asset protocol); null for anything else. */
   protected thumbnailUrl(file: DocumentFileListItemDto): string | null {
     return this.assetService.getAssetKind(file.path) === 'image' ? toAssetUrl(file.path) : null;
+  }
+
+  /** Asset page of an image of the list. */
+  protected assetRoute(file: DocumentFileListItemDto): string {
+    return toInAppAssetRoute(file.path) ?? this.scopeRoute();
   }
 
   /** Icon of a non-image file of the list: PDF, audio, anything else. */

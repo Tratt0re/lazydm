@@ -432,6 +432,9 @@
         "done": "Renamed to {{name}} — {{links}} links updated in {{notes}} notes",
         "error": "Couldn't rename the file"
       }
+    },
+    "assets": {
+      "loadError": "Couldn't load this image"
     }
   },
   "document": {

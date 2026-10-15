@@ -432,6 +432,9 @@
         "done": "Renommé en {{name}} — {{links}} liens mis à jour dans {{notes}} notes",
         "error": "Impossible de renommer le fichier"
       }
+    },
+    "assets": {
+      "loadError": "Impossible de charger cette image"
     }
   },
   "document": {

@@ -93,7 +93,8 @@ LazyDM works like **Obsidian**, specialised for Dungeon Masters.
   sub-folder), *Reveal in Finder* (*Show in Explorer* / file manager elsewhere) and *Delete…*, a folder for *Open*,
   *Rename…*, *Reveal* and *Delete…*.
 - **Asset rows** show a small thumbnail for images (an icon for PDF and audio), a *Rename* button and *Copy to
-  compendium*. Clicking an image opens the **asset page** (`/<section>/…/<file name with extension>`): only the
+  compendium*. Clicking an image (section page or explorer) opens the **asset page**
+  (`/<section>/…/<file name with extension>`, its own tab title and breadcrumb; a rename moves it): only the
   image, fitted to the page, with *Rename*, *Copy to compendium / campaign* and *Delete* in the toolbar.
 - **Renaming and deleting** (notes, assets, sub-folders) — every link change is conflict-checked like a save:
   - *Rename* a note: the note page's sheet (§6), also from the section page. *Rename* an asset: the new name gives

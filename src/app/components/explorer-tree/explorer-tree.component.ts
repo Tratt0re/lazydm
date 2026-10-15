@@ -16,7 +16,10 @@ import { NavigationEnd, Router, RouterLink } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { filter, map } from 'rxjs';
 
-import { toInAppNoteRoute } from '@/components/document-preview/document-preview.markdown';
+import {
+  toInAppAssetRoute,
+  toInAppNoteRoute,
+} from '@/components/document-preview/document-preview.markdown';
 import type { DocumentFileListItemDto, DocumentFolderDto } from '@/dtos';
 import { CopyToService } from '@/services/copy-to.service';
 import { DocumentService } from '@/services/document.service';
@@ -216,6 +219,11 @@ export class AppExplorerTreeComponent {
 
   protected noteRoute(file: DocumentFileListItemDto): string | null {
     return toInAppNoteRoute(file.path);
+  }
+
+  /** Asset page of an image (null for any other asset). */
+  protected assetRoute(file: DocumentFileListItemDto): string | null {
+    return toInAppAssetRoute(file.path);
   }
 
   /** The sub-folder of the section a file is in (`null` directly in it): where an asset row links to. */

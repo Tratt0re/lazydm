@@ -1,0 +1,26 @@
+@if (hasLoadError()) {
+  <div class="mx-auto w-full max-w-5xl p-6">
+    <arc-alert
+      arcType="destructive"
+      arcIcon="circle-alert"
+      [arcTitle]="'campaigns.assets.loadError' | translate"
+      [arcDescription]="assetPath()"
+    />
+  </div>
+} @else {
+  <!-- Only the image, fitted to the page (never upscaled past its own size). The absolute box gives the
+       image a definite size to fit in, so the page never scrolls. -->
+  <div class="flex min-h-0 flex-1 p-4">
+    <div class="relative min-h-0 min-w-0 flex-1 overflow-hidden border border-input bg-recessed">
+      <div class="absolute inset-4 flex items-center justify-center">
+        <img
+          [src]="imageUrl()"
+          [alt]="fileName()"
+          draggable="false"
+          class="max-h-full max-w-full border border-border object-contain"
+          (error)="onImageError()"
+        />
+      </div>
+    </div>
+  </div>
+}

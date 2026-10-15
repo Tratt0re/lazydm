@@ -40,8 +40,13 @@
           </a>
         } @else {
           <div class="flex items-center justify-between gap-4 px-4 py-2 text-muted-foreground" [class.pl-14]="isNested">
-            <span class="flex min-w-0 items-center gap-3">
-              @if (thumbnailUrl(file); as thumbnail) {
+            @if (thumbnailUrl(file); as thumbnail) {
+              <!-- An image opens its asset page. -->
+              <a
+                [routerLink]="assetRoute(file)"
+                draggable="false"
+                class="flex min-w-0 flex-1 items-center gap-3 hover:text-primary focus-visible:outline-2 focus-visible:outline-ring"
+              >
                 <img
                   [src]="thumbnail"
                   alt=""
@@ -49,13 +54,16 @@
                   draggable="false"
                   class="size-10 shrink-0 border border-border bg-recessed object-cover"
                 />
-              } @else {
+                <span class="truncate text-sm text-foreground">{{ file.name }}</span>
+              </a>
+            } @else {
+              <span class="flex min-w-0 items-center gap-3">
                 <span class="flex size-10 shrink-0 items-center justify-center border border-border bg-recessed">
                   <arc-icon [arcType]="assetIcon(file)" class="size-4 text-primary" />
                 </span>
-              }
-              <span class="truncate text-sm text-foreground">{{ file.name }}</span>
-            </span>
+                <span class="truncate text-sm text-foreground">{{ file.name }}</span>
+              </span>
+            }
             <span class="flex shrink-0 items-center gap-3">
               <span class="text-[10px] font-semibold tracking-[0.1em] uppercase">
                 {{ formatFileSize(file.size) }}

@@ -24,7 +24,7 @@ export class FileActionsService {
    * linking to it and *Update links* (default on). `onRenamed` gets the new path.
    */
   async openRenameAssetSheet(
-    file: DocumentFileListItemDto,
+    file: Pick<DocumentFileListItemDto, 'path' | 'name'>,
     onRenamed?: (path: string) => void,
   ): Promise<void> {
     let backlinks: readonly BacklinkDto[] = [];
@@ -101,7 +101,11 @@ export class FileActionsService {
   }
 
   /** Renames an asset; returns its new path, or null when it failed (the error is shown). */
-  private async renameAsset(path: string, name: string, updateLinks: boolean): Promise<string | null> {
+  private async renameAsset(
+    path: string,
+    name: string,
+    updateLinks: boolean,
+  ): Promise<string | null> {
     try {
       const result = await this.documentService.renameAsset({ path, name, updateLinks });
       toast.success(

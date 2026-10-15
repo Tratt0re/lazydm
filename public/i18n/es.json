@@ -432,6 +432,9 @@
         "done": "Renombrado a {{name}} — {{links}} enlaces actualizados en {{notes}} notas",
         "error": "No se pudo renombrar el archivo"
       }
+    },
+    "assets": {
+      "loadError": "No se pudo cargar esta imagen"
     }
   },
   "document": {

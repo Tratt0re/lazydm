@@ -432,6 +432,9 @@
         "done": "已重命名为 {{name}} — 已更新 {{notes}} 篇笔记中的 {{links}} 个链接",
         "error": "无法重命名文件"
       }
+    },
+    "assets": {
+      "loadError": "无法加载此图片"
     }
   },
   "document": {

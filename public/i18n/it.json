@@ -432,6 +432,9 @@
         "done": "Rinominato in {{name}} — {{links}} collegamenti aggiornati in {{notes}} note",
         "error": "Impossibile rinominare il file"
       }
+    },
+    "assets": {
+      "loadError": "Impossibile caricare questa immagine"
     }
   },
   "document": {

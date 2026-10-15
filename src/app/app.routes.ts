@@ -16,12 +16,37 @@ const RENAMED_SECTION_ROUTES: Routes = [
   { path: 'monsters/:subfolder/:note', redirectTo: 'enemies/:subfolder/:note' },
 ];
 
-/** A note: directly in its section (`:note`) or in one of its sub-folders (`:subfolder/:note`). */
-const NOTE_ROUTES: Routes = [':note', ':subfolder/:note'].map((path) => ({
-  path,
-  canDeactivate: [documentLeaveGuard],
-  loadComponent: () => import('./pages/document-page/document-page').then((m) => m.DocumentPage),
-}));
+/** Image file names (the editor's and the reading view's list): those open the asset page, not a note. */
+const IMAGE_FILE_PATTERN = /\.(png|jpe?g|gif|webp|svg|avif)$/i;
+
+/** An image of a section, directly in it (`:file`) or in one of its sub-folders (`:subfolder/:file`). */
+function matchImageAsset(segments: UrlSegment[]): UrlMatchResult | null {
+  const file = segments[segments.length - 1];
+  if ((segments.length !== 1 && segments.length !== 2) || !IMAGE_FILE_PATTERN.test(file.path)) {
+    return null;
+  }
+
+  return {
+    consumed: segments,
+    posParams: segments.length === 2 ? { subfolder: segments[0], file } : { file },
+  };
+}
+
+/**
+ * A note: directly in its section (`:note`) or in one of its sub-folders (`:subfolder/:note`). Images at
+ * those places open the asset page instead.
+ */
+const NOTE_ROUTES: Routes = [
+  {
+    matcher: matchImageAsset,
+    loadComponent: () => import('./pages/asset-page/asset-page').then((m) => m.AssetPage),
+  },
+  ...[':note', ':subfolder/:note'].map((path) => ({
+    path,
+    canDeactivate: [documentLeaveGuard],
+    loadComponent: () => import('./pages/document-page/document-page').then((m) => m.DocumentPage),
+  })),
+];
 
 function matchSheetPaths(segments: UrlSegment[]): UrlMatchResult | null {
   return ['compendium', 'templates', 'settings'].includes(segments[0]?.path ?? '')

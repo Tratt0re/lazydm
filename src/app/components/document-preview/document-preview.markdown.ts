@@ -109,6 +109,17 @@ export function toInAppNoteRoute(resolvedPath: string): string | null {
   return `${location.scopeRoute}/${folder}/${location.name}`;
 }
 
+/** In-app route of an image of a campaign or of a compendium system (its asset page), null for anything else. */
+export function toInAppAssetRoute(resolvedPath: string): string | null {
+  const location = parseVaultFilePath(resolvedPath);
+  if (!location || location.isNote || !IMAGE_EXTENSION_PATTERN.test(location.name)) {
+    return null;
+  }
+
+  const folder = location.subfolder ? `${location.section}/${location.subfolder}` : location.section;
+  return `${location.scopeRoute}/${folder}/${location.name}`;
+}
+
 function renderWikilinkToken(token: Token): string {
   const { isEmbed, raw, resolvedPath, targetName, heading, label, sourcePath } =
     token.meta as unknown as WikilinkTokenMeta;

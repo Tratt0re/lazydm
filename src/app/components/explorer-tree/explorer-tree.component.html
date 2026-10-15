@@ -152,16 +152,18 @@
   }
 </ng-template>
 
-<!-- A file: a note opens in the editor; an asset opens the folder page it is in. -->
+<!-- A file: a note opens in the editor, an image its asset page; other assets open the folder page they are in. -->
 <ng-template #fileRow let-file let-node="node">
   @let route = noteRoute(file);
   @let isNote = file.kind === 'md' && !!route;
+  @let imageRoute = isNote ? null : assetRoute(file);
+  @let ownRoute = isNote ? route : imageRoute;
   <a
-    [routerLink]="isNote ? route : node.route"
-    [queryParams]="isNote ? null : folderQueryOf(node, file)"
+    [routerLink]="ownRoute ?? node.route"
+    [queryParams]="ownRoute ? null : folderQueryOf(node, file)"
     (click)="navigated.emit()"
-    [class]="rowClass(isNote && isActive(route), false) + ' gap-2 pl-[26px] pr-3 font-normal'"
-    [attr.aria-current]="isNote && isActive(route) ? 'page' : null"
+    [class]="rowClass(!!ownRoute && isActive(ownRoute), false) + ' gap-2 pl-[26px] pr-3 font-normal'"
+    [attr.aria-current]="ownRoute && isActive(ownRoute) ? 'page' : null"
     [attr.title]="isNote ? file.title : file.name"
     arc-context-menu
     [arcContextMenuTriggerFor]="fileMenu"
