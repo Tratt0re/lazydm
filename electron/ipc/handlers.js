@@ -1,5 +1,6 @@
 const {
   appMetaController,
+  assetController,
   campaignController,
   cloudReadinessController,
   compendiumController,
@@ -24,6 +25,9 @@ const IPC_HANDLERS = Object.freeze({
   [CHANNELS.appMeta.update]: appMetaController.update,
   [CHANNELS.appMeta.remove]: appMetaController.remove,
   [CHANNELS.appMeta.upsert]: appMetaController.upsert,
+
+  [CHANNELS.assets.save]: assetController.save,
+  [CHANNELS.assets.import]: assetController.importFiles,
 
   [CHANNELS.campaigns.list]: campaignController.list,
   [CHANNELS.campaigns.get]: campaignController.get,

@@ -59,6 +59,8 @@
           (saveRequested)="save()"
           (linkOpen)="openRoute($event)"
           (brokenLinkOpen)="openBrokenLinkMenu($event)"
+          (filesPasted)="onFilesPasted($event)"
+          (importFileRequested)="importFiles()"
         />
         <app-broken-link-menu (fixBrokenLink)="onFixBrokenLink($event)" />
         @if (mode() === 'reading') {

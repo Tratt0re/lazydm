@@ -19,7 +19,14 @@ import { toInAppNoteRoute } from '@/components/document-preview/document-preview
 import { AppSheetFormService } from '@/components/sheet-form/sheet-form.service';
 import type { AppSheetField } from '@/components/sheet-form/sheet-form.types';
 import { CAMPAIGN_SECTION_PARAM } from '@/pages/campaign-section-page/campaign-section-page';
-import type { BacklinkDto, DocumentDto, DocumentLinkDto, LinkTargetDto } from '@/dtos';
+import type {
+  BacklinkDto,
+  DocumentDto,
+  DocumentLinkDto,
+  LinkTargetDto,
+  SavedAssetDto,
+} from '@/dtos';
+import { AssetService, NOTE_AUDIO_MAX_SECONDS } from '@/services/asset.service';
 import { BrokenLinkActionsService } from '@/services/broken-link-actions.service';
 import { CopyToService } from '@/services/copy-to.service';
 import { getNoteScopeKind, NoteScopeService } from '@/services/note-scope.service';
@@ -84,6 +91,7 @@ export class DocumentPage {
   private readonly workspace = inject(WorkspaceService);
   private readonly brokenLinkActions = inject(BrokenLinkActionsService);
   private readonly copyTo = inject(CopyToService);
+  private readonly assetService = inject(AssetService);
   private readonly editor = viewChild(AppCodeEditorComponent);
   private readonly brokenLinkMenu = viewChild(AppBrokenLinkMenuComponent);
   private loadToken = 0;
@@ -260,6 +268,75 @@ export class DocumentPage {
       return false;
     } finally {
       this.isSaving.set(false);
+    }
+  }
+
+  /** Pasted media files are saved right away in the scope's assets and embedded at the cursor. */
+  protected onFilesPasted(files: readonly File[]): void {
+    const document = this.document();
+    if (document) {
+      void this.saveAssets(document.path, async () => {
+        const saved: SavedAssetDto[] = [];
+        for (const file of files) {
+          saved.push(await this.assetService.save(document.path, file));
+        }
+        return saved;
+      });
+    }
+  }
+
+  /** *Import file…* (insert menu): media files picked on disk, saved and embedded like a paste. */
+  protected importFiles(): void {
+    const document = this.document();
+    if (document) {
+      void this.saveAssets(document.path, () => this.assetService.importFiles(document.path));
+    }
+  }
+
+  /**
+   * Saves assets, embeds them in the note (unless another note was opened meanwhile), says where they
+   * went, and warns about audio longer than note audio is meant for.
+   */
+  private async saveAssets(
+    notePath: string,
+    saveFiles: () => Promise<readonly SavedAssetDto[]>,
+  ): Promise<void> {
+    let saved: readonly SavedAssetDto[];
+    try {
+      saved = await saveFiles();
+    } catch (error) {
+      toast.error(this.translateService.instant('document.assets.saveError'), {
+        description: error instanceof Error ? error.message : String(error),
+      });
+      return;
+    }
+
+    if (saved.length === 0) {
+      return;
+    }
+
+    if (this.document()?.path === notePath) {
+      this.editor()?.insertEmbeds(saved.map((asset) => asset.linkTarget));
+    }
+    toast.success(
+      this.translateService.instant(
+        saved.length === 1 ? 'document.assets.savedOne' : 'document.assets.savedMany',
+        { count: saved.length },
+      ),
+      { description: saved.map((asset) => asset.path).join(', ') },
+    );
+
+    for (const asset of saved.filter((item) => item.kind === 'audio')) {
+      const duration = await this.assetService.readAudioDuration(asset.path);
+      if (duration !== null && duration > NOTE_AUDIO_MAX_SECONDS) {
+        toast.warning(
+          this.translateService.instant('document.assets.longAudio', {
+            name: asset.linkTarget,
+            seconds: NOTE_AUDIO_MAX_SECONDS,
+          }),
+          { description: this.translateService.instant('document.assets.longAudioDescription') },
+        );
+      }
     }
   }
 

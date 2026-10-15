@@ -121,6 +121,24 @@ async function copyVaultFile(rootPath, fromPath, toPath) {
   return { status: 'copied', path: toPath };
 }
 
+/**
+ * Writes bytes (a pasted or imported asset) to a new vault file without ever overwriting: returns
+ * `{ status: 'exists' }` when the target is taken.
+ */
+async function writeVaultFile(rootPath, relativePath, bytes) {
+  const absolutePath = resolveInsideVault(rootPath, relativePath);
+  await fs.promises.mkdir(path.dirname(absolutePath), { recursive: true });
+  try {
+    await fs.promises.writeFile(absolutePath, bytes, { flag: 'wx' });
+  } catch (error) {
+    if (error && error.code === 'EEXIST') {
+      return { status: 'exists', path: relativePath };
+    }
+    throw error;
+  }
+  return { status: 'written', path: relativePath };
+}
+
 function buildDefaultNote(type, title) {
   return `---\n${YAML.stringify({ type, title })}---\n# ${title}\n`;
 }
@@ -203,4 +221,5 @@ module.exports = {
   renameDocumentFile,
   saveDocumentCopy,
   writeDocument,
+  writeVaultFile,
 };

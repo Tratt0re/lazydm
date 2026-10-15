@@ -1,11 +1,5 @@
 import { closeBrackets, closeBracketsKeymap, startCompletion } from '@codemirror/autocomplete';
-import {
-  EditorSelection,
-  EditorState,
-  type Extension,
-  type Line,
-  Prec,
-} from '@codemirror/state';
+import { EditorSelection, EditorState, type Extension, type Line, Prec } from '@codemirror/state';
 import { type Command, EditorView, keymap } from '@codemirror/view';
 
 /** Typed with a selection, these wrap it (opening → closing) instead of replacing it. */
@@ -180,7 +174,8 @@ export type EditorInsertAction =
   | 'calloutWarning'
   | 'calloutDanger'
   | 'link'
-  | 'asset';
+  | 'asset'
+  | 'importFile';
 
 type LinePrefixKind = 'bullet' | 'ordered' | 'task' | 'quote';
 
@@ -201,7 +196,7 @@ const CODE_FENCE = '```';
 function selectedLines(state: EditorState): Line[] {
   const lines = new Map<number, Line>();
   for (const range of state.selection.ranges) {
-    for (let position = range.from; position <= range.to; ) {
+    for (let position = range.from; position <= range.to;) {
       const line = state.doc.lineAt(position);
       lines.set(line.number, line);
       position = line.to + 1;
@@ -398,7 +393,8 @@ function clipboardCommand(action: 'cut' | 'copy' | 'paste'): Command {
   };
 }
 
-export const INSERT_COMMANDS: Readonly<Record<EditorInsertAction, Command>> = {
+/** *Import file…* needs the note page (file dialog, saving): the editor emits it instead of running a command. */
+export const INSERT_COMMANDS: Readonly<Record<Exclude<EditorInsertAction, 'importFile'>, Command>> = {
   cut: clipboardCommand('cut'),
   copy: clipboardCommand('copy'),
   paste: clipboardCommand('paste'),

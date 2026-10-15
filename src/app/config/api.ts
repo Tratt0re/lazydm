@@ -13,6 +13,7 @@ export interface ElectronAppInfo {
 
 export enum APIChannel {
   APP_META = 'appMeta',
+  ASSETS = 'assets',
   CAMPAIGNS = 'campaigns',
   CHARACTERS = 'characters',
   CLOUD = 'cloud',
@@ -32,6 +33,10 @@ export interface ElectronIpcClient {
   readonly appMeta: {
     readonly get: IpcRequest<{ key: string }, { value: string | null }>;
     readonly set: IpcRequest<{ key: string; value: string }, { success: boolean }>;
+  };
+  readonly assets: {
+    readonly save: IpcRequest<DTO.SaveAssetPayload, DTO.SavedAssetDto>;
+    readonly import: IpcRequest<{ sourcePath: string }, { files: DTO.SavedAssetDto[] }>;
   };
   readonly campaigns: {
     readonly list: OptionalIpcRequest<void, { rows: DTO.CampaignDto[] }>;

@@ -7,6 +7,10 @@ const CHANNELS = Object.freeze({
     remove: 'db:app-meta:remove',
     upsert: 'db:app-meta:upsert',
   }),
+  assets: Object.freeze({
+    save: 'assets:save',
+    import: 'assets:import',
+  }),
   campaigns: Object.freeze({
     list: 'campaigns:list',
     get: 'campaigns:get',

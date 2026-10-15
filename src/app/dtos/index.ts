@@ -1,3 +1,4 @@
+export * from './asset.dto';
 export * from './campaign.dto';
 export * from './compendium.dto';
 export * from './cloud-readiness.dto';

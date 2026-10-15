@@ -34,6 +34,7 @@ import { tags } from '@lezer/highlight';
 import type { EditorSettings } from '@/config/local-preferences.config';
 import { AppEditorInsertMenuComponent } from '@/components/editor-insert-menu/editor-insert-menu.component';
 import type { DocumentLinkDto, LinkTargetDto } from '@/dtos';
+import { AssetService } from '@/services/asset.service';
 import { LocalPreferencesService } from '@/services/local-preferences.service';
 import { codeMap } from './code-map';
 import {
@@ -90,6 +91,7 @@ export class AppCodeEditorComponent implements OnDestroy {
   private readonly modeCompartment = new Compartment();
   private readonly settingsCompartment = new Compartment();
   private readonly editorSettings = inject(LocalPreferencesService).editorSettings;
+  private readonly assetService = inject(AssetService);
 
   /** Identifies the open note; the editor content resets whenever this changes (switching notes). */
   readonly documentKey = input.required<string>();
@@ -108,6 +110,10 @@ export class AppCodeEditorComponent implements OnDestroy {
   /** A link of the live preview was clicked: its in-app route. */
   readonly linkOpen = output<string>();
   readonly brokenLinkOpen = output<CodeEditorBrokenLinkEvent>();
+  /** Media files were pasted (the page saves them as assets, then calls `insertEmbeds`). */
+  readonly filesPasted = output<readonly File[]>();
+  /** *Import file…* was chosen in the insert menu (the page opens the file dialog). */
+  readonly importFileRequested = output<void>();
 
   /** Link and asset entries of the insert menu need files to suggest (none in templates). */
   protected readonly canLink = computed(() => this.linkTargets().length > 0);
@@ -162,6 +168,18 @@ export class AppCodeEditorComponent implements OnDestroy {
     this.syncLinks();
   }
 
+  /** Writes `![[…]]` embeds of saved assets in place of the selection, one per line. */
+  insertEmbeds(linkTargets: readonly string[]): void {
+    const view = this.view;
+    if (!view || linkTargets.length === 0) {
+      return;
+    }
+
+    const embeds = linkTargets.map((target) => `![[${target}]]`).join('\n');
+    view.dispatch(view.state.replaceSelection(embeds), { scrollIntoView: true, userEvent: 'input.paste' });
+    view.focus();
+  }
+
   /** Places the cursor at a given line (1-based), used when a backlink points at a heading. */
   focusLine(lineNumber: number): void {
     const view = this.view;
@@ -188,12 +206,32 @@ export class AppCodeEditorComponent implements OnDestroy {
 
   protected runInsertAction(action: EditorInsertAction): void {
     const view = this.view;
-    if (view) {
-      // Focus first: the link suggestions and the clipboard both need the editor focused.
-      view.focus();
+    if (!view) {
+      return;
+    }
+
+    // Focus first: the link suggestions and the clipboard both need the editor focused.
+    view.focus();
+    if (action === 'importFile') {
+      this.importFileRequested.emit();
+    } else {
       INSERT_COMMANDS[action](view);
     }
   }
+
+  /** Pasted media files become assets (when the note has a scope to save them in); text pastes as usual. */
+  private readonly handlePaste = (event: ClipboardEvent): boolean => {
+    const files = [...(event.clipboardData?.files ?? [])].filter((file) =>
+      this.assetService.isMediaFile(file),
+    );
+    if (files.length === 0 || !this.canLink() || this.readOnly()) {
+      return false;
+    }
+
+    event.preventDefault();
+    this.filesPasted.emit(files);
+    return true;
+  };
 
   protected focusEditor(): void {
     this.view?.focus();
@@ -302,6 +340,7 @@ export class AppCodeEditorComponent implements OnDestroy {
         this.settingsCompartment.of(settingsExtensions(this.editorSettings())),
         EditorView.editable.of(!this.readOnly()),
         EditorView.contentAttributes.of({ 'aria-placeholder': this.placeholderText() }),
+        EditorView.domEventHandlers({ paste: (event) => this.handlePaste(event) }),
         EditorView.updateListener.of((update: ViewUpdate) => {
           if (update.docChanged) {
             this.contentChange.emit(update.state.doc.toString());

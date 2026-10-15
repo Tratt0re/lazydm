@@ -500,7 +500,15 @@
       "calloutDanger": "Gefahr",
       "link": "Link zu Notiz…",
       "assetGroup": "Asset",
-      "asset": "Aus den Assets…"
+      "asset": "Aus den Assets…",
+      "importFile": "Datei importieren…"
+    },
+    "assets": {
+      "savedOne": "In den Assets gespeichert",
+      "savedMany": "{{count}} Dateien in den Assets gespeichert",
+      "saveError": "Die Datei konnte nicht gespeichert werden",
+      "longAudio": "{{name}} ist länger als {{seconds}} Sekunden",
+      "longAudioDescription": "Notiz-Audio ist für kurze Klänge gedacht. Die Datei ist gespeichert und wird trotzdem abgespielt."
     }
   },
   "tabs": {

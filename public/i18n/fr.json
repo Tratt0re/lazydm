@@ -500,7 +500,15 @@
       "calloutDanger": "Danger",
       "link": "Lien vers une note…",
       "assetGroup": "Ressource",
-      "asset": "Depuis les ressources…"
+      "asset": "Depuis les ressources…",
+      "importFile": "Importer un fichier…"
+    },
+    "assets": {
+      "savedOne": "Enregistré dans les ressources",
+      "savedMany": "{{count}} fichiers enregistrés dans les ressources",
+      "saveError": "Impossible d'enregistrer le fichier",
+      "longAudio": "{{name}} dure plus de {{seconds}} secondes",
+      "longAudioDescription": "L'audio des notes est prévu pour des sons courts. Il est enregistré et sera tout de même lu."
     }
   },
   "tabs": {

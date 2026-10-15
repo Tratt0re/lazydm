@@ -500,7 +500,15 @@
       "calloutDanger": "Pericolo",
       "link": "Collegamento a nota…",
       "assetGroup": "Risorsa",
-      "asset": "Dalle risorse…"
+      "asset": "Dalle risorse…",
+      "importFile": "Importa file…"
+    },
+    "assets": {
+      "savedOne": "Salvato nelle risorse",
+      "savedMany": "{{count}} file salvati nelle risorse",
+      "saveError": "Impossibile salvare il file",
+      "longAudio": "{{name}} dura più di {{seconds}} secondi",
+      "longAudioDescription": "L'audio delle note è pensato per suoni brevi. Il file è salvato e verrà comunque riprodotto."
     }
   },
   "tabs": {

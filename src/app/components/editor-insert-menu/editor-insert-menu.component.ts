@@ -203,7 +203,10 @@ export class AppEditorInsertMenuComponent {
     item('calloutWarning', 'triangle-alert'),
     item('calloutDanger', 'octagon-alert'),
   ];
-  protected readonly assetItems: readonly InsertMenuItem[] = [item('asset', 'image')];
+  protected readonly assetItems: readonly InsertMenuItem[] = [
+    item('asset', 'image'),
+    item('importFile', 'file-up'),
+  ];
 
   protected readonly submenuTemplates = computed<
     Readonly<Record<InsertSubmenu, TemplateRef<void>>>

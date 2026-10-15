@@ -500,7 +500,15 @@
       "calloutDanger": "Danger",
       "link": "Link to note…",
       "assetGroup": "Asset",
-      "asset": "From assets…"
+      "asset": "From assets…",
+      "importFile": "Import file…"
+    },
+    "assets": {
+      "savedOne": "Saved to assets",
+      "savedMany": "{{count}} files saved to assets",
+      "saveError": "Couldn't save the file",
+      "longAudio": "{{name}} is longer than {{seconds}} seconds",
+      "longAudioDescription": "Note audio is meant for short sounds. It is saved and will still play."
     }
   },
   "tabs": {

@@ -500,7 +500,15 @@
       "calloutDanger": "危险",
       "link": "链接到笔记…",
       "assetGroup": "资源",
-      "asset": "从资源中…"
+      "asset": "从资源中…",
+      "importFile": "导入文件…"
+    },
+    "assets": {
+      "savedOne": "已保存到资源",
+      "savedMany": "已将 {{count}} 个文件保存到资源",
+      "saveError": "无法保存文件",
+      "longAudio": "{{name}} 超过 {{seconds}} 秒",
+      "longAudioDescription": "笔记音频适用于短音效。文件已保存，仍可播放。"
     }
   },
   "tabs": {
