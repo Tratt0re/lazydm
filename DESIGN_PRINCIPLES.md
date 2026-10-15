@@ -56,7 +56,8 @@ LazyDM works like **Obsidian**, specialised for Dungeon Masters.
   (`<campaign>/assets/`, `compendium/<system>/assets/`) and, from a note, embedded at the cursor as `![[name.ext]]`
   (Obsidian-compatible); a toast tells where the file went. File name: the original name as a slug
   (`pasted-<timestamp>.<ext>` for a pasted screenshot); a taken name gets a `-<timestamp>` suffix — an asset is
-  never overwritten.
+  never overwritten. A file **identical** to an asset already in the scope (same size, then same content) is not
+  saved again: the existing one is embedded and the toast says *Already in assets*.
 
 ## 2a. Sections (campaign folders)
 
@@ -72,8 +73,9 @@ LazyDM works like **Obsidian**, specialised for Dungeon Masters.
     with a user-written label (not translated). A custom type gets a generic built-in template.
 - **Folders appear on demand**: a section exists from the settings; its folder is created with its first file.
   Opening a campaign no longer creates empty folders (existing empty ones are left alone).
-- **Folders are never renamed on disk** by LazyDM (renaming a section = changing its label). Hiding is not deleting:
-  LazyDM never deletes a section folder.
+- **Section folders are never renamed on disk** by LazyDM (renaming a section = changing its label). Hiding is not
+  deleting: LazyDM never deletes a section folder. **Sub-folders** can be renamed and deleted (see *Renaming and
+  deleting* below).
 - **Sub-folders**: one level inside a section, created from the section page (*New folder*). A sub-folder is a
   **sub-type**: notes in `enemies/humans/` have `type: enemy` and `subtype: humans` (a separate frontmatter field,
   the sub-folder slug). New notes created inside a sub-folder get both. Sub-folders share the section's template
@@ -83,10 +85,29 @@ LazyDM works like **Obsidian**, specialised for Dungeon Masters.
   (`/<section>?folder=<name>`, breadcrumb `CAMPAIGN / SECTION /`), where *New note* creates notes in it and *New
   folder* is not offered (one level). A note in a sub-folder opens at `/<section>/<sub-folder>/<note>` with the
   breadcrumb `CAMPAIGN / SECTION / SUB-FOLDER /`.
-- **Section page as a tree**: sub-folders are collapsible rows showing their files inline (their name still opens
-  the sub-folder view). Files can be dragged onto a sub-folder, or onto the *main folder* target shown while
-  dragging, to move them (one section only); right-click a file for *Move to…* (main folder or a sub-folder) and
-  *Reveal in Finder* (*Show in Explorer* / file manager elsewhere), a folder for *Open* and *Reveal*.
+- **Section page as a tree**: sub-folders are collapsible rows showing their files inline; a click anywhere on the
+  row expands / collapses it, and a ↗ button shown on hover (as in the explorer) opens the sub-folder view.
+  *New folder* keeps the user on the current page, with the new sub-folder expanded. Rows keep the normal cursor
+  (pointer on what is clickable). Files can be dragged onto a sub-folder, or onto the *main folder* target shown
+  while dragging, to move them (one section only); right-click a file for *Rename…*, *Move to…* (main folder or a
+  sub-folder), *Reveal in Finder* (*Show in Explorer* / file manager elsewhere) and *Delete…*, a folder for *Open*,
+  *Rename…*, *Reveal* and *Delete…*.
+- **Asset rows** show a small thumbnail for images (an icon for PDF and audio), a *Rename* button and *Copy to
+  compendium*. Clicking an image opens the **asset page** (`/<section>/…/<file name with extension>`): only the
+  image, fitted to the page, with *Rename*, *Copy to compendium / campaign* and *Delete* in the toolbar.
+- **Renaming and deleting** (notes, assets, sub-folders) — every link change is conflict-checked like a save:
+  - *Rename* a note: the note page's sheet (§6), also from the section page. *Rename* an asset: the new name gives
+    the slug, the extension stays; embeds and links to it are rewritten.
+  - *Rename* a sub-folder: the folder on disk, the `subtype` of its notes, and path links through it
+    (`[[enemies/humans/bandit]]`) — the same rewrite as the `monsters/` → `enemies/` migration. A taken name is
+    refused.
+  - *Delete…* a note or an asset, after a confirmation listing the notes that link to it. For a note, *Turn links
+    into plain text* (default on); for an asset, *Remove the embeds* (default on). Unticked, the links stay and are
+    reported as broken in Review. Deleted files go to the **system Trash** (recoverable), never deleted for good.
+  - *Delete…* a sub-folder: the confirmation shows its file count and offers **Delete the files too** (each one as
+    above) or **Move them to the main folder** (links rewritten like *Move to…*, `subtype` removed). A file whose name
+    is taken in the main folder is listed and nothing is moved until it is renamed. The folder goes to the Trash.
+  - Unsaved edits of a note are saved before it is renamed or deleted; its open tabs close on delete.
 - **Special sections**: *Assets* (any non-`.md` file) and *Encounters* (special files) hold no plain notes — they
   offer *New folder* and *Import* but no *New note*; their sub-folders only organise files (no `subtype`), and the
   Review page does not check them. *Assets* also offers **Import from disk** (toolbar): a sheet with *Select
@@ -217,7 +238,8 @@ Planned Electron modules: `vault`, `cloud-readiness`, `campaign`, `document`, `i
   - *Create note…*: title (suggested from the link) and folder (the link's folder, else the source note's section);
     the note is created from its template and opened. Encounters are not offered as a folder (see below). If its kebab file name differs from the link text, the link is
     rewritten to it with the old text kept as alias (`[[klarg-the-bugbear|Klarg the Bugbear]]`).
-- Moving notes between sections: see §2a (*Moving a note*). Deleting notes is not available yet.
+- Moving notes between sections: see §2a (*Moving a note*). Renaming and deleting notes, assets and sub-folders:
+  see §2a (*Renaming and deleting*).
 
 ## 6b. Compendium
 
@@ -474,6 +496,13 @@ variant keys and configuration stay as they are.
 | 10.6 | Media embeds in Live and Reading: audio row with play/stop, PDF row opening the system viewer |
 | 10.7 | Note audio channel (one sound at a time, stops when leaving the note) and player in the view-buttons row |
 | 10.8 | Linked-note preview card (eye button on hover) and the editor reference sheet |
+| 11 | File management (11.1–11.6) |
+| 11.1 | Folder home: *New folder* stays on the page, row click toggles a sub-folder (↗ on hover opens it), normal cursor |
+| 11.2 | Asset rows: image thumbnails, *Rename* for assets (embeds rewritten); identical pasted files reused |
+| 11.3 | Asset page: the image alone, with *Rename*, *Copy to compendium / campaign*, *Delete* |
+| 11.4 | *Delete…* notes and assets (system Trash; links to plain text / embeds removed, or left broken), confirmed |
+| 11.5 | *Rename…* notes and sub-folders from the section page (sub-folder: folder, `subtype`, path links) |
+| 11.6 | *Delete…* sub-folders: delete the files too, or move them to the main folder (links rewritten) |
 
 ## 12. Open decisions
 
