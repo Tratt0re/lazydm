@@ -17,6 +17,7 @@
         draggable="true"
         arc-context-menu
         [arcContextMenuTriggerFor]="fileMenu"
+        [style.cursor]="'auto'"
         (dragstart)="onDragStart($event, file)"
         (dragend)="onDragEnd()"
       >
@@ -106,38 +107,46 @@
           @for (folder of folders(); track folder.name) {
             @let isOpen = isExpanded(folder.name);
             <li
-              class="border-b border-border transition-colors last:border-b-0"
+              class="group border-b border-border transition-colors last:border-b-0"
               [class.bg-accent]="dropTarget() === folder.name"
               arc-context-menu
               [arcContextMenuTriggerFor]="folderMenu"
+              [style.cursor]="'auto'"
               (dragover)="onDragOver($event, folder.name)"
               (dragleave)="onDragLeave(folder.name)"
               (drop)="onDrop($event, folder.name)"
             >
-              <div class="flex items-center gap-2 px-2 py-2">
+              <!-- The whole row expands / collapses the sub-folder; the ↗ button (on hover) opens its page. -->
+              <div class="flex items-center gap-2 pr-2 transition-colors hover:bg-accent/60">
                 <button
                   type="button"
-                  arc-button
-                  arcType="ghost"
-                  arcSize="sm"
-                  class="size-9"
+                  class="flex min-w-0 flex-1 cursor-pointer items-center gap-3 py-4 pr-2 pl-4 text-left focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-ring"
                   [attr.aria-expanded]="isOpen"
                   [attr.aria-label]="(isOpen ? 'campaigns.sections.collapseFolder' : 'campaigns.sections.expandFolder') | translate: { folder: toSubfolderLabel(folder.name) }"
                   (click)="toggleFolder(folder.name)"
                 >
-                  <arc-icon [arcType]="isOpen ? 'chevron-down' : 'chevron-right'" />
+                  <arc-icon
+                    arcType="chevron-right"
+                    class="size-4 shrink-0 text-muted-foreground transition-transform duration-150"
+                    [class.rotate-90]="isOpen"
+                    aria-hidden="true"
+                  />
+                  <arc-icon arcType="folder" class="size-4 shrink-0 text-primary" aria-hidden="true" />
+                  <span class="truncate text-sm font-semibold">{{ toSubfolderLabel(folder.name) }}</span>
+                  <span class="ml-auto shrink-0 font-mono text-[10px] font-semibold tracking-[0.1em] text-muted-foreground uppercase">
+                    {{ folder.name }}/ · {{ 'campaigns.sections.folderFiles' | translate: { count: folder.fileCount } }}
+                  </span>
                 </button>
                 <a
                   [routerLink]="[scopeRoute(), section.key]"
                   [queryParams]="{ folder: folder.name }"
-                  class="flex min-w-0 flex-1 items-center gap-3 py-2 hover:text-primary focus-visible:outline-2 focus-visible:outline-ring"
+                  class="flex size-8 shrink-0 items-center justify-center text-muted-foreground opacity-0 transition-[color,background-color,opacity] group-hover:opacity-100 hover:bg-accent hover:text-primary focus-visible:opacity-100 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-ring"
+                  [attr.aria-label]="'explorer.openPageOf' | translate: { name: toSubfolderLabel(folder.name) }"
+                  arcPosition="top"
+                  [arcTooltip]="'explorer.openPageOf' | translate: { name: toSubfolderLabel(folder.name) }"
                 >
-                  <arc-icon arcType="folder" class="size-4 shrink-0 text-primary" />
-                  <span class="truncate text-sm font-semibold">{{ toSubfolderLabel(folder.name) }}</span>
+                  <arc-icon arcType="arrow-up-right" class="size-4" />
                 </a>
-                <span class="shrink-0 pr-2 font-mono text-[10px] font-semibold tracking-[0.1em] text-muted-foreground uppercase">
-                  {{ folder.name }}/ · {{ 'campaigns.sections.folderFiles' | translate: { count: folder.fileCount } }}
-                </span>
               </div>
 
               @if (isOpen) {

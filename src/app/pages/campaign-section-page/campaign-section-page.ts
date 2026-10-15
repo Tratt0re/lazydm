@@ -380,7 +380,7 @@ export class CampaignSectionPage {
     return toInAppNoteRoute(file.path) ?? this.scopeRoute();
   }
 
-  /** New sub-folder of the section, then opens it. */
+  /** New sub-folder of the section; the page stays where it is, with the new sub-folder expanded. */
   protected openCreateFolderSheet(): void {
     let isSubmitting = false;
     const sheetRef = this.sheetFormService.open({
@@ -480,9 +480,8 @@ export class CampaignSectionPage {
 
     try {
       const folder = await this.documentService.createFolder(this.folderPath(), name);
-      await this.router.navigate([this.scopeRoute(), section.key], {
-        queryParams: { [SECTION_FOLDER_QUERY_PARAM]: folder },
-      });
+      this.expandedFolders.set(new Set(this.expandedFolders()).add(folder));
+      await this.loadTree(this.sectionPath());
       return true;
     } catch (error) {
       toast.error(this.translateService.instant('campaigns.sections.newFolder.error'), {
