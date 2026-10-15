@@ -445,7 +445,10 @@ export class CampaignSectionPage {
         folder: this.folderPath(),
       }),
       arcContent: AppAssetImportSheetComponent,
-      arcData: { folder: this.folderPath(), onImported: () => void this.loadTree(this.sectionPath()) },
+      arcData: {
+        folder: this.folderPath(),
+        onImported: () => void this.loadTree(this.sectionPath()),
+      },
       arcOkText: null,
       arcCancelText: this.translateService.instant('document.rename.cancel'),
     });

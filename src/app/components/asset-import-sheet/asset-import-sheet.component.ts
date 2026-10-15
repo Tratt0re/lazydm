@@ -23,7 +23,11 @@ export interface AssetImportSheetData {
   template: `
     <div
       class="flex min-h-64 flex-col items-center justify-center gap-4 border border-dashed p-6 text-center transition-colors"
-      [class]="isDragOver() ? 'border-primary bg-accent text-primary' : 'border-border-strong bg-recessed text-muted-foreground'"
+      [class]="
+        isDragOver()
+          ? 'border-primary bg-accent text-primary'
+          : 'border-border-strong bg-recessed text-muted-foreground'
+      "
       (dragover)="onDragOver($event)"
       (dragleave)="isDragOver.set(false)"
       (drop)="onDrop($event)"

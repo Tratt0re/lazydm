@@ -9,12 +9,7 @@ import {
 } from '@/components/document-preview/document-preview.markdown';
 import { AppSheetFormService } from '@/components/sheet-form/sheet-form.service';
 import type { AppSheetField } from '@/components/sheet-form/sheet-form.types';
-import type {
-  BacklinkDto,
-  DeleteFolderMode,
-  DocumentFileListItemDto,
-  SavedAssetDto,
-} from '@/dtos';
+import type { BacklinkDto, DeleteFolderMode, DocumentFileListItemDto, SavedAssetDto } from '@/dtos';
 import { AssetService } from '@/services/asset.service';
 import { DocumentService } from '@/services/document.service';
 import { WorkspaceService } from '@/services/workspace.service';

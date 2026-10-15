@@ -171,7 +171,12 @@ async function saveAsset(target, fileName, mimeType, bytes) {
   const { scope, folder } = target;
   const identicalPath = await findIdenticalAsset(vaultPath, scope, bytes);
   if (identicalPath) {
-    return { path: identicalPath, linkTarget: getLinkTarget(scope, identicalPath), kind, isReused: true };
+    return {
+      path: identicalPath,
+      linkTarget: getLinkTarget(scope, identicalPath),
+      kind,
+      isReused: true,
+    };
   }
 
   const timestamp = formatTimestampForFilename();
@@ -199,7 +204,12 @@ async function saveAsset(target, fileName, mimeType, bytes) {
   }
 
   await indexerController.reindexPaths([result.path]);
-  return { path: result.path, linkTarget: getLinkTarget(scope, result.path), kind, isReused: false };
+  return {
+    path: result.path,
+    linkTarget: getLinkTarget(scope, result.path),
+    kind,
+    isReused: false,
+  };
 }
 
 /**
