@@ -520,8 +520,12 @@ async function rename(payload) {
 
   const { updatedPaths, failedPaths, linkCount } =
     updateLinks && isNameChanged
-      ? await rewriteIncomingLinks(vaultPath, rawsBySource, relativePath, (content, sourcePath, raws) =>
-          rewriteRenamedLinks(content, sourcePath, raws, oldName, slug),
+      ? await rewriteIncomingLinks(
+          vaultPath,
+          rawsBySource,
+          relativePath,
+          (content, sourcePath, raws) =>
+            rewriteRenamedLinks(content, sourcePath, raws, oldName, slug),
         )
       : { updatedPaths: [], failedPaths: [], linkCount: 0 };
 
@@ -608,8 +612,12 @@ async function renameAsset(payload) {
   const rawsBySource = groupRawsBySource(vaultIndexModel.listIncomingLinks(relativePath));
   await documentModel.moveVaultFile(vaultPath, relativePath, newPath);
   const { updatedPaths, failedPaths, linkCount } = updateLinks
-    ? await rewriteIncomingLinks(vaultPath, rawsBySource, relativePath, (content, sourcePath, raws) =>
-        rewriteRenamedLinks(content, sourcePath, raws, oldName, newName),
+    ? await rewriteIncomingLinks(
+        vaultPath,
+        rawsBySource,
+        relativePath,
+        (content, sourcePath, raws) =>
+          rewriteRenamedLinks(content, sourcePath, raws, oldName, newName),
       )
     : { updatedPaths: [], failedPaths: [], linkCount: 0 };
 

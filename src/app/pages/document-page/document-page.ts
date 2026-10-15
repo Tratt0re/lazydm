@@ -111,7 +111,9 @@ export class DocumentPage {
   );
 
   protected readonly notePath = computed(() => {
-    const folder = this.subfolder() ? `${this.sectionKey()}/${this.subfolder()}` : this.sectionKey();
+    const folder = this.subfolder()
+      ? `${this.sectionKey()}/${this.subfolder()}`
+      : this.sectionKey();
     return `${this.scope()?.rootPath ?? ''}/${folder}/${this.noteSlug()}.md`;
   });
 
@@ -324,10 +326,9 @@ export class DocumentPage {
       : saved.length === 1
         ? 'document.assets.savedOne'
         : 'document.assets.savedMany';
-    toast.success(
-      this.translateService.instant(titleKey, { count: saved.length }),
-      { description: saved.map((asset) => asset.path).join(', ') },
-    );
+    toast.success(this.translateService.instant(titleKey, { count: saved.length }), {
+      description: saved.map((asset) => asset.path).join(', '),
+    });
 
     for (const asset of saved.filter((item) => item.kind === 'audio')) {
       const duration = await this.assetService.readAudioDuration(asset.path);
