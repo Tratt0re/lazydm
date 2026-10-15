@@ -9,7 +9,10 @@ import {
 import { Decoration, type DecorationSet, EditorView, WidgetType } from '@codemirror/view';
 
 import {
+  getMediaEmbedKind,
+  type MediaEmbedLabels,
   renderMarkdownToSafeHtml,
+  renderMediaEmbedHtml,
   toAssetUrl,
   toInAppNoteRoute,
 } from '@/components/document-preview/document-preview.markdown';
@@ -19,6 +22,9 @@ import type { DocumentLinkDto } from '@/dtos';
 export interface LivePreviewContext {
   readonly links: readonly DocumentLinkDto[];
   readonly sourcePath: string;
+  /** The audio of the note playing now (its row shows *stop*). */
+  readonly playingAudioPath?: string | null;
+  readonly mediaLabels?: MediaEmbedLabels;
 }
 
 /** Updates the links the live preview resolves `[[wikilinks]]` and embeds with. */
@@ -137,6 +143,41 @@ class ImageWidget extends WidgetType {
     image.alt = this.alt;
     image.loading = 'lazy';
     return image;
+  }
+}
+
+/** An embedded audio (play/stop) or PDF (opens in the system viewer): the reading view's row. */
+class MediaEmbedWidget extends WidgetType {
+  constructor(
+    private readonly kind: 'audio' | 'pdf',
+    private readonly path: string,
+    private readonly name: string,
+    private readonly labels: MediaEmbedLabels | undefined,
+    private readonly isPlaying: boolean,
+  ) {
+    super();
+  }
+
+  override eq(other: MediaEmbedWidget): boolean {
+    return (
+      other.path === this.path &&
+      other.name === this.name &&
+      other.isPlaying === this.isPlaying &&
+      other.labels === this.labels
+    );
+  }
+
+  toDOM(): HTMLElement {
+    // Our own escaped HTML, the same row as in the reading view.
+    const container = document.createElement('span');
+    container.innerHTML = renderMediaEmbedHtml(
+      this.kind,
+      this.path,
+      this.name,
+      this.labels,
+      this.isPlaying,
+    );
+    return container.firstElementChild as HTMLElement;
   }
 }
 
@@ -584,6 +625,23 @@ function decorateWikilinks(target: DecorationContext, frontmatterEnd: number): v
       ranges.push(
         Decoration.replace({
           widget: new ImageWidget(toAssetUrl(link.resolvedPath), raw),
+        }).range(from, to),
+      );
+      continue;
+    }
+
+    const mediaKind = isEmbed && link?.resolvedPath ? getMediaEmbedKind(link.resolvedPath) : null;
+    if (mediaKind && link?.resolvedPath) {
+      const pipeIndex = raw.indexOf('|');
+      ranges.push(
+        Decoration.replace({
+          widget: new MediaEmbedWidget(
+            mediaKind,
+            link.resolvedPath,
+            pipeIndex >= 0 ? raw.slice(pipeIndex + 1) : link.targetName,
+            context.mediaLabels,
+            context.playingAudioPath === link.resolvedPath,
+          ),
         }).range(from, to),
       );
       continue;

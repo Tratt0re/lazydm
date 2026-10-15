@@ -521,6 +521,12 @@
       "longAudio": "{{name}} 超过 {{seconds}} 秒",
       "longAudioDescription": "笔记音频适用于短音效。文件已保存，仍可播放。",
       "reused": "已在资源中"
+    },
+    "media": {
+      "play": "播放",
+      "open": "打开",
+      "playError": "无法播放此音频",
+      "openError": "无法打开此文件——没有可打开它的应用"
     }
   },
   "tabs": {

@@ -707,6 +707,83 @@ arc-content > main:has(> app-document-page) {
   margin: 0.8em 0;
 }
 
+/* Embedded audio / PDF (reading view and live preview): a compact row with the file name. */
+.arc-embed-file {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6em;
+  max-width: 100%;
+  margin: 0.2em 0;
+  padding: 0.3em 0.75em 0.3em 0.3em;
+  border: 1px solid var(--border);
+  background: var(--recessed);
+  color: var(--foreground);
+  font: inherit;
+  font-size: 0.9em;
+  vertical-align: middle;
+}
+
+button.arc-embed-file {
+  padding-left: 0.6em;
+  cursor: pointer;
+}
+
+button.arc-embed-file:hover,
+.arc-embed-file-button:hover {
+  border-color: var(--primary);
+  color: var(--primary);
+}
+
+.arc-embed-file-name {
+  overflow: hidden;
+  font-family: var(--font-mono);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.arc-embed-file-button {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 1.9em;
+  height: 1.9em;
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--primary);
+  cursor: pointer;
+}
+
+.arc-embed-file svg {
+  width: 1em;
+  height: 1em;
+  flex: none;
+}
+
+.arc-embed-file-icon {
+  color: var(--primary);
+}
+
+.arc-embed-file:focus-visible,
+.arc-embed-file-button:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+}
+
+/* Play shows while stopped, stop while playing. */
+.arc-embed-file[data-playing='true'] {
+  border-color: var(--primary);
+}
+
+.arc-embed-file .arc-embed-file-stop,
+.arc-embed-file[data-playing='true'] .arc-embed-file-play {
+  display: none;
+}
+
+.arc-embed-file[data-playing='true'] .arc-embed-file-stop {
+  display: block;
+}
+
 .arc-markdown-body .arc-wikilink-broken {
   color: var(--destructive);
   text-decoration: underline dashed;

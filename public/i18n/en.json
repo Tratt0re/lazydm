@@ -521,6 +521,12 @@
       "longAudio": "{{name}} is longer than {{seconds}} seconds",
       "longAudioDescription": "Note audio is meant for short sounds. It is saved and will still play.",
       "reused": "Already in assets"
+    },
+    "media": {
+      "play": "Play",
+      "open": "Open",
+      "playError": "Couldn't play this audio",
+      "openError": "Couldn't open this file — no app can open it"
     }
   },
   "tabs": {

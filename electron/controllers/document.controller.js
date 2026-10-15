@@ -302,6 +302,25 @@ function reveal(payload) {
   return { path: relativePath };
 }
 
+/**
+ * Opens a vault file in the system's default app (a PDF in its viewer). Throws the system's message when no
+ * app can open it, so the page can offer *Reveal* instead.
+ */
+async function openFile(payload) {
+  const body = ensurePlainObject(payload, 'payload');
+  const relativePath = requirePath(body);
+  const absolutePath = resolveInsideVault(vaultController.getReadyVaultPath(), relativePath);
+  if (!fs.existsSync(absolutePath) || !fs.statSync(absolutePath).isFile()) {
+    throw new Error(`Not found: ${relativePath}`);
+  }
+
+  const errorMessage = await shell.openPath(absolutePath);
+  if (errorMessage) {
+    throw new Error(errorMessage);
+  }
+  return { path: relativePath };
+}
+
 /** Sub-type of a note created in `folderPath`: the sub-folder of its section, if it is in one. */
 function getSubtypeOfFolder(folderPath) {
   const location = sectionModel.parseSectionFolder(folderPath);
@@ -1171,6 +1190,7 @@ module.exports = {
   links,
   list,
   move,
+  openFile,
   read,
   rename,
   renameAsset,

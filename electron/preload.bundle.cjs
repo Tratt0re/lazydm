@@ -62,6 +62,7 @@ var require_channels = __commonJS({
         setType: "documents:setType",
         move: "documents:move",
         reveal: "documents:reveal",
+        open: "documents:open",
         copy: "documents:copy",
         copyPlan: "documents:copyPlan"
       }),

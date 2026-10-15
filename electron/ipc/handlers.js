@@ -62,6 +62,7 @@ const IPC_HANDLERS = Object.freeze({
   [CHANNELS.documents.setType]: documentController.setType,
   [CHANNELS.documents.move]: documentController.move,
   [CHANNELS.documents.reveal]: documentController.reveal,
+  [CHANNELS.documents.open]: documentController.openFile,
   [CHANNELS.documents.copy]: documentController.copy,
   [CHANNELS.documents.copyPlan]: documentController.copyPlan,
 

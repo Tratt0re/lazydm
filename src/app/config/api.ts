@@ -87,6 +87,7 @@ export interface ElectronIpcClient {
     >;
     readonly move: IpcRequest<{ path: string; folder: string }, DTO.MoveDocumentResultDto>;
     readonly reveal: IpcRequest<{ path: string }, { path: string }>;
+    readonly open: IpcRequest<{ path: string }, { path: string }>;
     readonly copy: IpcRequest<DTO.CopyDocumentPayload, DTO.CopyDocumentResultDto>;
     readonly copyPlan: IpcRequest<{ path: string; target: string }, DTO.CopyPlanDto>;
   };

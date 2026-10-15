@@ -61,6 +61,9 @@
           (brokenLinkOpen)="openBrokenLinkMenu($event)"
           (filesPasted)="onFilesPasted($event)"
           (importFileRequested)="importFiles()"
+          [playingAudioPath]="noteAudio.playingPath()"
+          [mediaLabels]="mediaLabels"
+          (assetAction)="onAssetAction($event)"
         />
         <app-broken-link-menu (fixBrokenLink)="onFixBrokenLink($event)" />
         @if (mode() === 'reading') {
@@ -69,7 +72,10 @@
             [body]="previewBody()"
             [links]="document()?.links ?? []"
             [sourcePath]="document()?.path ?? ''"
+            [playingAudioPath]="noteAudio.playingPath()"
+            [mediaLabels]="mediaLabels"
             (fixBrokenLink)="onFixBrokenLink($event)"
+            (assetAction)="onAssetAction($event)"
           />
         }
       </div>

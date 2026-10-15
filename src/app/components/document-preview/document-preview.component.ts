@@ -25,9 +25,11 @@ import {
 import type { BrokenLinkFixRequest } from '@/components/document-links-panel/document-links-panel.component';
 import type { DocumentLinkDto } from '@/dtos';
 import { LocalPreferencesService } from '@/services/local-preferences.service';
-import { renderMarkdownToSafeHtml } from './document-preview.markdown';
+import type { CodeEditorAssetAction } from '@/components/code-editor/code-editor.component';
+import { type MediaEmbedLabels, renderMarkdownToSafeHtml } from './document-preview.markdown';
 
 const BROKEN_LINK_SELECTOR = '[data-broken-raw]';
+const ASSET_ACTION_SELECTOR = '[data-asset-action]';
 /** Padding of the reading pane on its right when the code map takes room there (p-6 + the map). */
 const CODE_MAP_PADDING = 24 + CODE_MAP_WIDTH;
 
@@ -103,10 +105,19 @@ export class AppDocumentPreviewComponent {
   readonly body = input.required<string>();
   readonly links = input<readonly DocumentLinkDto[]>([]);
   readonly sourcePath = input.required<string>();
+  /** The note's audio playing now, shown as *stop* on its row. */
+  readonly playingAudioPath = input<string | null>(null);
+  readonly mediaLabels = input<MediaEmbedLabels | undefined>(undefined);
+  /** Play/stop an embedded audio or open an embedded PDF. */
+  readonly assetAction = output<CodeEditorAssetAction>();
 
   protected readonly renderedHtml = computed(() => {
     return this.sanitizer.bypassSecurityTrustHtml(
-      renderMarkdownToSafeHtml(this.body(), { links: this.links(), sourcePath: this.sourcePath() }),
+      renderMarkdownToSafeHtml(this.body(), {
+        links: this.links(),
+        sourcePath: this.sourcePath(),
+        mediaLabels: this.mediaLabels(),
+      }),
     );
   });
 
@@ -118,6 +129,19 @@ export class AppDocumentPreviewComponent {
       this.syncCodeMap(isOn);
     });
     inject(DestroyRef).onDestroy(() => this.syncCodeMap(false));
+
+    // The playing audio's row shows *stop* (set on the rendered rows, so the note is not re-rendered).
+    afterRenderEffect(() => {
+      this.renderedHtml();
+      const playingPath = this.playingAudioPath();
+      for (const row of this.bodyElement().nativeElement.querySelectorAll<HTMLElement>(
+        '[data-asset-kind="audio"]',
+      )) {
+        const isPlaying = row.dataset['assetPath'] === playingPath;
+        row.dataset['playing'] = String(isPlaying);
+        row.querySelector('[aria-pressed]')?.setAttribute('aria-pressed', String(isPlaying));
+      }
+    });
   }
 
   protected onContentKeyDown(event: KeyboardEvent): void {
@@ -130,6 +154,17 @@ export class AppDocumentPreviewComponent {
   }
 
   protected onContentClick(event: MouseEvent): void {
+    const assetControl = (event.target as HTMLElement).closest<HTMLElement>(ASSET_ACTION_SELECTOR);
+    const action = assetControl?.dataset['assetAction'];
+    if (assetControl && (action === 'toggle-audio' || action === 'open')) {
+      event.preventDefault();
+      const path = assetControl.closest<HTMLElement>('[data-asset-path]')?.dataset['assetPath'];
+      if (path) {
+        this.assetAction.emit({ action, path });
+      }
+      return;
+    }
+
     const brokenLink = (event.target as HTMLElement).closest<HTMLElement>(BROKEN_LINK_SELECTOR);
     if (brokenLink) {
       event.preventDefault();

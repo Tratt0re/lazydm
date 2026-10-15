@@ -31,6 +31,50 @@ export interface RenderMarkdownOptions {
   readonly links: readonly DocumentLinkDto[];
   /** Vault-relative path of the note being rendered, used to tell same-note heading links apart. */
   readonly sourcePath: string;
+  /** Accessible names of the audio / PDF rows' controls, in the UI language. */
+  readonly mediaLabels?: MediaEmbedLabels;
+}
+
+/** Accessible names of the controls of an embedded audio (play/stop toggle) or PDF (open) row. */
+export interface MediaEmbedLabels {
+  readonly play: string;
+  readonly open: string;
+}
+
+const DEFAULT_MEDIA_LABELS: MediaEmbedLabels = { play: 'Play', open: 'Open' };
+const AUDIO_EXTENSION_PATTERN = /\.(mp3|wav|ogg|m4a|flac)$/i;
+const PDF_EXTENSION_PATTERN = /\.pdf$/i;
+const SVG_ATTRIBUTES =
+  'viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"';
+/** Lucide `play`, `square` and `file-text`, inline: the rows are plain HTML in both views. */
+const PLAY_ICON = `<svg class="arc-embed-file-play" ${SVG_ATTRIBUTES}><polygon points="6 3 20 12 6 21 6 3"/></svg>`;
+const STOP_ICON = `<svg class="arc-embed-file-stop" ${SVG_ATTRIBUTES}><rect x="5" y="5" width="14" height="14"/></svg>`;
+const FILE_ICON = `<svg class="arc-embed-file-icon" ${SVG_ATTRIBUTES}><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/></svg>`;
+
+/** An embed shown as a media row rather than an image: audio or PDF (null for anything else). */
+export function getMediaEmbedKind(path: string): 'audio' | 'pdf' | null {
+  return AUDIO_EXTENSION_PATTERN.test(path) ? 'audio' : PDF_EXTENSION_PATTERN.test(path) ? 'pdf' : null;
+}
+
+/**
+ * HTML of an embedded audio or PDF: a row with its name. Audio has a play/stop toggle (`data-playing` set
+ * while it plays); a PDF row opens the file in the system viewer. Clicks are handled by the view through
+ * `data-asset-action` / `data-asset-path`. Shared by the reading view and the live preview.
+ */
+export function renderMediaEmbedHtml(
+  kind: 'audio' | 'pdf',
+  path: string,
+  name: string,
+  labels: MediaEmbedLabels = DEFAULT_MEDIA_LABELS,
+  isPlaying = false,
+): string {
+  const assetPath = escapeHtml(path);
+  const label = escapeHtml(name);
+  if (kind === 'pdf') {
+    return `<button type="button" class="arc-embed-file" data-asset-kind="pdf" data-asset-action="open" data-asset-path="${assetPath}" title="${escapeHtml(labels.open)}: ${label}">${FILE_ICON}<span class="arc-embed-file-name">${label}</span></button>`;
+  }
+
+  return `<span class="arc-embed-file" data-asset-kind="audio" data-asset-path="${assetPath}" data-playing="${isPlaying}"><button type="button" class="arc-embed-file-button" data-asset-action="toggle-audio" aria-pressed="${isPlaying}" aria-label="${escapeHtml(labels.play)}: ${label}">${PLAY_ICON}${STOP_ICON}</button><span class="arc-embed-file-name">${label}</span></span>`;
 }
 
 interface WikilinkTokenMeta {
@@ -42,6 +86,7 @@ interface WikilinkTokenMeta {
   readonly heading: string | null;
   readonly label: string | null;
   readonly sourcePath: string;
+  readonly mediaLabels?: MediaEmbedLabels;
 }
 
 function escapeHtml(value: string): string {
@@ -125,7 +170,7 @@ export function toInAppAssetRoute(resolvedPath: string): string | null {
 }
 
 function renderWikilinkToken(token: Token): string {
-  const { isEmbed, raw, resolvedPath, targetName, heading, label, sourcePath } =
+  const { isEmbed, raw, resolvedPath, targetName, heading, label, sourcePath, mediaLabels } =
     token.meta as unknown as WikilinkTokenMeta;
   const displayText = escapeHtml(
     label ?? (heading ? `${targetName} > ${heading}` : targetName || 'this note'),
@@ -134,6 +179,11 @@ function renderWikilinkToken(token: Token): string {
   if (isEmbed && resolvedPath && IMAGE_EXTENSION_PATTERN.test(resolvedPath)) {
     const src = toAssetUrl(resolvedPath);
     return `<img class="arc-embed-image" src="${src}" alt="${displayText}" loading="lazy" />`;
+  }
+
+  const mediaKind = isEmbed && resolvedPath ? getMediaEmbedKind(resolvedPath) : null;
+  if (mediaKind && resolvedPath) {
+    return renderMediaEmbedHtml(mediaKind, resolvedPath, label ?? targetName, mediaLabels);
   }
 
   if (isEmbed) {
@@ -168,7 +218,11 @@ function wikilinkRule(state: StateInline, silent: boolean): boolean {
   }
 
   if (!silent) {
-    const env = state.env as unknown as { links: DocumentLinkDto[]; sourcePath: string };
+    const env = state.env as unknown as {
+      links: DocumentLinkDto[];
+      sourcePath: string;
+      mediaLabels?: MediaEmbedLabels;
+    };
     const link = env.links.shift();
     const token = state.push('wikilink', '', 0);
     const meta: WikilinkTokenMeta = {
@@ -179,6 +233,7 @@ function wikilinkRule(state: StateInline, silent: boolean): boolean {
       heading: link?.heading ?? null,
       label: link?.raw.includes('|') ? link.raw.split('|').slice(1).join('|') : null,
       sourcePath: env.sourcePath,
+      mediaLabels: env.mediaLabels,
     };
     token.meta = meta as unknown as Record<string, unknown>;
   }
@@ -288,7 +343,11 @@ const markdownRenderer = createRenderer();
 
 /** Renders a note body to HTML. The result still needs sanitizing before it is trusted in the DOM. */
 export function renderMarkdownBody(body: string, options: RenderMarkdownOptions): string {
-  const env = { links: [...options.links], sourcePath: options.sourcePath } as unknown as Env;
+  const env = {
+    links: [...options.links],
+    sourcePath: options.sourcePath,
+    mediaLabels: options.mediaLabels,
+  } as unknown as Env;
   return markdownRenderer.render(body, env);
 }
 

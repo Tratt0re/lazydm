@@ -521,6 +521,12 @@
       "longAudio": "{{name}} dura más de {{seconds}} segundos",
       "longAudioDescription": "El audio de las notas está pensado para sonidos cortos. Se ha guardado y se reproducirá igualmente.",
       "reused": "Ya está en recursos"
+    },
+    "media": {
+      "play": "Reproducir",
+      "open": "Abrir",
+      "playError": "No se pudo reproducir este audio",
+      "openError": "No se pudo abrir el archivo: ninguna app puede abrirlo"
     }
   },
   "tabs": {

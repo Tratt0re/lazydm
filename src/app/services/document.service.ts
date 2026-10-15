@@ -77,6 +77,11 @@ export class DocumentService extends BaseIpcService<APIChannel.DOCUMENTS> {
     await this.ipcClient.reveal({ path });
   }
 
+  /** Opens a vault file in the system's default app (a PDF in its viewer); rejects when none can. */
+  async openFile(path: string): Promise<void> {
+    await this.ipcClient.open({ path });
+  }
+
   /** New sub-folder of a section (`name` is turned into the folder slug); returns its slug. */
   async createFolder(folder: string, name: string): Promise<string> {
     return (await this.ipcClient.createFolder({ folder, name })).name;

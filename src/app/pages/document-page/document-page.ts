@@ -8,6 +8,7 @@ import { toast } from 'ngx-sonner';
 import { AppBrokenLinkMenuComponent } from '@/components/broken-link-menu/broken-link-menu.component';
 import {
   AppCodeEditorComponent,
+  type CodeEditorAssetAction,
   type CodeEditorBrokenLinkEvent,
 } from '@/components/code-editor/code-editor.component';
 import {
@@ -15,11 +16,16 @@ import {
   type BrokenLinkFixRequest,
 } from '@/components/document-links-panel/document-links-panel.component';
 import { AppDocumentPreviewComponent } from '@/components/document-preview/document-preview.component';
-import { toInAppNoteRoute } from '@/components/document-preview/document-preview.markdown';
+import {
+  type MediaEmbedLabels,
+  toInAppNoteRoute,
+} from '@/components/document-preview/document-preview.markdown';
 import { CAMPAIGN_SECTION_PARAM } from '@/pages/campaign-section-page/campaign-section-page';
 import type { DocumentDto, DocumentLinkDto, LinkTargetDto, SavedAssetDto } from '@/dtos';
 import { AssetService, NOTE_AUDIO_MAX_SECONDS } from '@/services/asset.service';
 import { FileActionsService } from '@/services/file-actions.service';
+import { FileMoveService } from '@/services/file-move.service';
+import { NoteAudioService } from '@/services/note-audio.service';
 import { BrokenLinkActionsService } from '@/services/broken-link-actions.service';
 import { CopyToService } from '@/services/copy-to.service';
 import { getNoteScopeKind, NoteScopeService } from '@/services/note-scope.service';
@@ -83,6 +89,13 @@ export class DocumentPage {
   private readonly copyTo = inject(CopyToService);
   private readonly assetService = inject(AssetService);
   private readonly fileActions = inject(FileActionsService);
+  private readonly fileMove = inject(FileMoveService);
+  /** The note audio channel: one sound at a time, stopped when the note changes or the page goes. */
+  protected readonly noteAudio = inject(NoteAudioService);
+  protected readonly mediaLabels: MediaEmbedLabels = {
+    play: this.translateService.instant('document.media.play'),
+    open: this.translateService.instant('document.media.open'),
+  };
   private readonly editor = viewChild(AppCodeEditorComponent);
   private readonly brokenLinkMenu = viewChild(AppBrokenLinkMenuComponent);
   private loadToken = 0;
@@ -141,6 +154,7 @@ export class DocumentPage {
     inject(DestroyRef).onDestroy(() => {
       window.electronAPI?.offIpcEvent?.(INDEX_UPDATED_EVENT, this.handleIndexUpdated);
       this.unregisterOpenNote?.();
+      this.noteAudio.stop();
     });
 
     effect((onCleanup) => {
@@ -373,6 +387,31 @@ export class DocumentPage {
     void this.router.navigateByUrl(route);
   }
 
+  /**
+   * An embedded audio's play/stop (the note audio channel) or a PDF's row (the system viewer; without an app
+   * for it, the error offers *Reveal*).
+   */
+  protected onAssetAction({ action, path }: CodeEditorAssetAction): void {
+    if (action === 'toggle-audio') {
+      this.noteAudio.toggle(path).catch((error: unknown) =>
+        toast.error(this.translateService.instant('document.media.playError'), {
+          description: error instanceof Error ? error.message : String(error),
+        }),
+      );
+      return;
+    }
+
+    this.documentService.openFile(path).catch((error: unknown) =>
+      toast.error(this.translateService.instant('document.media.openError'), {
+        description: error instanceof Error ? error.message : String(error),
+        action: {
+          label: this.translateService.instant(this.fileMove.revealLabel),
+          onClick: () => this.fileMove.reveal(path),
+        },
+      }),
+    );
+  }
+
   protected openBrokenLinkMenu(event: CodeEditorBrokenLinkEvent): void {
     this.brokenLinkMenu()?.open(event.raw, event.targetName, event.x, event.y);
   }
@@ -576,6 +615,8 @@ export class DocumentPage {
       const document = await this.documentService.read(notePath);
       if (token === this.loadToken) {
         this.fileActions.forgetDeleted(document.path);
+        // The note audio channel belongs to the note shown: another note starts silent.
+        this.noteAudio.stop();
         // A rename started elsewhere (section page, explorer) saves this page's edits first.
         this.unregisterOpenNote?.();
         this.unregisterOpenNote = this.fileActions.registerOpenNote(document.path, () =>

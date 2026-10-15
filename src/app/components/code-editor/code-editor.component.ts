@@ -33,6 +33,7 @@ import { tags } from '@lezer/highlight';
 
 import type { EditorSettings } from '@/config/local-preferences.config';
 import { AppEditorInsertMenuComponent } from '@/components/editor-insert-menu/editor-insert-menu.component';
+import type { MediaEmbedLabels } from '@/components/document-preview/document-preview.markdown';
 import type { DocumentLinkDto, LinkTargetDto } from '@/dtos';
 import { AssetService } from '@/services/asset.service';
 import { LocalPreferencesService } from '@/services/local-preferences.service';
@@ -60,7 +61,13 @@ export interface CodeEditorBrokenLinkEvent {
 
 /** Links of the live preview and of its rendered blocks (tables, callouts). */
 const LIVE_LINK_SELECTOR =
-  '.cm-lp-link, .cm-lp-block a[data-route], .cm-lp-block [data-broken-raw]';
+  '.cm-lp-link, .cm-lp-block a[data-route], .cm-lp-block [data-broken-raw], [data-asset-action]';
+
+/** A control of an embedded audio / PDF row: play/stop the audio, open the PDF. */
+export interface CodeEditorAssetAction {
+  readonly action: 'toggle-audio' | 'open';
+  readonly path: string;
+}
 
 /**
  * Wraps CodeMirror 6 as the markdown editor, in live preview (default) or source mode. Colours come
@@ -104,6 +111,9 @@ export class AppCodeEditorComponent implements OnDestroy {
   /** Files of the note's scope, suggested while a link is typed (none: no suggestions). */
   readonly linkTargets = input<readonly LinkTargetDto[]>([]);
   readonly sourcePath = input('');
+  /** The note's audio playing now, shown as *stop* on its row. */
+  readonly playingAudioPath = input<string | null>(null);
+  readonly mediaLabels = input<MediaEmbedLabels | undefined>(undefined);
 
   readonly contentChange = output<string>();
   readonly saveRequested = output<void>();
@@ -114,6 +124,8 @@ export class AppCodeEditorComponent implements OnDestroy {
   readonly filesPasted = output<readonly File[]>();
   /** *Import file…* was chosen in the insert menu (the page opens the file dialog). */
   readonly importFileRequested = output<void>();
+  /** Play/stop an embedded audio or open an embedded PDF (live preview rows). */
+  readonly assetAction = output<CodeEditorAssetAction>();
 
   /** Link and asset entries of the insert menu need files to suggest (none in templates). */
   protected readonly canLink = computed(() => this.linkTargets().length > 0);
@@ -136,6 +148,8 @@ export class AppCodeEditorComponent implements OnDestroy {
       this.links();
       this.linkTargets();
       this.sourcePath();
+      this.playingAudioPath();
+      this.mediaLabels();
       this.syncLinks();
     });
 
@@ -261,7 +275,12 @@ export class AppCodeEditorComponent implements OnDestroy {
   private syncLinks(): void {
     this.view?.dispatch({
       effects: [
-        setLivePreviewContext.of({ links: this.links(), sourcePath: this.sourcePath() }),
+        setLivePreviewContext.of({
+          links: this.links(),
+          sourcePath: this.sourcePath(),
+          playingAudioPath: this.playingAudioPath(),
+          mediaLabels: this.mediaLabels(),
+        }),
         setLinkCompletionContext.of({ targets: this.linkTargets(), sourcePath: this.sourcePath() }),
       ],
     });
@@ -291,6 +310,17 @@ export class AppCodeEditorComponent implements OnDestroy {
   /** Click opens the link; Cmd/Ctrl-click is left to the tab bar (opens it in a new tab). */
   private readonly handleLinkClick = (event: MouseEvent) => {
     const link = this.getLiveLink(event);
+    const action = link?.dataset['assetAction'];
+    if (link && (action === 'toggle-audio' || action === 'open')) {
+      event.preventDefault();
+      event.stopPropagation();
+      const path = link.closest<HTMLElement>('[data-asset-path]')?.dataset['assetPath'];
+      if (path) {
+        this.assetAction.emit({ action, path });
+      }
+      return;
+    }
+
     if (!link || event.metaKey || event.ctrlKey) {
       return;
     }
