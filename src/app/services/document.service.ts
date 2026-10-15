@@ -18,6 +18,7 @@ import type {
   RenameAssetPayload,
   RenameDocumentPayload,
   RenameDocumentResultDto,
+  RenameFolderResultDto,
   SaveDocumentCopyPayload,
   UnlinkPayload,
   WriteDocumentPayload,
@@ -117,6 +118,11 @@ export class DocumentService extends BaseIpcService<APIChannel.DOCUMENTS> {
   /** Moves a note or an asset to the system Trash, by default rewriting the links pointing to it first. */
   deleteFile(payload: DeleteFilePayload): Promise<RenameDocumentResultDto> {
     return this.ipcClient.delete(payload);
+  }
+
+  /** Renames a sub-folder of a section: the folder, its notes' sub-type and the path links through it. */
+  renameFolder(folder: string, name: string): Promise<RenameFolderResultDto> {
+    return this.ipcClient.renameFolder({ folder, name });
   }
 
   links(path: string): Promise<DocumentLinksDto> {

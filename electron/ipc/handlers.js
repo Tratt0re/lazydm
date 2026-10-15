@@ -51,6 +51,7 @@ const IPC_HANDLERS = Object.freeze({
   [CHANNELS.documents.rename]: documentController.rename,
   [CHANNELS.documents.renameAsset]: documentController.renameAsset,
   [CHANNELS.documents.delete]: documentController.deleteFile,
+  [CHANNELS.documents.renameFolder]: documentController.renameFolder,
   [CHANNELS.documents.links]: documentController.links,
   [CHANNELS.documents.linkTargets]: documentController.linkTargets,
   [CHANNELS.documents.brokenLinks]: documentController.brokenLinks,

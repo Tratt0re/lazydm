@@ -98,12 +98,10 @@
 
         <ng-template #fileMenu>
           <div arc-menu-content class="w-56">
-            @if (file.kind !== 'md') {
-              <button type="button" arc-menu-item (click)="openRenameAssetSheet(file)">
-                <arc-icon arcType="text-cursor-input" />
-                {{ 'campaigns.sections.renameAsset.menu' | translate }}
-              </button>
-            }
+            <button type="button" arc-menu-item (click)="openRenameSheet(file)">
+              <arc-icon arcType="text-cursor-input" />
+              {{ 'campaigns.sections.renameAsset.menu' | translate }}
+            </button>
             <button type="button" arc-menu-item (click)="openMoveSheet(file)">
               <arc-icon arcType="move-right" />
               {{ 'campaigns.sections.move.menu' | translate }}
@@ -212,6 +210,10 @@
                     <arc-icon arcType="folder" />
                     {{ 'campaigns.sections.openFolder' | translate }}
                   </a>
+                  <button type="button" arc-menu-item (click)="openRenameFolderSheet(folder)">
+                    <arc-icon arcType="text-cursor-input" />
+                    {{ 'campaigns.sections.renameAsset.menu' | translate }}
+                  </button>
                   <button type="button" arc-menu-item (click)="reveal(folderPathOf(folder.name))">
                     <arc-icon arcType="folder" />
                     {{ revealLabel | translate }}

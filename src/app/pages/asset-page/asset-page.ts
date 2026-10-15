@@ -13,7 +13,6 @@ import { FileActionsService } from '@/services/file-actions.service';
 import { getNoteScopeKind, NoteScopeService } from '@/services/note-scope.service';
 import { SectionService, toSubfolderLabel } from '@/services/section.service';
 import { ToolbarContextService } from '@/services/toolbar-context.service';
-import { WorkspaceService } from '@/services/workspace.service';
 import { ArcTechAlertComponent } from '@/shared/components/alert';
 
 /** File name of the image (with its extension), from the route. */
@@ -41,7 +40,6 @@ export class AssetPage {
   private readonly translateService = inject(TranslateService);
   private readonly fileActions = inject(FileActionsService);
   private readonly copyTo = inject(CopyToService);
-  private readonly workspace = inject(WorkspaceService);
 
   private readonly params = toSignal(this.route.paramMap, {
     initialValue: this.route.snapshot.paramMap,
@@ -165,10 +163,9 @@ export class AssetPage {
       return;
     }
 
+    // Campaign tabs follow the rename on their own (FileActionsService); a system page navigates itself.
     if (this.scope()?.kind === 'system') {
       await this.router.navigateByUrl(newRoute, { replaceUrl: true });
-    } else {
-      await this.workspace.replaceUrl(oldRoute, newRoute);
     }
   }
 }

@@ -754,6 +754,12 @@
       "done": "{{name}} 已移到废纸篓",
       "linksUpdated": "已更新 {{notes}} 篇笔记中的 {{links}} 个链接",
       "error": "无法删除文件"
+    },
+    "renameFolder": {
+      "title": "重命名 {{name}}",
+      "description": "文件夹将在磁盘上重命名；其中 {{count}} 个文件保留原名，笔记获得新的子类型，经过此文件夹的链接会被更新。",
+      "done": "文件夹已重命名为 {{name}}",
+      "error": "无法重命名文件夹"
     }
   }
 }

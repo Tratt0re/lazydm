@@ -182,6 +182,20 @@ async function moveVaultFile(rootPath, fromPath, toPath) {
   await fs.promises.rename(resolveInsideVault(rootPath, fromPath), toAbsolutePath);
 }
 
+/** Moves (renames) a vault folder with everything in it; never overwrites an existing folder or file. */
+async function moveVaultFolder(rootPath, fromPath, toPath) {
+  const fromAbsolutePath = resolveInsideVault(rootPath, fromPath);
+  const toAbsolutePath = resolveInsideVault(rootPath, toPath);
+  if (!fs.existsSync(fromAbsolutePath) || !fs.statSync(fromAbsolutePath).isDirectory()) {
+    throw new Error(`Not a folder: ${fromPath}`);
+  }
+  if (fs.existsSync(toAbsolutePath)) {
+    throw new Error(`A folder named "${path.posix.basename(toPath)}" already exists in ${path.posix.dirname(toPath)}.`);
+  }
+
+  await fs.promises.rename(fromAbsolutePath, toAbsolutePath);
+}
+
 /** Sub-folders of a vault folder (hidden and `_` folders left out), by name; none when it does not exist yet. */
 async function listSubfolders(rootPath, folderPath) {
   try {
@@ -217,6 +231,7 @@ module.exports = {
   createFolder,
   listSubfolders,
   moveVaultFile,
+  moveVaultFolder,
   readDocument,
   renameDocumentFile,
   saveDocumentCopy,

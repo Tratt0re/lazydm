@@ -754,6 +754,12 @@
       "done": "{{name}} spostato nel Cestino",
       "linksUpdated": "{{links}} collegamenti aggiornati in {{notes}} note",
       "error": "Impossibile eliminare il file"
+    },
+    "renameFolder": {
+      "title": "Rinomina {{name}}",
+      "description": "La cartella viene rinominata sul disco; i suoi {{count}} file mantengono il nome, le note ricevono il nuovo sottotipo e i collegamenti che passano dalla cartella vengono aggiornati.",
+      "done": "Cartella rinominata in {{name}}",
+      "error": "Impossibile rinominare la cartella"
     }
   }
 }

@@ -14,6 +14,7 @@ const {
   getLinkPlainText,
   parseMarkdownDocument,
   removeFrontmatterField,
+  renameLinkFolder,
   renameLinkTarget,
   replaceDocumentTitle,
   rewriteLinks,
@@ -578,6 +579,96 @@ async function rewriteIncomingLinks(vaultPath, rawsBySource, skipPath, rewrite) 
 }
 
 /**
+ * Renames a sub-folder of a section (a sub-type): the folder on disk, the `subtype` of its notes (not in the
+ * special sections, whose sub-folders only organise files) and the path links through it
+ * (`[[enemies/humans/bandit]]`, `../enemies/humans/bandit.md`) — the rewrite the `monsters/` → `enemies/`
+ * migration does for sections. A taken name is refused; every write is conflict-checked like a save.
+ */
+async function renameFolder(payload) {
+  const body = ensurePlainObject(payload, 'payload');
+  const folderPath = requirePath(body, 'folder').replace(/\/+$/, '');
+  const name = requireString(body.name, 'payload.name', { maxLength: FOLDER_NAME_MAX_LENGTH });
+  const location = sectionModel.parseSectionFolder(folderPath);
+  if (!location?.subfolder) {
+    throw new Error(`Not a sub-folder of a section: ${folderPath}`);
+  }
+
+  const slug = toSlug(name);
+  if (slug.length === 0) {
+    throw new Error('payload.name must contain at least one letter or number.');
+  }
+
+  requireIndexOpen();
+  const vaultPath = vaultController.getReadyVaultPath();
+  const sectionPath = `${location.scope}/${location.section}`;
+  const newFolderPath = `${sectionPath}/${slug}`;
+  if (newFolderPath === folderPath) {
+    return { path: folderPath, name: slug, moved: [], updatedPaths: [], failedPaths: [], linkCount: 0 };
+  }
+
+  const prefix = `${folderPath}/`;
+  const toNewPath = (filePath) =>
+    filePath.startsWith(prefix) ? `${newFolderPath}/${filePath.slice(prefix.length)}` : filePath;
+  const files = vaultIndexModel.listScopeFiles(location.scope).filter((file) => file.path.startsWith(prefix));
+  // Notes inside the folder move with it: their links are rewritten at their new path.
+  const rawsBySource = new Map(
+    [...groupRawsBySource(files.flatMap((file) => vaultIndexModel.listIncomingLinks(file.path)))].map(
+      ([sourcePath, raws]) => [toNewPath(sourcePath), raws],
+    ),
+  );
+
+  await documentModel.moveVaultFolder(vaultPath, folderPath, newFolderPath);
+
+  const failedPaths = [];
+  const subtypePaths = [];
+  if (!sectionModel.SPECIAL_SECTION_KEYS.includes(location.section)) {
+    for (const file of files.filter((item) => item.kind === 'md')) {
+      const newPath = toNewPath(file.path);
+      try {
+        const note = await documentModel.readDocument(vaultPath, newPath);
+        if (note.frontmatter?.subtype === slug) {
+          continue;
+        }
+
+        const result = await documentModel.writeDocument(
+          vaultPath,
+          newPath,
+          setFrontmatterField(note.content, 'subtype', slug),
+          note.contentHash,
+        );
+        (result.status === 'saved' ? subtypePaths : failedPaths).push(newPath);
+      } catch (error) {
+        console.warn('[electron] Failed to set the sub-type ->', newPath, error);
+        failedPaths.push(newPath);
+      }
+    }
+  }
+
+  const parents = new Set(['', location.section, sectionPath]);
+  const links = await rewriteIncomingLinks(vaultPath, rawsBySource, null, (content, sourcePath, raws) =>
+    rewriteLinks(
+      content,
+      (link) => (raws?.has(link.raw) ? renameLinkFolder(link, location.subfolder, slug, parents) : null),
+      { sourcePath },
+    ),
+  );
+
+  const moved = files.map((file) => ({ from: file.path, to: toNewPath(file.path) }));
+  await indexerController.reindexPaths([
+    ...moved.flatMap((move) => [move.from, move.to]),
+    ...links.updatedPaths,
+  ]);
+  return {
+    path: newFolderPath,
+    name: slug,
+    moved,
+    updatedPaths: [...new Set([...subtypePaths, ...links.updatedPaths])],
+    failedPaths: [...new Set([...failedPaths, ...links.failedPaths])],
+    linkCount: links.linkCount,
+  };
+}
+
+/**
  * Deletes a note or an asset: the file goes to the system Trash (recoverable). With `rewriteLinks`, the links
  * the index resolved to it are rewritten in every other note first — a note's links become their plain text,
  * an asset's embeds are removed (its plain links become text). Without it they stay, reported as broken.
@@ -598,17 +689,21 @@ async function deleteFile(payload) {
   const isNote = vaultIndexModel.getFileKind(relativePath) === 'md';
   const rawsBySource = groupRawsBySource(vaultIndexModel.listIncomingLinks(relativePath));
   const { updatedPaths, failedPaths, linkCount } = rewriteLinksToText
-    ? await rewriteIncomingLinks(vaultPath, rawsBySource, relativePath, (content, sourcePath, raws) =>
-        rewriteLinks(
-          content,
-          (link) => {
-            if (!raws?.has(link.raw)) {
-              return null;
-            }
-            return { text: !isNote && link.kind === 'embed' ? '' : getLinkPlainText(link) };
-          },
-          { sourcePath },
-        ),
+    ? await rewriteIncomingLinks(
+        vaultPath,
+        rawsBySource,
+        relativePath,
+        (content, sourcePath, raws) =>
+          rewriteLinks(
+            content,
+            (link) => {
+              if (!raws?.has(link.raw)) {
+                return null;
+              }
+              return { text: !isNote && link.kind === 'embed' ? '' : getLinkPlainText(link) };
+            },
+            { sourcePath },
+          ),
       )
     : { updatedPaths: [], failedPaths: [], linkCount: 0 };
 
@@ -949,6 +1044,7 @@ module.exports = {
   read,
   rename,
   renameAsset,
+  renameFolder,
   reveal,
   saveCopy,
   setType,

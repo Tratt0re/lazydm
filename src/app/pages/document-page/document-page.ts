@@ -16,11 +16,8 @@ import {
 } from '@/components/document-links-panel/document-links-panel.component';
 import { AppDocumentPreviewComponent } from '@/components/document-preview/document-preview.component';
 import { toInAppNoteRoute } from '@/components/document-preview/document-preview.markdown';
-import { AppSheetFormService } from '@/components/sheet-form/sheet-form.service';
-import type { AppSheetField } from '@/components/sheet-form/sheet-form.types';
 import { CAMPAIGN_SECTION_PARAM } from '@/pages/campaign-section-page/campaign-section-page';
 import type {
-  BacklinkDto,
   DocumentDto,
   DocumentLinkDto,
   LinkTargetDto,
@@ -47,8 +44,6 @@ import { ArcTechTooltipImports } from '@/shared/components/tooltip';
 export const DOCUMENT_NOTE_PARAM = 'note';
 /** Sub-folder of the section the note is in (its sub-type), when it is in one. */
 export const DOCUMENT_SUBFOLDER_PARAM = 'subfolder';
-
-const RENAME_PREVIEW_MAX_TITLES = 5;
 
 const FRONTMATTER_FENCE_PATTERN = /^---\r?\n[\s\S]*?\r?\n(?:---|\.\.\.)\r?\n?/;
 
@@ -87,7 +82,6 @@ export class DocumentPage {
   private readonly sheetService = inject(ArcTechSheetService);
   private readonly translateService = inject(TranslateService);
   private readonly toolbarContext = inject(ToolbarContextService);
-  private readonly sheetFormService = inject(AppSheetFormService);
   private readonly localPreferences = inject(LocalPreferencesService);
   private readonly workspace = inject(WorkspaceService);
   private readonly brokenLinkActions = inject(BrokenLinkActionsService);
@@ -97,6 +91,7 @@ export class DocumentPage {
   private readonly editor = viewChild(AppCodeEditorComponent);
   private readonly brokenLinkMenu = viewChild(AppBrokenLinkMenuComponent);
   private loadToken = 0;
+  private unregisterOpenNote: (() => void) | null = null;
 
   private readonly sectionKey = toSignal(
     this.route.paramMap.pipe(map((params) => params.get(CAMPAIGN_SECTION_PARAM) ?? '')),
@@ -148,9 +143,10 @@ export class DocumentPage {
 
   constructor() {
     window.electronAPI?.onIpcEvent?.(INDEX_UPDATED_EVENT, this.handleIndexUpdated);
-    inject(DestroyRef).onDestroy(() =>
-      window.electronAPI?.offIpcEvent?.(INDEX_UPDATED_EVENT, this.handleIndexUpdated),
-    );
+    inject(DestroyRef).onDestroy(() => {
+      window.electronAPI?.offIpcEvent?.(INDEX_UPDATED_EVENT, this.handleIndexUpdated);
+      this.unregisterOpenNote?.();
+    });
 
     effect((onCleanup) => {
       const scope = this.scope();
@@ -461,123 +457,35 @@ export class DocumentPage {
     );
   }
 
-  /** Rename with a preview of the notes linking here; unsaved edits are saved first (as when leaving). */
-  protected async openRenameSheet(): Promise<void> {
+  /**
+   * Rename with a preview of the notes linking here (the shared sheet; unsaved edits are saved first). The
+   * view mode follows the note; a system page navigates to the new URL, an unchanged URL reloads the note.
+   */
+  protected openRenameSheet(): void {
     const document = this.document();
-    if (!document || (this.isDirty() && !(await this.save()))) {
+    if (!document) {
       return;
     }
 
-    let backlinks: readonly BacklinkDto[] = [];
-    try {
-      backlinks = (await this.documentService.links(document.path)).backlinks;
-    } catch (error) {
-      console.warn('[app] Failed to load backlinks for rename:', document.path, error);
-    }
-
-    const sourceTitles = [
-      ...new Map(
-        backlinks.map((link) => [link.sourcePath, link.sourceTitle ?? link.sourcePath]),
-      ).values(),
-    ];
-    const listedTitles = sourceTitles.slice(0, RENAME_PREVIEW_MAX_TITLES).join(', ');
-    const hiddenCount = sourceTitles.length - RENAME_PREVIEW_MAX_TITLES;
-    const fields: AppSheetField[] = [
-      {
-        id: 'title',
-        type: 'input',
-        label: 'document.rename.titleLabel',
-        value: document.title,
-        required: true,
-        translate: true,
-      },
-    ];
-
-    if (sourceTitles.length > 0) {
-      fields.push({
-        id: 'updateLinks',
-        type: 'checkbox',
-        value: true,
-        checkboxLabel: this.translateService.instant('document.rename.updateLinks', {
-          links: backlinks.length,
-          notes: sourceTitles.length,
-        }),
-      });
-    }
-
-    let isSubmitting = false;
-    const sheetRef = this.sheetFormService.open({
-      arcTitle: this.translateService.instant('document.rename.title'),
-      arcDescription:
-        sourceTitles.length > 0
-          ? this.translateService.instant('document.rename.linkedFrom', {
-              notes: hiddenCount > 0 ? `${listedTitles} +${hiddenCount}` : listedTitles,
-            })
-          : this.translateService.instant('document.rename.noBacklinks'),
-      arcOkText: this.translateService.instant('document.rename.submit'),
-      arcCancelText: this.translateService.instant('document.rename.cancel'),
-      fields,
-      onSubmit: (form) => {
-        if (!isSubmitting) {
-          isSubmitting = true;
-          const values = form.getValues();
-          void this.renameNote(
-            document,
-            String(values['title'] ?? ''),
-            values['updateLinks'] !== false,
-          ).then((isRenamed) => {
-            isSubmitting = false;
-            if (isRenamed) {
-              sheetRef.close();
-            }
-          });
+    void this.fileActions.openRenameNoteSheet(
+      { path: document.path, title: document.title },
+      async (newPath) => {
+        this.localPreferences.setDocumentViewMode(newPath, this.mode());
+        const oldRoute = toInAppNoteRoute(document.path);
+        const newRoute = toInAppNoteRoute(newPath);
+        if (oldRoute && newRoute && oldRoute !== newRoute) {
+          if (this.scope()?.kind === 'system') {
+            await this.router.navigateByUrl(newRoute, { replaceUrl: true });
+          }
+          return;
         }
 
-        return false;
-      },
-    });
-  }
-
-  private async renameNote(
-    document: DocumentDto,
-    title: string,
-    updateLinks: boolean,
-  ): Promise<boolean> {
-    try {
-      const result = await this.documentService.rename({ path: document.path, title, updateLinks });
-      toast.success(
-        this.translateService.instant('document.rename.done', {
-          links: result.linkCount,
-          notes: result.updatedPaths.length,
-        }),
-      );
-      if (result.failedPaths.length > 0) {
-        toast.warning(this.translateService.instant('document.rename.failed'), {
-          description: result.failedPaths.join(', '),
-        });
-      }
-
-      this.localPreferences.setDocumentViewMode(result.path, this.mode());
-      const oldRoute = toInAppNoteRoute(document.path);
-      const newRoute = toInAppNoteRoute(result.path);
-      if (oldRoute && newRoute && oldRoute !== newRoute && this.scope()?.kind === 'system') {
-        await this.router.navigateByUrl(newRoute, { replaceUrl: true });
-      } else if (oldRoute && newRoute && oldRoute !== newRoute) {
-        await this.workspace.replaceUrl(oldRoute, newRoute);
-      } else {
-        const renamed = await this.documentService.read(result.path);
+        const renamed = await this.documentService.read(newPath);
         this.document.set(renamed);
         this.editedContent.set(renamed.content);
         this.editor()?.replaceContent(renamed.content);
-      }
-
-      return true;
-    } catch (error) {
-      toast.error(this.translateService.instant('document.rename.error'), {
-        description: error instanceof Error ? error.message : String(error),
-      });
-      return false;
-    }
+      },
+    );
   }
 
   private openConflictSheet(current: DocumentDto): void {
@@ -673,6 +581,11 @@ export class DocumentPage {
       const document = await this.documentService.read(notePath);
       if (token === this.loadToken) {
         this.fileActions.forgetDeleted(document.path);
+        // A rename started elsewhere (section page, explorer) saves this page's edits first.
+        this.unregisterOpenNote?.();
+        this.unregisterOpenNote = this.fileActions.registerOpenNote(document.path, () =>
+          this.saveBeforeLeave(),
+        );
         this.document.set(document);
         this.editedContent.set(document.content);
         this.editorLinks.set(document.links);

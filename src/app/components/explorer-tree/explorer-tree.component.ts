@@ -223,6 +223,24 @@ export class AppExplorerTreeComponent {
     return toInAppNoteRoute(file.path);
   }
 
+  /** *Rename…* a sub-folder (sub-type and links follow); the tree follows the index update. */
+  protected openRenameFolderSheet(folderPath: string, folder: DocumentFolderDto): void {
+    void this.fileActions.openRenameFolderSheet({
+      path: folderPath,
+      label: toSubfolderLabel(folder.name),
+      fileCount: folder.fileCount,
+    });
+  }
+
+  /** *Rename…* a note (its title) or an asset (its name); the tree follows the index update. */
+  protected openRenameSheet(file: DocumentFileListItemDto): void {
+    if (file.kind === 'md') {
+      void this.fileActions.openRenameNoteSheet({ path: file.path, title: file.title });
+    } else {
+      void this.fileActions.openRenameAssetSheet(file);
+    }
+  }
+
   /** *Delete…* a note or an asset (to the system Trash); the tree follows the index update. */
   protected openDeleteSheet(file: DocumentFileListItemDto): void {
     const isNote = file.kind === 'md';

@@ -116,6 +116,10 @@
                     <arc-icon arcType="arrow-up-right" />
                     {{ 'explorer.openPage' | translate }}
                   </a>
+                  <button type="button" arc-menu-item (click)="openRenameFolderSheet(folderPath, folder)">
+                    <arc-icon arcType="text-cursor-input" />
+                    {{ 'campaigns.sections.renameAsset.menu' | translate }}
+                  </button>
                   <button type="button" arc-menu-item (click)="fileMove.reveal(folderPath)">
                     <arc-icon arcType="folder" />
                     {{ fileMove.revealLabel | translate }}
@@ -195,6 +199,10 @@
           {{ 'tabs.menu.openInBackground' | translate }}
         </button>
       }
+      <button type="button" arc-menu-item (click)="openRenameSheet(file)">
+        <arc-icon arcType="text-cursor-input" />
+        {{ 'campaigns.sections.renameAsset.menu' | translate }}
+      </button>
       <button type="button" arc-menu-item (click)="openMoveSheet(node, file)">
         <arc-icon arcType="move-right" />
         {{ 'campaigns.sections.move.menu' | translate }}

@@ -389,6 +389,38 @@ export class CampaignSectionPage {
     void this.fileActions.openRenameAssetSheet(file, () => void this.loadTree(this.sectionPath()));
   }
 
+  /** *Rename…* from the right-click menu: a note (its title, links updated) or an asset. */
+  protected openRenameSheet(file: DocumentFileListItemDto): void {
+    if (file.kind !== 'md') {
+      this.openRenameAssetSheet(file);
+      return;
+    }
+
+    void this.fileActions.openRenameNoteSheet(
+      { path: file.path, title: file.title },
+      () => void this.loadTree(this.sectionPath()),
+    );
+  }
+
+  /** *Rename…* a sub-folder (sub-type and links follow); it stays expanded under its new name. */
+  protected openRenameFolderSheet(folder: DocumentFolderDto): void {
+    void this.fileActions.openRenameFolderSheet(
+      {
+        path: this.folderPathOf(folder.name),
+        label: toSubfolderLabel(folder.name),
+        fileCount: folder.fileCount,
+      },
+      (name) => {
+        const expanded = new Set(this.expandedFolders());
+        if (expanded.delete(folder.name)) {
+          expanded.add(name);
+          this.expandedFolders.set(expanded);
+        }
+        void this.loadTree(this.sectionPath());
+      },
+    );
+  }
+
   /** *Delete…* a note or an asset (to the system Trash), after a confirmation; the list reloads. */
   protected openDeleteSheet(file: DocumentFileListItemDto): void {
     const isNote = file.kind === 'md';

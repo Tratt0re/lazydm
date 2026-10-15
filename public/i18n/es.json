@@ -754,6 +754,12 @@
       "done": "{{name}} movido a la Papelera",
       "linksUpdated": "{{links}} enlaces actualizados en {{notes}} notas",
       "error": "No se pudo eliminar el archivo"
+    },
+    "renameFolder": {
+      "title": "Renombrar {{name}}",
+      "description": "La carpeta se renombra en el disco; sus {{count}} archivos conservan su nombre, las notas reciben el nuevo subtipo y se actualizan los enlaces que pasan por la carpeta.",
+      "done": "Carpeta renombrada a {{name}}",
+      "error": "No se pudo renombrar la carpeta"
     }
   }
 }

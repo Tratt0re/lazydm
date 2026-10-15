@@ -51,6 +51,7 @@ var require_channels = __commonJS({
         rename: "documents:rename",
         renameAsset: "documents:renameAsset",
         delete: "documents:delete",
+        renameFolder: "documents:renameFolder",
         links: "documents:links",
         linkTargets: "documents:linkTargets",
         brokenLinks: "documents:brokenLinks",

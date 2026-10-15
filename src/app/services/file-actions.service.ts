@@ -40,6 +40,222 @@ export class FileActionsService {
     this.deletedPaths.delete(path);
   }
 
+  /** The note page showing a note saves its unsaved edits before the note is renamed from anywhere. */
+  private readonly openNoteSavers = new Map<string, () => Promise<boolean>>();
+
+  /** Registers the save of the note a page shows; returns the unregister function. */
+  registerOpenNote(path: string, save: () => Promise<boolean>): () => void {
+    this.openNoteSavers.set(path, save);
+    return () => {
+      if (this.openNoteSavers.get(path) === save) {
+        this.openNoteSavers.delete(path);
+      }
+    };
+  }
+
+  /**
+   * *Rename* a note: the new title gives the file name, with a preview of the notes linking to it and *Update
+   * links* (default on). Unsaved edits of the note, where it is open, are saved first. `onRenamed` gets the new
+   * path before campaign tabs follow it (a page showing the note can remember things under the new path).
+   */
+  async openRenameNoteSheet(
+    note: { readonly path: string; readonly title: string },
+    onRenamed?: (path: string) => void | Promise<void>,
+  ): Promise<void> {
+    const save = this.openNoteSavers.get(note.path);
+    if (save && !(await save())) {
+      return;
+    }
+
+    const { backlinks, sourceTitles, preview } = await this.loadLinkingNotes(note.path);
+    const fields: AppSheetField[] = [
+      {
+        id: 'title',
+        type: 'input',
+        label: 'document.rename.titleLabel',
+        value: note.title,
+        required: true,
+        translate: true,
+      },
+    ];
+    if (sourceTitles.length > 0) {
+      fields.push({
+        id: 'updateLinks',
+        type: 'checkbox',
+        value: true,
+        checkboxLabel: this.translateService.instant('document.rename.updateLinks', {
+          links: backlinks.length,
+          notes: sourceTitles.length,
+        }),
+      });
+    }
+
+    let isSubmitting = false;
+    const sheetRef = this.sheetFormService.open({
+      arcTitle: this.translateService.instant('document.rename.title'),
+      arcDescription:
+        sourceTitles.length > 0
+          ? this.translateService.instant('document.rename.linkedFrom', { notes: preview })
+          : this.translateService.instant('document.rename.noBacklinks'),
+      arcOkText: this.translateService.instant('document.rename.submit'),
+      arcCancelText: this.translateService.instant('document.rename.cancel'),
+      fields,
+      onSubmit: (form) => {
+        if (!isSubmitting) {
+          isSubmitting = true;
+          const values = form.getValues();
+          void this.renameNote(
+            note.path,
+            String(values['title'] ?? ''),
+            values['updateLinks'] !== false,
+            onRenamed,
+          ).then((isRenamed) => {
+            isSubmitting = false;
+            if (isRenamed) {
+              sheetRef.close();
+            }
+          });
+        }
+
+        return false;
+      },
+    });
+  }
+
+  private async renameNote(
+    path: string,
+    title: string,
+    updateLinks: boolean,
+    onRenamed?: (path: string) => void | Promise<void>,
+  ): Promise<boolean> {
+    try {
+      const result = await this.documentService.rename({ path, title, updateLinks });
+      toast.success(
+        this.translateService.instant('document.rename.done', {
+          links: result.linkCount,
+          notes: result.updatedPaths.length,
+        }),
+      );
+      if (result.failedPaths.length > 0) {
+        toast.warning(this.translateService.instant('document.rename.failed'), {
+          description: result.failedPaths.join(', '),
+        });
+      }
+
+      await onRenamed?.(result.path);
+      await this.followInTabs(toInAppNoteRoute(path), toInAppNoteRoute(result.path));
+      return true;
+    } catch (error) {
+      toast.error(this.translateService.instant('document.rename.error'), {
+        description: error instanceof Error ? error.message : String(error),
+      });
+      return false;
+    }
+  }
+
+  /**
+   * *Rename…* a sub-folder of a section: the new name gives the folder slug; its notes' sub-type and the path
+   * links through it follow. Unsaved edits of its notes, where open, are saved first; campaign tabs on its
+   * notes and on its page follow. `onRenamed` gets the new folder name.
+   */
+  async openRenameFolderSheet(
+    folder: { readonly path: string; readonly label: string; readonly fileCount: number },
+    onRenamed?: (name: string) => void,
+  ): Promise<void> {
+    for (const [path, save] of this.openNoteSavers) {
+      if (path.startsWith(`${folder.path}/`) && !(await save())) {
+        return;
+      }
+    }
+
+    let isSubmitting = false;
+    const sheetRef = this.sheetFormService.open({
+      arcTitle: this.translateService.instant('files.renameFolder.title', { name: folder.label }),
+      arcDescription: this.translateService.instant('files.renameFolder.description', {
+        count: folder.fileCount,
+      }),
+      arcOkText: this.translateService.instant('document.rename.submit'),
+      arcCancelText: this.translateService.instant('document.rename.cancel'),
+      fields: [
+        {
+          id: 'name',
+          type: 'input',
+          label: 'campaigns.sections.renameAsset.nameLabel',
+          value: folder.label,
+          required: true,
+          translate: true,
+        },
+      ],
+      onSubmit: (form) => {
+        if (!isSubmitting) {
+          isSubmitting = true;
+          void this.renameFolder(folder.path, String(form.getValues()['name'] ?? '')).then(
+            (name) => {
+              isSubmitting = false;
+              if (name) {
+                sheetRef.close();
+                onRenamed?.(name);
+              }
+            },
+          );
+        }
+
+        return false;
+      },
+    });
+  }
+
+  /** Renames a sub-folder; returns its new name, or null when it failed (the error is shown). */
+  private async renameFolder(path: string, name: string): Promise<string | null> {
+    try {
+      const result = await this.documentService.renameFolder(path, name);
+      toast.success(
+        this.translateService.instant('files.renameFolder.done', { name: result.name }),
+        result.linkCount > 0
+          ? {
+              description: this.translateService.instant('files.delete.linksUpdated', {
+                links: result.linkCount,
+                notes: result.updatedPaths.length,
+              }),
+            }
+          : undefined,
+      );
+      if (result.failedPaths.length > 0) {
+        toast.warning(this.translateService.instant('document.rename.failed'), {
+          description: result.failedPaths.join(', '),
+        });
+      }
+
+      for (const { from, to } of result.moved) {
+        await this.followInTabs(
+          toInAppNoteRoute(from) ?? toInAppAssetRoute(from),
+          toInAppNoteRoute(to) ?? toInAppAssetRoute(to),
+        );
+      }
+      const location = parseVaultFilePath(`${path}/_`);
+      if (location) {
+        const sectionRoute = `${location.scopeRoute}/${location.section}`;
+        await this.followInTabs(
+          `${sectionRoute}?folder=${encodeURIComponent(path.split('/').pop() ?? '')}`,
+          `${sectionRoute}?folder=${encodeURIComponent(result.name)}`,
+        );
+      }
+      return result.name;
+    } catch (error) {
+      toast.error(this.translateService.instant('files.renameFolder.error'), {
+        description: error instanceof Error ? error.message : String(error),
+      });
+      return null;
+    }
+  }
+
+  /** Campaign tabs and history pointing to a renamed file follow it (a system page navigates itself). */
+  private async followInTabs(oldRoute: string | null, newRoute: string | null): Promise<void> {
+    if (oldRoute && newRoute && oldRoute !== newRoute && this.workspace.isCampaignUrl(oldRoute)) {
+      await this.workspace.replaceUrl(oldRoute, newRoute);
+    }
+  }
+
   /**
    * *Rename* an asset: the new name gives the file name (the extension stays), with a preview of the notes
    * linking to it and *Update links* (default on). `onRenamed` gets the new path.
@@ -251,6 +467,7 @@ export class FileActionsService {
           description: result.failedPaths.join(', '),
         });
       }
+      await this.followInTabs(toInAppAssetRoute(path), toInAppAssetRoute(result.path));
       return result.path;
     } catch (error) {
       toast.error(this.translateService.instant('campaigns.sections.renameAsset.error'), {

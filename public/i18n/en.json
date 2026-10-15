@@ -754,6 +754,12 @@
       "done": "{{name}} moved to the Trash",
       "linksUpdated": "{{links}} links updated in {{notes}} notes",
       "error": "Couldn't delete the file"
+    },
+    "renameFolder": {
+      "title": "Rename {{name}}",
+      "description": "The folder is renamed on disk; its {{count}} files keep their names, the notes get the new sub-type, and links through the folder are updated.",
+      "done": "Folder renamed to {{name}}",
+      "error": "Couldn't rename the folder"
     }
   }
 }

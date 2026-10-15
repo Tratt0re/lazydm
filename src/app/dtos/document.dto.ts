@@ -154,6 +154,16 @@ export interface RenameAssetPayload {
   readonly updateLinks?: boolean;
 }
 
+/** A renamed sub-folder: its new path and name (slug), and where each of its files went. */
+export interface RenameFolderResultDto {
+  readonly path: string;
+  readonly name: string;
+  readonly moved: readonly { readonly from: string; readonly to: string }[];
+  readonly updatedPaths: readonly string[];
+  readonly failedPaths: readonly string[];
+  readonly linkCount: number;
+}
+
 /** Deletes a note or an asset (to the system Trash). */
 export interface DeleteFilePayload {
   readonly path: string;
