@@ -51,6 +51,12 @@ LazyDM works like **Obsidian**, specialised for Dungeon Masters.
   with it (§2a). When they disagree LazyDM **reports it and offers a fix; it never blocks the note and never moves
   it on its own**. Links resolve by name, so a note in the wrong folder keeps working.
 - A map is an image in `assets/` plus a `.md` card that embeds it.
+- **Media files** (images: png, jpg, gif, webp, svg, avif; pdf; audio: mp3, wav, ogg, m4a, flac) pasted into a
+  note, dropped on the Assets section or imported from disk are **saved right away** in the scope's own `assets/`
+  (`<campaign>/assets/`, `compendium/<system>/assets/`) and, from a note, embedded at the cursor as `![[name.ext]]`
+  (Obsidian-compatible); a toast tells where the file went. File name: the original name as a slug
+  (`pasted-<timestamp>.<ext>` for a pasted screenshot); a taken name gets a `-<timestamp>` suffix — an asset is
+  never overwritten.
 
 ## 2a. Sections (campaign folders)
 
@@ -83,7 +89,9 @@ LazyDM works like **Obsidian**, specialised for Dungeon Masters.
   *Reveal in Finder* (*Show in Explorer* / file manager elsewhere), a folder for *Open* and *Reveal*.
 - **Special sections**: *Assets* (any non-`.md` file) and *Encounters* (special files) hold no plain notes — they
   offer *New folder* and *Import* but no *New note*; their sub-folders only organise files (no `subtype`), and the
-  Review page does not check them.
+  Review page does not check them. *Assets* also offers **Import from disk** (toolbar): a sheet with *Select
+  files* (the system file dialog) and a drop zone; media files can also be dropped straight on the section page
+  (or on one of its sub-folders).
 - **Enemies** (formerly *Monsters*): folder `enemies/`, type `enemy`. `type: monster` is still read as `enemy`, so
   old files coming back through sync are not misplaced. A one-time migration (vault format version in
   `vault.json`) renames `monsters/` → `enemies/` in campaigns and systems and rewrites `type:`, the template rules,
@@ -308,7 +316,8 @@ Planned Electron modules: `vault`, `cloud-readiness`, `campaign`, `document`, `i
     current item; clicking it expands the list in place, choosing an item collapses it again.
 - **Editor settings** (Settings → Editor) are device-local, like theme and language: code map, line numbers,
   text size (also in Reading), readable line width, default view of notes never opened, line wrapping, current
-  line highlight, spellcheck. The **code map** is our own (no dependency), in the editor and in Reading: the whole
+  line highlight, spellcheck, auto-close pairs (off by default: typing `(` `[` `{` `"` `` ` `` also writes the
+  closing one). The **code map** is our own (no dependency), in the editor and in Reading: the whole
   note at a small scale from what is shown, each markdown element in its colour (theme chart tokens; legend in
   Settings), H1–H3 as labels where they are, the visible part framed, placed right before the scrollbar;
   click/drag and the wheel scroll the note, a label jumps to its heading. The note page fits the window so the
@@ -354,6 +363,30 @@ Planned Electron modules: `vault`, `cloud-readiness`, `campaign`, `document`, `i
   - **Dividers** (`---`) render as a small primary `◇` at the start of the line followed by the plain rule.
   - **Callouts** (`> [!type] Title`): note/info (default), tip/success, warning, danger/error — left accent bar in
     the status colour, mono uppercase title.
+  - **Formatting**: Cmd/Ctrl+B bold, Cmd/Ctrl+I italic (toggle: wrap the selection, or remove the marks around
+    it; with no selection, insert the pair with the cursor inside). With a selection, typing `(` `[` `{` `"` `'`
+    `` ` `` `*` `_` `~` wraps it instead of replacing it.
+  - **Insert menu** (right-click in Live and Source; Reading has none): cut / copy / paste; bold, italic,
+    strikethrough, inline code; H1–H3 (set on the current line); bulleted, numbered and task list, quote, code
+    block, table, divider; *Info box* → note / tip / warning / danger callout; *Link to note* (`[[` with the link
+    suggestions); *Asset* → *From assets…* (`![[` with the suggestions, assets first) and *Import file…* (file
+    dialog, saved like a paste, §2).
+  - **Media embeds**: images render inline; a **PDF** is a file row (icon + name) opening the system viewer;
+    an **audio** file is a row with a play/stop icon button and its name (Live and Reading).
+  - **Note audio channel**: one audio plays at a time per note — starting another stops the current one. While
+    playing, a compact player (name, pause/resume, stop, seek, time) sits at the right end of the view-buttons row;
+    it disappears when playback ends. Changing or closing the note stops it. Note audio is meant for short sounds
+    (≤ 30 s); a longer file is still saved and played, with a warning toast.
+  - **Link preview**: hovering a resolved note link (Live and Reading) shows a small eye button next to it;
+    pressing it opens a floating, read-only preview card of the note (popover surface, 2px `border-strong` frame,
+    title with its dot over the `.arc-ornament-rule`) with *Open* (Cmd/Ctrl-click: new tab). Escape or a click
+    outside closes it.
+  - **Editor reference** (an *info* icon button right after the three view buttons, tooltip and accessible name
+    from the label): a side sheet listing everything the editor understands, grouped — text (bold, italic,
+    strikethrough, inline code), headings, lists and tasks, links and embeds (`[[…]]`, `![[…]]`, markdown links),
+    blocks (quote, info boxes, code block, table, divider), media (images, PDF, audio), frontmatter properties, and
+    the keyboard shortcuts / right-click menu. Each entry shows the syntax (mono) next to how it renders (the
+    Reading renderer, so it never drifts from the real output). Read-only; it never edits the note.
 
 ## 9. ArcTechUI visual style (Nordic Relic)
 
@@ -428,6 +461,7 @@ variant keys and configuration stay as they are.
 | 9.1 | Per-campaign sections: hide, order, labels, custom sections, folders on demand; Electron owns the section list (Settings → Sections) |
 | 9.2 | Sub-folders as sub-types (one level, `subtype` field), *New folder*, breadcrumb, copy keeps the sub-folder |
 | 9.3 | Review page: broken links + misplaced / wrong sub-type / untyped / outside sections / unknown / too-deep folders; move note with link rewrite |
+| 10 | Editor quality: backtick input fix; bold/italic shortcuts and wrap-selection (auto-close pairs as a setting); right-click insert menu; media assets (paste, import from disk, drop on Assets); audio / PDF embeds; note audio channel and player; linked-note preview card; editor reference sheet |
 
 ## 12. Open decisions
 
