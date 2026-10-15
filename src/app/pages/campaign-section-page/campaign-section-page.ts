@@ -21,10 +21,7 @@ import { CopyToService } from '@/services/copy-to.service';
 import { DocumentService } from '@/services/document.service';
 import { FileMoveService, type MoveSection } from '@/services/file-move.service';
 import { SectionService, toSubfolderLabel } from '@/services/section.service';
-import {
-  AUTOMATIC_TEMPLATE_RULE,
-  TemplateService,
-} from '@/services/template.service';
+import { AUTOMATIC_TEMPLATE_RULE, TemplateService } from '@/services/template.service';
 import { ToolbarContextService, type ToolbarItemAction } from '@/services/toolbar-context.service';
 import { ArcTechAlertComponent } from '@/shared/components/alert';
 import { ArcTechButtonComponent } from '@/shared/components/button';
@@ -129,11 +126,15 @@ export class CampaignSectionPage {
   });
   protected readonly scopeRoute = computed(() => this.scope()?.routeBase ?? '');
   protected readonly importLabel = computed(() =>
-    this.scope()?.kind === 'system' ? 'compendium.import.fromCampaign' : 'compendium.import.fromCompendium',
+    this.scope()?.kind === 'system'
+      ? 'compendium.import.fromCampaign'
+      : 'compendium.import.fromCompendium',
   );
 
   /** The section folder (`<scope>/<section>`), whatever sub-folder is open. */
-  private readonly sectionPath = computed(() => `${this.scope()?.rootPath ?? ''}/${this.sectionKey()}`);
+  private readonly sectionPath = computed(
+    () => `${this.scope()?.rootPath ?? ''}/${this.sectionKey()}`,
+  );
   private readonly tree = signal<{
     files: readonly DocumentFileListItemDto[];
     folders: readonly SectionTreeFolder[];
@@ -221,7 +222,8 @@ export class CampaignSectionPage {
     const actions: ToolbarItemAction[] = [];
 
     // Custom sections have no built-in of their own but can still pick a template.
-    const hasTemplates = noteType !== null && (this.templateTypes().includes(noteType) || section?.isCustom);
+    const hasTemplates =
+      noteType !== null && (this.templateTypes().includes(noteType) || section?.isCustom);
     if (scope?.kind === 'campaign' && noteType && hasTemplates) {
       const campaign = scope.rootPath;
       actions.push({
@@ -308,7 +310,9 @@ export class CampaignSectionPage {
 
   /** Label of the copy action of this page's files: to the compendium, or (inside a system) to a campaign. */
   protected copyLabel(file: DocumentFileListItemDto): string {
-    return this.copyTo.isInCompendium(file.path) ? 'compendium.copy.toCampaign' : 'compendium.copy.toCompendium';
+    return this.copyTo.isInCompendium(file.path)
+      ? 'compendium.copy.toCampaign'
+      : 'compendium.copy.toCompendium';
   }
 
   protected isExpanded(name: string): boolean {
@@ -365,7 +369,11 @@ export class CampaignSectionPage {
 
   /** Move to the section itself or one of its sub-folders. */
   protected openMoveSheet(file: DocumentFileListItemDto): void {
-    this.fileMove.openMoveSheet(file, this.moveSection(), () => void this.loadTree(this.sectionPath()));
+    this.fileMove.openMoveSheet(
+      file,
+      this.moveSection(),
+      () => void this.loadTree(this.sectionPath()),
+    );
   }
 
   protected reveal(path: string): void {
@@ -424,7 +432,11 @@ export class CampaignSectionPage {
     const scope = this.scope();
     const section = this.section();
     if (scope && section) {
-      void this.copyTo.openImportSheet(scope, section.key, () => void this.loadTree(this.sectionPath()));
+      void this.copyTo.openImportSheet(
+        scope,
+        section.key,
+        () => void this.loadTree(this.sectionPath()),
+      );
     }
   }
 
@@ -443,12 +455,14 @@ export class CampaignSectionPage {
       onSubmit: (form) => {
         if (!isSubmitting) {
           isSubmitting = true;
-          void this.createNote(String(form.getValues()['title'] ?? ''), section.type ?? '').then((created) => {
-            isSubmitting = false;
-            if (created) {
-              sheetRef.close();
-            }
-          });
+          void this.createNote(String(form.getValues()['title'] ?? ''), section.type ?? '').then(
+            (created) => {
+              isSubmitting = false;
+              if (created) {
+                sheetRef.close();
+              }
+            },
+          );
         }
 
         return false;
