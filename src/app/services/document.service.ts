@@ -8,6 +8,7 @@ import type {
   CopyPlanDto,
   CreateDocumentPayload,
   CreateFromLinkPayload,
+  DeleteFilePayload,
   DocumentDto,
   DocumentFileListItemDto,
   DocumentFolderDto,
@@ -111,6 +112,11 @@ export class DocumentService extends BaseIpcService<APIChannel.DOCUMENTS> {
   /** Renames an asset (the extension stays) and, by default, the links and embeds pointing to it. */
   renameAsset(payload: RenameAssetPayload): Promise<RenameDocumentResultDto> {
     return this.ipcClient.renameAsset(payload);
+  }
+
+  /** Moves a note or an asset to the system Trash, by default rewriting the links pointing to it first. */
+  deleteFile(payload: DeleteFilePayload): Promise<RenameDocumentResultDto> {
+    return this.ipcClient.delete(payload);
   }
 
   links(path: string): Promise<DocumentLinksDto> {

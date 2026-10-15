@@ -741,5 +741,19 @@
     "openPage": "Apri pagina",
     "openPageOf": "Vai alla home di {{name}}",
     "empty": "Cartella vuota"
+  },
+  "files": {
+    "delete": {
+      "menu": "Elimina…",
+      "title": "Eliminare {{name}}?",
+      "noBacklinks": "Nessuna nota collega qui.",
+      "trash": "Finisce nel Cestino, da cui puoi ripristinarlo.",
+      "linksToText": "Trasforma {{links}} collegamenti in {{notes}} note in testo semplice",
+      "removeEmbeds": "Rimuovi {{links}} incorporamenti e collegamenti da {{notes}} note",
+      "submit": "Sposta nel Cestino",
+      "done": "{{name}} spostato nel Cestino",
+      "linksUpdated": "{{links}} collegamenti aggiornati in {{notes}} note",
+      "error": "Impossibile eliminare il file"
+    }
   }
 }

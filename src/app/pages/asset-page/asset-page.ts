@@ -52,7 +52,9 @@ export class AssetPage {
 
   /** Vault-relative path of the image. */
   protected readonly assetPath = computed(() => {
-    const folder = this.subfolder() ? `${this.sectionKey()}/${this.subfolder()}` : this.sectionKey();
+    const folder = this.subfolder()
+      ? `${this.sectionKey()}/${this.subfolder()}`
+      : this.sectionKey();
     return `${this.scope()?.rootPath ?? ''}/${folder}/${this.fileName()}`;
   });
   protected readonly imageUrl = computed(() => toAssetUrl(this.assetPath()));
@@ -117,6 +119,14 @@ export class AssetPage {
               iconOnly: true,
               action: () => this.openRenameSheet(),
             },
+            {
+              id: 'delete',
+              label: this.translateService.instant('files.delete.menu'),
+              icon: 'trash',
+              buttonType: 'outline',
+              iconOnly: true,
+              action: () => this.openDeleteSheet(),
+            },
           ],
         }),
       );
@@ -133,6 +143,18 @@ export class AssetPage {
     void this.fileActions.openRenameAssetSheet(
       { path: oldPath, name: this.fileName() },
       (newPath) => void this.followRename(oldPath, newPath),
+    );
+  }
+
+  /** *Delete…* (to the system Trash); the page, and its tab in a campaign, go to the folder page. */
+  private openDeleteSheet(): void {
+    void this.fileActions.openDeleteSheet(
+      { path: this.assetPath(), label: this.fileName(), isNote: false },
+      (folderRoute) => {
+        if (folderRoute && this.scope()?.kind === 'system') {
+          void this.router.navigateByUrl(folderRoute, { replaceUrl: true });
+        }
+      },
     );
   }
 

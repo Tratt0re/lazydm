@@ -741,5 +741,19 @@
     "openPage": "打开页面",
     "openPageOf": "前往 {{name}} 主页",
     "empty": "空文件夹"
+  },
+  "files": {
+    "delete": {
+      "menu": "删除…",
+      "title": "删除 {{name}}？",
+      "noBacklinks": "没有笔记链接到这里。",
+      "trash": "文件将移到废纸篓，可从中恢复。",
+      "linksToText": "将 {{notes}} 篇笔记中的 {{links}} 个链接转为纯文本",
+      "removeEmbeds": "从 {{notes}} 篇笔记中移除 {{links}} 个嵌入和链接",
+      "submit": "移到废纸篓",
+      "done": "{{name}} 已移到废纸篓",
+      "linksUpdated": "已更新 {{notes}} 篇笔记中的 {{links}} 个链接",
+      "error": "无法删除文件"
+    }
   }
 }

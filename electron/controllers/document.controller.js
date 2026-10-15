@@ -578,6 +578,46 @@ async function rewriteIncomingLinks(vaultPath, rawsBySource, skipPath, rewrite) 
 }
 
 /**
+ * Deletes a note or an asset: the file goes to the system Trash (recoverable). With `rewriteLinks`, the links
+ * the index resolved to it are rewritten in every other note first — a note's links become their plain text,
+ * an asset's embeds are removed (its plain links become text). Without it they stay, reported as broken.
+ */
+async function deleteFile(payload) {
+  const body = ensurePlainObject(payload, 'payload');
+  const relativePath = requirePath(body);
+  const rewriteLinksToText =
+    normalizeOptionalBooleanFlag(body.rewriteLinks, 'payload.rewriteLinks') !== 0;
+
+  requireIndexOpen();
+  const vaultPath = vaultController.getReadyVaultPath();
+  const absolutePath = resolveInsideVault(vaultPath, relativePath);
+  if (!fs.existsSync(absolutePath) || !fs.statSync(absolutePath).isFile()) {
+    throw new Error(`Not found: ${relativePath}`);
+  }
+
+  const isNote = vaultIndexModel.getFileKind(relativePath) === 'md';
+  const rawsBySource = groupRawsBySource(vaultIndexModel.listIncomingLinks(relativePath));
+  const { updatedPaths, failedPaths, linkCount } = rewriteLinksToText
+    ? await rewriteIncomingLinks(vaultPath, rawsBySource, relativePath, (content, sourcePath, raws) =>
+        rewriteLinks(
+          content,
+          (link) => {
+            if (!raws?.has(link.raw)) {
+              return null;
+            }
+            return { text: !isNote && link.kind === 'embed' ? '' : getLinkPlainText(link) };
+          },
+          { sourcePath },
+        ),
+      )
+    : { updatedPaths: [], failedPaths: [], linkCount: 0 };
+
+  await shell.trashItem(absolutePath);
+  await indexerController.reindexPaths([relativePath, ...updatedPaths]);
+  return { path: relativePath, updatedPaths, failedPaths, linkCount };
+}
+
+/**
  * Renames an asset (image, PDF, audio…): the new name gives the slug, the extension stays, the folder too.
  * With `updateLinks`, the links and embeds resolving to it are rewritten like a note rename's.
  */
@@ -901,6 +941,7 @@ module.exports = {
   createFolder,
   createFromLink,
   create,
+  deleteFile,
   linkTargets,
   links,
   list,

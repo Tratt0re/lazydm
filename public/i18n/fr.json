@@ -741,5 +741,19 @@
     "openPage": "Ouvrir la page",
     "openPageOf": "Aller à l'accueil de {{name}}",
     "empty": "Dossier vide"
+  },
+  "files": {
+    "delete": {
+      "menu": "Supprimer…",
+      "title": "Supprimer {{name}} ?",
+      "noBacklinks": "Aucune note ne renvoie ici.",
+      "trash": "Il va dans la Corbeille, d’où vous pouvez le restaurer.",
+      "linksToText": "Transformer {{links}} liens dans {{notes}} notes en texte brut",
+      "removeEmbeds": "Retirer {{links}} intégrations et liens de {{notes}} notes",
+      "submit": "Mettre à la Corbeille",
+      "done": "{{name}} mis à la Corbeille",
+      "linksUpdated": "{{links}} liens mis à jour dans {{notes}} notes",
+      "error": "Impossible de supprimer le fichier"
+    }
   }
 }

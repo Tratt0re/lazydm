@@ -105,7 +105,9 @@ export function toInAppNoteRoute(resolvedPath: string): string | null {
     return null;
   }
 
-  const folder = location.subfolder ? `${location.section}/${location.subfolder}` : location.section;
+  const folder = location.subfolder
+    ? `${location.section}/${location.subfolder}`
+    : location.section;
   return `${location.scopeRoute}/${folder}/${location.name}`;
 }
 
@@ -116,7 +118,9 @@ export function toInAppAssetRoute(resolvedPath: string): string | null {
     return null;
   }
 
-  const folder = location.subfolder ? `${location.section}/${location.subfolder}` : location.section;
+  const folder = location.subfolder
+    ? `${location.section}/${location.subfolder}`
+    : location.section;
   return `${location.scopeRoute}/${folder}/${location.name}`;
 }
 
@@ -226,12 +230,20 @@ function calloutRule(state: StateCore): void {
     }
 
     const calloutType = match[1].toLocaleLowerCase();
-    tokens[index].meta = { calloutType, calloutTitle: match[2] || calloutType } satisfies CalloutMeta;
+    tokens[index].meta = {
+      calloutType,
+      calloutTitle: match[2] || calloutType,
+    } satisfies CalloutMeta;
     inlineToken.content = bodyLines.join('\n');
 
     let depth = 0;
     for (let closeIndex = index; closeIndex < tokens.length; closeIndex++) {
-      depth += tokens[closeIndex].type === 'blockquote_open' ? 1 : tokens[closeIndex].type === 'blockquote_close' ? -1 : 0;
+      depth +=
+        tokens[closeIndex].type === 'blockquote_open'
+          ? 1
+          : tokens[closeIndex].type === 'blockquote_close'
+            ? -1
+            : 0;
       if (depth === 0) {
         tokens[closeIndex].meta = { calloutType };
         break;

@@ -741,5 +741,19 @@
     "openPage": "Abrir página",
     "openPageOf": "Ir al inicio de {{name}}",
     "empty": "Carpeta vacía"
+  },
+  "files": {
+    "delete": {
+      "menu": "Eliminar…",
+      "title": "¿Eliminar {{name}}?",
+      "noBacklinks": "Ninguna nota enlaza aquí.",
+      "trash": "Va a la Papelera, desde donde puedes restaurarlo.",
+      "linksToText": "Convertir {{links}} enlaces en {{notes}} notas en texto plano",
+      "removeEmbeds": "Quitar {{links}} incrustaciones y enlaces de {{notes}} notas",
+      "submit": "Mover a la Papelera",
+      "done": "{{name}} movido a la Papelera",
+      "linksUpdated": "{{links}} enlaces actualizados en {{notes}} notas",
+      "error": "No se pudo eliminar el archivo"
+    }
   }
 }

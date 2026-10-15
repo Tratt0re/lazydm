@@ -27,6 +27,7 @@ import type {
   SavedAssetDto,
 } from '@/dtos';
 import { AssetService, NOTE_AUDIO_MAX_SECONDS } from '@/services/asset.service';
+import { FileActionsService } from '@/services/file-actions.service';
 import { BrokenLinkActionsService } from '@/services/broken-link-actions.service';
 import { CopyToService } from '@/services/copy-to.service';
 import { getNoteScopeKind, NoteScopeService } from '@/services/note-scope.service';
@@ -92,6 +93,7 @@ export class DocumentPage {
   private readonly brokenLinkActions = inject(BrokenLinkActionsService);
   private readonly copyTo = inject(CopyToService);
   private readonly assetService = inject(AssetService);
+  private readonly fileActions = inject(FileActionsService);
   private readonly editor = viewChild(AppCodeEditorComponent);
   private readonly brokenLinkMenu = viewChild(AppBrokenLinkMenuComponent);
   private loadToken = 0;
@@ -202,6 +204,15 @@ export class DocumentPage {
               action: () => this.openRenameSheet(),
             },
             {
+              id: 'delete',
+              label: this.translateService.instant('files.delete.menu'),
+              icon: 'trash',
+              buttonType: 'outline',
+              iconOnly: true,
+              disabled: () => !this.document() || this.isSaving(),
+              action: () => this.openDeleteSheet(),
+            },
+            {
               id: 'save',
               label: this.translateService.instant('document.toolbar.save'),
               icon: 'save',
@@ -238,6 +249,12 @@ export class DocumentPage {
 
   /** Autosave when leaving the note (tab switch, link, sidebar); a conflict or error keeps the user here. */
   async saveBeforeLeave(): Promise<boolean> {
+    // A note deleted while shown (here or from the explorer) is not written back.
+    const document = this.document();
+    if (document && this.fileActions.isDeleted(document.path)) {
+      return true;
+    }
+
     return !this.isDirty() || (await this.save());
   }
 
@@ -422,6 +439,26 @@ export class DocumentPage {
     this.document.set(reloaded);
     this.editedContent.set(reloaded.content);
     this.editor()?.replaceContent(reloaded.content);
+  }
+
+  /**
+   * *Delete…* the note (to the system Trash), after a confirmation. Its unsaved edits are dropped (leaving a
+   * deleted note does not save it); campaign tabs go to the folder page, a system page navigates there.
+   */
+  protected openDeleteSheet(): void {
+    const document = this.document();
+    if (!document) {
+      return;
+    }
+
+    void this.fileActions.openDeleteSheet(
+      { path: document.path, label: document.title, isNote: true },
+      (folderRoute) => {
+        if (folderRoute && this.scope()?.kind === 'system') {
+          void this.router.navigateByUrl(folderRoute, { replaceUrl: true });
+        }
+      },
+    );
   }
 
   /** Rename with a preview of the notes linking here; unsaved edits are saved first (as when leaving). */
@@ -635,6 +672,7 @@ export class DocumentPage {
     try {
       const document = await this.documentService.read(notePath);
       if (token === this.loadToken) {
+        this.fileActions.forgetDeleted(document.path);
         this.document.set(document);
         this.editedContent.set(document.content);
         this.editorLinks.set(document.links);

@@ -389,6 +389,15 @@ export class CampaignSectionPage {
     void this.fileActions.openRenameAssetSheet(file, () => void this.loadTree(this.sectionPath()));
   }
 
+  /** *Delete…* a note or an asset (to the system Trash), after a confirmation; the list reloads. */
+  protected openDeleteSheet(file: DocumentFileListItemDto): void {
+    const isNote = file.kind === 'md';
+    void this.fileActions.openDeleteSheet(
+      { path: file.path, label: isNote ? file.title : file.name, isNote },
+      () => void this.loadTree(this.sectionPath()),
+    );
+  }
+
   /** Thumbnail of an image asset (served by the asset protocol); null for anything else. */
   protected thumbnailUrl(file: DocumentFileListItemDto): string | null {
     return this.assetService.getAssetKind(file.path) === 'image' ? toAssetUrl(file.path) : null;

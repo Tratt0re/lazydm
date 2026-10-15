@@ -108,7 +108,10 @@ LazyDM works like **Obsidian**, specialised for Dungeon Masters.
   - *Delete…* a sub-folder: the confirmation shows its file count and offers **Delete the files too** (each one as
     above) or **Move them to the main folder** (links rewritten like *Move to…*, `subtype` removed). A file whose name
     is taken in the main folder is listed and nothing is moved until it is renamed. The folder goes to the Trash.
-  - Unsaved edits of a note are saved before it is renamed or deleted; its open tabs close on delete.
+  - Unsaved edits of a note are saved before it is renamed; on delete they are dropped (a deleted note is
+    never written back, even when it was open while deleted from the explorer). Tabs and history entries
+    showing a deleted file go to its section page (the last tab rule still holds). *Delete…* is in the note and
+    asset toolbars and in the file right-click menus of the section page and the explorer.
 - **Special sections**: *Assets* (any non-`.md` file) and *Encounters* (special files) hold no plain notes — they
   offer *New folder* and *Import* but no *New note*; their sub-folders only organise files (no `subtype`), and the
   Review page does not check them. *Assets* also offers **Import from disk** (toolbar): a sheet with *Select

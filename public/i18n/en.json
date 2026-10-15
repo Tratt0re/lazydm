@@ -741,5 +741,19 @@
     "openPage": "Open page",
     "openPageOf": "Go to {{name}} home",
     "empty": "Empty folder"
+  },
+  "files": {
+    "delete": {
+      "menu": "Delete…",
+      "title": "Delete {{name}}?",
+      "noBacklinks": "No note links here.",
+      "trash": "It goes to the Trash, where you can restore it.",
+      "linksToText": "Turn {{links}} links in {{notes}} notes into plain text",
+      "removeEmbeds": "Remove {{links}} embeds and links from {{notes}} notes",
+      "submit": "Move to Trash",
+      "done": "{{name}} moved to the Trash",
+      "linksUpdated": "{{links}} links updated in {{notes}} notes",
+      "error": "Couldn't delete the file"
+    }
   }
 }

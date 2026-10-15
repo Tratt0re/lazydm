@@ -23,6 +23,7 @@ import {
 import type { DocumentFileListItemDto, DocumentFolderDto } from '@/dtos';
 import { CopyToService } from '@/services/copy-to.service';
 import { DocumentService } from '@/services/document.service';
+import { FileActionsService } from '@/services/file-actions.service';
 import { FileMoveService } from '@/services/file-move.service';
 import { LocalPreferencesService } from '@/services/local-preferences.service';
 import { toSubfolderLabel } from '@/services/section.service';
@@ -83,6 +84,7 @@ export class AppExplorerTreeComponent {
   private readonly translateService = inject(TranslateService);
   protected readonly fileMove = inject(FileMoveService);
   protected readonly copyTo = inject(CopyToService);
+  private readonly fileActions = inject(FileActionsService);
   protected readonly workspace = inject(WorkspaceService);
   private readonly localPreferences = inject(LocalPreferencesService);
   protected readonly toSubfolderLabel = toSubfolderLabel;
@@ -219,6 +221,16 @@ export class AppExplorerTreeComponent {
 
   protected noteRoute(file: DocumentFileListItemDto): string | null {
     return toInAppNoteRoute(file.path);
+  }
+
+  /** *Delete…* a note or an asset (to the system Trash); the tree follows the index update. */
+  protected openDeleteSheet(file: DocumentFileListItemDto): void {
+    const isNote = file.kind === 'md';
+    void this.fileActions.openDeleteSheet({
+      path: file.path,
+      label: isNote ? file.title : file.name,
+      isNote,
+    });
   }
 
   /** Asset page of an image (null for any other asset). */

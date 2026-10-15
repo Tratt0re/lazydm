@@ -154,6 +154,13 @@ export interface RenameAssetPayload {
   readonly updateLinks?: boolean;
 }
 
+/** Deletes a note or an asset (to the system Trash). */
+export interface DeleteFilePayload {
+  readonly path: string;
+  /** Links to a note become plain text, an asset's embeds are removed (default true). */
+  readonly rewriteLinks?: boolean;
+}
+
 export interface RenameDocumentResultDto {
   readonly path: string;
   readonly updatedPaths: readonly string[];
