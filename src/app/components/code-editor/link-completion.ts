@@ -3,10 +3,11 @@ import {
   type Completion,
   type CompletionContext,
   type CompletionResult,
+  completionKeymap,
   pickedCompletion,
 } from '@codemirror/autocomplete';
-import { type Extension, StateEffect, StateField } from '@codemirror/state';
-import { EditorView } from '@codemirror/view';
+import { type Extension, Prec, StateEffect, StateField } from '@codemirror/state';
+import { EditorView, keymap } from '@codemirror/view';
 
 import type { LinkTargetDto } from '@/dtos';
 
@@ -40,6 +41,15 @@ const contextField = StateField.define<LinkCompletionContext>({
 });
 
 /**
+ * The library keymap without its macOS-only Option shortcuts (`Alt-\``, `Alt-i`): on several layouts
+ * Option types a character (Italian: Option+\ is the backtick), which those shortcuts would swallow.
+ * Ctrl-Space still opens the suggestions. Highest precedence, like the library's own keymap.
+ */
+const linkCompletionKeymap = Prec.highest(
+  keymap.of(completionKeymap.filter((binding) => !binding.mac)),
+);
+
+/**
  * Link suggestions: typing `[[`, `![[` or `[label](` opens a list of the files of the note's own scope
  * (campaign or compendium system), filtered as the target is typed. Picking one writes a link that
  * resolves: the bare name (or the path when the name is taken twice) for wikilinks, a relative path
@@ -52,7 +62,9 @@ export function linkCompletion(): Extension {
       override: [linkCompletions],
       icons: false,
       maxRenderedOptions: MAX_OPTIONS,
+      defaultKeymap: false,
     }),
+    linkCompletionKeymap,
     completionTheme,
   ];
 }
