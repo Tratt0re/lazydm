@@ -4,6 +4,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   effect,
+  computed,
   ElementRef,
   inject,
   input,
@@ -31,10 +32,17 @@ import {
 import { tags } from '@lezer/highlight';
 
 import type { EditorSettings } from '@/config/local-preferences.config';
+import { AppEditorInsertMenuComponent } from '@/components/editor-insert-menu/editor-insert-menu.component';
 import type { DocumentLinkDto, LinkTargetDto } from '@/dtos';
 import { LocalPreferencesService } from '@/services/local-preferences.service';
 import { codeMap } from './code-map';
-import { autoClosePairs, formattingKeymap, wrapSelectionOnInput } from './editor-commands';
+import {
+  autoClosePairs,
+  type EditorInsertAction,
+  formattingKeymap,
+  INSERT_COMMANDS,
+  wrapSelectionOnInput,
+} from './editor-commands';
 import { linkCompletion, setLinkCompletionContext } from './link-completion';
 import { findFrontmatterEnd, livePreview, setLivePreviewContext } from './live-preview';
 
@@ -60,7 +68,15 @@ const LIVE_LINK_SELECTOR =
  */
 @Component({
   selector: 'app-code-editor',
-  template: `<div #host class="h-full min-h-0 w-full"></div>`,
+  imports: [AppEditorInsertMenuComponent],
+  template: `
+    <div #host class="h-full min-h-0 w-full"></div>
+    <app-editor-insert-menu
+      [canLink]="canLink()"
+      (action)="runInsertAction($event)"
+      (menuClosed)="focusEditor()"
+    />
+  `,
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     class: 'block h-full min-h-0 w-full overflow-hidden border border-input bg-recessed',
@@ -68,6 +84,7 @@ const LIVE_LINK_SELECTOR =
 })
 export class AppCodeEditorComponent implements OnDestroy {
   private readonly host = viewChild.required<ElementRef<HTMLDivElement>>('host');
+  private readonly insertMenu = viewChild.required(AppEditorInsertMenuComponent);
   private view: EditorView | null = null;
   private previousDocumentKey: string | null = null;
   private readonly modeCompartment = new Compartment();
@@ -91,6 +108,9 @@ export class AppCodeEditorComponent implements OnDestroy {
   /** A link of the live preview was clicked: its in-app route. */
   readonly linkOpen = output<string>();
   readonly brokenLinkOpen = output<CodeEditorBrokenLinkEvent>();
+
+  /** Link and asset entries of the insert menu need files to suggest (none in templates). */
+  protected readonly canLink = computed(() => this.linkTargets().length > 0);
 
   constructor() {
     afterNextRender(() => this.createView());
@@ -128,6 +148,7 @@ export class AppCodeEditorComponent implements OnDestroy {
     const host = this.host().nativeElement;
     host.removeEventListener('mousedown', this.handleLinkMouseDown, true);
     host.removeEventListener('click', this.handleLinkClick, true);
+    host.removeEventListener('contextmenu', this.handleContextMenu);
     this.view?.destroy();
   }
 
@@ -162,7 +183,42 @@ export class AppCodeEditorComponent implements OnDestroy {
     // Capture phase: CodeMirror would otherwise move the cursor into the link (showing its source).
     host.addEventListener('mousedown', this.handleLinkMouseDown, true);
     host.addEventListener('click', this.handleLinkClick, true);
+    host.addEventListener('contextmenu', this.handleContextMenu);
   }
+
+  protected runInsertAction(action: EditorInsertAction): void {
+    const view = this.view;
+    if (view) {
+      // Focus first: the link suggestions and the clipboard both need the editor focused.
+      view.focus();
+      INSERT_COMMANDS[action](view);
+    }
+  }
+
+  protected focusEditor(): void {
+    this.view?.focus();
+  }
+
+  /**
+   * Right-click opens the insert menu (not in read-only notes). Like a native menu, a click outside
+   * the selection first moves the cursor there; inside it the selection stays, for wrapping.
+   */
+  private readonly handleContextMenu = (event: MouseEvent) => {
+    const view = this.view;
+    if (!view || this.readOnly()) {
+      return;
+    }
+
+    event.preventDefault();
+    const position = view.posAtCoords({ x: event.clientX, y: event.clientY });
+    const isInSelection = view.state.selection.ranges.some(
+      (range) => position !== null && position >= range.from && position <= range.to,
+    );
+    if (position !== null && !isInSelection) {
+      view.dispatch({ selection: { anchor: position } });
+    }
+    this.insertMenu().open(event.clientX, event.clientY);
+  };
 
   private syncLinks(): void {
     this.view?.dispatch({

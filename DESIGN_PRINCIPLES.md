@@ -366,11 +366,14 @@ Planned Electron modules: `vault`, `cloud-readiness`, `campaign`, `document`, `i
   - **Formatting**: Cmd/Ctrl+B bold, Cmd/Ctrl+I italic (toggle: wrap the selection, or remove the marks around
     it; with no selection, insert the pair with the cursor inside). With a selection, typing `(` `[` `{` `"` `'`
     `` ` `` `*` `_` `~` wraps it instead of replacing it.
-  - **Insert menu** (right-click in Live and Source; Reading has none): cut / copy / paste; bold, italic,
-    strikethrough, inline code; H1–H3 (set on the current line); bulleted, numbered and task list, quote, code
-    block, table, divider; *Info box* → note / tip / warning / danger callout; *Link to note* (`[[` with the link
+  - **Insert menu** (right-click in Live and Source; Reading and read-only templates have none; a right-click
+    outside the selection moves the cursor there first): cut / copy / paste; bold, italic, strikethrough, inline
+    code; *Heading* → H1–H3; *List* → bulleted, numbered, task; quote, code block (around the selected lines),
+    table, *Info box* → note / tip / warning / danger callout, divider; *Link to note…* (`[[` with the link
     suggestions); *Asset* → *From assets…* (`![[` with the suggestions, assets first) and *Import file…* (file
-    dialog, saved like a paste, §2).
+    dialog, saved like a paste, §2). Link and asset entries need a scope (not in templates). A line is either a
+    heading or a list / quote item: setting one replaces the other's marks; setting the same list or quote again
+    removes it. Blocks go on their own lines, after a blank line when the cursor's line has text.
   - **Media embeds**: images render inline; a **PDF** is a file row (icon + name) opening the system viewer;
     an **audio** file is a row with a play/stop icon button and its name (Live and Reading).
   - **Note audio channel**: one audio plays at a time per note — starting another stops the current one. While

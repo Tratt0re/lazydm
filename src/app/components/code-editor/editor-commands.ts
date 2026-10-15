@@ -1,5 +1,11 @@
-import { closeBrackets, closeBracketsKeymap } from '@codemirror/autocomplete';
-import { EditorSelection, EditorState, type Extension, Prec } from '@codemirror/state';
+import { closeBrackets, closeBracketsKeymap, startCompletion } from '@codemirror/autocomplete';
+import {
+  EditorSelection,
+  EditorState,
+  type Extension,
+  type Line,
+  Prec,
+} from '@codemirror/state';
 import { type Command, EditorView, keymap } from '@codemirror/view';
 
 /** Typed with a selection, these wrap it (opening → closing) instead of replacing it. */
@@ -145,3 +151,275 @@ export function autoClosePairs(): Extension {
     EditorState.languageData.of(() => [{ closeBrackets: { brackets: AUTO_CLOSE_BRACKETS } }]),
   ];
 }
+
+// ---------------------------------------------------------------------------------------------
+// Insert menu (right-click): headings, line prefixes, blocks, links, clipboard
+// ---------------------------------------------------------------------------------------------
+
+/** What the insert menu can do; each one is a command of `INSERT_COMMANDS`. */
+export type EditorInsertAction =
+  | 'cut'
+  | 'copy'
+  | 'paste'
+  | 'bold'
+  | 'italic'
+  | 'strikethrough'
+  | 'inlineCode'
+  | 'heading1'
+  | 'heading2'
+  | 'heading3'
+  | 'bulletList'
+  | 'orderedList'
+  | 'taskList'
+  | 'quote'
+  | 'codeBlock'
+  | 'table'
+  | 'divider'
+  | 'calloutNote'
+  | 'calloutTip'
+  | 'calloutWarning'
+  | 'calloutDanger'
+  | 'link'
+  | 'asset';
+
+type LinePrefixKind = 'bullet' | 'ordered' | 'task' | 'quote';
+
+const HEADING_PREFIX = /^#{1,6}[ \t]+/;
+/** Any list or quote prefix a line can have, so switching kinds replaces it instead of stacking. */
+const LINE_PREFIX_PATTERNS: Readonly<Record<LinePrefixKind, RegExp>> = {
+  task: /^[-*+] \[[ xX]\] /,
+  bullet: /^[-*+] /,
+  ordered: /^\d+[.)] /,
+  quote: /^> ?/,
+};
+const LINE_PREFIX_KINDS: readonly LinePrefixKind[] = ['task', 'bullet', 'ordered', 'quote'];
+
+const TABLE_TEMPLATE = '| Column | Column |\n| --- | --- |\n|  |  |\n|  |  |';
+const CODE_FENCE = '```';
+
+/** The lines touched by the selection ranges, once each, in document order. */
+function selectedLines(state: EditorState): Line[] {
+  const lines = new Map<number, Line>();
+  for (const range of state.selection.ranges) {
+    for (let position = range.from; position <= range.to; ) {
+      const line = state.doc.lineAt(position);
+      lines.set(line.number, line);
+      position = line.to + 1;
+    }
+  }
+  return [...lines.values()].sort((a, b) => a.number - b.number);
+}
+
+/** Leading whitespace of a line, kept when its prefix changes (nested list items). */
+function splitIndent(text: string): { indent: string; rest: string } {
+  const indent = /^[ \t]*/.exec(text)![0];
+  return { indent, rest: text.slice(indent.length) };
+}
+
+/**
+ * A line's block marks: its indentation, its list or quote prefix and its heading `#` marks (a
+ * line is a heading or a list/quote item; the commands below switch it from one to the other).
+ */
+function parseLineMarks(line: Line) {
+  const { indent, rest } = splitIndent(line.text);
+  const prefix = findLinePrefix(rest);
+  const heading = HEADING_PREFIX.exec(rest.slice(prefix?.length ?? 0));
+  return { indent, prefix, headingLength: heading?.[0].length ?? 0 };
+}
+
+function findLinePrefix(rest: string): { kind: LinePrefixKind; length: number } | null {
+  for (const kind of LINE_PREFIX_KINDS) {
+    const match = LINE_PREFIX_PATTERNS[kind].exec(rest);
+    if (match) {
+      return { kind, length: match[0].length };
+    }
+  }
+  return null;
+}
+
+/**
+ * H1–H3 on the selected lines: their `#` marks (and any list or quote prefix) are replaced by
+ * `level` ones; the text stays.
+ */
+function setHeading(level: number): Command {
+  return (view) => {
+    const marks = `${'#'.repeat(level)} `;
+    view.dispatch({
+      changes: selectedLines(view.state).map((line) => {
+        const { indent, prefix, headingLength } = parseLineMarks(line);
+        const to = line.from + indent.length + (prefix?.length ?? 0) + headingLength;
+        return { from: line.from, to, insert: marks };
+      }),
+      scrollIntoView: true,
+      userEvent: 'input',
+    });
+    return true;
+  };
+}
+
+/**
+ * Lists and quotes on the selected lines: removed when every line already has that prefix,
+ * otherwise set on each line (replacing another list or quote prefix, and heading marks).
+ * Numbered lists count up.
+ */
+function toggleLinePrefix(kind: LinePrefixKind): Command {
+  return (view) => {
+    const parsed = selectedLines(view.state).map((line) => ({ line, ...parseLineMarks(line) }));
+    const isRemoving = parsed.every(({ prefix }) => prefix?.kind === kind);
+    let number = 0;
+    view.dispatch({
+      changes: parsed.map(({ line, indent, prefix, headingLength }) => {
+        const from = line.from + indent.length;
+        const prefixTo = from + (prefix?.length ?? 0);
+        if (isRemoving) {
+          return { from, to: prefixTo };
+        }
+        const to = prefixTo + headingLength;
+        number++;
+        const insert =
+          kind === 'bullet'
+            ? '- '
+            : kind === 'task'
+              ? '- [ ] '
+              : kind === 'ordered'
+                ? `${number}. `
+                : '> ';
+        return { from, to, insert };
+      }),
+      scrollIntoView: true,
+      userEvent: 'input',
+    });
+    return true;
+  };
+}
+
+/**
+ * Inserts a block on its own lines: at the cursor's line when it is empty, otherwise after it with a
+ * blank line between. `select` is the part of `text` left selected (or the cursor), as offsets.
+ */
+function insertBlock(
+  text: string,
+  select: readonly [number, number] = [text.length, text.length],
+): Command {
+  return (view) => {
+    const line = view.state.doc.lineAt(view.state.selection.main.head);
+    const isEmpty = line.text.trim() === '';
+    const from = isEmpty ? line.from : line.to;
+    const before = isEmpty ? '' : '\n\n';
+    const start = from + before.length;
+    view.dispatch({
+      changes: { from, to: line.to, insert: `${before}${text}` },
+      selection: EditorSelection.range(start + select[0], start + select[1]),
+      scrollIntoView: true,
+      userEvent: 'input',
+    });
+    return true;
+  };
+}
+
+/** A fenced code block around the selected lines, or an empty one with the cursor inside. */
+const insertCodeBlock: Command = (view) => {
+  const range = view.state.selection.main;
+  if (range.empty) {
+    return insertBlock(`${CODE_FENCE}\n\n${CODE_FENCE}`, [4, 4])(view);
+  }
+
+  const first = view.state.doc.lineAt(range.from);
+  const last = view.state.doc.lineAt(range.to);
+  view.dispatch({
+    changes: [
+      { from: first.from, insert: `${CODE_FENCE}\n` },
+      { from: last.to, insert: `\n${CODE_FENCE}` },
+    ],
+    selection: EditorSelection.cursor(first.from + CODE_FENCE.length),
+    scrollIntoView: true,
+    userEvent: 'input',
+  });
+  return true;
+};
+
+/** A callout (`> [!type]`) with the cursor on its first content line. */
+function insertCallout(type: string): Command {
+  return insertBlock(`> [!${type}]\n> `);
+}
+
+/**
+ * Starts a `[[link]]` or `![[embed]]` at the cursor and opens the link suggestions; selected text
+ * becomes what the suggestions are filtered on.
+ */
+function startLink(opening: string): Command {
+  return (view) => {
+    const range = view.state.selection.main;
+    const query = view.state.sliceDoc(range.from, range.to);
+    view.dispatch({
+      changes: { from: range.from, to: range.to, insert: `${opening}${query}` },
+      selection: EditorSelection.cursor(range.from + opening.length + query.length),
+      scrollIntoView: true,
+      userEvent: 'input',
+    });
+    startCompletion(view);
+    return true;
+  };
+}
+
+/** Cut / copy / paste through the system clipboard (plain text), as the native menu would. */
+function clipboardCommand(action: 'cut' | 'copy' | 'paste'): Command {
+  return (view) => {
+    const range = view.state.selection.main;
+    if (action === 'paste') {
+      void navigator.clipboard
+        .readText()
+        .then((text) =>
+          view.dispatch(view.state.replaceSelection(text), {
+            scrollIntoView: true,
+            userEvent: 'input.paste',
+          }),
+        )
+        .catch((error: unknown) => console.warn('[app] Clipboard read failed:', error));
+      return true;
+    }
+
+    if (range.empty) {
+      return false;
+    }
+
+    void navigator.clipboard
+      .writeText(view.state.sliceDoc(range.from, range.to))
+      .then(() => {
+        if (action === 'cut') {
+          view.dispatch({
+            changes: { from: range.from, to: range.to },
+            userEvent: 'delete.cut',
+          });
+        }
+      })
+      .catch((error: unknown) => console.warn('[app] Clipboard write failed:', error));
+    return true;
+  };
+}
+
+export const INSERT_COMMANDS: Readonly<Record<EditorInsertAction, Command>> = {
+  cut: clipboardCommand('cut'),
+  copy: clipboardCommand('copy'),
+  paste: clipboardCommand('paste'),
+  bold: toggleInlineMarker('**'),
+  italic: toggleInlineMarker('*'),
+  strikethrough: toggleInlineMarker('~~'),
+  inlineCode: toggleInlineMarker('`'),
+  heading1: setHeading(1),
+  heading2: setHeading(2),
+  heading3: setHeading(3),
+  bulletList: toggleLinePrefix('bullet'),
+  orderedList: toggleLinePrefix('ordered'),
+  taskList: toggleLinePrefix('task'),
+  quote: toggleLinePrefix('quote'),
+  codeBlock: insertCodeBlock,
+  table: insertBlock(TABLE_TEMPLATE, [2, 8]),
+  divider: insertBlock('---\n'),
+  calloutNote: insertCallout('note'),
+  calloutTip: insertCallout('tip'),
+  calloutWarning: insertCallout('warning'),
+  calloutDanger: insertCallout('danger'),
+  link: startLink('[['),
+  asset: startLink('![['),
+};
