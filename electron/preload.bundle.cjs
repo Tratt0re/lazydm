@@ -21,6 +21,10 @@ var require_channels = __commonJS({
         remove: "db:app-meta:remove",
         upsert: "db:app-meta:upsert"
       }),
+      assets: Object.freeze({
+        save: "assets:save",
+        import: "assets:import"
+      }),
       campaigns: Object.freeze({
         list: "campaigns:list",
         get: "campaigns:get",
@@ -102,7 +106,8 @@ var require_channels = __commonJS({
         getState: "window:getState",
         minimize: "window:minimize",
         toggleMaximize: "window:toggleMaximize",
-        close: "window:close"
+        close: "window:close",
+        paste: "window:paste"
       }),
       workspace: Object.freeze({
         get: "workspace:get",
