@@ -44,10 +44,19 @@ function close(_payload, event) {
   getSenderWindow(event).close();
 }
 
+/**
+ * A real paste in the sender's focused element (the editor's right-click *Paste*): the page handles it
+ * like Cmd/Ctrl+V, so media files on the clipboard become assets too.
+ */
+function paste(_payload, event) {
+  getSenderWindow(event).webContents.paste();
+}
+
 module.exports = {
   close,
   getState,
   minimize,
+  paste,
   reload,
   toggleMaximize,
 };

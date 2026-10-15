@@ -93,6 +93,7 @@ const CHANNELS = Object.freeze({
     minimize: 'window:minimize',
     toggleMaximize: 'window:toggleMaximize',
     close: 'window:close',
+    paste: 'window:paste',
   }),
   workspace: Object.freeze({
     get: 'workspace:get',

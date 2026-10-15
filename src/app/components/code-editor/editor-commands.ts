@@ -357,10 +357,22 @@ function startLink(opening: string): Command {
   };
 }
 
-/** Cut / copy / paste through the system clipboard (plain text), as the native menu would. */
+/**
+ * Cut / copy / paste as the native menu would. In the app, paste is a real paste (the main process
+ * pastes into the focused editor), so it goes through the editor's paste handling like Cmd/Ctrl+V and
+ * media files become assets; without Electron it falls back to the clipboard's plain text.
+ */
 function clipboardCommand(action: 'cut' | 'copy' | 'paste'): Command {
   return (view) => {
     const range = view.state.selection.main;
+    const windowControls = window.electronAPI?.ipcClient?.window;
+    if (action === 'paste' && windowControls) {
+      windowControls
+        .paste()
+        .catch((error: unknown) => console.warn('[app] Paste failed:', error));
+      return true;
+    }
+
     if (action === 'paste') {
       void navigator.clipboard
         .readText()

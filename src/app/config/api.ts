@@ -124,6 +124,7 @@ export interface ElectronIpcClient {
     >;
     readonly minimize: OptionalIpcRequest<void, void>;
     readonly toggleMaximize: OptionalIpcRequest<void, { isMaximized: boolean }>;
+    readonly paste: OptionalIpcRequest<void, void>;
     readonly close: OptionalIpcRequest<void, void>;
   };
   readonly workspace: {
