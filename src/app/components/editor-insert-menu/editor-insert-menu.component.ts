@@ -50,7 +50,11 @@ const submenu = (key: InsertSubmenu, label: string, icon: ArcTechIcon): InsertMe
   icon,
 });
 
-const item = (action: EditorInsertAction, icon: ArcTechIcon, shortcut?: string): InsertMenuItem => ({
+const item = (
+  action: EditorInsertAction,
+  icon: ArcTechIcon,
+  shortcut?: string,
+): InsertMenuItem => ({
   action,
   label: `document.insertMenu.${action}`,
   icon,
@@ -62,7 +66,12 @@ const item = (action: EditorInsertAction, icon: ArcTechIcon, shortcut?: string):
   selector: 'app-editor-insert-menu',
   imports: [TranslatePipe, ArcTechIconComponent, ArcTechMenuImports],
   template: `
-    <span class="hidden" arc-context-menu [arcContextMenuTriggerFor]="insertMenu" aria-hidden="true"></span>
+    <span
+      class="hidden"
+      arc-context-menu
+      [arcContextMenuTriggerFor]="insertMenu"
+      aria-hidden="true"
+    ></span>
 
     <!-- Items are written inside each menu template: a menu item needs the menu it is declared in. -->
     <ng-template #insertMenu>
@@ -196,14 +205,14 @@ export class AppEditorInsertMenuComponent {
   ];
   protected readonly assetItems: readonly InsertMenuItem[] = [item('asset', 'image')];
 
-  protected readonly submenuTemplates = computed<Readonly<Record<InsertSubmenu, TemplateRef<void>>>>(
-    () => ({
-      heading: this.headingMenu(),
-      list: this.listMenu(),
-      callout: this.calloutMenu(),
-      asset: this.assetMenu(),
-    }),
-  );
+  protected readonly submenuTemplates = computed<
+    Readonly<Record<InsertSubmenu, TemplateRef<void>>>
+  >(() => ({
+    heading: this.headingMenu(),
+    list: this.listMenu(),
+    callout: this.calloutMenu(),
+    asset: this.assetMenu(),
+  }));
 
   /** Without a scope the link entries go, and so does the separator left trailing before them. */
   protected readonly visibleEntries = computed(() => {
@@ -229,7 +238,18 @@ export class AppEditorInsertMenuComponent {
         .closed.pipe(takeUntilDestroyed(destroyRef))
         .subscribe(() => this.menuClosed.emit()),
     );
+
+    document.addEventListener('auxclick', this.handleAuxClick, true);
+    destroyRef.onDestroy(() => document.removeEventListener('auxclick', this.handleAuxClick, true));
   }
+
+  // Releasing the right button fires an auxclick that the overlay would read as a click outside
+  // the menu just opened (its trigger is a hidden element), closing it right away (as in the tab bar).
+  private readonly handleAuxClick = (event: MouseEvent) => {
+    if (event.button === 2 && this.trigger().isOpen()) {
+      event.stopPropagation();
+    }
+  };
 
   /** Opens the menu at a screen position (the right-click). */
   open(x: number, y: number): void {
