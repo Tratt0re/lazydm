@@ -461,7 +461,15 @@ variant keys and configuration stay as they are.
 | 9.1 | Per-campaign sections: hide, order, labels, custom sections, folders on demand; Electron owns the section list (Settings → Sections) |
 | 9.2 | Sub-folders as sub-types (one level, `subtype` field), *New folder*, breadcrumb, copy keeps the sub-folder |
 | 9.3 | Review page: broken links + misplaced / wrong sub-type / untyped / outside sections / unknown / too-deep folders; move note with link rewrite |
-| 10 | Editor quality: backtick input fix; bold/italic shortcuts and wrap-selection (auto-close pairs as a setting); right-click insert menu; media assets (paste, import from disk, drop on Assets); audio / PDF embeds; note audio channel and player; linked-note preview card; editor reference sheet |
+| 10 | Editor quality (10.1–10.8) |
+| 10.1 | Backtick input fix (macOS Option shortcuts of the completion keymap removed) |
+| 10.2 | Cmd/Ctrl+B / Cmd/Ctrl+I toggles, wrap the selection on typing a pair, *Auto-close pairs* setting |
+| 10.3 | Right-click insert menu: edit, format, H1–H3, lists, quote, code block, table, divider, info boxes, link, asset |
+| 10.4 | Media assets: save on paste, *Import file…* in the editor, `assets:save` / `assets:import`, toast |
+| 10.5 | Assets section: *Import from disk* sheet (select files or drop zone), drop on the page and its sub-folders |
+| 10.6 | Media embeds in Live and Reading: audio row with play/stop, PDF row opening the system viewer |
+| 10.7 | Note audio channel (one sound at a time, stops when leaving the note) and player in the view-buttons row |
+| 10.8 | Linked-note preview card (eye button on hover) and the editor reference sheet |
 
 ## 12. Open decisions
 
