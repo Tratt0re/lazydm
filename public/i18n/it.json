@@ -350,7 +350,8 @@
         "titleLabel": "Titolo",
         "titlePlaceholder": "Capo dei Goblin",
         "submit": "Crea nota",
-        "cancel": "Annulla"
+        "cancel": "Annulla",
+        "error": "Impossibile creare la nota"
       },
       "loadError": "Impossibile caricare questa sezione",
       "scenes": {
@@ -536,6 +537,7 @@
     "linkPreview": {
       "show": "Anteprima della nota collegata",
       "open": "Apri",
+      "close": "Chiudi",
       "loading": "Caricamento…",
       "loadError": "Impossibile caricare questa nota"
     },

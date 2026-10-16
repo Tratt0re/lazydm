@@ -350,7 +350,8 @@
         "titleLabel": "Título",
         "titlePlaceholder": "Jefe goblin",
         "submit": "Crear nota",
-        "cancel": "Cancelar"
+        "cancel": "Cancelar",
+        "error": "No se pudo crear la nota"
       },
       "loadError": "No se pudo cargar esta sección",
       "scenes": {
@@ -536,6 +537,7 @@
     "linkPreview": {
       "show": "Vista previa de la nota enlazada",
       "open": "Abrir",
+      "close": "Cerrar",
       "loading": "Cargando…",
       "loadError": "No se pudo cargar esta nota"
     },

@@ -26,7 +26,7 @@ import { DocumentService } from '@/services/document.service';
 import { FileActionsService } from '@/services/file-actions.service';
 import { FileMoveService } from '@/services/file-move.service';
 import { LocalPreferencesService } from '@/services/local-preferences.service';
-import { toSubfolderLabel } from '@/services/section.service';
+import { type AppSection, SectionService, toSubfolderLabel } from '@/services/section.service';
 import { WorkspaceService } from '@/services/workspace.service';
 import { ArcTechIconComponent, type ArcTechIcon } from '@/shared/components/icon';
 import { ArcTechMenuImports } from '@/shared/components/menu';
@@ -62,7 +62,8 @@ interface SectionTree {
 /**
  * Explorer sidebar (campaign shell, Compendium sheet): a file tree like a code editor's. Folder rows expand on
  * click; the ↗ button on their right opens the folder's page. Files open the note. Right-click: *Move to…* and
- * *Reveal* on files (*Copy to…* on assets), *Open page* and *Reveal* on folders. The folder holding the open page
+ * *Reveal* on files (*Copy to…* on assets), *Open page* and *Reveal* on folders, with *New note* and *New
+ * folder* where the folder takes them. The folder holding the open page
  * expands by itself; with a `stateKey` the open folders are remembered on this device.
  */
 @Component({
@@ -87,6 +88,7 @@ export class AppExplorerTreeComponent {
   private readonly fileActions = inject(FileActionsService);
   protected readonly workspace = inject(WorkspaceService);
   private readonly localPreferences = inject(LocalPreferencesService);
+  private readonly sectionService = inject(SectionService);
   protected readonly toSubfolderLabel = toSubfolderLabel;
 
   readonly nodes = input.required<readonly ExplorerNode[]>();
@@ -221,6 +223,59 @@ export class AppExplorerTreeComponent {
 
   protected noteRoute(file: DocumentFileListItemDto): string | null {
     return toInAppNoteRoute(file.path);
+  }
+
+  /**
+   * The section a folder row is (campaign `<slug>/<section>`, compendium `compendium/<system>/<section>`), for
+   * what can be created in it; null for other rows (a system, static folders, plain links).
+   */
+  protected sectionOf(node: ExplorerNode): AppSection | null {
+    if (!node.path || node.children) {
+      return null;
+    }
+
+    const segments = node.path.split('/');
+    const isSystem = segments[0] === 'compendium';
+    if (segments.length !== (isSystem ? 3 : 2)) {
+      return null;
+    }
+
+    const key = segments[segments.length - 1];
+    return isSystem
+      ? this.sectionService.findSystemSection(key)
+      : this.sectionService.findCampaignSection(key);
+  }
+
+  /** Notes go in sections with a note type (not assets or encounters), and in their sub-folders. */
+  protected canCreateNote(section: AppSection | null): boolean {
+    return !!section?.type && !section.isSpecial;
+  }
+
+  /** *New note* in a section or one of its sub-folders: opens the new note. */
+  protected openCreateNoteSheet(node: ExplorerNode, section: AppSection, folder?: string): void {
+    if (node.path && section.type) {
+      this.fileActions.openCreateNoteSheet({
+        path: folder ? `${node.path}/${folder}` : node.path,
+        type: section.type,
+        sectionLabel: this.labelOf(node),
+      });
+    }
+  }
+
+  /** *New folder* in a section (one level): the section opens on it once created. */
+  protected openCreateFolderSheet(node: ExplorerNode, section: AppSection): void {
+    const path = node.path;
+    if (!path) {
+      return;
+    }
+
+    this.fileActions.openCreateFolderSheet(
+      { path, label: this.labelOf(node), isSpecial: section.isSpecial },
+      (name) => {
+        this.expandedKeys.set(new Set(this.expandedKeys()).add(node.key).add(`${node.key}/${name}`));
+        void this.loadTree(path);
+      },
+    );
   }
 
   /** *Rename…* a sub-folder (sub-type and links follow); the tree follows the index update. */

@@ -10,8 +10,6 @@ import {
   AppAssetImportSheetComponent,
   type AssetImportSheetData,
 } from '@/components/asset-import-sheet/asset-import-sheet.component';
-import { AppSheetFormService } from '@/components/sheet-form/sheet-form.service';
-import type { AppSheetField } from '@/components/sheet-form/sheet-form.types';
 import {
   toAssetUrl,
   toInAppAssetRoute,
@@ -52,15 +50,6 @@ interface SectionTreeFolder extends DocumentFolderDto {
   readonly files: readonly DocumentFileListItemDto[];
 }
 
-const NEW_NOTE_TITLE_FIELD: AppSheetField = {
-  id: 'title',
-  type: 'input',
-  label: 'campaigns.sections.newNote.titleLabel',
-  placeholder: 'campaigns.sections.newNote.titlePlaceholder',
-  required: true,
-  translate: true,
-};
-
 function formatFileSize(sizeInBytes: number): string {
   if (sizeInBytes < 1024) {
     return `${sizeInBytes} B`;
@@ -91,7 +80,6 @@ export class CampaignSectionPage {
   /** A campaign, or a compendium system (the same page lists both). */
   private readonly scope = inject(NoteScopeService).scopeOf(getNoteScopeKind(this.route));
   private readonly documentService = inject(DocumentService);
-  private readonly sheetFormService = inject(AppSheetFormService);
   private readonly translateService = inject(TranslateService);
   private readonly toolbarContext = inject(ToolbarContextService);
   private readonly templateService = inject(TemplateService);
@@ -569,41 +557,17 @@ export class CampaignSectionPage {
 
   /** New sub-folder of the section; the page stays where it is, with the new sub-folder expanded. */
   protected openCreateFolderSheet(): void {
-    let isSubmitting = false;
-    const sheetRef = this.sheetFormService.open({
-      arcTitle: this.translateService.instant('campaigns.sections.newFolder.title'),
-      arcDescription: this.translateService.instant(
-        this.section()?.isSpecial
-          ? 'campaigns.sections.newFolder.specialDescription'
-          : 'campaigns.sections.newFolder.description',
-        { section: this.sectionLabel() },
-      ),
-      arcOkText: this.translateService.instant('campaigns.sections.newFolder.submit'),
-      arcCancelText: this.translateService.instant('campaigns.sections.newNote.cancel'),
-      fields: [
-        {
-          id: 'name',
-          type: 'input',
-          label: 'campaigns.sections.newFolder.nameLabel',
-          placeholder: 'campaigns.sections.newFolder.namePlaceholder',
-          required: true,
-          translate: true,
-        },
-      ],
-      onSubmit: (form) => {
-        if (!isSubmitting) {
-          isSubmitting = true;
-          void this.createFolder(String(form.getValues()['name'] ?? '')).then((isCreated) => {
-            isSubmitting = false;
-            if (isCreated) {
-              sheetRef.close();
-            }
-          });
-        }
-
-        return false;
+    this.fileActions.openCreateFolderSheet(
+      {
+        path: this.sectionPath(),
+        label: this.sectionLabel(),
+        isSpecial: this.section()?.isSpecial ?? false,
       },
-    });
+      (name) => {
+        this.expandedFolders.set(new Set(this.expandedFolders()).add(name));
+        void this.loadTree(this.sectionPath());
+      },
+    );
   }
 
   /** Copies a file of the same folder from the other side (compendium ↔ campaign) into this folder. */
@@ -619,69 +583,24 @@ export class CampaignSectionPage {
     }
   }
 
-  protected openCreateSheet(): void {
+  /** Whether the section's folders take new notes (not the special sections: assets, encounters). */
+  protected readonly canCreateNote = computed(() => {
     const section = this.section();
-    if (!section?.type) {
+    return !!section?.type && !section.isSpecial;
+  });
+
+  /** *New note* in the folder shown, or in one of its sub-folders (folder right-click menu). */
+  protected openCreateSheet(subfolder: string | null = this.subfolder()): void {
+    const section = this.section();
+    if (!section?.type || section.isSpecial) {
       return;
     }
 
-    let isSubmitting = false;
-    const sheetRef = this.sheetFormService.open({
-      arcTitle: this.translateService.instant('campaigns.sections.newNote.title'),
-      arcOkText: this.translateService.instant('campaigns.sections.newNote.submit'),
-      arcCancelText: this.translateService.instant('campaigns.sections.newNote.cancel'),
-      fields: [NEW_NOTE_TITLE_FIELD],
-      onSubmit: (form) => {
-        if (!isSubmitting) {
-          isSubmitting = true;
-          void this.createNote(String(form.getValues()['title'] ?? ''), section.type ?? '').then(
-            (created) => {
-              isSubmitting = false;
-              if (created) {
-                sheetRef.close();
-              }
-            },
-          );
-        }
-
-        return false;
-      },
+    this.fileActions.openCreateNoteSheet({
+      path: subfolder ? this.folderPathOf(subfolder) : this.sectionPath(),
+      type: section.type,
+      sectionLabel: this.sectionLabel(),
     });
-  }
-
-  private async createNote(title: string, type: string): Promise<boolean> {
-    try {
-      const note = await this.documentService.create({
-        folder: this.folderPath(),
-        title,
-        type,
-        section: this.sectionLabel(),
-      });
-      await this.router.navigateByUrl(toInAppNoteRoute(note.path) ?? this.scopeRoute());
-      return true;
-    } catch (error) {
-      this.errorMessage.set(error instanceof Error ? error.message : String(error));
-      return false;
-    }
-  }
-
-  private async createFolder(name: string): Promise<boolean> {
-    const section = this.section();
-    if (!section) {
-      return false;
-    }
-
-    try {
-      const folder = await this.documentService.createFolder(this.folderPath(), name);
-      this.expandedFolders.set(new Set(this.expandedFolders()).add(folder));
-      await this.loadTree(this.sectionPath());
-      return true;
-    } catch (error) {
-      toast.error(this.translateService.instant('campaigns.sections.newFolder.error'), {
-        description: error instanceof Error ? error.message : String(error),
-      });
-      return false;
-    }
   }
 
   /** Sub-folder a file of the section is in (`''` directly in the section). */

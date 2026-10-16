@@ -175,6 +175,8 @@ import {
   SeparatorHorizontal,
   File,
   FileMusic,
+  FilePlus,
+  FolderPlus,
 } from 'lucide-angular';
 
 export const ARCTECH_ICONS = {
@@ -353,6 +355,8 @@ export const ARCTECH_ICONS = {
   'separator-horizontal': SeparatorHorizontal,
   file: File,
   'file-music': FileMusic,
+  'file-plus': FilePlus,
+  'folder-plus': FolderPlus,
 } as const satisfies Record<string, LucideIconData>;
 
 export declare type ArcTechIcon = keyof typeof ARCTECH_ICONS | LucideIconData;

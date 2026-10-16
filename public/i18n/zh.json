@@ -350,7 +350,8 @@
         "titleLabel": "标题",
         "titlePlaceholder": "哥布林头目",
         "submit": "创建笔记",
-        "cancel": "取消"
+        "cancel": "取消",
+        "error": "无法创建笔记"
       },
       "loadError": "无法加载此分区",
       "scenes": {
@@ -536,6 +537,7 @@
     "linkPreview": {
       "show": "预览链接的笔记",
       "open": "打开",
+      "close": "关闭",
       "loading": "正在加载…",
       "loadError": "无法加载此笔记"
     },

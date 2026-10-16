@@ -350,7 +350,8 @@
         "titleLabel": "Titel",
         "titlePlaceholder": "Goblin-Boss",
         "submit": "Notiz erstellen",
-        "cancel": "Abbrechen"
+        "cancel": "Abbrechen",
+        "error": "Die Notiz konnte nicht erstellt werden"
       },
       "loadError": "Dieser Bereich konnte nicht geladen werden",
       "scenes": {
@@ -536,6 +537,7 @@
     "linkPreview": {
       "show": "Vorschau der verknüpften Notiz",
       "open": "Öffnen",
+      "close": "Schließen",
       "loading": "Wird geladen…",
       "loadError": "Diese Notiz konnte nicht geladen werden"
     },

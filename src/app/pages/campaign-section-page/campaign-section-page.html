@@ -217,6 +217,13 @@
                     <arc-icon arcType="folder" />
                     {{ 'campaigns.sections.openFolder' | translate }}
                   </a>
+                  @if (canCreateNote()) {
+                    <button type="button" arc-menu-item (click)="openCreateSheet(folder.name)">
+                      <arc-icon arcType="file-plus" />
+                      {{ 'campaigns.sections.newNote.create' | translate }}
+                    </button>
+                  }
+                  <div class="-mx-1 my-1 h-px bg-border-subtle" role="separator"></div>
                   <button type="button" arc-menu-item (click)="openRenameFolderSheet(folder)">
                     <arc-icon arcType="text-cursor-input" />
                     {{ 'campaigns.sections.renameAsset.menu' | translate }}

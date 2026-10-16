@@ -20,6 +20,7 @@ import { DocumentService } from '@/services/document.service';
 import { WorkspaceService } from '@/services/workspace.service';
 import { ArcTechButtonComponent } from '@/shared/components/button';
 import { ArcTechIconComponent } from '@/shared/components/icon';
+import { ArcTechTooltipImports } from '@/shared/components/tooltip';
 
 const CARD_WIDTH = 420;
 const CARD_MAX_HEIGHT = 440;
@@ -49,12 +50,12 @@ interface PreviewState {
  */
 @Component({
   selector: 'app-link-preview-card',
-  imports: [TranslatePipe, ArcTechButtonComponent, ArcTechIconComponent],
+  imports: [TranslatePipe, ArcTechButtonComponent, ArcTechIconComponent, ...ArcTechTooltipImports],
   template: `
     <ng-template #card>
       @if (state(); as preview) {
         <section
-          class="flex flex-col border-2 border-border-strong bg-popover text-popover-foreground shadow-[0_12px_25px_#0005] outline-none"
+          class="flex flex-col border-2 border-primary bg-popover text-popover-foreground shadow-[0_12px_25px_#0005] outline-none"
           role="dialog"
           tabindex="-1"
           [attr.aria-label]="preview.title"
@@ -63,29 +64,51 @@ interface PreviewState {
         >
           <header class="relative shrink-0 px-4 pt-3 pb-4">
             <div class="flex items-center justify-between gap-3">
-              <h2 class="min-w-0 truncate font-display text-xl font-extrabold tracking-[0.02em] uppercase">
+              <h2
+                class="min-w-0 truncate font-display text-xl font-extrabold tracking-[0.02em] uppercase"
+              >
                 {{ preview.title }}<span class="text-primary" aria-hidden="true">.</span>
               </h2>
-              <button
-                type="button"
-                arc-button
-                arcType="outline"
-                arcSize="sm"
-                class="shrink-0"
-                (click)="open($event)"
-              >
-                <arc-icon arcType="arrow-up-right" />
-                {{ 'document.linkPreview.open' | translate }}
-              </button>
+              <div class="flex shrink-0 items-center gap-1">
+                <button
+                  type="button"
+                  arc-button
+                  arcType="ghost"
+                  class="size-8"
+                  [attr.aria-label]="'document.linkPreview.open' | translate"
+                  arcPosition="bottom"
+                  [arcTooltip]="'document.linkPreview.open' | translate"
+                  (click)="open($event)"
+                >
+                  <arc-icon arcType="arrow-up-right" />
+                </button>
+                <button
+                  type="button"
+                  arc-button
+                  arcType="ghost"
+                  class="size-8"
+                  [attr.aria-label]="'document.linkPreview.close' | translate"
+                  arcPosition="bottom"
+                  [arcTooltip]="'document.linkPreview.close' | translate"
+                  (click)="close()"
+                >
+                  <arc-icon arcType="x" />
+                </button>
+              </div>
             </div>
-            <div class="arc-ornament-rule absolute inset-x-4 bottom-0 translate-y-1/2" aria-hidden="true">
+            <div
+              class="arc-ornament-rule absolute inset-x-4 bottom-0 translate-y-1/2"
+              aria-hidden="true"
+            >
               <span>◇</span>
             </div>
           </header>
 
           <div class="min-h-0 overflow-auto px-4 pt-4 pb-4">
             @if (preview.hasError) {
-              <p class="text-sm text-destructive">{{ 'document.linkPreview.loadError' | translate }}</p>
+              <p class="text-sm text-destructive">
+                {{ 'document.linkPreview.loadError' | translate }}
+              </p>
             } @else if (preview.html) {
               <div class="arc-markdown-body arc-link-preview-body" [innerHTML]="preview.html"></div>
             } @else {
@@ -136,8 +159,20 @@ export class AppLinkPreviewCardComponent {
         .position()
         .flexibleConnectedTo(new ElementRef(anchor))
         .withPositions([
-          { originX: 'start', originY: 'bottom', overlayX: 'start', overlayY: 'top', offsetY: CARD_GAP },
-          { originX: 'start', originY: 'top', overlayX: 'start', overlayY: 'bottom', offsetY: -CARD_GAP },
+          {
+            originX: 'start',
+            originY: 'bottom',
+            overlayX: 'start',
+            overlayY: 'top',
+            offsetY: CARD_GAP,
+          },
+          {
+            originX: 'start',
+            originY: 'top',
+            overlayX: 'start',
+            overlayY: 'bottom',
+            offsetY: -CARD_GAP,
+          },
         ])
         .withPush(true)
         .withViewportMargin(12),

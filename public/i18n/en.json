@@ -350,7 +350,8 @@
         "titleLabel": "Title",
         "titlePlaceholder": "Goblin Boss",
         "submit": "Create note",
-        "cancel": "Cancel"
+        "cancel": "Cancel",
+        "error": "Couldn't create the note"
       },
       "loadError": "Couldn't load this section",
       "scenes": {
@@ -536,6 +537,7 @@
     "linkPreview": {
       "show": "Preview linked note",
       "open": "Open",
+      "close": "Close",
       "loading": "Loading…",
       "loadError": "Couldn't load this note"
     },

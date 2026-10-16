@@ -46,11 +46,26 @@
     </div>
 
     <ng-template #folderMenu>
+      @let section = sectionOf(node);
       <div arc-menu-content class="w-56">
         <a arc-menu-item [routerLink]="node.route" (click)="navigated.emit()">
           <arc-icon arcType="arrow-up-right" />
           {{ 'explorer.openPage' | translate }}
         </a>
+        @if (section) {
+          <div class="-mx-1 my-1 h-px bg-border-subtle" role="separator"></div>
+          @if (canCreateNote(section)) {
+            <button type="button" arc-menu-item (click)="openCreateNoteSheet(node, section)">
+              <arc-icon arcType="file-plus" />
+              {{ 'campaigns.sections.newNote.create' | translate }}
+            </button>
+          }
+          <button type="button" arc-menu-item (click)="openCreateFolderSheet(node, section)">
+            <arc-icon arcType="folder-plus" />
+            {{ 'campaigns.sections.newFolder.button' | translate }}
+          </button>
+          <div class="-mx-1 my-1 h-px bg-border-subtle" role="separator"></div>
+        }
         @if (node.path) {
           <button type="button" arc-menu-item (click)="fileMove.reveal(node.path)">
             <arc-icon arcType="folder" />
@@ -106,6 +121,7 @@
               </div>
 
               <ng-template #subfolderMenu>
+                @let folderSection = sectionOf(node);
                 <div arc-menu-content class="w-56">
                   <a
                     arc-menu-item
@@ -116,6 +132,18 @@
                     <arc-icon arcType="arrow-up-right" />
                     {{ 'explorer.openPage' | translate }}
                   </a>
+                  @if (folderSection && canCreateNote(folderSection)) {
+                    <div class="-mx-1 my-1 h-px bg-border-subtle" role="separator"></div>
+                    <button
+                      type="button"
+                      arc-menu-item
+                      (click)="openCreateNoteSheet(node, folderSection, folder.name)"
+                    >
+                      <arc-icon arcType="file-plus" />
+                      {{ 'campaigns.sections.newNote.create' | translate }}
+                    </button>
+                  }
+                  <div class="-mx-1 my-1 h-px bg-border-subtle" role="separator"></div>
                   <button type="button" arc-menu-item (click)="openRenameFolderSheet(folderPath, folder)">
                     <arc-icon arcType="text-cursor-input" />
                     {{ 'campaigns.sections.renameAsset.menu' | translate }}

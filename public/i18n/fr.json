@@ -350,7 +350,8 @@
         "titleLabel": "Titre",
         "titlePlaceholder": "Chef gobelin",
         "submit": "Créer la note",
-        "cancel": "Annuler"
+        "cancel": "Annuler",
+        "error": "Impossible de créer la note"
       },
       "loadError": "Impossible de charger cette section",
       "scenes": {
@@ -536,6 +537,7 @@
     "linkPreview": {
       "show": "Aperçu de la note liée",
       "open": "Ouvrir",
+      "close": "Fermer",
       "loading": "Chargement…",
       "loadError": "Impossible de charger cette note"
     },

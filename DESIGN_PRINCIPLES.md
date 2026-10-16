@@ -112,6 +112,9 @@ LazyDM works like **Obsidian**, specialised for Dungeon Masters.
     never written back, even when it was open while deleted from the explorer). Tabs and history entries
     showing a deleted file go to its section page (the last tab rule still holds). *Delete…* is in the note and
     asset toolbars and in the file right-click menus of the section page and the explorer.
+  - **Folder right-click menus** (explorer and section page) offer what the folder takes: a section *New note*
+    (not the special sections) and *New folder*; a sub-folder *New note* (it gets the sub-folder's sub-type) but no
+    *New folder* (one level only). The same sheets as the section toolbar; a new note opens right away.
 - **Special sections**: *Assets* (any non-`.md` file) and *Encounters* (special files) hold no plain notes — they
   offer *New folder* and *Import* but no *New note*; their sub-folders only organise files (no `subtype`), and the
   Review page does not check them. *Assets* also offers **Import from disk** (toolbar): a sheet with *Select
@@ -421,8 +424,9 @@ Planned Electron modules: `vault`, `cloud-readiness`, `campaign`, `document`, `i
     against the files of the note's scope with the index's own rules (exact path, path suffix, name, shortest
     path); the index takes over again after the save.
   - **Link preview**: hovering a resolved note link (Live and Reading) shows a small eye button next to it;
-    pressing it opens a floating, read-only preview card of the note (popover surface, 2px `border-strong` frame,
-    title with its dot over the `.arc-ornament-rule`) with *Open* (Cmd/Ctrl-click: new tab). The body renders as in
+    pressing it opens a floating, read-only preview card of the note (popover surface, 2px primary frame, title
+    with its dot over the `.arc-ornament-rule`) with two icon buttons: *Open* (Cmd/Ctrl-click: new tab) and
+    *Close*. The body renders as in
     Reading; a first heading repeating the title is left out. Escape, a click outside, the eye button again or
     changing note closes it.
   - **Editor reference** (an *info* icon button right after the three view buttons, tooltip and accessible name

@@ -1,4 +1,5 @@
 import { Injectable, inject } from '@angular/core';
+import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { toast } from 'ngx-sonner';
 
@@ -16,8 +17,26 @@ import { WorkspaceService } from '@/services/workspace.service';
 
 const LINKING_PREVIEW_MAX_TITLES = 5;
 
+const NEW_NOTE_TITLE_FIELD: AppSheetField = {
+  id: 'title',
+  type: 'input',
+  label: 'campaigns.sections.newNote.titleLabel',
+  placeholder: 'campaigns.sections.newNote.titlePlaceholder',
+  required: true,
+  translate: true,
+};
+
+const NEW_FOLDER_NAME_FIELD: AppSheetField = {
+  id: 'name',
+  type: 'input',
+  label: 'campaigns.sections.newFolder.nameLabel',
+  placeholder: 'campaigns.sections.newFolder.namePlaceholder',
+  required: true,
+  translate: true,
+};
+
 /**
- * Renaming and deleting vault files from the pages that show them, with the links pointing to them kept up
+ * Creating, renaming and deleting vault files from the pages that show them, with the links pointing to them kept up
  * to date: shared by the note page, the asset page, the section page and the explorer.
  */
 @Injectable({ providedIn: 'root' })
@@ -27,6 +46,7 @@ export class FileActionsService {
   private readonly translateService = inject(TranslateService);
   private readonly workspace = inject(WorkspaceService);
   private readonly assetService = inject(AssetService);
+  private readonly router = inject(Router);
   /**
    * Files deleted in this session, until a page opens a file at that path again: a note page still showing
    * one (deleted from the explorer, say) must not save it back when it is left.
@@ -104,6 +124,106 @@ export class FileActionsService {
         this.openNoteSavers.delete(path);
       }
     };
+  }
+
+  /**
+   * *New note* in a section folder or one of its sub-folders (`folder`, vault path), of the section's note
+   * `type`; a sub-folder gives its sub-type (Electron side). Opens the new note, which is how both the section
+   * page and the explorer create one.
+   */
+  openCreateNoteSheet(folder: { readonly path: string; readonly type: string; readonly sectionLabel: string }): void {
+    let isSubmitting = false;
+    const sheetRef = this.sheetFormService.open({
+      arcTitle: this.translateService.instant('campaigns.sections.newNote.title'),
+      arcOkText: this.translateService.instant('campaigns.sections.newNote.submit'),
+      arcCancelText: this.translateService.instant('campaigns.sections.newNote.cancel'),
+      fields: [NEW_NOTE_TITLE_FIELD],
+      onSubmit: (form) => {
+        if (!isSubmitting) {
+          isSubmitting = true;
+          void this.createNote(folder, String(form.getValues()['title'] ?? '')).then((isCreated) => {
+            isSubmitting = false;
+            if (isCreated) {
+              sheetRef.close();
+            }
+          });
+        }
+
+        return false;
+      },
+    });
+  }
+
+  /**
+   * *New folder* directly in a section (`sectionPath`, vault path): one level of sub-folders, the sub-types of
+   * its notes (plain folders in the special sections). `onCreated` gets the new folder's name.
+   */
+  openCreateFolderSheet(
+    section: { readonly path: string; readonly label: string; readonly isSpecial: boolean },
+    onCreated?: (name: string) => void,
+  ): void {
+    let isSubmitting = false;
+    const sheetRef = this.sheetFormService.open({
+      arcTitle: this.translateService.instant('campaigns.sections.newFolder.title'),
+      arcDescription: this.translateService.instant(
+        section.isSpecial
+          ? 'campaigns.sections.newFolder.specialDescription'
+          : 'campaigns.sections.newFolder.description',
+        { section: section.label },
+      ),
+      arcOkText: this.translateService.instant('campaigns.sections.newFolder.submit'),
+      arcCancelText: this.translateService.instant('campaigns.sections.newNote.cancel'),
+      fields: [NEW_FOLDER_NAME_FIELD],
+      onSubmit: (form) => {
+        if (!isSubmitting) {
+          isSubmitting = true;
+          void this.createFolder(section.path, String(form.getValues()['name'] ?? '')).then((name) => {
+            isSubmitting = false;
+            if (name) {
+              sheetRef.close();
+              onCreated?.(name);
+            }
+          });
+        }
+
+        return false;
+      },
+    });
+  }
+
+  private async createNote(
+    folder: { readonly path: string; readonly type: string; readonly sectionLabel: string },
+    title: string,
+  ): Promise<boolean> {
+    try {
+      const note = await this.documentService.create({
+        folder: folder.path,
+        title,
+        type: folder.type,
+        section: folder.sectionLabel,
+      });
+      const route = toInAppNoteRoute(note.path);
+      if (route) {
+        await this.router.navigateByUrl(route);
+      }
+      return true;
+    } catch (error) {
+      toast.error(this.translateService.instant('campaigns.sections.newNote.error'), {
+        description: error instanceof Error ? error.message : String(error),
+      });
+      return false;
+    }
+  }
+
+  private async createFolder(sectionPath: string, name: string): Promise<string | null> {
+    try {
+      return await this.documentService.createFolder(sectionPath, name);
+    } catch (error) {
+      toast.error(this.translateService.instant('campaigns.sections.newFolder.error'), {
+        description: error instanceof Error ? error.message : String(error),
+      });
+      return null;
+    }
   }
 
   /**
