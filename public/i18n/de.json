@@ -248,6 +248,10 @@
         "label": "Rechtschreibprüfung",
         "description": "Falsch geschriebene Wörter unterstreichen. Auch Fantasy-Namen werden markiert."
       },
+      "showSourceView": {
+        "label": "Quelltext-Ansicht",
+        "description": "Die Quelltext-Ansicht (reines Markdown) neben Live-Vorschau und Lesen anbieten."
+      },
       "textSize": {
         "label": "Textgröße",
         "description": "Größe des Textes im Editor und in der Leseansicht.",

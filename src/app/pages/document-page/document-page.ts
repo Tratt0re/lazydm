@@ -56,6 +56,12 @@ function stripFrontmatterFence(content: string): string {
 
 const INDEX_UPDATED_EVENT = 'index:updated';
 
+const EDITOR_MODES: readonly { value: DocumentViewMode; label: string; icon: ArcTechIcon }[] = [
+  { value: 'live', label: 'document.toolbar.live', icon: 'pencil-line' },
+  { value: 'source', label: 'document.toolbar.source', icon: 'code' },
+  { value: 'reading', label: 'document.toolbar.reading', icon: 'book-open' },
+];
+
 @Component({
   selector: 'app-document-page',
   imports: [
@@ -127,16 +133,12 @@ export class DocumentPage {
   protected readonly document = signal<DocumentDto | null>(null);
   protected readonly editedContent = signal('');
   protected readonly mode = signal<DocumentViewMode>('live');
-  /** Editor views, switched by the toggle buttons above the editor. */
-  protected readonly editorModes: readonly {
-    value: DocumentViewMode;
-    label: string;
-    icon: ArcTechIcon;
-  }[] = [
-    { value: 'live', label: 'document.toolbar.live', icon: 'pencil-line' },
-    { value: 'source', label: 'document.toolbar.source', icon: 'code' },
-    { value: 'reading', label: 'document.toolbar.reading', icon: 'book-open' },
-  ];
+  /** Editor views, switched by the toggle buttons above the editor (Source only when enabled in Settings). */
+  protected readonly editorModes = computed(() =>
+    EDITOR_MODES.filter(
+      (option) => option.value !== 'source' || this.localPreferences.editorSettings().showSourceView,
+    ),
+  );
   /** Links the live editor resolves with; refreshed when the vault index re-reads this note. */
   protected readonly editorLinks = signal<readonly DocumentLinkDto[]>([]);
   /** Files of the note's scope the editor suggests while a link is typed; refreshed with the index. */
@@ -248,6 +250,13 @@ export class DocumentPage {
 
     effect(() => {
       void this.loadDocument(this.notePath());
+    });
+
+    // Hiding the Source view (Settings → Editor) moves a note shown in Source to Live.
+    effect(() => {
+      if (!this.localPreferences.editorSettings().showSourceView && this.mode() === 'source') {
+        this.mode.set('live');
+      }
     });
   }
 

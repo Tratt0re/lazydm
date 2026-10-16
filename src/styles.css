@@ -703,8 +703,13 @@ arc-content > main:has(> app-document-page) {
 
 .arc-markdown-body .arc-embed-image {
   display: block;
+  width: auto;
+  max-width: 100%;
+  height: auto;
+  max-height: 80vh;
   border: 1px solid var(--border);
   margin: 0.8em 0;
+  object-fit: contain;
 }
 
 /* Embedded audio / PDF (reading view and live preview): a compact row with the file name. */
@@ -814,10 +819,56 @@ button.arc-embed-file:hover,
   flex: none;
 }
 
+/* Volume: a square, flat track filled up to the value (`--arc-volume`), and a square knob with
+   engraved grip lines, like the relic plates of the theme. */
 .arc-embed-file-volume {
-  width: 5em;
-  accent-color: var(--primary);
+  --arc-volume: 100%;
+  width: 5.5em;
+  height: 1.1em;
+  margin: 0;
+  background: transparent;
   cursor: pointer;
+  appearance: none;
+}
+
+.arc-embed-file-volume::-webkit-slider-runnable-track {
+  height: 4px;
+  border: 1px solid var(--border);
+  background: linear-gradient(
+    to right,
+    var(--primary) 0 var(--arc-volume),
+    var(--card) var(--arc-volume) 100%
+  );
+}
+
+.arc-embed-file-volume::-webkit-slider-thumb {
+  width: 0.75em;
+  height: 0.95em;
+  margin-top: calc(-0.475em + 1px);
+  border: 1px solid var(--primary);
+  background:
+    linear-gradient(
+      to right,
+      transparent 0 30%,
+      color-mix(in oklch, var(--primary) 70%, transparent) 30% 40%,
+      transparent 40% 60%,
+      color-mix(in oklch, var(--primary) 70%, transparent) 60% 70%,
+      transparent 70%
+    )
+    center / 100% 55% no-repeat,
+    var(--raised);
+  box-shadow: inset 0 1px 0 color-mix(in oklch, var(--foreground) 12%, transparent);
+  appearance: none;
+}
+
+.arc-embed-file-volume:hover::-webkit-slider-thumb,
+.arc-embed-file-volume:focus-visible::-webkit-slider-thumb {
+  background-color: var(--card);
+}
+
+.arc-embed-file-volume:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
 }
 
 .arc-markdown-body .arc-wikilink-broken {

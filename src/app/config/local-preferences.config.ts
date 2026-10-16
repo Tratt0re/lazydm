@@ -42,6 +42,8 @@ export interface EditorSettings {
   readonly highlightActiveLine: boolean;
   /** Typing an opening bracket or quote also writes the closing one. */
   readonly autoClosePairs: boolean;
+  /** The Source view (raw markdown) among the note's views; off, notes offer Live and Reading only. */
+  readonly showSourceView: boolean;
 }
 
 export const EDITOR_SETTINGS_DEFAULTS: Readonly<EditorSettings> = Object.freeze({
@@ -54,6 +56,7 @@ export const EDITOR_SETTINGS_DEFAULTS: Readonly<EditorSettings> = Object.freeze(
   lineWrapping: true,
   highlightActiveLine: false,
   autoClosePairs: false,
+  showSourceView: false,
 });
 
 export type ThemePreference = 'light' | 'dark' | 'system';

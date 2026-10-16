@@ -34,10 +34,14 @@ import { tags } from '@lezer/highlight';
 
 import type { EditorSettings } from '@/config/local-preferences.config';
 import { AppEditorInsertMenuComponent } from '@/components/editor-insert-menu/editor-insert-menu.component';
-import type { MediaEmbedLabels } from '@/components/document-preview/document-preview.markdown';
+import {
+  syncAudioRow,
+  type MediaEmbedLabels,
+} from '@/components/document-preview/document-preview.markdown';
 import type { DocumentLinkDto, LinkTargetDto } from '@/dtos';
 import { AssetService } from '@/services/asset.service';
 import { LocalPreferencesService } from '@/services/local-preferences.service';
+import type { NoteAudioProgress } from '@/services/note-audio.service';
 import { codeMap } from './code-map';
 import {
   autoClosePairs,
@@ -62,7 +66,7 @@ export interface CodeEditorBrokenLinkEvent {
 
 /** Links of the live preview and of its rendered blocks (tables, callouts). */
 const LIVE_LINK_SELECTOR =
-  '.cm-lp-link, .cm-lp-block a[data-route], .cm-lp-block [data-broken-raw], [data-asset-action]';
+  '.cm-lp-link, .cm-lp-block a[data-route], .cm-lp-block [data-broken-raw], [data-asset-action]:not([data-asset-action="set-volume"])';
 
 /** A control of an embedded audio / PDF row: play/stop, open in the system viewer, or set volume. */
 export interface CodeEditorAssetAction {
@@ -118,6 +122,8 @@ export class AppCodeEditorComponent implements OnDestroy {
   readonly playingAudioPath = input<string | null>(null);
   /** 0–1 volume, the same for every sound; the row's slider is initialised to this. */
   readonly audioVolume = input<number>(1);
+  /** Time of the playing audio, written into its row (no decoration rebuild). */
+  readonly audioProgress = input<NoteAudioProgress | undefined>(undefined);
   readonly mediaLabels = input<MediaEmbedLabels | undefined>(undefined);
 
   readonly contentChange = output<string>();
@@ -156,6 +162,18 @@ export class AppCodeEditorComponent implements OnDestroy {
       this.playingAudioPath();
       this.mediaLabels();
       this.syncLinks();
+    });
+
+    // Time and volume go straight into the rendered audio rows, so playing does not rebuild decorations.
+    effect(() => {
+      const progress = this.audioProgress();
+      const volume = this.audioVolume();
+      const playingPath = this.playingAudioPath();
+      for (const row of this.host().nativeElement.querySelectorAll<HTMLElement>(
+        '[data-asset-kind="audio"]',
+      )) {
+        syncAudioRow(row, row.dataset['assetPath'] === playingPath ? progress : undefined, volume);
+      }
     });
 
     effect(() => {

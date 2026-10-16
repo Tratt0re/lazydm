@@ -343,7 +343,8 @@ Planned Electron modules: `vault`, `cloud-readiness`, `campaign`, `document`, `i
 - **Editor settings** (Settings → Editor) are device-local, like theme and language: code map, line numbers,
   text size (also in Reading), readable line width, default view of notes never opened, line wrapping, current
   line highlight, spellcheck, auto-close pairs (off by default: typing `(` `[` `{` `"` `` ` `` also writes the
-  closing one). The **code map** is our own (no dependency), in the editor and in Reading: the whole
+  closing one), Source view (off by default: notes offer Live preview and Reading only). Choices among options are
+  **dropdowns**, not segmented controls; each text size option is written at that size. The **code map** is our own (no dependency), in the editor and in Reading: the whole
   note at a small scale from what is shown, each markdown element in its colour (theme chart tokens; legend in
   Settings), H1–H3 as labels where they are, the visible part framed, placed right before the scrollbar;
   click/drag and the wheel scroll the note, a label jumps to its heading. The note page fits the window so the
@@ -382,9 +383,11 @@ Planned Electron modules: `vault`, `cloud-readiness`, `campaign`, `document`, `i
     (clickable), images, links, tables, callouts and frontmatter (as a properties box) are rendered. The note opens
     with the cursor below the frontmatter. An image being edited stays shown, with its `![[…]]` / `![](…)` source
     on the line below it.
-  - **Source**: the raw markdown in the mono font, syntax highlighted.
+  - **Source**: the raw markdown in the mono font, syntax highlighted. **Hidden by default**; Settings → Editor
+    turns it on. While hidden, a note remembered in Source opens in Live preview.
   - **Reading**: read-only, sanitized HTML (markdown-it + DOMPurify).
-  - **Links behave like links**: pointer cursor, a click opens the note (Cmd/Ctrl-click opens it in a new tab), an
+  - **Link suggestions**: Enter or Tab picks the highlighted one.
+  - **Links behave like links**: pointer cursor (in every view), a click opens the note (Cmd/Ctrl-click opens it in a new tab), an
     external link opens in the browser, a broken link opens the fix menu. Clicking a link never moves the cursor.
     The editor re-resolves its links on every index update.
   - **Dividers** (`---`) render as a small primary `◇` at the start of the line followed by the plain rule.

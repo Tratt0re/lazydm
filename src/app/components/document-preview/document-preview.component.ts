@@ -27,7 +27,11 @@ import type { DocumentLinkDto } from '@/dtos';
 import { LocalPreferencesService } from '@/services/local-preferences.service';
 import type { CodeEditorAssetAction } from '@/components/code-editor/code-editor.component';
 import type { NoteAudioProgress } from '@/services/note-audio.service';
-import { type MediaEmbedLabels, renderMarkdownToSafeHtml } from './document-preview.markdown';
+import {
+  type MediaEmbedLabels,
+  renderMarkdownToSafeHtml,
+  syncAudioRow,
+} from './document-preview.markdown';
 
 const BROKEN_LINK_SELECTOR = '[data-broken-raw]';
 const ASSET_ACTION_SELECTOR = '[data-asset-action]';
@@ -146,20 +150,7 @@ export class AppDocumentPreviewComponent {
         const isPlaying = row.dataset['assetPath'] === playingPath;
         row.dataset['playing'] = String(isPlaying);
         row.querySelector('[aria-pressed]')?.setAttribute('aria-pressed', String(isPlaying));
-        (row.querySelector('.arc-embed-file-volume') as HTMLInputElement | null)?.setAttribute(
-          'value',
-          String(volume),
-        );
-        if (isPlaying && progress) {
-          const timeEl = row.querySelector('.arc-embed-file-time');
-          if (timeEl) {
-            const fmt = (s: number) => {
-              const sec = Math.max(0, Math.floor(Number.isFinite(s) ? s : 0));
-              return `${Math.floor(sec / 60)}:${String(sec % 60).padStart(2, '0')}`;
-            };
-            timeEl.textContent = `${fmt(progress.currentTime)} / ${fmt(progress.duration)}`;
-          }
-        }
+        syncAudioRow(row, isPlaying ? progress : undefined, volume);
       }
     });
   }

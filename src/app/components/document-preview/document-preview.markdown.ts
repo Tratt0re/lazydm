@@ -16,9 +16,16 @@ const ASSET_PROTOCOL = 'lazydm-asset://vault';
 /** Obsidian callout header: `> [!warning] Optional title` (`+` / `-` fold markers are accepted). */
 const CALLOUT_PATTERN = /^\[!([A-Za-z][\w-]*)\][+-]?[ \t]*(.*)$/;
 
-const SANITIZE_OPTIONS: { readonly ADD_TAGS: string[]; readonly ADD_ATTR: string[] } = {
+const SANITIZE_OPTIONS: {
+  readonly ADD_TAGS: string[];
+  readonly ADD_ATTR: string[];
+  readonly ALLOWED_URI_REGEXP: RegExp;
+} = {
   ADD_TAGS: ['img'],
   ADD_ATTR: ['loading', 'target', 'rel'],
+  // DOMPurify's default URI list plus the vault asset protocol (images would otherwise lose their `src`).
+  ALLOWED_URI_REGEXP:
+    /^(?:(?:(?:f|ht)tps?|mailto|tel|lazydm-asset):|[^a-z]|[a-z+.-]+(?:[^a-z+.\-:]|$))/i,
 };
 
 /** URL of a vault file served by the app's asset protocol (images in notes, embeds). */
@@ -63,7 +70,7 @@ export function getMediaEmbedKind(path: string): 'audio' | 'pdf' | null {
 }
 
 /** `0:04` / `12:03`: minutes:seconds, no leading zero on the minutes. */
-function formatDuration(totalSeconds: number): string {
+export function formatDuration(totalSeconds: number): string {
   if (!Number.isFinite(totalSeconds) || totalSeconds < 0) {
     return '0:00';
   }
@@ -102,9 +109,30 @@ export function renderMediaEmbedHtml(
     `<span class="arc-embed-file-name">${label}</span>` +
     `<span class="arc-embed-file-time">${time}</span>` +
     `${VOLUME_ICON}` +
-    `<input type="range" class="arc-embed-file-volume" data-asset-action="set-volume" min="0" max="1" step="0.01" value="${volume}" aria-label="${escapeHtml(labels.volume)}: ${label}" />` +
+    `<input type="range" class="arc-embed-file-volume" data-asset-action="set-volume" min="0" max="1" step="0.01" value="${volume}" style="--arc-volume: ${Math.round(volume * 100)}%" aria-label="${escapeHtml(labels.volume)}: ${label}" />` +
     `</span>`
   );
+}
+
+/**
+ * Updates a rendered audio row in place: its time (when it is the one playing) and its volume slider.
+ * Both views call it as the note audio channel changes, instead of rendering the row again.
+ */
+export function syncAudioRow(
+  row: HTMLElement,
+  progress: { readonly currentTime: number; readonly duration: number } | undefined,
+  volume: number,
+): void {
+  const time = row.querySelector('.arc-embed-file-time');
+  if (time && progress) {
+    time.textContent = `${formatDuration(progress.currentTime)} / ${formatDuration(progress.duration)}`;
+  }
+
+  const slider = row.querySelector<HTMLInputElement>('.arc-embed-file-volume');
+  if (slider && document.activeElement !== slider) {
+    slider.value = String(volume);
+  }
+  slider?.style.setProperty('--arc-volume', `${Math.round(volume * 100)}%`);
 }
 
 interface WikilinkTokenMeta {
@@ -233,7 +261,7 @@ function renderWikilinkToken(token: Token): string {
 
   const route = toInAppNoteRoute(resolvedPath);
   if (route) {
-    return `<a class="arc-wikilink" data-route="${escapeHtml(route)}" href="javascript:void(0)">${displayText}</a>`;
+    return `<a class="arc-wikilink" data-route="${escapeHtml(route)}" href="#">${displayText}</a>`;
   }
 
   // Resolved (e.g. the vault-level compendium), but there's no browsing UI for it yet.

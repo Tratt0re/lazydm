@@ -248,6 +248,10 @@
         "label": "Corrector ortográfico",
         "description": "Subraya las palabras mal escritas. Los nombres de fantasía también se marcarán."
       },
+      "showSourceView": {
+        "label": "Vista Código fuente",
+        "description": "Ofrecer la vista Código fuente (markdown sin formato) junto a Vista previa en vivo y Lectura."
+      },
       "textSize": {
         "label": "Tamaño del texto",
         "description": "Tamaño del texto en el editor y en la vista Lectura.",

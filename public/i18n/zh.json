@@ -248,6 +248,10 @@
         "label": "拼写检查",
         "description": "为拼写错误的单词加下划线。奇幻名称也会被标出。"
       },
+      "showSourceView": {
+        "label": "源码视图",
+        "description": "在实时预览和阅读旁提供源码视图（原始 Markdown）。"
+      },
       "textSize": {
         "label": "文字大小",
         "description": "编辑器和阅读视图中的文字大小。",

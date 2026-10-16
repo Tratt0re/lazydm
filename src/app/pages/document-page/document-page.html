@@ -16,7 +16,7 @@
           role="group"
           [attr.aria-label]="'document.toolbar.modeAriaLabel' | translate"
         >
-          @for (option of editorModes; track option.value) {
+          @for (option of editorModes(); track option.value) {
             @let isPressed = mode() === option.value;
             <button
               type="button"
@@ -63,6 +63,7 @@
           (importFileRequested)="importFiles()"
           [playingAudioPath]="noteAudio.playingPath()"
           [audioVolume]="noteAudio.volume()"
+          [audioProgress]="noteAudio.progress()"
           [mediaLabels]="mediaLabels"
           (assetAction)="onAssetAction($event)"
         />

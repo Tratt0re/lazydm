@@ -18,19 +18,20 @@
             {{ 'settings.editor.textSize.description' | translate }}
           </p>
         </div>
-        <arc-segmented
-          arcSize="sm"
-          [arcDefaultValue]="settings().textSize"
-          [arcAriaLabel]="'settings.editor.textSize.label' | translate"
-          (arcChange)="setTextSize($event)"
+        <arc-select
+          class="w-44"
+          [arcValue]="settings().textSize"
+          [attr.aria-label]="'settings.editor.textSize.label' | translate"
+          (arcSelectionChange)="setTextSize($event)"
         >
-          @for (size of textSizes; track size) {
-            <arc-segmented-item
-              [value]="size"
-              [label]="'settings.editor.textSize.options.' + size | translate"
+          @for (option of textSizes; track option.size) {
+            <arc-select-item
+              [arcValue]="option.size"
+              [arcLabel]="'settings.editor.textSize.options.' + option.size | translate"
+              [style.font-size.px]="option.fontSize"
             />
           }
-        </arc-segmented>
+        </arc-select>
       </div>
     </div>
 
@@ -45,16 +46,16 @@
             {{ 'settings.editor.defaultView.description' | translate }}
           </p>
         </div>
-        <arc-segmented
-          arcSize="sm"
-          [arcDefaultValue]="settings().defaultView"
-          [arcAriaLabel]="'settings.editor.defaultView.label' | translate"
-          (arcChange)="setDefaultView($event)"
+        <arc-select
+          class="w-44"
+          [arcValue]="defaultView()"
+          [attr.aria-label]="'settings.editor.defaultView.label' | translate"
+          (arcSelectionChange)="setDefaultView($event)"
         >
-          @for (mode of viewModes; track mode) {
-            <arc-segmented-item [value]="mode" [label]="'document.toolbar.' + mode | translate" />
+          @for (mode of viewModes(); track mode) {
+            <arc-select-item [arcValue]="mode" [arcLabel]="'document.toolbar.' + mode | translate" />
           }
-        </arc-segmented>
+        </arc-select>
       </div>
       @for (row of behaviourRows; track row.key) {
         <ng-container *ngTemplateOutlet="flag; context: { $implicit: row }" />

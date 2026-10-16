@@ -1,20 +1,18 @@
 import { NgTemplateOutlet } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 
 import { CODE_MAP_COLORS, type CodeMapKind } from '@/components/code-map/code-map';
 import {
   DOCUMENT_VIEW_MODES,
   type DocumentViewMode,
+  EDITOR_TEXT_SCALES,
   EDITOR_TEXT_SIZES,
   type EditorSettings,
   type EditorTextSize,
 } from '@/config/local-preferences.config';
 import { LocalPreferencesService } from '@/services/local-preferences.service';
-import {
-  ArcTechSegmentedComponent,
-  ArcTechSegmentedItemComponent,
-} from '@/shared/components/segmented';
+import { ArcTechSelectImports } from '@/shared/components/select';
 import { ArcTechSwitchComponent } from '@/shared/components/switch';
 
 type EditorFlag = {
@@ -40,8 +38,7 @@ const flagRow = (key: EditorFlag): EditorFlagRow => ({
   imports: [
     NgTemplateOutlet,
     TranslatePipe,
-    ArcTechSegmentedComponent,
-    ArcTechSegmentedItemComponent,
+    ...ArcTechSelectImports,
     ArcTechSwitchComponent,
   ],
   templateUrl: './editor-section.component.html',
@@ -49,8 +46,20 @@ const flagRow = (key: EditorFlag): EditorFlagRow => ({
 export class EditorSectionComponent {
   private readonly localPreferences = inject(LocalPreferencesService);
   protected readonly settings = this.localPreferences.editorSettings;
-  protected readonly textSizes = EDITOR_TEXT_SIZES;
-  protected readonly viewModes = DOCUMENT_VIEW_MODES;
+  /** Each size's option is written at that size (the editor body text is 15px at medium). */
+  protected readonly textSizes = EDITOR_TEXT_SIZES.map((size) => ({
+    size,
+    fontSize: 15 * EDITOR_TEXT_SCALES[size],
+  }));
+  /** Source is offered as the default view only while the Source view is shown. */
+  protected readonly viewModes = computed(() =>
+    DOCUMENT_VIEW_MODES.filter((mode) => mode !== 'source' || this.settings().showSourceView),
+  );
+  /** A hidden Source default opens notes in Live, so the dropdown shows Live. */
+  protected readonly defaultView = computed(() => {
+    const { defaultView, showSourceView } = this.settings();
+    return defaultView === 'source' && !showSourceView ? 'live' : defaultView;
+  });
   /** The code map's colours, shown under its switch. */
   protected readonly codeMapLegend = (Object.keys(CODE_MAP_COLORS) as CodeMapKind[]).map((kind) => ({
     kind,
@@ -66,6 +75,7 @@ export class EditorSectionComponent {
     flagRow('highlightActiveLine'),
     flagRow('autoClosePairs'),
     flagRow('spellcheck'),
+    flagRow('showSourceView'),
   ];
 
   protected isOn(key: EditorFlag): boolean {
@@ -76,13 +86,13 @@ export class EditorSectionComponent {
     this.localPreferences.setEditorSetting(key, value);
   }
 
-  protected setTextSize(value: string): void {
+  protected setTextSize(value: string | string[]): void {
     if (EDITOR_TEXT_SIZES.includes(value as EditorTextSize)) {
       this.localPreferences.setEditorSetting('textSize', value as EditorTextSize);
     }
   }
 
-  protected setDefaultView(value: string): void {
+  protected setDefaultView(value: string | string[]): void {
     if (DOCUMENT_VIEW_MODES.includes(value as DocumentViewMode)) {
       this.localPreferences.setEditorSetting('defaultView', value as DocumentViewMode);
     }

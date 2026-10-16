@@ -150,6 +150,11 @@ class ImageWidget extends WidgetType {
     image.draggable = !this.isEditing;
     return image;
   }
+
+  /** Widgets' events are ignored by default; the editor must see the drag to move the embed text. */
+  override ignoreEvent(event: Event): boolean {
+    return this.isEditing || event.type !== 'dragstart';
+  }
 }
 
 /** An embedded audio (play/stop) or PDF (opens in the system viewer): the reading view's row. */

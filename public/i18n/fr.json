@@ -248,6 +248,10 @@
         "label": "Correcteur orthographique",
         "description": "Souligner les mots mal orthographiés. Les noms de fantasy seront aussi signalés."
       },
+      "showSourceView": {
+        "label": "Vue Source",
+        "description": "Proposer la vue Source (markdown brut) à côté d’Aperçu en direct et Lecture."
+      },
       "textSize": {
         "label": "Taille du texte",
         "description": "Taille du texte dans l'éditeur et en vue Lecture.",

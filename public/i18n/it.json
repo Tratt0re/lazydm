@@ -248,6 +248,10 @@
         "label": "Controllo ortografico",
         "description": "Sottolinea le parole errate. Anche i nomi fantasy verranno segnalati."
       },
+      "showSourceView": {
+        "label": "Vista Sorgente",
+        "description": "Mostra la vista Sorgente (markdown grezzo) accanto ad Anteprima dal vivo e Lettura."
+      },
       "textSize": {
         "label": "Dimensione del testo",
         "description": "Dimensione del testo nell'editor e nella vista Lettura.",

@@ -119,9 +119,14 @@ export class LocalPreferencesService {
     this.setText(LocalPreferenceKey.DOCUMENT_LINKS_PANEL_OPEN, isOpen ? '1' : '0');
   }
 
-  /** View chosen for a note on this device (the editor's default view when never chosen). */
+  /**
+   * View chosen for a note on this device (the editor's default view when never chosen). Source falls
+   * back to Live while the Source view is hidden (Settings → Editor).
+   */
   getDocumentViewMode(path: string): DocumentViewMode {
-    return this.readDocumentViewModes()[path] ?? this.editorSettingsSignal().defaultView;
+    const settings = this.editorSettingsSignal();
+    const mode = this.readDocumentViewModes()[path] ?? settings.defaultView;
+    return mode === 'source' && !settings.showSourceView ? 'live' : mode;
   }
 
   setEditorSetting<K extends keyof EditorSettings>(key: K, value: EditorSettings[K]): void {
@@ -159,6 +164,7 @@ export class LocalPreferencesService {
       lineWrapping: flag('lineWrapping'),
       highlightActiveLine: flag('highlightActiveLine'),
       autoClosePairs: flag('autoClosePairs'),
+      showSourceView: flag('showSourceView'),
     };
   }
 

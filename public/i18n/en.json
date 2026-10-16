@@ -248,6 +248,10 @@
         "label": "Spellcheck",
         "description": "Underline misspelled words. Fantasy names will be flagged too."
       },
+      "showSourceView": {
+        "label": "Source view",
+        "description": "Offer the Source view (raw markdown) next to Live preview and Reading."
+      },
       "textSize": {
         "label": "Text size",
         "description": "Size of the text in the editor and in Reading view.",

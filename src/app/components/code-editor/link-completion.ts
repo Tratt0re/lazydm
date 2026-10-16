@@ -1,4 +1,5 @@
 import {
+  acceptCompletion,
   autocompletion,
   type Completion,
   type CompletionContext,
@@ -46,7 +47,11 @@ const contextField = StateField.define<LinkCompletionContext>({
  * Ctrl-Space still opens the suggestions. Highest precedence, like the library's own keymap.
  */
 const linkCompletionKeymap = Prec.highest(
-  keymap.of(completionKeymap.filter((binding) => !binding.mac)),
+  keymap.of([
+    ...completionKeymap.filter((binding) => !binding.mac),
+    // Tab picks the highlighted suggestion, like Enter (without suggestions open it does nothing here).
+    { key: 'Tab', run: acceptCompletion },
+  ]),
 );
 
 /**
