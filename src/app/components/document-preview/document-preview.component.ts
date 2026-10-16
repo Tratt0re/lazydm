@@ -115,6 +115,8 @@ export class AppDocumentPreviewComponent {
   readonly playingAudioPath = input<string | null>(null);
   readonly audioProgress = input<NoteAudioProgress | undefined>(undefined);
   readonly audioVolume = input<number>(1);
+  /** Lengths of the note's audio files (seconds, by path), shown before they play. */
+  readonly audioDurations = input<ReadonlyMap<string, number>>(new Map());
   readonly mediaLabels = input<MediaEmbedLabels | undefined>(undefined);
   /** Play/stop an embedded audio, open a PDF, or set the volume. */
   readonly assetAction = output<CodeEditorAssetAction>();
@@ -144,13 +146,15 @@ export class AppDocumentPreviewComponent {
       const playingPath = this.playingAudioPath();
       const progress = this.audioProgress();
       const volume = this.audioVolume();
+      const durations = this.audioDurations();
       for (const row of this.bodyElement().nativeElement.querySelectorAll<HTMLElement>(
         '[data-asset-kind="audio"]',
       )) {
         const isPlaying = row.dataset['assetPath'] === playingPath;
         row.dataset['playing'] = String(isPlaying);
         row.querySelector('[aria-pressed]')?.setAttribute('aria-pressed', String(isPlaying));
-        syncAudioRow(row, isPlaying ? progress : undefined, volume);
+        const path = row.dataset['assetPath'] ?? '';
+        syncAudioRow(row, isPlaying ? progress : undefined, durations.get(path), volume);
       }
     });
   }

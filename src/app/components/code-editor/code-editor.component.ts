@@ -124,6 +124,8 @@ export class AppCodeEditorComponent implements OnDestroy {
   readonly audioVolume = input<number>(1);
   /** Time of the playing audio, written into its row (no decoration rebuild). */
   readonly audioProgress = input<NoteAudioProgress | undefined>(undefined);
+  /** Lengths of the note's audio files (seconds, by path), shown before they play. */
+  readonly audioDurations = input<ReadonlyMap<string, number>>(new Map());
   readonly mediaLabels = input<MediaEmbedLabels | undefined>(undefined);
 
   readonly contentChange = output<string>();
@@ -161,6 +163,7 @@ export class AppCodeEditorComponent implements OnDestroy {
       this.sourcePath();
       this.playingAudioPath();
       this.mediaLabels();
+      this.audioDurations();
       this.syncLinks();
     });
 
@@ -168,11 +171,13 @@ export class AppCodeEditorComponent implements OnDestroy {
     effect(() => {
       const progress = this.audioProgress();
       const volume = this.audioVolume();
+      const durations = this.audioDurations();
       const playingPath = this.playingAudioPath();
       for (const row of this.host().nativeElement.querySelectorAll<HTMLElement>(
         '[data-asset-kind="audio"]',
       )) {
-        syncAudioRow(row, row.dataset['assetPath'] === playingPath ? progress : undefined, volume);
+        const path = row.dataset['assetPath'] ?? '';
+        syncAudioRow(row, path === playingPath ? progress : undefined, durations.get(path), volume);
       }
     });
 
@@ -310,6 +315,7 @@ export class AppCodeEditorComponent implements OnDestroy {
           mediaLabels: this.mediaLabels(),
           // Read untracked: volume changes (slider drags) must not trigger decoration rebuilds.
           volume: untracked(this.audioVolume),
+          audioDurations: this.audioDurations(),
         }),
         setLinkCompletionContext.of({ targets: this.linkTargets(), sourcePath: this.sourcePath() }),
       ],

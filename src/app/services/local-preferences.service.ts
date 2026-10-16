@@ -168,7 +168,7 @@ export class LocalPreferencesService {
     };
   }
 
-  /** Text size and column width are CSS variables, shared by the editor views and the reading view. */
+  /** Text size, column width and code wrapping are CSS variables, shared by the editor views and Reading. */
   private applyEditorSettings(settings: EditorSettings): void {
     this.editorSettingsSignal.set(settings);
     if (!this.isBrowser) {
@@ -178,6 +178,7 @@ export class LocalPreferencesService {
     const root = document.documentElement.style;
     root.setProperty('--editor-text-scale', String(EDITOR_TEXT_SCALES[settings.textSize]));
     root.setProperty('--editor-max-width', settings.readableWidth ? EDITOR_READABLE_WIDTH : 'none');
+    root.setProperty('--editor-pre-white-space', settings.lineWrapping ? 'pre-wrap' : 'pre');
   }
 
   /** Remembers the view of a note; only the most recent notes are kept. */

@@ -1,6 +1,7 @@
 import { Injectable, inject, signal } from '@angular/core';
 
 import { toAssetUrl } from '@/components/document-preview/document-preview.markdown';
+import { AssetService } from '@/services/asset.service';
 import { LocalPreferencesService } from '@/services/local-preferences.service';
 
 /** Current time and duration of the playing audio, in seconds (duration `NaN` until the metadata loads). */
@@ -17,6 +18,10 @@ export interface NoteAudioProgress {
 @Injectable({ providedIn: 'root' })
 export class NoteAudioService {
   private readonly localPreferences = inject(LocalPreferencesService);
+  private readonly assetService = inject(AssetService);
+  private readonly durationsSignal = signal<ReadonlyMap<string, number>>(new Map());
+  /** Paths whose length was asked for (loaded or loading), so each file is read once. */
+  private readonly requestedDurations = new Set<string>();
   private audio: HTMLAudioElement | null = null;
   private readonly playingPathSignal = signal<string | null>(null);
   private readonly progressSignal = signal<NoteAudioProgress>({ currentTime: 0, duration: NaN });
@@ -28,6 +33,27 @@ export class NoteAudioService {
   readonly progress = this.progressSignal.asReadonly();
   /** 0–1, the same for every sound, remembered on this device. */
   readonly volume = this.volumeSignal.asReadonly();
+  /** Length in seconds of the audio files asked for with `loadDurations`, by vault path. */
+  readonly durations = this.durationsSignal.asReadonly();
+
+  /** Reads the length of audio files (their metadata only), so rows show it before playing. */
+  loadDurations(paths: readonly string[]): void {
+    for (const path of paths) {
+      if (this.requestedDurations.has(path)) {
+        continue;
+      }
+
+      this.requestedDurations.add(path);
+      void this.assetService.readAudioDuration(path).then((duration) => {
+        if (duration === null) {
+          // Not readable now (missing, still syncing): asked again next time.
+          this.requestedDurations.delete(path);
+          return;
+        }
+        this.durationsSignal.update((durations) => new Map(durations).set(path, duration));
+      });
+    }
+  }
 
   /** Plays an audio asset (stopping any other), or stops it when it is the one playing. */
   toggle(path: string): Promise<void> {

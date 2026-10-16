@@ -17,6 +17,7 @@ import {
 } from '@/components/document-links-panel/document-links-panel.component';
 import { AppDocumentPreviewComponent } from '@/components/document-preview/document-preview.component';
 import {
+  getMediaEmbedKind,
   type MediaEmbedLabels,
   toInAppNoteRoute,
 } from '@/components/document-preview/document-preview.markdown';
@@ -250,6 +251,15 @@ export class DocumentPage {
 
     effect(() => {
       void this.loadDocument(this.notePath());
+    });
+
+    // The note's audio rows show their length before playing: read it for each embedded sound.
+    effect(() => {
+      this.noteAudio.loadDurations(
+        this.liveLinks()
+          .map((link) => link.resolvedPath)
+          .filter((path): path is string => !!path && getMediaEmbedKind(path) === 'audio'),
+      );
     });
 
     // Hiding the Source view (Settings → Editor) moves a note shown in Source to Live.

@@ -27,6 +27,8 @@ export interface LivePreviewContext {
   readonly mediaLabels?: MediaEmbedLabels;
   /** 0–1 volume for the audio row's slider initial value. */
   readonly volume?: number;
+  /** Lengths of the note's audio files (seconds, by path), shown on their rows. */
+  readonly audioDurations?: ReadonlyMap<string, number>;
 }
 
 /** Updates the links the live preview resolves `[[wikilinks]]` and embeds with. */
@@ -166,6 +168,7 @@ class MediaEmbedWidget extends WidgetType {
     private readonly labels: MediaEmbedLabels | undefined,
     private readonly isPlaying: boolean,
     private readonly volume: number = 1,
+    private readonly durationSeconds: number = NaN,
   ) {
     super();
   }
@@ -176,7 +179,8 @@ class MediaEmbedWidget extends WidgetType {
       other.name === this.name &&
       other.isPlaying === this.isPlaying &&
       other.labels === this.labels &&
-      other.volume === this.volume
+      other.volume === this.volume &&
+      Object.is(other.durationSeconds, this.durationSeconds)
     );
   }
 
@@ -190,7 +194,7 @@ class MediaEmbedWidget extends WidgetType {
       this.labels,
       this.isPlaying,
       /* currentSeconds */ 0,
-      /* durationSeconds */ NaN,
+      this.durationSeconds,
       this.volume,
     );
     return container.firstElementChild as HTMLElement;
@@ -661,6 +665,7 @@ function decorateWikilinks(target: DecorationContext, frontmatterEnd: number): v
             context.mediaLabels,
             context.playingAudioPath === link.resolvedPath,
             context.volume ?? 1,
+            context.audioDurations?.get(link.resolvedPath) ?? NaN,
           ),
         }).range(from, to),
       );

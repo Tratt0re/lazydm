@@ -69,20 +69,28 @@ export function getMediaEmbedKind(path: string): 'audio' | 'pdf' | null {
       : null;
 }
 
-/** `0:04` / `12:03`: minutes:seconds, no leading zero on the minutes. */
-export function formatDuration(totalSeconds: number): string {
+/**
+ * `0:04` / `12:03`: minutes:seconds, no leading zero on the minutes. Lengths round up (`roundUp`), so a
+ * sound of 0.9 s reads `0:01`, not `0:00`; elapsed time rounds down.
+ */
+export function formatDuration(totalSeconds: number, roundUp = false): string {
   if (!Number.isFinite(totalSeconds) || totalSeconds < 0) {
     return '0:00';
   }
 
-  const seconds = Math.floor(totalSeconds);
+  const seconds = roundUp ? Math.ceil(totalSeconds) : Math.floor(totalSeconds);
   return `${Math.floor(seconds / 60)}:${String(seconds % 60).padStart(2, '0')}`;
+}
+
+/** Time of an audio row: its length while stopped, `elapsed / length` while it plays. */
+function formatAudioTime(isPlaying: boolean, currentSeconds: number, durationSeconds: number): string {
+  const length = formatDuration(durationSeconds, true);
+  return isPlaying ? `${formatDuration(currentSeconds)} / ${length}` : length;
 }
 
 /**
  * HTML of an embedded audio or PDF: a row with its name. Audio has a play/stop toggle (`data-playing` set
- * while it plays) and, only while playing or hovered (so the volume can be set before playing), the time
- * (`currentSeconds` / `durationSeconds`, from the note audio channel) and a volume slider. A PDF row opens
+ * while it plays), its time (the length, `elapsed / length` while playing) and a volume slider. A PDF row opens
  * the file in the system viewer. Clicks are handled by the view through `data-asset-action` /
  * `data-asset-path`. Shared by the reading view and the live preview.
  */
@@ -102,7 +110,7 @@ export function renderMediaEmbedHtml(
     return `<button type="button" class="arc-embed-file" data-asset-kind="pdf" data-asset-action="open" data-asset-path="${assetPath}" title="${escapeHtml(labels.open)}: ${label}">${FILE_ICON}<span class="arc-embed-file-name">${label}</span></button>`;
   }
 
-  const time = `${formatDuration(currentSeconds)} / ${formatDuration(durationSeconds)}`;
+  const time = formatAudioTime(isPlaying, currentSeconds, durationSeconds);
   return (
     `<span class="arc-embed-file" data-asset-kind="audio" data-asset-path="${assetPath}" data-playing="${isPlaying}">` +
     `<button type="button" class="arc-embed-file-button" data-asset-action="toggle-audio" aria-pressed="${isPlaying}" aria-label="${escapeHtml(labels.play)}: ${label}">${PLAY_ICON}${STOP_ICON}</button>` +
@@ -115,17 +123,20 @@ export function renderMediaEmbedHtml(
 }
 
 /**
- * Updates a rendered audio row in place: its time (when it is the one playing) and its volume slider.
- * Both views call it as the note audio channel changes, instead of rendering the row again.
+ * Updates a rendered audio row in place: its time (`progress` only for the one playing; `duration` is the
+ * file's length, known before playing) and its volume slider. Both views call it as the note audio
+ * channel changes, instead of rendering the row again.
  */
 export function syncAudioRow(
   row: HTMLElement,
   progress: { readonly currentTime: number; readonly duration: number } | undefined,
+  duration: number | undefined,
   volume: number,
 ): void {
   const time = row.querySelector('.arc-embed-file-time');
-  if (time && progress) {
-    time.textContent = `${formatDuration(progress.currentTime)} / ${formatDuration(progress.duration)}`;
+  if (time) {
+    const length = Number.isFinite(progress?.duration) ? progress!.duration : (duration ?? NaN);
+    time.textContent = formatAudioTime(Boolean(progress), progress?.currentTime ?? 0, length);
   }
 
   const slider = row.querySelector<HTMLInputElement>('.arc-embed-file-volume');
@@ -369,7 +380,8 @@ function calloutRule(state: StateCore): void {
 }
 
 function createRenderer(): MarkdownItInstance {
-  const md = new MarkdownIt({ html: false, linkify: true, breaks: false, typographer: false });
+  // `breaks`: a line break in the note stays one in Reading, as in Live preview (and Obsidian).
+  const md = new MarkdownIt({ html: false, linkify: true, breaks: true, typographer: false });
   md.inline.ruler.before('link', 'wikilink', wikilinkRule);
   md.renderer.rules['wikilink'] = (tokens, index) => renderWikilinkToken(tokens[index]);
 

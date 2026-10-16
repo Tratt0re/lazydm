@@ -526,6 +526,17 @@ arc-content > main:has(> app-document-page) {
   font-size: calc(0.9375rem * var(--editor-text-scale, 1));
   line-height: 1.6;
   color: var(--foreground);
+  /* Long words and URLs break instead of widening the page. */
+  overflow-wrap: anywhere;
+}
+
+/* Line wrapping (Settings → Editor) applies to Reading too: code blocks wrap, or scroll sideways when off. */
+.arc-markdown-body pre {
+  white-space: var(--editor-pre-white-space, pre-wrap);
+}
+
+.arc-markdown-body .arc-embed-file-name {
+  overflow-wrap: normal;
 }
 
 .arc-markdown-body h1,
@@ -789,30 +800,17 @@ button.arc-embed-file:hover,
   display: block;
 }
 
-/* Time and volume: invisible until the row is hovered or audio is playing. */
-.arc-embed-file-time,
-.arc-embed-file-volume-icon,
-.arc-embed-file-volume {
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.15s;
-}
-
-.arc-embed-file:hover .arc-embed-file-time,
-.arc-embed-file:hover .arc-embed-file-volume-icon,
-.arc-embed-file:hover .arc-embed-file-volume,
-.arc-embed-file[data-playing='true'] .arc-embed-file-time,
-.arc-embed-file[data-playing='true'] .arc-embed-file-volume-icon,
-.arc-embed-file[data-playing='true'] .arc-embed-file-volume {
-  opacity: 1;
-  pointer-events: auto;
-}
-
+/* Time (length; elapsed / length while playing) and volume, always shown. */
 .arc-embed-file-time {
   font-family: var(--font-mono);
   font-size: 0.8em;
   white-space: nowrap;
   color: var(--muted-foreground);
+  font-variant-numeric: tabular-nums;
+}
+
+.arc-embed-file[data-playing='true'] .arc-embed-file-time {
+  color: var(--primary);
 }
 
 .arc-embed-file-volume-icon {
