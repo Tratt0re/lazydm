@@ -1,4 +1,5 @@
 import {
+  afterNextRender,
   afterRenderEffect,
   ChangeDetectionStrategy,
   Component,
@@ -26,6 +27,10 @@ import type { BrokenLinkFixRequest } from '@/components/document-links-panel/doc
 import type { DocumentLinkDto } from '@/dtos';
 import { LocalPreferencesService } from '@/services/local-preferences.service';
 import type { CodeEditorAssetAction } from '@/components/code-editor/code-editor.component';
+import {
+  attachLinkPreviewHover,
+  type LinkPreviewRequest,
+} from '@/components/link-preview-card/link-preview-hover';
 import type { NoteAudioProgress } from '@/services/note-audio.service';
 import {
   type MediaEmbedLabels,
@@ -92,6 +97,7 @@ function readingKindOf(element: Element): CodeMapKind {
 })
 export class AppDocumentPreviewComponent {
   private readonly sanitizer = inject(DomSanitizer);
+  private readonly destroyRef = inject(DestroyRef);
   private readonly router = inject(Router);
   private readonly brokenLinkMenu = viewChild.required(AppBrokenLinkMenuComponent);
   private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
@@ -120,6 +126,10 @@ export class AppDocumentPreviewComponent {
   readonly mediaLabels = input<MediaEmbedLabels | undefined>(undefined);
   /** Play/stop an embedded audio, open a PDF, or set the volume. */
   readonly assetAction = output<CodeEditorAssetAction>();
+  /** Accessible name of the eye button shown on hovered note links. */
+  readonly linkPreviewLabel = input('');
+  /** The eye button of a note link was pressed: show its preview card. */
+  readonly linkPreview = output<LinkPreviewRequest>();
 
   protected readonly renderedHtml = computed(() => {
     return this.sanitizer.bypassSecurityTrustHtml(
@@ -139,6 +149,15 @@ export class AppDocumentPreviewComponent {
       this.syncCodeMap(isOn);
     });
     inject(DestroyRef).onDestroy(() => this.syncCodeMap(false));
+
+    afterNextRender(() => {
+      const detach = attachLinkPreviewHover(
+        this.scroller().nativeElement,
+        () => this.linkPreviewLabel(),
+        (request) => this.linkPreview.emit(request),
+      );
+      this.destroyRef.onDestroy(detach);
+    });
 
     // Sync playing state, time and volume onto the rendered rows without re-rendering the note.
     afterRenderEffect(() => {

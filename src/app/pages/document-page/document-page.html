@@ -66,7 +66,9 @@
           [audioDurations]="noteAudio.durations()"
           [audioProgress]="noteAudio.progress()"
           [mediaLabels]="mediaLabels"
+          [linkPreviewLabel]="linkPreviewLabel"
           (assetAction)="onAssetAction($event)"
+          (linkPreview)="toggleLinkPreview($event)"
         />
         <app-broken-link-menu (fixBrokenLink)="onFixBrokenLink($event)" />
         @if (mode() === 'reading') {
@@ -80,10 +82,13 @@
             [audioVolume]="noteAudio.volume()"
             [audioDurations]="noteAudio.durations()"
             [mediaLabels]="mediaLabels"
+            [linkPreviewLabel]="linkPreviewLabel"
             (fixBrokenLink)="onFixBrokenLink($event)"
             (assetAction)="onAssetAction($event)"
+            (linkPreview)="toggleLinkPreview($event)"
           />
         }
+        <app-link-preview-card />
       </div>
     </div>
 

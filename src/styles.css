@@ -948,6 +948,55 @@ button.arc-embed-file:hover,
   outline-offset: 2px;
 }
 
+/* Eye button after a hovered note link (Live and Reading): opens the linked note's preview card. */
+.arc-link-preview-eye {
+  position: fixed;
+  z-index: 40;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border: 1px solid var(--border-strong);
+  background: var(--popover);
+  color: var(--primary);
+  cursor: pointer;
+  transform: translateY(-50%);
+}
+
+.arc-link-preview-eye[hidden] {
+  display: none;
+}
+
+.arc-link-preview-eye:hover {
+  border-color: var(--primary);
+  background: var(--raised);
+}
+
+.arc-link-preview-eye:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+}
+
+.arc-link-preview-eye svg {
+  width: 14px;
+  height: 14px;
+}
+
+/* The card's note: the Reading look, a little smaller and without the readable-width column. */
+.arc-markdown-body.arc-link-preview-body {
+  max-width: none;
+  font-size: 0.875rem;
+}
+
+.arc-link-preview-body h1 {
+  font-size: 1.5rem;
+}
+
+.arc-link-preview-body h2 {
+  font-size: 1.25rem;
+}
+
 .arc-markdown-body .arc-wikilink-broken {
   color: var(--destructive);
   text-decoration: underline dashed;

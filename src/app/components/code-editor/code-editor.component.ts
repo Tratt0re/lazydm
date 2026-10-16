@@ -35,6 +35,10 @@ import { tags } from '@lezer/highlight';
 import type { EditorSettings } from '@/config/local-preferences.config';
 import { AppEditorInsertMenuComponent } from '@/components/editor-insert-menu/editor-insert-menu.component';
 import {
+  attachLinkPreviewHover,
+  type LinkPreviewRequest,
+} from '@/components/link-preview-card/link-preview-hover';
+import {
   syncAudioRow,
   type MediaEmbedLabels,
 } from '@/components/document-preview/document-preview.markdown';
@@ -127,6 +131,8 @@ export class AppCodeEditorComponent implements OnDestroy {
   /** Lengths of the note's audio files (seconds, by path), shown before they play. */
   readonly audioDurations = input<ReadonlyMap<string, number>>(new Map());
   readonly mediaLabels = input<MediaEmbedLabels | undefined>(undefined);
+  /** Accessible name of the eye button shown on hovered note links (none: no link previews). */
+  readonly linkPreviewLabel = input('');
 
   readonly contentChange = output<string>();
   readonly saveRequested = output<void>();
@@ -139,6 +145,9 @@ export class AppCodeEditorComponent implements OnDestroy {
   readonly importFileRequested = output<void>();
   /** Play/stop an embedded audio or open an embedded PDF (live preview rows). */
   readonly assetAction = output<CodeEditorAssetAction>();
+  /** The eye button of a note link was pressed (live preview): show its preview card. */
+  readonly linkPreview = output<LinkPreviewRequest>();
+  private detachLinkPreview: (() => void) | null = null;
 
   /** Link and asset entries of the insert menu need files to suggest (none in templates). */
   protected readonly canLink = computed(() => this.linkTargets().length > 0);
@@ -198,6 +207,7 @@ export class AppCodeEditorComponent implements OnDestroy {
     host.removeEventListener('click', this.handleLinkClick, true);
     host.removeEventListener('input', this.handleVolumeInput, true);
     host.removeEventListener('contextmenu', this.handleContextMenu);
+    this.detachLinkPreview?.();
     this.view?.destroy();
   }
 
@@ -249,6 +259,11 @@ export class AppCodeEditorComponent implements OnDestroy {
     host.addEventListener('click', this.handleLinkClick, true);
     host.addEventListener('input', this.handleVolumeInput, true);
     host.addEventListener('contextmenu', this.handleContextMenu);
+    this.detachLinkPreview = attachLinkPreviewHover(
+      host,
+      () => this.linkPreviewLabel(),
+      (request) => this.linkPreview.emit(request),
+    );
   }
 
   protected runInsertAction(action: EditorInsertAction): void {

@@ -532,6 +532,12 @@
       "volume": "Volume",
       "playError": "Impossible de lire cet audio",
       "openError": "Impossible d’ouvrir ce fichier — aucune app ne peut l’ouvrir"
+    },
+    "linkPreview": {
+      "show": "Aperçu de la note liée",
+      "open": "Ouvrir",
+      "loading": "Chargement…",
+      "loadError": "Impossible de charger cette note"
     }
   },
   "tabs": {

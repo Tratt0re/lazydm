@@ -532,6 +532,12 @@
       "volume": "音量",
       "playError": "无法播放此音频",
       "openError": "无法打开此文件——没有可打开它的应用"
+    },
+    "linkPreview": {
+      "show": "预览链接的笔记",
+      "open": "打开",
+      "loading": "正在加载…",
+      "loadError": "无法加载此笔记"
     }
   },
   "tabs": {

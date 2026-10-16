@@ -532,6 +532,12 @@
       "volume": "Volumen",
       "playError": "No se pudo reproducir este audio",
       "openError": "No se pudo abrir el archivo: ninguna app puede abrirlo"
+    },
+    "linkPreview": {
+      "show": "Vista previa de la nota enlazada",
+      "open": "Abrir",
+      "loading": "Cargando…",
+      "loadError": "No se pudo cargar esta nota"
     }
   },
   "tabs": {

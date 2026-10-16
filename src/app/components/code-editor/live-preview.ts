@@ -346,7 +346,10 @@ function linkAttributes(
   const route =
     link.resolvedPath === context.sourcePath ? null : toInAppNoteRoute(link.resolvedPath);
   return route
-    ? { className: 'cm-lp-link', attributes: { 'data-route': route, title: link.resolvedPath } }
+    ? {
+        className: 'cm-lp-link',
+        attributes: { 'data-route': route, 'data-path': link.resolvedPath, title: link.resolvedPath },
+      }
     : { className: 'cm-lp-link cm-lp-link-plain', attributes: { title: link.resolvedPath } };
 }
 

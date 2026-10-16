@@ -16,6 +16,8 @@ import {
   type BrokenLinkFixRequest,
 } from '@/components/document-links-panel/document-links-panel.component';
 import { AppDocumentPreviewComponent } from '@/components/document-preview/document-preview.component';
+import { AppLinkPreviewCardComponent } from '@/components/link-preview-card/link-preview-card.component';
+import type { LinkPreviewRequest } from '@/components/link-preview-card/link-preview-hover';
 import {
   getMediaEmbedKind,
   type MediaEmbedLabels,
@@ -75,6 +77,7 @@ const EDITOR_MODES: readonly { value: DocumentViewMode; label: string; icon: Arc
     AppCodeEditorComponent,
     AppDocumentLinksPanelComponent,
     AppDocumentPreviewComponent,
+    AppLinkPreviewCardComponent,
   ],
   templateUrl: './document-page.html',
   host: {
@@ -107,6 +110,8 @@ export class DocumentPage {
   };
   private readonly editor = viewChild(AppCodeEditorComponent);
   private readonly brokenLinkMenu = viewChild(AppBrokenLinkMenuComponent);
+  private readonly linkPreviewCard = viewChild(AppLinkPreviewCardComponent);
+  protected readonly linkPreviewLabel = this.translateService.instant('document.linkPreview.show');
   private loadToken = 0;
   private unregisterOpenNote: (() => void) | null = null;
 
@@ -453,6 +458,16 @@ export class DocumentPage {
     );
   }
 
+  /** The eye button of a note link: its preview card (pressed again for the same note, it closes). */
+  protected toggleLinkPreview({ anchor, path, route }: LinkPreviewRequest): void {
+    const card = this.linkPreviewCard();
+    if (card?.isShowing(path)) {
+      card.close();
+    } else {
+      void card?.show(anchor, path, route);
+    }
+  }
+
   protected openBrokenLinkMenu(event: CodeEditorBrokenLinkEvent): void {
     this.brokenLinkMenu()?.open(event.raw, event.targetName, event.x, event.y);
   }
@@ -658,6 +673,7 @@ export class DocumentPage {
         this.fileActions.forgetDeleted(document.path);
         // The note audio channel belongs to the note shown: another note starts silent.
         this.noteAudio.stop();
+        this.linkPreviewCard()?.close();
         // A rename started elsewhere (section page, explorer) saves this page's edits first.
         this.unregisterOpenNote?.();
         this.unregisterOpenNote = this.fileActions.registerOpenNote(document.path, () =>

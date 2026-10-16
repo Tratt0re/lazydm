@@ -280,7 +280,7 @@ function renderWikilinkToken(token: Token): string {
 
   const route = toInAppNoteRoute(resolvedPath);
   if (route) {
-    return `<a class="arc-wikilink" data-route="${escapeHtml(route)}" href="#">${displayText}</a>`;
+    return `<a class="arc-wikilink" data-route="${escapeHtml(route)}" data-path="${escapeHtml(resolvedPath)}" href="#">${displayText}</a>`;
   }
 
   // Resolved (e.g. the vault-level compendium), but there's no browsing UI for it yet.

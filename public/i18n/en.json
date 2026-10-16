@@ -532,6 +532,12 @@
       "volume": "Volume",
       "playError": "Couldn't play this audio",
       "openError": "Couldn't open this file — no app can open it"
+    },
+    "linkPreview": {
+      "show": "Preview linked note",
+      "open": "Open",
+      "loading": "Loading…",
+      "loadError": "Couldn't load this note"
     }
   },
   "tabs": {
