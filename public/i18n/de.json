@@ -538,6 +538,61 @@
       "open": "Öffnen",
       "loading": "Wird geladen…",
       "loadError": "Diese Notiz konnte nicht geladen werden"
+    },
+    "reference": {
+      "button": "Editor-Referenz",
+      "title": "Editor-Referenz",
+      "description": "Alles, was der Editor versteht: was du tippst und wie es angezeigt wird.",
+      "groups": {
+        "text": "Text",
+        "headings": "Überschriften",
+        "lists": "Listen und Aufgaben",
+        "links": "Links",
+        "blocks": "Blöcke",
+        "media": "Medien",
+        "properties": "Eigenschaften",
+        "shortcuts": "Tastenkürzel"
+      },
+      "items": {
+        "bold": "Fett",
+        "italic": "Kursiv",
+        "strikethrough": "Durchgestrichen",
+        "inlineCode": "Inline-Code",
+        "heading1": "Überschrift 1",
+        "heading2": "Überschrift 2",
+        "heading3": "Überschrift 3",
+        "bulletList": "Aufzählung",
+        "orderedList": "Nummerierte Liste",
+        "taskList": "Aufgabenliste",
+        "wikilink": "Link zu einer Notiz",
+        "wikilinkLabel": "Link mit eigenem Text",
+        "wikilinkHeading": "Link zu einer Überschrift",
+        "brokenLink": "Link zu einer fehlenden Notiz",
+        "markdownLink": "Weblink",
+        "quote": "Zitat",
+        "callout": "Infobox (Hinweis, Tipp, Warnung, Gefahr)",
+        "codeBlock": "Codeblock",
+        "table": "Tabelle",
+        "divider": "Trennlinie",
+        "image": "Bild",
+        "audio": "Audio",
+        "pdf": "PDF",
+        "frontmatter": "Notiz-Eigenschaften"
+      },
+      "notes": {
+        "image": "Zeigt das Bild aus den Assets der Kampagne. Ziehe es, um es in der Notiz zu verschieben.",
+        "frontmatter": "Ganz oben in der Notiz: als Eigenschaften-Box angezeigt."
+      },
+      "shortcuts": {
+        "save": "Notiz speichern",
+        "bold": "Fett",
+        "italic": "Kursiv",
+        "linkSuggestions": "Notizen und Assets zum Verlinken vorschlagen",
+        "acceptSuggestion": "Markierten Vorschlag übernehmen (auch Eingabe)",
+        "wrapSelection": "Mit markiertem Text: ihn in das getippte Zeichen einschließen",
+        "insertMenu": "Rechtsklick: Formatierung, Blöcke, Links und Assets einfügen",
+        "openInNewTab": "Cmd/Strg-Klick auf einen Link: in neuem Tab öffnen"
+      }
     }
   },
   "tabs": {

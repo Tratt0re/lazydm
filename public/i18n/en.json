@@ -538,6 +538,61 @@
       "open": "Open",
       "loading": "Loading…",
       "loadError": "Couldn't load this note"
+    },
+    "reference": {
+      "button": "Editor reference",
+      "title": "Editor reference",
+      "description": "Everything the editor understands: what you type, and how it shows.",
+      "groups": {
+        "text": "Text",
+        "headings": "Headings",
+        "lists": "Lists and tasks",
+        "links": "Links",
+        "blocks": "Blocks",
+        "media": "Media",
+        "properties": "Properties",
+        "shortcuts": "Shortcuts"
+      },
+      "items": {
+        "bold": "Bold",
+        "italic": "Italic",
+        "strikethrough": "Strikethrough",
+        "inlineCode": "Inline code",
+        "heading1": "Heading 1",
+        "heading2": "Heading 2",
+        "heading3": "Heading 3",
+        "bulletList": "Bulleted list",
+        "orderedList": "Numbered list",
+        "taskList": "Task list",
+        "wikilink": "Link to a note",
+        "wikilinkLabel": "Link with its own text",
+        "wikilinkHeading": "Link to a heading",
+        "brokenLink": "Link to a missing note",
+        "markdownLink": "Web link",
+        "quote": "Quote",
+        "callout": "Info box (note, tip, warning, danger)",
+        "codeBlock": "Code block",
+        "table": "Table",
+        "divider": "Divider",
+        "image": "Image",
+        "audio": "Audio",
+        "pdf": "PDF",
+        "frontmatter": "Note properties"
+      },
+      "notes": {
+        "image": "Shows the image from the campaign's assets. Drag it to move it in the note.",
+        "frontmatter": "At the very top of the note: shown as a properties box."
+      },
+      "shortcuts": {
+        "save": "Save the note",
+        "bold": "Bold",
+        "italic": "Italic",
+        "linkSuggestions": "Suggest notes and assets to link",
+        "acceptSuggestion": "Pick the highlighted suggestion (Enter too)",
+        "wrapSelection": "With text selected: wrap it in the typed mark",
+        "insertMenu": "Right-click: insert formatting, blocks, links and assets",
+        "openInNewTab": "Cmd/Ctrl-click a link: open it in a new tab"
+      }
     }
   },
   "tabs": {

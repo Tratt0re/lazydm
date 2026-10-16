@@ -410,9 +410,9 @@ Planned Electron modules: `vault`, `cloud-readiness`, `campaign`, `document`, `i
     heading or a list / quote item: setting one replaces the other's marks; setting the same list or quote again
     removes it. Blocks go on their own lines, after a blank line when the cursor's line has text.
   - **Media embeds**: images render inline (drag an image to move its embed elsewhere in the note); a **PDF** is
-    a file row (icon + name) opening the system viewer; an **audio** file is a row with a play/stop icon button
-    and its name (Live and Reading). While it plays, and while hovered (so the volume can be set before playing),
-    the row also shows the time (`0:04 / 0:12`) and a volume slider.
+    a file row (icon + name) opening the system viewer; an **audio** file is a row with a play/stop icon button,
+    its name, its time and a volume slider, always shown (Live and Reading): the length (`0:12`, read from the
+    file's metadata, rounded up) while stopped, `elapsed / length` while it plays.
   - **Note audio channel**: one audio plays at a time per note — starting another stops the current one. One
     volume for note audio, remembered on this device. There is no separate player: the row is the player.
     Changing or closing the note stops it. Note audio is meant for short sounds (≤ 30 s); a longer file is still
@@ -422,14 +422,16 @@ Planned Electron modules: `vault`, `cloud-readiness`, `campaign`, `document`, `i
     path); the index takes over again after the save.
   - **Link preview**: hovering a resolved note link (Live and Reading) shows a small eye button next to it;
     pressing it opens a floating, read-only preview card of the note (popover surface, 2px `border-strong` frame,
-    title with its dot over the `.arc-ornament-rule`) with *Open* (Cmd/Ctrl-click: new tab). Escape or a click
-    outside closes it.
+    title with its dot over the `.arc-ornament-rule`) with *Open* (Cmd/Ctrl-click: new tab). The body renders as in
+    Reading; a first heading repeating the title is left out. Escape, a click outside, the eye button again or
+    changing note closes it.
   - **Editor reference** (an *info* icon button right after the three view buttons, tooltip and accessible name
     from the label): a side sheet listing everything the editor understands, grouped — text (bold, italic,
     strikethrough, inline code), headings, lists and tasks, links and embeds (`[[…]]`, `![[…]]`, markdown links),
     blocks (quote, info boxes, code block, table, divider), media (images, PDF, audio), frontmatter properties, and
     the keyboard shortcuts / right-click menu. Each entry shows the syntax (mono) next to how it renders (the
-    Reading renderer, so it never drifts from the real output). Read-only; it never edits the note.
+    Reading renderer, so it never drifts from the real output; images and properties get a one-line note instead).
+    A right-side sheet without footer. Read-only; it never edits the note, and its samples are not clickable.
 
 ## 9. ArcTechUI visual style (Nordic Relic)
 

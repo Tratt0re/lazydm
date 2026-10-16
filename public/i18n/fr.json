@@ -538,6 +538,61 @@
       "open": "Ouvrir",
       "loading": "Chargement…",
       "loadError": "Impossible de charger cette note"
+    },
+    "reference": {
+      "button": "Référence de l’éditeur",
+      "title": "Référence de l’éditeur",
+      "description": "Tout ce que l’éditeur comprend : ce que vous tapez, et comment c’est affiché.",
+      "groups": {
+        "text": "Texte",
+        "headings": "Titres",
+        "lists": "Listes et tâches",
+        "links": "Liens",
+        "blocks": "Blocs",
+        "media": "Médias",
+        "properties": "Propriétés",
+        "shortcuts": "Raccourcis"
+      },
+      "items": {
+        "bold": "Gras",
+        "italic": "Italique",
+        "strikethrough": "Barré",
+        "inlineCode": "Code en ligne",
+        "heading1": "Titre 1",
+        "heading2": "Titre 2",
+        "heading3": "Titre 3",
+        "bulletList": "Liste à puces",
+        "orderedList": "Liste numérotée",
+        "taskList": "Liste de tâches",
+        "wikilink": "Lien vers une note",
+        "wikilinkLabel": "Lien avec son propre texte",
+        "wikilinkHeading": "Lien vers un titre",
+        "brokenLink": "Lien vers une note manquante",
+        "markdownLink": "Lien web",
+        "quote": "Citation",
+        "callout": "Encadré (note, astuce, avertissement, danger)",
+        "codeBlock": "Bloc de code",
+        "table": "Tableau",
+        "divider": "Séparateur",
+        "image": "Image",
+        "audio": "Audio",
+        "pdf": "PDF",
+        "frontmatter": "Propriétés de la note"
+      },
+      "notes": {
+        "image": "Affiche l’image des ressources de la campagne. Faites-la glisser pour la déplacer dans la note.",
+        "frontmatter": "Tout en haut de la note : affichées dans un encadré de propriétés."
+      },
+      "shortcuts": {
+        "save": "Enregistrer la note",
+        "bold": "Gras",
+        "italic": "Italique",
+        "linkSuggestions": "Suggérer des notes et ressources à lier",
+        "acceptSuggestion": "Choisir la suggestion en surbrillance (Entrée aussi)",
+        "wrapSelection": "Avec du texte sélectionné : l’entourer du signe tapé",
+        "insertMenu": "Clic droit : insérer mise en forme, blocs, liens et ressources",
+        "openInNewTab": "Cmd/Ctrl-clic sur un lien : l’ouvrir dans un nouvel onglet"
+      }
     }
   },
   "tabs": {

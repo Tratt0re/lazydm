@@ -16,6 +16,7 @@ import {
   type BrokenLinkFixRequest,
 } from '@/components/document-links-panel/document-links-panel.component';
 import { AppDocumentPreviewComponent } from '@/components/document-preview/document-preview.component';
+import { AppEditorReferenceSheetComponent } from '@/components/editor-reference-sheet/editor-reference-sheet.component';
 import { AppLinkPreviewCardComponent } from '@/components/link-preview-card/link-preview-card.component';
 import type { LinkPreviewRequest } from '@/components/link-preview-card/link-preview-hover';
 import {
@@ -466,6 +467,18 @@ export class DocumentPage {
     } else {
       void card?.show(anchor, path, route);
     }
+  }
+
+  /** The *info* button after the view buttons: what the editor understands, in a side sheet. */
+  protected openEditorReference(): void {
+    this.sheetService.create<AppEditorReferenceSheetComponent, void>({
+      arcTitle: this.translateService.instant('document.reference.title'),
+      arcDescription: this.translateService.instant('document.reference.description'),
+      arcContent: AppEditorReferenceSheetComponent,
+      arcSide: 'right',
+      arcWidth: '560px',
+      arcHideFooter: true,
+    });
   }
 
   protected openBrokenLinkMenu(event: CodeEditorBrokenLinkEvent): void {

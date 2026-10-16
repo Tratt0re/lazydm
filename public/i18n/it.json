@@ -538,6 +538,61 @@
       "open": "Apri",
       "loading": "Caricamento…",
       "loadError": "Impossibile caricare questa nota"
+    },
+    "reference": {
+      "button": "Guida dell'editor",
+      "title": "Guida dell'editor",
+      "description": "Tutto ciò che l'editor riconosce: cosa scrivi e come viene mostrato.",
+      "groups": {
+        "text": "Testo",
+        "headings": "Titoli",
+        "lists": "Elenchi e attività",
+        "links": "Collegamenti",
+        "blocks": "Blocchi",
+        "media": "Media",
+        "properties": "Proprietà",
+        "shortcuts": "Scorciatoie"
+      },
+      "items": {
+        "bold": "Grassetto",
+        "italic": "Corsivo",
+        "strikethrough": "Barrato",
+        "inlineCode": "Codice in linea",
+        "heading1": "Titolo 1",
+        "heading2": "Titolo 2",
+        "heading3": "Titolo 3",
+        "bulletList": "Elenco puntato",
+        "orderedList": "Elenco numerato",
+        "taskList": "Elenco di attività",
+        "wikilink": "Collegamento a una nota",
+        "wikilinkLabel": "Collegamento con testo proprio",
+        "wikilinkHeading": "Collegamento a un titolo",
+        "brokenLink": "Collegamento a una nota mancante",
+        "markdownLink": "Collegamento web",
+        "quote": "Citazione",
+        "callout": "Riquadro informativo (nota, suggerimento, avviso, pericolo)",
+        "codeBlock": "Blocco di codice",
+        "table": "Tabella",
+        "divider": "Divisore",
+        "image": "Immagine",
+        "audio": "Audio",
+        "pdf": "PDF",
+        "frontmatter": "Proprietà della nota"
+      },
+      "notes": {
+        "image": "Mostra l'immagine dalle risorse della campagna. Trascinala per spostarla nella nota.",
+        "frontmatter": "In cima alla nota: mostrate come riquadro delle proprietà."
+      },
+      "shortcuts": {
+        "save": "Salva la nota",
+        "bold": "Grassetto",
+        "italic": "Corsivo",
+        "linkSuggestions": "Suggerisce note e risorse da collegare",
+        "acceptSuggestion": "Sceglie il suggerimento evidenziato (anche Invio)",
+        "wrapSelection": "Con del testo selezionato: lo racchiude nel segno digitato",
+        "insertMenu": "Clic destro: inserisci formattazione, blocchi, collegamenti e risorse",
+        "openInNewTab": "Cmd/Ctrl-clic su un collegamento: lo apre in una nuova scheda"
+      }
     }
   },
   "tabs": {

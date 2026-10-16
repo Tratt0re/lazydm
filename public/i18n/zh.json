@@ -538,6 +538,61 @@
       "open": "打开",
       "loading": "正在加载…",
       "loadError": "无法加载此笔记"
+    },
+    "reference": {
+      "button": "编辑器参考",
+      "title": "编辑器参考",
+      "description": "编辑器能识别的一切：你输入的内容，以及它的显示方式。",
+      "groups": {
+        "text": "文本",
+        "headings": "标题",
+        "lists": "列表与任务",
+        "links": "链接",
+        "blocks": "块",
+        "media": "媒体",
+        "properties": "属性",
+        "shortcuts": "快捷键"
+      },
+      "items": {
+        "bold": "粗体",
+        "italic": "斜体",
+        "strikethrough": "删除线",
+        "inlineCode": "行内代码",
+        "heading1": "标题 1",
+        "heading2": "标题 2",
+        "heading3": "标题 3",
+        "bulletList": "项目符号列表",
+        "orderedList": "编号列表",
+        "taskList": "任务列表",
+        "wikilink": "链接到笔记",
+        "wikilinkLabel": "带自定义文字的链接",
+        "wikilinkHeading": "链接到标题",
+        "brokenLink": "链接到不存在的笔记",
+        "markdownLink": "网页链接",
+        "quote": "引用",
+        "callout": "信息框（笔记、提示、警告、危险）",
+        "codeBlock": "代码块",
+        "table": "表格",
+        "divider": "分隔线",
+        "image": "图片",
+        "audio": "音频",
+        "pdf": "PDF",
+        "frontmatter": "笔记属性"
+      },
+      "notes": {
+        "image": "显示战役资源中的图片。拖动它可在笔记中移动。",
+        "frontmatter": "位于笔记最顶部：显示为属性框。"
+      },
+      "shortcuts": {
+        "save": "保存笔记",
+        "bold": "粗体",
+        "italic": "斜体",
+        "linkSuggestions": "建议可链接的笔记和资源",
+        "acceptSuggestion": "选择高亮的建议（回车也可）",
+        "wrapSelection": "选中文本时：用输入的符号包裹它",
+        "insertMenu": "右键：插入格式、块、链接和资源",
+        "openInNewTab": "Cmd/Ctrl 点击链接：在新标签页中打开"
+      }
     }
   },
   "tabs": {

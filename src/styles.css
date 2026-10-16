@@ -948,6 +948,34 @@ button.arc-embed-file:hover,
   outline-offset: 2px;
 }
 
+/* Editor reference samples: shown as rendered, but links, audio and PDF rows do nothing there. */
+.arc-reference-sample {
+  font-size: 0.875rem;
+  pointer-events: none;
+}
+
+.arc-reference-sample > :first-child {
+  margin-top: 0;
+}
+
+/* Headings at a scale that fits the sheet, still in their relative sizes. */
+.arc-reference-sample h1 {
+  font-size: 1.6rem;
+  padding-bottom: 0.2em;
+}
+
+.arc-reference-sample h2 {
+  font-size: 1.3rem;
+}
+
+.arc-reference-sample h3 {
+  font-size: 1.1rem;
+}
+
+.arc-reference-sample > :last-child {
+  margin-bottom: 0;
+}
+
 /* Eye button after a hovered note link (Live and Reading): opens the linked note's preview card. */
 .arc-link-preview-eye {
   position: fixed;

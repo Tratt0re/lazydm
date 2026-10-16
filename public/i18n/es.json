@@ -538,6 +538,61 @@
       "open": "Abrir",
       "loading": "Cargando…",
       "loadError": "No se pudo cargar esta nota"
+    },
+    "reference": {
+      "button": "Referencia del editor",
+      "title": "Referencia del editor",
+      "description": "Todo lo que entiende el editor: lo que escribes y cómo se muestra.",
+      "groups": {
+        "text": "Texto",
+        "headings": "Títulos",
+        "lists": "Listas y tareas",
+        "links": "Enlaces",
+        "blocks": "Bloques",
+        "media": "Multimedia",
+        "properties": "Propiedades",
+        "shortcuts": "Atajos"
+      },
+      "items": {
+        "bold": "Negrita",
+        "italic": "Cursiva",
+        "strikethrough": "Tachado",
+        "inlineCode": "Código en línea",
+        "heading1": "Título 1",
+        "heading2": "Título 2",
+        "heading3": "Título 3",
+        "bulletList": "Lista con viñetas",
+        "orderedList": "Lista numerada",
+        "taskList": "Lista de tareas",
+        "wikilink": "Enlace a una nota",
+        "wikilinkLabel": "Enlace con texto propio",
+        "wikilinkHeading": "Enlace a un título",
+        "brokenLink": "Enlace a una nota inexistente",
+        "markdownLink": "Enlace web",
+        "quote": "Cita",
+        "callout": "Recuadro informativo (nota, consejo, aviso, peligro)",
+        "codeBlock": "Bloque de código",
+        "table": "Tabla",
+        "divider": "Separador",
+        "image": "Imagen",
+        "audio": "Audio",
+        "pdf": "PDF",
+        "frontmatter": "Propiedades de la nota"
+      },
+      "notes": {
+        "image": "Muestra la imagen de los recursos de la campaña. Arrástrala para moverla en la nota.",
+        "frontmatter": "Al principio de la nota: se muestran como un recuadro de propiedades."
+      },
+      "shortcuts": {
+        "save": "Guardar la nota",
+        "bold": "Negrita",
+        "italic": "Cursiva",
+        "linkSuggestions": "Sugerir notas y recursos para enlazar",
+        "acceptSuggestion": "Elegir la sugerencia resaltada (también Intro)",
+        "wrapSelection": "Con texto seleccionado: rodearlo con la marca escrita",
+        "insertMenu": "Clic derecho: insertar formato, bloques, enlaces y recursos",
+        "openInNewTab": "Cmd/Ctrl-clic en un enlace: abrirlo en una pestaña nueva"
+      }
     }
   },
   "tabs": {
