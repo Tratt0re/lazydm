@@ -401,12 +401,17 @@ Planned Electron modules: `vault`, `cloud-readiness`, `campaign`, `document`, `i
     dialog, saved like a paste, §2). Link and asset entries need a scope (not in templates). A line is either a
     heading or a list / quote item: setting one replaces the other's marks; setting the same list or quote again
     removes it. Blocks go on their own lines, after a blank line when the cursor's line has text.
-  - **Media embeds**: images render inline; a **PDF** is a file row (icon + name) opening the system viewer;
-    an **audio** file is a row with a play/stop icon button and its name (Live and Reading).
-  - **Note audio channel**: one audio plays at a time per note — starting another stops the current one. While
-    playing, a compact player (name, pause/resume, stop, seek, time) sits at the right end of the view-buttons row;
-    it disappears when playback ends. Changing or closing the note stops it. Note audio is meant for short sounds
-    (≤ 30 s); a longer file is still saved and played, with a warning toast.
+  - **Media embeds**: images render inline (drag an image to move its embed elsewhere in the note); a **PDF** is
+    a file row (icon + name) opening the system viewer; an **audio** file is a row with a play/stop icon button
+    and its name (Live and Reading). While it plays, and while hovered (so the volume can be set before playing),
+    the row also shows the time (`0:04 / 0:12`) and a volume slider.
+  - **Note audio channel**: one audio plays at a time per note — starting another stops the current one. One
+    volume for note audio, remembered on this device. There is no separate player: the row is the player.
+    Changing or closing the note stops it. Note audio is meant for short sounds (≤ 30 s); a longer file is still
+    saved and played, with a warning toast.
+  - **Links before saving**: links, embeds and media typed in the note resolve right away (Live and Reading),
+    against the files of the note's scope with the index's own rules (exact path, path suffix, name, shortest
+    path); the index takes over again after the save.
   - **Link preview**: hovering a resolved note link (Live and Reading) shows a small eye button next to it;
     pressing it opens a floating, read-only preview card of the note (popover surface, 2px `border-strong` frame,
     title with its dot over the `.arc-ornament-rule`) with *Open* (Cmd/Ctrl-click: new tab). Escape or a click
@@ -506,7 +511,7 @@ variant keys and configuration stay as they are.
 | 12 | Editor media and preview (12.1–12.4) |
 | 12.1 | Assets section: *Import from disk* sheet (select files or drop zone), drop on the page and its sub-folders |
 | 12.2 | Media embeds in Live and Reading: audio row with play/stop, PDF row opening the system viewer |
-| 12.3 | Note audio channel (one sound at a time, stops when leaving the note) and player in the view-buttons row |
+| 12.3 | Editor fixes: links resolve before saving (Live and Reading), Reading view follows the edits, drag images to move them; audio rows with time and a remembered volume |
 | 12.4 | Linked-note preview card (eye button on hover) and the editor reference sheet |
 | 12.5 | Folder right-click menu (explorer and section page): *New note* and *New folder* where the folder allows them |
 

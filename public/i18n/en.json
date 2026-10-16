@@ -525,6 +525,7 @@
     "media": {
       "play": "Play",
       "open": "Open",
+      "volume": "Volume",
       "playError": "Couldn't play this audio",
       "openError": "Couldn't open this file — no app can open it"
     }

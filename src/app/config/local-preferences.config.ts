@@ -7,6 +7,7 @@ export enum LocalPreferenceKey {
   DOCUMENT_VIEW_MODES = 'document_view_modes',
   EXPLORER_EXPANDED = 'explorer_expanded',
   EDITOR_SETTINGS = 'editor_settings',
+  NOTE_AUDIO_VOLUME = 'note_audio_volume',
 }
 
 /** How a note is shown: live preview (editable, rendered), raw source, or read-only reading view. */
@@ -63,6 +64,8 @@ export interface LocalPreferences {
   readonly language: string;
   readonly onboardingCompleted: boolean;
   readonly documentLinksPanelOpen: boolean;
+  /** Volume of the note audio channel (0–1), the same for every embedded sound on this device. */
+  readonly noteAudioVolume: number;
 }
 
 export const LOCAL_PREFERENCE_DEFAULTS: Readonly<LocalPreferences> = Object.freeze({
@@ -71,4 +74,5 @@ export const LOCAL_PREFERENCE_DEFAULTS: Readonly<LocalPreferences> = Object.free
   language: 'en',
   onboardingCompleted: false,
   documentLinksPanelOpen: true,
+  noteAudioVolume: 1,
 });

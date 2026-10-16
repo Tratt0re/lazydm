@@ -25,6 +25,8 @@ export interface LivePreviewContext {
   /** The audio of the note playing now (its row shows *stop*). */
   readonly playingAudioPath?: string | null;
   readonly mediaLabels?: MediaEmbedLabels;
+  /** 0–1 volume for the audio row's slider initial value. */
+  readonly volume?: number;
 }
 
 /** Updates the links the live preview resolves `[[wikilinks]]` and embeds with. */
@@ -142,6 +144,10 @@ class ImageWidget extends WidgetType {
     image.src = this.src;
     image.alt = this.alt;
     image.loading = 'lazy';
+    // Collapsed (not being edited), the widget replaces its whole `![[…]]` / `![](…)` text: CodeMirror's
+    // own drag handling (dragstart) picks up that full range from a draggable element, so dragging the
+    // image moves its embed like dragging the link text already does.
+    image.draggable = !this.isEditing;
     return image;
   }
 }
@@ -154,6 +160,7 @@ class MediaEmbedWidget extends WidgetType {
     private readonly name: string,
     private readonly labels: MediaEmbedLabels | undefined,
     private readonly isPlaying: boolean,
+    private readonly volume: number = 1,
   ) {
     super();
   }
@@ -163,7 +170,8 @@ class MediaEmbedWidget extends WidgetType {
       other.path === this.path &&
       other.name === this.name &&
       other.isPlaying === this.isPlaying &&
-      other.labels === this.labels
+      other.labels === this.labels &&
+      other.volume === this.volume
     );
   }
 
@@ -176,6 +184,9 @@ class MediaEmbedWidget extends WidgetType {
       this.name,
       this.labels,
       this.isPlaying,
+      /* currentSeconds */ 0,
+      /* durationSeconds */ NaN,
+      this.volume,
     );
     return container.firstElementChild as HTMLElement;
   }
@@ -433,7 +444,9 @@ function decorateSyntax(target: DecorationContext, frontmatterEnd: number): void
           if (src && isEditing) {
             const alt = state.sliceDoc(marks[0].to, marks[1].from);
             ranges.push(
-              Decoration.widget({ widget: new ImageWidget(src, alt, true), side: -1 }).range(node.from),
+              Decoration.widget({ widget: new ImageWidget(src, alt, true), side: -1 }).range(
+                node.from,
+              ),
             );
           } else if (src) {
             ranges.push(
@@ -559,12 +572,13 @@ function decorateSyntax(target: DecorationContext, frontmatterEnd: number): void
         if (BULLET_MARKS.has(text) && !isOnLines(state, node.from, node.to)) {
           // A task shows only its checkbox: its `- ` goes away instead of becoming a bullet.
           const isTask = node.node.nextSibling?.name === 'Task';
-          const end = isTask && state.sliceDoc(node.to, node.to + 1) === ' ' ? node.to + 1 : node.to;
+          const end =
+            isTask && state.sliceDoc(node.to, node.to + 1) === ' ' ? node.to + 1 : node.to;
           ranges.push(
-            (isTask ? Decoration.replace({}) : Decoration.replace({ widget: new BulletWidget() })).range(
-              node.from,
-              end,
-            ),
+            (isTask
+              ? Decoration.replace({})
+              : Decoration.replace({ widget: new BulletWidget() })
+            ).range(node.from, end),
           );
         }
         return;
@@ -641,6 +655,7 @@ function decorateWikilinks(target: DecorationContext, frontmatterEnd: number): v
             pipeIndex >= 0 ? raw.slice(pipeIndex + 1) : link.targetName,
             context.mediaLabels,
             context.playingAudioPath === link.resolvedPath,
+            context.volume ?? 1,
           ),
         }).range(from, to),
       );

@@ -35,31 +35,49 @@ export interface RenderMarkdownOptions {
   readonly mediaLabels?: MediaEmbedLabels;
 }
 
-/** Accessible names of the controls of an embedded audio (play/stop toggle) or PDF (open) row. */
+/** Accessible names of the controls of an embedded audio (play/stop toggle, volume) or PDF (open) row. */
 export interface MediaEmbedLabels {
   readonly play: string;
   readonly open: string;
+  readonly volume: string;
 }
 
-const DEFAULT_MEDIA_LABELS: MediaEmbedLabels = { play: 'Play', open: 'Open' };
+const DEFAULT_MEDIA_LABELS: MediaEmbedLabels = { play: 'Play', open: 'Open', volume: 'Volume' };
 const AUDIO_EXTENSION_PATTERN = /\.(mp3|wav|ogg|m4a|flac)$/i;
 const PDF_EXTENSION_PATTERN = /\.pdf$/i;
 const SVG_ATTRIBUTES =
   'viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"';
-/** Lucide `play`, `square` and `file-text`, inline: the rows are plain HTML in both views. */
+/** Lucide `play`, `square`, `file-text` and `volume-2`, inline: the rows are plain HTML in both views. */
 const PLAY_ICON = `<svg class="arc-embed-file-play" ${SVG_ATTRIBUTES}><polygon points="6 3 20 12 6 21 6 3"/></svg>`;
 const STOP_ICON = `<svg class="arc-embed-file-stop" ${SVG_ATTRIBUTES}><rect x="5" y="5" width="14" height="14"/></svg>`;
 const FILE_ICON = `<svg class="arc-embed-file-icon" ${SVG_ATTRIBUTES}><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/></svg>`;
+const VOLUME_ICON = `<svg class="arc-embed-file-volume-icon" ${SVG_ATTRIBUTES}><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>`;
 
 /** An embed shown as a media row rather than an image: audio or PDF (null for anything else). */
 export function getMediaEmbedKind(path: string): 'audio' | 'pdf' | null {
-  return AUDIO_EXTENSION_PATTERN.test(path) ? 'audio' : PDF_EXTENSION_PATTERN.test(path) ? 'pdf' : null;
+  return AUDIO_EXTENSION_PATTERN.test(path)
+    ? 'audio'
+    : PDF_EXTENSION_PATTERN.test(path)
+      ? 'pdf'
+      : null;
+}
+
+/** `0:04` / `12:03`: minutes:seconds, no leading zero on the minutes. */
+function formatDuration(totalSeconds: number): string {
+  if (!Number.isFinite(totalSeconds) || totalSeconds < 0) {
+    return '0:00';
+  }
+
+  const seconds = Math.floor(totalSeconds);
+  return `${Math.floor(seconds / 60)}:${String(seconds % 60).padStart(2, '0')}`;
 }
 
 /**
  * HTML of an embedded audio or PDF: a row with its name. Audio has a play/stop toggle (`data-playing` set
- * while it plays); a PDF row opens the file in the system viewer. Clicks are handled by the view through
- * `data-asset-action` / `data-asset-path`. Shared by the reading view and the live preview.
+ * while it plays) and, only while playing or hovered (so the volume can be set before playing), the time
+ * (`currentSeconds` / `durationSeconds`, from the note audio channel) and a volume slider. A PDF row opens
+ * the file in the system viewer. Clicks are handled by the view through `data-asset-action` /
+ * `data-asset-path`. Shared by the reading view and the live preview.
  */
 export function renderMediaEmbedHtml(
   kind: 'audio' | 'pdf',
@@ -67,6 +85,9 @@ export function renderMediaEmbedHtml(
   name: string,
   labels: MediaEmbedLabels = DEFAULT_MEDIA_LABELS,
   isPlaying = false,
+  currentSeconds = 0,
+  durationSeconds = NaN,
+  volume = 1,
 ): string {
   const assetPath = escapeHtml(path);
   const label = escapeHtml(name);
@@ -74,7 +95,16 @@ export function renderMediaEmbedHtml(
     return `<button type="button" class="arc-embed-file" data-asset-kind="pdf" data-asset-action="open" data-asset-path="${assetPath}" title="${escapeHtml(labels.open)}: ${label}">${FILE_ICON}<span class="arc-embed-file-name">${label}</span></button>`;
   }
 
-  return `<span class="arc-embed-file" data-asset-kind="audio" data-asset-path="${assetPath}" data-playing="${isPlaying}"><button type="button" class="arc-embed-file-button" data-asset-action="toggle-audio" aria-pressed="${isPlaying}" aria-label="${escapeHtml(labels.play)}: ${label}">${PLAY_ICON}${STOP_ICON}</button><span class="arc-embed-file-name">${label}</span></span>`;
+  const time = `${formatDuration(currentSeconds)} / ${formatDuration(durationSeconds)}`;
+  return (
+    `<span class="arc-embed-file" data-asset-kind="audio" data-asset-path="${assetPath}" data-playing="${isPlaying}">` +
+    `<button type="button" class="arc-embed-file-button" data-asset-action="toggle-audio" aria-pressed="${isPlaying}" aria-label="${escapeHtml(labels.play)}: ${label}">${PLAY_ICON}${STOP_ICON}</button>` +
+    `<span class="arc-embed-file-name">${label}</span>` +
+    `<span class="arc-embed-file-time">${time}</span>` +
+    `${VOLUME_ICON}` +
+    `<input type="range" class="arc-embed-file-volume" data-asset-action="set-volume" min="0" max="1" step="0.01" value="${volume}" aria-label="${escapeHtml(labels.volume)}: ${label}" />` +
+    `</span>`
+  );
 }
 
 interface WikilinkTokenMeta {
@@ -210,7 +240,10 @@ function renderWikilinkToken(token: Token): string {
   return `<span class="arc-wikilink arc-wikilink-external" title="${escapeHtml(resolvedPath)}">${displayText}</span>`;
 }
 
-/** Matches `[[...]]`/`![[...]]` and pairs each occurrence, in order, with the resolved link data from `env.links`. */
+/**
+ * Matches `[[...]]`/`![[...]]` and pairs it with its resolved link data from `env.links`, by its raw text
+ * (not by position: adding or removing a link earlier in the note must not shift every link after it).
+ */
 function wikilinkRule(state: StateInline, silent: boolean): boolean {
   const match = WIKILINK_PATTERN.exec(state.src.slice(state.pos));
   if (!match) {
@@ -223,7 +256,7 @@ function wikilinkRule(state: StateInline, silent: boolean): boolean {
       sourcePath: string;
       mediaLabels?: MediaEmbedLabels;
     };
-    const link = env.links.shift();
+    const link = env.links.find((item) => item.raw === match[2]);
     const token = state.push('wikilink', '', 0);
     const meta: WikilinkTokenMeta = {
       isEmbed: match[1] === '!',

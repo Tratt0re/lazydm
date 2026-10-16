@@ -54,7 +54,9 @@ export class LocalPreferencesService {
 
   setTheme(theme: ThemePreference): void {
     const normalizedTheme: ThemePreference =
-      theme === 'light' || theme === 'dark' || theme === 'system' ? theme : LOCAL_PREFERENCE_DEFAULTS.theme;
+      theme === 'light' || theme === 'dark' || theme === 'system'
+        ? theme
+        : LOCAL_PREFERENCE_DEFAULTS.theme;
 
     this.themePreferenceSignal.set(normalizedTheme);
     this.setText(LocalPreferenceKey.THEME, normalizedTheme);
@@ -65,7 +67,23 @@ export class LocalPreferencesService {
   }
 
   setThemeColor(themeColor: string): void {
-    this.setText(LocalPreferenceKey.THEME_COLOR, themeColor.trim() || LOCAL_PREFERENCE_DEFAULTS.themeColor);
+    this.setText(
+      LocalPreferenceKey.THEME_COLOR,
+      themeColor.trim() || LOCAL_PREFERENCE_DEFAULTS.themeColor,
+    );
+  }
+
+  /** Volume of the note audio channel (0–1), on this device. */
+  getNoteAudioVolume(): number {
+    const value = Number(this.getText(LocalPreferenceKey.NOTE_AUDIO_VOLUME));
+    return Number.isFinite(value) && value >= 0 && value <= 1
+      ? value
+      : LOCAL_PREFERENCE_DEFAULTS.noteAudioVolume;
+  }
+
+  setNoteAudioVolume(volume: number): void {
+    const normalizedVolume = Math.min(1, Math.max(0, volume));
+    this.setText(LocalPreferenceKey.NOTE_AUDIO_VOLUME, String(normalizedVolume));
   }
 
   getLanguage(): string {
@@ -114,12 +132,16 @@ export class LocalPreferencesService {
 
   private readEditorSettings(): EditorSettings {
     return this.normalizeEditorSettings(
-      this.getJson<Partial<Record<keyof EditorSettings, unknown>>>(LocalPreferenceKey.EDITOR_SETTINGS) ?? {},
+      this.getJson<Partial<Record<keyof EditorSettings, unknown>>>(
+        LocalPreferenceKey.EDITOR_SETTINGS,
+      ) ?? {},
     );
   }
 
   /** Known values only; anything else (an older or hand-edited entry) falls back to the default. */
-  private normalizeEditorSettings(value: Partial<Record<keyof EditorSettings, unknown>>): EditorSettings {
+  private normalizeEditorSettings(
+    value: Partial<Record<keyof EditorSettings, unknown>>,
+  ): EditorSettings {
     const defaults = EDITOR_SETTINGS_DEFAULTS;
     const flag = (key: keyof EditorSettings) =>
       typeof value[key] === 'boolean' ? (value[key] as boolean) : (defaults[key] as boolean);
@@ -158,7 +180,10 @@ export class LocalPreferencesService {
     delete modes[path];
     modes[path] = mode;
     const entries = Object.entries(modes).slice(-DOCUMENT_VIEW_MODES_MAX_ENTRIES);
-    this.setText(LocalPreferenceKey.DOCUMENT_VIEW_MODES, JSON.stringify(Object.fromEntries(entries)));
+    this.setText(
+      LocalPreferenceKey.DOCUMENT_VIEW_MODES,
+      JSON.stringify(Object.fromEntries(entries)),
+    );
   }
 
   /** Folders left open in an explorer sidebar (`campaign:<slug>`, `compendium`), per device. */
@@ -185,13 +210,17 @@ export class LocalPreferencesService {
 
   private readDocumentViewModes(): Record<string, DocumentViewMode> {
     try {
-      const parsed: unknown = JSON.parse(this.getText(LocalPreferenceKey.DOCUMENT_VIEW_MODES) ?? '{}');
+      const parsed: unknown = JSON.parse(
+        this.getText(LocalPreferenceKey.DOCUMENT_VIEW_MODES) ?? '{}',
+      );
       if (!parsed || typeof parsed !== 'object') {
         return {};
       }
 
       return Object.fromEntries(
-        Object.entries(parsed).filter(([, mode]) => DOCUMENT_VIEW_MODES.includes(mode as DocumentViewMode)),
+        Object.entries(parsed).filter(([, mode]) =>
+          DOCUMENT_VIEW_MODES.includes(mode as DocumentViewMode),
+        ),
       ) as Record<string, DocumentViewMode>;
     } catch {
       return {};

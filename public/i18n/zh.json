@@ -525,6 +525,7 @@
     "media": {
       "play": "播放",
       "open": "打开",
+      "volume": "音量",
       "playError": "无法播放此音频",
       "openError": "无法打开此文件——没有可打开它的应用"
     }

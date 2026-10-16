@@ -23,6 +23,7 @@ import {
 import { CAMPAIGN_SECTION_PARAM } from '@/pages/campaign-section-page/campaign-section-page';
 import type { DocumentDto, DocumentLinkDto, LinkTargetDto, SavedAssetDto } from '@/dtos';
 import { AssetService, NOTE_AUDIO_MAX_SECONDS } from '@/services/asset.service';
+import { resolveDocumentLinks } from '@/components/code-editor/resolve-links';
 import { FileActionsService } from '@/services/file-actions.service';
 import { FileMoveService } from '@/services/file-move.service';
 import { NoteAudioService } from '@/services/note-audio.service';
@@ -95,6 +96,7 @@ export class DocumentPage {
   protected readonly mediaLabels: MediaEmbedLabels = {
     play: this.translateService.instant('document.media.play'),
     open: this.translateService.instant('document.media.open'),
+    volume: this.translateService.instant('document.media.volume'),
   };
   private readonly editor = viewChild(AppCodeEditorComponent);
   private readonly brokenLinkMenu = viewChild(AppBrokenLinkMenuComponent);
@@ -148,6 +150,18 @@ export class DocumentPage {
     () => this.document() !== null && this.editedContent() !== this.document()!.content,
   );
   protected readonly previewBody = computed(() => stripFrontmatterFence(this.editedContent()));
+  /**
+   * The links of the text being edited, resolved against the files of the note's scope, so links typed or
+   * pasted show up right away (Live and Reading); the index's links fill in what that list cannot answer.
+   */
+  protected readonly liveLinks = computed(() =>
+    resolveDocumentLinks(
+      this.editedContent(),
+      this.document()?.path ?? '',
+      this.linkTargets(),
+      this.editorLinks(),
+    ),
+  );
 
   constructor() {
     window.electronAPI?.onIpcEvent?.(INDEX_UPDATED_EVENT, this.handleIndexUpdated);
@@ -313,7 +327,9 @@ export class DocumentPage {
   protected importFiles(): void {
     const document = this.document();
     if (document) {
-      void this.saveAssets(document.path, () => this.assetService.importFiles({ sourcePath: document.path }));
+      void this.saveAssets(document.path, () =>
+        this.assetService.importFiles({ sourcePath: document.path }),
+      );
     }
   }
 
@@ -391,7 +407,13 @@ export class DocumentPage {
    * An embedded audio's play/stop (the note audio channel) or a PDF's row (the system viewer; without an app
    * for it, the error offers *Reveal*).
    */
-  protected onAssetAction({ action, path }: CodeEditorAssetAction): void {
+  protected onAssetAction(event: CodeEditorAssetAction): void {
+    if (event.action === 'set-volume') {
+      this.noteAudio.setVolume(event.volume ?? 1);
+      return;
+    }
+
+    const { action, path } = event;
     if (action === 'toggle-audio') {
       this.noteAudio.toggle(path).catch((error: unknown) =>
         toast.error(this.translateService.instant('document.media.playError'), {

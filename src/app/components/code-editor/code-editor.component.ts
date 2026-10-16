@@ -3,13 +3,14 @@ import {
   booleanAttribute,
   ChangeDetectionStrategy,
   Component,
-  effect,
   computed,
+  effect,
   ElementRef,
   inject,
   input,
   OnDestroy,
   output,
+  untracked,
   viewChild,
 } from '@angular/core';
 import { defaultKeymap, history, historyKeymap } from '@codemirror/commands';
@@ -63,10 +64,12 @@ export interface CodeEditorBrokenLinkEvent {
 const LIVE_LINK_SELECTOR =
   '.cm-lp-link, .cm-lp-block a[data-route], .cm-lp-block [data-broken-raw], [data-asset-action]';
 
-/** A control of an embedded audio / PDF row: play/stop the audio, open the PDF. */
+/** A control of an embedded audio / PDF row: play/stop, open in the system viewer, or set volume. */
 export interface CodeEditorAssetAction {
-  readonly action: 'toggle-audio' | 'open';
+  readonly action: 'toggle-audio' | 'open' | 'set-volume';
   readonly path: string;
+  /** Volume (0–1) for `set-volume` actions. */
+  readonly volume?: number;
 }
 
 /**
@@ -113,6 +116,8 @@ export class AppCodeEditorComponent implements OnDestroy {
   readonly sourcePath = input('');
   /** The note's audio playing now, shown as *stop* on its row. */
   readonly playingAudioPath = input<string | null>(null);
+  /** 0–1 volume, the same for every sound; the row's slider is initialised to this. */
+  readonly audioVolume = input<number>(1);
   readonly mediaLabels = input<MediaEmbedLabels | undefined>(undefined);
 
   readonly contentChange = output<string>();
@@ -168,6 +173,7 @@ export class AppCodeEditorComponent implements OnDestroy {
     const host = this.host().nativeElement;
     host.removeEventListener('mousedown', this.handleLinkMouseDown, true);
     host.removeEventListener('click', this.handleLinkClick, true);
+    host.removeEventListener('input', this.handleVolumeInput, true);
     host.removeEventListener('contextmenu', this.handleContextMenu);
     this.view?.destroy();
   }
@@ -190,7 +196,10 @@ export class AppCodeEditorComponent implements OnDestroy {
     }
 
     const embeds = linkTargets.map((target) => `![[${target}]]`).join('\n');
-    view.dispatch(view.state.replaceSelection(embeds), { scrollIntoView: true, userEvent: 'input.paste' });
+    view.dispatch(view.state.replaceSelection(embeds), {
+      scrollIntoView: true,
+      userEvent: 'input.paste',
+    });
     view.focus();
   }
 
@@ -215,6 +224,7 @@ export class AppCodeEditorComponent implements OnDestroy {
     // Capture phase: CodeMirror would otherwise move the cursor into the link (showing its source).
     host.addEventListener('mousedown', this.handleLinkMouseDown, true);
     host.addEventListener('click', this.handleLinkClick, true);
+    host.addEventListener('input', this.handleVolumeInput, true);
     host.addEventListener('contextmenu', this.handleContextMenu);
   }
 
@@ -280,6 +290,8 @@ export class AppCodeEditorComponent implements OnDestroy {
           sourcePath: this.sourcePath(),
           playingAudioPath: this.playingAudioPath(),
           mediaLabels: this.mediaLabels(),
+          // Read untracked: volume changes (slider drags) must not trigger decoration rebuilds.
+          volume: untracked(this.audioVolume),
         }),
         setLinkCompletionContext.of({ targets: this.linkTargets(), sourcePath: this.sourcePath() }),
       ],
@@ -304,6 +316,24 @@ export class AppCodeEditorComponent implements OnDestroy {
     if (this.getLiveLink(event)) {
       event.preventDefault();
       event.stopPropagation();
+    }
+  };
+
+  /** Dragging the volume slider emits a `set-volume` action (fires on every `input` event). */
+  private readonly handleVolumeInput = (event: Event) => {
+    if (this.mode() !== 'live') {
+      return;
+    }
+
+    const target = event.target as HTMLElement;
+    if (target.dataset['assetAction'] !== 'set-volume') {
+      return;
+    }
+
+    const path = target.closest<HTMLElement>('[data-asset-path]')?.dataset['assetPath'] ?? '';
+    const volume = parseFloat((target as HTMLInputElement).value);
+    if (Number.isFinite(volume)) {
+      this.assetAction.emit({ action: 'set-volume', path, volume });
     }
   };
 

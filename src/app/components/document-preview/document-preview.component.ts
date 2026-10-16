@@ -26,6 +26,7 @@ import type { BrokenLinkFixRequest } from '@/components/document-links-panel/doc
 import type { DocumentLinkDto } from '@/dtos';
 import { LocalPreferencesService } from '@/services/local-preferences.service';
 import type { CodeEditorAssetAction } from '@/components/code-editor/code-editor.component';
+import type { NoteAudioProgress } from '@/services/note-audio.service';
 import { type MediaEmbedLabels, renderMarkdownToSafeHtml } from './document-preview.markdown';
 
 const BROKEN_LINK_SELECTOR = '[data-broken-raw]';
@@ -74,6 +75,7 @@ function readingKindOf(element: Element): CodeMapKind {
         class="arc-markdown-body"
         [innerHTML]="renderedHtml()"
         (click)="onContentClick($event)"
+        (input)="onContentInput($event)"
         (keydown)="onContentKeyDown($event)"
       ></div>
     </div>
@@ -107,8 +109,10 @@ export class AppDocumentPreviewComponent {
   readonly sourcePath = input.required<string>();
   /** The note's audio playing now, shown as *stop* on its row. */
   readonly playingAudioPath = input<string | null>(null);
+  readonly audioProgress = input<NoteAudioProgress | undefined>(undefined);
+  readonly audioVolume = input<number>(1);
   readonly mediaLabels = input<MediaEmbedLabels | undefined>(undefined);
-  /** Play/stop an embedded audio or open an embedded PDF. */
+  /** Play/stop an embedded audio, open a PDF, or set the volume. */
   readonly assetAction = output<CodeEditorAssetAction>();
 
   protected readonly renderedHtml = computed(() => {
@@ -130,16 +134,32 @@ export class AppDocumentPreviewComponent {
     });
     inject(DestroyRef).onDestroy(() => this.syncCodeMap(false));
 
-    // The playing audio's row shows *stop* (set on the rendered rows, so the note is not re-rendered).
+    // Sync playing state, time and volume onto the rendered rows without re-rendering the note.
     afterRenderEffect(() => {
       this.renderedHtml();
       const playingPath = this.playingAudioPath();
+      const progress = this.audioProgress();
+      const volume = this.audioVolume();
       for (const row of this.bodyElement().nativeElement.querySelectorAll<HTMLElement>(
         '[data-asset-kind="audio"]',
       )) {
         const isPlaying = row.dataset['assetPath'] === playingPath;
         row.dataset['playing'] = String(isPlaying);
         row.querySelector('[aria-pressed]')?.setAttribute('aria-pressed', String(isPlaying));
+        (row.querySelector('.arc-embed-file-volume') as HTMLInputElement | null)?.setAttribute(
+          'value',
+          String(volume),
+        );
+        if (isPlaying && progress) {
+          const timeEl = row.querySelector('.arc-embed-file-time');
+          if (timeEl) {
+            const fmt = (s: number) => {
+              const sec = Math.max(0, Math.floor(Number.isFinite(s) ? s : 0));
+              return `${Math.floor(sec / 60)}:${String(sec % 60).padStart(2, '0')}`;
+            };
+            timeEl.textContent = `${fmt(progress.currentTime)} / ${fmt(progress.duration)}`;
+          }
+        }
       }
     });
   }
@@ -150,6 +170,20 @@ export class AppDocumentPreviewComponent {
       event.preventDefault();
       const rect = brokenLink.getBoundingClientRect();
       this.openBrokenLinkMenu(brokenLink, rect.left, rect.bottom);
+    }
+  }
+
+  /** Handles `input` events from the volume range slider inside a rendered audio row. */
+  protected onContentInput(event: Event): void {
+    const target = event.target as HTMLElement;
+    if (target.dataset['assetAction'] !== 'set-volume') {
+      return;
+    }
+
+    const path = target.closest<HTMLElement>('[data-asset-path]')?.dataset['assetPath'] ?? '';
+    const volume = parseFloat((target as HTMLInputElement).value);
+    if (Number.isFinite(volume)) {
+      this.assetAction.emit({ action: 'set-volume', path, volume });
     }
   }
 

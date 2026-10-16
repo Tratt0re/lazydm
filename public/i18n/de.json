@@ -525,6 +525,7 @@
     "media": {
       "play": "Abspielen",
       "open": "Öffnen",
+      "volume": "Lautstärke",
       "playError": "Dieses Audio konnte nicht abgespielt werden",
       "openError": "Die Datei konnte nicht geöffnet werden — keine App kann sie öffnen"
     }

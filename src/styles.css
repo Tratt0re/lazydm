@@ -784,6 +784,42 @@ button.arc-embed-file:hover,
   display: block;
 }
 
+/* Time and volume: invisible until the row is hovered or audio is playing. */
+.arc-embed-file-time,
+.arc-embed-file-volume-icon,
+.arc-embed-file-volume {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.15s;
+}
+
+.arc-embed-file:hover .arc-embed-file-time,
+.arc-embed-file:hover .arc-embed-file-volume-icon,
+.arc-embed-file:hover .arc-embed-file-volume,
+.arc-embed-file[data-playing='true'] .arc-embed-file-time,
+.arc-embed-file[data-playing='true'] .arc-embed-file-volume-icon,
+.arc-embed-file[data-playing='true'] .arc-embed-file-volume {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.arc-embed-file-time {
+  font-family: var(--font-mono);
+  font-size: 0.8em;
+  white-space: nowrap;
+  color: var(--muted-foreground);
+}
+
+.arc-embed-file-volume-icon {
+  flex: none;
+}
+
+.arc-embed-file-volume {
+  width: 5em;
+  accent-color: var(--primary);
+  cursor: pointer;
+}
+
 .arc-markdown-body .arc-wikilink-broken {
   color: var(--destructive);
   text-decoration: underline dashed;
