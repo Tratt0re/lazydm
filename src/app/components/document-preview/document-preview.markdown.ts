@@ -60,6 +60,14 @@ const STOP_ICON = `<svg class="arc-embed-file-stop" ${SVG_ATTRIBUTES}><rect x="5
 const FILE_ICON = `<svg class="arc-embed-file-icon" ${SVG_ATTRIBUTES}><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/></svg>`;
 const VOLUME_ICON = `<svg class="arc-embed-file-volume-icon" ${SVG_ATTRIBUTES}><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>`;
 
+/**
+ * A task's checkbox (`- [ ]` / `- [x]`): the app's square box with a check, in Reading (read-only) and
+ * the live preview (clickable). A styled span rather than an `<input>`, so both themes draw it alike.
+ */
+export function renderTaskBoxHtml(isChecked: boolean): string {
+  return `<span class="arc-task-box" role="checkbox" aria-checked="${isChecked}" data-checked="${isChecked}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="square" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span>`;
+}
+
 /** An embed shown as a media row rather than an image: audio or PDF (null for anything else). */
 export function getMediaEmbedKind(path: string): 'audio' | 'pdf' | null {
   return AUDIO_EXTENSION_PATTERN.test(path)
@@ -379,6 +387,46 @@ function calloutRule(state: StateCore): void {
   }
 }
 
+const TASK_MARKER_PATTERN = /^\[([ xX])\]\s+/;
+
+/**
+ * GitHub/Obsidian task lists: a list item starting with `[ ]` / `[x]` loses that text and gets a checkbox;
+ * its list is marked so it has no bullets.
+ */
+function taskListRule(state: StateCore): void {
+  const tokens = state.tokens;
+  for (let index = 2; index < tokens.length; index++) {
+    const inlineToken = tokens[index];
+    if (
+      inlineToken.type !== 'inline' ||
+      tokens[index - 1].type !== 'paragraph_open' ||
+      tokens[index - 2].type !== 'list_item_open'
+    ) {
+      continue;
+    }
+
+    const match = TASK_MARKER_PATTERN.exec(inlineToken.content);
+    if (!match) {
+      continue;
+    }
+
+    inlineToken.content = inlineToken.content.slice(match[0].length);
+    const isChecked = match[1] !== ' ';
+    tokens[index - 2].attrJoin('class', isChecked ? 'arc-task-item arc-task-done' : 'arc-task-item');
+    tokens[index - 2].meta = { taskChecked: isChecked };
+    for (let listIndex = index - 3; listIndex >= 0; listIndex--) {
+      const token = tokens[listIndex];
+      if (
+        (token.type === 'bullet_list_open' || token.type === 'ordered_list_open') &&
+        token.level === tokens[index - 2].level - 1
+      ) {
+        token.attrJoin('class', 'arc-task-list');
+        break;
+      }
+    }
+  }
+}
+
 function createRenderer(): MarkdownItInstance {
   // `breaks`: a line break in the note stays one in Reading, as in Live preview (and Obsidian).
   const md = new MarkdownIt({ html: false, linkify: true, breaks: true, typographer: false });
@@ -386,6 +434,13 @@ function createRenderer(): MarkdownItInstance {
   md.renderer.rules['wikilink'] = (tokens, index) => renderWikilinkToken(tokens[index]);
 
   md.core.ruler.after('block', 'callout', calloutRule);
+  md.core.ruler.after('block', 'task-list', taskListRule);
+  const defaultListItemOpen = md.renderer.rules['list_item_open'] ?? renderTokenAsIs;
+  md.renderer.rules['list_item_open'] = (tokens, index, options, env, self) => {
+    const meta = tokens[index].meta as { taskChecked?: boolean } | null;
+    const open = defaultListItemOpen(tokens, index, options, env, self);
+    return meta?.taskChecked === undefined ? open : open + renderTaskBoxHtml(meta.taskChecked);
+  };
   const defaultBlockquoteOpen = md.renderer.rules['blockquote_open'] ?? renderTokenAsIs;
   const defaultBlockquoteClose = md.renderer.rules['blockquote_close'] ?? renderTokenAsIs;
   md.renderer.rules['blockquote_open'] = (tokens, index, options, env, self) => {

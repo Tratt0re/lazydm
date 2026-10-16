@@ -576,7 +576,86 @@ arc-content > main:has(> app-document-page) {
 .arc-markdown-body ul,
 .arc-markdown-body ol {
   margin: 0.8em 0;
-  padding-left: 1.4em;
+  padding-left: 1.6em;
+}
+
+/* Tailwind's reset removes list markers: bring them back, in primary like the live preview's bullets. */
+.arc-markdown-body ul {
+  list-style: disc;
+}
+
+.arc-markdown-body ul ul {
+  list-style: circle;
+}
+
+.arc-markdown-body ol {
+  list-style: decimal;
+}
+
+.arc-markdown-body li {
+  margin: 0.15em 0;
+}
+
+.arc-markdown-body li::marker {
+  color: var(--primary);
+}
+
+.arc-markdown-body ol > li::marker {
+  color: var(--muted-foreground);
+  font-family: var(--font-mono);
+  font-size: 0.9em;
+}
+
+.arc-markdown-body li > ul,
+.arc-markdown-body li > ol {
+  margin: 0.15em 0;
+}
+
+/* Task lists: no bullet, the checkbox in its place. */
+.arc-markdown-body ul.arc-task-list {
+  list-style: none;
+  padding-left: 0.2em;
+}
+
+.arc-markdown-body .arc-task-item.arc-task-done {
+  color: var(--muted-foreground);
+}
+
+.arc-markdown-body .arc-task-box {
+  margin-right: 0.5em;
+}
+
+/* Task checkbox (Reading and live preview): the app's square checkbox, primary with a check when done. */
+.arc-task-box {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1em;
+  height: 1em;
+  border: 1px solid var(--input);
+  background: var(--recessed);
+  color: var(--primary-foreground);
+  vertical-align: -0.15em;
+  transition: border-color 0.15s, background-color 0.15s;
+}
+
+.arc-task-box svg {
+  width: 0.75em;
+  height: 0.75em;
+  visibility: hidden;
+}
+
+.arc-task-box[data-checked='true'] {
+  border-color: var(--primary);
+  background: var(--primary);
+}
+
+.arc-task-box[data-checked='true'] svg {
+  visibility: visible;
+}
+
+.cm-lp-task:hover {
+  border-color: var(--primary);
 }
 
 .arc-markdown-body blockquote {

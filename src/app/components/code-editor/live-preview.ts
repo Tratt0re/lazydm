@@ -1,18 +1,27 @@
 import { ensureSyntaxTree, syntaxTree } from '@codemirror/language';
 import {
-  type EditorState,
+  EditorState,
   type Extension,
+  Prec,
   type Range,
   StateEffect,
   StateField,
 } from '@codemirror/state';
-import { Decoration, type DecorationSet, EditorView, WidgetType } from '@codemirror/view';
+import {
+  type Command,
+  Decoration,
+  type DecorationSet,
+  EditorView,
+  keymap,
+  WidgetType,
+} from '@codemirror/view';
 
 import {
   getMediaEmbedKind,
   type MediaEmbedLabels,
   renderMarkdownToSafeHtml,
   renderMediaEmbedHtml,
+  renderTaskBoxHtml,
   toAssetUrl,
   toInAppNoteRoute,
 } from '@/components/document-preview/document-preview.markdown';
@@ -104,10 +113,11 @@ class TaskWidget extends WidgetType {
   }
 
   toDOM(view: EditorView): HTMLElement {
-    const input = document.createElement('input');
-    input.type = 'checkbox';
-    input.className = 'cm-lp-task';
-    input.checked = this.checked;
+    // The app's checkbox (square, primary when checked), the same box as in Reading.
+    const container = document.createElement('span');
+    container.innerHTML = renderTaskBoxHtml(this.checked);
+    const input = container.firstElementChild as HTMLElement;
+    input.classList.add('cm-lp-task');
     input.addEventListener('mousedown', (event) => event.preventDefault());
     input.addEventListener('click', (event) => {
       event.preventDefault();
@@ -219,7 +229,12 @@ class BlockWidget extends WidgetType {
   }
 
   toDOM(view: EditorView): HTMLElement {
-    const element = this.build();
+    // The wrapper holds the block's spacing (and any margin of its content): CodeMirror measures a block
+    // widget's border box, so margins outside it would shift every line below from where it is drawn —
+    // clicks and arrow keys would then land on the line above or below.
+    const element = document.createElement('div');
+    element.className = 'cm-lp-block-wrap';
+    element.append(this.build());
     element.addEventListener('mousedown', (event) => {
       if ((event.target as HTMLElement).closest('a, [data-broken-raw]')) {
         return;
@@ -761,10 +776,11 @@ const livePreviewTheme = EditorView.theme({
     backgroundColor: 'var(--raised)',
     padding: '1px 4px',
   },
+  // Same as a Reading quote: primary bar, muted text.
   '.cm-lp-quote': {
-    borderLeft: '3px solid var(--border-strong)',
-    paddingLeft: '12px !important',
-    color: 'var(--foreground-secondary)',
+    borderLeft: '3px solid var(--primary)',
+    paddingLeft: '1em !important',
+    color: 'var(--muted-foreground)',
   },
   '.cm-lp-codeblock': {
     fontFamily: 'var(--font-mono)',
@@ -775,14 +791,7 @@ const livePreviewTheme = EditorView.theme({
   '.cm-lp-codefence': { color: 'var(--muted-foreground)' },
   '.cm-lp-frontmatter': { fontFamily: 'var(--font-mono)', fontSize: '13px' },
   '.cm-lp-bullet': { color: 'var(--primary)', fontWeight: '700', padding: '0 2px' },
-  '.cm-lp-task': {
-    width: '14px',
-    height: '14px',
-    margin: '0 4px 0 0',
-    verticalAlign: '-2px',
-    accentColor: 'var(--primary)',
-    cursor: 'pointer',
-  },
+  '.cm-lp-task': { marginRight: '0.3em', verticalAlign: '-0.12em', cursor: 'pointer' },
   '.cm-lp-image': {
     display: 'inline-block',
     maxWidth: '100%',
@@ -808,7 +817,10 @@ const livePreviewTheme = EditorView.theme({
     backgroundColor: 'var(--border)',
   },
   // Rendered HTML must not inherit the editor's `break-spaces` (it would show its newlines as blank lines).
-  '.cm-lp-block': { margin: '6px 0', cursor: 'text', whiteSpace: 'normal' },
+  '.cm-lp-block-wrap': { display: 'flow-root', padding: '6px 0' },
+  '.cm-lp-block': { margin: '0', cursor: 'text', whiteSpace: 'normal' },
+  '.cm-lp-block > :first-child': { marginTop: '0' },
+  '.cm-lp-block > :last-child': { marginBottom: '0' },
   '.cm-lp-properties': {
     display: 'grid',
     gridTemplateColumns: 'minmax(6rem, max-content) 1fr',
@@ -831,10 +843,79 @@ const livePreviewTheme = EditorView.theme({
   },
 });
 
+/** Whether a line is inside a block the live preview shows rendered (table, callout, properties). */
+function isInRenderedBlock(state: EditorState, lineFrom: number, lineTo: number): boolean {
+  let found = false;
+  state.field(livePreviewField).between(lineFrom, lineTo, (from, to, decoration) => {
+    if (decoration.spec.block && from <= lineFrom && to >= lineTo) {
+      found = true;
+      return false;
+    }
+    return undefined;
+  });
+  return found;
+}
+
+/**
+ * Up/Down onto a rendered block step onto its next line (which shows the block's source) instead of
+ * jumping over the whole block, so the cursor always moves one line at a time.
+ */
+function stepIntoBlock(direction: -1 | 1): Command {
+  return (view) => {
+    const range = view.state.selection.main;
+    if (!range.empty) {
+      return false;
+    }
+
+    const line = view.state.doc.lineAt(range.head);
+    const targetNumber = line.number + direction;
+    if (targetNumber < 1 || targetNumber > view.state.doc.lines) {
+      return false;
+    }
+
+    const target = view.state.doc.line(targetNumber);
+    if (!isInRenderedBlock(view.state, target.from, target.to)) {
+      return false;
+    }
+
+    const column = Math.min(range.head - line.from, target.length);
+    view.dispatch({ selection: { anchor: target.from + column }, scrollIntoView: true });
+    return true;
+  };
+}
+
+/** Block marks at the start of a line: indentation, then a list / task / quote / heading prefix. */
+const LINE_MARKS_PATTERN = /^[ \t]*(?:(?:[-*+]|\d+[.)]) (?:\[[ xX]\] )?|(?:> ?)+|#{1,6} )/;
+
+/**
+ * A click on a list, task, quote or heading line that lands in its (hidden) marks puts the cursor after
+ * them, so typing writes the line's text instead of text before the `- ` / `> ` / `#`.
+ */
+const clickAfterLineMarks = EditorState.transactionFilter.of((transaction) => {
+  const range = transaction.selection?.main;
+  if (!range?.empty || !transaction.isUserEvent('select.pointer') || transaction.docChanged) {
+    return transaction;
+  }
+
+  const line = transaction.state.doc.lineAt(range.head);
+  const marks = LINE_MARKS_PATTERN.exec(line.text);
+  if (!marks || range.head - line.from >= marks[0].length) {
+    return transaction;
+  }
+
+  return [transaction, { selection: { anchor: line.from + marks[0].length }, sequential: true }];
+});
+
+// Above the default keymap, whose Up/Down would otherwise run first.
+const livePreviewKeymap = Prec.high(keymap.of([
+  { key: 'ArrowUp', run: stepIntoBlock(-1) },
+  { key: 'ArrowDown', run: stepIntoBlock(1) },
+]));
+
 /**
  * Obsidian-like live preview for the markdown editor: the text stays editable, its markdown is shown
  * rendered, and the syntax of an element comes back while the cursor is on it. Links open on click.
  */
 export function livePreview(): Extension {
-  return [contextField, livePreviewField, livePreviewTheme];
+  return [contextField, livePreviewField, livePreviewTheme, livePreviewKeymap, clickAfterLineMarks];
 }

@@ -383,6 +383,11 @@ Planned Electron modules: `vault`, `cloud-readiness`, `campaign`, `document`, `i
     (clickable), images, links, tables, callouts and frontmatter (as a properties box) are rendered. The note opens
     with the cursor below the frontmatter. An image being edited stays shown, with its `![[…]]` / `![](…)` source
     on the line below it.
+  - **Cursor and marks**: Up/Down always move one line, also through rendered tables and callouts; a click
+    or an inserted list / task / quote / heading puts the cursor after its marks, so typing writes its text.
+    Rendered blocks keep their spacing inside the widget, so clicks land on the line under the pointer.
+  - **Same look as Reading**: quotes (primary bar, muted text), list markers in primary, task checkboxes as the
+    app's square checkbox (primary with a check when done).
   - **Source**: the raw markdown in the mono font, syntax highlighted. **Hidden by default**; Settings → Editor
     turns it on. While hidden, a note remembered in Source opens in Live preview.
   - **Reading**: read-only, sanitized HTML (markdown-it + DOMPurify).

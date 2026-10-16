@@ -239,15 +239,25 @@ function findLinePrefix(rest: string): { kind: LinePrefixKind; length: number } 
 function setHeading(level: number): Command {
   return (view) => {
     const marks = `${'#'.repeat(level)} `;
-    view.dispatch({
-      changes: selectedLines(view.state).map((line) => {
+    const ends = new Map<number, number>();
+    const changes = view.state.changes(
+      selectedLines(view.state).map((line) => {
         const { indent, prefix, headingLength } = parseLineMarks(line);
         const to = line.from + indent.length + (prefix?.length ?? 0) + headingLength;
+        ends.set(line.number, to);
         return { from: line.from, to, insert: marks };
       }),
-      scrollIntoView: true,
-      userEvent: 'input',
-    });
+    );
+    // As for lists: a cursor at the start of the line (or in its marks) goes after the new `#` marks.
+    const selection = EditorSelection.create(
+      view.state.selection.ranges.map((range) => {
+        const marksEnd = ends.get(view.state.doc.lineAt(range.head).number) ?? range.head;
+        const head = changes.mapPos(Math.max(range.head, marksEnd), 1);
+        return range.empty ? EditorSelection.cursor(head) : range.map(changes, 1);
+      }),
+      view.state.selection.mainIndex,
+    );
+    view.dispatch({ changes, selection, scrollIntoView: true, userEvent: 'input' });
     return true;
   };
 }
@@ -262,8 +272,8 @@ function toggleLinePrefix(kind: LinePrefixKind): Command {
     const parsed = selectedLines(view.state).map((line) => ({ line, ...parseLineMarks(line) }));
     const isRemoving = parsed.every(({ prefix }) => prefix?.kind === kind);
     let number = 0;
-    view.dispatch({
-      changes: parsed.map(({ line, indent, prefix, headingLength }) => {
+    const changes = view.state.changes(
+      parsed.map(({ line, indent, prefix, headingLength }) => {
         const from = line.from + indent.length;
         const prefixTo = from + (prefix?.length ?? 0);
         if (isRemoving) {
@@ -281,9 +291,20 @@ function toggleLinePrefix(kind: LinePrefixKind): Command {
                 : '> ';
         return { from, to, insert };
       }),
-      scrollIntoView: true,
-      userEvent: 'input',
-    });
+    );
+    // A cursor left at the start of the line (or inside the old prefix) goes after the new prefix: typing
+    // then writes the item's text, not text before the mark. `1` maps positions past inserted text.
+    const selection = EditorSelection.create(
+      view.state.selection.ranges.map((range) => {
+        const lineFrom = view.state.doc.lineAt(range.head).from;
+        const { indent, prefix } = parseLineMarks(view.state.doc.lineAt(range.head));
+        const marksEnd = lineFrom + indent.length + (prefix?.length ?? 0);
+        const head = range.head <= marksEnd ? changes.mapPos(marksEnd, 1) : changes.mapPos(range.head, 1);
+        return range.empty ? EditorSelection.cursor(head) : range.map(changes, 1);
+      }),
+      view.state.selection.mainIndex,
+    );
+    view.dispatch({ changes, selection, scrollIntoView: true, userEvent: 'input' });
     return true;
   };
 }
