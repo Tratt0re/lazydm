@@ -40,7 +40,7 @@
 
   @if (isOpen() && (isLoading() || query())) {
     <div
-      class="absolute left-1/2 top-full z-[100] mt-1 w-[420px] -translate-x-1/2 border border-border bg-card shadow-xl"
+      class="absolute left-1/2 top-full z-50 mt-1 w-[420px] max-w-[calc(100vw-2rem)] -translate-x-1/2 border border-border bg-card shadow-xl"
       role="listbox"
       [attr.aria-label]="'search.resultsLabel' | translate"
       (mousedown)="$event.preventDefault()"
