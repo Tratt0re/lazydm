@@ -898,7 +898,9 @@
       "editTitle": "Edit entity",
       "save": "Save",
       "name": "Name",
-      "namePlaceholder": "Goblin 1"
+      "namePlaceholder": "Goblin 1",
+      "duplicate": "Duplicate",
+      "drag": "Drag to reorder"
     },
     "fields": {
       "initiative": "Initiative",
@@ -935,6 +937,16 @@
       "enemy": "Enemy",
       "player": "Player",
       "ally": "Ally"
+    },
+    "battle": {
+      "start": "Start battle",
+      "next": "Next turn",
+      "stop": "Stop battle",
+      "round": "Round {{round}}",
+      "turnOf": "Turn of {{name}}",
+      "stopTitle": "Stop the battle?",
+      "stopDescription": "Initiatives and statuses are cleared and hit points go back to their maximum where there is one. Names and other values stay.",
+      "stopConfirm": "Stop battle"
     }
   }
 }

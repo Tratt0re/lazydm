@@ -24,9 +24,42 @@
         [arcDescription]="'encounters.empty.description' | translate"
       />
     } @else {
-      <ul class="flex flex-col border border-border bg-card">
+      @if (isRunning()) {
+        <div class="flex flex-wrap items-baseline gap-x-6 gap-y-1 border border-border bg-raised px-4 py-3">
+          <span class="font-display text-2xl leading-none font-extrabold tracking-[0.02em] uppercase">
+            {{ 'encounters.battle.round' | translate: { round: round() } }}<span class="text-primary" aria-hidden="true">.</span>
+          </span>
+          @if (turnName(); as name) {
+            <span class="font-mono text-xs text-muted-foreground">
+              {{ 'encounters.battle.turnOf' | translate: { name } }}
+            </span>
+          }
+        </div>
+      }
+
+      <ul
+        class="flex flex-col border border-border bg-card"
+        cdkDropList
+        [cdkDropListData]="entities()"
+        [cdkDropListDisabled]="!isEditable()"
+        (cdkDropListDropped)="onDrop($event)"
+      >
         @for (entity of entities(); track entity.id) {
-          <li class="flex flex-wrap items-center gap-x-4 gap-y-2 border-b border-border p-4 last:border-b-0">
+          <li
+            cdkDrag
+            class="flex flex-wrap items-center gap-x-4 gap-y-2 border-b border-l-[3px] border-b-border bg-card p-4 last:border-b-0 [&.cdk-drag-placeholder]:opacity-40"
+            [class]="isRunning() && entity.id === turnId() ? 'border-l-primary bg-accent' : 'border-l-transparent'"
+            [attr.aria-current]="isRunning() && entity.id === turnId() ? 'step' : null"
+          >
+            <span
+              cdkDragHandle
+              class="flex size-6 shrink-0 cursor-grab items-center justify-center text-muted-foreground"
+              [attr.aria-label]="'encounters.entity.drag' | translate"
+              [arcTooltip]="'encounters.entity.drag' | translate"
+            >
+              <arc-icon arcType="grip-vertical" class="size-4" aria-hidden="true" />
+            </span>
+
             @for (field of leadFields(); track field.key) {
               @let initiative = numberOf(entity, field);
               <span
@@ -98,6 +131,19 @@
               }
             }
 
+            <button
+              type="button"
+              arc-button
+              arcType="ghost"
+              arcSize="sm"
+              class="size-8 shrink-0"
+              [disabled]="!isEditable()"
+              [attr.aria-label]="'encounters.entity.duplicate' | translate"
+              [arcTooltip]="'encounters.entity.duplicate' | translate"
+              (click)="duplicateEntity(entity)"
+            >
+              <arc-icon arcType="copy-plus" />
+            </button>
             <button
               type="button"
               arc-button

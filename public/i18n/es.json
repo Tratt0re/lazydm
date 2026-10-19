@@ -898,7 +898,9 @@
       "editTitle": "Editar entidad",
       "save": "Guardar",
       "name": "Nombre",
-      "namePlaceholder": "Goblin 1"
+      "namePlaceholder": "Goblin 1",
+      "duplicate": "Duplicar",
+      "drag": "Arrastra para reordenar"
     },
     "fields": {
       "initiative": "Iniciativa",
@@ -935,6 +937,16 @@
       "enemy": "Enemigo",
       "player": "Jugador",
       "ally": "Aliado"
+    },
+    "battle": {
+      "start": "Iniciar combate",
+      "next": "Siguiente turno",
+      "stop": "Terminar combate",
+      "round": "Ronda {{round}}",
+      "turnOf": "Turno de {{name}}",
+      "stopTitle": "¿Terminar el combate?",
+      "stopDescription": "Las iniciativas y los estados se borran y los puntos de golpe vuelven al máximo donde lo hay. Los nombres y otros valores se conservan.",
+      "stopConfirm": "Terminar combate"
     }
   }
 }

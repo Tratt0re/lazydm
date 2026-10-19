@@ -898,7 +898,9 @@
       "editTitle": "Modifica entità",
       "save": "Salva",
       "name": "Nome",
-      "namePlaceholder": "Goblin 1"
+      "namePlaceholder": "Goblin 1",
+      "duplicate": "Duplica",
+      "drag": "Trascina per riordinare"
     },
     "fields": {
       "initiative": "Iniziativa",
@@ -935,6 +937,16 @@
       "enemy": "Nemico",
       "player": "Giocatore",
       "ally": "Alleato"
+    },
+    "battle": {
+      "start": "Inizia battaglia",
+      "next": "Turno successivo",
+      "stop": "Termina battaglia",
+      "round": "Round {{round}}",
+      "turnOf": "Turno di {{name}}",
+      "stopTitle": "Terminare la battaglia?",
+      "stopDescription": "Iniziative e stati vengono azzerati e i punti ferita tornano al massimo dove c'è. Nomi e altri valori restano.",
+      "stopConfirm": "Termina battaglia"
     }
   }
 }

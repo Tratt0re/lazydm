@@ -898,7 +898,9 @@
       "editTitle": "编辑单位",
       "save": "保存",
       "name": "名称",
-      "namePlaceholder": "地精 1"
+      "namePlaceholder": "地精 1",
+      "duplicate": "复制",
+      "drag": "拖动以重新排序"
     },
     "fields": {
       "initiative": "先攻",
@@ -935,6 +937,16 @@
       "enemy": "敌人",
       "player": "玩家",
       "ally": "盟友"
+    },
+    "battle": {
+      "start": "开始战斗",
+      "next": "下一回合",
+      "stop": "结束战斗",
+      "round": "第 {{round}} 轮",
+      "turnOf": "{{name}} 的回合",
+      "stopTitle": "结束战斗？",
+      "stopDescription": "先攻和状态将被清除，生命值恢复到最大值（如有）。名称和其他数值保留。",
+      "stopConfirm": "结束战斗"
     }
   }
 }

@@ -1,4 +1,18 @@
-import { ChangeDetectionStrategy, Component, computed, effect, inject, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  effect,
+  inject,
+  signal,
+} from '@angular/core';
+import {
+  CdkDrag,
+  type CdkDragDrop,
+  CdkDragHandle,
+  CdkDropList,
+  moveItemInArray,
+} from '@angular/cdk/drag-drop';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
@@ -21,7 +35,7 @@ import { EncounterService } from '@/services/encounter.service';
 import { FileActionsService } from '@/services/file-actions.service';
 import { getNoteScopeKind, NoteScopeService } from '@/services/note-scope.service';
 import { SectionService, toSubfolderLabel } from '@/services/section.service';
-import { ToolbarContextService } from '@/services/toolbar-context.service';
+import { ToolbarContextService, type ToolbarItemAction } from '@/services/toolbar-context.service';
 import { ArcTechAlertComponent } from '@/shared/components/alert';
 import { ArcTechBadgeComponent } from '@/shared/components/badge';
 import { ArcTechButtonComponent } from '@/shared/components/button';
@@ -71,6 +85,9 @@ function parseNumber(value: unknown): number | null {
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-encounter-page',
   imports: [
+    CdkDrag,
+    CdkDragHandle,
+    CdkDropList,
     TranslatePipe,
     AppEncounterHealthBarComponent,
     ArcTechAlertComponent,
@@ -130,13 +147,24 @@ export class EncounterPage {
   /** Fields shown in the row: the initiative ones lead, the name follows, the others come after. */
   protected readonly leadFields = computed(() => this.rowFields('initiative'));
   protected readonly otherFields = computed(() => this.rowFields('other'));
-  /** Entities still in the battle, by initiative (highest first); those without one stay last in file order. */
-  protected readonly entities = computed(() => {
-    const initiativeKey = this.rule()?.fields.find((field) => field.component === 'initiative')?.key;
-    const entities = (this.encounter()?.entities ?? []).filter((entity) => !entity.isDead);
-    const initiativeOf = (entity: EncounterEntityDto): number =>
-      (initiativeKey ? toNumber(entity.values[initiativeKey]) : null) ?? Number.NEGATIVE_INFINITY;
-    return [...entities].sort((left, right) => initiativeOf(right) - initiativeOf(left));
+  /** Key of the rule's initiative field (null when the rule has none). */
+  private readonly initiativeKey = computed(
+    () => this.rule()?.fields.find((field) => field.component === 'initiative')?.key ?? null,
+  );
+  /**
+   * Entities still in the battle, in the order of the file: sorted by initiative when the battle starts and
+   * when an entity is added or its initiative changes, free to be dragged anywhere after that.
+   */
+  protected readonly entities = computed(() =>
+    (this.encounter()?.entities ?? []).filter((entity) => !entity.isDead),
+  );
+  protected readonly isRunning = computed(() => this.encounter()?.battle.status === 'running');
+  protected readonly round = computed(() => this.encounter()?.battle.round ?? 0);
+  /** The entity whose turn it is. */
+  protected readonly turnId = computed(() => this.encounter()?.battle.turnId ?? null);
+  protected readonly turnName = computed(() => {
+    const entity = this.entities().find((candidate) => candidate.id === this.turnId());
+    return entity ? this.entityName(entity.name) : null;
   });
 
   constructor() {
@@ -155,6 +183,37 @@ export class EncounterPage {
       const sectionPath = `${scope.routeBase}/${this.sectionKey()}`;
       const subfolder = this.subfolder();
       const isEditable = this.isEditable();
+      const isRunning = this.isRunning();
+      const battleActions: readonly ToolbarItemAction[] = isRunning
+        ? [
+            {
+              id: 'next-turn',
+              label: this.translateService.instant('encounters.battle.next'),
+              icon: 'chevrons-right',
+              iconOnly: true,
+              disabled: () => !isEditable || this.entities().length === 0,
+              action: () => this.nextTurn(),
+            },
+            {
+              id: 'stop-battle',
+              label: this.translateService.instant('encounters.battle.stop'),
+              icon: 'square',
+              buttonType: 'outline',
+              iconOnly: true,
+              disabled: !isEditable,
+              action: () => this.openStopSheet(),
+            },
+          ]
+        : [
+            {
+              id: 'start-battle',
+              label: this.translateService.instant('encounters.battle.start'),
+              icon: 'play',
+              iconOnly: true,
+              disabled: () => !isEditable || this.entities().length === 0,
+              action: () => this.startBattle(),
+            },
+          ];
       onCleanup(
         this.toolbarContext.activate({
           title: this.title(),
@@ -178,10 +237,12 @@ export class EncounterPage {
               : []),
           ],
           itemActions: [
+            ...battleActions,
             {
               id: 'add-entity',
               label: this.translateService.instant('encounters.entity.add'),
               icon: 'plus',
+              buttonType: 'outline',
               iconOnly: true,
               disabled: !isEditable,
               action: () => this.openEntitySheet(null),
@@ -351,8 +412,16 @@ export class EncounterPage {
       case 'healthbar': {
         const health = isRecord(value) ? value : {};
         return [
-          number(`${field.key}.current`, `${label} · ${this.translateService.instant('encounters.hp.current')}`, health['current']),
-          number(`${field.key}.max`, `${label} · ${this.translateService.instant('encounters.hp.max')}`, health['max']),
+          number(
+            `${field.key}.current`,
+            `${label} · ${this.translateService.instant('encounters.hp.current')}`,
+            health['current'],
+          ),
+          number(
+            `${field.key}.max`,
+            `${label} · ${this.translateService.instant('encounters.hp.max')}`,
+            health['max'],
+          ),
         ];
       }
       case 'side':
@@ -426,14 +495,30 @@ export class EncounterPage {
 
     const name = String(form['name'] ?? '').trim() || null;
     if (entity) {
-      this.updateEntity(entity.id, (current) => ({ ...current, name, values }));
+      const edited = { ...entity, name, values };
+      const key = this.initiativeKey();
+      // A changed initiative moves the entity to its place; otherwise it stays where it is (it may have been dragged).
+      if (key && values[key] !== entity.values[key]) {
+        this.updateEncounter((encounter) => ({
+          ...encounter,
+          entities: this.insertByInitiative(
+            encounter.entities.filter((candidate) => candidate.id !== entity.id),
+            edited,
+          ),
+        }));
+      } else {
+        this.updateEntity(entity.id, () => edited);
+      }
     } else {
+      // Added mid-battle too: it takes its place by initiative; the current turn does not move.
       this.updateEncounter((encounter) => ({
         ...encounter,
-        entities: [
-          ...encounter.entities,
-          { id: crypto.randomUUID(), name, values, isDead: false },
-        ],
+        entities: this.insertByInitiative(encounter.entities, {
+          id: crypto.randomUUID(),
+          name,
+          values,
+          isDead: false,
+        }),
       }));
     }
   }
@@ -444,6 +529,173 @@ export class EncounterPage {
     } else {
       values[key] = value;
     }
+  }
+
+  // --- Battle ------------------------------------------------------------------------------------------
+
+  private initiativeOf(entity: EncounterEntityDto): number {
+    const key = this.initiativeKey();
+    return (key ? toNumber(entity.values[key]) : null) ?? Number.NEGATIVE_INFINITY;
+  }
+
+  /** Highest initiative first; entities without one keep their place after those that have one. */
+  private sortByInitiative(entities: readonly EncounterEntityDto[]): EncounterEntityDto[] {
+    return [...entities].sort((left, right) => this.initiativeOf(right) - this.initiativeOf(left));
+  }
+
+  /** `entity` placed before the first one with a lower initiative; with none of its own it goes last. */
+  private insertByInitiative(
+    entities: readonly EncounterEntityDto[],
+    entity: EncounterEntityDto,
+  ): EncounterEntityDto[] {
+    const own = this.initiativeOf(entity);
+    const index = own === Number.NEGATIVE_INFINITY ? -1 : entities.findIndex((other) => this.initiativeOf(other) < own);
+    return index === -1
+      ? [...entities, entity]
+      : [...entities.slice(0, index), entity, ...entities.slice(index)];
+  }
+
+  /** *Start battle*: the round is 1, the entities are in initiative order and the first one has the turn. */
+  protected startBattle(): void {
+    this.updateEncounter((encounter) => {
+      const entities = this.sortByInitiative(encounter.entities);
+      return {
+        ...encounter,
+        entities,
+        battle: {
+          status: 'running',
+          round: 1,
+          turnId: entities.find((entity) => !entity.isDead)?.id ?? null,
+        },
+      };
+    });
+  }
+
+  /** *Next turn*: the entity after the current one; after the last one a new round begins. */
+  protected nextTurn(): void {
+    this.updateEncounter((encounter) => {
+      const alive = encounter.entities.filter((entity) => !entity.isDead);
+      if (alive.length === 0) {
+        return encounter;
+      }
+
+      const index = alive.findIndex((entity) => entity.id === encounter.battle.turnId);
+      const isLast = index === alive.length - 1;
+      return {
+        ...encounter,
+        battle: {
+          ...encounter.battle,
+          round: encounter.battle.round + (isLast ? 1 : 0),
+          turnId: alive[isLast ? 0 : index + 1].id,
+        },
+      };
+    });
+  }
+
+  /** *Stop battle* asks first: it clears initiatives and statuses and refills the HP. */
+  private openStopSheet(): void {
+    const sheetRef = this.sheetService.create({
+      arcTitle: this.translateService.instant('encounters.battle.stopTitle'),
+      arcContent: this.translateService.instant('encounters.battle.stopDescription'),
+      arcOkText: this.translateService.instant('encounters.battle.stopConfirm'),
+      arcOkDestructive: true,
+      arcCancelText: this.translateService.instant('campaigns.sections.newNote.cancel'),
+      arcOnOk: () => {
+        this.stopBattle();
+        sheetRef.close();
+        return false;
+      },
+    });
+  }
+
+  /**
+   * Ends the battle: no round or turn, every initiative and status gone, HP back to the maximum where there
+   * is one (the temporary HP go too). Names, sides and the rest of the values stay.
+   */
+  private stopBattle(): void {
+    const rule = this.rule();
+    if (!rule) {
+      return;
+    }
+
+    const clearedKeys = rule.fields
+      .filter((field) => field.component === 'initiative' || field.component === 'statuses')
+      .map((field) => field.key);
+    const healthKeys = rule.fields
+      .filter((field) => field.component === 'healthbar')
+      .map((field) => field.key);
+
+    this.hpUndoSteps.set([]);
+    this.updateEncounter((encounter) => ({
+      ...encounter,
+      battle: { status: 'idle', round: 0, turnId: null },
+      entities: encounter.entities.map((entity) => {
+        const values: Record<string, unknown> = { ...entity.values };
+        clearedKeys.forEach((key) => delete values[key]);
+        for (const key of healthKeys) {
+          const health = isRecord(values[key]) ? (values[key] as HealthValue) : null;
+          if (health?.max !== undefined) {
+            values[key] = { current: health.max, max: health.max };
+          } else if (health) {
+            const { temp: _temp, ...rest } = health;
+            this.setOrClear(values, key, Object.keys(rest).length > 0 ? rest : null);
+          }
+        }
+
+        return { ...entity, values };
+      }),
+    }));
+  }
+
+  /** *Duplicate*: a copy right after the entity, numbered after its name ("Goblin 1" → "Goblin 2"). */
+  protected duplicateEntity(entity: EncounterEntityDto): void {
+    this.updateEncounter((encounter) => {
+      const copy: EncounterEntityDto = {
+        ...entity,
+        id: crypto.randomUUID(),
+        name: this.nextNumberedName(entity.name, encounter.entities),
+        values: structuredClone(entity.values) as Record<string, unknown>,
+      };
+      const index = encounter.entities.findIndex((candidate) => candidate.id === entity.id);
+      return {
+        ...encounter,
+        entities: [
+          ...encounter.entities.slice(0, index + 1),
+          copy,
+          ...encounter.entities.slice(index + 1),
+        ],
+      };
+    });
+  }
+
+  /** The name with the next free number after its base ("Goblin 1" with Goblin 1–3 present → "Goblin 4"). */
+  private nextNumberedName(
+    name: string | null,
+    entities: readonly EncounterEntityDto[],
+  ): string | null {
+    if (name === null) {
+      return null;
+    }
+
+    const base = name.replace(/\s*\d+$/, '').trim();
+    const taken = entities
+      .map((entity) => entity.name?.match(/^(.*?)\s*(\d*)$/))
+      .filter((match): match is RegExpMatchArray => !!match && match[1].trim() === base)
+      .map((match) => Number(match[2] || 1));
+    return `${base} ${Math.max(0, ...taken) + 1}`;
+  }
+
+  /** Drag to reorder the living entities (the dead keep their place after them). */
+  protected onDrop(event: CdkDragDrop<EncounterEntityDto[]>): void {
+    if (event.previousIndex === event.currentIndex) {
+      return;
+    }
+
+    this.updateEncounter((encounter) => {
+      const alive = encounter.entities.filter((entity) => !entity.isDead);
+      moveItemInArray(alive, event.previousIndex, event.currentIndex);
+      return { ...encounter, entities: [...alive, ...encounter.entities.filter((entity) => entity.isDead)] };
+    });
   }
 
   // --- Hit points --------------------------------------------------------------------------------------
@@ -508,7 +760,10 @@ export class EncounterPage {
     if (mode === 'temp') {
       next = { ...previous, temp: amount };
     } else if (mode === 'heal') {
-      next = { ...previous, current: max === undefined ? base + amount : Math.min(base + amount, max) };
+      next = {
+        ...previous,
+        current: max === undefined ? base + amount : Math.min(base + amount, max),
+      };
     } else {
       const absorbed = Math.min(temp, amount);
       // With no HP known there is nothing to subtract from: only the temporary HP take the hit.

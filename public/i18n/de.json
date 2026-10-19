@@ -898,7 +898,9 @@
       "editTitle": "Einheit bearbeiten",
       "save": "Speichern",
       "name": "Name",
-      "namePlaceholder": "Goblin 1"
+      "namePlaceholder": "Goblin 1",
+      "duplicate": "Duplizieren",
+      "drag": "Zum Umsortieren ziehen"
     },
     "fields": {
       "initiative": "Initiative",
@@ -935,6 +937,16 @@
       "enemy": "Feind",
       "player": "Spieler",
       "ally": "Verbündeter"
+    },
+    "battle": {
+      "start": "Kampf starten",
+      "next": "Nächster Zug",
+      "stop": "Kampf beenden",
+      "round": "Runde {{round}}",
+      "turnOf": "{{name}} ist am Zug",
+      "stopTitle": "Kampf beenden?",
+      "stopDescription": "Initiativen und Zustände werden gelöscht, Trefferpunkte gehen auf das Maximum zurück, wo eines vorhanden ist. Namen und andere Werte bleiben.",
+      "stopConfirm": "Kampf beenden"
     }
   }
 }
