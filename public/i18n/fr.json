@@ -873,5 +873,32 @@
       "select": "Choisir des fichiers…",
       "skipped": "Ni images, ni PDF, ni audio — ignorés"
     }
+  },
+  "encounters": {
+    "new": {
+      "button": "Nouvelle rencontre",
+      "title": "Nouvelle rencontre",
+      "nameLabel": "Nom",
+      "namePlaceholder": "Embuscade de gobelins",
+      "submit": "Créer la rencontre",
+      "error": "Impossible de créer la rencontre"
+    },
+    "loadError": "Impossible de charger cette rencontre",
+    "parseError": "Ce fichier n'est pas un JSON valide",
+    "empty": {
+      "title": "Personne dans cette rencontre pour l'instant",
+      "description": "Les entités ajoutées apparaissent ici par ordre d'initiative."
+    },
+    "entity": {
+      "unnamed": "Sans nom"
+    },
+    "fields": {
+      "initiative": "Initiative",
+      "side": "Camp",
+      "ac": "CA",
+      "hp": "PV",
+      "statuses": "États",
+      "note": "Note"
+    }
   }
 }

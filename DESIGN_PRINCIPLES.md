@@ -543,6 +543,18 @@ variant keys and configuration stay as they are.
 | 13.2 | Harden: `arc-dropdown-menu` trigger semantics (role, `aria-haspopup`, `aria-expanded`), hard-coded strings to i18n (`ESC`, table row labels), modal focus trap / return |
 | 13.3 | Adapt: touch-target sizes (tab close, icon buttons), header-search listbox width and z-index scale, dialog margins on narrow windows |
 | 13.4 | Optimize: replace `transition-all` (accordion, progress bar, sidebar width), `OnPush` for app-level components |
+| 14 | Encounter manager (14.1–14.11): encounters are `.json` files of the Encounters section, linked like assets (`![[ambush.json]]`); every entity field is optional; rows are driven by battle rules |
+| 14.1 | Format and Electron: encounter model (conflict-checked save), battle rule schema and default rule, `encounters:*` channels, typed service |
+| 14.2 | Route and page: `*.json` in `encounters/` opens the encounter page; the section page lists encounters (swords icon) and offers *New encounter* |
+| 14.3 | Rule-driven rows: initiative, name, health bar (HP + temporary HP), *Manage HP* modal (damage / heal / temporary HP), undo |
+| 14.4 | Battle flow: *Start battle* / *Stop battle* (stop clears statuses and initiatives and restores HP where possible; no reset), next turn, add entities mid-battle, duplicate with numbering, drag to reorder, *Roll initiative* only when the rule has a formula |
+| 14.5 | Cemetery: remove an entity, side panel listing the dead with recover |
+| 14.6 | Statuses: a `statuses` section (notes, description = the note body), added automatically to existing campaigns; round counts that tick down |
+| 14.7 | Side panel: the entity's linked note, a status description, rule fields read from the note's frontmatter |
+| 14.8 | Party roster: hidden `encounters/_party.json`, always reachable from the encounters overview, re-added to any encounter |
+| 14.9 | Battle rules management: `_battle-rules/` JSON files (vault, system, campaign), built-in rule with *Customize*, per-campaign choice in `vault.json`, library in the Templates sheet |
+| 14.10 | Embedding: `![[x.json]]` renders as an encounter row in notes, link suggestions list encounters, Linked files panel shows them |
+| 14.11 | Docs: §2, §6, §12 updated with the final encounter design |
 
 ## 12. Open decisions
 

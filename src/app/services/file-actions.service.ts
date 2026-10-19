@@ -6,6 +6,7 @@ import { toast } from 'ngx-sonner';
 import {
   parseVaultFilePath,
   toInAppAssetRoute,
+  toInAppEncounterRoute,
   toInAppNoteRoute,
 } from '@/components/document-preview/document-preview.markdown';
 import { AppSheetFormService } from '@/components/sheet-form/sheet-form.service';
@@ -13,6 +14,7 @@ import type { AppSheetField } from '@/components/sheet-form/sheet-form.types';
 import type { BacklinkDto, DeleteFolderMode, DocumentFileListItemDto, SavedAssetDto } from '@/dtos';
 import { AssetService } from '@/services/asset.service';
 import { DocumentService } from '@/services/document.service';
+import { EncounterService } from '@/services/encounter.service';
 import { WorkspaceService } from '@/services/workspace.service';
 
 const LINKING_PREVIEW_MAX_TITLES = 5;
@@ -22,6 +24,15 @@ const NEW_NOTE_TITLE_FIELD: AppSheetField = {
   type: 'input',
   label: 'campaigns.sections.newNote.titleLabel',
   placeholder: 'campaigns.sections.newNote.titlePlaceholder',
+  required: true,
+  translate: true,
+};
+
+const NEW_ENCOUNTER_NAME_FIELD: AppSheetField = {
+  id: 'name',
+  type: 'input',
+  label: 'encounters.new.nameLabel',
+  placeholder: 'encounters.new.namePlaceholder',
   required: true,
   translate: true,
 };
@@ -42,6 +53,7 @@ const NEW_FOLDER_NAME_FIELD: AppSheetField = {
 @Injectable({ providedIn: 'root' })
 export class FileActionsService {
   private readonly documentService = inject(DocumentService);
+  private readonly encounterService = inject(EncounterService);
   private readonly sheetFormService = inject(AppSheetFormService);
   private readonly translateService = inject(TranslateService);
   private readonly workspace = inject(WorkspaceService);
@@ -154,6 +166,32 @@ export class FileActionsService {
     });
   }
 
+  /** *New encounter* in the Encounters section or one of its sub-folders (`folderPath`); opens the new encounter. */
+  openCreateEncounterSheet(folderPath: string): void {
+    let isSubmitting = false;
+    const sheetRef = this.sheetFormService.open({
+      arcTitle: this.translateService.instant('encounters.new.title'),
+      arcOkText: this.translateService.instant('encounters.new.submit'),
+      arcCancelText: this.translateService.instant('campaigns.sections.newNote.cancel'),
+      fields: [NEW_ENCOUNTER_NAME_FIELD],
+      onSubmit: (form) => {
+        if (!isSubmitting) {
+          isSubmitting = true;
+          void this.createEncounter(folderPath, String(form.getValues()['name'] ?? '')).then(
+            (isCreated) => {
+              isSubmitting = false;
+              if (isCreated) {
+                sheetRef.close();
+              }
+            },
+          );
+        }
+
+        return false;
+      },
+    });
+  }
+
   /**
    * *New folder* directly in a section (`sectionPath`, vault path): one level of sub-folders, the sub-types of
    * its notes (plain folders in the special sections). `onCreated` gets the new folder's name.
@@ -209,6 +247,22 @@ export class FileActionsService {
       return true;
     } catch (error) {
       toast.error(this.translateService.instant('campaigns.sections.newNote.error'), {
+        description: error instanceof Error ? error.message : String(error),
+      });
+      return false;
+    }
+  }
+
+  private async createEncounter(folderPath: string, name: string): Promise<boolean> {
+    try {
+      const encounter = await this.encounterService.create({ folder: folderPath, name });
+      const route = toInAppEncounterRoute(encounter.path);
+      if (route) {
+        await this.router.navigateByUrl(route);
+      }
+      return true;
+    } catch (error) {
+      toast.error(this.translateService.instant('encounters.new.error'), {
         description: error instanceof Error ? error.message : String(error),
       });
       return false;

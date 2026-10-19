@@ -873,5 +873,32 @@
       "select": "Select files…",
       "skipped": "Not images, PDFs or audio — skipped"
     }
+  },
+  "encounters": {
+    "new": {
+      "button": "New encounter",
+      "title": "New encounter",
+      "nameLabel": "Name",
+      "namePlaceholder": "Goblin ambush",
+      "submit": "Create encounter",
+      "error": "Couldn't create the encounter"
+    },
+    "loadError": "Couldn't load this encounter",
+    "parseError": "This file is not valid JSON",
+    "empty": {
+      "title": "No one in this encounter yet",
+      "description": "Entities you add appear here in initiative order."
+    },
+    "entity": {
+      "unnamed": "Unnamed"
+    },
+    "fields": {
+      "initiative": "Initiative",
+      "side": "Side",
+      "ac": "AC",
+      "hp": "HP",
+      "statuses": "Statuses",
+      "note": "Note"
+    }
   }
 }

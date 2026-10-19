@@ -873,5 +873,32 @@
       "select": "Seleccionar archivos…",
       "skipped": "No son imágenes, PDF ni audio: omitidos"
     }
+  },
+  "encounters": {
+    "new": {
+      "button": "Nuevo encuentro",
+      "title": "Nuevo encuentro",
+      "nameLabel": "Nombre",
+      "namePlaceholder": "Emboscada de goblins",
+      "submit": "Crear encuentro",
+      "error": "No se pudo crear el encuentro"
+    },
+    "loadError": "No se pudo cargar este encuentro",
+    "parseError": "Este archivo no es un JSON válido",
+    "empty": {
+      "title": "Nadie en este encuentro todavía",
+      "description": "Las entidades que añadas aparecen aquí por orden de iniciativa."
+    },
+    "entity": {
+      "unnamed": "Sin nombre"
+    },
+    "fields": {
+      "initiative": "Iniciativa",
+      "side": "Bando",
+      "ac": "CA",
+      "hp": "PG",
+      "statuses": "Estados",
+      "note": "Nota"
+    }
   }
 }

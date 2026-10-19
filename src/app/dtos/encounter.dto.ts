@@ -1,12 +1,6 @@
 /** What a field of an entity row shows and edits; the battle rule picks one per field. */
 export type BattleFieldComponent =
-  | 'initiative'
-  | 'text'
-  | 'number'
-  | 'healthbar'
-  | 'statuses'
-  | 'side'
-  | 'note-link';
+  'initiative' | 'text' | 'number' | 'healthbar' | 'statuses' | 'side' | 'note-link';
 
 export interface BattleRuleFieldDto {
   /** Key the entities store their value under. */

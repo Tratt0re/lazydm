@@ -873,5 +873,32 @@
       "select": "Seleziona file…",
       "skipped": "Non sono immagini, PDF o audio: ignorati"
     }
+  },
+  "encounters": {
+    "new": {
+      "button": "Nuovo incontro",
+      "title": "Nuovo incontro",
+      "nameLabel": "Nome",
+      "namePlaceholder": "Imboscata dei goblin",
+      "submit": "Crea incontro",
+      "error": "Impossibile creare l'incontro"
+    },
+    "loadError": "Impossibile caricare questo incontro",
+    "parseError": "Questo file non è un JSON valido",
+    "empty": {
+      "title": "Nessuno in questo incontro",
+      "description": "Le entità aggiunte appaiono qui in ordine di iniziativa."
+    },
+    "entity": {
+      "unnamed": "Senza nome"
+    },
+    "fields": {
+      "initiative": "Iniziativa",
+      "side": "Fazione",
+      "ac": "CA",
+      "hp": "PF",
+      "statuses": "Stati",
+      "note": "Nota"
+    }
   }
 }

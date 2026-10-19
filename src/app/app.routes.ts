@@ -19,10 +19,26 @@ const RENAMED_SECTION_ROUTES: Routes = [
 /** Image and sound file names: those open the asset page (image viewer / player), not a note. */
 const ASSET_FILE_PATTERN = /\.(png|jpe?g|gif|webp|svg|avif|mp3|wav|ogg|m4a|flac)$/i;
 
+/** Encounter file names: those open the encounter page, not a note. */
+const ENCOUNTER_FILE_PATTERN = /\.json$/i;
+
 /** An image or a sound of a section, directly in it (`:file`) or in one of its sub-folders (`:subfolder/:file`). */
 function matchImageAsset(segments: UrlSegment[]): UrlMatchResult | null {
   const file = segments[segments.length - 1];
   if ((segments.length !== 1 && segments.length !== 2) || !ASSET_FILE_PATTERN.test(file.path)) {
+    return null;
+  }
+
+  return {
+    consumed: segments,
+    posParams: segments.length === 2 ? { subfolder: segments[0], file } : { file },
+  };
+}
+
+/** An encounter file (`.json`), directly in a section (`:file`) or in one of its sub-folders. */
+function matchEncounter(segments: UrlSegment[]): UrlMatchResult | null {
+  const file = segments[segments.length - 1];
+  if ((segments.length !== 1 && segments.length !== 2) || !ENCOUNTER_FILE_PATTERN.test(file.path)) {
     return null;
   }
 
@@ -40,6 +56,11 @@ const NOTE_ROUTES: Routes = [
   {
     matcher: matchImageAsset,
     loadComponent: () => import('./pages/asset-page/asset-page').then((m) => m.AssetPage),
+  },
+  {
+    matcher: matchEncounter,
+    loadComponent: () =>
+      import('./pages/encounter-page/encounter-page').then((m) => m.EncounterPage),
   },
   ...[':note', ':subfolder/:note'].map((path) => ({
     path,

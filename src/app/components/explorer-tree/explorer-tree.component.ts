@@ -316,9 +316,12 @@ export class AppExplorerTreeComponent {
   }
 
   /** Icon of an asset in the tree: image, sound or PDF. */
-  protected assetIcon(file: DocumentFileListItemDto): 'image' | 'file-music' | 'file-text' {
+  protected assetIcon(file: DocumentFileListItemDto): 'image' | 'file-music' | 'file-text' | 'swords' {
     if (/\.pdf$/i.test(file.path)) {
       return 'file-text';
+    }
+    if (/\.json$/i.test(file.path) && toInAppAssetRoute(file.path)) {
+      return 'swords';
     }
     return toInAppAssetRoute(file.path) && !/\.(png|jpe?g|gif|webp|svg|avif)$/i.test(file.path)
       ? 'file-music'

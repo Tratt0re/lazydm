@@ -873,5 +873,32 @@
       "select": "选择文件…",
       "skipped": "不是图片、PDF 或音频，已跳过"
     }
+  },
+  "encounters": {
+    "new": {
+      "button": "新建遭遇",
+      "title": "新建遭遇",
+      "nameLabel": "名称",
+      "namePlaceholder": "地精伏击",
+      "submit": "创建遭遇",
+      "error": "无法创建遭遇"
+    },
+    "loadError": "无法加载此遭遇",
+    "parseError": "此文件不是有效的 JSON",
+    "empty": {
+      "title": "此遭遇中还没有人",
+      "description": "添加的单位会按先攻顺序显示在这里。"
+    },
+    "entity": {
+      "unnamed": "未命名"
+    },
+    "fields": {
+      "initiative": "先攻",
+      "side": "阵营",
+      "ac": "AC",
+      "hp": "生命值",
+      "statuses": "状态",
+      "note": "笔记"
+    }
   }
 }

@@ -22,7 +22,7 @@ import { ArcTechIconComponent } from '@/shared/components/icon';
 
 /** File name of the image (with its extension), from the route. */
 export const ASSET_FILE_PARAM = 'file';
-const ASSET_SUBFOLDER_PARAM = 'subfolder';
+export const ASSET_SUBFOLDER_PARAM = 'subfolder';
 
 /**
  * An image or a sound asset on its own: the image fitted to the page, the sound with a player. The toolbar

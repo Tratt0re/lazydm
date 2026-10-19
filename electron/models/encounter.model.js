@@ -80,7 +80,12 @@ function normalizeEncounter(value, fallbackName) {
     rule: toText(source.rule, ENCOUNTER_RULE_MAX_LENGTH),
     battle: {
       status: isRunning ? 'running' : 'idle',
-      round: isRunning && Number.isInteger(battle.round) && battle.round > 0 ? battle.round : isRunning ? 1 : 0,
+      round:
+        isRunning && Number.isInteger(battle.round) && battle.round > 0
+          ? battle.round
+          : isRunning
+            ? 1
+            : 0,
       turnId: isRunning && ids.has(battle.turnId) ? battle.turnId : null,
     },
     entities,

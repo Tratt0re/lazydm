@@ -233,13 +233,37 @@ export function toInAppNoteRoute(resolvedPath: string): string | null {
   return `${location.scopeRoute}/${folder}/${location.name}`;
 }
 
-/** In-app route of an image or a sound of a campaign or of a compendium system (its asset page), null for anything else. */
+/**
+ * In-app route of an image, a sound or an encounter of a campaign or of a compendium system (its own page),
+ * null for anything else.
+ */
 export function toInAppAssetRoute(resolvedPath: string): string | null {
   const location = parseVaultFilePath(resolvedPath);
   if (
     !location ||
     location.isNote ||
     !(IMAGE_EXTENSION_PATTERN.test(location.name) || AUDIO_EXTENSION_PATTERN.test(location.name))
+  ) {
+    return toInAppEncounterRoute(resolvedPath);
+  }
+
+  const folder = location.subfolder
+    ? `${location.section}/${location.subfolder}`
+    : location.section;
+  return `${location.scopeRoute}/${folder}/${location.name}`;
+}
+
+/** Encounters are the `.json` files of the Encounters section (special files, not notes). */
+export const ENCOUNTER_EXTENSION_PATTERN = /\.json$/i;
+const ENCOUNTERS_SECTION_KEY = 'encounters';
+
+/** In-app route of an encounter (a `.json` file of an Encounters section), null for anything else. */
+export function toInAppEncounterRoute(resolvedPath: string): string | null {
+  const location = parseVaultFilePath(resolvedPath);
+  if (
+    !location ||
+    location.section !== ENCOUNTERS_SECTION_KEY ||
+    !ENCOUNTER_EXTENSION_PATTERN.test(location.name)
   ) {
     return null;
   }

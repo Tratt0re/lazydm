@@ -13,6 +13,7 @@ import {
 import {
   toAssetUrl,
   toInAppAssetRoute,
+  toInAppEncounterRoute,
   toInAppNoteRoute,
 } from '@/components/document-preview/document-preview.markdown';
 import type {
@@ -44,6 +45,8 @@ export const CAMPAIGN_SECTION_PARAM = 'section';
 export const SECTION_FOLDER_QUERY_PARAM = 'folder';
 /** The Assets section (any non-note file): files from the file manager can be imported or dropped there. */
 const ASSETS_SECTION_KEY = 'assets';
+/** The Encounters section: `.json` files with their own page, created with *New encounter*. */
+const ENCOUNTERS_SECTION_KEY = 'encounters';
 
 /** A sub-folder of the section with the files directly in it. */
 interface SectionTreeFolder extends DocumentFolderDto {
@@ -280,6 +283,16 @@ export class CampaignSectionPage {
         buttonType: 'outline',
         iconOnly: true,
         action: () => this.openCreateFolderSheet(),
+      });
+    }
+
+    if (section?.key === ENCOUNTERS_SECTION_KEY) {
+      actions.push({
+        id: 'section-new-encounter',
+        label: 'encounters.new.button',
+        icon: 'swords',
+        iconOnly: true,
+        action: () => this.fileActions.openCreateEncounterSheet(this.folderPath()),
       });
     }
 
@@ -543,6 +556,11 @@ export class CampaignSectionPage {
     return toInAppAssetRoute(file.path) ?? this.scopeRoute();
   }
 
+  /** Encounter page of a `.json` file of the Encounters section; null for any other file. */
+  protected encounterRoute(file: DocumentFileListItemDto): string | null {
+    return toInAppEncounterRoute(file.path);
+  }
+
   protected isPdf(file: DocumentFileListItemDto): boolean {
     return this.assetService.getAssetKind(file.path) === 'pdf';
   }
@@ -563,7 +581,13 @@ export class CampaignSectionPage {
   /** Icon of a non-image file of the list: PDF, audio, anything else. */
   protected assetIcon(file: DocumentFileListItemDto): ArcTechIcon {
     const kind = this.assetService.getAssetKind(file.path);
-    return kind === 'pdf' ? 'file-text' : kind === 'audio' ? 'file-music' : 'file';
+    return kind === 'pdf'
+      ? 'file-text'
+      : kind === 'audio'
+        ? 'file-music'
+        : this.encounterRoute(file)
+          ? 'swords'
+          : 'file';
   }
 
   protected reveal(path: string): void {

@@ -873,5 +873,32 @@
       "select": "Dateien auswählen…",
       "skipped": "Keine Bilder, PDFs oder Audiodateien — übersprungen"
     }
+  },
+  "encounters": {
+    "new": {
+      "button": "Neue Begegnung",
+      "title": "Neue Begegnung",
+      "nameLabel": "Name",
+      "namePlaceholder": "Goblin-Hinterhalt",
+      "submit": "Begegnung erstellen",
+      "error": "Die Begegnung konnte nicht erstellt werden"
+    },
+    "loadError": "Diese Begegnung konnte nicht geladen werden",
+    "parseError": "Diese Datei ist kein gültiges JSON",
+    "empty": {
+      "title": "Noch niemand in dieser Begegnung",
+      "description": "Hinzugefügte Einheiten erscheinen hier in Initiative-Reihenfolge."
+    },
+    "entity": {
+      "unnamed": "Unbenannt"
+    },
+    "fields": {
+      "initiative": "Initiative",
+      "side": "Seite",
+      "ac": "RK",
+      "hp": "TP",
+      "statuses": "Zustände",
+      "note": "Notiz"
+    }
   }
 }

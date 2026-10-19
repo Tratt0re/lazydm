@@ -1,0 +1,42 @@
+<div class="mx-auto flex w-full max-w-5xl flex-col gap-4 p-6">
+  @if (errorMessage(); as message) {
+    <arc-alert
+      arcType="destructive"
+      arcIcon="circle-alert"
+      [arcTitle]="'encounters.loadError' | translate"
+      [arcDescription]="message"
+    />
+  } @else if (file(); as loaded) {
+    @if (loaded.parseError; as parseError) {
+      <arc-alert
+        arcType="destructive"
+        arcIcon="circle-alert"
+        [arcTitle]="'encounters.parseError' | translate"
+        [arcDescription]="parseError"
+      />
+    }
+
+    @if (entities().length === 0) {
+      <arc-empty
+        class="border border-dashed border-border bg-card/60"
+        arcIcon="swords"
+        [arcTitle]="'encounters.empty.title' | translate"
+        [arcDescription]="'encounters.empty.description' | translate"
+      />
+    } @else {
+      <ul class="flex flex-col border border-border bg-card">
+        @for (entity of entities(); track entity.id) {
+          <li class="flex items-center gap-3 border-b border-border p-4 last:border-b-0">
+            <arc-icon arcType="swords" class="size-4 shrink-0 text-primary" aria-hidden="true" />
+            <span
+              class="truncate text-sm font-semibold"
+              [class.text-muted-foreground]="entity.name === null"
+            >
+              {{ entityName(entity.name) }}
+            </span>
+          </li>
+        }
+      </ul>
+    }
+  }
+</div>
