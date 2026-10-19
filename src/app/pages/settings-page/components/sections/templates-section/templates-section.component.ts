@@ -83,6 +83,7 @@ export class TemplatesSectionComponent implements OnInit {
       this.templates(),
       this.campaignSlug() ?? '',
       this.rules()[type],
+      this.types().includes(type),
     );
   }
 

@@ -102,10 +102,7 @@ export class TemplateLibraryPage implements OnInit {
   private readonly campaignSections = signal<readonly AppSection[] | null>(null);
   protected readonly noteTypes = computed<readonly NoteTypeRow[]>(() =>
     (this.campaignSections() ?? this.sectionService.systemSections())
-      .filter(
-        (section) =>
-          section.type !== null && (section.isCustom || this.types().includes(section.type)),
-      )
+      .filter((section) => section.type !== null && this.types().includes(section.type))
       .map((section) => ({
         type: section.type!,
         sectionKey: section.key,

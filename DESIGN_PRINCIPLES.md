@@ -77,7 +77,7 @@ LazyDM works like **Obsidian**, specialised for Dungeon Masters.
   - `labels`: display names (`characters` → *NPCs*); the folder on disk keeps its name;
   - `custom`: the campaign's own sections (`{ key: 'factions', type: 'faction', label: 'Factions', icon: 'flag',
     description: '…' }`), with a user-written label and description (not translated); the description is shown on
-    the overview tile. A custom type gets a generic built-in template unless the user links one.
+    the overview tile. A custom section has no built-in template: it starts on *Automatic* (a minimal frontmatter) until the user links one.
 - **Folders appear on demand**: a section exists from the settings; its folder is created with its first file.
   Opening a campaign no longer creates empty folders (existing empty ones are left alone).
 - **Section folders are never renamed on disk** by LazyDM (renaming a section = changing its label). Hiding is not
@@ -289,7 +289,7 @@ Planned Electron modules: `vault`, `cloud-readiness`, `campaign`, `document`, `i
 - A **template** is a plain `.md` file in a `_templates/` folder: at the vault root (`_templates/`), in a compendium
   system (`compendium/<system>/_templates/`) or in a campaign (`<campaign>/_templates/`, where *Copy to campaign*
   puts copied templates). Obsidian can use them as they are.
-- **Built-in templates** ship with the app, one per note type (encounters excluded). They are read-only and never
+- **Built-in templates** ship with the app, one per preset section's note type (encounters excluded); sections the user creates have none. They are read-only and never
   written to the vault unasked; *Customize* copies one into `_templates/` to edit it.
 - **Per-campaign choice per note type**, saved in `.lazydm/vault.json` → `templates.campaigns.<slug>.<type>` (a
   template path or `builtin`; no entry = automatic). Deleting a template removes the choices pointing at it.
@@ -297,7 +297,7 @@ Planned Electron modules: `vault`, `cloud-readiness`, `campaign`, `document`, `i
   1. the campaign's choice for the type;
   2. a compendium system's own `_templates/<type>.md` (system notes only);
   3. the vault's `_templates/<type>.md`;
-  4. the built-in; types without one get a minimal frontmatter.
+  4. the built-in; types without one (the user's own sections) get a minimal frontmatter.
   A choice whose file is gone falls through to 3–4.
 - **Placeholders**: `{{title}}`, `{{date}}` (YYYY-MM-DD), `{{time}}` (HH:MM), `{{campaign}}` (campaign or system
   name), `{{section}}` (folder display name, in the UI language), `{{type}}`. Unknown placeholders stay as written;

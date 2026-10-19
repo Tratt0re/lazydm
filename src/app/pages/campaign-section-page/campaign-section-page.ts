@@ -244,6 +244,7 @@ export class CampaignSectionPage {
           this.templates(),
           campaign,
           this.templateRules()[noteType],
+          this.templateTypes().includes(noteType),
         ),
         change: (value) => this.setTemplateRule(campaign, noteType, value),
       });

@@ -40,13 +40,15 @@ export class TemplateService extends BaseIpcService<APIChannel.TEMPLATES> {
   }
 
   /**
-   * Choices of a campaign's template select for a note type: Automatic, Built-in, its templates, and the
-   * current choice when its file is gone (so the select is never blank).
+   * Choices of a campaign's template select for a note type: Automatic, Built-in (only for the types that ship
+   * one: a custom section starts on Automatic), its templates, and the current choice when its file is gone
+   * (so the select is never blank).
    */
   getRuleOptions(
     templates: readonly TemplateDto[],
     campaign: string,
     currentRule: string | undefined,
+    hasBuiltIn = true,
   ): readonly TemplateRuleOption[] {
     const campaignTemplates = this.getCampaignTemplates(templates, campaign);
     const options: TemplateRuleOption[] = [
@@ -54,10 +56,14 @@ export class TemplateService extends BaseIpcService<APIChannel.TEMPLATES> {
         value: AUTOMATIC_TEMPLATE_RULE,
         label: this.translateService.instant('settings.templates.rules.automatic'),
       },
-      {
-        value: BUILT_IN_TEMPLATE_RULE,
-        label: this.translateService.instant('settings.templates.sources.builtin'),
-      },
+      ...(hasBuiltIn
+        ? [
+            {
+              value: BUILT_IN_TEMPLATE_RULE,
+              label: this.translateService.instant('settings.templates.sources.builtin'),
+            },
+          ]
+        : []),
       ...campaignTemplates.map((template) => ({
         value: template.path,
         label: this.getTemplateLabel(template),

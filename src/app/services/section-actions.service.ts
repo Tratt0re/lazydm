@@ -90,7 +90,12 @@ export class SectionActionsService {
           value: currentRule,
           translate: true,
           options: this.templateService
-            .getRuleOptions(library.rows, campaign, currentRule)
+            .getRuleOptions(
+              library.rows,
+              campaign,
+              currentRule,
+              section?.type ? library.types.includes(section.type) : false,
+            )
             .map((option) => ({ ...option, translate: false })),
         },
         {
