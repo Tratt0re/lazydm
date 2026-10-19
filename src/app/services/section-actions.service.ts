@@ -3,6 +3,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { toast } from 'ngx-sonner';
 
 import { DocumentService } from '@/services/document.service';
+import { FileActionsService } from '@/services/file-actions.service';
 import { AppSheetFormService } from '@/components/sheet-form/sheet-form.service';
 import type { CustomSectionPayload, SectionSettingsPayload } from '@/dtos';
 import {
@@ -23,6 +24,7 @@ export class SectionActionsService {
   private readonly sectionService = inject(SectionService);
   private readonly templateService = inject(TemplateService);
   private readonly documentService = inject(DocumentService);
+  private readonly fileActions = inject(FileActionsService);
   private readonly sheetFormService = inject(AppSheetFormService);
   private readonly translateService = inject(TranslateService);
 
@@ -39,7 +41,8 @@ export class SectionActionsService {
       this.templateService.list(),
       this.templateService.getRules(campaign),
     ]);
-    const currentRule = (section?.type ? rules[section.type] : undefined) ?? AUTOMATIC_TEMPLATE_RULE;
+    const currentRule =
+      (section?.type ? rules[section.type] : undefined) ?? AUTOMATIC_TEMPLATE_RULE;
     const prefix = section ? 'settings.campaignSections.edit' : 'settings.campaignSections.create';
     let isSubmitting = false;
     const sheetRef = this.sheetFormService.open({
@@ -133,11 +136,7 @@ export class SectionActionsService {
    * *Delete…* a section with all its content, after a confirmation with its file count: the folder goes to the
    * system Trash; links to its files become plain text / embeds are removed unless unticked.
    */
-  openDeleteSectionSheet(
-    campaign: string,
-    section: AppSection,
-    onDeleted?: () => void,
-  ): void {
+  openDeleteSectionSheet(campaign: string, section: AppSection, onDeleted?: () => void): void {
     let isSubmitting = false;
     const name = this.sectionService.labelOf(section);
     const sheetRef = this.sheetFormService.open({
@@ -154,7 +153,9 @@ export class SectionActionsService {
           id: 'rewriteLinks',
           type: 'checkbox',
           value: true,
-          checkboxLabel: this.translateService.instant('settings.campaignSections.remove.rewriteLinks'),
+          checkboxLabel: this.translateService.instant(
+            'settings.campaignSections.remove.rewriteLinks',
+          ),
         },
       ],
       onSubmit: (form) => {
@@ -184,6 +185,7 @@ export class SectionActionsService {
     try {
       const result = await this.documentService.deleteSection(campaign, section.key, rewriteLinks);
       await this.sectionService.list(campaign);
+      await this.fileActions.followDeletedSection(campaign, section.key, result.deleted);
       toast.success(
         this.translateService.instant('settings.campaignSections.remove.done', { name }),
         result.linkCount > 0

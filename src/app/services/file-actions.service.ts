@@ -565,6 +565,40 @@ export class FileActionsService {
     }
   }
 
+  /**
+   * A section was deleted with its files: tabs and history showing the section, one of its sub-folders or one of
+   * its files go to the campaign overview, and the deleted notes are never saved back.
+   */
+  async followDeletedSection(
+    campaign: string,
+    sectionKey: string,
+    deletedPaths: readonly string[],
+  ): Promise<void> {
+    const overviewRoute = `/campaigns/${campaign}`;
+    const sectionRoute = `${overviewRoute}/${sectionKey}`;
+    const subfolders = new Set<string>();
+    for (const deletedPath of deletedPaths) {
+      this.deletedPaths.add(deletedPath);
+      const subfolder = parseVaultFilePath(deletedPath)?.subfolder;
+      if (subfolder) {
+        subfolders.add(subfolder);
+      }
+
+      await this.followInTabs(
+        toInAppNoteRoute(deletedPath) ?? toInAppAssetRoute(deletedPath),
+        overviewRoute,
+      );
+    }
+
+    for (const subfolder of subfolders) {
+      await this.followInTabs(
+        `${sectionRoute}?folder=${encodeURIComponent(subfolder)}`,
+        overviewRoute,
+      );
+    }
+    await this.followInTabs(sectionRoute, overviewRoute);
+  }
+
   /** Campaign tabs and history pointing to a renamed file follow it (a system page navigates itself). */
   private async followInTabs(oldRoute: string | null, newRoute: string | null): Promise<void> {
     if (oldRoute && newRoute && oldRoute !== newRoute && this.workspace.isCampaignUrl(oldRoute)) {
