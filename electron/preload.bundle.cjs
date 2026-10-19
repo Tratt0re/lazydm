@@ -67,6 +67,11 @@ var require_channels = __commonJS({
         copy: "documents:copy",
         copyPlan: "documents:copyPlan"
       }),
+      encounters: Object.freeze({
+        read: "encounters:read",
+        write: "encounters:write",
+        create: "encounters:create"
+      }),
       review: Object.freeze({
         list: "review:list"
       }),

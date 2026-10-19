@@ -96,7 +96,9 @@ export interface ElectronIpcClient {
     readonly copyPlan: IpcRequest<{ path: string; target: string }, DTO.CopyPlanDto>;
   };
   readonly encounters: {
-    readonly list: OptionalIpcRequest<void, { rows: any[] }>;
+    readonly read: IpcRequest<{ path: string }, DTO.EncounterFileDto>;
+    readonly write: IpcRequest<DTO.WriteEncounterPayload, DTO.WriteEncounterResultDto>;
+    readonly create: IpcRequest<DTO.CreateEncounterPayload, DTO.EncounterFileDto>;
   };
   readonly review: {
     readonly list: IpcRequest<{ scope: string }, DTO.ReviewDto>;

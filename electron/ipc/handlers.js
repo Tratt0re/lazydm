@@ -5,6 +5,7 @@ const {
   cloudReadinessController,
   compendiumController,
   documentController,
+  encounterController,
   indexerController,
   resetController,
   reviewController,
@@ -66,6 +67,10 @@ const IPC_HANDLERS = Object.freeze({
   [CHANNELS.documents.open]: documentController.openFile,
   [CHANNELS.documents.copy]: documentController.copy,
   [CHANNELS.documents.copyPlan]: documentController.copyPlan,
+
+  [CHANNELS.encounters.read]: encounterController.read,
+  [CHANNELS.encounters.write]: encounterController.write,
+  [CHANNELS.encounters.create]: encounterController.create,
 
   [CHANNELS.review.list]: reviewController.list,
   [CHANNELS.search.query]: searchController.query,

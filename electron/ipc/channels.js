@@ -53,6 +53,11 @@ const CHANNELS = Object.freeze({
     copy: 'documents:copy',
     copyPlan: 'documents:copyPlan',
   }),
+  encounters: Object.freeze({
+    read: 'encounters:read',
+    write: 'encounters:write',
+    create: 'encounters:create',
+  }),
   review: Object.freeze({
     list: 'review:list',
   }),

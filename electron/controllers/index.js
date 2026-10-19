@@ -4,6 +4,7 @@ const campaignController = require('./campaign.controller');
 const cloudReadinessController = require('./cloud-readiness.controller');
 const compendiumController = require('./compendium.controller');
 const documentController = require('./document.controller');
+const encounterController = require('./encounter.controller');
 const indexerController = require('./indexer.controller');
 const resetController = require('./reset.controller');
 const reviewController = require('./review.controller');
@@ -22,6 +23,7 @@ module.exports = {
   cloudReadinessController,
   compendiumController,
   documentController,
+  encounterController,
   indexerController,
   resetController,
   reviewController,
