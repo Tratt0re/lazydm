@@ -900,7 +900,8 @@
       "name": "Nome",
       "namePlaceholder": "Goblin 1",
       "duplicate": "Duplica",
-      "drag": "Trascina per riordinare"
+      "drag": "Trascina per riordinare",
+      "remove": "Manda al cimitero"
     },
     "fields": {
       "initiative": "Iniziativa",
@@ -947,6 +948,11 @@
       "stopTitle": "Terminare la battaglia?",
       "stopDescription": "Iniziative e stati vengono azzerati e i punti ferita tornano al massimo dove c'è. Nomi e altri valori restano.",
       "stopConfirm": "Termina battaglia"
+    },
+    "cemetery": {
+      "title": "Cimitero",
+      "empty": "Nessuno è ancora caduto.",
+      "recover": "Recupera"
     }
   }
 }

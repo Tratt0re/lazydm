@@ -900,7 +900,8 @@
       "name": "Name",
       "namePlaceholder": "Goblin 1",
       "duplicate": "Duplicate",
-      "drag": "Drag to reorder"
+      "drag": "Drag to reorder",
+      "remove": "Send to the cemetery"
     },
     "fields": {
       "initiative": "Initiative",
@@ -947,6 +948,11 @@
       "stopTitle": "Stop the battle?",
       "stopDescription": "Initiatives and statuses are cleared and hit points go back to their maximum where there is one. Names and other values stay.",
       "stopConfirm": "Stop battle"
+    },
+    "cemetery": {
+      "title": "Cemetery",
+      "empty": "No one has fallen yet.",
+      "recover": "Recover"
     }
   }
 }

@@ -1,3 +1,5 @@
+<div class="flex min-h-0 flex-1">
+<div class="min-h-0 min-w-0 flex-1 overflow-y-auto">
 <div class="mx-auto flex w-full max-w-5xl flex-col gap-4 p-6">
   @if (errorMessage(); as message) {
     <arc-alert
@@ -131,6 +133,20 @@
               }
             }
 
+            <span class="ml-auto flex shrink-0 items-center">
+            <button
+              type="button"
+              arc-button
+              arcType="ghost"
+              arcSize="sm"
+              class="size-8 shrink-0"
+              [disabled]="!isEditable()"
+              [attr.aria-label]="'encounters.entity.remove' | translate"
+              [arcTooltip]="'encounters.entity.remove' | translate"
+              (click)="removeEntity(entity)"
+            >
+              <arc-icon arcType="skull" />
+            </button>
             <button
               type="button"
               arc-button
@@ -157,9 +173,28 @@
             >
               <arc-icon arcType="pencil" />
             </button>
+            </span>
           </li>
         }
       </ul>
     }
   }
+</div>
+</div>
+
+<!-- Kept mounted so opening and closing can slide instead of re-rendering. -->
+<div
+  class="shrink-0 overflow-hidden transition-[width,opacity] duration-200 ease-out motion-reduce:transition-none"
+  [class]="isCemeteryOpen() ? 'w-84 opacity-100' : 'w-0 opacity-0'"
+  [attr.inert]="isCemeteryOpen() ? null : ''"
+  [attr.aria-hidden]="isCemeteryOpen() ? null : 'true'"
+>
+  <div class="h-full py-4 pr-4">
+    <app-encounter-cemetery
+      [entities]="deadEntities()"
+      [isDisabled]="!isEditable()"
+      (recover)="recoverEntity($event)"
+    />
+  </div>
+</div>
 </div>

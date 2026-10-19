@@ -18,6 +18,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { toast } from 'ngx-sonner';
 
+import { AppEncounterCemeteryComponent } from '@/components/encounter-cemetery/encounter-cemetery.component';
 import { AppEncounterHealthBarComponent } from '@/components/encounter-health-bar/encounter-health-bar.component';
 import { toInAppEncounterRoute } from '@/components/document-preview/document-preview.markdown';
 import { AppSheetFormService } from '@/components/sheet-form/sheet-form.service';
@@ -89,6 +90,7 @@ function parseNumber(value: unknown): number | null {
     CdkDragHandle,
     CdkDropList,
     TranslatePipe,
+    AppEncounterCemeteryComponent,
     AppEncounterHealthBarComponent,
     ArcTechAlertComponent,
     ArcTechBadgeComponent,
@@ -158,6 +160,11 @@ export class EncounterPage {
   protected readonly entities = computed(() =>
     (this.encounter()?.entities ?? []).filter((entity) => !entity.isDead),
   );
+  /** Entities in the cemetery: out of the order, can be recovered. */
+  protected readonly deadEntities = computed(() =>
+    (this.encounter()?.entities ?? []).filter((entity) => entity.isDead),
+  );
+  protected readonly isCemeteryOpen = signal(false);
   protected readonly isRunning = computed(() => this.encounter()?.battle.status === 'running');
   protected readonly round = computed(() => this.encounter()?.battle.round ?? 0);
   /** The entity whose turn it is. */
@@ -246,6 +253,14 @@ export class EncounterPage {
               iconOnly: true,
               disabled: !isEditable,
               action: () => this.openEntitySheet(null),
+            },
+            {
+              id: 'cemetery',
+              label: this.translateService.instant('encounters.cemetery.title'),
+              icon: 'ghost',
+              buttonType: 'outline',
+              iconOnly: true,
+              action: () => this.isCemeteryOpen.update((isOpen) => !isOpen),
             },
             {
               id: 'undo-hp',
@@ -549,7 +564,10 @@ export class EncounterPage {
     entity: EncounterEntityDto,
   ): EncounterEntityDto[] {
     const own = this.initiativeOf(entity);
-    const index = own === Number.NEGATIVE_INFINITY ? -1 : entities.findIndex((other) => this.initiativeOf(other) < own);
+    const index =
+      own === Number.NEGATIVE_INFINITY
+        ? -1
+        : entities.findIndex((other) => this.initiativeOf(other) < own);
     return index === -1
       ? [...entities, entity]
       : [...entities.slice(0, index), entity, ...entities.slice(index)];
@@ -685,6 +703,52 @@ export class EncounterPage {
     return `${base} ${Math.max(0, ...taken) + 1}`;
   }
 
+  /**
+   * *Remove*: the entity goes to the cemetery. If it had the turn, the turn passes to the next one (a new
+   * round when it was the last); with no one left the battle keeps its round and has no turn.
+   */
+  protected removeEntity(entity: EncounterEntityDto): void {
+    this.updateEncounter((encounter) => {
+      const alive = encounter.entities.filter((candidate) => !candidate.isDead);
+      const index = alive.findIndex((candidate) => candidate.id === entity.id);
+      const others = alive.filter((candidate) => candidate.id !== entity.id);
+      let battle = encounter.battle;
+      if (battle.status === 'running' && battle.turnId === entity.id) {
+        const isLast = index === alive.length - 1;
+        battle = {
+          ...battle,
+          round: battle.round + (isLast && others.length > 0 ? 1 : 0),
+          turnId: others.length > 0 ? others[isLast ? 0 : index].id : null,
+        };
+      }
+
+      return {
+        ...encounter,
+        battle,
+        entities: encounter.entities.map((candidate) =>
+          candidate.id === entity.id ? { ...candidate, isDead: true } : candidate,
+        ),
+      };
+    });
+  }
+
+  /** *Recover*: back among the living, in its place by initiative; the turn does not move. */
+  protected recoverEntity(entity: EncounterEntityDto): void {
+    this.updateEncounter((encounter) => {
+      const alive = encounter.entities.filter((candidate) => !candidate.isDead);
+      const dead = encounter.entities.filter(
+        (candidate) => candidate.isDead && candidate.id !== entity.id,
+      );
+      const hasNoTurn = encounter.battle.status === 'running' && encounter.battle.turnId === null;
+      return {
+        ...encounter,
+        // A battle that was left with no one gives the turn to whoever comes back.
+        battle: hasNoTurn ? { ...encounter.battle, turnId: entity.id } : encounter.battle,
+        entities: [...this.insertByInitiative(alive, { ...entity, isDead: false }), ...dead],
+      };
+    });
+  }
+
   /** Drag to reorder the living entities (the dead keep their place after them). */
   protected onDrop(event: CdkDragDrop<EncounterEntityDto[]>): void {
     if (event.previousIndex === event.currentIndex) {
@@ -694,7 +758,10 @@ export class EncounterPage {
     this.updateEncounter((encounter) => {
       const alive = encounter.entities.filter((entity) => !entity.isDead);
       moveItemInArray(alive, event.previousIndex, event.currentIndex);
-      return { ...encounter, entities: [...alive, ...encounter.entities.filter((entity) => entity.isDead)] };
+      return {
+        ...encounter,
+        entities: [...alive, ...encounter.entities.filter((entity) => entity.isDead)],
+      };
     });
   }
 

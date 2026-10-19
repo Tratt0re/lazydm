@@ -900,7 +900,8 @@
       "name": "名称",
       "namePlaceholder": "地精 1",
       "duplicate": "复制",
-      "drag": "拖动以重新排序"
+      "drag": "拖动以重新排序",
+      "remove": "送入墓地"
     },
     "fields": {
       "initiative": "先攻",
@@ -947,6 +948,11 @@
       "stopTitle": "结束战斗？",
       "stopDescription": "先攻和状态将被清除，生命值恢复到最大值（如有）。名称和其他数值保留。",
       "stopConfirm": "结束战斗"
+    },
+    "cemetery": {
+      "title": "墓地",
+      "empty": "还没有人倒下。",
+      "recover": "恢复"
     }
   }
 }

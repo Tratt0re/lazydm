@@ -900,7 +900,8 @@
       "name": "Name",
       "namePlaceholder": "Goblin 1",
       "duplicate": "Duplizieren",
-      "drag": "Zum Umsortieren ziehen"
+      "drag": "Zum Umsortieren ziehen",
+      "remove": "Auf den Friedhof schicken"
     },
     "fields": {
       "initiative": "Initiative",
@@ -947,6 +948,11 @@
       "stopTitle": "Kampf beenden?",
       "stopDescription": "Initiativen und Zustände werden gelöscht, Trefferpunkte gehen auf das Maximum zurück, wo eines vorhanden ist. Namen und andere Werte bleiben.",
       "stopConfirm": "Kampf beenden"
+    },
+    "cemetery": {
+      "title": "Friedhof",
+      "empty": "Noch ist niemand gefallen.",
+      "recover": "Wiederbeleben"
     }
   }
 }
