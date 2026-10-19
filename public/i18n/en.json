@@ -448,7 +448,8 @@
       }
     },
     "assets": {
-      "loadError": "Couldn't load this image"
+      "loadError": "Couldn't load this image",
+      "loadErrorAudio": "Couldn't play this sound"
     }
   },
   "document": {
@@ -538,6 +539,7 @@
     },
     "media": {
       "play": "Play",
+      "stop": "Stop",
       "open": "Open",
       "volume": "Volume",
       "playError": "Couldn't play this audio",
@@ -812,7 +814,11 @@
       "done": "{{name}} added to the sections"
     }
   },
-  "sidebar": {},
+  "sidebar": {
+    "collapse": "Collapse sidebar",
+    "expand": "Expand sidebar",
+    "close": "Close sidebar"
+  },
   "search": {
     "placeholder": "Search campaign…",
     "label": "Search campaign",

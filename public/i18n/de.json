@@ -448,7 +448,8 @@
       }
     },
     "assets": {
-      "loadError": "Dieses Bild konnte nicht geladen werden"
+      "loadError": "Dieses Bild konnte nicht geladen werden",
+      "loadErrorAudio": "Dieser Klang konnte nicht abgespielt werden"
     }
   },
   "document": {
@@ -538,6 +539,7 @@
     },
     "media": {
       "play": "Abspielen",
+      "stop": "Stopp",
       "open": "Öffnen",
       "volume": "Lautstärke",
       "playError": "Dieses Audio konnte nicht abgespielt werden",
@@ -812,7 +814,11 @@
       "done": "{{name}} zu den Bereichen hinzugefügt"
     }
   },
-  "sidebar": {},
+  "sidebar": {
+    "collapse": "Seitenleiste einklappen",
+    "expand": "Seitenleiste ausklappen",
+    "close": "Seitenleiste schließen"
+  },
   "search": {
     "placeholder": "Kampagne durchsuchen…",
     "label": "Kampagne durchsuchen",

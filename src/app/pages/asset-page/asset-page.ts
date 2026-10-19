@@ -4,29 +4,35 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
 import {
+  AUDIO_EXTENSION_PATTERN,
+  formatDuration,
   toAssetUrl,
   toInAppAssetRoute,
 } from '@/components/document-preview/document-preview.markdown';
 import { CAMPAIGN_SECTION_PARAM } from '@/pages/campaign-section-page/campaign-section-page';
 import { CopyToService } from '@/services/copy-to.service';
 import { FileActionsService } from '@/services/file-actions.service';
+import { NoteAudioService } from '@/services/note-audio.service';
 import { getNoteScopeKind, NoteScopeService } from '@/services/note-scope.service';
 import { SectionService, toSubfolderLabel } from '@/services/section.service';
 import { ToolbarContextService } from '@/services/toolbar-context.service';
 import { ArcTechAlertComponent } from '@/shared/components/alert';
+import { ArcTechButtonComponent } from '@/shared/components/button';
+import { ArcTechIconComponent } from '@/shared/components/icon';
 
 /** File name of the image (with its extension), from the route. */
 export const ASSET_FILE_PARAM = 'file';
 const ASSET_SUBFOLDER_PARAM = 'subfolder';
 
 /**
- * An image asset on its own, fitted to the page: the toolbar renames it (links follow) or copies it to the
- * compendium / a campaign. Opened from the section page and the explorer.
+ * An image or a sound asset on its own: the image fitted to the page, the sound with a player. The toolbar
+ * renames it (links follow) or copies it to the compendium / a campaign. Opened from the section page and
+ * the explorer.
  */
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-asset-page',
-  imports: [TranslatePipe, ArcTechAlertComponent],
+  imports: [TranslatePipe, ArcTechAlertComponent, ArcTechButtonComponent, ArcTechIconComponent],
   templateUrl: './asset-page.html',
   host: {
     class: 'flex min-h-0 flex-1 flex-col',
@@ -41,6 +47,7 @@ export class AssetPage {
   private readonly translateService = inject(TranslateService);
   private readonly fileActions = inject(FileActionsService);
   private readonly copyTo = inject(CopyToService);
+  private readonly noteAudio = inject(NoteAudioService);
 
   private readonly params = toSignal(this.route.paramMap, {
     initialValue: this.route.snapshot.paramMap,
@@ -57,6 +64,25 @@ export class AssetPage {
     return `${this.scope()?.rootPath ?? ''}/${folder}/${this.fileName()}`;
   });
   protected readonly imageUrl = computed(() => toAssetUrl(this.assetPath()));
+  protected readonly isAudio = computed(() => AUDIO_EXTENSION_PATTERN.test(this.fileName()));
+  protected readonly isPlaying = computed(() => this.noteAudio.playingPath() === this.assetPath());
+  protected readonly volume = this.noteAudio.volume;
+  protected readonly durationSeconds = computed(
+    () => this.noteAudio.durations().get(this.assetPath()) ?? NaN,
+  );
+  protected readonly currentSeconds = computed(() =>
+    this.isPlaying() ? this.noteAudio.progress().currentTime : 0,
+  );
+  protected readonly timeLabel = computed(
+    () =>
+      `${formatDuration(this.currentSeconds())} / ${formatDuration(this.durationSeconds(), true)}`,
+  );
+  protected readonly progressPercent = computed(() => {
+    const duration = this.isPlaying() ? this.noteAudio.progress().duration : this.durationSeconds();
+    return Number.isFinite(duration) && duration > 0
+      ? Math.min(100, (this.currentSeconds() / duration) * 100)
+      : 0;
+  });
   /** The image could not be loaded (gone, renamed elsewhere, not an image after all). */
   protected readonly hasLoadError = signal(false);
 
@@ -65,6 +91,20 @@ export class AssetPage {
     effect(() => {
       this.imageUrl();
       this.hasLoadError.set(false);
+    });
+
+    // A sound's length shows before it plays; leaving the page (or opening another sound) stops it.
+    effect((onCleanup) => {
+      if (!this.isAudio()) {
+        return;
+      }
+      const path = this.assetPath();
+      this.noteAudio.loadDurations([path]);
+      onCleanup(() => {
+        if (this.noteAudio.playingPath() === path) {
+          this.noteAudio.stop();
+        }
+      });
     });
 
     effect((onCleanup) => {
@@ -134,6 +174,17 @@ export class AssetPage {
 
   protected onImageError(): void {
     this.hasLoadError.set(true);
+  }
+
+  protected togglePlay(): void {
+    this.noteAudio.toggle(this.assetPath()).catch((error: unknown) => {
+      this.hasLoadError.set(true);
+      console.warn('[app] Failed to play the audio:', this.assetPath(), error);
+    });
+  }
+
+  protected onVolumeInput(event: Event): void {
+    this.noteAudio.setVolume(Number((event.target as HTMLInputElement).value));
   }
 
   /** *Rename*: the links follow; the page (and its tab, in a campaign) moves to the new file name. */

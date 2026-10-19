@@ -206,7 +206,7 @@
     [arcContextMenuTriggerFor]="fileMenu"
     [style.cursor]="'pointer'"
   >
-    <arc-icon [arcType]="isNote ? 'file-text' : 'image'" class="size-3.5 shrink-0 text-sidebar-primary" aria-hidden="true" />
+    <arc-icon [arcType]="isNote ? 'file-text' : assetIcon(file)" class="size-3.5 shrink-0 text-sidebar-primary" aria-hidden="true" />
     <span class="truncate">{{ isNote ? file.title : file.name }}</span>
   </a>
 

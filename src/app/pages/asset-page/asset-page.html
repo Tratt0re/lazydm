@@ -3,9 +3,59 @@
     <arc-alert
       arcType="destructive"
       arcIcon="circle-alert"
-      [arcTitle]="'campaigns.assets.loadError' | translate"
+      [arcTitle]="(isAudio() ? 'campaigns.assets.loadErrorAudio' : 'campaigns.assets.loadError') | translate"
       [arcDescription]="assetPath()"
     />
+  </div>
+} @else if (isAudio()) {
+  <!-- A sound: a player on the same recessed plate as the image. -->
+  <div class="flex min-h-0 flex-1 p-4">
+    <div class="flex min-h-0 min-w-0 flex-1 items-center justify-center border border-input bg-recessed p-6">
+      <div class="flex w-full max-w-xl flex-col gap-5 border border-border bg-card p-6">
+        <div class="flex items-center gap-3 text-primary">
+          <arc-icon arcType="file-music" class="size-5 shrink-0" aria-hidden="true" />
+          <span class="truncate font-display text-2xl leading-none font-extrabold tracking-[0.02em] uppercase text-foreground">
+            {{ fileName() }}
+          </span>
+        </div>
+
+        <div class="flex items-center gap-4">
+          <button
+            type="button"
+            arc-button
+            class="size-10 shrink-0"
+            [attr.aria-pressed]="isPlaying()"
+            [attr.aria-label]="(isPlaying() ? 'document.media.stop' : 'document.media.play') | translate"
+            (click)="togglePlay()"
+          >
+            <arc-icon [arcType]="isPlaying() ? 'square' : 'play'" />
+          </button>
+          <div class="flex min-w-0 flex-1 flex-col gap-2">
+            <div class="h-1 border border-border bg-recessed" role="presentation">
+              <div class="h-full bg-primary" [style.width.%]="progressPercent()"></div>
+            </div>
+            <span class="font-mono text-[11px] font-semibold tracking-[0.08em] text-muted-foreground">
+              {{ timeLabel() }}
+            </span>
+          </div>
+        </div>
+
+        <label class="flex items-center gap-3">
+          <arc-icon [arcType]="volume() === 0 ? 'volume-x' : 'volume-2'" class="size-4 shrink-0 text-muted-foreground" aria-hidden="true" />
+          <span class="sr-only">{{ 'document.media.volume' | translate }}</span>
+          <input
+            type="range"
+            min="0"
+            max="1"
+            step="0.05"
+            class="arc-embed-file-volume w-32"
+            [value]="volume()"
+            [style.--arc-volume.%]="volume() * 100"
+            (input)="onVolumeInput($event)"
+          />
+        </label>
+      </div>
+    </div>
   </div>
 } @else {
   <!-- Only the image, fitted to the page (never upscaled past its own size). The absolute box gives the

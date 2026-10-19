@@ -543,6 +543,23 @@ export class CampaignSectionPage {
     return toInAppAssetRoute(file.path) ?? this.scopeRoute();
   }
 
+  protected isPdf(file: DocumentFileListItemDto): boolean {
+    return this.assetService.getAssetKind(file.path) === 'pdf';
+  }
+
+  /** A PDF of the list opens in the system's viewer; a toast says when no app can. */
+  protected openPdf(file: DocumentFileListItemDto): void {
+    this.documentService.openFile(file.path).catch((error: unknown) =>
+      toast.error(this.translateService.instant('document.media.openError'), {
+        description: error instanceof Error ? error.message : String(error),
+        action: {
+          label: this.translateService.instant(this.fileMove.revealLabel),
+          onClick: () => this.fileMove.reveal(file.path),
+        },
+      }),
+    );
+  }
+
   /** Icon of a non-image file of the list: PDF, audio, anything else. */
   protected assetIcon(file: DocumentFileListItemDto): ArcTechIcon {
     const kind = this.assetService.getAssetKind(file.path);

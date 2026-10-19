@@ -448,7 +448,8 @@
       }
     },
     "assets": {
-      "loadError": "Impossible de charger cette image"
+      "loadError": "Impossible de charger cette image",
+      "loadErrorAudio": "Impossible de lire ce son"
     }
   },
   "document": {
@@ -538,6 +539,7 @@
     },
     "media": {
       "play": "Lire",
+      "stop": "Arrêter",
       "open": "Ouvrir",
       "volume": "Volume",
       "playError": "Impossible de lire cet audio",
@@ -812,7 +814,11 @@
       "done": "{{name}} ajoutée aux sections"
     }
   },
-  "sidebar": {},
+  "sidebar": {
+    "collapse": "Réduire la barre latérale",
+    "expand": "Développer la barre latérale",
+    "close": "Fermer la barre latérale"
+  },
   "search": {
     "placeholder": "Rechercher dans la campagne…",
     "label": "Rechercher dans la campagne",

@@ -315,7 +315,17 @@ export class AppExplorerTreeComponent {
     });
   }
 
-  /** Asset page of an image (null for any other asset). */
+  /** Icon of an asset in the tree: image, sound or PDF. */
+  protected assetIcon(file: DocumentFileListItemDto): 'image' | 'file-music' | 'file-text' {
+    if (/\.pdf$/i.test(file.path)) {
+      return 'file-text';
+    }
+    return toInAppAssetRoute(file.path) && !/\.(png|jpe?g|gif|webp|svg|avif)$/i.test(file.path)
+      ? 'file-music'
+      : 'image';
+  }
+
+  /** Asset page of an image or a sound (null for any other asset). */
   protected assetRoute(file: DocumentFileListItemDto): string | null {
     return toInAppAssetRoute(file.path);
   }

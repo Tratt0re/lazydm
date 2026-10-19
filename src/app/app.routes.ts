@@ -16,13 +16,13 @@ const RENAMED_SECTION_ROUTES: Routes = [
   { path: 'monsters/:subfolder/:note', redirectTo: 'enemies/:subfolder/:note' },
 ];
 
-/** Image file names (the editor's and the reading view's list): those open the asset page, not a note. */
-const IMAGE_FILE_PATTERN = /\.(png|jpe?g|gif|webp|svg|avif)$/i;
+/** Image and sound file names: those open the asset page (image viewer / player), not a note. */
+const ASSET_FILE_PATTERN = /\.(png|jpe?g|gif|webp|svg|avif|mp3|wav|ogg|m4a|flac)$/i;
 
-/** An image of a section, directly in it (`:file`) or in one of its sub-folders (`:subfolder/:file`). */
+/** An image or a sound of a section, directly in it (`:file`) or in one of its sub-folders (`:subfolder/:file`). */
 function matchImageAsset(segments: UrlSegment[]): UrlMatchResult | null {
   const file = segments[segments.length - 1];
-  if ((segments.length !== 1 && segments.length !== 2) || !IMAGE_FILE_PATTERN.test(file.path)) {
+  if ((segments.length !== 1 && segments.length !== 2) || !ASSET_FILE_PATTERN.test(file.path)) {
     return null;
   }
 

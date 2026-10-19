@@ -50,7 +50,7 @@ export interface MediaEmbedLabels {
 }
 
 const DEFAULT_MEDIA_LABELS: MediaEmbedLabels = { play: 'Play', open: 'Open', volume: 'Volume' };
-const AUDIO_EXTENSION_PATTERN = /\.(mp3|wav|ogg|m4a|flac)$/i;
+export const AUDIO_EXTENSION_PATTERN = /\.(mp3|wav|ogg|m4a|flac)$/i;
 const PDF_EXTENSION_PATTERN = /\.pdf$/i;
 const SVG_ATTRIBUTES =
   'viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"';
@@ -233,10 +233,14 @@ export function toInAppNoteRoute(resolvedPath: string): string | null {
   return `${location.scopeRoute}/${folder}/${location.name}`;
 }
 
-/** In-app route of an image of a campaign or of a compendium system (its asset page), null for anything else. */
+/** In-app route of an image or a sound of a campaign or of a compendium system (its asset page), null for anything else. */
 export function toInAppAssetRoute(resolvedPath: string): string | null {
   const location = parseVaultFilePath(resolvedPath);
-  if (!location || location.isNote || !IMAGE_EXTENSION_PATTERN.test(location.name)) {
+  if (
+    !location ||
+    location.isNote ||
+    !(IMAGE_EXTENSION_PATTERN.test(location.name) || AUDIO_EXTENSION_PATTERN.test(location.name))
+  ) {
     return null;
   }
 

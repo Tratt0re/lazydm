@@ -448,7 +448,8 @@
       }
     },
     "assets": {
-      "loadError": "无法加载此图片"
+      "loadError": "无法加载此图片",
+      "loadErrorAudio": "无法播放此声音"
     }
   },
   "document": {
@@ -538,6 +539,7 @@
     },
     "media": {
       "play": "播放",
+      "stop": "停止",
       "open": "打开",
       "volume": "音量",
       "playError": "无法播放此音频",
@@ -812,7 +814,11 @@
       "done": "已将 {{name}} 添加到分区"
     }
   },
-  "sidebar": {},
+  "sidebar": {
+    "collapse": "收起侧边栏",
+    "expand": "展开侧边栏",
+    "close": "关闭侧边栏"
+  },
   "search": {
     "placeholder": "搜索当前活动…",
     "label": "搜索当前活动",
