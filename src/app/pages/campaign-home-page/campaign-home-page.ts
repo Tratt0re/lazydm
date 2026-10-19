@@ -4,6 +4,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 
 import { CampaignService } from '@/services/campaign.service';
 import { countReviewItems, ReviewService } from '@/services/review.service';
+import { SectionActionsService } from '@/services/section-actions.service';
 import { SectionService } from '@/services/section.service';
 import { ToolbarContextService } from '@/services/toolbar-context.service';
 import { ArcTechAlertComponent } from '@/shared/components/alert';
@@ -51,12 +52,16 @@ import { ArcTechIconComponent } from '@/shared/components/icon';
                   {{ sectionService.labelOf(section) }}<span class="text-primary" aria-hidden="true">.</span>
                 </h2>
                 <p class="text-sm text-muted-foreground">
-                  {{
-                    (section.isCustom
-                      ? 'campaigns.sections.customDescription'
-                      : 'campaigns.sections.' + section.key + '.description'
-                    ) | translate
-                  }}
+                  @if (section.description) {
+                    {{ section.description }}
+                  } @else {
+                    {{
+                      (section.isCustom
+                        ? 'campaigns.sections.customDescription'
+                        : 'campaigns.sections.' + section.key + '.description'
+                      ) | translate
+                    }}
+                  }
                 </p>
               </a>
             </li>
@@ -71,6 +76,7 @@ export class CampaignHomePage {
   private readonly campaignService = inject(CampaignService);
   private readonly reviewService = inject(ReviewService);
   private readonly toolbarContext = inject(ToolbarContextService);
+  private readonly sectionActions = inject(SectionActionsService);
   protected readonly sectionService = inject(SectionService);
 
   protected readonly campaign = this.campaignService.activeCampaign;
@@ -82,7 +88,19 @@ export class CampaignHomePage {
     effect((onCleanup) => {
       const campaign = this.campaign();
       if (campaign) {
-        onCleanup(this.toolbarContext.activate({ title: campaign.name }));
+        onCleanup(
+          this.toolbarContext.activate({
+            title: campaign.name,
+            itemActions: [
+              {
+                id: 'new-section',
+                label: 'settings.campaignSections.add',
+                icon: 'plus',
+                action: () => void this.sectionActions.openSectionSheet(campaign.slug, null),
+              },
+            ],
+          }),
+        );
         this.reviewService
           .list(campaign.slug)
           .then((review) => this.reviewCount.set(countReviewItems(review)))

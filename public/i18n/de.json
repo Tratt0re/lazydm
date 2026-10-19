@@ -144,7 +144,7 @@
     },
     "campaignSections": {
       "title": "Bereiche dieser Kampagne",
-      "description": "Ordne, benenne oder blende die Bereiche von {{campaign}} aus oder füge eigene hinzu. Ordner auf der Festplatte werden nie umbenannt oder gelöscht: Ausgeblendete Bereiche behalten ihre Dateien.",
+      "description": "Sortiere, benenne, verstecke oder lösche die Abschnitte von {{campaign}} oder füge eigene hinzu. Beim Löschen eines Abschnitts wandern Ordner und Dateien in den Papierkorb.",
       "add": "Bereich hinzufügen",
       "drag": "Zum Sortieren ziehen",
       "nameAriaLabel": "Name von {{name}}",
@@ -166,7 +166,11 @@
         "iconLabel": "Symbol",
         "typeLabel": "Notiztyp",
         "typePlaceholder": "Aus dem Namen",
-        "typeDescription": "Wird als type: in das Frontmatter seiner Notizen geschrieben. Leer lassen, um den Namen zu verwenden."
+        "typeDescription": "Wird als type: in das Frontmatter seiner Notizen geschrieben. Leer lassen, um den Namen zu verwenden.",
+        "descriptionLabel": "Beschreibung",
+        "descriptionPlaceholder": "Eine kurze Zeile für die Übersicht",
+        "templateLabel": "Vorlage",
+        "templateDescription": "Die Vorlage, mit der neue Notizen dieses Abschnitts beginnen. Weitere erstellst du im Vorlagen-Fenster."
       },
       "edit": {
         "title": "Bereich bearbeiten",
@@ -175,10 +179,13 @@
         "typeDescription": "Der Notiztyp eines bestehenden Bereichs kann sich nicht ändern."
       },
       "remove": {
-        "button": "Bereich entfernen",
-        "title": "{{name}} entfernen?",
-        "description": "Der Bereich verschwindet aus dieser Kampagne. Der Ordner {{folder}} und seine Dateien bleiben im Vault.",
-        "confirm": "Entfernen"
+        "button": "Abschnitt löschen",
+        "title": "{{name}} löschen?",
+        "description": "Der Ordner {{folder}} und die {{count}} Dateien darin wandern in den Papierkorb, wo du sie wiederherstellen kannst.",
+        "confirm": "Löschen",
+        "rewriteLinks": "Links auf seine Dateien in Klartext umwandeln und deren Einbettungen entfernen",
+        "done": "Abschnitt {{name}} in den Papierkorb verschoben",
+        "error": "Der Abschnitt konnte nicht gelöscht werden"
       },
       "icons": {
         "folder": "Ordner",
@@ -331,7 +338,7 @@
     },
     "create": {
       "title": "Neue Kampagne",
-      "description": "LazyDM legt in deinem Vault einen Ordner für die Kampagne mit den Standardbereichen an.",
+      "description": "LazyDM legt für die Kampagne einen Ordner in deinem Vault an. Wähle die Abschnitte, mit denen sie startet.",
       "nameLabel": "Name",
       "namePlaceholder": "Die verlorene Mine von Phandelver",
       "nameDescription": "Der Ordner wird danach benannt, mit Bindestrichen statt Leerzeichen.",
@@ -339,7 +346,9 @@
       "descriptionPlaceholder": "Eine kurze Zusammenfassung des Abenteuers",
       "submit": "Kampagne erstellen",
       "cancel": "Abbrechen",
-      "error": "Kampagne konnte nicht erstellt werden"
+      "error": "Kampagne konnte nicht erstellt werden",
+      "presetsLabel": "Start-Abschnitte",
+      "presetsDescription": "Assets und Begegnungen sind immer dabei. Abschnitte kannst du später hinzufügen, ändern oder löschen."
     },
     "sections": {
       "emptyTitle": "Noch keine Einträge in {{section}}",
@@ -721,8 +730,7 @@
   },
   "templates": {
     "library": {
-      "title": "Vorlagenbibliothek",
-      "usedIn": "Verwendet in {{campaign}} für"
+      "title": "Vorlagenbibliothek"
     }
   },
   "review": {

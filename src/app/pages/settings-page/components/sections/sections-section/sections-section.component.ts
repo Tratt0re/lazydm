@@ -9,13 +9,12 @@ import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { toast } from 'ngx-sonner';
 
-import { AppSheetFormService } from '@/components/sheet-form/sheet-form.service';
-import type { CustomSectionPayload, SectionSettingsPayload } from '@/dtos';
+import type { SectionSettingsPayload } from '@/dtos';
 import { AppSheetService } from '@/services/app-sheet.service';
 import { CampaignService } from '@/services/campaign.service';
-import { type AppSection, CUSTOM_SECTION_ICONS, SectionService } from '@/services/section.service';
+import { SectionActionsService } from '@/services/section-actions.service';
+import { type AppSection, SectionService } from '@/services/section.service';
 import { ArcTechAlertComponent } from '@/shared/components/alert';
-import { ArcTechAlertDialogService } from '@/shared/components/alert-dialog';
 import { ArcTechButtonComponent } from '@/shared/components/button';
 import { ArcTechIconComponent } from '@/shared/components/icon';
 import { ArcTechInputDirective } from '@/shared/components/input';
@@ -25,7 +24,7 @@ import { ArcTechTooltipImports } from '@/shared/components/tooltip';
 /**
  * Settings → Sections: the sections of the campaign under the sheet (saved in `.lazydm/vault.json`) — order
  * (drag or move buttons), name, shown or hidden, and the campaign's own custom sections. Folders on disk are
- * never renamed or deleted: renaming changes the name only, removing a custom section leaves its files.
+ * never renamed: renaming changes the name only; deleting a section moves its folder and files to the Trash.
  */
 @Component({
   selector: 'app-sections-section',
@@ -47,8 +46,7 @@ export class SectionsSectionComponent implements OnInit {
   private readonly sectionService = inject(SectionService);
   private readonly campaignService = inject(CampaignService);
   private readonly appSheetService = inject(AppSheetService);
-  private readonly sheetFormService = inject(AppSheetFormService);
-  private readonly alertDialogService = inject(ArcTechAlertDialogService);
+  private readonly sectionActions = inject(SectionActionsService);
   private readonly translateService = inject(TranslateService);
 
   protected readonly sections = signal<readonly AppSection[]>([]);
@@ -126,97 +124,17 @@ export class SectionsSectionComponent implements OnInit {
   }
 
   protected confirmRemove(section: AppSection): void {
-    this.alertDialogService.confirm({
-      arcTitle: this.translateService.instant('settings.campaignSections.remove.title', {
-        name: this.labelOf(section),
-      }),
-      arcDescription: this.translateService.instant(
-        'settings.campaignSections.remove.description',
-        { folder: `${section.key}/` },
-      ),
-      arcOkText: this.translateService.instant('settings.campaignSections.remove.confirm'),
-      arcCancelText: this.translateService.instant('settings.campaignSections.cancel'),
-      arcOkDestructive: true,
-      arcOnOk: () => {
-        void this.save(this.sections().filter((row) => row.key !== section.key));
-      },
-    });
+    const campaign = this.campaignSlug();
+    if (campaign) {
+      this.sectionActions.openDeleteSectionSheet(campaign, section, () => void this.load());
+    }
   }
 
-  /** New custom section (name, icon, note type) or an existing one (name and icon; folder and type stay). */
   private openSectionSheet(section: AppSection | null): void {
-    let isSubmitting = false;
-    const prefix = section ? 'settings.campaignSections.edit' : 'settings.campaignSections.create';
-    const sheetRef = this.sheetFormService.open({
-      arcTitle: this.translateService.instant(`${prefix}.title`),
-      arcDescription: this.translateService.instant(`${prefix}.description`),
-      arcOkText: this.translateService.instant(`${prefix}.submit`),
-      arcCancelText: this.translateService.instant('settings.campaignSections.cancel'),
-      fields: [
-        {
-          id: 'label',
-          type: 'input',
-          label: 'settings.campaignSections.create.nameLabel',
-          placeholder: 'settings.campaignSections.create.namePlaceholder',
-          value: section?.customLabel ?? '',
-          required: true,
-          translate: true,
-        },
-        {
-          id: 'icon',
-          type: 'select',
-          label: 'settings.campaignSections.create.iconLabel',
-          value: section?.icon ?? CUSTOM_SECTION_ICONS[0],
-          required: true,
-          translate: true,
-          options: CUSTOM_SECTION_ICONS.map((icon) => ({
-            value: icon,
-            label: `settings.campaignSections.icons.${icon}`,
-            icon,
-            translate: true,
-          })),
-        },
-        {
-          id: 'type',
-          type: 'input',
-          label: 'settings.campaignSections.create.typeLabel',
-          placeholder: 'settings.campaignSections.create.typePlaceholder',
-          description: section
-            ? 'settings.campaignSections.edit.typeDescription'
-            : 'settings.campaignSections.create.typeDescription',
-          value: section?.type ?? '',
-          disabled: section !== null,
-          translate: true,
-        },
-      ],
-      onSubmit: (form) => {
-        if (!isSubmitting) {
-          isSubmitting = true;
-          const values = form.getValues();
-          const custom: CustomSectionPayload = {
-            key: section?.key,
-            label: String(values['label'] ?? '').trim(),
-            type: section ? undefined : String(values['type'] ?? '').trim() || undefined,
-            icon: String(values['icon'] ?? CUSTOM_SECTION_ICONS[0]),
-          };
-          const settings = this.toSettings(this.sections());
-          const nextSettings: SectionSettingsPayload = section
-            ? {
-                ...settings,
-                custom: settings.custom.map((item) => (item.key === section.key ? custom : item)),
-              }
-            : { ...settings, custom: [...settings.custom, custom] };
-          void this.saveSettings(nextSettings).then((isSaved) => {
-            isSubmitting = false;
-            if (isSaved) {
-              sheetRef.close();
-            }
-          });
-        }
-
-        return false;
-      },
-    });
+    const campaign = this.campaignSlug();
+    if (campaign) {
+      void this.sectionActions.openSectionSheet(campaign, section, (rows) => this.sections.set(rows));
+    }
   }
 
   /** Shows the new order or state right away, then saves; on error the saved state comes back. */

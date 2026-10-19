@@ -144,7 +144,7 @@
     },
     "campaignSections": {
       "title": "Sezioni di questa campagna",
-      "description": "Riordina, rinomina o nascondi le sezioni di {{campaign}}, oppure aggiungine di tue. Le cartelle sul disco non vengono mai rinominate né eliminate: le sezioni nascoste mantengono i loro file.",
+      "description": "Riordina, rinomina, nascondi o elimina le sezioni di {{campaign}}, oppure aggiungi le tue. Eliminare una sezione sposta cartella e file nel Cestino.",
       "add": "Aggiungi sezione",
       "drag": "Trascina per riordinare",
       "nameAriaLabel": "Nome di {{name}}",
@@ -166,7 +166,11 @@
         "iconLabel": "Icona",
         "typeLabel": "Tipo di nota",
         "typePlaceholder": "Dal nome",
-        "typeDescription": "Scritto come type: nel frontmatter delle sue note. Lascia vuoto per usare il nome."
+        "typeDescription": "Scritto come type: nel frontmatter delle sue note. Lascia vuoto per usare il nome.",
+        "descriptionLabel": "Descrizione",
+        "descriptionPlaceholder": "Una breve riga mostrata nella panoramica",
+        "templateLabel": "Template",
+        "templateDescription": "Il template da cui partono le nuove note di questa sezione. Creane altri nel pannello Template."
       },
       "edit": {
         "title": "Modifica sezione",
@@ -175,10 +179,13 @@
         "typeDescription": "Il tipo di nota di una sezione esistente non può cambiare."
       },
       "remove": {
-        "button": "Rimuovi sezione",
-        "title": "Rimuovere {{name}}?",
-        "description": "La sezione esce da questa campagna. La cartella {{folder}} e i suoi file restano nel vault.",
-        "confirm": "Rimuovi"
+        "button": "Elimina sezione",
+        "title": "Eliminare {{name}}?",
+        "description": "La cartella {{folder}} e i {{count}} file al suo interno vanno nel Cestino, da dove puoi ripristinarli.",
+        "confirm": "Elimina",
+        "rewriteLinks": "Trasforma i link ai suoi file in testo semplice e rimuovi i relativi incorporamenti",
+        "done": "Sezione {{name}} spostata nel Cestino",
+        "error": "Impossibile eliminare la sezione"
       },
       "icons": {
         "folder": "Cartella",
@@ -331,7 +338,7 @@
     },
     "create": {
       "title": "Nuova campagna",
-      "description": "LazyDM crea una cartella per la campagna nel tuo vault, con le sezioni predefinite.",
+      "description": "LazyDM crea una cartella per la campagna nel tuo vault. Scegli le sezioni da cui parte.",
       "nameLabel": "Nome",
       "namePlaceholder": "La Miniera Perduta di Phandelver",
       "nameDescription": "La cartella prende questo nome, con trattini al posto degli spazi.",
@@ -339,7 +346,9 @@
       "descriptionPlaceholder": "Un breve riassunto dell'avventura",
       "submit": "Crea campagna",
       "cancel": "Annulla",
-      "error": "Impossibile creare la campagna"
+      "error": "Impossibile creare la campagna",
+      "presetsLabel": "Sezioni iniziali",
+      "presetsDescription": "Asset e Incontri sono sempre inclusi. Potrai aggiungere, modificare o eliminare le sezioni in seguito."
     },
     "sections": {
       "emptyTitle": "Ancora nessun elemento in {{section}}",
@@ -721,8 +730,7 @@
   },
   "templates": {
     "library": {
-      "title": "Libreria dei modelli",
-      "usedIn": "Usato in {{campaign}} per"
+      "title": "Libreria dei modelli"
     }
   },
   "review": {

@@ -144,7 +144,7 @@
     },
     "campaignSections": {
       "title": "Secciones de esta campaña",
-      "description": "Reordena, renombra u oculta las secciones de {{campaign}}, o añade las tuyas. Las carpetas del disco nunca se renombran ni se eliminan: las secciones ocultas conservan sus archivos.",
+      "description": "Reordena, renombra, oculta o elimina las secciones de {{campaign}}, o añade las tuyas. Al eliminar una sección, su carpeta y archivos van a la Papelera.",
       "add": "Añadir sección",
       "drag": "Arrastra para reordenar",
       "nameAriaLabel": "Nombre de {{name}}",
@@ -166,7 +166,11 @@
         "iconLabel": "Icono",
         "typeLabel": "Tipo de nota",
         "typePlaceholder": "A partir del nombre",
-        "typeDescription": "Se escribe como type: en el frontmatter de sus notas. Déjalo vacío para usar el nombre."
+        "typeDescription": "Se escribe como type: en el frontmatter de sus notas. Déjalo vacío para usar el nombre.",
+        "descriptionLabel": "Descripción",
+        "descriptionPlaceholder": "Una línea breve que se muestra en el resumen",
+        "templateLabel": "Plantilla",
+        "templateDescription": "La plantilla con la que empiezan las notas nuevas de esta sección. Crea más en el panel de Plantillas."
       },
       "edit": {
         "title": "Editar sección",
@@ -175,10 +179,13 @@
         "typeDescription": "El tipo de nota de una sección existente no puede cambiar."
       },
       "remove": {
-        "button": "Quitar sección",
-        "title": "¿Quitar {{name}}?",
-        "description": "La sección sale de esta campaña. La carpeta {{folder}} y sus archivos se quedan en el vault.",
-        "confirm": "Quitar"
+        "button": "Eliminar sección",
+        "title": "¿Eliminar {{name}}?",
+        "description": "La carpeta {{folder}} y los {{count}} archivos que contiene van a la Papelera, donde puedes restaurarlos.",
+        "confirm": "Eliminar",
+        "rewriteLinks": "Convertir los enlaces a sus archivos en texto simple y quitar sus incrustaciones",
+        "done": "Sección {{name}} movida a la Papelera",
+        "error": "No se pudo eliminar la sección"
       },
       "icons": {
         "folder": "Carpeta",
@@ -331,7 +338,7 @@
     },
     "create": {
       "title": "Nueva campaña",
-      "description": "LazyDM crea una carpeta para la campaña en tu vault, con sus secciones predeterminadas.",
+      "description": "LazyDM crea una carpeta para la campaña en tu vault. Elige las secciones con las que empieza.",
       "nameLabel": "Nombre",
       "namePlaceholder": "La mina perdida de Phandelver",
       "nameDescription": "La carpeta se llama así, con guiones en lugar de espacios.",
@@ -339,7 +346,9 @@
       "descriptionPlaceholder": "Un breve resumen de la aventura",
       "submit": "Crear campaña",
       "cancel": "Cancelar",
-      "error": "No se pudo crear la campaña"
+      "error": "No se pudo crear la campaña",
+      "presetsLabel": "Secciones iniciales",
+      "presetsDescription": "Recursos y Encuentros siempre se incluyen. Podrás añadir, cambiar o eliminar secciones después."
     },
     "sections": {
       "emptyTitle": "Aún no hay {{section}}",
@@ -721,8 +730,7 @@
   },
   "templates": {
     "library": {
-      "title": "Biblioteca de plantillas",
-      "usedIn": "Usada en {{campaign}} para"
+      "title": "Biblioteca de plantillas"
     }
   },
   "review": {

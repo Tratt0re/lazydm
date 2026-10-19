@@ -144,7 +144,7 @@
     },
     "campaignSections": {
       "title": "此战役的分区",
-      "description": "为 {{campaign}} 调整分区的顺序、重命名或隐藏分区，或添加自己的分区。磁盘上的文件夹永远不会被重命名或删除：隐藏的分区会保留其文件。",
+      "description": "重新排序、重命名、隐藏或删除 {{campaign}} 的分区，也可以添加自己的分区。删除分区会把它的文件夹和文件移到废纸篓。",
       "add": "添加分区",
       "drag": "拖动以调整顺序",
       "nameAriaLabel": "{{name}} 的名称",
@@ -166,7 +166,11 @@
         "iconLabel": "图标",
         "typeLabel": "笔记类型",
         "typePlaceholder": "根据名称",
-        "typeDescription": "作为 type: 写入其笔记的 frontmatter。留空则使用名称。"
+        "typeDescription": "作为 type: 写入其笔记的 frontmatter。留空则使用名称。",
+        "descriptionLabel": "描述",
+        "descriptionPlaceholder": "显示在概览中的一行简短说明",
+        "templateLabel": "模板",
+        "templateDescription": "此分区新笔记所使用的模板。可在模板面板中创建更多。"
       },
       "edit": {
         "title": "编辑分区",
@@ -175,10 +179,13 @@
         "typeDescription": "已有分区的笔记类型不能更改。"
       },
       "remove": {
-        "button": "移除分区",
-        "title": "移除 {{name}}？",
-        "description": "该分区将从此战役中移除。{{folder}} 文件夹及其文件会保留在资料库中。",
-        "confirm": "移除"
+        "button": "删除分区",
+        "title": "删除 {{name}}？",
+        "description": "文件夹 {{folder}} 及其中的 {{count}} 个文件会移到废纸篓，你可以从那里恢复。",
+        "confirm": "删除",
+        "rewriteLinks": "将指向其文件的链接转为纯文本并移除嵌入",
+        "done": "分区 {{name}} 已移到废纸篓",
+        "error": "无法删除分区"
       },
       "icons": {
         "folder": "文件夹",
@@ -331,7 +338,7 @@
     },
     "create": {
       "title": "新建战役",
-      "description": "LazyDM 会在你的资料库中为该战役创建一个文件夹，并附带默认分区。",
+      "description": "LazyDM 会在你的库中为战役创建一个文件夹。选择它起始的分区。",
       "nameLabel": "名称",
       "namePlaceholder": "凡达林的失落矿坑",
       "nameDescription": "文件夹将以此命名，空格会替换为连字符。",
@@ -339,7 +346,9 @@
       "descriptionPlaceholder": "冒险的简短概述",
       "submit": "创建战役",
       "cancel": "取消",
-      "error": "无法创建战役"
+      "error": "无法创建战役",
+      "presetsLabel": "起始分区",
+      "presetsDescription": "资源和遭遇始终包含在内。之后可以添加、修改或删除分区。"
     },
     "sections": {
       "emptyTitle": "{{section}}中还没有内容",
@@ -721,8 +730,7 @@
   },
   "templates": {
     "library": {
-      "title": "模板库",
-      "usedIn": "在 {{campaign}} 中用于"
+      "title": "模板库"
     }
   },
   "review": {

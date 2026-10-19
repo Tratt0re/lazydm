@@ -144,7 +144,7 @@
     },
     "campaignSections": {
       "title": "Sections de cette campagne",
-      "description": "Réordonnez, renommez ou masquez les sections de {{campaign}}, ou ajoutez les vôtres. Les dossiers sur le disque ne sont jamais renommés ni supprimés : les sections masquées gardent leurs fichiers.",
+      "description": "Réorganisez, renommez, masquez ou supprimez les sections de {{campaign}}, ou ajoutez les vôtres. Supprimer une section envoie son dossier et ses fichiers à la Corbeille.",
       "add": "Ajouter une section",
       "drag": "Glisser pour réordonner",
       "nameAriaLabel": "Nom de {{name}}",
@@ -166,7 +166,11 @@
         "iconLabel": "Icône",
         "typeLabel": "Type de note",
         "typePlaceholder": "D’après le nom",
-        "typeDescription": "Écrit comme type: dans le frontmatter de ses notes. Laissez vide pour utiliser le nom."
+        "typeDescription": "Écrit comme type: dans le frontmatter de ses notes. Laissez vide pour utiliser le nom.",
+        "descriptionLabel": "Description",
+        "descriptionPlaceholder": "Une courte ligne affichée dans l'aperçu",
+        "templateLabel": "Modèle",
+        "templateDescription": "Le modèle dont partent les nouvelles notes de cette section. Créez-en d'autres dans le panneau Modèles."
       },
       "edit": {
         "title": "Modifier la section",
@@ -175,10 +179,13 @@
         "typeDescription": "Le type de note d’une section existante ne peut pas changer."
       },
       "remove": {
-        "button": "Retirer la section",
-        "title": "Retirer {{name}} ?",
-        "description": "La section quitte cette campagne. Le dossier {{folder}} et ses fichiers restent dans le vault.",
-        "confirm": "Retirer"
+        "button": "Supprimer la section",
+        "title": "Supprimer {{name}} ?",
+        "description": "Le dossier {{folder}} et les {{count}} fichiers qu'il contient vont à la Corbeille, d'où vous pouvez les restaurer.",
+        "confirm": "Supprimer",
+        "rewriteLinks": "Transformer les liens vers ses fichiers en texte brut et retirer leurs intégrations",
+        "done": "Section {{name}} déplacée vers la Corbeille",
+        "error": "Impossible de supprimer la section"
       },
       "icons": {
         "folder": "Dossier",
@@ -331,7 +338,7 @@
     },
     "create": {
       "title": "Nouvelle campagne",
-      "description": "LazyDM crée un dossier pour la campagne dans votre vault, avec ses sections par défaut.",
+      "description": "LazyDM crée un dossier pour la campagne dans votre vault. Choisissez les sections de départ.",
       "nameLabel": "Nom",
       "namePlaceholder": "La Mine perdue de Phandelver",
       "nameDescription": "Le dossier porte ce nom, avec des tirets à la place des espaces.",
@@ -339,7 +346,9 @@
       "descriptionPlaceholder": "Un court résumé de l'aventure",
       "submit": "Créer la campagne",
       "cancel": "Annuler",
-      "error": "Impossible de créer la campagne"
+      "error": "Impossible de créer la campagne",
+      "presetsLabel": "Sections de départ",
+      "presetsDescription": "Ressources et Rencontres sont toujours incluses. Vous pourrez ajouter, modifier ou supprimer des sections ensuite."
     },
     "sections": {
       "emptyTitle": "Aucun élément dans {{section}}",
@@ -721,8 +730,7 @@
   },
   "templates": {
     "library": {
-      "title": "Bibliothèque de modèles",
-      "usedIn": "Utilisé dans {{campaign}} pour"
+      "title": "Bibliothèque de modèles"
     }
   },
   "review": {

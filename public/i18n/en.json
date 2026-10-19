@@ -144,7 +144,7 @@
     },
     "campaignSections": {
       "title": "Sections of this campaign",
-      "description": "Reorder, rename or hide the sections of {{campaign}}, or add your own. Folders on disk are never renamed or deleted: hidden sections keep their files.",
+      "description": "Reorder, rename, hide or delete the sections of {{campaign}}, or add your own. Deleting a section moves its folder and files to the Trash.",
       "add": "Add section",
       "drag": "Drag to reorder",
       "nameAriaLabel": "Name of {{name}}",
@@ -166,7 +166,11 @@
         "iconLabel": "Icon",
         "typeLabel": "Note type",
         "typePlaceholder": "From the name",
-        "typeDescription": "Written as type: in the frontmatter of its notes. Leave empty to use the name."
+        "typeDescription": "Written as type: in the frontmatter of its notes. Leave empty to use the name.",
+        "descriptionLabel": "Description",
+        "descriptionPlaceholder": "A short line shown on the overview",
+        "templateLabel": "Template",
+        "templateDescription": "The template new notes of this section start from. Create more in the Templates sheet."
       },
       "edit": {
         "title": "Edit section",
@@ -175,10 +179,13 @@
         "typeDescription": "The note type of an existing section cannot change."
       },
       "remove": {
-        "button": "Remove section",
-        "title": "Remove {{name}}?",
-        "description": "The section leaves this campaign. The {{folder}} folder and its files stay in the vault.",
-        "confirm": "Remove"
+        "button": "Delete section",
+        "title": "Delete {{name}}?",
+        "description": "The {{folder}} folder and the {{count}} files in it go to the Trash, where you can restore them.",
+        "confirm": "Delete",
+        "rewriteLinks": "Turn links to its files into plain text and remove their embeds",
+        "done": "Section {{name}} moved to the Trash",
+        "error": "Couldn't delete the section"
       },
       "icons": {
         "folder": "Folder",
@@ -331,7 +338,7 @@
     },
     "create": {
       "title": "New campaign",
-      "description": "LazyDM creates a folder for the campaign in your vault, with its default sections.",
+      "description": "LazyDM creates a folder for the campaign in your vault. Choose the sections it starts with.",
       "nameLabel": "Name",
       "namePlaceholder": "Lost Mine of Phandelver",
       "nameDescription": "The folder is named after it, with dashes instead of spaces.",
@@ -339,7 +346,9 @@
       "descriptionPlaceholder": "A short summary of the adventure",
       "submit": "Create campaign",
       "cancel": "Cancel",
-      "error": "Couldn't create the campaign"
+      "error": "Couldn't create the campaign",
+      "presetsLabel": "Starting sections",
+      "presetsDescription": "Assets and Encounters are always included. You can add, change or delete sections later."
     },
     "sections": {
       "emptyTitle": "No {{section}} yet",
@@ -721,8 +730,7 @@
   },
   "templates": {
     "library": {
-      "title": "Template library",
-      "usedIn": "Used in {{campaign}} for"
+      "title": "Template library"
     }
   },
   "review": {

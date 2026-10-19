@@ -84,32 +84,6 @@
         </div>
       </div>
 
-      @if (canLink()) {
-        <div class="flex flex-wrap items-center gap-2 border-b border-border bg-recessed px-4 py-3">
-          <span class="mr-1 font-mono text-xs tracking-wider text-muted-foreground uppercase">
-            {{ 'templates.library.usedIn' | translate: { campaign: campaignName() } }}
-          </span>
-          @for (row of noteTypes(); track row.type) {
-            @let linked = isLinked(row.type);
-            <button
-              type="button"
-              arc-button
-              arcType="ghost"
-              arcSize="sm"
-              class="h-8 border px-2.5 font-mono text-[11px] tracking-[0.04em]"
-              [class]="linked ? 'border-primary bg-raised text-primary' : 'border-input text-muted-foreground'"
-              [attr.aria-pressed]="linked"
-              (click)="toggleLink(row.type)"
-            >
-              @if (linked) {
-                <arc-icon arcType="check" class="size-3.5" />
-              }
-              {{ row.label }}
-            </button>
-          }
-        </div>
-      }
-
       <app-code-editor
         class="min-h-[22rem] flex-1"
         [documentKey]="current.key"

@@ -11,9 +11,8 @@ import {
   type SecondarySidebarItem,
 } from '@/components/secondary-sidebar/secondary-sidebar.component';
 import { AppSheetFormService } from '@/components/sheet-form/sheet-form.service';
-import type { TemplateDto, TemplateRulesDto } from '@/dtos';
+import type { TemplateDto } from '@/dtos';
 import { AppSheetService } from '@/services/app-sheet.service';
-import { CampaignService } from '@/services/campaign.service';
 import { DocumentService } from '@/services/document.service';
 import { type AppSection, SectionService } from '@/services/section.service';
 import { TemplateService } from '@/services/template.service';
@@ -51,7 +50,7 @@ interface SelectedTemplate {
 /**
  * The Templates sheet: every template of the vault (built-ins, the vault's `_templates/`, each compendium
  * system's and each campaign's) in the shared secondary sidebar, edited with the note editor. When the
- * sheet is over a campaign, the selected template can be linked to that campaign's note types.
+ * sheet is over a campaign, its custom sections' types are offered to start a template from.
  */
 @Component({
   selector: 'app-template-library-page',
@@ -72,7 +71,6 @@ interface SelectedTemplate {
 export class TemplateLibraryPage implements OnInit {
   private readonly templateService = inject(TemplateService);
   private readonly documentService = inject(DocumentService);
-  private readonly campaignService = inject(CampaignService);
   private readonly appSheetService = inject(AppSheetService);
   private readonly sheetFormService = inject(AppSheetFormService);
   private readonly alertDialogService = inject(ArcTechAlertDialogService);
@@ -91,7 +89,6 @@ export class TemplateLibraryPage implements OnInit {
 
   protected readonly templates = signal<readonly TemplateDto[]>([]);
   protected readonly types = signal<readonly string[]>([]);
-  protected readonly rules = signal<TemplateRulesDto>({});
   protected readonly selected = signal<SelectedTemplate | null>(null);
   protected readonly editedContent = signal('');
   protected readonly editorMode = signal<CodeEditorMode>('source');
@@ -99,12 +96,7 @@ export class TemplateLibraryPage implements OnInit {
   protected readonly errorMessage = signal<string | null>(null);
 
   /** Campaign of the page under the sheet (`/campaigns/<slug>/…`), or null on the campaign list. */
-  protected readonly campaignSlug = signal<string | null>(null);
-  protected readonly campaignName = computed(() => {
-    const slug = this.campaignSlug();
-    const campaign = this.campaignService.activeCampaign();
-    return campaign?.slug === slug ? campaign.name : (slug ?? '');
-  });
+  private readonly campaignSlug = signal<string | null>(null);
 
   /** Sections of the campaign under the sheet (custom ones included); the defaults without a campaign. */
   private readonly campaignSections = signal<readonly AppSection[] | null>(null);
@@ -188,17 +180,6 @@ export class TemplateLibraryPage implements OnInit {
     );
   });
 
-  /** The selected template file can be linked to note types of the campaign under the sheet. */
-  protected readonly canLink = computed(() => {
-    const campaign = this.campaignSlug();
-    const template = this.selectedTemplate();
-    return (
-      campaign !== null &&
-      template !== null &&
-      this.templateService.getCampaignTemplates([template], campaign).length > 0
-    );
-  });
-
   constructor() {
     // Leaving the sheet saves pending edits, like leaving a note.
     inject(DestroyRef).onDestroy(() => void this.save());
@@ -207,33 +188,6 @@ export class TemplateLibraryPage implements OnInit {
   ngOnInit(): void {
     this.campaignSlug.set(this.readCampaignSlug());
     void this.load();
-  }
-
-  protected isLinked(type: string): boolean {
-    const template = this.selectedTemplate();
-    return template !== null && this.rules()[type] === template.path;
-  }
-
-  /** Links the selected template to a note type of the campaign, or unlinks it (back to automatic). */
-  protected async toggleLink(type: string): Promise<void> {
-    const campaign = this.campaignSlug();
-    const template = this.selectedTemplate();
-    if (!campaign || !template) {
-      return;
-    }
-
-    try {
-      this.rules.set(
-        await this.templateService.setRule(
-          campaign,
-          type,
-          this.isLinked(type) ? null : template.path,
-        ),
-      );
-      toast.success(this.translateService.instant('settings.templates.rules.saved'));
-    } catch (error) {
-      this.showError('settings.templates.rules.saveError', error);
-    }
   }
 
   /** Library selection; unsaved edits of the current template are saved first (like leaving a note). */
@@ -430,15 +384,13 @@ export class TemplateLibraryPage implements OnInit {
     this.errorMessage.set(null);
     try {
       const campaign = this.campaignSlug();
-      const [library, rules, sections] = await Promise.all([
+      const [library, sections] = await Promise.all([
         this.templateService.list(),
-        campaign ? this.templateService.getRules(campaign) : Promise.resolve({}),
         campaign ? this.sectionService.list(campaign) : Promise.resolve(null),
       ]);
       this.campaignSections.set(sections);
       this.templates.set(library.rows);
       this.types.set(library.types);
-      this.rules.set(rules);
     } catch (error) {
       this.errorMessage.set(error instanceof Error ? error.message : String(error));
     }

@@ -7,6 +7,7 @@ import { AppSheetFormService } from '@/components/sheet-form/sheet-form.service'
 import type { AppSheetField } from '@/components/sheet-form/sheet-form.types';
 import { Toolbar } from '@/layout/toolbar/toolbar';
 import { CampaignService } from '@/services/campaign.service';
+import { SectionService } from '@/services/section.service';
 import type { ToolbarItemAction, ToolbarTitleBreadcrumbItem } from '@/services/toolbar-context.service';
 import { VaultService } from '@/services/vault.service';
 import { ArcTechAlertComponent } from '@/shared/components/alert';
@@ -49,6 +50,7 @@ const CREATE_CAMPAIGN_FIELDS: readonly AppSheetField[] = [
 export class CampaignListPage implements OnInit {
   private readonly campaignService = inject(CampaignService);
   private readonly vaultService = inject(VaultService);
+  private readonly sectionService = inject(SectionService);
   private readonly sheetFormService = inject(AppSheetFormService);
   private readonly translateService = inject(TranslateService);
   private readonly router = inject(Router);
@@ -80,18 +82,41 @@ export class CampaignListPage implements OnInit {
 
   protected openCreateSheet(): void {
     let isSubmitting = false;
+    const presets = this.sectionService.presetSections();
 
     const sheetRef = this.sheetFormService.open({
       arcTitle: this.translateService.instant('campaigns.create.title'),
       arcDescription: this.translateService.instant('campaigns.create.description'),
       arcOkText: this.translateService.instant('campaigns.create.submit'),
       arcCancelText: this.translateService.instant('campaigns.create.cancel'),
-      fields: CREATE_CAMPAIGN_FIELDS,
+      fields: [
+        ...CREATE_CAMPAIGN_FIELDS,
+        {
+          id: 'presets',
+          type: 'combobox',
+          multiple: true,
+          label: 'campaigns.create.presetsLabel',
+          description: 'campaigns.create.presetsDescription',
+          value: presets.map((section) => section.key),
+          translate: true,
+          options: presets.map((section) => ({
+            value: section.key,
+            label: this.sectionService.labelOf(section),
+            icon: section.icon,
+            translate: false,
+          })),
+        },
+      ],
       onSubmit: (form) => {
         if (!isSubmitting) {
           isSubmitting = true;
           const values = form.getValues();
-          void this.createCampaign(String(values['name'] ?? ''), String(values['description'] ?? '')).then(
+          const chosen = values['presets'];
+          void this.createCampaign(
+            String(values['name'] ?? ''),
+            String(values['description'] ?? ''),
+            Array.isArray(chosen) ? chosen.map(String) : [],
+          ).then(
             (created) => {
               isSubmitting = false;
               if (created) {
@@ -107,9 +132,13 @@ export class CampaignListPage implements OnInit {
     });
   }
 
-  private async createCampaign(name: string, description: string): Promise<boolean> {
+  private async createCampaign(
+    name: string,
+    description: string,
+    presets: readonly string[],
+  ): Promise<boolean> {
     try {
-      const campaign = await this.campaignService.create({ name, description });
+      const campaign = await this.campaignService.create({ name, description, presets });
       await this.router.navigate(['/campaigns', campaign.slug]);
       return true;
     } catch (error) {
