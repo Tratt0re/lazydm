@@ -61,20 +61,30 @@ LazyDM works like **Obsidian**, specialised for Dungeon Masters.
 
 ## 2a. Sections (campaign folders)
 
-- A **section** is a top-level folder of a campaign bound to one note type: key (folder slug), type, label, icon.
-  The **default sections** are the ones in §2 (Electron owns the list and sends it to Angular, with each campaign's
-  settings applied — no list kept in sync by hand).
+- A **section** is a top-level folder of a campaign bound to one note type: key (folder slug), type, label, icon,
+  optional description. Sections are **user-managed**: the user creates them (name, optional description, icon,
+  optional template) from the campaign overview toolbar (*New section*) or Settings → Sections, and can reorder,
+  hide, rename and delete them. Only *Assets* and *Encounters* are fixed (special sections, see below).
+- **Presets**: the sections in §2 (scenes, characters, enemies…) are **presets** with their built-in template
+  already set. They are offered as a checklist when a campaign is created (*New campaign*), as a way to
+  pre-initialise its spaces; Assets and Encounters are always included. Campaigns that already exist keep the
+  sections they have. Electron owns the list and sends it to Angular, with each campaign's settings applied — no
+  list kept in sync by hand.
 - **Per-campaign settings** in `.lazydm/vault.json` → `sections.campaigns.<slug>`:
   - `hidden`: default sections not shown in the sidebar (their files stay indexed and linkable; the settings show
     *hidden, N notes inside*);
   - `order`: the sidebar order;
   - `labels`: display names (`characters` → *NPCs*); the folder on disk keeps its name;
-  - `custom`: the campaign's own sections (`{ key: 'factions', type: 'faction', label: 'Factions', icon: 'flag' }`),
-    with a user-written label (not translated). A custom type gets a generic built-in template.
+  - `custom`: the campaign's own sections (`{ key: 'factions', type: 'faction', label: 'Factions', icon: 'flag',
+    description: '…' }`), with a user-written label and description (not translated); the description is shown on
+    the overview tile. A custom type gets a generic built-in template unless the user links one.
 - **Folders appear on demand**: a section exists from the settings; its folder is created with its first file.
   Opening a campaign no longer creates empty folders (existing empty ones are left alone).
 - **Section folders are never renamed on disk** by LazyDM (renaming a section = changing its label). Hiding is not
-  deleting: LazyDM never deletes a section folder. **Sub-folders** can be renamed and deleted (see *Renaming and
+  deleting. **Deleting a section** (Settings → Sections, *Delete…*) deletes it **with all its content**: the folder
+  goes to the system Trash (recoverable) and the section leaves the settings. The confirmation asks whether to
+  update the links to its files (*Turn links into plain text* / remove embeds, default on, like deleting a
+  sub-folder). Special sections cannot be deleted. **Sub-folders** can be renamed and deleted (see *Renaming and
   deleting* below).
 - **Sub-folders**: one level inside a section, created from the section page (*New folder*). A sub-folder is a
   **sub-type**: notes in `enemies/humans/` have `type: enemy` and `subtype: humans` (a separate frontmatter field,
@@ -293,16 +303,16 @@ Planned Electron modules: `vault`, `cloud-readiness`, `campaign`, `document`, `i
   name), `{{section}}` (folder display name, in the UI language), `{{type}}`. Unknown placeholders stay as written;
   inside the frontmatter values are escaped for YAML strings, so a title with quotes keeps it valid.
 - Template files are excluded from broken links (their links are placeholders).
-- **UI**, three places, all writing the same `vault.json` choices:
+- **UI**, where templates are made and where they are linked (the same `vault.json` choices):
   - **Templates sheet** (header button, next to Compendium and Settings): the library — built-ins and every
     `_templates/` folder in the shared secondary sidebar — with the note editor (Live / Source), Save, New template
-    (empty or from a built-in), Delete (confirmed) and Customize. Over a campaign, the selected template file shows
-    *Used in <campaign> for* with one toggle per note type to link / unlink it. Unsaved edits are saved when another
-    template is selected or the sheet is left, like notes.
+    (empty or from a built-in), Delete (confirmed) and Customize. It only creates and edits templates; it does not
+    link them. Unsaved edits are saved when another template is selected or the sheet is left, like notes.
   - **Settings → Templates**: the per-type choices of the campaign under the sheet (a hint when opened from the
     campaign list); the Templates sheet itself opens from the title bar.
   - **Campaign section pages**: a *Template* select in the toolbar for the section's note type (Automatic, Built-in,
-    the vault's, the systems' and the campaign's own templates).
+    the vault's, the systems' and the campaign's own templates). This is how a template is linked to a section;
+    the *New section* sheet offers the same select.
 - **Section pages keep their actions in the toolbar** (template select, *Import*, *New note*), never in a button
   row above the list — the same rule as every other page.
 
