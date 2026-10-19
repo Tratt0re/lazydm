@@ -963,6 +963,14 @@
       "roundsHint": "Optional. It counts down at the end of this entity's turn and goes at 0.",
       "submit": "Add",
       "remove": "Remove {{name}}"
+    },
+    "note": {
+      "show": "Show the note",
+      "open": "Open the note",
+      "close": "Close",
+      "loadError": "Couldn't load this note",
+      "search": "Search notes…",
+      "none": "No notes found"
     }
   }
 }

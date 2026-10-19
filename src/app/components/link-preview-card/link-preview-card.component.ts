@@ -31,7 +31,7 @@ const CARD_MAX_HEIGHT = 440;
 const CARD_GAP = 8;
 
 /** The note's first line when it is a heading repeating the title: the card's header already shows it. */
-function withoutTitleHeading(body: string, title: string): string {
+export function withoutTitleHeading(body: string, title: string): string {
   const match = /^\s*#{1,6}[ \t]+(.+?)[ \t#]*(?:\r?\n|$)/.exec(body);
   return match && match[1].trim().toLocaleLowerCase() === title.trim().toLocaleLowerCase()
     ? body.slice(match[0].length)

@@ -19,6 +19,7 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { toast } from 'ngx-sonner';
 
 import { AppEncounterCemeteryComponent } from '@/components/encounter-cemetery/encounter-cemetery.component';
+import { AppEncounterNotePanelComponent } from '@/components/encounter-note-panel/encounter-note-panel.component';
 import { AppEncounterHealthBarComponent } from '@/components/encounter-health-bar/encounter-health-bar.component';
 import { toInAppEncounterRoute } from '@/components/document-preview/document-preview.markdown';
 import { AppSheetFormService } from '@/components/sheet-form/sheet-form.service';
@@ -29,9 +30,11 @@ import type {
   EncounterDto,
   EncounterEntityDto,
   EncounterFileDto,
+  LinkTargetDto,
 } from '@/dtos';
 import { ASSET_FILE_PARAM, ASSET_SUBFOLDER_PARAM } from '@/pages/asset-page/asset-page';
 import { CAMPAIGN_SECTION_PARAM } from '@/pages/campaign-section-page/campaign-section-page';
+import { DocumentService } from '@/services/document.service';
 import { EncounterService } from '@/services/encounter.service';
 import { FileActionsService } from '@/services/file-actions.service';
 import { getNoteScopeKind, NoteScopeService } from '@/services/note-scope.service';
@@ -98,6 +101,7 @@ function parseNumber(value: unknown): number | null {
     TranslatePipe,
     AppEncounterCemeteryComponent,
     AppEncounterHealthBarComponent,
+    AppEncounterNotePanelComponent,
     ArcTechAlertComponent,
     ArcTechBadgeComponent,
     ArcTechButtonComponent,
@@ -119,6 +123,7 @@ export class EncounterPage {
   private readonly translateService = inject(TranslateService);
   private readonly fileActions = inject(FileActionsService);
   private readonly encounterService = inject(EncounterService);
+  private readonly documentService = inject(DocumentService);
   private readonly sheetFormService = inject(AppSheetFormService);
   private readonly sheetService = inject(ArcTechSheetService);
   private loadToken = 0;
@@ -171,6 +176,14 @@ export class EncounterPage {
     (this.encounter()?.entities ?? []).filter((entity) => entity.isDead),
   );
   protected readonly isCemeteryOpen = signal(false);
+  /** Note shown in the side panel (vault path), from an entity's linked note. */
+  protected readonly openNotePath = signal<string | null>(null);
+  /** Notes of the scope an entity can be linked to (the picker's options), by path. */
+  private readonly scopeNotes = signal<readonly LinkTargetDto[]>([]);
+  /** Frontmatter of the linked notes already read, by note path (rule fields can read from it). */
+  protected readonly noteFrontmatter = signal<ReadonlyMap<string, Readonly<Record<string, unknown>>>>(
+    new Map(),
+  );
   protected readonly isRunning = computed(() => this.encounter()?.battle.status === 'running');
   protected readonly round = computed(() => this.encounter()?.battle.round ?? 0);
   /** The entity whose turn it is. */
@@ -266,7 +279,10 @@ export class EncounterPage {
               icon: 'ghost',
               buttonType: 'outline',
               iconOnly: true,
-              action: () => this.isCemeteryOpen.update((isOpen) => !isOpen),
+              action: () => {
+                this.openNotePath.set(null);
+                this.isCemeteryOpen.update((isOpen) => !isOpen);
+              },
             },
             {
               id: 'undo-hp',
@@ -306,11 +322,34 @@ export class EncounterPage {
     return name ?? this.translateService.instant('encounters.entity.unnamed');
   }
 
-  protected numberOf(entity: EncounterEntityDto, field: BattleRuleFieldDto): number | null {
-    return toNumber(entity.values[field.key]);
+  /** Key of the rule's note-link field (null when the rule has none). */
+  private readonly noteKey = computed(
+    () => this.rule()?.fields.find((field) => field.component === 'note-link')?.key ?? null,
+  );
+
+  /** Vault path of the note an entity is linked to. */
+  protected noteOf(entity: EncounterEntityDto): string | null {
+    const key = this.noteKey();
+    return key ? this.textOf(entity, { key }) : null;
   }
 
-  protected textOf(entity: EncounterEntityDto, field: BattleRuleFieldDto): string | null {
+  /**
+   * Value of a field read from the entity's linked note: the frontmatter key of a `frontmatter:<key>` source.
+   * It only fills in what the entity has no value of its own for; nothing is copied into the file.
+   */
+  private noteValue(entity: EncounterEntityDto, field: { readonly source?: string }): unknown {
+    const prefix = 'frontmatter:';
+    const notePath = this.noteOf(entity);
+    return notePath && field.source?.startsWith(prefix)
+      ? this.noteFrontmatter().get(notePath)?.[field.source.slice(prefix.length)]
+      : undefined;
+  }
+
+  protected numberOf(entity: EncounterEntityDto, field: BattleRuleFieldDto): number | null {
+    return toNumber(entity.values[field.key]) ?? toNumber(this.noteValue(entity, field));
+  }
+
+  protected textOf(entity: EncounterEntityDto, field: { readonly key: string }): string | null {
     const value = entity.values[field.key];
     return typeof value === 'string' && value.length > 0 ? value : null;
   }
@@ -327,13 +366,17 @@ export class EncounterPage {
 
   protected healthOf(entity: EncounterEntityDto, field: BattleRuleFieldDto): HealthValue {
     const value = entity.values[field.key];
-    return isRecord(value)
-      ? {
-          current: toNumber(value['current']) ?? undefined,
-          max: toNumber(value['max']) ?? undefined,
-          temp: toNumber(value['temp']) ?? undefined,
-        }
-      : {};
+    if (isRecord(value)) {
+      return {
+        current: toNumber(value['current']) ?? undefined,
+        max: toNumber(value['max']) ?? undefined,
+        temp: toNumber(value['temp']) ?? undefined,
+      };
+    }
+
+    // Nothing of its own: a note that gives a number (`hp: 11`) is a full health bar.
+    const fromNote = toNumber(this.noteValue(entity, field));
+    return fromNote === null ? {} : { current: fromNote, max: fromNote };
   }
 
   /** Label of a side: its translation when the rule's option has one (`enemy`, `player`, `ally`), else as written. */
@@ -471,8 +514,25 @@ export class EncounterPage {
             ],
           },
         ];
-      case 'text':
       case 'note-link':
+        return [
+          {
+            id: field.key,
+            type: 'combobox',
+            label,
+            value: typeof value === 'string' ? value : '',
+            searchable: true,
+            searchPlaceholder: this.translateService.instant('encounters.note.search'),
+            emptyText: this.translateService.instant('encounters.note.none'),
+            translate: false,
+            options: this.scopeNotes().map((note) => ({
+              value: note.path,
+              label: note.title,
+              icon: 'file-text' as const,
+            })),
+          },
+        ];
+      case 'text':
         return [
           {
             id: field.key,
@@ -525,6 +585,7 @@ export class EncounterPage {
     }
 
     const name = String(form['name'] ?? '').trim() || null;
+    void this.loadFrontmatter([{ id: '', name, values, isDead: false }]);
     if (entity) {
       const edited = { ...entity, name, values };
       const key = this.initiativeKey();
@@ -786,6 +847,15 @@ export class EncounterPage {
 
   // --- Statuses ----------------------------------------------------------------------------------------
 
+  /** Opens the linked note of an entity in the side panel (the cemetery gives way to it). */
+  protected openNote(entity: EncounterEntityDto): void {
+    const notePath = this.noteOf(entity);
+    if (notePath) {
+      this.isCemeteryOpen.set(false);
+      this.openNotePath.set(notePath);
+    }
+  }
+
   /** *Add status*: a name, and optionally the number of rounds it lasts (it counts down on the entity's turns). */
   protected openStatusSheet(entity: EncounterEntityDto, field: BattleRuleFieldDto): void {
     let isDone = false;
@@ -991,6 +1061,8 @@ export class EncounterPage {
         this.file.set(file);
         this.encounter.set(file.encounter);
         this.rule.set(rule);
+        this.openNotePath.set(null);
+        void this.loadNotes(path, file.encounter);
       }
     } catch (error) {
       if (token === this.loadToken) {
@@ -1003,6 +1075,45 @@ export class EncounterPage {
         this.isLoading.set(false);
       }
     }
+  }
+
+  /**
+   * The notes of the scope (for the picker) and the frontmatter of the notes the entities link to (rule fields
+   * with a `frontmatter:` source read it). A note that cannot be read just has no values.
+   */
+  private async loadNotes(path: string, encounter: EncounterDto): Promise<void> {
+    try {
+      const targets = await this.documentService.linkTargets(path);
+      this.scopeNotes.set(targets.filter((target) => target.kind === 'md'));
+    } catch (error) {
+      console.warn('[app] Failed to list the notes of the scope:', path, error);
+    }
+
+    await this.loadFrontmatter(encounter.entities);
+  }
+
+  private async loadFrontmatter(entities: readonly EncounterEntityDto[]): Promise<void> {
+    const noteKey = this.noteKey();
+    const known = this.noteFrontmatter();
+    const paths = new Set(
+      entities
+        .map((entity) => (noteKey ? this.textOf(entity, { key: noteKey }) : null))
+        .filter((notePath): notePath is string => !!notePath && !known.has(notePath)),
+    );
+    if (paths.size === 0) {
+      return;
+    }
+
+    const loaded = await Promise.all(
+      [...paths].map(async (notePath) => {
+        try {
+          return [notePath, (await this.documentService.read(notePath)).frontmatter] as const;
+        } catch {
+          return [notePath, {}] as const;
+        }
+      }),
+    );
+    this.noteFrontmatter.update((map) => new Map([...map, ...loaded]));
   }
 
   /** Saves the encounter; changes made while a save runs are saved right after it, in order. */

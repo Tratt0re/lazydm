@@ -963,6 +963,14 @@
       "roundsHint": "Opcional. Baja al final del turno de esta entidad y desaparece en 0.",
       "submit": "Añadir",
       "remove": "Quitar {{name}}"
+    },
+    "note": {
+      "show": "Mostrar la nota",
+      "open": "Abrir la nota",
+      "close": "Cerrar",
+      "loadError": "No se pudo cargar esta nota",
+      "search": "Buscar notas…",
+      "none": "No se encontraron notas"
     }
   }
 }

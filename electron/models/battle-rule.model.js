@@ -51,8 +51,8 @@ const DEFAULT_BATTLE_RULE = Object.freeze({
   fields: Object.freeze([
     entityField('initiative', 'initiative'),
     entityField('side', 'side', { options: DEFAULT_SIDES }),
-    entityField('ac', 'number'),
-    entityField('hp', 'healthbar'),
+    entityField('ac', 'number', { source: `${FRONTMATTER_SOURCE_PREFIX}ac` }),
+    entityField('hp', 'healthbar', { source: `${FRONTMATTER_SOURCE_PREFIX}hp` }),
     entityField('statuses', 'statuses'),
     entityField('note', 'note-link'),
   ]),

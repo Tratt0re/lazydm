@@ -963,6 +963,14 @@
       "roundsHint": "Facultatif. Diminue à la fin du tour de cette entité et disparaît à 0.",
       "submit": "Ajouter",
       "remove": "Retirer {{name}}"
+    },
+    "note": {
+      "show": "Afficher la note",
+      "open": "Ouvrir la note",
+      "close": "Fermer",
+      "loadError": "Impossible de charger cette note",
+      "search": "Rechercher des notes…",
+      "none": "Aucune note trouvée"
     }
   }
 }

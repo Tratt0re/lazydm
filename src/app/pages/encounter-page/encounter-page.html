@@ -155,10 +155,20 @@
                 }
                 @case ('note-link') {
                   @if (textOf(entity, field); as note) {
-                    <span class="flex items-center gap-1 truncate font-mono text-xs text-muted-foreground">
-                      <arc-icon arcType="file-text" class="size-3.5 shrink-0" />
-                      {{ note }}
-                    </span>
+                    <button
+                      type="button"
+                      arc-button
+                      arcType="ghost"
+                      arcSize="sm"
+                      class="size-8 shrink-0"
+                      [class.text-primary]="openNotePath() === note"
+                      [attr.aria-pressed]="openNotePath() === note"
+                      [attr.aria-label]="'encounters.note.show' | translate"
+                      [arcTooltip]="'encounters.note.show' | translate"
+                      (click)="openNote(entity)"
+                    >
+                      <arc-icon arcType="file-text" />
+                    </button>
                   }
                 }
               }
@@ -216,16 +226,20 @@
 <!-- Kept mounted so opening and closing can slide instead of re-rendering. -->
 <div
   class="shrink-0 overflow-hidden transition-[width,opacity] duration-200 ease-out motion-reduce:transition-none"
-  [class]="isCemeteryOpen() ? 'w-84 opacity-100' : 'w-0 opacity-0'"
-  [attr.inert]="isCemeteryOpen() ? null : ''"
-  [attr.aria-hidden]="isCemeteryOpen() ? null : 'true'"
+  [class]="isCemeteryOpen() || openNotePath() ? 'w-84 opacity-100' : 'w-0 opacity-0'"
+  [attr.inert]="isCemeteryOpen() || openNotePath() ? null : ''"
+  [attr.aria-hidden]="isCemeteryOpen() || openNotePath() ? null : 'true'"
 >
   <div class="h-full py-4 pr-4">
-    <app-encounter-cemetery
-      [entities]="deadEntities()"
-      [isDisabled]="!isEditable()"
-      (recover)="recoverEntity($event)"
-    />
+    @if (openNotePath(); as notePath) {
+      <app-encounter-note-panel [path]="notePath" (closed)="openNotePath.set(null)" />
+    } @else {
+      <app-encounter-cemetery
+        [entities]="deadEntities()"
+        [isDisabled]="!isEditable()"
+        (recover)="recoverEntity($event)"
+      />
+    }
   </div>
 </div>
 </div>

@@ -963,6 +963,14 @@
       "roundsHint": "Optional. Zählt am Ende des Zuges dieser Einheit herunter und endet bei 0.",
       "submit": "Hinzufügen",
       "remove": "{{name}} entfernen"
+    },
+    "note": {
+      "show": "Notiz anzeigen",
+      "open": "Notiz öffnen",
+      "close": "Schließen",
+      "loadError": "Diese Notiz konnte nicht geladen werden",
+      "search": "Notizen suchen…",
+      "none": "Keine Notizen gefunden"
     }
   }
 }

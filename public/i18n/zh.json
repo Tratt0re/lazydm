@@ -963,6 +963,14 @@
       "roundsHint": "可选。在该单位回合结束时递减，归零后移除。",
       "submit": "添加",
       "remove": "移除 {{name}}"
+    },
+    "note": {
+      "show": "显示笔记",
+      "open": "打开笔记",
+      "close": "关闭",
+      "loadError": "无法加载此笔记",
+      "search": "搜索笔记…",
+      "none": "未找到笔记"
     }
   }
 }
