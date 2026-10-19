@@ -726,7 +726,9 @@
     "sidebarAriaLabel": "纲要系统"
   },
   "common": {
-    "close": "关闭"
+    "close": "关闭",
+    "selectAllRows": "选择所有行",
+    "selectRow": "选择行"
   },
   "templates": {
     "library": {

@@ -726,7 +726,9 @@
     "sidebarAriaLabel": "Sistemas del compendio"
   },
   "common": {
-    "close": "Cerrar"
+    "close": "Cerrar",
+    "selectAllRows": "Seleccionar todas las filas",
+    "selectRow": "Seleccionar fila"
   },
   "templates": {
     "library": {

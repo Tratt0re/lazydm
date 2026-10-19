@@ -726,7 +726,9 @@
     "sidebarAriaLabel": "Systeme des Kompendiums"
   },
   "common": {
-    "close": "Schließen"
+    "close": "Schließen",
+    "selectAllRows": "Alle Zeilen auswählen",
+    "selectRow": "Zeile auswählen"
   },
   "templates": {
     "library": {

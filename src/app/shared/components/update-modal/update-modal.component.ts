@@ -1,3 +1,4 @@
+import { A11yModule } from '@angular/cdk/a11y';
 import { ChangeDetectionStrategy, Component, inject, signal, ViewEncapsulation } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 
@@ -8,13 +9,15 @@ import { ArcTechIconComponent } from '@/shared/components/icon/icon.component';
 
 @Component({
   selector: 'app-update-modal',
-  imports: [TranslatePipe, ArcTechButtonComponent, ArcTechCheckboxComponent, ArcTechIconComponent],
+  imports: [A11yModule, TranslatePipe, ArcTechButtonComponent,ArcTechCheckboxComponent, ArcTechIconComponent],
   template: `
     <div
       class="fixed inset-0 z-50 flex items-center justify-center bg-scrim"
       role="dialog"
       aria-modal="true"
       aria-labelledby="update-modal-title"
+      cdkTrapFocus
+      [cdkTrapFocusAutoCapture]="true"
       (keydown.escape)="onDismiss()"
     >
       <div

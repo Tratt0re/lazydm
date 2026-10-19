@@ -30,7 +30,16 @@ import { dropdownContentVariants } from './dropdown.variants';
   imports: [OverlayModule],
   template: `
     <!-- Dropdown Trigger -->
-    <div class="trigger-container" (click)="toggle()" (keydown.{enter,space}.prevent)="toggle()" tabindex="0">
+    <div
+      class="trigger-container"
+      role="button"
+      aria-haspopup="menu"
+      [attr.aria-expanded]="isOpen()"
+      [attr.aria-disabled]="disabled()"
+      (click)="toggle()"
+      (keydown.{enter,space}.prevent)="toggle()"
+      tabindex="0"
+    >
       <ng-content select="[dropdown-trigger]" />
     </div>
 

@@ -726,7 +726,9 @@
     "sidebarAriaLabel": "Compendium systems"
   },
   "common": {
-    "close": "Close"
+    "close": "Close",
+    "selectAllRows": "Select all rows",
+    "selectRow": "Select row"
   },
   "templates": {
     "library": {

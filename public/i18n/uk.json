@@ -726,7 +726,9 @@
     "sidebarAriaLabel": "Системи компендіуму"
   },
   "common": {
-    "close": "Закрити"
+    "close": "Закрити",
+    "selectAllRows": "Вибрати всі рядки",
+    "selectRow": "Вибрати рядок"
   },
   "templates": {
     "library": {

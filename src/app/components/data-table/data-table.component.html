@@ -112,7 +112,7 @@
                   [class]="partiallySelectedVisibleRows() && !allVisibleRowsSelected() ? 'opacity-70' : ''"
                   (arcCheckedChange)="onToggleAllRowsChange($event)"
                 >
-                  <span class="sr-only">Select all rows</span>
+                  <span class="sr-only">{{ 'common.selectAllRows' | translate }}</span>
                 </arc-checkbox>
               </th>
             }
@@ -185,7 +185,7 @@
                       [arcChecked]="isRowSelected(row)"
                       (arcCheckedChange)="onToggleRowChange($event, row)"
                     >
-                      <span class="sr-only">Select row</span>
+                      <span class="sr-only">{{ 'common.selectRow' | translate }}</span>
                     </arc-checkbox>
                   </td>
                 }
