@@ -27,16 +27,14 @@
       [attr.inert]="showSidebarOverlay() ? '' : null"
       [attr.aria-hidden]="showSidebarOverlay() ? 'true' : null"
     >
-      <app-tab-bar />
+      <app-tab-bar [sidebarCollapsed]="sidebarCollapsed()" (sidebarToggle)="toggleSidebar()" />
 
       <app-toolbar
-        [sidebarCollapsed]="sidebarCollapsed()"
         [title]="toolbarTitle()"
         [titleMode]="toolbarTitleMode()"
         [titleBreadcrumbs]="toolbarTitleBreadcrumbs()"
         [itemActions]="toolbarItemActions()"
         [itemNavigation]="toolbarItemNavigation()"
-        (sidebarToggle)="toggleSidebar()"
       ></app-toolbar>
 
       <arc-content id="main-content" class="min-h-0">

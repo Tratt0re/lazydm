@@ -1,6 +1,7 @@
 @if (workspace.isVisible()) {
   <div class="flex h-10 items-stretch border-b border-border bg-recessed">
     <div class="flex shrink-0 items-center gap-1 border-r border-border px-2">
+      <app-sidebar-toggle [sidebarCollapsed]="sidebarCollapsed()" (toggle)="sidebarToggle.emit()" />
       <button
         type="button"
         arc-button

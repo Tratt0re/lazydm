@@ -4,6 +4,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { HeaderSearchComponent } from '@/components/header-search/header-search.component';
 import { type AppSheetKind, AppSheetService } from '@/services/app-sheet.service';
 import { VaultService } from '@/services/vault.service';
+import { WorkspaceService } from '@/services/workspace.service';
 import { ArcTechButtonComponent } from '@/shared/components/button';
 import { ArcTechIconComponent, type ArcTechIcon } from '@/shared/components/icon';
 import { ArcTechTooltipImports } from '@/shared/components/tooltip';
@@ -33,6 +34,7 @@ const FULLSCREEN_CHANGED_EVENT = 'window:fullscreenChanged';
 })
 export class Header {
   protected readonly sheets = inject(AppSheetService);
+  protected readonly workspace = inject(WorkspaceService);
   /** Title-bar buttons of the full-page sheets: icon only, the name is the tooltip. */
   protected readonly sheetButtons: readonly {
     kind: AppSheetKind;

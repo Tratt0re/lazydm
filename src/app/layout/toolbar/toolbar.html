@@ -1,15 +1,8 @@
 <arc-header [arcHeight]="64" class="relative justify-between gap-4 border-b-0">
   <div class="flex min-w-0 items-center gap-2">
-    @if (showSidebarToggle()) {
-      <app-sidebar-toggle [sidebarCollapsed]="sidebarCollapsed()" (toggle)="onSidebarToggle()"></app-sidebar-toggle>
-    }
-
     <div class="flex min-w-0 items-center gap-4">
       @if (title(); as title) {
         <div class="flex min-w-0 items-center gap-2">
-          @if (showSidebarToggle()) {
-            <arc-divider arcOrientation="vertical" arcSpacing="sm" class="h-6"></arc-divider>
-          }
           <div class="flex min-w-0 flex-col justify-center gap-1">
             @if (hasTitleBreadcrumbs()) {
               <nav [attr.aria-label]="'breadcrumb.ariaLabel' | translate" class="min-w-0">

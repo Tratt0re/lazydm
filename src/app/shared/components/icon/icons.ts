@@ -177,6 +177,7 @@ import {
   FileMusic,
   FilePlus,
   FolderPlus,
+  Grid2x2Plus,
 } from 'lucide-angular';
 
 export const ARCTECH_ICONS = {
@@ -357,6 +358,7 @@ export const ARCTECH_ICONS = {
   'file-music': FileMusic,
   'file-plus': FilePlus,
   'folder-plus': FolderPlus,
+  'grid-2x2-plus': Grid2x2Plus,
 } as const satisfies Record<string, LucideIconData>;
 
 export declare type ArcTechIcon = keyof typeof ARCTECH_ICONS | LucideIconData;

@@ -257,6 +257,7 @@ export class CampaignSectionPage {
         label: 'files.importFromDisk.button',
         icon: 'file-up',
         buttonType: 'outline',
+        iconOnly: true,
         action: () => this.openImportFromDiskSheet(),
       });
     }
@@ -266,6 +267,7 @@ export class CampaignSectionPage {
       label: this.importLabel(),
       icon: 'library-big',
       buttonType: 'outline',
+      iconOnly: true,
       action: () => this.openImportSheet(),
     });
 
@@ -274,8 +276,9 @@ export class CampaignSectionPage {
       actions.push({
         id: 'section-new-folder',
         label: 'campaigns.sections.newFolder.button',
-        icon: 'folder',
+        icon: 'folder-plus',
         buttonType: 'outline',
+        iconOnly: true,
         action: () => this.openCreateFolderSheet(),
       });
     }
@@ -284,7 +287,8 @@ export class CampaignSectionPage {
       actions.push({
         id: 'section-new-note',
         label: 'campaigns.sections.newNote.create',
-        icon: 'plus',
+        icon: 'file-plus',
+        iconOnly: true,
         action: () => this.openCreateSheet(),
       });
     }

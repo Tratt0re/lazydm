@@ -7,9 +7,11 @@
   <!-- left column: drag area spacer -->
   <span></span>
 
-  <!-- center column: search bar (only when a vault is open) -->
-  @if (vault()) {
+  <!-- center column: search bar (it searches the open campaign, so only on a campaign page) -->
+  @if (vault() && workspace.isVisible()) {
     <app-header-search class="window-no-drag" />
+  } @else {
+    <span></span>
   }
 
   <!-- right column: sheet buttons + window controls -->

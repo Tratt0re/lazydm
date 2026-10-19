@@ -4,8 +4,11 @@
   arcType="ghost"
   arcSize="sm"
   arcShape="square"
+  class="size-7"
   [attr.aria-label]="(sidebarCollapsed() ? 'sidebar.expand' : 'sidebar.collapse') | translate"
   [attr.aria-expanded]="!sidebarCollapsed()"
+  arcPosition="bottom"
+  [arcTooltip]="(sidebarCollapsed() ? 'sidebar.expand' : 'sidebar.collapse') | translate"
   (click)="onToggle()"
 >
   <arc-icon arcType="panel-left" class="size-4" />

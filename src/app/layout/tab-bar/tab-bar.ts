@@ -7,11 +7,14 @@ import {
   ElementRef,
   HostListener,
   inject,
+  input,
+  output,
   signal,
   viewChild,
 } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 
+import { SidebarToggleComponent } from '@/components/sidebar-toggle/sidebar-toggle.component';
 import type { WorkspaceTabDto } from '@/dtos';
 import { REVIEW_ROUTE_SEGMENT } from '@/pages/review-page/review-page';
 import { AppSheetService } from '@/services/app-sheet.service';
@@ -41,6 +44,7 @@ type TabBarMenuTarget =
     ArcTechIconComponent,
     ArcTechMenuImports,
     ArcTechTooltipImports,
+    SidebarToggleComponent,
   ],
   templateUrl: './tab-bar.html',
   host: {
@@ -48,6 +52,8 @@ type TabBarMenuTarget =
   },
 })
 export class TabBar {
+  readonly sidebarCollapsed = input(false);
+  readonly sidebarToggle = output<void>();
   protected readonly workspace = inject(WorkspaceService);
   private readonly sheets = inject(AppSheetService);
   private readonly sectionService = inject(SectionService);

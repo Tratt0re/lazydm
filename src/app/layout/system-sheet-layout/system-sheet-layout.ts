@@ -15,7 +15,6 @@ import { ToolbarContextService } from '@/services/toolbar-context.service';
   providers: [ToolbarContextService],
   template: `
     <app-toolbar
-      [showSidebarToggle]="false"
       [title]="toolbar.title()"
       [titleMode]="toolbar.titleMode()"
       [titleBreadcrumbs]="toolbar.titleBreadcrumbs()"

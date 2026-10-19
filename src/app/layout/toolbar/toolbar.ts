@@ -1,10 +1,8 @@
-import { ChangeDetectionStrategy, Component, input, output, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input, ViewEncapsulation } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 import { RouterLink } from '@angular/router';
 
-import { SidebarToggleComponent } from '@/components/sidebar-toggle/sidebar-toggle.component';
 import { ArcTechButtonComponent } from '@/shared/components/button';
-import { ArcTechDividerComponent } from '@/shared/components/divider';
 import { ArcTechIconComponent } from '@/shared/components/icon';
 import { ArcTechSegmentedComponent, ArcTechSegmentedItemComponent } from '@/shared/components/segmented';
 import { ArcTechSelectImports } from '@/shared/components/select';
@@ -24,11 +22,9 @@ import type {
   selector: 'app-toolbar',
   imports: [
     HeaderComponent,
-    SidebarToggleComponent,
     TranslatePipe,
     RouterLink,
     ArcTechButtonComponent,
-    ArcTechDividerComponent,
     ArcTechIconComponent,
     ArcTechSegmentedComponent,
     ArcTechSegmentedItemComponent,
@@ -39,20 +35,11 @@ import type {
   encapsulation: ViewEncapsulation.None,
 })
 export class Toolbar {
-  readonly sidebarCollapsed = input(false);
   readonly title = input<string | null>(null);
   readonly titleMode = input<ToolbarTitleMode>('default');
   readonly titleBreadcrumbs = input<readonly ToolbarTitleBreadcrumbItem[]>([]);
   readonly itemActions = input<readonly ToolbarItemAction[]>([]);
   readonly itemNavigation = input<ToolbarItemNavigation | null>(null);
-  readonly sidebarToggle = output<void>();
-  /** Hidden where the page has no collapsible sidebar (compendium system inside its sheet). */
-  readonly showSidebarToggle = input(true);
-
-  protected onSidebarToggle(): void {
-    this.sidebarToggle.emit();
-  }
-
   protected isActionDisabled(action: ToolbarAction): boolean {
     if (typeof action.disabled === 'function') {
       return action.disabled();

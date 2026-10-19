@@ -96,7 +96,8 @@ export class CampaignHomePage {
               {
                 id: 'new-section',
                 label: 'settings.campaignSections.add',
-                icon: 'plus',
+                icon: 'grid-2x2-plus',
+                iconOnly: true,
                 action: () => void this.sectionActions.openSectionSheet(campaign.slug, null),
               },
             ],
