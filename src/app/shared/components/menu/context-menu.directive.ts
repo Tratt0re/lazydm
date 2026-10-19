@@ -1,5 +1,13 @@
 import { CdkContextMenuTrigger } from '@angular/cdk/menu';
-import { DestroyRef, Directive, DOCUMENT, ElementRef, inject, input, TemplateRef } from '@angular/core';
+import {
+  DestroyRef,
+  Directive,
+  DOCUMENT,
+  ElementRef,
+  inject,
+  input,
+  TemplateRef,
+} from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 import { noopFn } from '@/shared/utils/merge-classes';
@@ -39,7 +47,9 @@ export class ArcTechContextMenuDirective {
         overlayY: 'top',
       },
     ];
-    this.cdkTrigger.opened.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => this.attachCloseListeners());
+    this.cdkTrigger.opened
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => this.attachCloseListeners());
   }
 
   protected handleKeyDown(event: KeyboardEvent): void {
