@@ -16,7 +16,13 @@ const MOD = isMac ? '⌘' : 'Ctrl';
 const SAMPLE_SOURCE = 'reference/notes/sample.md';
 const GOBLIN_PATH = 'reference/npcs/Goblin.md';
 const SAMPLE_LINKS: readonly DocumentLinkDto[] = [
-  { raw: 'Goblin', kind: 'wikilink', targetName: 'Goblin', heading: null, resolvedPath: GOBLIN_PATH },
+  {
+    raw: 'Goblin',
+    kind: 'wikilink',
+    targetName: 'Goblin',
+    heading: null,
+    resolvedPath: GOBLIN_PATH,
+  },
   {
     raw: 'Goblin|the goblin',
     kind: 'wikilink',
@@ -146,7 +152,9 @@ const SHORTCUTS: readonly { readonly key: string; readonly keys: readonly string
     <div class="flex flex-col gap-6 p-4">
       @for (group of groups; track group.key) {
         <section>
-          <h3 class="font-mono text-[11px] font-semibold tracking-[0.1em] text-muted-foreground uppercase">
+          <h3
+            class="font-mono text-[11px] font-semibold tracking-[0.1em] text-muted-foreground uppercase"
+          >
             {{ 'document.reference.groups.' + group.key | translate }}
           </h3>
           <ul class="mt-2 flex flex-col divide-y divide-border border border-border bg-card">
@@ -158,11 +166,14 @@ const SHORTCUTS: readonly { readonly key: string; readonly keys: readonly string
                   </p>
                   <pre
                     class="mt-1.5 overflow-x-auto bg-recessed px-2 py-1 font-mono text-xs text-foreground"
-                  >{{ item.syntax }}</pre>
+                    >{{ item.syntax }}</pre>
                 </div>
                 <div class="min-w-0 self-center">
                   @if (item.html) {
-                    <div class="arc-markdown-body arc-reference-sample" [innerHTML]="item.html"></div>
+                    <div
+                      class="arc-markdown-body arc-reference-sample"
+                      [innerHTML]="item.html"
+                    ></div>
                   } @else {
                     <p class="text-xs text-muted-foreground">
                       {{ 'document.reference.notes.' + item.key | translate }}
@@ -176,7 +187,9 @@ const SHORTCUTS: readonly { readonly key: string; readonly keys: readonly string
       }
 
       <section>
-        <h3 class="font-mono text-[11px] font-semibold tracking-[0.1em] text-muted-foreground uppercase">
+        <h3
+          class="font-mono text-[11px] font-semibold tracking-[0.1em] text-muted-foreground uppercase"
+        >
           {{ 'document.reference.groups.shortcuts' | translate }}
         </h3>
         <ul class="mt-2 flex flex-col divide-y divide-border border border-border bg-card">
