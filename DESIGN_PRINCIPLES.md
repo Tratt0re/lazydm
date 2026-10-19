@@ -538,6 +538,11 @@ variant keys and configuration stay as they are.
 | 12.3 | Editor fixes: links resolve before saving (Live and Reading), Reading view follows the edits, drag images to move them; audio rows with time and a remembered volume |
 | 12.4 | Linked-note preview card (eye button on hover) and the editor reference sheet |
 | 12.5 | Folder right-click menu (explorer and section page): *New note* and *New folder* where the folder allows them |
+| 13 | Design polishing (13.1–13.4), from the impeccable audit |
+| 13.1 | Normalize: light-theme contrast (`--muted-foreground`, form-control border token), text-size floor, `--scrim` / overlay-shadow tokens instead of literals, one focus style |
+| 13.2 | Harden: `arc-dropdown-menu` trigger semantics (role, `aria-haspopup`, `aria-expanded`), hard-coded strings to i18n (`ESC`, table row labels), modal focus trap / return |
+| 13.3 | Adapt: touch-target sizes (tab close, icon buttons), header-search listbox width and z-index scale, dialog margins on narrow windows |
+| 13.4 | Optimize: replace `transition-all` (accordion, progress bar, sidebar width), `OnPush` for app-level components |
 
 ## 12. Open decisions
 
