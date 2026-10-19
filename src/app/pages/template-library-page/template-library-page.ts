@@ -12,9 +12,8 @@ import {
 } from '@/components/secondary-sidebar/secondary-sidebar.component';
 import { AppSheetFormService } from '@/components/sheet-form/sheet-form.service';
 import type { TemplateDto } from '@/dtos';
-import { AppSheetService } from '@/services/app-sheet.service';
 import { DocumentService } from '@/services/document.service';
-import { type AppSection, SectionService } from '@/services/section.service';
+import { SectionService } from '@/services/section.service';
 import { TemplateService } from '@/services/template.service';
 import { ArcTechAlertComponent } from '@/shared/components/alert';
 import { ArcTechAlertDialogService } from '@/shared/components/alert-dialog';
@@ -49,8 +48,8 @@ interface SelectedTemplate {
 
 /**
  * The Templates sheet: every template of the vault (built-ins, the vault's `_templates/`, each compendium
- * system's and each campaign's) in the shared secondary sidebar, edited with the note editor. When the
- * sheet is over a campaign, its custom sections' types are offered to start a template from.
+ * system's and each campaign's) in the shared secondary sidebar, edited with the note editor. It does not
+ * depend on the campaign under the sheet: templates are linked from the sections.
  */
 @Component({
   selector: 'app-template-library-page',
@@ -71,7 +70,6 @@ interface SelectedTemplate {
 export class TemplateLibraryPage implements OnInit {
   private readonly templateService = inject(TemplateService);
   private readonly documentService = inject(DocumentService);
-  private readonly appSheetService = inject(AppSheetService);
   private readonly sheetFormService = inject(AppSheetFormService);
   private readonly alertDialogService = inject(ArcTechAlertDialogService);
   private readonly translateService = inject(TranslateService);
@@ -95,13 +93,13 @@ export class TemplateLibraryPage implements OnInit {
   protected readonly isSaving = signal(false);
   protected readonly errorMessage = signal<string | null>(null);
 
-  /** Campaign of the page under the sheet (`/campaigns/<slug>/…`), or null on the campaign list. */
-  private readonly campaignSlug = signal<string | null>(null);
-
-  /** Sections of the campaign under the sheet (custom ones included); the defaults without a campaign. */
-  private readonly campaignSections = signal<readonly AppSection[] | null>(null);
+  /**
+   * Built-in templates are the preset sections', whichever campaign is open: the library always shows all of them,
+   * even those of presets the campaign under the sheet does not have.
+   */
   protected readonly noteTypes = computed<readonly NoteTypeRow[]>(() =>
-    (this.campaignSections() ?? this.sectionService.systemSections())
+    this.sectionService
+      .systemSections()
       .filter((section) => section.type !== null && this.types().includes(section.type))
       .map((section) => ({
         type: section.type!,
@@ -183,7 +181,6 @@ export class TemplateLibraryPage implements OnInit {
   }
 
   ngOnInit(): void {
-    this.campaignSlug.set(this.readCampaignSlug());
     void this.load();
   }
 
@@ -380,22 +377,12 @@ export class TemplateLibraryPage implements OnInit {
   private async load(): Promise<void> {
     this.errorMessage.set(null);
     try {
-      const campaign = this.campaignSlug();
-      const [library, sections] = await Promise.all([
-        this.templateService.list(),
-        campaign ? this.sectionService.list(campaign) : Promise.resolve(null),
-      ]);
-      this.campaignSections.set(sections);
+      const library = await this.templateService.list();
       this.templates.set(library.rows);
       this.types.set(library.types);
     } catch (error) {
       this.errorMessage.set(error instanceof Error ? error.message : String(error));
     }
-  }
-
-  private readCampaignSlug(): string | null {
-    const [root, slug] = this.appSheetService.underlyingPath().split('/');
-    return root === 'campaigns' && slug ? slug : null;
   }
 
   private showError(key: string, error: unknown): void {

@@ -93,7 +93,7 @@ export class CampaignListPage implements OnInit {
         ...CREATE_CAMPAIGN_FIELDS,
         {
           id: 'presets',
-          type: 'combobox',
+          type: 'select',
           multiple: true,
           label: 'campaigns.create.presetsLabel',
           description: 'campaigns.create.presetsDescription',

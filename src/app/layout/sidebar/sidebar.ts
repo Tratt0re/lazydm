@@ -18,7 +18,9 @@ import {
   type ExplorerNode,
 } from '@/components/explorer-tree/explorer-tree.component';
 import { CampaignService } from '@/services/campaign.service';
+import { SectionActionsService } from '@/services/section-actions.service';
 import { ArcTechIconComponent } from '@/shared/components/icon';
+import { ArcTechMenuImports } from '@/shared/components/menu';
 import {
   SidebarComponent,
   SidebarGroupComponent,
@@ -42,6 +44,7 @@ import type { MenuSectionConfig } from '@/config/menu.config';
     SidebarGroupComponent,
     SidebarGroupLabelComponent,
     AppExplorerTreeComponent,
+    ...ArcTechMenuImports,
     ...ArcTechTooltipImports,
   ],
   templateUrl: './sidebar.html',
@@ -51,6 +54,7 @@ export class Sidebar {
   private readonly destroyRef = inject(DestroyRef);
   protected readonly updateService = inject(UpdateService);
   private readonly campaignService = inject(CampaignService);
+  private readonly sectionActions = inject(SectionActionsService);
   private readonly collapseTransitionMs = 100;
   private collapseTransitionTimer?: ReturnType<typeof globalThis.setTimeout>;
   private previousCollapsed?: boolean;
@@ -138,6 +142,15 @@ export class Sidebar {
         ? 'border-sidebar-border bg-raised text-sidebar-primary'
         : 'border-transparent text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground',
     );
+  }
+
+  /** *New section* in the active campaign, from the sidebar's right-click menu. */
+  protected openNewSectionSheet(): void {
+    const campaign = this.campaignService.activeCampaign()?.slug;
+    if (campaign) {
+      void this.sectionActions.openSectionSheet(campaign, null);
+      this.onMenuItemClick();
+    }
   }
 
   protected toggleSidebar(): void {
