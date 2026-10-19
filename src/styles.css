@@ -16,7 +16,7 @@
   --popover: #F8F7F2;
   --popover-foreground: #30363A;
   --primary: #766043;
-  --primary-foreground: #DFE0DE;
+  --primary-foreground: #F1F0EB;
   --highlight: #8B724E;
   --primary-pressed: #59482F;
   --secondary: #F8F7F2;
@@ -45,7 +45,7 @@
   --sidebar: #D7D8D6;
   --sidebar-foreground: #4C5356;
   --sidebar-primary: #766043;
-  --sidebar-primary-foreground: #DFE0DE;
+  --sidebar-primary-foreground: #F1F0EB;
   --sidebar-accent: #E2E4E2;
   --sidebar-accent-foreground: #202428;
   --sidebar-border: #92979B;

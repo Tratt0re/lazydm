@@ -10,8 +10,6 @@ import { noopFn } from '@/shared/utils/merge-classes';
     'data-slot': 'context-menu-trigger',
     '[attr.tabindex]': "'0'",
     '[style.cursor]': "'context-menu'",
-    '[attr.aria-haspopup]': "'menu'",
-    '[attr.aria-expanded]': 'cdkTrigger.isOpen()',
     '[attr.data-state]': "cdkTrigger.isOpen() ? 'open': 'closed'",
     '(contextmenu)': 'noopFn()',
     '(keydown)': 'handleKeyDown($event)',
