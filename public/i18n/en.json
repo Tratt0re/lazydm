@@ -478,7 +478,8 @@
       "reload": "Reload the other version"
     },
     "links": {
-      "linkedFiles": "Linked files",
+      "linkedNotes": "Linked notes",
+      "linkedAssets": "Linked assets",
       "noLinkedFiles": "No links to or from other files yet.",
       "from": "From",
       "to": "To",
@@ -547,6 +548,7 @@
     },
     "linkPreview": {
       "show": "Preview linked note",
+      "showImage": "Preview image",
       "open": "Open",
       "close": "Close",
       "loading": "Loading…",

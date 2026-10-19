@@ -15,6 +15,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 
 import {
   parseVaultFilePath,
+  toInAppAssetRoute,
   toInAppNoteRoute,
 } from '@/components/document-preview/document-preview.markdown';
 import type { DocumentLinkDto, DocumentLinksDto } from '@/dtos';
@@ -32,6 +33,8 @@ interface LinkedFile {
   readonly path: string;
   readonly title: string;
   readonly route: string | null;
+  /** An image, sound or PDF rather than a note. */
+  readonly isAsset: boolean;
   readonly sectionLabel: string;
   /** The file links to this note. */
   readonly isFrom: boolean;
@@ -85,7 +88,8 @@ export class AppDocumentLinksPanelComponent {
       files.get(path) ?? {
         path,
         title: title || getFileName(path),
-        route: toInAppNoteRoute(path),
+        route: toInAppNoteRoute(path) ?? toInAppAssetRoute(path),
+        isAsset: !/\.md$/i.test(path),
         sectionLabel: this.sectionService.labelOfPath(path),
         isFrom: false,
         isTo: false,
@@ -114,6 +118,8 @@ export class AppDocumentLinksPanelComponent {
 
     return [...files.values()].sort((left, right) => left.title.localeCompare(right.title));
   });
+  protected readonly linkedNotes = computed(() => this.linkedFiles().filter((file) => !file.isAsset));
+  protected readonly linkedAssets = computed(() => this.linkedFiles().filter((file) => file.isAsset));
   /** Broken links page of the note's campaign or compendium system. */
   protected readonly brokenLinksRoute = computed(() => {
     const location = parseVaultFilePath(this.path());

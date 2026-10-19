@@ -478,7 +478,8 @@
       "reload": "Andere Version neu laden"
     },
     "links": {
-      "linkedFiles": "Verknüpfte Dateien",
+      "linkedNotes": "Verknüpfte Notizen",
+      "linkedAssets": "Verknüpfte Dateien",
       "noLinkedFiles": "Noch keine Links von oder zu anderen Dateien.",
       "from": "Von",
       "to": "Zu",
@@ -547,6 +548,7 @@
     },
     "linkPreview": {
       "show": "Vorschau der verknüpften Notiz",
+      "showImage": "Bildvorschau",
       "open": "Öffnen",
       "close": "Schließen",
       "loading": "Wird geladen…",

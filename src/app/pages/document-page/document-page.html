@@ -80,6 +80,7 @@
           [audioProgress]="noteAudio.progress()"
           [mediaLabels]="mediaLabels"
           [linkPreviewLabel]="linkPreviewLabel"
+          [imagePreviewLabel]="imagePreviewLabel"
           (assetAction)="onAssetAction($event)"
           (linkPreview)="toggleLinkPreview($event)"
         />
@@ -96,6 +97,7 @@
             [audioDurations]="noteAudio.durations()"
             [mediaLabels]="mediaLabels"
             [linkPreviewLabel]="linkPreviewLabel"
+            [imagePreviewLabel]="imagePreviewLabel"
             (fixBrokenLink)="onFixBrokenLink($event)"
             (assetAction)="onAssetAction($event)"
             (linkPreview)="toggleLinkPreview($event)"

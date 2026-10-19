@@ -15,7 +15,11 @@ import { DomSanitizer, type SafeHtml } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 
-import { renderMarkdownToSafeHtml } from '@/components/document-preview/document-preview.markdown';
+import {
+  renderMarkdownToSafeHtml,
+  toAssetUrl,
+  toInAppAssetRoute,
+} from '@/components/document-preview/document-preview.markdown';
 import { DocumentService } from '@/services/document.service';
 import { WorkspaceService } from '@/services/workspace.service';
 import { ArcTechButtonComponent } from '@/shared/components/button';
@@ -40,6 +44,8 @@ interface PreviewState {
   readonly route: string;
   readonly title: string;
   readonly html: SafeHtml | null;
+  /** Source of the image when the card previews an image instead of a note. */
+  readonly imageUrl: string | null;
   readonly hasError: boolean;
 }
 
@@ -107,8 +113,18 @@ interface PreviewState {
           <div class="min-h-0 overflow-auto px-4 pt-4 pb-4">
             @if (preview.hasError) {
               <p class="text-sm text-destructive">
-                {{ 'document.linkPreview.loadError' | translate }}
+                {{
+                  (preview.imageUrl ? 'campaigns.assets.loadError' : 'document.linkPreview.loadError')
+                    | translate
+                }}
               </p>
+            } @else if (preview.imageUrl) {
+              <img
+                class="mx-auto block max-h-[320px] max-w-full border border-border object-contain"
+                [src]="preview.imageUrl"
+                [alt]="preview.title"
+                (error)="onImageError()"
+              />
             } @else if (preview.html) {
               <div class="arc-markdown-body arc-link-preview-body" [innerHTML]="preview.html"></div>
             } @else {
@@ -152,8 +168,67 @@ export class AppLinkPreviewCardComponent {
     this.close();
     const token = ++this.loadToken;
     const fallbackTitle = path.split('/').pop()?.replace(/\.md$/i, '') ?? path;
-    this.state.set({ path, route, title: fallbackTitle, html: null, hasError: false });
+    this.state.set({
+      path,
+      route,
+      title: fallbackTitle,
+      html: null,
+      imageUrl: null,
+      hasError: false,
+    });
 
+    const overlayRef = this.attach(anchor);
+
+    try {
+      const document = await this.documentService.read(path);
+      if (token !== this.loadToken) {
+        return;
+      }
+      const title = document.title || fallbackTitle;
+      const html = renderMarkdownToSafeHtml(withoutTitleHeading(document.body, title), {
+        links: document.links,
+        sourcePath: document.path,
+      });
+      this.state.set({
+        path,
+        route,
+        title,
+        html: this.sanitizer.bypassSecurityTrustHtml(html),
+        imageUrl: null,
+        hasError: false,
+      });
+    } catch (error) {
+      console.warn('[app] Failed to load the link preview:', path, error);
+      if (token === this.loadToken) {
+        this.state.update((state) => (state ? { ...state, hasError: true } : state));
+      }
+    }
+
+    // The card grows once the note is in: keep it within the window.
+    requestAnimationFrame(() => overlayRef.updatePosition());
+  }
+
+  /** Opens the card below (or above) `anchor` for the image at `path` (vault path): the image itself. */
+  showImage(anchor: Element, path: string): void {
+    this.close();
+    const route = toInAppAssetRoute(path) ?? '';
+    this.state.set({
+      path,
+      route,
+      title: path.split('/').pop() ?? path,
+      html: null,
+      imageUrl: toAssetUrl(path),
+      hasError: false,
+    });
+    this.attach(anchor);
+  }
+
+  protected onImageError(): void {
+    this.state.update((state) => (state ? { ...state, hasError: true } : state));
+  }
+
+  /** Creates the overlay under (or over) `anchor` with the card in it; returns it. */
+  private attach(anchor: Element): OverlayRef {
     const overlayRef = this.overlay.create({
       positionStrategy: this.overlay
         .position()
@@ -193,32 +268,7 @@ export class AppLinkPreviewCardComponent {
       }
     });
 
-    try {
-      const document = await this.documentService.read(path);
-      if (token !== this.loadToken) {
-        return;
-      }
-      const title = document.title || fallbackTitle;
-      const html = renderMarkdownToSafeHtml(withoutTitleHeading(document.body, title), {
-        links: document.links,
-        sourcePath: document.path,
-      });
-      this.state.set({
-        path,
-        route,
-        title,
-        html: this.sanitizer.bypassSecurityTrustHtml(html),
-        hasError: false,
-      });
-    } catch (error) {
-      console.warn('[app] Failed to load the link preview:', path, error);
-      if (token === this.loadToken) {
-        this.state.update((state) => (state ? { ...state, hasError: true } : state));
-      }
-    }
-
-    // The card grows once the note is in: keep it within the window.
-    requestAnimationFrame(() => overlayRef.updatePosition());
+    return overlayRef;
   }
 
   close(): void {

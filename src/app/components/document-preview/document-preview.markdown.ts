@@ -22,7 +22,7 @@ const SANITIZE_OPTIONS: {
   readonly ALLOWED_URI_REGEXP: RegExp;
 } = {
   ADD_TAGS: ['img'],
-  ADD_ATTR: ['loading', 'target', 'rel'],
+  ADD_ATTR: ['loading', 'target', 'rel', 'data-path'],
   // DOMPurify's default URI list plus the vault asset protocol (images would otherwise lose their `src`).
   ALLOWED_URI_REGEXP:
     /^(?:(?:(?:f|ht)tps?|mailto|tel|lazydm-asset):|[^a-z]|[a-z+.-]+(?:[^a-z+.\-:]|$))/i,
@@ -259,7 +259,7 @@ function renderWikilinkToken(token: Token): string {
 
   if (isEmbed && resolvedPath && IMAGE_EXTENSION_PATTERN.test(resolvedPath)) {
     const src = toAssetUrl(resolvedPath);
-    return `<img class="arc-embed-image" src="${src}" alt="${displayText}" loading="lazy" />`;
+    return `<img class="arc-embed-image" src="${src}" alt="${displayText}" loading="lazy" data-path="${escapeHtml(resolvedPath)}" />`;
   }
 
   const mediaKind = isEmbed && resolvedPath ? getMediaEmbedKind(resolvedPath) : null;

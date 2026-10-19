@@ -142,12 +142,19 @@ class ImageWidget extends WidgetType {
     private readonly src: string,
     private readonly alt: string,
     private readonly isEditing = false,
+    /** Vault path of the image (none for a web image): lets the eye button preview it. */
+    private readonly path: string | null = null,
   ) {
     super();
   }
 
   override eq(other: ImageWidget): boolean {
-    return other.src === this.src && other.alt === this.alt && other.isEditing === this.isEditing;
+    return (
+      other.src === this.src &&
+      other.alt === this.alt &&
+      other.isEditing === this.isEditing &&
+      other.path === this.path
+    );
   }
 
   toDOM(): HTMLElement {
@@ -156,6 +163,9 @@ class ImageWidget extends WidgetType {
     image.src = this.src;
     image.alt = this.alt;
     image.loading = 'lazy';
+    if (this.path) {
+      image.dataset['path'] = this.path;
+    }
     // Collapsed (not being edited), the widget replaces its whole `![[…]]` / `![](…)` text: CodeMirror's
     // own drag handling (dragstart) picks up that full range from a draggable element, so dragging the
     // image moves its embed like dragging the link text already does.
@@ -471,14 +481,19 @@ function decorateSyntax(target: DecorationContext, frontmatterEnd: number): void
           if (src && isEditing) {
             const alt = state.sliceDoc(marks[0].to, marks[1].from);
             ranges.push(
-              Decoration.widget({ widget: new ImageWidget(src, alt, true), side: -1 }).range(
+              Decoration.widget({ widget: new ImageWidget(src, alt, true, link?.resolvedPath ?? null), side: -1 }).range(
                 node.from,
               ),
             );
           } else if (src) {
             ranges.push(
               Decoration.replace({
-                widget: new ImageWidget(src, state.sliceDoc(marks[0].to, marks[1].from)),
+                widget: new ImageWidget(
+                  src,
+                  state.sliceDoc(marks[0].to, marks[1].from),
+                  false,
+                  link?.resolvedPath ?? null,
+                ),
               }).range(node.from, node.to),
             );
           }
@@ -653,7 +668,7 @@ function decorateWikilinks(target: DecorationContext, frontmatterEnd: number): v
       if (isEmbed && link?.resolvedPath && IMAGE_PATTERN.test(link.resolvedPath)) {
         ranges.push(
           Decoration.widget({
-            widget: new ImageWidget(toAssetUrl(link.resolvedPath), raw, true),
+            widget: new ImageWidget(toAssetUrl(link.resolvedPath), raw, true, link.resolvedPath),
             side: -1,
           }).range(from),
         );
@@ -665,7 +680,7 @@ function decorateWikilinks(target: DecorationContext, frontmatterEnd: number): v
     if (isEmbed && link?.resolvedPath && IMAGE_PATTERN.test(link.resolvedPath)) {
       ranges.push(
         Decoration.replace({
-          widget: new ImageWidget(toAssetUrl(link.resolvedPath), raw),
+          widget: new ImageWidget(toAssetUrl(link.resolvedPath), raw, false, link.resolvedPath),
         }).range(from, to),
       );
       continue;

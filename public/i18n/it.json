@@ -478,7 +478,8 @@
       "reload": "Ricarica l'altra versione"
     },
     "links": {
-      "linkedFiles": "File collegati",
+      "linkedNotes": "Note collegate",
+      "linkedAssets": "Risorse collegate",
       "noLinkedFiles": "Ancora nessun collegamento da o verso altri file.",
       "from": "Da",
       "to": "A",
@@ -547,6 +548,7 @@
     },
     "linkPreview": {
       "show": "Anteprima della nota collegata",
+      "showImage": "Anteprima dell'immagine",
       "open": "Apri",
       "close": "Chiudi",
       "loading": "Caricamento…",

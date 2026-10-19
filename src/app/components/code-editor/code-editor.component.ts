@@ -133,6 +133,8 @@ export class AppCodeEditorComponent implements OnDestroy {
   readonly mediaLabels = input<MediaEmbedLabels | undefined>(undefined);
   /** Accessible name of the eye button shown on hovered note links (none: no link previews). */
   readonly linkPreviewLabel = input('');
+  /** Accessible name of the eye button shown on hovered images. */
+  readonly imagePreviewLabel = input('');
 
   readonly contentChange = output<string>();
   readonly saveRequested = output<void>();
@@ -263,6 +265,7 @@ export class AppCodeEditorComponent implements OnDestroy {
       host,
       () => this.linkPreviewLabel(),
       (request) => this.linkPreview.emit(request),
+      () => this.imagePreviewLabel(),
     );
   }
 

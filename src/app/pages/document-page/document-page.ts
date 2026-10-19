@@ -114,6 +114,7 @@ export class DocumentPage {
   private readonly brokenLinkMenu = viewChild(AppBrokenLinkMenuComponent);
   private readonly linkPreviewCard = viewChild(AppLinkPreviewCardComponent);
   protected readonly linkPreviewLabel = this.translateService.instant('document.linkPreview.show');
+  protected readonly imagePreviewLabel = this.translateService.instant('document.linkPreview.showImage');
   private loadToken = 0;
   private unregisterOpenNote: (() => void) | null = null;
 
@@ -461,10 +462,12 @@ export class DocumentPage {
   }
 
   /** The eye button of a note link: its preview card (pressed again for the same note, it closes). */
-  protected toggleLinkPreview({ anchor, path, route }: LinkPreviewRequest): void {
+  protected toggleLinkPreview({ kind, anchor, path, route }: LinkPreviewRequest): void {
     const card = this.linkPreviewCard();
     if (card?.isShowing(path)) {
       card.close();
+    } else if (kind === 'image') {
+      card?.showImage(anchor, path);
     } else {
       void card?.show(anchor, path, route);
     }

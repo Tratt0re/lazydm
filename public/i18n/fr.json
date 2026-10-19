@@ -478,7 +478,8 @@
       "reload": "Recharger l'autre version"
     },
     "links": {
-      "linkedFiles": "Fichiers liés",
+      "linkedNotes": "Notes liées",
+      "linkedAssets": "Ressources liées",
       "noLinkedFiles": "Aucun lien vers ou depuis d’autres fichiers pour l’instant.",
       "from": "De",
       "to": "Vers",
@@ -547,6 +548,7 @@
     },
     "linkPreview": {
       "show": "Aperçu de la note liée",
+      "showImage": "Aperçu de l'image",
       "open": "Ouvrir",
       "close": "Fermer",
       "loading": "Chargement…",

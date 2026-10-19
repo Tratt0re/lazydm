@@ -478,7 +478,8 @@
       "reload": "重新加载另一版本"
     },
     "links": {
-      "linkedFiles": "关联文件",
+      "linkedNotes": "链接的笔记",
+      "linkedAssets": "链接的资源",
       "noLinkedFiles": "还没有与其他文件之间的链接。",
       "from": "来自",
       "to": "指向",
@@ -547,6 +548,7 @@
     },
     "linkPreview": {
       "show": "预览链接的笔记",
+      "showImage": "预览图片",
       "open": "打开",
       "close": "关闭",
       "loading": "正在加载…",

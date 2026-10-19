@@ -128,6 +128,8 @@ export class AppDocumentPreviewComponent {
   readonly assetAction = output<CodeEditorAssetAction>();
   /** Accessible name of the eye button shown on hovered note links. */
   readonly linkPreviewLabel = input('');
+  /** Accessible name of the eye button shown on hovered images. */
+  readonly imagePreviewLabel = input('');
   /** The eye button of a note link was pressed: show its preview card. */
   readonly linkPreview = output<LinkPreviewRequest>();
 
@@ -155,6 +157,7 @@ export class AppDocumentPreviewComponent {
         this.scroller().nativeElement,
         () => this.linkPreviewLabel(),
         (request) => this.linkPreview.emit(request),
+        () => this.imagePreviewLabel(),
       );
       this.destroyRef.onDestroy(detach);
     });
