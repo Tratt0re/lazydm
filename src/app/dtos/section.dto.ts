@@ -13,12 +13,16 @@ export interface SectionDto extends DefaultSectionDto {
   readonly label: string | null;
   readonly isCustom: boolean;
   readonly isHidden: boolean;
+  /** Short text a custom section shows on the overview tile. */
+  readonly description?: string | null;
   /** Files in the section folder (from the vault index). */
   readonly fileCount: number;
 }
 
 export interface SectionDefaultsDto {
   readonly campaign: readonly DefaultSectionDto[];
+  /** Sections a new campaign can start with (the special ones are always there). */
+  readonly presets: readonly DefaultSectionDto[];
   /** Default sections plus the folders only a compendium system has (`notes/`). */
   readonly compendium: readonly DefaultSectionDto[];
 }
@@ -29,11 +33,14 @@ export interface CustomSectionPayload {
   readonly label: string;
   readonly type?: string;
   readonly icon: string;
+  readonly description?: string;
 }
 
 export interface SectionSettingsPayload {
   readonly hidden: readonly string[];
   readonly order: readonly string[];
+  /** Deleted preset sections (they do not come back as defaults). */
+  readonly removed?: readonly string[];
   readonly labels: Readonly<Record<string, string>>;
   readonly custom: readonly CustomSectionPayload[];
 }

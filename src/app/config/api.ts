@@ -72,6 +72,10 @@ export interface ElectronIpcClient {
       { folder: string; mode: DTO.DeleteFolderMode; rewriteLinks: boolean },
       DTO.DeleteFolderResultDto
     >;
+    readonly deleteSection: IpcRequest<
+      { campaign: string; section: string; rewriteLinks: boolean },
+      DTO.DeleteSectionResultDto
+    >;
     readonly links: IpcRequest<DTO.ReadDocumentPayload, DTO.DocumentLinksDto>;
     readonly linkTargets: IpcRequest<{ sourcePath: string }, { rows: DTO.LinkTargetDto[] }>;
     readonly brokenLinks: IpcRequest<{ campaign: string }, { rows: DTO.BrokenLinkDto[] }>;

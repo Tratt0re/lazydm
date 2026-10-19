@@ -707,6 +707,42 @@ function getDeletedLinkText(link, isNote) {
   return !isNote && link.kind === 'embed' ? '' : getLinkPlainText(link);
 }
 
+/**
+ * Rewrites the links from notes outside a deleted folder (`prefix`, its own notes go with it) to the files in
+ * it: a note's links become plain text, an asset's embeds are removed (see {@link getDeletedLinkText}).
+ */
+async function rewriteLinksToDeletedFiles(vaultPath, files, prefix) {
+  const isNoteByRawBySource = new Map();
+  for (const file of files) {
+    for (const link of vaultIndexModel.listIncomingLinks(file.path)) {
+      if (!link.sourcePath.startsWith(prefix)) {
+        if (!isNoteByRawBySource.has(link.sourcePath)) {
+          isNoteByRawBySource.set(link.sourcePath, new Map());
+        }
+        isNoteByRawBySource.get(link.sourcePath).set(link.raw, file.kind === 'md');
+      }
+    }
+  }
+
+  const rawsBySource = new Map(
+    [...isNoteByRawBySource].map(([sourcePath, isNoteByRaw]) => [
+      sourcePath,
+      new Set(isNoteByRaw.keys()),
+    ]),
+  );
+  return rewriteIncomingLinks(vaultPath, rawsBySource, null, (content, sourcePath) => {
+    const isNoteByRaw = isNoteByRawBySource.get(sourcePath);
+    return rewriteLinks(
+      content,
+      (link) =>
+        isNoteByRaw.has(link.raw)
+          ? { text: getDeletedLinkText(link, isNoteByRaw.get(link.raw)) }
+          : null,
+      { sourcePath },
+    );
+  });
+}
+
 const FOLDER_DELETE_MODES = new Set(['delete', 'moveToMain']);
 
 /**
@@ -764,41 +800,7 @@ async function deleteFolder(payload) {
       linkCount += result.linkCount;
     }
   } else if (rewriteLinksToText) {
-    // Links from notes outside the folder (its own notes go with it), each raw knowing what it points to.
-    const isNoteByRawBySource = new Map();
-    for (const file of files) {
-      for (const link of vaultIndexModel.listIncomingLinks(file.path)) {
-        if (!link.sourcePath.startsWith(prefix)) {
-          if (!isNoteByRawBySource.has(link.sourcePath)) {
-            isNoteByRawBySource.set(link.sourcePath, new Map());
-          }
-          isNoteByRawBySource.get(link.sourcePath).set(link.raw, file.kind === 'md');
-        }
-      }
-    }
-
-    const rawsBySource = new Map(
-      [...isNoteByRawBySource].map(([sourcePath, isNoteByRaw]) => [
-        sourcePath,
-        new Set(isNoteByRaw.keys()),
-      ]),
-    );
-    const result = await rewriteIncomingLinks(
-      vaultPath,
-      rawsBySource,
-      null,
-      (content, sourcePath) => {
-        const isNoteByRaw = isNoteByRawBySource.get(sourcePath);
-        return rewriteLinks(
-          content,
-          (link) =>
-            isNoteByRaw.has(link.raw)
-              ? { text: getDeletedLinkText(link, isNoteByRaw.get(link.raw)) }
-              : null,
-          { sourcePath },
-        );
-      },
-    );
+    const result = await rewriteLinksToDeletedFiles(vaultPath, files, prefix);
     result.updatedPaths.forEach((item) => updatedPaths.add(item));
     result.failedPaths.forEach((item) => failedPaths.add(item));
     linkCount = result.linkCount;
@@ -818,6 +820,77 @@ async function deleteFolder(payload) {
     updatedPaths: [...updatedPaths],
     failedPaths: [...failedPaths],
     linkCount,
+  };
+}
+
+/**
+ * Deletes a section of a campaign with all its content: the folder goes to the system Trash (recoverable) and
+ * the section leaves the campaign's settings. With `rewriteLinks`, links from notes outside it to its files are
+ * handled like a file delete (plain text, embeds removed). The special sections cannot be deleted.
+ */
+async function deleteSection(payload) {
+  const body = ensurePlainObject(payload, 'payload');
+  const campaign = requireString(body.campaign, 'payload.campaign');
+  const key = requireString(body.section, 'payload.section');
+  const rewriteLinksToText =
+    normalizeOptionalBooleanFlag(body.rewriteLinks, 'payload.rewriteLinks') !== 0;
+  if (campaign.includes('/') || key.includes('/')) {
+    throw new Error('Not a section of a campaign.');
+  }
+
+  requireIndexOpen();
+  const vaultPath = vaultController.getReadyVaultPath();
+  const section = sectionModel
+    .listCampaignSections(vaultPath, campaign)
+    .find((item) => item.key === key);
+  if (!section) {
+    throw new Error(`Not a section: ${campaign}/${key}`);
+  }
+  if (section.isSpecial) {
+    throw new Error(`The ${key} section cannot be deleted.`);
+  }
+
+  const folderPath = `${campaign}/${key}`;
+  const absolutePath = resolveInsideVault(vaultPath, folderPath);
+  const prefix = `${folderPath}/`;
+  const files = vaultIndexModel
+    .listScopeFiles(campaign)
+    .filter((file) => file.path.startsWith(prefix));
+  const links = rewriteLinksToText
+    ? await rewriteLinksToDeletedFiles(vaultPath, files, prefix)
+    : { updatedPaths: [], failedPaths: [], linkCount: 0 };
+
+  if (fs.existsSync(absolutePath)) {
+    await shell.trashItem(absolutePath);
+  }
+
+  // Custom sections leave `custom`; a preset is marked `removed` (it would come back as a default otherwise).
+  const stored = sectionModel.readCampaignSectionSettings(vaultPath, campaign);
+  const rows = sectionModel.listCampaignSections(vaultPath, campaign);
+  sectionModel.saveCampaignSectionSettings(vaultPath, campaign, {
+    hidden: stored.hidden,
+    order: stored.order,
+    labels: stored.labels,
+    removed: section.isCustom ? stored.removed : [...stored.removed, key],
+    custom: rows
+      .filter((row) => row.isCustom && row.key !== key)
+      .map(({ key: rowKey, type, label, icon, description }) => ({
+        key: rowKey,
+        type,
+        label,
+        icon,
+        description,
+      })),
+  });
+
+  await indexerController.reindexPaths([...files.map((file) => file.path), ...links.updatedPaths]);
+  return {
+    status: 'deleted',
+    path: folderPath,
+    deleted: files.map((file) => file.path),
+    updatedPaths: links.updatedPaths,
+    failedPaths: links.failedPaths,
+    linkCount: links.linkCount,
   };
 }
 
@@ -1186,6 +1259,7 @@ module.exports = {
   create,
   deleteFile,
   deleteFolder,
+  deleteSection,
   linkTargets,
   links,
   list,

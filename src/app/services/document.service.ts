@@ -11,6 +11,7 @@ import type {
   DeleteFilePayload,
   DeleteFolderMode,
   DeleteFolderResultDto,
+  DeleteSectionResultDto,
   DocumentDto,
   DocumentFileListItemDto,
   DocumentFolderDto,
@@ -139,6 +140,15 @@ export class DocumentService extends BaseIpcService<APIChannel.DOCUMENTS> {
     rewriteLinks: boolean,
   ): Promise<DeleteFolderResultDto> {
     return this.ipcClient.deleteFolder({ folder, mode, rewriteLinks });
+  }
+
+  /** Deletes a section of a campaign with all its files (to the system Trash), by default rewriting the links. */
+  deleteSection(
+    campaign: string,
+    section: string,
+    rewriteLinks: boolean,
+  ): Promise<DeleteSectionResultDto> {
+    return this.ipcClient.deleteSection({ campaign, section, rewriteLinks });
   }
 
   links(path: string): Promise<DocumentLinksDto> {

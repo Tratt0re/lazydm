@@ -53,6 +53,7 @@ var require_channels = __commonJS({
         delete: "documents:delete",
         renameFolder: "documents:renameFolder",
         deleteFolder: "documents:deleteFolder",
+        deleteSection: "documents:deleteSection",
         links: "documents:links",
         linkTargets: "documents:linkTargets",
         brokenLinks: "documents:brokenLinks",

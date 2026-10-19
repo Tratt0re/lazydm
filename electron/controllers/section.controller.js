@@ -34,6 +34,7 @@ async function list(payload) {
 function defaults() {
   return {
     campaign: sectionModel.DEFAULT_SECTIONS,
+    presets: sectionModel.SECTION_PRESETS,
     compendium: [...sectionModel.DEFAULT_SECTIONS, ...sectionModel.COMPENDIUM_EXTRA_SECTIONS],
   };
 }

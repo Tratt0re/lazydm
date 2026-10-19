@@ -32,6 +32,8 @@ export interface AppSection {
   /** Assets and encounters: *New folder* and *Import* but no *New note*; sub-folders are not sub-types. */
   readonly isSpecial: boolean;
   readonly fileCount: number;
+  /** Text of a custom section's overview tile, if the user wrote one. */
+  readonly description: string | null;
 }
 
 /** Icons offered for a custom section (the first one is the default). */
@@ -73,6 +75,7 @@ export function toSectionSettings(rows: readonly AppSection[]): SectionSettingsP
         label: row.customLabel ?? row.key,
         type: row.type ?? undefined,
         icon: row.icon,
+        description: row.description ?? undefined,
       })),
   };
 }
@@ -98,6 +101,7 @@ function toAppSection(section: DefaultSectionDto | SectionDto): AppSection {
     isHidden: settings?.isHidden ?? false,
     isSpecial: section.isSpecial === true,
     fileCount: settings?.fileCount ?? 0,
+    description: settings?.description ?? null,
   };
 }
 
@@ -117,7 +121,11 @@ export class SectionService extends BaseIpcService<APIChannel.SECTIONS> {
     this.translateService.onLangChange.pipe(map((event) => event.lang)),
     { initialValue: this.translateService.getCurrentLang() ?? 'en' },
   );
-  private readonly defaultsSignal = signal<SectionDefaultsDto>({ campaign: [], compendium: [] });
+  private readonly defaultsSignal = signal<SectionDefaultsDto>({
+    campaign: [],
+    presets: [],
+    compendium: [],
+  });
   private readonly loadedSignal = signal<{ slug: string; rows: readonly SectionDto[] } | null>(
     null,
   );
@@ -133,6 +141,10 @@ export class SectionService extends BaseIpcService<APIChannel.SECTIONS> {
   /** The sections the active campaign shows in its sidebar. */
   readonly visibleCampaignSections = computed(() =>
     this.campaignSections().filter((section) => !section.isHidden),
+  );
+  /** Sections a new campaign can start with. */
+  readonly presetSections = computed<readonly AppSection[]>(() =>
+    this.defaultsSignal().presets.map(toAppSection),
   );
   /** Folders a compendium system can have (default sections and `notes/`). */
   readonly systemSections = computed<readonly AppSection[]>(() =>

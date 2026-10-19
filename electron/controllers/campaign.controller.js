@@ -1,4 +1,4 @@
-const { campaignModel } = require('../models');
+const { campaignModel, sectionModel } = require('../models');
 const { toSlug } = require('../utils/string-sanitize');
 const vaultController = require('./vault.controller');
 const { ensurePlainObject, normalizeOptionalString, requireString } = require('./utils');
@@ -40,7 +40,13 @@ async function create(payload) {
     throw new Error(`A folder named "${slug}" already exists in the vault.`);
   }
 
-  return campaignModel.createCampaign(vaultPath, { slug, name, description });
+  const campaign = await campaignModel.createCampaign(vaultPath, { slug, name, description });
+  // Starting sections: the chosen presets (no list = all of them, like campaigns before presets).
+  if (Array.isArray(body.presets)) {
+    sectionModel.initCampaignSections(vaultPath, slug, body.presets);
+  }
+
+  return campaign;
 }
 
 module.exports = {

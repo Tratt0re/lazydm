@@ -10,4 +10,6 @@ export interface CampaignDto {
 export interface CreateCampaignPayload {
   readonly name: string;
   readonly description?: string | null;
+  /** Keys of the preset sections the campaign starts with; none given = all of them. */
+  readonly presets?: readonly string[];
 }

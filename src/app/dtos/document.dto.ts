@@ -183,6 +183,16 @@ export type DeleteFolderResultDto =
       readonly linkCount: number;
     };
 
+/** Result of deleting a section: its folder went to the Trash with all its files. */
+export interface DeleteSectionResultDto {
+  readonly status: 'deleted';
+  readonly path: string;
+  readonly deleted: readonly string[];
+  readonly updatedPaths: readonly string[];
+  readonly failedPaths: readonly string[];
+  readonly linkCount: number;
+}
+
 /** Deletes a note or an asset (to the system Trash). */
 export interface DeleteFilePayload {
   readonly path: string;
