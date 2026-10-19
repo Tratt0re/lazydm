@@ -953,6 +953,16 @@
       "title": "Cimitero",
       "empty": "Nessuno è ancora caduto.",
       "recover": "Recupera"
+    },
+    "status": {
+      "add": "Aggiungi stato",
+      "title": "Aggiungi stato · {{name}}",
+      "nameLabel": "Stato",
+      "namePlaceholder": "Prono",
+      "roundsLabel": "Round",
+      "roundsHint": "Facoltativo. Scende alla fine del turno di questa entità e scompare a 0.",
+      "submit": "Aggiungi",
+      "remove": "Rimuovi {{name}}"
     }
   }
 }

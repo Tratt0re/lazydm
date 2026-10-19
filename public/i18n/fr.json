@@ -953,6 +953,16 @@
       "title": "Cimetière",
       "empty": "Personne n'est encore tombé.",
       "recover": "Récupérer"
+    },
+    "status": {
+      "add": "Ajouter un état",
+      "title": "Ajouter un état · {{name}}",
+      "nameLabel": "État",
+      "namePlaceholder": "À terre",
+      "roundsLabel": "Rounds",
+      "roundsHint": "Facultatif. Diminue à la fin du tour de cette entité et disparaît à 0.",
+      "submit": "Ajouter",
+      "remove": "Retirer {{name}}"
     }
   }
 }

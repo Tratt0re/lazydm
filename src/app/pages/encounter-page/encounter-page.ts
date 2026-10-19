@@ -63,6 +63,12 @@ interface HpUndoStep {
   readonly previous: HealthValue | undefined;
 }
 
+/** A status: a free tag the user types on an entity, with an optional number of rounds left. */
+interface StatusValue {
+  readonly name: string;
+  readonly rounds?: number;
+}
+
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null && !Array.isArray(value);
 }
@@ -307,6 +313,16 @@ export class EncounterPage {
   protected textOf(entity: EncounterEntityDto, field: BattleRuleFieldDto): string | null {
     const value = entity.values[field.key];
     return typeof value === 'string' && value.length > 0 ? value : null;
+  }
+
+  /** Statuses of an entity (`values[<statuses field key>]`); anything that is not a tag with a name is ignored. */
+  protected statusesOf(entity: EncounterEntityDto, field: BattleRuleFieldDto): readonly StatusValue[] {
+    const value = entity.values[field.key];
+    return Array.isArray(value)
+      ? value.filter(
+          (status): status is StatusValue => isRecord(status) && typeof status['name'] === 'string',
+        )
+      : [];
   }
 
   protected healthOf(entity: EncounterEntityDto, field: BattleRuleFieldDto): HealthValue {
@@ -601,6 +617,9 @@ export class EncounterPage {
       const isLast = index === alive.length - 1;
       return {
         ...encounter,
+        entities: encounter.entities.map((entity) =>
+          entity.id === encounter.battle.turnId ? this.tickStatuses(entity) : entity,
+        ),
         battle: {
           ...encounter.battle,
           round: encounter.battle.round + (isLast ? 1 : 0),
@@ -763,6 +782,90 @@ export class EncounterPage {
         entities: [...alive, ...encounter.entities.filter((entity) => entity.isDead)],
       };
     });
+  }
+
+  // --- Statuses ----------------------------------------------------------------------------------------
+
+  /** *Add status*: a name, and optionally the number of rounds it lasts (it counts down on the entity's turns). */
+  protected openStatusSheet(entity: EncounterEntityDto, field: BattleRuleFieldDto): void {
+    let isDone = false;
+    const sheetRef = this.sheetFormService.open({
+      arcTitle: this.translateService.instant('encounters.status.title', {
+        name: this.entityName(entity.name),
+      }),
+      arcOkText: this.translateService.instant('encounters.status.submit'),
+      arcCancelText: this.translateService.instant('campaigns.sections.newNote.cancel'),
+      fields: [
+        {
+          id: 'name',
+          type: 'input',
+          label: 'encounters.status.nameLabel',
+          placeholder: 'encounters.status.namePlaceholder',
+          required: true,
+          translate: true,
+        },
+        {
+          id: 'rounds',
+          type: 'input',
+          inputType: 'number',
+          label: 'encounters.status.roundsLabel',
+          description: 'encounters.status.roundsHint',
+          translate: true,
+        },
+      ],
+      onSubmit: (form) => {
+        const values = form.getValues();
+        const name = String(values['name'] ?? '').trim();
+        const rounds = parseNumber(values['rounds']);
+        if (!isDone && name.length > 0) {
+          isDone = true;
+          this.setStatuses(entity.id, field.key, (statuses) => [
+            ...statuses,
+            { name, ...(rounds !== null && rounds > 0 ? { rounds } : {}) },
+          ]);
+          sheetRef.close();
+        }
+
+        return false;
+      },
+    });
+  }
+
+  protected removeStatus(entity: EncounterEntityDto, field: BattleRuleFieldDto, index: number): void {
+    this.setStatuses(entity.id, field.key, (statuses) => statuses.filter((_, i) => i !== index));
+  }
+
+  /** Replaces the statuses of an entity; none left removes the key, so the file only holds what means something. */
+  private setStatuses(
+    entityId: string,
+    key: string,
+    change: (statuses: readonly StatusValue[]) => readonly StatusValue[],
+  ): void {
+    this.updateEntity(entityId, (entity) => {
+      const values = { ...entity.values };
+      const current = Array.isArray(values[key]) ? (values[key] as StatusValue[]) : [];
+      const next = change(current);
+      this.setOrClear(values, key, next.length > 0 ? next : null);
+      return { ...entity, values };
+    });
+  }
+
+  /** End of an entity's turn: its statuses lose a round, and those that reach zero go. Tags without rounds stay. */
+  private tickStatuses(entity: EncounterEntityDto): EncounterEntityDto {
+    const key = this.rule()?.fields.find((field) => field.component === 'statuses')?.key;
+    const current = key ? entity.values[key] : null;
+    if (!key || !Array.isArray(current)) {
+      return entity;
+    }
+
+    const next = (current as StatusValue[])
+      .map((status) =>
+        status.rounds === undefined ? status : { ...status, rounds: status.rounds - 1 },
+      )
+      .filter((status) => status.rounds === undefined || status.rounds > 0);
+    const values = { ...entity.values };
+    this.setOrClear(values, key, next.length > 0 ? next : null);
+    return { ...entity, values };
   }
 
   // --- Hit points --------------------------------------------------------------------------------------

@@ -953,6 +953,16 @@
       "title": "墓地",
       "empty": "还没有人倒下。",
       "recover": "恢复"
+    },
+    "status": {
+      "add": "添加状态",
+      "title": "添加状态 · {{name}}",
+      "nameLabel": "状态",
+      "namePlaceholder": "倒地",
+      "roundsLabel": "轮数",
+      "roundsHint": "可选。在该单位回合结束时递减，归零后移除。",
+      "submit": "添加",
+      "remove": "移除 {{name}}"
     }
   }
 }

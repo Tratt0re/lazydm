@@ -549,8 +549,8 @@ variant keys and configuration stay as they are.
 | 14.3 | Rule-driven rows: initiative, name, health bar (HP + temporary HP), *Manage HP* modal (damage / heal / temporary HP), undo |
 | 14.4 | Battle flow: *Start battle* / *Stop battle* (stop clears statuses and initiatives and restores HP where possible; no reset), next turn, add entities mid-battle, duplicate with numbering, drag to reorder, *Roll initiative* only when the rule has a formula |
 | 14.5 | Cemetery: remove an entity, side panel listing the dead with recover |
-| 14.6 | Statuses: a `statuses` section (notes, description = the note body), added automatically to existing campaigns; round counts that tick down |
-| 14.7 | Side panel: the entity's linked note, a status description, rule fields read from the note's frontmatter |
+| 14.6 | Statuses: free tags the user types on an entity, with an optional round count that ticks down at the end of its turn (no section, no notes; richer statuses may come later) |
+| 14.7 | Side panel: the entity's linked note and rule fields read from the note's frontmatter |
 | 14.8 | Party roster: hidden `encounters/_party.json`, always reachable from the encounters overview, re-added to any encounter |
 | 14.9 | Battle rules management: `_battle-rules/` JSON files (vault, system, campaign), built-in rule with *Customize*, per-campaign choice in `vault.json`, library in the Templates sheet |
 | 14.10 | Embedding: `![[x.json]]` renders as an encounter row in notes, link suggestions list encounters, Linked files panel shows them |

@@ -953,6 +953,16 @@
       "title": "Friedhof",
       "empty": "Noch ist niemand gefallen.",
       "recover": "Wiederbeleben"
+    },
+    "status": {
+      "add": "Zustand hinzufügen",
+      "title": "Zustand hinzufügen · {{name}}",
+      "nameLabel": "Zustand",
+      "namePlaceholder": "Liegend",
+      "roundsLabel": "Runden",
+      "roundsHint": "Optional. Zählt am Ende des Zuges dieser Einheit herunter und endet bei 0.",
+      "submit": "Hinzufügen",
+      "remove": "{{name}} entfernen"
     }
   }
 }

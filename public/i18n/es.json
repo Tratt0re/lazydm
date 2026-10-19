@@ -953,6 +953,16 @@
       "title": "Cementerio",
       "empty": "Nadie ha caído todavía.",
       "recover": "Recuperar"
+    },
+    "status": {
+      "add": "Añadir estado",
+      "title": "Añadir estado · {{name}}",
+      "nameLabel": "Estado",
+      "namePlaceholder": "Derribado",
+      "roundsLabel": "Rondas",
+      "roundsHint": "Opcional. Baja al final del turno de esta entidad y desaparece en 0.",
+      "submit": "Añadir",
+      "remove": "Quitar {{name}}"
     }
   }
 }

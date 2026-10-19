@@ -117,6 +117,37 @@
                     {{ 'encounters.hp.manage' | translate }}
                   </button>
                 }
+                @case ('statuses') {
+                  <span class="flex flex-wrap items-center gap-1">
+                    @for (status of statusesOf(entity, field); track $index) {
+                      <arc-badge arcType="outline" class="gap-1 pr-0.5">
+                        {{ status.name }}@if (status.rounds !== undefined) { · {{ status.rounds }} }
+                        <button
+                          type="button"
+                          class="flex size-4 cursor-pointer items-center justify-center hover:text-destructive focus-visible:outline-2 focus-visible:outline-ring"
+                          [disabled]="!isEditable()"
+                          [attr.aria-label]="'encounters.status.remove' | translate: { name: status.name }"
+                          (click)="removeStatus(entity, field, $index)"
+                        >
+                          <arc-icon arcType="x" />
+                        </button>
+                      </arc-badge>
+                    }
+                    <button
+                      type="button"
+                      arc-button
+                      arcType="ghost"
+                      arcSize="sm"
+                      class="size-6"
+                      [disabled]="!isEditable()"
+                      [attr.aria-label]="'encounters.status.add' | translate"
+                      [arcTooltip]="'encounters.status.add' | translate"
+                      (click)="openStatusSheet(entity, field)"
+                    >
+                      <arc-icon arcType="plus" />
+                    </button>
+                  </span>
+                }
                 @case ('text') {
                   @if (textOf(entity, field); as text) {
                     <span class="truncate text-xs text-muted-foreground">{{ text }}</span>
