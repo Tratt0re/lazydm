@@ -890,7 +890,15 @@
       "description": "添加的单位会按先攻顺序显示在这里。"
     },
     "entity": {
-      "unnamed": "未命名"
+      "unnamed": "未命名",
+      "add": "添加单位",
+      "addTitle": "添加单位",
+      "addSubmit": "添加",
+      "edit": "编辑",
+      "editTitle": "编辑单位",
+      "save": "保存",
+      "name": "名称",
+      "namePlaceholder": "地精 1"
     },
     "fields": {
       "initiative": "先攻",
@@ -899,6 +907,34 @@
       "hp": "生命值",
       "statuses": "状态",
       "note": "笔记"
+    },
+    "saveError": "无法保存遭遇",
+    "conflict": {
+      "title": "此遭遇已在别处更改",
+      "description": "你编辑期间保存了此遭遇的较新版本。保留你的更改，或加载另一个版本。",
+      "keepMine": "保留我的版本",
+      "reload": "加载另一个版本"
+    },
+    "hp": {
+      "manage": "管理生命值",
+      "title": "管理生命值 · {{name}}",
+      "apply": "应用",
+      "mode": "变更",
+      "amount": "数值",
+      "current": "当前",
+      "max": "最大",
+      "undo": "撤销上次生命值更改",
+      "modes": {
+        "damage": "伤害",
+        "heal": "治疗",
+        "temp": "设置临时生命值"
+      }
+    },
+    "sides": {
+      "none": "无阵营",
+      "enemy": "敌人",
+      "player": "玩家",
+      "ally": "盟友"
     }
   }
 }

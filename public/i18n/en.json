@@ -890,7 +890,15 @@
       "description": "Entities you add appear here in initiative order."
     },
     "entity": {
-      "unnamed": "Unnamed"
+      "unnamed": "Unnamed",
+      "add": "Add entity",
+      "addTitle": "Add entity",
+      "addSubmit": "Add",
+      "edit": "Edit",
+      "editTitle": "Edit entity",
+      "save": "Save",
+      "name": "Name",
+      "namePlaceholder": "Goblin 1"
     },
     "fields": {
       "initiative": "Initiative",
@@ -899,6 +907,34 @@
       "hp": "HP",
       "statuses": "Statuses",
       "note": "Note"
+    },
+    "saveError": "Couldn't save the encounter",
+    "conflict": {
+      "title": "This encounter changed elsewhere",
+      "description": "A newer version of this encounter was saved while you were editing. Keep your changes, or load the other version.",
+      "keepMine": "Keep my version",
+      "reload": "Load the other version"
+    },
+    "hp": {
+      "manage": "Manage HP",
+      "title": "Manage HP · {{name}}",
+      "apply": "Apply",
+      "mode": "Change",
+      "amount": "Amount",
+      "current": "current",
+      "max": "max",
+      "undo": "Undo last HP change",
+      "modes": {
+        "damage": "Damage",
+        "heal": "Heal",
+        "temp": "Set temporary HP"
+      }
+    },
+    "sides": {
+      "none": "No side",
+      "enemy": "Enemy",
+      "player": "Player",
+      "ally": "Ally"
     }
   }
 }

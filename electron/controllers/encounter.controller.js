@@ -1,4 +1,4 @@
-const { encounterModel } = require('../models');
+const { battleRuleModel, encounterModel } = require('../models');
 const { toSlug } = require('../utils/string-sanitize');
 const vaultController = require('./vault.controller');
 const { ensurePlainObject, normalizeOptionalString, requireString } = require('./utils');
@@ -10,6 +10,13 @@ function requirePath(body, key = 'path') {
 function read(payload) {
   const body = ensurePlainObject(payload, 'payload');
   return encounterModel.readEncounter(vaultController.getReadyVaultPath(), requirePath(body));
+}
+
+/** Battle rule of an encounter. Only the built-in rule exists for now; rule files and campaign choices come later. */
+function rule(payload) {
+  const body = ensurePlainObject(payload, 'payload');
+  requirePath(body);
+  return battleRuleModel.DEFAULT_BATTLE_RULE;
 }
 
 function write(payload) {
@@ -45,5 +52,6 @@ function create(payload) {
 module.exports = {
   create,
   read,
+  rule,
   write,
 };

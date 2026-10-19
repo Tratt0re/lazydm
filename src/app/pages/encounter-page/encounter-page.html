@@ -6,13 +6,13 @@
       [arcTitle]="'encounters.loadError' | translate"
       [arcDescription]="message"
     />
-  } @else if (file(); as loaded) {
-    @if (loaded.parseError; as parseError) {
+  } @else if (encounter()) {
+    @if (parseError(); as message) {
       <arc-alert
         arcType="destructive"
         arcIcon="circle-alert"
         [arcTitle]="'encounters.parseError' | translate"
-        [arcDescription]="parseError"
+        [arcDescription]="message"
       />
     }
 
@@ -26,14 +26,91 @@
     } @else {
       <ul class="flex flex-col border border-border bg-card">
         @for (entity of entities(); track entity.id) {
-          <li class="flex items-center gap-3 border-b border-border p-4 last:border-b-0">
-            <arc-icon arcType="swords" class="size-4 shrink-0 text-primary" aria-hidden="true" />
+          <li class="flex flex-wrap items-center gap-x-4 gap-y-2 border-b border-border p-4 last:border-b-0">
+            @for (field of leadFields(); track field.key) {
+              @let initiative = numberOf(entity, field);
+              <span
+                class="flex size-10 shrink-0 items-center justify-center border border-border bg-recessed font-display text-xl font-extrabold"
+                [class.text-muted-foreground]="initiative === null"
+                [attr.title]="fieldLabel(field)"
+              >
+                {{ initiative ?? '–' }}
+              </span>
+            }
+
             <span
-              class="truncate text-sm font-semibold"
+              class="min-w-0 flex-1 basis-40 truncate text-sm font-semibold"
               [class.text-muted-foreground]="entity.name === null"
             >
               {{ entityName(entity.name) }}
             </span>
+
+            @for (field of otherFields(); track field.key) {
+              @switch (field.component) {
+                @case ('side') {
+                  @if (textOf(entity, field); as side) {
+                    <arc-badge arcType="secondary">{{ sideLabel(side) }}</arc-badge>
+                  }
+                }
+                @case ('number') {
+                  @if (numberOf(entity, field); as value) {
+                    <span class="flex items-baseline gap-1 font-mono text-xs">
+                      <span class="text-muted-foreground uppercase">{{ fieldLabel(field) }}</span>
+                      <span class="font-semibold">{{ value }}</span>
+                    </span>
+                  }
+                }
+                @case ('healthbar') {
+                  @let health = healthOf(entity, field);
+                  <app-encounter-health-bar
+                    class="w-44"
+                    [current]="health.current ?? null"
+                    [max]="health.max ?? null"
+                    [temp]="health.temp ?? 0"
+                    [label]="fieldLabel(field)"
+                  />
+                  <button
+                    type="button"
+                    arc-button
+                    arcType="outline"
+                    arcSize="sm"
+                    class="shrink-0"
+                    [disabled]="!isEditable()"
+                    (click)="openHpSheet(entity, field)"
+                  >
+                    <arc-icon arcType="heart" />
+                    {{ 'encounters.hp.manage' | translate }}
+                  </button>
+                }
+                @case ('text') {
+                  @if (textOf(entity, field); as text) {
+                    <span class="truncate text-xs text-muted-foreground">{{ text }}</span>
+                  }
+                }
+                @case ('note-link') {
+                  @if (textOf(entity, field); as note) {
+                    <span class="flex items-center gap-1 truncate font-mono text-xs text-muted-foreground">
+                      <arc-icon arcType="file-text" class="size-3.5 shrink-0" />
+                      {{ note }}
+                    </span>
+                  }
+                }
+              }
+            }
+
+            <button
+              type="button"
+              arc-button
+              arcType="ghost"
+              arcSize="sm"
+              class="size-8 shrink-0"
+              [disabled]="!isEditable()"
+              [attr.aria-label]="'encounters.entity.edit' | translate"
+              [arcTooltip]="'encounters.entity.edit' | translate"
+              (click)="openEntitySheet(entity)"
+            >
+              <arc-icon arcType="pencil" />
+            </button>
           </li>
         }
       </ul>

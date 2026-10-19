@@ -890,7 +890,15 @@
       "description": "Las entidades que añadas aparecen aquí por orden de iniciativa."
     },
     "entity": {
-      "unnamed": "Sin nombre"
+      "unnamed": "Sin nombre",
+      "add": "Añadir entidad",
+      "addTitle": "Añadir entidad",
+      "addSubmit": "Añadir",
+      "edit": "Editar",
+      "editTitle": "Editar entidad",
+      "save": "Guardar",
+      "name": "Nombre",
+      "namePlaceholder": "Goblin 1"
     },
     "fields": {
       "initiative": "Iniciativa",
@@ -899,6 +907,34 @@
       "hp": "PG",
       "statuses": "Estados",
       "note": "Nota"
+    },
+    "saveError": "No se pudo guardar el encuentro",
+    "conflict": {
+      "title": "Este encuentro cambió en otro sitio",
+      "description": "Se guardó una versión más reciente de este encuentro mientras lo editabas. Conserva tus cambios o carga la otra versión.",
+      "keepMine": "Conservar mi versión",
+      "reload": "Cargar la otra versión"
+    },
+    "hp": {
+      "manage": "Gestionar PG",
+      "title": "Gestionar PG · {{name}}",
+      "apply": "Aplicar",
+      "mode": "Cambio",
+      "amount": "Cantidad",
+      "current": "actuales",
+      "max": "máx.",
+      "undo": "Deshacer el último cambio de PG",
+      "modes": {
+        "damage": "Daño",
+        "heal": "Curación",
+        "temp": "Fijar PG temporales"
+      }
+    },
+    "sides": {
+      "none": "Sin bando",
+      "enemy": "Enemigo",
+      "player": "Jugador",
+      "ally": "Aliado"
     }
   }
 }

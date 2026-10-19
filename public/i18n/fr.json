@@ -890,7 +890,15 @@
       "description": "Les entités ajoutées apparaissent ici par ordre d'initiative."
     },
     "entity": {
-      "unnamed": "Sans nom"
+      "unnamed": "Sans nom",
+      "add": "Ajouter une entité",
+      "addTitle": "Ajouter une entité",
+      "addSubmit": "Ajouter",
+      "edit": "Modifier",
+      "editTitle": "Modifier l'entité",
+      "save": "Enregistrer",
+      "name": "Nom",
+      "namePlaceholder": "Gobelin 1"
     },
     "fields": {
       "initiative": "Initiative",
@@ -899,6 +907,34 @@
       "hp": "PV",
       "statuses": "États",
       "note": "Note"
+    },
+    "saveError": "Impossible d'enregistrer la rencontre",
+    "conflict": {
+      "title": "Cette rencontre a changé ailleurs",
+      "description": "Une version plus récente de cette rencontre a été enregistrée pendant votre édition. Gardez vos modifications ou chargez l'autre version.",
+      "keepMine": "Garder ma version",
+      "reload": "Charger l'autre version"
+    },
+    "hp": {
+      "manage": "Gérer les PV",
+      "title": "Gérer les PV · {{name}}",
+      "apply": "Appliquer",
+      "mode": "Changement",
+      "amount": "Quantité",
+      "current": "actuels",
+      "max": "max.",
+      "undo": "Annuler le dernier changement de PV",
+      "modes": {
+        "damage": "Dégâts",
+        "heal": "Soins",
+        "temp": "Définir les PV temporaires"
+      }
+    },
+    "sides": {
+      "none": "Aucun camp",
+      "enemy": "Ennemi",
+      "player": "Joueur",
+      "ally": "Allié"
     }
   }
 }

@@ -69,6 +69,7 @@ const IPC_HANDLERS = Object.freeze({
   [CHANNELS.documents.copyPlan]: documentController.copyPlan,
 
   [CHANNELS.encounters.read]: encounterController.read,
+  [CHANNELS.encounters.rule]: encounterController.rule,
   [CHANNELS.encounters.write]: encounterController.write,
   [CHANNELS.encounters.create]: encounterController.create,
 

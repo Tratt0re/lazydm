@@ -890,7 +890,15 @@
       "description": "Le entità aggiunte appaiono qui in ordine di iniziativa."
     },
     "entity": {
-      "unnamed": "Senza nome"
+      "unnamed": "Senza nome",
+      "add": "Aggiungi entità",
+      "addTitle": "Aggiungi entità",
+      "addSubmit": "Aggiungi",
+      "edit": "Modifica",
+      "editTitle": "Modifica entità",
+      "save": "Salva",
+      "name": "Nome",
+      "namePlaceholder": "Goblin 1"
     },
     "fields": {
       "initiative": "Iniziativa",
@@ -899,6 +907,34 @@
       "hp": "PF",
       "statuses": "Stati",
       "note": "Nota"
+    },
+    "saveError": "Impossibile salvare l'incontro",
+    "conflict": {
+      "title": "Questo incontro è cambiato altrove",
+      "description": "È stata salvata una versione più recente di questo incontro mentre lo modificavi. Mantieni le tue modifiche o carica l'altra versione.",
+      "keepMine": "Mantieni la mia versione",
+      "reload": "Carica l'altra versione"
+    },
+    "hp": {
+      "manage": "Gestisci PF",
+      "title": "Gestisci PF · {{name}}",
+      "apply": "Applica",
+      "mode": "Modifica",
+      "amount": "Quantità",
+      "current": "attuali",
+      "max": "massimi",
+      "undo": "Annulla l'ultima modifica ai PF",
+      "modes": {
+        "damage": "Danno",
+        "heal": "Cura",
+        "temp": "Imposta PF temporanei"
+      }
+    },
+    "sides": {
+      "none": "Nessuna fazione",
+      "enemy": "Nemico",
+      "player": "Giocatore",
+      "ally": "Alleato"
     }
   }
 }

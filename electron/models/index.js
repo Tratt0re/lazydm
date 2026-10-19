@@ -1,4 +1,5 @@
 const appMetaModel = require('./app-meta.model');
+const battleRuleModel = require('./battle-rule.model');
 const campaignModel = require('./campaign.model');
 const compendiumModel = require('./compendium.model');
 const documentModel = require('./document.model');
@@ -13,6 +14,7 @@ const workspaceModel = require('./workspace.model');
 
 module.exports = {
   appMetaModel,
+  battleRuleModel,
   campaignModel,
   cloudReadinessModel,
   compendiumModel,

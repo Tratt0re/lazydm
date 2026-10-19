@@ -55,6 +55,7 @@ const CHANNELS = Object.freeze({
   }),
   encounters: Object.freeze({
     read: 'encounters:read',
+    rule: 'encounters:rule',
     write: 'encounters:write',
     create: 'encounters:create',
   }),

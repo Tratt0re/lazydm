@@ -890,7 +890,15 @@
       "description": "Hinzugefügte Einheiten erscheinen hier in Initiative-Reihenfolge."
     },
     "entity": {
-      "unnamed": "Unbenannt"
+      "unnamed": "Unbenannt",
+      "add": "Einheit hinzufügen",
+      "addTitle": "Einheit hinzufügen",
+      "addSubmit": "Hinzufügen",
+      "edit": "Bearbeiten",
+      "editTitle": "Einheit bearbeiten",
+      "save": "Speichern",
+      "name": "Name",
+      "namePlaceholder": "Goblin 1"
     },
     "fields": {
       "initiative": "Initiative",
@@ -899,6 +907,34 @@
       "hp": "TP",
       "statuses": "Zustände",
       "note": "Notiz"
+    },
+    "saveError": "Die Begegnung konnte nicht gespeichert werden",
+    "conflict": {
+      "title": "Diese Begegnung wurde anderswo geändert",
+      "description": "Während der Bearbeitung wurde eine neuere Version dieser Begegnung gespeichert. Eigene Änderungen behalten oder die andere Version laden.",
+      "keepMine": "Meine Version behalten",
+      "reload": "Andere Version laden"
+    },
+    "hp": {
+      "manage": "TP verwalten",
+      "title": "TP verwalten · {{name}}",
+      "apply": "Anwenden",
+      "mode": "Änderung",
+      "amount": "Menge",
+      "current": "aktuell",
+      "max": "max.",
+      "undo": "Letzte TP-Änderung rückgängig machen",
+      "modes": {
+        "damage": "Schaden",
+        "heal": "Heilung",
+        "temp": "Temporäre TP setzen"
+      }
+    },
+    "sides": {
+      "none": "Keine Seite",
+      "enemy": "Feind",
+      "player": "Spieler",
+      "ally": "Verbündeter"
     }
   }
 }
