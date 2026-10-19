@@ -18,7 +18,7 @@ export const accordionTriggerVariants = cva(
   },
 );
 
-export const accordionContentVariants = cva('grid text-sm transition-all', {
+export const accordionContentVariants = cva('grid text-sm transition-[grid-template-rows] duration-200 ease-out motion-reduce:transition-none', {
   variants: {
     isOpen: {
       true: 'grid-rows-[1fr]',

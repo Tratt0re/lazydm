@@ -1,6 +1,6 @@
 import { cva, type VariantProps } from 'class-variance-authority';
 
-export const containerProgressBarVariants = cva('w-full transition-all', {
+export const containerProgressBarVariants = cva('w-full', {
   variants: {
     arcType: {
       default: 'border border-input bg-recessed',
@@ -31,7 +31,7 @@ export type ArcTechProgressBarSizeVariants = NonNullable<
   VariantProps<typeof containerProgressBarVariants>['arcSize']
 >;
 
-export const progressBarVariants = cva('h-full transition-all', {
+export const progressBarVariants = cva('h-full transition-[width] duration-200 ease-out motion-reduce:transition-none', {
   variants: {
     arcType: {
       default: 'bg-primary',

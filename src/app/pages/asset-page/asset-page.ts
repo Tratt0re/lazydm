@@ -1,4 +1,4 @@
-import { Component, computed, effect, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, effect, inject, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
@@ -24,6 +24,7 @@ const ASSET_SUBFOLDER_PARAM = 'subfolder';
  * compendium / a campaign. Opened from the section page and the explorer.
  */
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-asset-page',
   imports: [TranslatePipe, ArcTechAlertComponent],
   templateUrl: './asset-page.html',

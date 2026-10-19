@@ -5,7 +5,7 @@ import {
   CdkDropList,
   moveItemInArray,
 } from '@angular/cdk/drag-drop';
-import { Component, OnInit, computed, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, OnInit, signal } from '@angular/core';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { toast } from 'ngx-sonner';
 
@@ -27,6 +27,7 @@ import { ArcTechTooltipImports } from '@/shared/components/tooltip';
  * never renamed: renaming changes the name only; deleting a section moves its folder and files to the Trash.
  */
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-sections-section',
   imports: [
     CdkDrag,

@@ -1,4 +1,4 @@
-import { Component, computed, inject, signal, type OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, type OnInit, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
@@ -17,6 +17,7 @@ import { ArcTechIconComponent } from '@/shared/components/icon';
  * bar showing where the sheet is, like the Settings and Templates sidebars.
  */
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-compendium-sheet-layout',
   imports: [RouterOutlet, TranslatePipe, AppExplorerTreeComponent, ArcTechIconComponent],
   template: `

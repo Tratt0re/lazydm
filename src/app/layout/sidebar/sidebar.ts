@@ -1,7 +1,8 @@
 import {
+  ChangeDetectionStrategy,
   Component,
-  DestroyRef,
   computed,
+  DestroyRef,
   effect,
   inject,
   input,
@@ -33,6 +34,7 @@ import { UpdateService } from '@/shared/core/services/update.service';
 import type { MenuSectionConfig } from '@/config/menu.config';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-sidebar',
   imports: [
     RouterLink,

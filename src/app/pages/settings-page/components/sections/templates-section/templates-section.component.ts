@@ -1,4 +1,4 @@
-import { Component, OnInit, computed, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, OnInit, signal } from '@angular/core';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { toast } from 'ngx-sonner';
 
@@ -26,6 +26,7 @@ interface NoteTypeRow {
  * `.lazydm/vault.json`). The templates themselves are managed in the Templates sheet (title-bar button).
  */
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-templates-section',
   imports: [
     TranslatePipe,

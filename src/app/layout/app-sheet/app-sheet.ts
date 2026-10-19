@@ -1,4 +1,4 @@
-import { Component, HostListener, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, HostListener, inject } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, RouterOutlet } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
@@ -15,6 +15,7 @@ import { ArcTechIconComponent } from '@/shared/components/icon';
  * so they never change the toolbar (or the tab titles) of the campaign underneath.
  */
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-sheet',
   imports: [RouterOutlet, TranslatePipe, ArcTechButtonComponent, ArcTechIconComponent],
   providers: [ToolbarContextService],

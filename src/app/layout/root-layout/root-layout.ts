@@ -1,4 +1,5 @@
 import {
+  ChangeDetectionStrategy,
   Component,
   computed,
   HostListener,
@@ -22,6 +23,7 @@ import { ToolbarContextService } from '@/services/toolbar-context.service';
 import { detectSmallScreenViewport } from '@/shared/utils';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-root-layout',
   imports: [
     ...LayoutImports,

@@ -1,4 +1,4 @@
-import { Component, effect, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, effect, inject } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { RouterOutlet } from '@angular/router';
 
@@ -9,6 +9,7 @@ import { Header } from '@/layout/header/header';
 import { ArcTechToastComponent } from '@/shared/components/toast';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-root',
   imports: [RouterOutlet, Header, ArcTechToastComponent],
   templateUrl: './app.html',

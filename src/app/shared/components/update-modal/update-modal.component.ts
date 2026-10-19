@@ -1,5 +1,11 @@
 import { A11yModule } from '@angular/cdk/a11y';
-import { ChangeDetectionStrategy, Component, inject, signal, ViewEncapsulation } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  inject,
+  signal,
+  ViewEncapsulation,
+} from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 
 import { UpdateService } from '@/shared/core/services/update.service';
@@ -9,7 +15,13 @@ import { ArcTechIconComponent } from '@/shared/components/icon/icon.component';
 
 @Component({
   selector: 'app-update-modal',
-  imports: [A11yModule, TranslatePipe, ArcTechButtonComponent,ArcTechCheckboxComponent, ArcTechIconComponent],
+  imports: [
+    A11yModule,
+    TranslatePipe,
+    ArcTechButtonComponent,
+    ArcTechCheckboxComponent,
+    ArcTechIconComponent,
+  ],
   template: `
     <div
       class="fixed inset-0 z-50 flex items-center justify-center bg-scrim"
@@ -26,7 +38,10 @@ import { ArcTechIconComponent } from '@/shared/components/icon/icon.component';
         <header class="flex flex-col gap-3">
           <div class="flex items-center gap-2 text-primary">
             <arc-icon arcType="arrow-up" class="size-4 shrink-0" />
-            <h2 id="update-modal-title" class="font-display text-[35px] leading-none font-extrabold tracking-[0.025em] text-foreground-strong uppercase">
+            <h2
+              id="update-modal-title"
+              class="font-display text-[35px] leading-none font-extrabold tracking-[0.025em] text-foreground-strong uppercase"
+            >
               {{ 'update.modal.title' | translate }}
             </h2>
           </div>
@@ -36,7 +51,7 @@ import { ArcTechIconComponent } from '@/shared/components/icon/icon.component';
                 | translate
                   : {
                       current: updateService.updateResult()?.currentVersion,
-                      latest: updateService.updateResult()?.latestVersion
+                      latest: updateService.updateResult()?.latestVersion,
                     }
             }}
           </p>

@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 
 import { Toolbar } from '@/layout/toolbar/toolbar';
@@ -9,6 +9,7 @@ import { ToolbarContextService } from '@/services/toolbar-context.service';
  * system pages; the folders are in the sheet's cascading sidebar. Shares nothing with the campaign.
  */
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-system-sheet-layout',
   imports: [RouterOutlet, Toolbar],
   providers: [ToolbarContextService],

@@ -1,4 +1,4 @@
-import { Component, OnInit, computed, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, OnInit, signal } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { toast } from 'ngx-sonner';
@@ -37,6 +37,7 @@ const CREATE_SYSTEM_FIELDS: readonly AppSheetField[] = [
 
 /** The vault compendium: systems (cross-campaign folders) to copy notes and files to and from. */
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-compendium-page',
   imports: [
     RouterLink,

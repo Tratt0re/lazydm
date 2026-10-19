@@ -1,4 +1,4 @@
-import { Component, computed, effect, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, effect, inject, signal } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { toast } from 'ngx-sonner';
@@ -17,6 +17,7 @@ import { ArcTechIconComponent } from '@/shared/components/icon';
 
 /** Overview of a compendium system: the folders it has so far, and a way to create notes in it. */
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-system-home-page',
   imports: [
     RouterLink,

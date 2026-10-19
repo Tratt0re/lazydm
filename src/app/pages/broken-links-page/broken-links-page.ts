@@ -1,5 +1,6 @@
 import {
   booleanAttribute,
+  ChangeDetectionStrategy,
   Component,
   computed,
   DestroyRef,
@@ -40,6 +41,7 @@ interface BrokenLinkGroup {
  * *Broken links* group of the Review page (`embedded`: no toolbar of its own, nothing when there are none).
  */
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-broken-links-page',
   imports: [
     RouterLink,

@@ -1,4 +1,4 @@
-import { Component, DestroyRef, inject, signal, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, inject, signal, ViewEncapsulation } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 
 import { HeaderSearchComponent } from '@/components/header-search/header-search.component';
@@ -16,6 +16,7 @@ const FULLSCREEN_CHANGED_EVENT = 'window:fullscreenChanged';
  * buttons (native traffic lights on macOS, the app's own buttons elsewhere).
  */
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-header',
   imports: [
     TranslatePipe,

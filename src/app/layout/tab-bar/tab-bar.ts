@@ -1,6 +1,7 @@
 import { CdkDrag, type CdkDragDrop, CdkDropList } from '@angular/cdk/drag-drop';
 import { CdkContextMenuTrigger } from '@angular/cdk/menu';
 import {
+  ChangeDetectionStrategy,
   Component,
   DestroyRef,
   ElementRef,
@@ -30,6 +31,7 @@ type TabBarMenuTarget =
   | { readonly kind: 'link'; readonly url: string };
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-tab-bar',
   imports: [
     CdkDrag,

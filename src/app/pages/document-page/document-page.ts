@@ -1,4 +1,4 @@
-import { Component, DestroyRef, computed, effect, inject, signal, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, DestroyRef, effect, inject, signal, viewChild } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
@@ -67,6 +67,7 @@ const EDITOR_MODES: readonly { value: DocumentViewMode; label: string; icon: Arc
 ];
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-document-page',
   imports: [
     TranslatePipe,

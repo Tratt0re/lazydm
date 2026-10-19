@@ -1,5 +1,5 @@
 import { NgTemplateOutlet } from '@angular/common';
-import { Component, computed, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 
 import { CODE_MAP_COLORS, type CodeMapKind } from '@/components/code-map/code-map';
@@ -34,6 +34,7 @@ const flagRow = (key: EditorFlag): EditorFlagRow => ({
 
 /** Settings → Editor: how notes look and behave in the editor, on this device. */
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-editor-section',
   imports: [
     NgTemplateOutlet,

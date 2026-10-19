@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 
 import { ArcTechButtonComponent } from '@/shared/components/button';
@@ -7,6 +7,7 @@ import { EDarkModes, ArcTechDarkMode } from '@/shared/services/dark-mode';
 import { applyThemeTransition } from '@/shared/utils/theme-transition';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-theme-toggle',
   imports: [ArcTechButtonComponent, ArcTechIconComponent, TranslatePipe],
   templateUrl: './theme-toggle.component.html',

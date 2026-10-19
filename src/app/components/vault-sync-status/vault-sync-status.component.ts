@@ -1,4 +1,4 @@
-import { Component, computed, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 
 import { CloudReadinessService } from '@/services/cloud-readiness.service';
@@ -9,6 +9,7 @@ import { ArcTechProgressBarComponent } from '@/shared/components/progress-bar';
 const CONFLICT_PATHS_PREVIEW_LIMIT = 5;
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-vault-sync-status',
   imports: [
     TranslatePipe,

@@ -1,4 +1,4 @@
-import { Component, OnInit, computed, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, OnInit, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 
@@ -12,6 +12,7 @@ import { ArcTechIconComponent } from '@/shared/components/icon';
 type VaultFolderDetection = 'existing' | 'empty' | 'nonEmpty';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-vault-setup-page',
   imports: [TranslatePipe, ArcTechAlertComponent, ArcTechBadgeComponent, ArcTechButtonComponent, ArcTechIconComponent],
   templateUrl: './vault-setup-page.html',
