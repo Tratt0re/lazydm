@@ -22,7 +22,7 @@
   --secondary: #F8F7F2;
   --secondary-foreground: #30363A;
   --muted: #D7D8D6;
-  --muted-foreground: #62696B;
+  --muted-foreground: #565D60;
   --accent: #E2E4E2;
   --accent-foreground: #202428;
   --destructive: #93473D;
@@ -30,7 +30,7 @@
   --border: #92979B;
   --border-subtle: #B9BEBC;
   --border-strong: #676E71;
-  --input: #92979B;
+  --input: #71777A;
   --ring: #8B724E;
   --recessed: #D7D8D6;
   --raised: #F8F7F2;
@@ -51,7 +51,7 @@
   --sidebar-border: #92979B;
   --sidebar-ring: #8B724E;
   --high-contrast-table-header-color: #F8F7F2;
-  --high-contrast-table-header-foreground-color: #62696B;
+  --high-contrast-table-header-foreground-color: #565D60;
   --system-app-color-1: #93473D;
   --system-app-color-2: #8F6233;
   --system-app-color-3: #886724;
@@ -68,6 +68,9 @@
   --mana: #426C89;
   --arcane: #71598C;
   --info: #426875;
+  --scrim: rgb(3 5 7 / 82%);
+  --elevation-overlay: 0 12px 25px #0005;
+  --elevation-modal: 0 20px 75px #0008;
 }
 
 .dark {
@@ -94,7 +97,7 @@
   --border: #4F555B;
   --border-subtle: #34383D;
   --border-strong: #71777A;
-  --input: #4F555B;
+  --input: #6A7075;
   --ring: #D0BD98;
   --recessed: #15171A;
   --raised: #23262A;
@@ -195,6 +198,9 @@
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
+  --color-scrim: var(--scrim);
+  --shadow-overlay: var(--elevation-overlay);
+  --shadow-modal: var(--elevation-modal);
   --color-chart-1: var(--chart-1);
   --color-chart-2: var(--chart-2);
   --color-chart-3: var(--chart-3);
@@ -388,7 +394,7 @@
 .arc-tab-drag-preview {
   background: var(--raised);
   border: 1px solid var(--border-strong);
-  box-shadow: 0 12px 25px #0005;
+  box-shadow: var(--elevation-overlay);
 }
 
 /* Ornamental rule (Nordic Relic "engraved geometry"): bronze bar, three marks, then a hairline. */

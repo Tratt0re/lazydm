@@ -1,6 +1,6 @@
 <div class="flex min-h-0 flex-1 flex-col gap-1 overflow-y-auto">
   <h2
-    class="flex h-8 shrink-0 items-center justify-between px-2 font-mono text-[10px] font-semibold tracking-[0.11em] text-muted-foreground uppercase"
+    class="flex h-8 shrink-0 items-center justify-between px-2 font-mono text-[11px] font-semibold tracking-[0.11em] text-muted-foreground uppercase"
   >
     {{ 'document.links.linkedFiles' | translate }}
     <span>{{ linkedFiles().length }}</span>
@@ -39,7 +39,7 @@
 
   @if (brokenLinks().length > 0) {
     <h2
-      class="mt-3 flex h-8 shrink-0 items-center justify-between border-t border-border-subtle px-2 pt-3 font-mono text-[10px] font-semibold tracking-[0.11em] text-destructive uppercase"
+      class="mt-3 flex h-8 shrink-0 items-center justify-between border-t border-border-subtle px-2 pt-3 font-mono text-[11px] font-semibold tracking-[0.11em] text-destructive uppercase"
     >
       {{ 'document.links.broken' | translate }}
       <span>{{ brokenLinks().length }}</span>
@@ -126,7 +126,7 @@
       }
     </span>
   </span>
-  <span class="mt-1 block font-mono text-[10px] font-semibold tracking-[0.08em] uppercase">
+  <span class="mt-1 block font-mono text-[11px] font-semibold tracking-[0.08em] uppercase">
     {{ file.sectionLabel }}
   </span>
   @for (snippet of file.snippets; track snippet) {

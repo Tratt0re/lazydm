@@ -33,7 +33,7 @@ export type ArcTechToastVariants = VariantProps<typeof toastVariants>;
 export const toastClasses = {
   toast: mergeClasses(
     '!items-start !gap-3 !border !border-border-strong !bg-card !py-3.5 !pr-12 !pl-3.5 !text-card-foreground',
-    '!shadow-[0_12px_25px_#0005] [&_[data-icon]]:mt-px',
+    '!shadow-overlay [&_[data-icon]]:mt-px',
   ),
   title: '!text-[12px] !font-bold !uppercase !tracking-[0.05em] !text-foreground-strong',
   description: '!mt-1 !font-mono !text-[11px] !leading-[1.5] !text-muted-foreground',
@@ -43,7 +43,7 @@ export const toastClasses = {
     '!text-muted-foreground hover:!bg-accent hover:!text-foreground focus-visible:!outline-2 focus-visible:!outline-ring',
   ),
   actionButton: mergeClasses(
-    '!h-7 !rounded-none !border !border-primary !bg-transparent !px-2.5 !font-mono !text-[10px]',
+    '!h-7 !rounded-none !border !border-primary !bg-transparent !px-2.5 !font-mono !text-[11px]',
     '!font-semibold !tracking-[0.06em] !text-primary !uppercase hover:!bg-primary hover:!text-primary-foreground',
   ),
   success: '!border-success [&_[data-icon]]:text-success',

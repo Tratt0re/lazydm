@@ -11,14 +11,14 @@ import { ArcTechIconComponent } from '@/shared/components/icon/icon.component';
   imports: [TranslatePipe, ArcTechButtonComponent, ArcTechCheckboxComponent, ArcTechIconComponent],
   template: `
     <div
-      class="fixed inset-0 z-50 flex items-center justify-center bg-[rgb(3_5_7/82%)]"
+      class="fixed inset-0 z-50 flex items-center justify-center bg-scrim"
       role="dialog"
       aria-modal="true"
       aria-labelledby="update-modal-title"
       (keydown.escape)="onDismiss()"
     >
       <div
-        class="relative flex w-full max-w-md flex-col gap-5 overflow-hidden rounded-none border-2 border-border-strong bg-card p-6 text-card-foreground shadow-[0_20px_75px_#0008]"
+        class="relative flex w-full max-w-md flex-col gap-5 overflow-hidden rounded-none border-2 border-border-strong bg-card p-6 text-card-foreground shadow-modal"
       >
         <header class="flex flex-col gap-3">
           <div class="flex items-center gap-2 text-primary">

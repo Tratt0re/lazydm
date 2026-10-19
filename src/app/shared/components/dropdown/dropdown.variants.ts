@@ -1,7 +1,7 @@
 import { cva, type VariantProps } from 'class-variance-authority';
 
 export const dropdownContentVariants = cva(
-  'bg-popover text-popover-foreground z-50 min-w-50 overflow-y-auto rounded-none border border-border-strong py-1 px-1 shadow-[0_12px_25px_#0005]',
+  'bg-popover text-popover-foreground z-50 min-w-50 overflow-y-auto rounded-none border border-border-strong py-1 px-1 shadow-overlay',
 );
 
 export const dropdownItemVariants = cva(

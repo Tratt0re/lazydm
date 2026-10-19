@@ -84,7 +84,7 @@
         } @else {
           @let tree = treeOf(node);
           @if (!tree) {
-            <p class="px-3 py-1.5 font-mono text-[10px] text-muted-foreground">…</p>
+            <p class="px-3 py-1.5 font-mono text-[11px] text-muted-foreground">…</p>
           } @else {
             @for (folder of tree.folders; track folder.name) {
               @let folderKey = node.key + '/' + folder.name;
@@ -165,7 +165,7 @@
                   @for (file of folder.files; track file.path) {
                     <ng-container *ngTemplateOutlet="fileRow; context: { $implicit: file, node }" />
                   } @empty {
-                    <p class="px-3 py-1.5 font-mono text-[10px] text-muted-foreground">
+                    <p class="px-3 py-1.5 font-mono text-[11px] text-muted-foreground">
                       {{ 'explorer.empty' | translate }}
                     </p>
                   }
@@ -178,7 +178,7 @@
             }
 
             @if (tree.folders.length === 0 && tree.files.length === 0) {
-              <p class="px-3 py-1.5 font-mono text-[10px] text-muted-foreground">
+              <p class="px-3 py-1.5 font-mono text-[11px] text-muted-foreground">
                 {{ 'explorer.empty' | translate }}
               </p>
             }

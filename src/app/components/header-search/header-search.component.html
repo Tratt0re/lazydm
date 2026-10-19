@@ -29,10 +29,10 @@
       aria-haspopup="listbox"
     />
     @if (query()) {
-      <span class="shrink-0 select-none font-mono text-[9px] text-muted-foreground">ESC</span>
+      <span class="shrink-0 select-none font-mono text-[11px] text-muted-foreground">ESC</span>
     } @else {
       <span
-        class="shrink-0 select-none font-mono text-[9px] text-muted-foreground"
+        class="shrink-0 select-none font-mono text-[11px] text-muted-foreground"
         aria-hidden="true"
       >{{ shortcutLabel }}</span>
     }
@@ -71,13 +71,13 @@
                   <arc-icon arcType="file-text" class="size-3.5 shrink-0 text-muted-foreground" aria-hidden="true" />
                   <span class="truncate">{{ hit.title }}</span>
                   @if (hit.type) {
-                    <span class="ml-auto shrink-0 text-[9px] uppercase tracking-widest text-muted-foreground">
+                    <span class="ml-auto shrink-0 text-[11px] uppercase tracking-widest text-muted-foreground">
                       {{ hit.type }}
                     </span>
                   }
                 </span>
                 @if (hit.snippetParts.length) {
-                  <span class="line-clamp-1 pl-5 font-sans text-[10px] leading-snug text-muted-foreground">
+                  <span class="line-clamp-1 pl-5 font-sans text-[11px] leading-snug text-muted-foreground">
                     @for (part of hit.snippetParts; track $index) {
                       @if (part.isMatch) {
                         <mark class="bg-primary/20 text-foreground">{{ part.text }}</mark>
@@ -91,7 +91,7 @@
             </li>
           }
         </ul>
-        <div class="border-t border-border px-3 py-1.5 font-mono text-[9px] text-muted-foreground">
+        <div class="border-t border-border px-3 py-1.5 font-mono text-[11px] text-muted-foreground">
           {{ 'search.hint' | translate }}
         </div>
       }

@@ -13,7 +13,7 @@
 
         <div class="flex flex-col gap-3 p-6">
           <arc-progress-bar [progress]="downloadProgress()" />
-          <p class="text-[10px] font-semibold tracking-[0.12em] text-muted-foreground uppercase">
+          <p class="text-[11px] font-semibold tracking-[0.12em] text-muted-foreground uppercase">
             {{ 'vault.sync.progress' | translate: { done: downloadedCount(), total: downloadTotal() } }}
           </p>
         </div>

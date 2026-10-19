@@ -2,7 +2,7 @@ import { cva, type VariantProps } from 'class-variance-authority';
 
 export const menuContentVariants = cva([
   'z-50 min-w-32 overflow-hidden rounded-none border border-primary bg-popover p-1 text-popover-foreground',
-  'shadow-[0_12px_25px_#0005] animate-in data-[state=open]:animate-in data-[state=closed]:animate-out',
+  'shadow-overlay animate-in data-[state=open]:animate-in data-[state=closed]:animate-out',
   'data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95',
   'data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2',
   'data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2',
@@ -41,7 +41,7 @@ export const submenuArrowVariants = cva([
 ]);
 
 export const menuLabelVariants = cva(
-  'relative flex items-center px-2 py-1.5 text-[10px] font-semibold uppercase tracking-[0.12em] text-muted-foreground',
+  'relative flex items-center px-2 py-1.5 text-[11px] font-semibold uppercase tracking-[0.12em] text-muted-foreground',
   {
     variants: {
       inset: {
@@ -56,7 +56,7 @@ export const menuLabelVariants = cva(
 );
 
 export const menuShortcutVariants = cva(
-  'ml-auto pl-4 font-mono text-[10px] font-medium tracking-[0.04em] text-muted-foreground',
+  'ml-auto pl-4 font-mono text-[11px] font-medium tracking-[0.04em] text-muted-foreground',
 );
 
 export type ArcTechMenuItemTypeVariants = NonNullable<VariantProps<typeof menuItemVariants>['arcType']>;

@@ -40,7 +40,7 @@
               <span class="truncate text-sm font-semibold">{{ file.title }}</span>
             </span>
             @if (file.tags.length > 0) {
-              <span class="hidden shrink-0 truncate text-[10px] font-semibold tracking-[0.1em] text-muted-foreground uppercase sm:block">
+              <span class="hidden shrink-0 truncate text-[11px] font-semibold tracking-[0.1em] text-muted-foreground uppercase sm:block">
                 {{ file.tags.join(' · ') }}
               </span>
             }
@@ -72,7 +72,7 @@
               </span>
             }
             <span class="flex shrink-0 items-center gap-3">
-              <span class="text-[10px] font-semibold tracking-[0.1em] uppercase">
+              <span class="text-[11px] font-semibold tracking-[0.1em] uppercase">
                 {{ formatFileSize(file.size) }}
               </span>
               <button
@@ -181,7 +181,7 @@
                   />
                   <arc-icon arcType="folder" class="size-4 shrink-0 text-primary" aria-hidden="true" />
                   <span class="truncate text-sm font-semibold">{{ toSubfolderLabel(folder.name) }}</span>
-                  <span class="ml-auto shrink-0 font-mono text-[10px] font-semibold tracking-[0.1em] text-muted-foreground uppercase">
+                  <span class="ml-auto shrink-0 font-mono text-[11px] font-semibold tracking-[0.1em] text-muted-foreground uppercase">
                     {{ folder.name }}/ · {{ 'campaigns.sections.folderFiles' | translate: { count: folder.fileCount } }}
                   </span>
                 </button>

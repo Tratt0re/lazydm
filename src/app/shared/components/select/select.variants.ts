@@ -30,7 +30,7 @@ export const selectTriggerVariants = cva(
   },
 );
 export const selectContentVariants = cva(
-  'z-9999 min-w-full scrollbar-hide overflow-y-auto rounded-none border border-border-strong bg-popover text-popover-foreground shadow-[0_12px_25px_#0005] animate-in fade-in-0',
+  'z-9999 min-w-full scrollbar-hide overflow-y-auto rounded-none border border-border-strong bg-popover text-popover-foreground shadow-overlay animate-in fade-in-0',
 );
 export const selectItemVariants = cva(
   'relative flex min-w-full cursor-pointer items-center gap-2 rounded-none border-b border-border/60 last:border-b-0 text-nowrap outline-hidden select-none hover:bg-accent hover:text-accent-foreground data-[focused=true]:bg-accent data-[focused=true]:text-accent-foreground data-selected:text-primary data-selected:font-semibold data-disabled:pointer-events-none data-disabled:cursor-not-allowed data-disabled:opacity-50 data-disabled:hover:bg-transparent data-disabled:hover:text-current [&_svg:not([class*="text-"])]:text-muted-foreground [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*="size-"])]:size-4',

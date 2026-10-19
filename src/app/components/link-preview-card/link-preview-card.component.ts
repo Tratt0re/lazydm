@@ -55,7 +55,7 @@ interface PreviewState {
     <ng-template #card>
       @if (state(); as preview) {
         <section
-          class="flex flex-col border-2 border-primary bg-popover text-popover-foreground shadow-[0_12px_25px_#0005] outline-none"
+          class="flex flex-col border-2 border-primary bg-popover text-popover-foreground shadow-overlay outline-none"
           role="dialog"
           tabindex="-1"
           [attr.aria-label]="preview.title"

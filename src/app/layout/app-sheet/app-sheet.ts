@@ -20,7 +20,7 @@ import { ArcTechIconComponent } from '@/shared/components/icon';
   providers: [ToolbarContextService],
   template: `
     <section
-      class="app-sheet-enter flex h-full min-h-0 flex-col border-b-2 border-border-strong bg-background shadow-[0_12px_25px_#0005]"
+      class="app-sheet-enter flex h-full min-h-0 flex-col border-b-2 border-border-strong bg-background shadow-overlay"
       [class.app-sheet-leave]="sheets.isClosing()"
       role="region"
       aria-labelledby="app-sheet-title"

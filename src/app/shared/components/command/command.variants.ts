@@ -41,7 +41,7 @@ export const commandGroupVariants = cva('overflow-hidden text-foreground', {
 });
 
 export const commandGroupHeadingVariants = cva(
-  'px-2 py-1.5 text-[10px] font-semibold uppercase tracking-[0.12em] text-muted-foreground',
+  'px-2 py-1.5 text-[11px] font-semibold uppercase tracking-[0.12em] text-muted-foreground',
   {
   variants: {},
   defaultVariants: {},
