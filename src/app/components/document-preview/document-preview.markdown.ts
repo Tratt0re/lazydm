@@ -439,11 +439,26 @@ function createRenderer(): MarkdownItInstance {
 
   md.core.ruler.after('block', 'callout', calloutRule);
   md.core.ruler.after('block', 'task-list', taskListRule);
+  // The checkbox goes inside the item's paragraph: in a loose list that paragraph is a block, and a box
+  // placed before it would leave the text on the row below. (A tight list's paragraph is hidden.)
   const defaultListItemOpen = md.renderer.rules['list_item_open'] ?? renderTokenAsIs;
+  const defaultParagraphOpen = md.renderer.rules['paragraph_open'] ?? renderTokenAsIs;
   md.renderer.rules['list_item_open'] = (tokens, index, options, env, self) => {
     const meta = tokens[index].meta as { taskChecked?: boolean } | null;
     const open = defaultListItemOpen(tokens, index, options, env, self);
-    return meta?.taskChecked === undefined ? open : open + renderTaskBoxHtml(meta.taskChecked);
+    const paragraph = tokens[index + 1];
+    // Tight: no <p>, so the box follows the <li>. Loose: the box goes inside the visible <p>.
+    return meta?.taskChecked === undefined || paragraph?.hidden === false
+      ? open
+      : open + renderTaskBoxHtml(meta.taskChecked);
+  };
+  md.renderer.rules['paragraph_open'] = (tokens, index, options, env, self) => {
+    const open = defaultParagraphOpen(tokens, index, options, env, self);
+    const item = tokens[index - 1];
+    const meta = item?.type === 'list_item_open' ? (item.meta as { taskChecked?: boolean } | null) : null;
+    return meta?.taskChecked === undefined || tokens[index].hidden
+      ? open
+      : open + renderTaskBoxHtml(meta.taskChecked);
   };
   const defaultBlockquoteOpen = md.renderer.rules['blockquote_open'] ?? renderTokenAsIs;
   const defaultBlockquoteClose = md.renderer.rules['blockquote_close'] ?? renderTokenAsIs;
