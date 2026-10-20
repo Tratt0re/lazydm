@@ -70,6 +70,7 @@ const IPC_HANDLERS = Object.freeze({
 
   [CHANNELS.encounters.read]: encounterController.read,
   [CHANNELS.encounters.rule]: encounterController.rule,
+  [CHANNELS.encounters.party]: encounterController.party,
   [CHANNELS.encounters.write]: encounterController.write,
   [CHANNELS.encounters.create]: encounterController.create,
 

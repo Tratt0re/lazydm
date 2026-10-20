@@ -70,6 +70,7 @@ var require_channels = __commonJS({
       encounters: Object.freeze({
         read: "encounters:read",
         rule: "encounters:rule",
+        party: "encounters:party",
         write: "encounters:write",
         create: "encounters:create"
       }),

@@ -28,6 +28,7 @@ import type {
   WriteDocumentResultDto,
 } from '@/dtos';
 import { BaseIpcService } from '@/services/base-ipc.service';
+import { PARTY_FILE_NAME } from '@/services/encounter.service';
 
 @Injectable({
   providedIn: 'root',
@@ -59,7 +60,8 @@ export class DocumentService extends BaseIpcService<APIChannel.DOCUMENTS> {
     files: readonly DocumentFileListItemDto[];
     folders: readonly (DocumentFolderDto & { files: readonly DocumentFileListItemDto[] })[];
   }> {
-    const { rows, folders } = await this.ipcClient.list({ folder });
+    const { rows: listed, folders } = await this.ipcClient.list({ folder });
+    const rows = listed.filter((file) => !file.path.endsWith(`/encounters/${PARTY_FILE_NAME}`));
     const prefix = `${folder.replace(/\/+$/, '')}/`;
     const depthOf = (file: DocumentFileListItemDto) => file.path.slice(prefix.length).split('/').length;
     return {

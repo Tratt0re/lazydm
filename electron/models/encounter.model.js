@@ -7,6 +7,8 @@ const { parseSectionFolder } = require('./section.model');
 const ENCOUNTER_EXTENSION = '.json';
 const ENCOUNTERS_SECTION_KEY = 'encounters';
 const ENCOUNTER_VERSION = 1;
+/** The party roster of a scope: a regular encounter file, hidden from the lists of the Encounters section. */
+const PARTY_FILE_NAME = '_party.json';
 const ENCOUNTER_NAME_MAX_LENGTH = 120;
 const ENCOUNTER_NOTES_MAX_LENGTH = 20000;
 const ENCOUNTER_RULE_MAX_LENGTH = 255;
@@ -183,11 +185,24 @@ async function createEncounter(rootPath, { folderPath, slug, name }) {
   return readEncounter(rootPath, relativePath);
 }
 
+/** The party roster of a campaign (`<scope>/encounters/_party.json`), created empty the first time it is asked for. */
+async function openParty(rootPath, scope, name) {
+  const relativePath = `${scope}/${ENCOUNTERS_SECTION_KEY}/${PARTY_FILE_NAME}`;
+  const absolutePath = resolveInsideVault(rootPath, relativePath);
+  if (!fs.existsSync(absolutePath)) {
+    safeWriteFileAtomic(absolutePath, serialize(normalizeEncounter({ name }, name)));
+  }
+
+  return readEncounter(rootPath, relativePath);
+}
+
 module.exports = {
   ENCOUNTER_EXTENSION,
+  PARTY_FILE_NAME,
   ENCOUNTER_NAME_MAX_LENGTH,
   createEncounter,
   normalizeEncounter,
+  openParty,
   readEncounter,
   writeEncounter,
 };

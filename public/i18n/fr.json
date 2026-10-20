@@ -974,6 +974,18 @@
       "loadError": "Impossible de charger cette note",
       "search": "Rechercher des notes…",
       "none": "Aucune note trouvée"
+    },
+    "party": {
+      "title": "Groupe",
+      "open": "Liste du groupe",
+      "add": "Ajouter le groupe",
+      "added": "{{count}} ajoutés depuis le groupe",
+      "nothingToAdd": "Le groupe est déjà là",
+      "error": "Impossible d'ajouter le groupe",
+      "empty": {
+        "title": "Le groupe est vide",
+        "description": "Ajoutez ici les personnages joueurs une seule fois. Ajouter le groupe les place dans n'importe quelle rencontre."
+      }
     }
   }
 }

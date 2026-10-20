@@ -22,8 +22,8 @@
       <arc-empty
         class="border border-dashed border-border bg-card/60"
         arcIcon="swords"
-        [arcTitle]="'encounters.empty.title' | translate"
-        [arcDescription]="'encounters.empty.description' | translate"
+        [arcTitle]="(isParty() ? 'encounters.party.empty.title' : 'encounters.empty.title') | translate"
+        [arcDescription]="(isParty() ? 'encounters.party.empty.description' : 'encounters.empty.description') | translate"
       />
     } @else {
       @if (isRunning()) {
@@ -104,6 +104,7 @@
                     [temp]="health.temp ?? 0"
                     [label]="fieldLabel(field)"
                   />
+                  @if (!isParty()) {
                   <button
                     type="button"
                     arc-button
@@ -116,6 +117,7 @@
                     <arc-icon arcType="heart" />
                     {{ 'encounters.hp.manage' | translate }}
                   </button>
+                  }
                 }
                 @case ('statuses') {
                   <span class="flex flex-wrap items-center gap-1">

@@ -974,6 +974,18 @@
       "loadError": "Couldn't load this note",
       "search": "Search notes…",
       "none": "No notes found"
+    },
+    "party": {
+      "title": "Party",
+      "open": "Party roster",
+      "add": "Add party",
+      "added": "{{count}} added from the party",
+      "nothingToAdd": "The party is already here",
+      "error": "Couldn't add the party",
+      "empty": {
+        "title": "The party is empty",
+        "description": "Add the player characters here once. Add party puts them in any encounter."
+      }
     }
   }
 }

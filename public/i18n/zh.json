@@ -974,6 +974,18 @@
       "loadError": "无法加载此笔记",
       "search": "搜索笔记…",
       "none": "未找到笔记"
+    },
+    "party": {
+      "title": "队伍",
+      "open": "队伍名单",
+      "add": "添加队伍",
+      "added": "已从队伍添加 {{count}} 个",
+      "nothingToAdd": "队伍已在其中",
+      "error": "无法添加队伍",
+      "empty": {
+        "title": "队伍为空",
+        "description": "在此一次性添加玩家角色。“添加队伍”可将他们加入任意遭遇。"
+      }
     }
   }
 }

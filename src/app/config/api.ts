@@ -98,6 +98,7 @@ export interface ElectronIpcClient {
   readonly encounters: {
     readonly read: IpcRequest<{ path: string }, DTO.EncounterFileDto>;
     readonly rule: IpcRequest<{ path: string }, DTO.BattleRuleDto>;
+    readonly party: IpcRequest<{ scope: string; name: string }, DTO.EncounterFileDto>;
     readonly write: IpcRequest<DTO.WriteEncounterPayload, DTO.WriteEncounterResultDto>;
     readonly create: IpcRequest<DTO.CreateEncounterPayload, DTO.EncounterFileDto>;
   };

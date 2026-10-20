@@ -974,6 +974,18 @@
       "loadError": "Diese Notiz konnte nicht geladen werden",
       "search": "Notizen suchen…",
       "none": "Keine Notizen gefunden"
+    },
+    "party": {
+      "title": "Gruppe",
+      "open": "Gruppenliste",
+      "add": "Gruppe hinzufügen",
+      "added": "{{count}} aus der Gruppe hinzugefügt",
+      "nothingToAdd": "Die Gruppe ist bereits dabei",
+      "error": "Die Gruppe konnte nicht hinzugefügt werden",
+      "empty": {
+        "title": "Die Gruppe ist leer",
+        "description": "Füge die Spielercharaktere hier einmal hinzu. „Gruppe hinzufügen“ setzt sie in jede Begegnung."
+      }
     }
   }
 }

@@ -37,7 +37,7 @@ import type {
 import { ASSET_FILE_PARAM, ASSET_SUBFOLDER_PARAM } from '@/pages/asset-page/asset-page';
 import { CAMPAIGN_SECTION_PARAM } from '@/pages/campaign-section-page/campaign-section-page';
 import { DocumentService } from '@/services/document.service';
-import { EncounterService } from '@/services/encounter.service';
+import { EncounterService, PARTY_FILE_NAME } from '@/services/encounter.service';
 import { FileActionsService } from '@/services/file-actions.service';
 import { getNoteScopeKind, NoteScopeService } from '@/services/note-scope.service';
 import { SectionService, toSubfolderLabel } from '@/services/section.service';
@@ -157,7 +157,13 @@ export class EncounterPage {
   protected readonly isLoading = signal(true);
   private readonly hpUndoSteps = signal<readonly HpUndoStep[]>([]);
 
-  protected readonly title = computed(() => this.encounter()?.name ?? this.fileName());
+  /** The party roster of the scope: the same page, without the battle (it only holds who can be added to one). */
+  protected readonly isParty = computed(() => this.fileName() === PARTY_FILE_NAME);
+  protected readonly title = computed(() =>
+    this.isParty()
+      ? this.translateService.instant('encounters.party.title')
+      : (this.encounter()?.name ?? this.fileName()),
+  );
   /** A file that is not valid JSON opens empty; editing would replace it, so it stays read-only. */
   protected readonly isEditable = computed(() => this.encounter() !== null && !this.parseError());
 
@@ -214,7 +220,10 @@ export class EncounterPage {
       const subfolder = this.subfolder();
       const isEditable = this.isEditable();
       const isRunning = this.isRunning();
-      const battleActions: readonly ToolbarItemAction[] = isRunning
+      const isParty = this.isParty();
+      const battleActions: readonly ToolbarItemAction[] = isParty
+        ? []
+        : isRunning
         ? [
             {
               id: 'next-turn',
@@ -268,6 +277,19 @@ export class EncounterPage {
           ],
           itemActions: [
             ...battleActions,
+            ...(isParty
+              ? []
+              : [
+                  {
+                    id: 'add-party',
+                    label: this.translateService.instant('encounters.party.add'),
+                    icon: 'users' as const,
+                    buttonType: 'outline' as const,
+                    iconOnly: true,
+                    disabled: !isEditable,
+                    action: () => void this.addParty(),
+                  },
+                ]),
             {
               id: 'add-entity',
               label: this.translateService.instant('encounters.entity.add'),
@@ -288,31 +310,35 @@ export class EncounterPage {
                 this.isCemeteryOpen.update((isOpen) => !isOpen);
               },
             },
-            {
-              id: 'undo-hp',
-              label: this.translateService.instant('encounters.hp.undo'),
-              icon: 'rotate-ccw',
-              buttonType: 'outline',
-              iconOnly: true,
-              disabled: () => !isEditable || this.hpUndoSteps().length === 0,
-              action: () => this.undoHpChange(),
-            },
-            {
-              id: 'rename',
-              label: this.translateService.instant('campaigns.sections.renameAsset.menu'),
-              icon: 'text-cursor-input',
-              buttonType: 'outline',
-              iconOnly: true,
-              action: () => this.openRenameSheet(),
-            },
-            {
-              id: 'delete',
-              label: this.translateService.instant('files.delete.menu'),
-              icon: 'trash',
-              buttonType: 'outline',
-              iconOnly: true,
-              action: () => this.openDeleteSheet(),
-            },
+            ...(isParty
+              ? []
+              : [
+                  {
+                    id: 'undo-hp',
+                    label: this.translateService.instant('encounters.hp.undo'),
+                    icon: 'rotate-ccw' as const,
+                    buttonType: 'outline' as const,
+                    iconOnly: true,
+                    disabled: () => !isEditable || this.hpUndoSteps().length === 0,
+                    action: () => this.undoHpChange(),
+                  },
+                  {
+                    id: 'rename',
+                    label: this.translateService.instant('campaigns.sections.renameAsset.menu'),
+                    icon: 'text-cursor-input' as const,
+                    buttonType: 'outline' as const,
+                    iconOnly: true,
+                    action: () => this.openRenameSheet(),
+                  },
+                  {
+                    id: 'delete',
+                    label: this.translateService.instant('files.delete.menu'),
+                    icon: 'trash' as const,
+                    buttonType: 'outline' as const,
+                    iconOnly: true,
+                    action: () => this.openDeleteSheet(),
+                  },
+                ]),
           ],
         }),
       );
@@ -742,6 +768,54 @@ export class EncounterPage {
           isDead: false,
         }),
       }));
+    }
+  }
+
+  /**
+   * *Add party*: the roster's entities join the battle (also a running one), in initiative order. A member
+   * whose name is already in the battle is skipped; one with no name is always added.
+   */
+  private async addParty(): Promise<void> {
+    const scope = this.scope();
+    if (!scope) {
+      return;
+    }
+
+    try {
+      const party = await this.encounterService.party(scope.rootPath, this.translateService.instant('encounters.party.title'));
+      const present = new Set(
+        (this.encounter()?.entities ?? []).map((entity) => entity.name?.trim().toLocaleLowerCase()),
+      );
+      const joining = party.encounter.entities.filter(
+        (member) => !member.isDead && !(member.name && present.has(member.name.trim().toLocaleLowerCase())),
+      );
+      if (joining.length > 0) {
+        this.updateEncounter((encounter) => ({
+          ...encounter,
+          entities: joining.reduce(
+            (entities, member) =>
+              this.insertByInitiative(entities, {
+                ...member,
+                id: crypto.randomUUID(),
+                values: structuredClone(member.values) as Record<string, unknown>,
+              }),
+            [...encounter.entities],
+          ),
+        }));
+        void this.loadFrontmatter(joining);
+      }
+
+      const skipped = party.encounter.entities.filter((member) => !member.isDead).length - joining.length;
+      toast.success(
+        this.translateService.instant(
+          joining.length > 0 ? 'encounters.party.added' : 'encounters.party.nothingToAdd',
+          { count: joining.length, skipped },
+        ),
+      );
+    } catch (error) {
+      toast.error(this.translateService.instant('encounters.party.error'), {
+        description: error instanceof Error ? error.message : String(error),
+      });
     }
   }
 
@@ -1206,8 +1280,11 @@ export class EncounterPage {
     this.hpUndoSteps.set([]);
 
     try {
+      const scope = this.scope();
       const [file, rule] = await Promise.all([
-        this.encounterService.read(path),
+        this.isParty() && scope
+          ? this.encounterService.party(scope.rootPath, this.title())
+          : this.encounterService.read(path),
         this.encounterService.rule(path),
       ]);
       if (token === this.loadToken) {

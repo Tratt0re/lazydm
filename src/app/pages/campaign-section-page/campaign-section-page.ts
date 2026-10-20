@@ -27,6 +27,7 @@ import { AssetService } from '@/services/asset.service';
 import { getNoteScopeKind, NoteScopeService } from '@/services/note-scope.service';
 import { CopyToService } from '@/services/copy-to.service';
 import { DocumentService } from '@/services/document.service';
+import { PARTY_FILE_NAME } from '@/services/encounter.service';
 import { FileActionsService } from '@/services/file-actions.service';
 import { FileMoveService, type MoveSection } from '@/services/file-move.service';
 import { SectionService, toSubfolderLabel } from '@/services/section.service';
@@ -293,6 +294,18 @@ export class CampaignSectionPage {
         icon: 'swords',
         iconOnly: true,
         action: () => this.fileActions.openCreateEncounterSheet(this.folderPath()),
+      });
+      // The party roster is hidden from the list: this is how it is always reached.
+      actions.push({
+        id: 'section-party',
+        label: 'encounters.party.open',
+        icon: 'users',
+        buttonType: 'outline',
+        iconOnly: true,
+        action: () =>
+          void this.router.navigateByUrl(
+            `${this.scopeRoute()}/${ENCOUNTERS_SECTION_KEY}/${PARTY_FILE_NAME}`,
+          ),
       });
     }
 

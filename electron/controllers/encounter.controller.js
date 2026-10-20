@@ -19,6 +19,20 @@ function rule(payload) {
   return battleRuleModel.DEFAULT_BATTLE_RULE;
 }
 
+/** The party roster of the campaign or system at `scope`, created the first time. */
+function party(payload) {
+  const body = ensurePlainObject(payload, 'payload');
+  const scope = requireString(body.scope, 'payload.scope');
+  const name = requireString(body.name, 'payload.name', {
+    maxLength: encounterModel.ENCOUNTER_NAME_MAX_LENGTH,
+  });
+  if (scope.split('/').some((segment) => segment === '..' || segment.length === 0)) {
+    throw new Error('payload.scope is not a campaign or a compendium system.');
+  }
+
+  return encounterModel.openParty(vaultController.getReadyVaultPath(), scope, name);
+}
+
 function write(payload) {
   const body = ensurePlainObject(payload, 'payload');
   const expectedHash =
@@ -51,6 +65,7 @@ function create(payload) {
 
 module.exports = {
   create,
+  party,
   read,
   rule,
   write,
