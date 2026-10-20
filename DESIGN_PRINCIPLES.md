@@ -22,6 +22,7 @@ LazyDM works like **Obsidian**, specialised for Dungeon Masters.
 │   ├── vault.json                     vault settings, template rules, folder/display-name mapping
 │   └── …
 ├── _templates/                        note templates (scene.md, enemy.md, character.md…)
+├── _battle-rules/                     battle rules (JSON), see §6d; also per system and per campaign
 ├── compendium/                        cross-campaign material, one folder per "system"
 │   └── <system-slug>/                 created by the user (a game, a setting, anything reused)
 │       ├── system.md                  system card: display name, description
@@ -37,7 +38,7 @@ LazyDM works like **Obsidian**, specialised for Dungeon Masters.
     ├── quests/                        type: quest
     ├── locations/                     type: location
     ├── world/                         type: world (lore, factions, history, deities)
-    ├── encounters/                    special linkable files, format to be designed (see §12)
+    ├── encounters/                    encounters: .json files, not notes (see §6d); _party.json = the party roster
     ├── handouts/                      type: handout (letters, clues; may embed images from assets/)
     ├── sessions/                      type: session
     ├── assets/                        every non-.md file: images, maps, pdfs, sounds…
@@ -125,8 +126,9 @@ LazyDM works like **Obsidian**, specialised for Dungeon Masters.
   - **Folder right-click menus** (explorer and section page) offer what the folder takes: a section *New note*
     (not the special sections) and *New folder*; a sub-folder *New note* (it gets the sub-folder's sub-type) but no
     *New folder* (one level only). The same sheets as the section toolbar; a new note opens right away.
-- **Special sections**: *Assets* (any non-`.md` file) and *Encounters* (special files) hold no plain notes — they
-  offer *New folder* and *Import* but no *New note*; their sub-folders only organise files (no `subtype`), and the
+- **Special sections**: *Assets* (any non-`.md` file) and *Encounters* (`.json` files, see §6d) hold no plain notes —
+  they offer *New folder* and *Import* but no *New note* (*Encounters* offers *New encounter*, *Party roster* and a
+  *Battle rule* select instead); their sub-folders only organise files (no `subtype`), and the
   Review page does not check them. *Assets* also offers **Import from disk** (toolbar): a sheet with *Select
   files* (the system file dialog) and a drop zone; media files can also be dropped straight on the section page
   (or on one of its sub-folders).
@@ -164,7 +166,8 @@ LazyDM works like **Obsidian**, specialised for Dungeon Masters.
 | --- | --- | --- |
 | `.md` frontmatter | `type`, `title`, `tags`, aliases, game fields (CR, HP…) | ✅ via the cloud folder |
 | `.md` body | content and `[[links]]` | ✅ |
-| `.lazydm/*.json` | template rules (`vault.json` → `templates`, see §6c), per-campaign sections (`vault.json` → `sections`, see §2a), vault format version, vault settings | ✅ |
+| `.json` encounters, battle rules | encounters (`<scope>/encounters/*.json`), the party roster, battle rules (`_battle-rules/*.json`), see §6d | ✅ via the cloud folder |
+| `.lazydm/*.json` | template rules (`vault.json` → `templates`, see §6c), battle-rule choices (`vault.json` → `battleRules`, see §6d), per-campaign sections (`vault.json` → `sections`, see §2a), vault format version, vault settings | ✅ |
 | Local SQLite | rebuildable index + device-local state | ❌ never |
 | Device-local preferences | **theme, language** (renderer `localStorage` via `LocalPreferencesService`), Electron-side settings (`settings-store` userData JSON), current vault (`app_meta.current_vault_id`) | ❌ never |
 
@@ -253,7 +256,7 @@ Planned Electron modules: `vault`, `cloud-readiness`, `campaign`, `document`, `i
   broken link itself in the live preview and reading view — click or Enter/Space):
   - *Remove link, keep text*: every occurrence of that link in the note becomes its label (or what it pointed to).
   - *Create note…*: title (suggested from the link) and folder (the link's folder, else the source note's section);
-    the note is created from its template and opened. Encounters are not offered as a folder (see below). If its kebab file name differs from the link text, the link is
+    the note is created from its template and opened. Encounters are not offered as a folder (they are `.json` files, see §6d). If its kebab file name differs from the link text, the link is
     rewritten to it with the old text kept as alias (`[[klarg-the-bugbear|Klarg the Bugbear]]`).
 - Moving notes between sections: see §2a (*Moving a note*). Renaming and deleting notes, assets and sub-folders:
   see §2a (*Renaming and deleting*).
@@ -289,7 +292,7 @@ Planned Electron modules: `vault`, `cloud-readiness`, `campaign`, `document`, `i
 - A **template** is a plain `.md` file in a `_templates/` folder: at the vault root (`_templates/`), in a compendium
   system (`compendium/<system>/_templates/`) or in a campaign (`<campaign>/_templates/`, where *Copy to campaign*
   puts copied templates). Obsidian can use them as they are.
-- **Built-in templates** ship with the app, one per preset section's note type (encounters excluded); sections the user creates have none. They are read-only and never
+- **Built-in templates** ship with the app, one per preset section's note type (encounters excluded, they are `.json` files); sections the user creates have none. They are read-only and never
   written to the vault unasked; *Customize* copies one into `_templates/` to edit it.
 - **Per-campaign choice per note type**, saved in `.lazydm/vault.json` → `templates.campaigns.<slug>.<type>` (a
   template path or `builtin`; no entry = automatic). Deleting a template removes the choices pointing at it.
@@ -316,6 +319,76 @@ Planned Electron modules: `vault`, `cloud-readiness`, `campaign`, `document`, `i
 - **Section pages keep their actions in the toolbar** (template select, *Import*, *New note*), never in a button
   row above the list — the same rule as every other page.
 
+## 6d. Encounters and battle rules
+
+- An **encounter** is a **`.json` file** of the *Encounters* section (`<scope>/encounters/<slug>.json`, or one
+  sub-folder deeper). It is not a note: no frontmatter, no `type`, not offered as a folder for notes created from
+  broken links. The index lists it as an asset; it is linked **like an asset**, with its full file name
+  (`![[ambush.json]]`, `[[ambush.json]]`).
+- **File format** (`version: 1`): `name`, `notes`, `rule` (the encounter's own battle rule: a rule path or
+  `builtin`, null follows the campaign), `battle` (`status` idle | running, `round`, `turnId`) and `entities`.
+  An entity is `{ id, name, values, isDead }`. **Everything but `id` is optional** and a missing or wrong field
+  never breaks the page: the file is normalised when read, so a hand-edited or minimal one opens. A file that is
+  not valid JSON opens empty and read-only (it would be replaced by a save). Saves are atomic and
+  **conflict-checked by content hash**, like a note save (*Keep my version* / *Load the other version*).
+- **Values** are stored by the key of the battle-rule field that shows them (`initiative`, `ac`, `hp` =
+  `{ current, max, temp }`, `statuses` = `[{ name, rounds? }]`, `note` = vault path of the linked note, …). A value
+  the rule no longer lists survives a change of rule; empty values are not stored.
+- **Page** (`/<scope>/encounters/<file>`, own tab title and breadcrumb): the initiative list, a bar with the round
+  and whose turn it is, and a toolbar with *Battle rule*, *Start battle* / *Next turn* / *Stop battle*, *Add party*,
+  *Add entity*, *Cemetery*, *Undo last HP change*, *Rename…* and *Delete…*. Every edit is saved right away.
+  - **Battle**: *Start* sorts by initiative (highest first, entities without one last), sets round 1 and gives the
+    first entity the turn; *Next turn* moves on and starts a new round after the last; *Stop* asks first, then
+    clears initiatives and statuses and refills HP to the maximum where one is known (temporary HP go too). There
+    is no reset. Entities can be added, edited and removed while the battle runs; a new one takes its place by
+    initiative and the current turn does not move. Rows can be dragged to any order.
+  - **Entities**: *Add entity* leads with the **note picker** (searchable list of the scope's notes); picking one
+    fills the name and the values the rule reads from its frontmatter, without touching what the user already
+    typed. Then name, initiative, maximum HP and AC, and a **quantity** (1–15, default 1); above 1 the confirm
+    button reads *Insert N* and the copies are numbered ("Goblin 1", "Goblin 2"…). *Duplicate* numbers the same way.
+    A field the rule reads from the note shows the note's value **only when the entity has none of its own**;
+    nothing is copied into the file.
+  - **Hit points**: a health bar (current over maximum, temporary HP as a second segment, the numbers always
+    written). *Manage HP* applies damage (temporary HP first, never below 0), healing (up to the maximum) or sets
+    the temporary HP; the last 30 changes can be undone.
+  - **Statuses** are **free tags** typed on an entity, with an optional number of rounds that counts down at the
+    end of that entity's turn and removes the tag at 0. They are not notes and have no section.
+  - **Cemetery**: *Remove* sends an entity to a side panel (it leaves the order; if it had the turn, the turn
+    passes on); *Recover* puts it back by initiative. It shares the right-hand slot with the **note panel**, which
+    shows an entity's linked note read-only, as in Reading.
+- **Party roster**: a hidden `encounters/_party.json` per campaign (the same file format and page, without the
+  battle), reached from the *Party roster* button of the Encounters section — it is not listed or offered as a link.
+  *Add party* copies its entities into an encounter (also a running one), skipping a member whose name is already
+  there.
+- **In notes**: `![[ambush.json]]` is a row with the battle (swords) icon and the file name, in Live preview and
+  Reading; a click opens the encounter (Cmd/Ctrl-click: a new tab). The Linked files panel lists encounters with the
+  other assets.
+- **Battle rules** configure the entity row; they are the encounter's equivalent of note templates:
+  - A rule is a **JSON file** `_battle-rules/<name>.json` at the vault root, in a compendium system or in a
+    campaign. The **built-in rule** (*Generic*: initiative, side, AC, HP bar, statuses, linked note) is read-only and
+    *Customize* copies it out. Unknown or duplicate fields are dropped on read, and a rule always has an initiative.
+  - A rule has a `name`, a `template` (a template path or `builtin:<type>`) whose **frontmatter keys** are the
+    attributes it may read from an entity's note, an `initiative` (`roll`: null when typed by hand, or a dice
+    formula) and an ordered list of `fields`: `{ key, component, label, source, showInRow, options? }`.
+    `component` is `initiative`, `number`, `text`, `healthbar`, `statuses`, `side` or `note-link`; `source` is `entity`
+    or `frontmatter:<key>`. The name and the initiative are in every rule. The system is not assumed: nothing in the
+    battle code names a game's fields.
+  - **Which rule applies**: the encounter's own choice, else its campaign's (`.lazydm/vault.json` →
+    `battleRules.campaigns.<slug>`), else the built-in; a choice whose file is gone falls through to the next. Both
+    are picked from a *Battle rule* select (encounter toolbar, and the Encounters section toolbar for the campaign).
+    Deleting a rule clears the campaign choices that pointed at it.
+  - **Dice formula**: `1d20`, `1d100`, `2d6 + 3`, `1d20 + {dex_mod}`. Terms are dice, whole numbers and `{key}`
+    (the **integer** of that frontmatter key of the entity's note: a positive one is added, a negative one
+    subtracts), joined by `+` and `-`. Never evaluated as code. The formula is checked while it is edited.
+  - **Roll initiative** appears only when the rule has a formula. It rolls for the **selected** entities (a checkbox
+    per row, *Select all*, *Clear*) and sorts the list. An entity the formula cannot be rolled for (no note, no such
+    key, not a whole number) has its initiative **erased**, and the failures are reported.
+  - **Editor**: the *Battle rules* sheet (title-bar button next to Templates) has the same library layout: built-in,
+    vault, systems and campaigns in the secondary sidebar, with a form for the name, the template, the initiative
+    (typed or rolled, formula and the template's keys as chips) and the field list (label, key, value source, sides,
+    *Show in the row*, reorder, remove, add by type). Unsaved edits are saved when another rule is selected or the
+    sheet is closed.
+
 ## 7. Security
 
 - **Path guard**: every path received from the renderer is resolved and rejected if it escapes the vault root.
@@ -333,7 +406,7 @@ Planned Electron modules: `vault`, `cloud-readiness`, `campaign`, `document`, `i
   The vertical divider before the title only appears next to the sidebar toggle.
   macOS keeps the native traffic lights inset into it (`titleBarStyle: 'hiddenInset'`); Windows/Linux use a
   frameless window with the app's own minimize / maximize-restore / close (double-click the bar = maximize).
-- **Compendium and Settings are full-page sheets**, not pages of the campaign navigation: they open over the
+- **Compendium, Templates, Battle rules and Settings are full-page sheets**, not pages of the campaign navigation: they open over the
   current page (named router outlet `overlay`), the campaign and its tabs stay as they are, and closing (×, Escape,
   Cmd/Ctrl+W, or the same title-bar button) brings it back. Each sheet reopens where it was left. Links to
   `/compendium/...` or `/settings/...` open in the sheet. Inside, a system has its own toolbar and appears in the sheet's cascading sidebar; sheet
@@ -384,7 +457,7 @@ Planned Electron modules: `vault`, `cloud-readiness`, `campaign`, `document`, `i
   in the toolbar, so a restored tab always tells where it points.
 - **Leaving a note with unsaved edits autosaves it** (tab switch, link, sidebar). If the save hits a conflict or an
   error, the navigation is cancelled and the conflict sheet / error toast is shown.
-- **Title bar**: the Compendium, Templates and Settings sheet buttons are square icon buttons (tooltip and
+- **Title bar**: the Compendium, Templates, Battle rules and Settings sheet buttons are square icon buttons (tooltip and
   accessible name from the label).
 - **Note toolbar**: the note actions (*Links*, *Copy to compendium / campaign*, *Rename*, *Save*) are square icon
   buttons (tooltip and accessible name from the label).
@@ -543,7 +616,7 @@ variant keys and configuration stay as they are.
 | 13.2 | Harden: `arc-dropdown-menu` trigger semantics (role, `aria-haspopup`, `aria-expanded`), hard-coded strings to i18n (`ESC`, table row labels), modal focus trap / return |
 | 13.3 | Adapt: touch-target sizes (tab close, icon buttons), header-search listbox width and z-index scale, dialog margins on narrow windows |
 | 13.4 | Optimize: replace `transition-all` (accordion, progress bar, sidebar width), `OnPush` for app-level components |
-| 14 | Encounter manager (14.1–14.11): encounters are `.json` files of the Encounters section, linked like assets (`![[ambush.json]]`); every entity field is optional; rows are driven by battle rules |
+| 14 | Encounter manager (14.1–14.11), design in §6d: encounters are `.json` files of the Encounters section, linked like assets (`![[ambush.json]]`); every entity field is optional; rows are driven by battle rules |
 | 14.1 | Format and Electron: encounter model (conflict-checked save), battle rule schema and default rule, `encounters:*` channels, typed service |
 | 14.2 | Route and page: `*.json` in `encounters/` opens the encounter page; the section page lists encounters (swords icon) and offers *New encounter* |
 | 14.3 | Rule-driven rows: initiative, name, health bar (HP + temporary HP), *Manage HP* modal (damage / heal / temporary HP), undo |
@@ -552,13 +625,14 @@ variant keys and configuration stay as they are.
 | 14.6 | Statuses: free tags the user types on an entity, with an optional round count that ticks down at the end of its turn (no section, no notes; richer statuses may come later) |
 | 14.7 | Side panel: the entity's linked note and rule fields read from the note's frontmatter |
 | 14.8 | Party roster: hidden `encounters/_party.json`, always reachable from the encounters overview, re-added to any encounter |
-| 14.9 | Battle rules management: `_battle-rules/` JSON files (vault, system, campaign), built-in rule with *Customize*, per-campaign choice in `vault.json`, library in the Templates sheet |
+| 14.9 | Battle rules: `_battle-rules/` JSON files (vault, system, campaign), built-in rule with *Customize*, per-campaign and per-encounter choice, dice-formula initiative and *Roll initiative* for selected entities, form editor in its own *Battle rules* sheet |
 | 14.10 | Embedding: `![[x.json]]` renders as an encounter row in notes, link suggestions list encounters, Linked files panel shows them |
-| 14.11 | Docs: §2, §6, §12 updated with the final encounter design |
+| 14.11 | Docs: §6d written, §2, §3, §8 and §12 updated with the final encounter design |
 
 ## 12. Open decisions
 
-- **Encounters** are special files: linkable from markdown notes, but not plain notes (own format/editor to be
-  designed). Until then they are not offered as a target folder for notes created from links.
+- **Encounters, later**: richer statuses (shared definitions with descriptions), combat timers, delay / hold turns,
+  a roll for several encounters at once, and a starting-HP reset are left out on purpose and can be added without
+  changing the file format (`version: 1`).
 
 - **Backup**: optional "zip the vault" backup to replace the removed DB backup — to be decided later.
