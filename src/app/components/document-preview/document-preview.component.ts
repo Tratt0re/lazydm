@@ -42,6 +42,8 @@ const BROKEN_LINK_SELECTOR = '[data-broken-raw]';
 const ASSET_ACTION_SELECTOR = '[data-asset-action]';
 /** Padding of the reading pane on its right when the code map takes room there (p-6 + the map). */
 const CODE_MAP_PADDING = 24 + CODE_MAP_WIDTH;
+/** The map of a narrow host (a side sheet) is this wide, in px. */
+const CODE_MAP_COMPACT_WIDTH = 64;
 
 /** Map kind of a rendered block (headings are handled apart, as labels). */
 function readingKindOf(element: Element): CodeMapKind {
@@ -77,7 +79,7 @@ function readingKindOf(element: Element): CodeMapKind {
   template: `<div
       #scroller
       class="h-full overflow-auto p-6"
-      [style.padding-right.px]="isCodeMapOn() ? codeMapPadding : null"
+      [style.padding-right.px]="isCodeMapOn() ? codeMapPadding() : null"
     >
       <div
         #body
@@ -93,6 +95,7 @@ function readingKindOf(element: Element): CodeMapKind {
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     class: 'relative block h-full min-h-0 w-full overflow-hidden border border-input bg-card',
+    '[style.--codemap-width.px]': 'isCompact() ? 64 : null',
   },
 })
 export class AppDocumentPreviewComponent {
@@ -105,7 +108,11 @@ export class AppDocumentPreviewComponent {
   private readonly bodyElement = viewChild.required<ElementRef<HTMLElement>>('body');
   private readonly editorSettings = inject(LocalPreferencesService).editorSettings;
   protected readonly isCodeMapOn = computed(() => this.editorSettings().codeMap);
-  protected readonly codeMapPadding = CODE_MAP_PADDING;
+  /** A narrow host (the note sheet) gets a slimmer map and less padding. */
+  readonly isCompact = input(false);
+  protected readonly codeMapPadding = computed(() =>
+    this.isCompact() ? 16 + CODE_MAP_COMPACT_WIDTH : CODE_MAP_PADDING,
+  );
   private codeMap: CodeMap | null = null;
   private codeMapObserver: ResizeObserver | null = null;
   private codeMapRequest = 0;

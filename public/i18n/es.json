@@ -931,7 +931,6 @@
       "amount": "Cantidad",
       "current": "actuales",
       "max": "máx.",
-      "undo": "Deshacer el último cambio de PG",
       "modes": {
         "damage": "Daño",
         "heal": "Curación",
@@ -1005,7 +1004,9 @@
       "cleared": "Iniciativa borrada para {{count}}",
       "failed": "{{count}} no pudieron tirar: {{reason}}",
       "error": "No se pudo tirar la iniciativa",
-      "hint": "Tira por las entidades seleccionadas. La que no puede tirar (falta un valor) pierde su iniciativa."
+      "hint": "Tira por las entidades seleccionadas. La que no puede tirar (falta un valor) pierde su iniciativa.",
+      "one": "Tirar la iniciativa",
+      "oneFailed": "No se pudo tirar la iniciativa"
     },
     "delete": {
       "title": "¿Eliminar {{name}} para siempre?",

@@ -5,6 +5,7 @@ import {
   effect,
   inject,
   signal,
+  untracked,
 } from '@angular/core';
 import {
   CdkDrag,
@@ -24,11 +25,10 @@ import { AppEncounterHealthBarComponent } from '@/components/encounter-health-ba
 import {
   ENCOUNTER_EXTENSION_PATTERN,
   toInAppEncounterRoute,
-  toInAppNoteRoute,
 } from '@/components/document-preview/document-preview.markdown';
 import type { AppSheetFormComponent } from '@/components/sheet-form/sheet-form.component';
 import { AppDialogFormService } from '@/components/sheet-form/dialog-form.service';
-import type { AppSheetField } from '@/components/sheet-form/sheet-form.types';
+import type { AppSheetField, AppSheetInputAction } from '@/components/sheet-form/sheet-form.types';
 import type {
   BattleFieldComponent,
   BattleRuleAreaDto,
@@ -74,16 +74,8 @@ interface HealthValue {
 
 type HpChangeMode = 'damage' | 'heal' | 'temp';
 const HP_CHANGE_MODES: readonly HpChangeMode[] = ['damage', 'heal', 'temp'];
-const HP_UNDO_MAX = 30;
 /** Most copies one add inserts at once (more is unrealistic at a table). */
 const ENTITY_QUANTITY_MAX = 15;
-
-/** What an undo puts back: the health an entity had before a *Manage HP* change. */
-interface HpUndoStep {
-  readonly entityId: string;
-  readonly key: string;
-  readonly previous: HealthValue | undefined;
-}
 
 /** An element of the entity row and the grid cells it takes (the name has no field). */
 interface RowCell {
@@ -180,8 +172,6 @@ export class EncounterPage {
   protected readonly parseError = computed(() => this.file()?.parseError ?? null);
   protected readonly errorMessage = signal<string | null>(null);
   protected readonly isLoading = signal(true);
-  private readonly hpUndoSteps = signal<readonly HpUndoStep[]>([]);
-  protected readonly hpUndoCount = computed(() => this.hpUndoSteps().length);
 
   /** The party roster of the scope: the same page, without the battle (it only holds who can be added to one). */
   protected readonly isParty = computed(() => this.fileName() === PARTY_FILE_NAME);
@@ -257,6 +247,17 @@ export class EncounterPage {
       }
     });
 
+    // A rule was edited, created, deleted or chosen (the Battle rules sheet, the section's select): the open
+    // encounter follows, with the rule it uses and the list of the toolbar's select.
+    let seenRuleChanges = this.battleRuleService.changes();
+    effect(() => {
+      const changes = this.battleRuleService.changes();
+      if (changes !== seenRuleChanges) {
+        seenRuleChanges = changes;
+        untracked(() => void this.refreshRule());
+      }
+    });
+
     effect((onCleanup) => {
       const scope = this.scope();
       if (!scope) {
@@ -292,6 +293,14 @@ export class EncounterPage {
           // Only the main and utility actions live here; the battle itself is in the page's own header.
           itemActions: [
             ...ruleActions,
+            {
+              id: 'cemetery',
+              label: this.translateService.instant('encounters.cemetery.title'),
+              icon: 'ghost' as const,
+              buttonType: this.isCemeteryOpen() ? ('default' as const) : ('outline' as const),
+              iconOnly: true,
+              action: () => this.isCemeteryOpen.update((isOpen) => !isOpen),
+            },
             ...(isParty
               ? []
               : [
@@ -575,6 +584,50 @@ export class EncounterPage {
     }
   }
 
+  /**
+   * The dice inside the initiative input: rolls the rule's formula for the entity of the form (the variables
+   * come from the frontmatter of the note picked in it). Null when the rule types its initiative by hand.
+   */
+  private initiativeRollAction(field: BattleRuleFieldDto): AppSheetInputAction | undefined {
+    const formula = this.rule()?.initiative.roll;
+    if (!formula) {
+      return undefined;
+    }
+
+    return {
+      icon: 'dices',
+      label: this.translateService.instant('encounters.roll.one'),
+      run: async (form) => {
+        const notePath = String(form.getValue(this.noteKey() ?? '') ?? '');
+        let frontmatter: Readonly<Record<string, unknown>> = {};
+        if (notePath) {
+          try {
+            frontmatter = (await this.documentService.read(notePath)).frontmatter;
+          } catch {
+            // No note values: the formula only rolls if it needs none.
+          }
+        }
+
+        const variables: Record<string, number> = {};
+        for (const [name, value] of Object.entries(frontmatter)) {
+          const integer = this.toInteger(value);
+          if (integer !== null) {
+            variables[name] = integer;
+          }
+        }
+
+        try {
+          return String(rollDice(formula, variables).total);
+        } catch (error) {
+          toast.error(this.translateService.instant('encounters.roll.oneFailed'), {
+            description: error instanceof Error ? error.message : String(error),
+          });
+          return null;
+        }
+      },
+    };
+  }
+
   private entityFormFields(
     field: BattleRuleFieldDto,
     entity: EncounterEntityDto | null,
@@ -582,17 +635,26 @@ export class EncounterPage {
   ): AppSheetField[] {
     const label = this.translateService.instant(field.label);
     const value = entity?.values[field.key];
-    const number = (id: string, text: string, current: unknown): AppSheetField => ({
+    // Adding: initiative, maximum HP and AC share one row; editing has more fields, two to a row.
+    const number = (
+      id: string,
+      text: string,
+      current: unknown,
+      action?: AppSheetInputAction,
+    ): AppSheetField => ({
       id,
       type: 'input',
       inputType: 'number',
       label: text,
       value: toNumber(current)?.toString() ?? '',
-      width: '1/2',
+      width: isNew ? '1/3' : '1/2',
+      ...(action ? { action } : {}),
     });
 
     switch (field.component) {
       case 'initiative':
+        // The dice sits inside the input when the rule rolls the initiative from a formula.
+        return [number(field.key, label, value, this.initiativeRollAction(field))];
       case 'number':
         return [number(field.key, label, value)];
       case 'healthbar': {
@@ -920,7 +982,6 @@ export class EncounterPage {
       .filter((field) => field.component === 'healthbar')
       .map((field) => field.key);
 
-    this.hpUndoSteps.set([]);
     this.updateEncounter((encounter) => ({
       ...encounter,
       battle: { status: 'idle', round: 0, turnId: null },
@@ -1090,21 +1151,15 @@ export class EncounterPage {
       this.scopeNotes().find((note) => note.path === notePath)?.title ??
       notePath.split('/').pop()?.replace(/\.md$/i, '') ??
       notePath;
+    // Information only: no footer buttons (the close button is in the header; a link inside opens its note).
     this.sheetService.create<AppEncounterNotePanelComponent, { path: string }>({
       arcTitle: title,
       arcDescription: notePath,
       arcContent: AppEncounterNotePanelComponent,
       arcData: { path: notePath },
       arcSide: 'right',
-      arcWidth: '560px',
-      arcOkText: this.translateService.instant('encounters.note.open'),
-      arcCancelText: this.translateService.instant('encounters.note.close'),
-      arcOnOk: () => {
-        const route = toInAppNoteRoute(notePath);
-        if (route) {
-          void this.router.navigateByUrl(route);
-        }
-      },
+      arcWidth: 'min(860px, 92vw)',
+      arcHideFooter: true,
     });
   }
 
@@ -1296,26 +1351,10 @@ export class EncounterPage {
       next = rest;
     }
 
-    this.hpUndoSteps.update((steps) => [...steps, { entityId, key, previous }].slice(-HP_UNDO_MAX));
     this.updateEntity(entityId, (candidate) => {
       const values = { ...candidate.values };
       this.setOrClear(values, key, Object.keys(next).length > 0 ? next : null);
       return { ...candidate, values };
-    });
-  }
-
-  /** Puts back the health an entity had before the last *Manage HP* change (other edits are kept). */
-  protected undoHpChange(): void {
-    const step = this.hpUndoSteps().at(-1);
-    if (!step) {
-      return;
-    }
-
-    this.hpUndoSteps.update((steps) => steps.slice(0, -1));
-    this.updateEntity(step.entityId, (entity) => {
-      const values = { ...entity.values };
-      this.setOrClear(values, step.key, step.previous ?? null);
-      return { ...entity, values };
     });
   }
 
@@ -1325,7 +1364,6 @@ export class EncounterPage {
     const token = ++this.loadToken;
     this.isLoading.set(true);
     this.errorMessage.set(null);
-    this.hpUndoSteps.set([]);
 
     try {
       const scope = this.scope();
@@ -1398,6 +1436,25 @@ export class EncounterPage {
   // --- Battle rule -------------------------------------------------------------------------------------
 
   /** Rules the select offers, and the campaign's current choice (for the first option's label). */
+  /** Reads the rule again (its file may have changed) and the choices of the toolbar's select. */
+  private async refreshRule(): Promise<void> {
+    const path = this.encounterPath();
+    if (!this.encounter()) {
+      return;
+    }
+
+    try {
+      const rule = await this.encounterService.rule(path, this.encounter()?.rule ?? null);
+      if (path === this.encounterPath()) {
+        this.rule.set(rule);
+      }
+    } catch (error) {
+      console.warn('[app] Failed to refresh the battle rule:', error);
+    }
+
+    await this.loadRuleChoices();
+  }
+
   private async loadRuleChoices(): Promise<void> {
     const scope = this.scope();
     try {
@@ -1612,7 +1669,6 @@ export class EncounterPage {
       arcOnCancel: () => {
         this.file.set(current);
         this.encounter.set(current.encounter);
-        this.hpUndoSteps.set([]);
       },
     });
   }
@@ -1640,11 +1696,34 @@ export class EncounterPage {
     );
   }
 
+  /**
+   * The file was renamed: the encounter's `name` (what the page, the tab and the lists show) follows the new file
+   * name, written to the file at its new place; campaign tabs and system pages then move to the new route.
+   */
   private async followRename(oldPath: string, newPath: string): Promise<void> {
     const oldRoute = toInAppEncounterRoute(oldPath);
     const newRoute = toInAppEncounterRoute(newPath);
     if (!oldRoute || !newRoute || oldRoute === newRoute) {
       return;
+    }
+
+    const newName = newPath.split('/').pop()?.replace(ENCOUNTER_EXTENSION_PATTERN, '') ?? '';
+    try {
+      const file = await this.encounterService.read(newPath);
+      if (!file.parseError && newName && file.encounter.name !== newName) {
+        await this.encounterService.write({
+          path: newPath,
+          encounter: { ...file.encounter, name: newName },
+          expectedHash: file.contentHash,
+        });
+      }
+    } catch (error) {
+      console.warn('[app] Failed to rename the encounter inside its file:', newPath, error);
+    }
+
+    // A campaign tab already moved to the new route (and loaded the file as it was): show the new name.
+    if (this.encounterPath() === newPath) {
+      await this.load(newPath);
     }
 
     // Campaign tabs follow the rename on their own (FileActionsService); a system page navigates itself.

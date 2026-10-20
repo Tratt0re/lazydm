@@ -29,6 +29,7 @@ import type { LinkPreviewRequest } from '@/components/link-preview-card/link-pre
       <div class="relative h-full min-h-0">
         <app-document-preview
           class="h-full"
+          [isCompact]="true"
           [body]="note.body"
           [links]="note.links"
           [sourcePath]="note.path"

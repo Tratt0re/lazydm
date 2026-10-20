@@ -126,15 +126,32 @@
             </label>
           }
 
-          <input
-            arc-input
-            [type]="field.inputType ?? 'text'"
-            [value]="inputValue(field)"
-            [placeholder]="displayPlaceholder(field)"
-            [disabled]="field.disabled ?? false"
-            [attr.aria-invalid]="fieldError(field) ? 'true' : null"
-            (input)="onInputChange(field, $any($event.target).value)"
-          />
+          <div class="relative">
+            <input
+              arc-input
+              [type]="field.inputType ?? 'text'"
+              [class.pr-10]="field.action"
+              [value]="inputValue(field)"
+              [placeholder]="displayPlaceholder(field)"
+              [disabled]="field.disabled ?? false"
+              [attr.aria-invalid]="fieldError(field) ? 'true' : null"
+              (input)="onInputChange(field, $any($event.target).value)"
+            />
+            @if (field.action; as action) {
+              <button
+                type="button"
+                arc-button
+                arcType="ghost"
+                arcSize="sm"
+                class="absolute top-1/2 right-1 size-7 -translate-y-1/2"
+                [attr.aria-label]="action.label"
+                [arcTooltip]="action.label"
+                (click)="runInputAction(field, action)"
+              >
+                <arc-icon [arcType]="action.icon" />
+              </button>
+            }
+          </div>
 
           @if (fieldError(field); as error) {
             <p class="mt-1 text-xs text-destructive" role="alert">{{ error }}</p>

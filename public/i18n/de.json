@@ -931,7 +931,6 @@
       "amount": "Menge",
       "current": "aktuell",
       "max": "max.",
-      "undo": "Letzte TP-Änderung rückgängig machen",
       "modes": {
         "damage": "Schaden",
         "heal": "Heilung",
@@ -1005,7 +1004,9 @@
       "cleared": "Initiative für {{count}} gelöscht",
       "failed": "{{count}} konnten nicht würfeln: {{reason}}",
       "error": "Die Initiative konnte nicht gewürfelt werden",
-      "hint": "Würfelt für die ausgewählten Einheiten. Wer nicht würfeln kann (fehlender Wert), verliert die Initiative."
+      "hint": "Würfelt für die ausgewählten Einheiten. Wer nicht würfeln kann (fehlender Wert), verliert die Initiative.",
+      "one": "Initiative würfeln",
+      "oneFailed": "Initiative konnte nicht gewürfelt werden"
     },
     "delete": {
       "title": "{{name}} endgültig löschen?",

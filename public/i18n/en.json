@@ -931,7 +931,6 @@
       "amount": "Amount",
       "current": "current",
       "max": "max",
-      "undo": "Undo last HP change",
       "modes": {
         "damage": "Damage",
         "heal": "Heal",
@@ -1005,7 +1004,9 @@
       "cleared": "Initiative cleared for {{count}}",
       "failed": "{{count}} could not roll: {{reason}}",
       "error": "Couldn't roll the initiative",
-      "hint": "Rolls for the selected entities. One that can't roll (a missing value) loses its initiative."
+      "hint": "Rolls for the selected entities. One that can't roll (a missing value) loses its initiative.",
+      "one": "Roll the initiative",
+      "oneFailed": "Couldn't roll the initiative"
     },
     "delete": {
       "title": "Delete {{name}} for good?",

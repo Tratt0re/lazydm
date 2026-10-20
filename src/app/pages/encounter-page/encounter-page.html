@@ -2,36 +2,29 @@
 <div class="min-h-0 min-w-0 flex-1 overflow-y-auto">
 <div class="mx-auto flex w-full max-w-5xl flex-col gap-4 p-6">
   @if (encounter()) {
+    <!-- Battle state, above the bar: the round and whose turn it is. -->
+    @if (!isParty()) {
+      <div class="flex flex-col">
+        <span class="font-display text-2xl leading-none font-extrabold tracking-[0.02em] uppercase">{{
+          (isRunning() ? 'encounters.battle.round' : 'encounters.battle.idle') | translate: { round: round() }
+        }}<span class="text-primary" aria-hidden="true">.</span></span>
+        <span class="truncate font-mono text-xs text-muted-foreground">
+          @if (isRunning() && turnName(); as name) {
+            {{ 'encounters.battle.turnOf' | translate: { name } }}
+          } @else {
+            {{ 'encounters.header.count' | translate: { count: entities().length } }}
+          }
+        </span>
+      </div>
+    }
+
     <header
       class="flex flex-wrap items-center gap-x-6 gap-y-3 border border-border bg-raised px-4 py-3"
       [attr.aria-label]="'encounters.header.label' | translate"
     >
-      <!-- Battle state: the round and whose turn it is. -->
       @if (!isParty()) {
-        <div class="flex min-w-0 flex-col">
-          <span class="font-display text-2xl leading-none font-extrabold tracking-[0.02em] uppercase">{{
-            (isRunning() ? 'encounters.battle.round' : 'encounters.battle.idle') | translate: { round: round() }
-          }}<span class="text-primary" aria-hidden="true">.</span></span>
-          <span class="truncate font-mono text-xs text-muted-foreground">
-            @if (isRunning() && turnName(); as name) {
-              {{ 'encounters.battle.turnOf' | translate: { name } }}
-            } @else {
-              {{ 'encounters.header.count' | translate: { count: entities().length } }}
-            }
-          </span>
-        </div>
-
         <div class="flex items-center gap-2">
           @if (isRunning()) {
-            <button
-              type="button"
-              arc-button
-              [arcDisabled]="!isEditable() || entities().length === 0"
-              (click)="nextTurn()"
-            >
-              <arc-icon arcType="chevrons-right" />
-              {{ 'encounters.battle.next' | translate }}
-            </button>
             <button
               type="button"
               arc-button
@@ -41,6 +34,15 @@
             >
               <arc-icon arcType="square" />
               {{ 'encounters.battle.stop' | translate }}
+            </button>
+            <button
+              type="button"
+              arc-button
+              [arcDisabled]="!isEditable() || entities().length === 0"
+              (click)="nextTurn()"
+            >
+              <arc-icon arcType="chevrons-right" />
+              {{ 'encounters.battle.next' | translate }}
             </button>
           } @else {
             <button
@@ -87,52 +89,26 @@
             type="button"
             arc-button
             arcType="outline"
+            class="size-9"
             [arcDisabled]="!isEditable()"
+            [attr.aria-label]="'encounters.party.add' | translate"
+            [arcTooltip]="'encounters.party.add' | translate"
             (click)="addParty()"
           >
             <arc-icon arcType="users" />
-            {{ 'encounters.party.add' | translate }}
           </button>
         }
         <button
           type="button"
           arc-button
           arcType="outline"
+          class="size-9"
           [arcDisabled]="!isEditable()"
+          [attr.aria-label]="'encounters.entity.add' | translate"
+          [arcTooltip]="'encounters.entity.add' | translate"
           (click)="openEntitySheet(null)"
         >
           <arc-icon arcType="plus" />
-          {{ 'encounters.entity.add' | translate }}
-        </button>
-        @if (!isParty()) {
-          <button
-            type="button"
-            arc-button
-            arcType="ghost"
-            class="size-9"
-            [arcDisabled]="!isEditable() || hpUndoCount() === 0"
-            [attr.aria-label]="'encounters.hp.undo' | translate"
-            [arcTooltip]="'encounters.hp.undo' | translate"
-            (click)="undoHpChange()"
-          >
-            <arc-icon arcType="rotate-ccw" />
-          </button>
-        }
-        <button
-          type="button"
-          arc-button
-          arcType="ghost"
-          class="size-9"
-          [class.text-primary]="isCemeteryOpen()"
-          [attr.aria-pressed]="isCemeteryOpen()"
-          [attr.aria-label]="'encounters.cemetery.title' | translate"
-          [arcTooltip]="'encounters.cemetery.title' | translate"
-          (click)="isCemeteryOpen.update(isOpen => !isOpen)"
-        >
-          <arc-icon arcType="ghost" />
-          @if (deadEntities().length > 0) {
-            <span class="font-mono text-xs">{{ deadEntities().length }}</span>
-          }
         </button>
       </div>
     </header>
@@ -178,7 +154,7 @@
             [attr.aria-current]="isRunning() && entity.id === turnId() ? 'step' : null"
           >
             <!-- Card header: the system actions of the entity. -->
-            <div class="flex items-center gap-1 border-b border-border-subtle bg-recessed px-2 py-0.5">
+            <div class="flex items-center gap-1 border-b border-border-subtle bg-recessed px-2 py-0">
               <span
                 cdkDragHandle
                 class="flex size-6 shrink-0 cursor-grab items-center justify-center text-muted-foreground"
@@ -200,7 +176,7 @@
                   arc-button
                   arcType="ghost"
                   arcSize="sm"
-                  class="size-6 shrink-0"
+                  class="size-6! shrink-0 p-0!"
                   [arcDisabled]="!isEditable()"
                   [attr.aria-label]="'encounters.entity.edit' | translate"
                   [arcTooltip]="'encounters.entity.edit' | translate"
@@ -213,7 +189,7 @@
                   arc-button
                   arcType="ghost"
                   arcSize="sm"
-                  class="size-6 shrink-0"
+                  class="size-6! shrink-0 p-0!"
                   [arcDisabled]="!isEditable()"
                   [attr.aria-label]="'encounters.entity.duplicate' | translate"
                   [arcTooltip]="'encounters.entity.duplicate' | translate"
@@ -226,7 +202,7 @@
                   arc-button
                   arcType="ghost"
                   arcSize="sm"
-                  class="size-6 shrink-0"
+                  class="size-6! shrink-0 p-0!"
                   [arcDisabled]="!isEditable()"
                   [attr.aria-label]="'encounters.entity.remove' | translate"
                   [arcTooltip]="'encounters.entity.remove' | translate"
@@ -293,42 +269,51 @@
                             arc-button
                             arcType="outline"
                             arcSize="sm"
-                            class="shrink-0"
+                            class="size-8! shrink-0 p-0!"
                             [arcDisabled]="!isEditable()"
+                            [attr.aria-label]="'encounters.hp.manage' | translate"
+                            [arcTooltip]="'encounters.hp.manage' | translate"
                             (click)="openHpSheet(entity, field)"
                           >
                             <arc-icon arcType="heart" />
-                            {{ 'encounters.hp.manage' | translate }}
                           </button>
                         }
                       }
                       @case ('statuses') {
-                        <!-- Tags typed in place: "name", space, "rounds", space; a second space means no rounds. -->
-                        <span class="flex min-w-0 flex-1 flex-wrap items-center gap-1">
-                          @for (status of statusesOf(entity, field); track $index) {
-                            <arc-badge arcType="outline" class="h-5 gap-1 py-0 pr-0.5">
-                              {{ status.name }}@if (status.rounds !== undefined) { · {{ status.rounds }} }
-                              <button
-                                type="button"
-                                class="flex size-4 cursor-pointer items-center justify-center hover:text-destructive focus-visible:outline-2 focus-visible:outline-ring"
-                                [disabled]="!isEditable()"
-                                [attr.aria-label]="'encounters.status.remove' | translate: { name: status.name }"
-                                (click)="removeStatus(entity, field, $index)"
-                              >
-                                <arc-icon arcType="x" />
-                              </button>
-                            </arc-badge>
-                          }
-                          <input
-                            type="text"
-                            class="h-5 min-w-28 flex-1 bg-transparent text-xs outline-none placeholder:text-muted-foreground focus-visible:outline-none"
-                            [disabled]="!isEditable()"
-                            [placeholder]="'encounters.status.placeholder' | translate"
-                            [attr.aria-label]="'encounters.status.add' | translate"
-                            (keydown)="onStatusKeydown($event, entity, field)"
-                            (blur)="commitStatusInput($any($event.target), entity, field)"
-                          />
-                        </span>
+                        <!-- A bordered, labelled field: tags typed in place ("name", space, "rounds", space). -->
+                        <div class="flex min-w-0 flex-1 flex-col gap-0.5">
+                          <label
+                            class="font-mono text-[10px] tracking-[0.1em] text-muted-foreground uppercase"
+                            [attr.for]="'status-' + entity.id"
+                          >{{ fieldLabel(field) }}</label>
+                          <div
+                            class="flex min-h-8 flex-wrap items-center gap-1 border border-input bg-recessed px-1.5 py-1 focus-within:border-ring"
+                          >
+                            @for (status of statusesOf(entity, field); track $index) {
+                              <arc-badge arcType="outline" class="h-5 gap-1 py-0 pr-0.5">
+                                {{ status.name }}@if (status.rounds !== undefined) { · {{ status.rounds }} }
+                                <button
+                                  type="button"
+                                  class="flex size-4 cursor-pointer items-center justify-center hover:text-destructive focus-visible:outline-2 focus-visible:outline-ring"
+                                  [disabled]="!isEditable()"
+                                  [attr.aria-label]="'encounters.status.remove' | translate: { name: status.name }"
+                                  (click)="removeStatus(entity, field, $index)"
+                                >
+                                  <arc-icon arcType="x" />
+                                </button>
+                              </arc-badge>
+                            }
+                            <input
+                              type="text"
+                              class="h-5 min-w-28 flex-1 bg-transparent text-xs outline-none placeholder:text-muted-foreground focus-visible:outline-none"
+                              [id]="'status-' + entity.id"
+                              [disabled]="!isEditable()"
+                              [placeholder]="'encounters.status.placeholder' | translate"
+                              (keydown)="onStatusKeydown($event, entity, field)"
+                              (blur)="commitStatusInput($any($event.target), entity, field)"
+                            />
+                          </div>
+                        </div>
                       }
                       @case ('text') {
                         @if (textOf(entity, field); as text) {

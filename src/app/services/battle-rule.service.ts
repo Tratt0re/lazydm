@@ -1,4 +1,4 @@
-import { Injectable, inject } from '@angular/core';
+import { Injectable, inject, signal } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 
 import { APIChannel } from '@/config/api';
@@ -28,6 +28,9 @@ export interface BattleRuleOption {
 })
 export class BattleRuleService extends BaseIpcService<APIChannel.BATTLE_RULES> {
   private readonly translateService = inject(TranslateService);
+  private readonly changesSignal = signal(0);
+  /** Counts every change of the rules (a saved, created or deleted file, a campaign's choice): pages showing one follow. */
+  readonly changes = this.changesSignal.asReadonly();
 
   constructor() {
     super(APIChannel.BATTLE_RULES);
@@ -84,16 +87,29 @@ export class BattleRuleService extends BaseIpcService<APIChannel.BATTLE_RULES> {
     return this.ipcClient.read({ path });
   }
 
-  write(path: string, rule: BattleRuleDto, expectedHash: string | null): Promise<WriteBattleRuleResultDto> {
-    return this.ipcClient.write({ path, rule, expectedHash });
+  async write(
+    path: string,
+    rule: BattleRuleDto,
+    expectedHash: string | null,
+  ): Promise<WriteBattleRuleResultDto> {
+    const result = await this.ipcClient.write({ path, rule, expectedHash });
+    this.notifyChanged();
+    return result;
   }
 
   async create(name: string): Promise<string> {
-    return (await this.ipcClient.create({ name })).path;
+    const { path } = await this.ipcClient.create({ name });
+    this.notifyChanged();
+    return path;
   }
 
   async remove(path: string): Promise<void> {
     await this.ipcClient.remove({ path });
+    this.notifyChanged();
+  }
+
+  private notifyChanged(): void {
+    this.changesSignal.update((count) => count + 1);
   }
 
   async getChoice(campaign: string): Promise<string | null> {
@@ -101,7 +117,9 @@ export class BattleRuleService extends BaseIpcService<APIChannel.BATTLE_RULES> {
   }
 
   async setChoice(campaign: string, rule: string | null): Promise<string | null> {
-    return (await this.ipcClient.setChoice({ campaign, rule })).rule;
+    const choice = (await this.ipcClient.setChoice({ campaign, rule })).rule;
+    this.notifyChanged();
+    return choice;
   }
 
   /** Frontmatter keys of a template (path or `builtin:<type>`): what a rule can read from an entity's note. */

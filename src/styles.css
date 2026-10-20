@@ -457,7 +457,8 @@ arc-content > main:has(> app-document-page) {
 /* Code map (components/code-map): placed by its script right before the scroll area's scrollbar. */
 .app-codemap {
   position: absolute;
-  width: 116px;
+  /* A narrower host (the note sheet) sets --codemap-width. */
+  width: var(--codemap-width, 116px);
   overflow: hidden;
   border-left: 1px solid var(--border);
   background-color: var(--recessed);
@@ -985,7 +986,8 @@ button.arc-embed-file:hover,
 /* Eye button after a hovered note link (Live and Reading): opens the linked note's preview card. */
 .arc-link-preview-eye {
   position: fixed;
-  z-index: 40;
+  /* Above sheets and modals (z-50), so previews also work inside the note sheet. */
+  z-index: 60;
   display: inline-flex;
   align-items: center;
   justify-content: center;

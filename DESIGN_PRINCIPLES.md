@@ -334,10 +334,12 @@ Planned Electron modules: `vault`, `cloud-readiness`, `campaign`, `document`, `i
 - **Values** are stored by the key of the battle-rule field that shows them (`initiative`, `ac`, `hp` =
   `{ current, max, temp }`, `statuses` = `[{ name, rounds? }]`, `note` = vault path of the linked note, …). A value
   the rule no longer lists survives a change of rule; empty values are not stored.
-- **Page** (`/<scope>/encounters/<file>`, own tab title and breadcrumb): the initiative list under a **page header**
-  (round and whose turn it is, *Start battle* / *Next turn* / *Stop battle*, *Roll initiative*, *Add party*, *Add
-  entity*, *Undo last HP change*, *Cemetery*). The **toolbar keeps only the main and utility actions**: *Battle rule*,
-  *Rename…* and *Delete…*. Every edit is saved right away.
+- **Page** (`/<scope>/encounters/<file>`, own tab title and breadcrumb): the round and whose turn it is
+  on top, then the **battle bar** (*Start battle* or *Stop battle* / *Next turn* on the left; *Roll initiative* and
+  the *Add party* and *Add entity* icon buttons on the right), then the initiative list. The **toolbar keeps the
+  main and utility actions**: *Battle rule*, *Cemetery* (opens the side panel), *Rename…* and *Delete…*. Every edit
+  is saved right away. The open encounter follows a rename (its name is the file name) and any change of its
+  battle rule or of the rule library.
   - **Battle**: *Start* sorts by initiative (highest first, entities without one last), sets round 1 and gives the
     first entity the turn; *Next turn* moves on and starts a new round after the last; *Stop* asks first, then
     clears initiatives and statuses and refills HP to the maximum where one is known (temporary HP go too). There
@@ -345,13 +347,13 @@ Planned Electron modules: `vault`, `cloud-readiness`, `campaign`, `document`, `i
     initiative and the current turn does not move. Rows can be dragged to any order.
   - **Entities**: *Add entity* (a modal) leads with the **note picker** (searchable list of the scope's notes); picking one
     fills the name and the values the rule reads from its frontmatter, without touching what the user already
-    typed. Then name, initiative, maximum HP and AC, and a **quantity** (1–15, default 1); above 1 the confirm
+    typed. Then the name, initiative / maximum HP / AC on one row (a dice inside the initiative input rolls it when the rule has a formula), and a **quantity** (1–15, default 1); above 1 the confirm
     button reads *Insert N* and the copies are numbered ("Goblin 1", "Goblin 2"…). *Duplicate* numbers the same way.
     A field the rule reads from the note shows the note's value **only when the entity has none of its own**;
     nothing is copied into the file.
-  - **Hit points**: a health bar (current over maximum, temporary HP as a second segment, the numbers always
-    written). *Manage HP* applies damage (temporary HP first, never below 0), healing (up to the maximum) or sets
-    the temporary HP; the last 30 changes can be undone.
+  - **Hit points**: one bar with `current / max` written over it (temporary HP as a second
+    segment). *Manage HP* (an icon button) applies damage (temporary HP first, never below 0), healing (up to the
+    maximum) or sets the temporary HP. There is no undo.
   - **Statuses** are **free tags** typed in place on an entity (one line, no dialog): `stunned`, space, `3`, space
     makes the tag *stunned · 3* (it counts down at the end of that entity's turn and goes at 0); a second space right
     after the name makes it without rounds. Enter or leaving the field also makes one, Backspace on an empty field
@@ -635,7 +637,7 @@ variant keys and configuration stay as they are.
 | 14 | Encounter manager (14.1–14.11), design in §6d: encounters are `.json` files of the Encounters section, linked like assets (`![[ambush.json]]`); every entity field is optional; rows are driven by battle rules |
 | 14.1 | Format and Electron: encounter model (conflict-checked save), battle rule schema and default rule, `encounters:*` channels, typed service |
 | 14.2 | Route and page: `*.json` in `encounters/` opens the encounter page; the section page lists encounters (swords icon) and offers *New encounter* |
-| 14.3 | Rule-driven rows: initiative, name, health bar (HP + temporary HP), *Manage HP* modal (damage / heal / temporary HP), undo |
+| 14.3 | Rule-driven rows: initiative, name, health bar (HP + temporary HP), *Manage HP* modal (damage / heal / temporary HP) |
 | 14.4 | Battle flow: *Start battle* / *Stop battle* (stop clears statuses and initiatives and restores HP where possible; no reset), next turn, add entities mid-battle, duplicate with numbering, drag to reorder, *Roll initiative* only when the rule has a formula |
 | 14.5 | Cemetery: remove an entity, side panel listing the dead with recover |
 | 14.6 | Statuses: free tags the user types on an entity, with an optional round count that ticks down at the end of its turn (no section, no notes; richer statuses may come later) |

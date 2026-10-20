@@ -81,8 +81,18 @@ export interface AppSheetCheckboxField extends AppSheetFieldBase<'checkbox', boo
   readonly icon?: ArcTechIcon;
 }
 
+/** A button inside the input, on its right (a dice to roll its value, for instance). */
+export interface AppSheetInputAction {
+  readonly icon: ArcTechIcon;
+  /** Accessible name and tooltip (already translated). */
+  readonly label: string;
+  /** Runs when pressed; a returned string becomes the value of the input. */
+  readonly run: (form: import('./sheet-form.component').AppSheetFormComponent) => string | null | Promise<string | null>;
+}
+
 export interface AppSheetInputField extends AppSheetFieldBase<'input', string | null> {
   readonly inputType?: AppSheetInputType;
+  readonly action?: AppSheetInputAction;
 }
 
 export type AppSheetField =

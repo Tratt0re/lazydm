@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, computed, effect, inject, input, si
 import { TranslateService } from '@ngx-translate/core';
 
 import { NumberFormatService } from '@/services/number-format.service';
+import { ArcTechButtonComponent } from '@/shared/components/button';
 import { ArcTechCheckboxComponent } from '@/shared/components/checkbox';
 import {
   ArcTechComboboxComponent,
@@ -9,8 +10,10 @@ import {
   type ArcTechComboboxOption,
 } from '@/shared/components/combobox';
 import { ArcTechDatePickerComponent } from '@/shared/components/date-picker';
+import { ArcTechIconComponent } from '@/shared/components/icon';
 import { ArcTechInputDirective } from '@/shared/components/input';
 import { ArcTechSelectImports } from '@/shared/components/select';
+import { ArcTechTooltipImports } from '@/shared/components/tooltip';
 import { ARC_MODAL_DATA } from '@/shared/components/dialog';
 import { ARC_SHEET_DATA } from '@/shared/components/sheet';
 import { mergeClasses } from '@/shared/utils/merge-classes';
@@ -22,6 +25,7 @@ import type {
   AppSheetFieldValue,
   AppSheetFieldValueMap,
   AppSheetFormData,
+  AppSheetInputAction,
   AppSheetInputField,
   AppSheetSelectField,
   AppSheetSelectOption,
@@ -50,7 +54,16 @@ const GRID_SPAN_CLASS_BY_VALUE = {
 
 @Component({
   selector: 'app-sheet-form',
-  imports: [ArcTechDatePickerComponent, ArcTechComboboxComponent, ArcTechCheckboxComponent, ArcTechInputDirective, ...ArcTechSelectImports],
+  imports: [
+    ArcTechButtonComponent,
+    ArcTechDatePickerComponent,
+    ArcTechComboboxComponent,
+    ArcTechCheckboxComponent,
+    ArcTechIconComponent,
+    ArcTechInputDirective,
+    ...ArcTechSelectImports,
+    ...ArcTechTooltipImports,
+  ],
   templateUrl: './sheet-form.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -289,6 +302,14 @@ export class AppSheetFormComponent {
 
   protected maxDate(field: AppSheetDatePickerField): Date | null {
     return this.normalizeDateValue(field.maxDate);
+  }
+
+  /** The button inside an input was pressed: its result, when there is one, becomes the input's value. */
+  protected async runInputAction(field: AppSheetInputField, action: AppSheetInputAction): Promise<void> {
+    const value = await action.run(this);
+    if (value !== null) {
+      this.setValue(field.id, value);
+    }
   }
 
   protected fieldWidthClass(field: AppSheetField): string {

@@ -32,7 +32,12 @@ export class ArcTechSheetRef<T = any, R = any, U = any> {
       this.overlayRef
         .outsidePointerEvents()
         .pipe(takeUntil(this.destroy$))
-        .subscribe(() => this.close());
+        .subscribe((event) => {
+          // A floating layer opened from inside (a link preview and its eye button) is part of the sheet.
+          if (!(event.target as Element | null)?.closest?.('[data-link-preview], .arc-link-preview-card')) {
+            this.close();
+          }
+        });
     }
 
     if (isPlatformBrowser(this.platformId)) {

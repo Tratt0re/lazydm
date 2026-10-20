@@ -931,7 +931,6 @@
       "amount": "Quantità",
       "current": "attuali",
       "max": "massimi",
-      "undo": "Annulla l'ultima modifica ai PF",
       "modes": {
         "damage": "Danno",
         "heal": "Cura",
@@ -1005,7 +1004,9 @@
       "cleared": "Iniziativa azzerata per {{count}}",
       "failed": "{{count}} non hanno potuto tirare: {{reason}}",
       "error": "Impossibile tirare l'iniziativa",
-      "hint": "Tira per le entità selezionate. Chi non può tirare (manca un valore) perde l'iniziativa."
+      "hint": "Tira per le entità selezionate. Chi non può tirare (manca un valore) perde l'iniziativa.",
+      "one": "Tira l'iniziativa",
+      "oneFailed": "Impossibile tirare l'iniziativa"
     },
     "delete": {
       "title": "Eliminare {{name}} per sempre?",

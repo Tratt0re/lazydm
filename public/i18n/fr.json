@@ -931,7 +931,6 @@
       "amount": "Quantité",
       "current": "actuels",
       "max": "max.",
-      "undo": "Annuler le dernier changement de PV",
       "modes": {
         "damage": "Dégâts",
         "heal": "Soins",
@@ -1005,7 +1004,9 @@
       "cleared": "Initiative effacée pour {{count}}",
       "failed": "{{count}} n'ont pas pu lancer : {{reason}}",
       "error": "Impossible de lancer l'initiative",
-      "hint": "Lance pour les entités sélectionnées. Celle qui ne peut pas lancer (valeur manquante) perd son initiative."
+      "hint": "Lance pour les entités sélectionnées. Celle qui ne peut pas lancer (valeur manquante) perd son initiative.",
+      "one": "Lancer l'initiative",
+      "oneFailed": "Impossible de lancer l'initiative"
     },
     "delete": {
       "title": "Supprimer {{name}} pour de bon ?",
