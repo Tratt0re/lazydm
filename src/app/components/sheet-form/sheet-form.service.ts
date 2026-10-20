@@ -14,6 +14,7 @@ export interface AppSheetFormOpenOptions
   readonly fields: readonly AppSheetField[];
   readonly values?: AppSheetFieldValueMap;
   readonly validateBeforeSubmit?: boolean;
+  readonly onFieldChange?: AppSheetFormData['onFieldChange'];
   readonly onSubmit?: SheetOnClickCallback<AppSheetFormComponent>;
 }
 
@@ -28,6 +29,7 @@ export class AppSheetFormService {
       fields,
       values,
       validateBeforeSubmit = true,
+      onFieldChange,
       onSubmit,
       ...sheetOptions
     } = options;
@@ -35,6 +37,7 @@ export class AppSheetFormService {
     const data: AppSheetFormData = {
       fields,
       values,
+      onFieldChange,
     };
 
     return this.arcTechSheetService.create<AppSheetFormComponent, AppSheetFormData>({

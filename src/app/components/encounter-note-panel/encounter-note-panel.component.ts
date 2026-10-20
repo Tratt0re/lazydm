@@ -1,4 +1,12 @@
-import { ChangeDetectionStrategy, Component, effect, inject, input, output, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  effect,
+  inject,
+  input,
+  output,
+  signal,
+} from '@angular/core';
 import { DomSanitizer, type SafeHtml } from '@angular/platform-browser';
 import { RouterLink } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
@@ -25,9 +33,7 @@ import { ArcTechTooltipImports } from '@/shared/components/tooltip';
   ],
   template: `
     <header class="flex shrink-0 items-center justify-between gap-2 px-2 pb-2">
-      <h2
-        class="min-w-0 truncate font-display text-xl font-extrabold tracking-[0.02em] uppercase"
-      >
+      <h2 class="min-w-0 truncate font-display text-xl font-extrabold tracking-[0.02em] uppercase">
         {{ title() }}<span class="text-primary" aria-hidden="true">.</span>
       </h2>
       <span class="flex shrink-0 items-center gap-1">
@@ -61,7 +67,9 @@ import { ArcTechTooltipImports } from '@/shared/components/tooltip';
 
     <div class="min-h-0 flex-1 overflow-y-auto px-2">
       @if (hasError()) {
-        <p class="text-xs leading-5 text-destructive">{{ 'encounters.note.loadError' | translate }}</p>
+        <p class="text-xs leading-5 text-destructive">
+          {{ 'encounters.note.loadError' | translate }}
+        </p>
       } @else if (html(); as html) {
         <div class="arc-markdown-body arc-link-preview-body" [innerHTML]="html"></div>
       }

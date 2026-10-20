@@ -901,7 +901,10 @@
       "namePlaceholder": "Gobelin 1",
       "duplicate": "Dupliquer",
       "drag": "Glisser pour réordonner",
-      "remove": "Envoyer au cimetière"
+      "remove": "Envoyer au cimetière",
+      "quantity": "Quantité",
+      "quantityHint": "Utilisée par Insérer plusieurs : ajoute ce nombre de copies numérotées (de 2 à 50).",
+      "insertMany": "Insérer plusieurs"
     },
     "fields": {
       "initiative": "Initiative",

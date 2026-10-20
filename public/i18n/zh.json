@@ -901,7 +901,10 @@
       "namePlaceholder": "地精 1",
       "duplicate": "复制",
       "drag": "拖动以重新排序",
-      "remove": "送入墓地"
+      "remove": "送入墓地",
+      "quantity": "数量",
+      "quantityHint": "用于“批量插入”：添加这么多个编号副本（2 到 50）。",
+      "insertMany": "批量插入"
     },
     "fields": {
       "initiative": "先攻",

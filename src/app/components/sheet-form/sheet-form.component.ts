@@ -120,23 +120,23 @@ export class AppSheetFormComponent {
   }
 
   protected onDateChange(field: AppSheetDatePickerField, value: Date | null): void {
-    this.patchValue(field.id, this.normalizeFieldValue(field, value));
+    this.userChanged(field, value);
   }
 
   protected onComboboxChange(field: AppSheetComboboxField, value: string | string[] | null): void {
-    this.patchValue(field.id, this.normalizeFieldValue(field, value));
+    this.userChanged(field, value);
   }
 
   protected onSelectChange(field: AppSheetSelectField, value: string | string[]): void {
-    this.patchValue(field.id, this.normalizeFieldValue(field, value));
+    this.userChanged(field, value);
   }
 
   protected onCheckboxChange(field: AppSheetCheckboxField, value: boolean): void {
-    this.patchValue(field.id, this.normalizeFieldValue(field, value));
+    this.userChanged(field, value);
   }
 
   protected onInputChange(field: AppSheetInputField, value: string): void {
-    this.patchValue(field.id, this.normalizeFieldValue(field, value));
+    this.userChanged(field, value);
   }
 
   protected dateValue(field: AppSheetDatePickerField): Date | null {
@@ -330,6 +330,13 @@ export class AppSheetFormComponent {
     }
 
     return Math.min(DEFAULT_GRID_COLUMNS, Math.max(1, Math.round(DEFAULT_GRID_COLUMNS * ratio)));
+  }
+
+  /** A change made by the user: stored, then reported to the form's owner (it may fill in other fields). */
+  private userChanged(field: AppSheetField, value: unknown): void {
+    const normalized = this.normalizeFieldValue(field, value);
+    this.patchValue(field.id, normalized);
+    this.sheetData?.onFieldChange?.(field.id, normalized, this);
   }
 
   private patchValue(fieldId: string, value: AppSheetFieldValue): void {

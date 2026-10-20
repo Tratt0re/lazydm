@@ -22,9 +22,11 @@ import { AppEncounterCemeteryComponent } from '@/components/encounter-cemetery/e
 import { AppEncounterNotePanelComponent } from '@/components/encounter-note-panel/encounter-note-panel.component';
 import { AppEncounterHealthBarComponent } from '@/components/encounter-health-bar/encounter-health-bar.component';
 import { toInAppEncounterRoute } from '@/components/document-preview/document-preview.markdown';
+import type { AppSheetFormComponent } from '@/components/sheet-form/sheet-form.component';
 import { AppSheetFormService } from '@/components/sheet-form/sheet-form.service';
 import type { AppSheetField } from '@/components/sheet-form/sheet-form.types';
 import type {
+  BattleFieldComponent,
   BattleRuleDto,
   BattleRuleFieldDto,
   EncounterDto,
@@ -58,6 +60,8 @@ interface HealthValue {
 type HpChangeMode = 'damage' | 'heal' | 'temp';
 const HP_CHANGE_MODES: readonly HpChangeMode[] = ['damage', 'heal', 'temp'];
 const HP_UNDO_MAX = 30;
+/** Most copies *Insert many* adds at once. */
+const ENTITY_QUANTITY_MAX = 50;
 
 /** What an undo puts back: the health an entity had before a *Manage HP* change. */
 interface HpUndoStep {
@@ -181,9 +185,9 @@ export class EncounterPage {
   /** Notes of the scope an entity can be linked to (the picker's options), by path. */
   private readonly scopeNotes = signal<readonly LinkTargetDto[]>([]);
   /** Frontmatter of the linked notes already read, by note path (rule fields can read from it). */
-  protected readonly noteFrontmatter = signal<ReadonlyMap<string, Readonly<Record<string, unknown>>>>(
-    new Map(),
-  );
+  protected readonly noteFrontmatter = signal<
+    ReadonlyMap<string, Readonly<Record<string, unknown>>>
+  >(new Map());
   protected readonly isRunning = computed(() => this.encounter()?.battle.status === 'running');
   protected readonly round = computed(() => this.encounter()?.battle.round ?? 0);
   /** The entity whose turn it is. */
@@ -355,7 +359,10 @@ export class EncounterPage {
   }
 
   /** Statuses of an entity (`values[<statuses field key>]`); anything that is not a tag with a name is ignored. */
-  protected statusesOf(entity: EncounterEntityDto, field: BattleRuleFieldDto): readonly StatusValue[] {
+  protected statusesOf(
+    entity: EncounterEntityDto,
+    field: BattleRuleFieldDto,
+  ): readonly StatusValue[] {
     const value = entity.values[field.key];
     return Array.isArray(value)
       ? value.filter(
@@ -427,20 +434,9 @@ export class EncounterPage {
       return;
     }
 
-    const fields: AppSheetField[] = [
-      {
-        id: 'name',
-        type: 'input',
-        label: 'encounters.entity.name',
-        placeholder: 'encounters.entity.namePlaceholder',
-        value: entity?.name ?? '',
-        translate: true,
-      },
-    ];
-    for (const field of rule.fields) {
-      fields.push(...this.entityFormFields(field, entity));
-    }
-
+    const isNew = entity === null;
+    // Fields the user changed by hand: picking a note fills in the others, never those.
+    const touched = new Set<string>();
     let isDone = false;
     const sheetRef = this.sheetFormService.open({
       arcTitle: this.translateService.instant(
@@ -450,8 +446,30 @@ export class EncounterPage {
         entity ? 'encounters.entity.save' : 'encounters.entity.addSubmit',
       ),
       arcCancelText: this.translateService.instant('campaigns.sections.newNote.cancel'),
-      fields,
+      // Adding offers *Insert many* too: the quantity field decides how many copies.
+      arcMiddleText: isNew ? this.translateService.instant('encounters.entity.insertMany') : undefined,
+      arcOnMiddle: isNew
+        ? (form) => {
+            const values = form.getValues();
+            const count = parseNumber(values['quantity']);
+            if (!isDone && count !== null && count >= 2) {
+              isDone = true;
+              this.addEntities(rule, values, Math.min(count, ENTITY_QUANTITY_MAX));
+              sheetRef.close();
+            }
+
+            return false;
+          }
+        : undefined,
+      fields: this.entitySheetFields(rule, entity),
       validateBeforeSubmit: false,
+      onFieldChange: (fieldId, value, form) => {
+        if (fieldId === this.noteKey()) {
+          void this.fillFromNote(rule, String(value ?? ''), form, touched);
+        } else {
+          touched.add(fieldId);
+        }
+      },
       onSubmit: (form) => {
         if (!isDone) {
           isDone = true;
@@ -464,9 +482,103 @@ export class EncounterPage {
     });
   }
 
+  /**
+   * Fields of the add / edit sheet: the note first, then the name and the values. Adding asks for the few
+   * that matter at the table (initiative, maximum HP, AC) and for a quantity; editing shows every rule field.
+   */
+  private entitySheetFields(rule: BattleRuleDto, entity: EncounterEntityDto | null): AppSheetField[] {
+    const isNew = entity === null;
+    const fields: AppSheetField[] = [];
+    const noteField = rule.fields.find((field) => field.component === 'note-link');
+    if (noteField) {
+      fields.push(...this.entityFormFields(noteField, entity, isNew));
+    }
+
+    fields.push({
+      id: 'name',
+      type: 'input',
+      label: 'encounters.entity.name',
+      placeholder: 'encounters.entity.namePlaceholder',
+      value: entity?.name ?? '',
+      translate: true,
+    });
+
+    const addable: Partial<Record<BattleFieldComponent, number>> = {
+      initiative: 0,
+      healthbar: 1,
+      number: 2,
+    };
+    const valueFields = rule.fields
+      .filter((field) => field.component !== 'note-link' && (!isNew || field.component in addable))
+      .sort((left, right) =>
+        isNew ? (addable[left.component] ?? 0) - (addable[right.component] ?? 0) : 0,
+      );
+    for (const field of valueFields) {
+      fields.push(...this.entityFormFields(field, entity, isNew));
+    }
+
+    if (isNew) {
+      fields.push({
+        id: 'quantity',
+        type: 'input',
+        inputType: 'number',
+        label: 'encounters.entity.quantity',
+        description: 'encounters.entity.quantityHint',
+        placeholder: '5',
+        translate: true,
+      });
+    }
+
+    return fields;
+  }
+
+  /**
+   * A note was picked in the sheet: its title becomes the name and its frontmatter fills the fields whose rule
+   * source says so (AC, HP…). Only fields the user has not touched are filled, so nothing typed is overwritten.
+   */
+  private async fillFromNote(
+    rule: BattleRuleDto,
+    notePath: string,
+    form: AppSheetFormComponent,
+    touched: ReadonlySet<string>,
+  ): Promise<void> {
+    if (!notePath) {
+      return;
+    }
+
+    const fill = (id: string, value: unknown): void => {
+      if (!touched.has(id) && value !== null && value !== undefined) {
+        form.setValue(id, String(value));
+      }
+    };
+    fill('name', this.scopeNotes().find((note) => note.path === notePath)?.title ?? null);
+
+    let frontmatter: Readonly<Record<string, unknown>>;
+    try {
+      frontmatter = (await this.documentService.read(notePath)).frontmatter;
+    } catch {
+      return;
+    }
+
+    const prefix = 'frontmatter:';
+    for (const field of rule.fields) {
+      const value = field.source.startsWith(prefix)
+        ? frontmatter[field.source.slice(prefix.length)]
+        : undefined;
+      if (field.component === 'healthbar') {
+        const max = toNumber(value);
+        fill(`${field.key}.max`, max);
+        fill(`${field.key}.current`, max);
+      } else if (field.component === 'initiative' || field.component === 'number') {
+        fill(field.key, toNumber(value));
+      }
+    }
+  }
+
   private entityFormFields(
     field: BattleRuleFieldDto,
     entity: EncounterEntityDto | null,
+    isNew = false,
   ): AppSheetField[] {
     const label = this.translateService.instant(field.label);
     const value = entity?.values[field.key];
@@ -486,11 +598,16 @@ export class EncounterPage {
       case 'healthbar': {
         const health = isRecord(value) ? value : {};
         return [
-          number(
-            `${field.key}.current`,
-            `${label} · ${this.translateService.instant('encounters.hp.current')}`,
-            health['current'],
-          ),
+          // A new entity starts at its maximum HP, so only the maximum is asked for.
+          ...(isNew
+            ? []
+            : [
+                number(
+                  `${field.key}.current`,
+                  `${label} · ${this.translateService.instant('encounters.hp.current')}`,
+                  health['current'],
+                ),
+              ]),
           number(
             `${field.key}.max`,
             `${label} · ${this.translateService.instant('encounters.hp.max')}`,
@@ -546,11 +663,12 @@ export class EncounterPage {
     }
   }
 
-  private saveEntityForm(
+  /** The name and values an entity gets from the sheet's fields (empty fields are not stored). */
+  private readEntityForm(
     entity: EncounterEntityDto | null,
     rule: BattleRuleDto,
     form: Record<string, unknown>,
-  ): void {
+  ): { readonly name: string | null; readonly values: Record<string, unknown> } {
     const values: Record<string, unknown> = { ...(entity?.values ?? {}) };
     for (const field of rule.fields) {
       switch (field.component) {
@@ -560,10 +678,14 @@ export class EncounterPage {
           break;
         case 'healthbar': {
           const previous = isRecord(values[field.key]) ? values[field.key] : {};
+          const max = parseNumber(form[`${field.key}.max`]) ?? undefined;
           const health = {
             ...(previous as HealthValue),
-            current: parseNumber(form[`${field.key}.current`]) ?? undefined,
-            max: parseNumber(form[`${field.key}.max`]) ?? undefined,
+            // A new entity (no current HP field in the sheet) starts at its maximum.
+            current:
+              parseNumber(form[`${field.key}.current`]) ??
+              (`${field.key}.current` in form ? undefined : max),
+            max,
           };
           this.setOrClear(
             values,
@@ -584,7 +706,15 @@ export class EncounterPage {
       }
     }
 
-    const name = String(form['name'] ?? '').trim() || null;
+    return { name: String(form['name'] ?? '').trim() || null, values };
+  }
+
+  private saveEntityForm(
+    entity: EncounterEntityDto | null,
+    rule: BattleRuleDto,
+    form: Record<string, unknown>,
+  ): void {
+    const { name, values } = this.readEntityForm(entity, rule, form);
     void this.loadFrontmatter([{ id: '', name, values, isDead: false }]);
     if (entity) {
       const edited = { ...entity, name, values };
@@ -613,6 +743,25 @@ export class EncounterPage {
         }),
       }));
     }
+  }
+
+  /** *Insert many*: `count` copies of the entity the sheet describes, numbered after its name ("Goblin 1"…). */
+  private addEntities(rule: BattleRuleDto, form: Record<string, unknown>, count: number): void {
+    const { name, values } = this.readEntityForm(null, rule, form);
+    void this.loadFrontmatter([{ id: '', name, values, isDead: false }]);
+    this.updateEncounter((encounter) => {
+      let entities: EncounterEntityDto[] = [...encounter.entities];
+      for (let index = 0; index < count; index++) {
+        entities = this.insertByInitiative(entities, {
+          id: crypto.randomUUID(),
+          name: this.nextNumberedName(name, entities),
+          values: structuredClone(values),
+          isDead: false,
+        });
+      }
+
+      return { ...encounter, entities };
+    });
   }
 
   private setOrClear(values: Record<string, unknown>, key: string, value: unknown): void {
@@ -901,7 +1050,11 @@ export class EncounterPage {
     });
   }
 
-  protected removeStatus(entity: EncounterEntityDto, field: BattleRuleFieldDto, index: number): void {
+  protected removeStatus(
+    entity: EncounterEntityDto,
+    field: BattleRuleFieldDto,
+    index: number,
+  ): void {
     this.setStatuses(entity.id, field.key, (statuses) => statuses.filter((_, i) => i !== index));
   }
 

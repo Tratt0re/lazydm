@@ -901,7 +901,10 @@
       "namePlaceholder": "Goblin 1",
       "duplicate": "Duplicate",
       "drag": "Drag to reorder",
-      "remove": "Send to the cemetery"
+      "remove": "Send to the cemetery",
+      "quantity": "Quantity",
+      "quantityHint": "Used by Insert many: adds this many numbered copies (2 to 50).",
+      "insertMany": "Insert many"
     },
     "fields": {
       "initiative": "Initiative",

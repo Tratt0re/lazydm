@@ -93,4 +93,10 @@ export type AppSheetField =
 export interface AppSheetFormData {
   readonly fields: readonly AppSheetField[];
   readonly values?: AppSheetFieldValueMap;
+  /** Called when the user changes a field; `form.setValue` can fill in the others. */
+  readonly onFieldChange?: (
+    fieldId: string,
+    value: AppSheetFieldValue,
+    form: import('./sheet-form.component').AppSheetFormComponent,
+  ) => void;
 }
