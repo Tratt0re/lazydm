@@ -903,8 +903,9 @@
       "drag": "Drag to reorder",
       "remove": "Send to the cemetery",
       "quantity": "Quantity",
-      "quantityHint": "Used by Insert many: adds this many numbered copies (2 to 50).",
-      "insertMany": "Insert many"
+      "quantityHint": "How many to insert: 1 to 15. Above 1 they are numbered.",
+      "quantityError": "Enter a quantity from 1 to {{max}}.",
+      "insertCount": "Insert {{count}}"
     },
     "fields": {
       "initiative": "Initiative",

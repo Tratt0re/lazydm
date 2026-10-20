@@ -60,8 +60,8 @@ interface HealthValue {
 type HpChangeMode = 'damage' | 'heal' | 'temp';
 const HP_CHANGE_MODES: readonly HpChangeMode[] = ['damage', 'heal', 'temp'];
 const HP_UNDO_MAX = 30;
-/** Most copies *Insert many* adds at once. */
-const ENTITY_QUANTITY_MAX = 50;
+/** Most copies one add inserts at once (more is unrealistic at a table). */
+const ENTITY_QUANTITY_MAX = 15;
 
 /** What an undo puts back: the health an entity had before a *Manage HP* change. */
 interface HpUndoStep {
@@ -472,23 +472,16 @@ export class EncounterPage {
         entity ? 'encounters.entity.save' : 'encounters.entity.addSubmit',
       ),
       arcCancelText: this.translateService.instant('campaigns.sections.newNote.cancel'),
-      // Adding offers *Insert many* too: the quantity field decides how many copies.
-      arcMiddleText: isNew ? this.translateService.instant('encounters.entity.insertMany') : undefined,
-      arcOnMiddle: isNew
-        ? (form) => {
-            const values = form.getValues();
-            const count = parseNumber(values['quantity']);
-            if (!isDone && count !== null && count >= 2) {
-              isDone = true;
-              this.addEntities(rule, values, Math.min(count, ENTITY_QUANTITY_MAX));
-              sheetRef.close();
-            }
-
-            return false;
+      // Adding: the quantity decides how many copies; the confirm button says so once it is more than one.
+      okTextFor: isNew
+        ? (values) => {
+            const count = parseNumber(values['quantity']) ?? 1;
+            return count > 1
+              ? this.translateService.instant('encounters.entity.insertCount', { count })
+              : this.translateService.instant('encounters.entity.addSubmit');
           }
         : undefined,
       fields: this.entitySheetFields(rule, entity),
-      validateBeforeSubmit: false,
       onFieldChange: (fieldId, value, form) => {
         if (fieldId === this.noteKey()) {
           void this.fillFromNote(rule, String(value ?? ''), form, touched);
@@ -499,7 +492,13 @@ export class EncounterPage {
       onSubmit: (form) => {
         if (!isDone) {
           isDone = true;
-          this.saveEntityForm(entity, rule, form.getValues());
+          const values = form.getValues();
+          const count = isNew ? (parseNumber(values['quantity']) ?? 1) : 1;
+          if (count > 1) {
+            this.addEntities(rule, values, count);
+          } else {
+            this.saveEntityForm(entity, rule, values);
+          }
           sheetRef.close();
         }
 
@@ -550,8 +549,16 @@ export class EncounterPage {
         inputType: 'number',
         label: 'encounters.entity.quantity',
         description: 'encounters.entity.quantityHint',
-        placeholder: '5',
+        value: '1',
         translate: true,
+        validate: (value) => {
+          const count = parseNumber(value);
+          return count !== null && count >= 1 && count <= ENTITY_QUANTITY_MAX
+            ? null
+            : this.translateService.instant('encounters.entity.quantityError', {
+                max: ENTITY_QUANTITY_MAX,
+              });
+        },
       });
     }
 

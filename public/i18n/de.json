@@ -903,8 +903,9 @@
       "drag": "Zum Umsortieren ziehen",
       "remove": "Auf den Friedhof schicken",
       "quantity": "Anzahl",
-      "quantityHint": "Für „Mehrere einfügen“: fügt so viele nummerierte Kopien hinzu (2 bis 50).",
-      "insertMany": "Mehrere einfügen"
+      "quantityHint": "Wie viele eingefügt werden: 1 bis 15. Ab 2 werden sie nummeriert.",
+      "quantityError": "Gib eine Anzahl von 1 bis {{max}} ein.",
+      "insertCount": "{{count}} einfügen"
     },
     "fields": {
       "initiative": "Initiative",

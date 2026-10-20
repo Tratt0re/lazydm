@@ -21,6 +21,8 @@ export interface AppSheetFieldBase<TType extends AppSheetFieldType, TValue exten
   readonly translate?: boolean;
   readonly required?: boolean;
   readonly disabled?: boolean;
+  /** Returns an (already translated) error message while the value is not acceptable, else null. */
+  readonly validate?: (value: TValue | undefined) => string | null;
 }
 
 export interface AppSheetDatePickerField extends AppSheetFieldBase<'date-picker', Date | string | null> {

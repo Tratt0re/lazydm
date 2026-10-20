@@ -15,6 +15,8 @@ export interface AppSheetFormOpenOptions
   readonly values?: AppSheetFieldValueMap;
   readonly validateBeforeSubmit?: boolean;
   readonly onFieldChange?: AppSheetFormData['onFieldChange'];
+  /** Text of the confirm button for the current values; it is updated as the user changes fields. */
+  readonly okTextFor?: (values: AppSheetFieldValueMap) => string;
   readonly onSubmit?: SheetOnClickCallback<AppSheetFormComponent>;
 }
 
@@ -30,17 +32,24 @@ export class AppSheetFormService {
       values,
       validateBeforeSubmit = true,
       onFieldChange,
+      okTextFor,
       onSubmit,
       ...sheetOptions
     } = options;
 
+    let sheetRef: ArcTechSheetRef<AppSheetFormComponent> | null = null;
     const data: AppSheetFormData = {
       fields,
       values,
-      onFieldChange,
+      onFieldChange: (fieldId, value, form) => {
+        onFieldChange?.(fieldId, value, form);
+        if (okTextFor) {
+          sheetRef?.setOkText(okTextFor(form.getValues()));
+        }
+      },
     };
 
-    return this.arcTechSheetService.create<AppSheetFormComponent, AppSheetFormData>({
+    sheetRef = this.arcTechSheetService.create<AppSheetFormComponent, AppSheetFormData>({
       ...sheetOptions,
       arcContent: AppSheetFormComponent,
       arcData: data,
@@ -56,5 +65,6 @@ export class AppSheetFormService {
         return component.getValues();
       },
     });
+    return sheetRef;
   }
 }

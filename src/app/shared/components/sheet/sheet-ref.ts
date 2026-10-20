@@ -45,6 +45,11 @@ export class ArcTechSheetRef<T = any, R = any, U = any> {
     }
   }
 
+  /** Changes the text of the confirm button while the sheet is open. */
+  setOkText(text: string): void {
+    this.containerInstance.okText.set(text);
+  }
+
   close(result?: R) {
     if (this.isClosing) {
       return;

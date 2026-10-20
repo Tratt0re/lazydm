@@ -903,8 +903,9 @@
       "drag": "Trascina per riordinare",
       "remove": "Manda al cimitero",
       "quantity": "Quantità",
-      "quantityHint": "Usata da Inserisci più copie: aggiunge questo numero di copie numerate (da 2 a 50).",
-      "insertMany": "Inserisci più copie"
+      "quantityHint": "Quante inserirne: da 1 a 15. Oltre 1 vengono numerate.",
+      "quantityError": "Inserisci una quantità da 1 a {{max}}.",
+      "insertCount": "Inserisci {{count}}"
     },
     "fields": {
       "initiative": "Iniziativa",

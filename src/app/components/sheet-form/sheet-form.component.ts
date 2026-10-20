@@ -106,17 +106,23 @@ export class AppSheetFormComponent {
 
   public isValid(): boolean {
     for (const field of this.resolvedFields()) {
-      if (!field.required) {
-        continue;
+      const value = this.fieldValueState()[field.id];
+      if (this.fieldError(field) !== null) {
+        return false;
       }
 
-      const value = this.fieldValueState()[field.id];
-      if (this.isFieldValueEmpty(field, value)) {
+      if (field.required && this.isFieldValueEmpty(field, value)) {
         return false;
       }
     }
 
     return true;
+  }
+
+  /** The message of a field whose value its `validate` refuses (shown under the field), else null. */
+  protected fieldError(field: AppSheetField): string | null {
+    const validate = field.validate as ((value: AppSheetFieldValue | undefined) => string | null) | undefined;
+    return validate?.(this.fieldValueState()[field.id]) ?? null;
   }
 
   protected onDateChange(field: AppSheetDatePickerField, value: Date | null): void {

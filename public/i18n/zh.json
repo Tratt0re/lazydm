@@ -903,8 +903,9 @@
       "drag": "拖动以重新排序",
       "remove": "送入墓地",
       "quantity": "数量",
-      "quantityHint": "用于“批量插入”：添加这么多个编号副本（2 到 50）。",
-      "insertMany": "批量插入"
+      "quantityHint": "插入数量：1 到 15。超过 1 个时会自动编号。",
+      "quantityError": "请输入 1 到 {{max}} 之间的数量。",
+      "insertCount": "插入 {{count}} 个"
     },
     "fields": {
       "initiative": "先攻",

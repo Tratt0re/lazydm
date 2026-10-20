@@ -127,7 +127,7 @@ export class ArcTechSheetOptions<T, U> {
                 <arc-icon [arcType]="config.arcOkIcon" />
               }
 
-              {{ config.arcOkText ?? 'OK' }}
+              {{ okText() ?? config.arcOkText ?? 'OK' }}
             </button>
           }
 
@@ -205,6 +205,8 @@ export class ArcTechSheetComponent<T, U> extends BasePortalOutlet {
   readonly middleTriggered = output<void>();
   readonly cancelTriggered = output<void>();
   readonly state = signal<'closed' | 'open'>('closed');
+  /** Text of the confirm button set after opening (overrides `arcOkText`), e.g. a label that follows a field. */
+  readonly okText = signal<string | null>(null);
 
   constructor() {
     super();

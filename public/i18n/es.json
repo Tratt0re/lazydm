@@ -903,8 +903,9 @@
       "drag": "Arrastra para reordenar",
       "remove": "Enviar al cementerio",
       "quantity": "Cantidad",
-      "quantityHint": "La usa Insertar varios: añade esta cantidad de copias numeradas (de 2 a 50).",
-      "insertMany": "Insertar varios"
+      "quantityHint": "Cuántos insertar: de 1 a 15. Con más de 1 se numeran.",
+      "quantityError": "Introduce una cantidad de 1 a {{max}}.",
+      "insertCount": "Insertar {{count}}"
     },
     "fields": {
       "initiative": "Iniciativa",

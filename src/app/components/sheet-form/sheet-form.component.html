@@ -132,10 +132,13 @@
             [value]="inputValue(field)"
             [placeholder]="displayPlaceholder(field)"
             [disabled]="field.disabled ?? false"
+            [attr.aria-invalid]="fieldError(field) ? 'true' : null"
             (input)="onInputChange(field, $any($event.target).value)"
           />
 
-          @if (field.description) {
+          @if (fieldError(field); as error) {
+            <p class="mt-1 text-xs text-destructive" role="alert">{{ error }}</p>
+          } @else if (field.description) {
             <p class="mt-1 text-xs text-muted-foreground">{{ displayDescription(field) }}</p>
           }
         </div>
