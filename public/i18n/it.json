@@ -963,13 +963,8 @@
     },
     "status": {
       "add": "Aggiungi stato",
-      "title": "Aggiungi stato · {{name}}",
-      "nameLabel": "Stato",
-      "namePlaceholder": "Prono",
-      "roundsLabel": "Round",
-      "roundsHint": "Facoltativo. Scende alla fine del turno di questa entità e scompare a 0.",
-      "submit": "Aggiungi",
-      "remove": "Rimuovi {{name}}"
+      "remove": "Rimuovi {{name}}",
+      "placeholder": "Aggiungi uno stato… (stordito 3 = 3 round)"
     },
     "note": {
       "show": "Mostra la nota",

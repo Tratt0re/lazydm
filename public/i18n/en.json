@@ -963,13 +963,8 @@
     },
     "status": {
       "add": "Add status",
-      "title": "Add status · {{name}}",
-      "nameLabel": "Status",
-      "namePlaceholder": "Prone",
-      "roundsLabel": "Rounds",
-      "roundsHint": "Optional. It counts down at the end of this entity's turn and goes at 0.",
-      "submit": "Add",
-      "remove": "Remove {{name}}"
+      "remove": "Remove {{name}}",
+      "placeholder": "Add a status… (stunned 3 = 3 rounds)"
     },
     "note": {
       "show": "Show the note",

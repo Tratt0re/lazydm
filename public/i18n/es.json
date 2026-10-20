@@ -963,13 +963,8 @@
     },
     "status": {
       "add": "Añadir estado",
-      "title": "Añadir estado · {{name}}",
-      "nameLabel": "Estado",
-      "namePlaceholder": "Derribado",
-      "roundsLabel": "Rondas",
-      "roundsHint": "Opcional. Baja al final del turno de esta entidad y desaparece en 0.",
-      "submit": "Añadir",
-      "remove": "Quitar {{name}}"
+      "remove": "Quitar {{name}}",
+      "placeholder": "Añadir estado… (aturdido 3 = 3 rondas)"
     },
     "note": {
       "show": "Mostrar la nota",

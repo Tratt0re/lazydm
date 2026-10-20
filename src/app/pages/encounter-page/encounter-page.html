@@ -173,29 +173,72 @@
         @for (entity of entities(); track entity.id) {
           <li
             cdkDrag
-            class="flex items-center gap-x-3 border-b border-l-[3px] border-b-border bg-card p-4 last:border-b-0 [&.cdk-drag-placeholder]:opacity-40"
+            class="flex flex-col border-b border-l-[3px] border-b-border bg-card last:border-b-0 [&.cdk-drag-placeholder]:opacity-40"
             [class]="isRunning() && entity.id === turnId() ? 'border-l-primary bg-accent' : 'border-l-transparent'"
             [attr.aria-current]="isRunning() && entity.id === turnId() ? 'step' : null"
           >
-            @if (canRoll()) {
-              <arc-checkbox
-                [arcChecked]="selectedIds().has(entity.id)"
-                [attr.aria-label]="'encounters.roll.select' | translate"
-                (checkChange)="toggleSelected(entity)"
-              />
-            }
-
-            <span
-              cdkDragHandle
-              class="flex size-6 shrink-0 cursor-grab items-center justify-center text-muted-foreground"
-              [attr.aria-label]="'encounters.entity.drag' | translate"
-              [arcTooltip]="'encounters.entity.drag' | translate"
-            >
-              <arc-icon arcType="grip-vertical" class="size-4" aria-hidden="true" />
-            </span>
+            <!-- Card header: the system actions of the entity. -->
+            <div class="flex items-center gap-1 border-b border-border-subtle bg-recessed px-2 py-0.5">
+              <span
+                cdkDragHandle
+                class="flex size-6 shrink-0 cursor-grab items-center justify-center text-muted-foreground"
+                [attr.aria-label]="'encounters.entity.drag' | translate"
+                [arcTooltip]="'encounters.entity.drag' | translate"
+              >
+                <arc-icon arcType="grip-vertical" class="size-4" aria-hidden="true" />
+              </span>
+              @if (canRoll()) {
+                <arc-checkbox
+                  [arcChecked]="selectedIds().has(entity.id)"
+                  [attr.aria-label]="'encounters.roll.select' | translate"
+                  (checkChange)="toggleSelected(entity)"
+                />
+              }
+              <span class="ml-auto flex shrink-0 items-center">
+                <button
+                  type="button"
+                  arc-button
+                  arcType="ghost"
+                  arcSize="sm"
+                  class="size-6 shrink-0"
+                  [arcDisabled]="!isEditable()"
+                  [attr.aria-label]="'encounters.entity.edit' | translate"
+                  [arcTooltip]="'encounters.entity.edit' | translate"
+                  (click)="openEntitySheet(entity)"
+                >
+                  <arc-icon arcType="pencil" />
+                </button>
+                <button
+                  type="button"
+                  arc-button
+                  arcType="ghost"
+                  arcSize="sm"
+                  class="size-6 shrink-0"
+                  [arcDisabled]="!isEditable()"
+                  [attr.aria-label]="'encounters.entity.duplicate' | translate"
+                  [arcTooltip]="'encounters.entity.duplicate' | translate"
+                  (click)="duplicateEntity(entity)"
+                >
+                  <arc-icon arcType="copy-plus" />
+                </button>
+                <button
+                  type="button"
+                  arc-button
+                  arcType="ghost"
+                  arcSize="sm"
+                  class="size-6 shrink-0"
+                  [arcDisabled]="!isEditable()"
+                  [attr.aria-label]="'encounters.entity.remove' | translate"
+                  [arcTooltip]="'encounters.entity.remove' | translate"
+                  (click)="removeEntity(entity)"
+                >
+                  <arc-icon arcType="skull" />
+                </button>
+              </span>
+            </div>
 
             <!-- The row is the rule's grid: each element sits where the rule put it. -->
-            <div class="grid min-w-0 flex-1 grid-cols-12 items-center gap-x-3 gap-y-2">
+            <div class="grid min-w-0 grid-cols-12 items-center gap-x-3 gap-y-2 p-3">
               @for (cell of rowCells(); track cell.id) {
                 <div
                   class="flex min-w-0 items-center gap-1"
@@ -260,9 +303,10 @@
                         }
                       }
                       @case ('statuses') {
-                        <span class="flex flex-wrap items-center gap-1">
+                        <!-- Tags typed in place: "name", space, "rounds", space; a second space means no rounds. -->
+                        <span class="flex min-w-0 flex-1 flex-wrap items-center gap-1">
                           @for (status of statusesOf(entity, field); track $index) {
-                            <arc-badge arcType="outline" class="gap-1 pr-0.5">
+                            <arc-badge arcType="outline" class="h-5 gap-1 py-0 pr-0.5">
                               {{ status.name }}@if (status.rounds !== undefined) { · {{ status.rounds }} }
                               <button
                                 type="button"
@@ -275,19 +319,15 @@
                               </button>
                             </arc-badge>
                           }
-                          <button
-                            type="button"
-                            arc-button
-                            arcType="ghost"
-                            arcSize="sm"
-                            class="size-6"
-                            [arcDisabled]="!isEditable()"
+                          <input
+                            type="text"
+                            class="h-5 min-w-28 flex-1 bg-transparent text-xs outline-none placeholder:text-muted-foreground focus-visible:outline-none"
+                            [disabled]="!isEditable()"
+                            [placeholder]="'encounters.status.placeholder' | translate"
                             [attr.aria-label]="'encounters.status.add' | translate"
-                            [arcTooltip]="'encounters.status.add' | translate"
-                            (click)="openStatusSheet(entity, field)"
-                          >
-                            <arc-icon arcType="plus" />
-                          </button>
+                            (keydown)="onStatusKeydown($event, entity, field)"
+                            (blur)="commitStatusInput($any($event.target), entity, field)"
+                          />
                         </span>
                       }
                       @case ('text') {
@@ -316,48 +356,6 @@
                 </div>
               }
             </div>
-
-            <span class="ml-auto flex shrink-0 items-center">
-            <button
-              type="button"
-              arc-button
-              arcType="ghost"
-              arcSize="sm"
-              class="size-8 shrink-0"
-              [arcDisabled]="!isEditable()"
-              [attr.aria-label]="'encounters.entity.remove' | translate"
-              [arcTooltip]="'encounters.entity.remove' | translate"
-              (click)="removeEntity(entity)"
-            >
-              <arc-icon arcType="skull" />
-            </button>
-            <button
-              type="button"
-              arc-button
-              arcType="ghost"
-              arcSize="sm"
-              class="size-8 shrink-0"
-              [arcDisabled]="!isEditable()"
-              [attr.aria-label]="'encounters.entity.duplicate' | translate"
-              [arcTooltip]="'encounters.entity.duplicate' | translate"
-              (click)="duplicateEntity(entity)"
-            >
-              <arc-icon arcType="copy-plus" />
-            </button>
-            <button
-              type="button"
-              arc-button
-              arcType="ghost"
-              arcSize="sm"
-              class="size-8 shrink-0"
-              [arcDisabled]="!isEditable()"
-              [attr.aria-label]="'encounters.entity.edit' | translate"
-              [arcTooltip]="'encounters.entity.edit' | translate"
-              (click)="openEntitySheet(entity)"
-            >
-              <arc-icon arcType="pencil" />
-            </button>
-            </span>
           </li>
         }
       </ul>

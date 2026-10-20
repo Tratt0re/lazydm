@@ -5,7 +5,7 @@ const Database = require('better-sqlite3');
 
 const INDEX_SCHEMA_FILE_PATH = path.join(__dirname, 'index-schemas', '000_vault_index.sql');
 // 2: files.campaign holds the link scope, `compendium/<system>` for compendium files.
-const INDEX_SCHEMA_VERSION = 2;
+const INDEX_SCHEMA_VERSION = 3;
 const INDEX_SCHEMA_VERSION_KEY = 'schema_version';
 
 let indexDb = null;

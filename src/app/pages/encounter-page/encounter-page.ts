@@ -22,6 +22,7 @@ import { AppEncounterCemeteryComponent } from '@/components/encounter-cemetery/e
 import { AppEncounterNotePanelComponent } from '@/components/encounter-note-panel/encounter-note-panel.component';
 import { AppEncounterHealthBarComponent } from '@/components/encounter-health-bar/encounter-health-bar.component';
 import {
+  ENCOUNTER_EXTENSION_PATTERN,
   toInAppEncounterRoute,
   toInAppNoteRoute,
 } from '@/components/document-preview/document-preview.markdown';
@@ -185,7 +186,7 @@ export class EncounterPage {
   protected readonly title = computed(() =>
     this.isParty()
       ? this.translateService.instant('encounters.party.title')
-      : (this.encounter()?.name ?? this.fileName()),
+      : (this.encounter()?.name ?? this.fileName().replace(ENCOUNTER_EXTENSION_PATTERN, '')),
   );
   /** A file that is not valid JSON opens empty; editing would replace it, so it stays read-only. */
   protected readonly isEditable = computed(() => this.encounter() !== null && !this.parseError());
@@ -1105,49 +1106,68 @@ export class EncounterPage {
     });
   }
 
-  /** *Add status*: a name, and optionally the number of rounds it lasts (it counts down on the entity's turns). */
-  protected openStatusSheet(entity: EncounterEntityDto, field: BattleRuleFieldDto): void {
-    let isDone = false;
-    const sheetRef = this.sheetFormService.open({
-      arcTitle: this.translateService.instant('encounters.status.title', {
-        name: this.entityName(entity.name),
-      }),
-      arcOkText: this.translateService.instant('encounters.status.submit'),
-      arcCancelText: this.translateService.instant('campaigns.sections.newNote.cancel'),
-      fields: [
-        {
-          id: 'name',
-          type: 'input',
-          label: 'encounters.status.nameLabel',
-          placeholder: 'encounters.status.namePlaceholder',
-          required: true,
-          translate: true,
-        },
-        {
-          id: 'rounds',
-          type: 'input',
-          inputType: 'number',
-          label: 'encounters.status.roundsLabel',
-          description: 'encounters.status.roundsHint',
-          translate: true,
-        },
-      ],
-      onSubmit: (form) => {
-        const values = form.getValues();
-        const name = String(values['name'] ?? '').trim();
-        const rounds = parseNumber(values['rounds']);
-        if (!isDone && name.length > 0) {
-          isDone = true;
-          this.setStatuses(entity.id, field.key, (statuses) => [
-            ...statuses,
-            { name, ...(rounds !== null && rounds > 0 ? { rounds } : {}) },
-          ]);
-          sheetRef.close();
-        }
+  /**
+   * The status field is typed in place: `name`, space, `rounds`, space makes a tag; a second space right after the
+   * name makes it without rounds. Enter and leaving the field make one too; Backspace on an empty field removes the
+   * last tag and Escape clears the field.
+   */
+  protected onStatusKeydown(
+    event: KeyboardEvent,
+    entity: EncounterEntityDto,
+    field: BattleRuleFieldDto,
+  ): void {
+    const input = event.target as HTMLInputElement;
+    if (event.isComposing) {
+      return;
+    }
 
-        return false;
-      },
-    });
+    if (event.key === 'Enter') {
+      event.preventDefault();
+      this.commitStatusInput(input, entity, field);
+    } else if (event.key === 'Escape') {
+      input.value = '';
+    } else if (event.key === 'Backspace' && input.value === '') {
+      const count = this.statusesOf(entity, field).length;
+      if (count > 0) {
+        event.preventDefault();
+        this.removeStatus(entity, field, count - 1);
+      }
+    } else if (event.key === ' ') {
+      const [name, rounds] = input.value.trim().split(/\s+/);
+      event.preventDefault();
+      if (!name) {
+        return;
+      }
+
+      if (rounds === undefined && !input.value.endsWith(' ')) {
+        input.value = `${name} `; // the number of rounds comes next; another space means none
+      } else if (rounds !== undefined && !/^\d+$/.test(rounds)) {
+        this.commitStatusInput(input, entity, field, name);
+        input.value = rounds;
+      } else {
+        this.commitStatusInput(input, entity, field);
+      }
+    }
+  }
+
+  /** Turns the text of the status field (`name` or `name rounds`) into a tag, then empties the field. */
+  protected commitStatusInput(
+    input: HTMLInputElement,
+    entity: EncounterEntityDto,
+    field: BattleRuleFieldDto,
+    text = input.value,
+  ): void {
+    const [name, rounds] = text.trim().split(/\s+/);
+    input.value = '';
+    if (!name) {
+      return;
+    }
+
+    const count = rounds !== undefined && /^\d+$/.test(rounds) ? Number(rounds) : 0;
+    this.setStatuses(entity.id, field.key, (statuses) => [
+      ...statuses,
+      { name, ...(count > 0 ? { rounds: count } : {}) },
+    ]);
   }
 
   protected removeStatus(
@@ -1609,7 +1629,7 @@ export class EncounterPage {
   /** *Delete…* (to the system Trash); the page, and its tab in a campaign, go to the folder page. */
   private openDeleteSheet(): void {
     void this.fileActions.openDeleteSheet(
-      { path: this.encounterPath(), label: this.fileName(), isNote: false },
+      { path: this.encounterPath(), label: this.title(), isNote: false },
       (folderRoute) => {
         if (folderRoute && this.scope()?.kind === 'system') {
           void this.router.navigateByUrl(folderRoute, { replaceUrl: true });

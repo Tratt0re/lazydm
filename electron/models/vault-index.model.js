@@ -278,11 +278,12 @@ function insertFileDetails(database, fileId, title, document) {
  *
  * @param {{ path: string, size: number, mtimeMs: number, contentHash?: string|null }} file - File stats.
  * @param {ReturnType<import('../utils/markdown-parse').parseMarkdownDocument>|null} document - Parsed markdown, null for assets.
+ * @param {string|null} titleOverride - Title of a file that is not a note (an encounter shows its name, not `x.json`).
  */
-function saveFile(file, document = null) {
+function saveFile(file, document = null, titleOverride = null) {
   const database = getVaultIndexDatabase();
   const name = getFileName(file.path);
-  const title = document?.title ?? name;
+  const title = document?.title ?? titleOverride ?? name;
 
   database.transaction(() => {
     const fileId = upsertFileRow(database, {

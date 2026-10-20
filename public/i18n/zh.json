@@ -963,13 +963,8 @@
     },
     "status": {
       "add": "添加状态",
-      "title": "添加状态 · {{name}}",
-      "nameLabel": "状态",
-      "namePlaceholder": "倒地",
-      "roundsLabel": "轮数",
-      "roundsHint": "可选。在该单位回合结束时递减，归零后移除。",
-      "submit": "添加",
-      "remove": "移除 {{name}}"
+      "remove": "移除 {{name}}",
+      "placeholder": "添加状态…（眩晕 3 = 3 回合）"
     },
     "note": {
       "show": "显示笔记",

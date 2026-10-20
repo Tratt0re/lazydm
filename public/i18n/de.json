@@ -963,13 +963,8 @@
     },
     "status": {
       "add": "Zustand hinzufügen",
-      "title": "Zustand hinzufügen · {{name}}",
-      "nameLabel": "Zustand",
-      "namePlaceholder": "Liegend",
-      "roundsLabel": "Runden",
-      "roundsHint": "Optional. Zählt am Ende des Zuges dieser Einheit herunter und endet bei 0.",
-      "submit": "Hinzufügen",
-      "remove": "{{name}} entfernen"
+      "remove": "{{name}} entfernen",
+      "placeholder": "Status hinzufügen… (betäubt 3 = 3 Runden)"
     },
     "note": {
       "show": "Notiz anzeigen",

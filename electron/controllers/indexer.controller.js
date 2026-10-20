@@ -74,9 +74,24 @@ function isFileChanged(file, knownState) {
   return !knownState || knownState.size !== file.size || knownState.mtime_ms !== file.mtimeMs;
 }
 
+/** An encounter (`.json` of an Encounters section) is listed by its `name`, like a note by its title; null for any other file. */
+async function readEncounterTitle(rootPath, relativePath) {
+  if (!/(^|\/)encounters\/(.+\/)?[^/]+\.json$/i.test(relativePath)) {
+    return null;
+  }
+
+  try {
+    const raw = await fs.promises.readFile(resolveInsideVault(rootPath, relativePath), 'utf8');
+    const name = JSON.parse(raw)?.name;
+    return typeof name === 'string' && name.trim() ? name.trim() : null;
+  } catch {
+    return null;
+  }
+}
+
 async function indexFile(rootPath, file, knownState) {
   if (vaultIndexModel.getFileKind(file.path) !== 'md') {
-    vaultIndexModel.saveFile(file);
+    vaultIndexModel.saveFile(file, null, await readEncounterTitle(rootPath, file.path));
     return;
   }
 

@@ -175,6 +175,8 @@ interface WikilinkTokenMeta {
   readonly targetName: string;
   readonly heading: string | null;
   readonly label: string | null;
+  /** Title of the resolved file: an encounter is shown by its name, not by `x.json`. */
+  readonly resolvedTitle?: string | null;
   readonly sourcePath: string;
   readonly mediaLabels?: MediaEmbedLabels;
 }
@@ -288,7 +290,7 @@ export function toInAppEncounterRoute(resolvedPath: string): string | null {
 }
 
 function renderWikilinkToken(token: Token): string {
-  const { isEmbed, raw, resolvedPath, targetName, heading, label, sourcePath, mediaLabels } =
+  const { isEmbed, raw, resolvedPath, resolvedTitle, targetName, heading, label, sourcePath, mediaLabels } =
     token.meta as unknown as WikilinkTokenMeta;
   const displayText = escapeHtml(
     label ?? (heading ? `${targetName} > ${heading}` : targetName || 'this note'),
@@ -301,7 +303,12 @@ function renderWikilinkToken(token: Token): string {
 
   const mediaKind = isEmbed && resolvedPath ? getMediaEmbedKind(resolvedPath) : null;
   if (mediaKind && resolvedPath) {
-    return renderMediaEmbedHtml(mediaKind, resolvedPath, label ?? targetName, mediaLabels);
+    return renderMediaEmbedHtml(
+      mediaKind,
+      resolvedPath,
+      label ?? (mediaKind === 'encounter' ? (resolvedTitle ?? targetName) : targetName),
+      mediaLabels,
+    );
   }
 
   if (isEmbed) {
@@ -353,6 +360,7 @@ function wikilinkRule(state: StateInline, silent: boolean): boolean {
       targetName: link?.targetName ?? match[2].split('|')[0].split('#')[0],
       heading: link?.heading ?? null,
       label: link?.raw.includes('|') ? link.raw.split('|').slice(1).join('|') : null,
+      resolvedTitle: link?.resolvedTitle ?? null,
       sourcePath: env.sourcePath,
       mediaLabels: env.mediaLabels,
     };

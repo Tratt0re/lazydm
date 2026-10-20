@@ -695,7 +695,11 @@ function decorateWikilinks(target: DecorationContext, frontmatterEnd: number): v
           widget: new MediaEmbedWidget(
             mediaKind,
             link.resolvedPath,
-            pipeIndex >= 0 ? raw.slice(pipeIndex + 1) : link.targetName,
+            pipeIndex >= 0
+              ? raw.slice(pipeIndex + 1)
+              : mediaKind === 'encounter'
+                ? (link.resolvedTitle ?? link.targetName)
+                : link.targetName,
             context.mediaLabels,
             context.playingAudioPath === link.resolvedPath,
             context.volume ?? 1,
