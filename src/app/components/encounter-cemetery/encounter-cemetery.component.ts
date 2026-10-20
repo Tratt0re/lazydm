@@ -41,7 +41,7 @@ import { ArcTechTooltipImports } from '@/shared/components/tooltip';
               class="size-8 shrink-0"
               [attr.aria-label]="'encounters.cemetery.recover' | translate"
               [arcTooltip]="'encounters.cemetery.recover' | translate"
-              [disabled]="isDisabled()"
+              [arcDisabled]="isDisabled()"
               (click)="recover.emit(entity)"
             >
               <arc-icon arcType="rotate-ccw" />

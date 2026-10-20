@@ -4,6 +4,7 @@ const { resolveInsideVault, safeWriteFileAtomic } = require('../utils/file-utils
 const { listCampaigns, readCampaign, NOTE_TYPE_DIR_NAMES } = require('./campaign.model');
 const { COMPENDIUM_DIR_NAME, listSystems, readSystem } = require('./compendium.model');
 const { listCampaignNoteTypes } = require('./section.model');
+const { parseMarkdownDocument } = require('../utils/markdown-parse');
 const { readVaultConfig, writeVaultConfig } = require('./vault.model');
 
 const TEMPLATES_DIR_NAME = '_templates';
@@ -316,6 +317,26 @@ async function resolveTemplate(rootPath, { folderPath, type }) {
   return BUILT_IN_TEMPLATES[type] ?? null;
 }
 
+const BUILT_IN_REF_PREFIX = 'builtin:';
+
+/**
+ * The frontmatter keys a template declares (`ac`, `hp`, `cr`…), except the ones every note has. `template` is a
+ * template path or `builtin:<type>`. These are the attributes a battle rule can read from an entity's note.
+ */
+async function readTemplateKeys(rootPath, template) {
+  let content;
+  if (template.startsWith(BUILT_IN_REF_PREFIX)) {
+    content = getBuiltInTemplate(template.slice(BUILT_IN_REF_PREFIX.length));
+  } else if (templateExists(rootPath, template)) {
+    content = await fs.promises.readFile(resolveInsideVault(rootPath, template), 'utf8');
+  } else {
+    throw new Error(`Template not found: ${template}`);
+  }
+
+  const { frontmatter } = parseMarkdownDocument(content, { sourcePath: 'template.md' });
+  return Object.keys(frontmatter ?? {}).filter((key) => !['type', 'title', 'subtype', 'tags'].includes(key));
+}
+
 /** Display name of the campaign or system a folder belongs to, for `{{campaign}}`. */
 async function readScopeName(rootPath, folderPath) {
   const scope = getScopeOfFolder(folderPath);
@@ -408,6 +429,7 @@ module.exports = {
   listTemplates,
   readCampaignRules,
   readScopeName,
+  readTemplateKeys,
   resolveTemplate,
   setCampaignRule,
   templateExists,

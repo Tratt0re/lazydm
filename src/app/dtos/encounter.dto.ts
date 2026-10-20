@@ -19,9 +19,37 @@ export interface BattleRuleFieldDto {
 export interface BattleRuleDto {
   readonly version: number;
   readonly name: string;
+  /** Template (path or `builtin:<type>`) whose frontmatter keys the rule can read; null for none. */
+  readonly template: string | null;
+  /** `roll`: a dice formula for the initiative (`1d20 + {dex}`); null means it is typed by hand. */
   readonly initiative: { readonly roll: string | null };
   readonly fields: readonly BattleRuleFieldDto[];
 }
+
+/** A rule file of the vault, a system or a campaign. */
+export interface BattleRuleRowDto {
+  readonly path: string;
+  readonly name: string;
+  readonly source: 'vault' | 'system' | 'campaign';
+  readonly scope: string | null;
+  readonly scopeName: string | null;
+}
+
+export interface BattleRuleListDto {
+  readonly rows: readonly BattleRuleRowDto[];
+  readonly builtIn: BattleRuleDto;
+}
+
+export interface BattleRuleFileDto {
+  readonly path: string;
+  readonly rule: BattleRuleDto;
+  readonly parseError: string | null;
+  readonly contentHash: string;
+}
+
+export type WriteBattleRuleResultDto =
+  | { readonly status: 'saved'; readonly contentHash: string }
+  | { readonly status: 'conflict'; readonly current: BattleRuleFileDto };
 
 /** An entity of a battle: every field is optional, only the id is guaranteed. */
 export interface EncounterEntityDto {

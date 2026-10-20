@@ -27,7 +27,8 @@
       "compendium": "Compendio",
       "backToCompendium": "Torna al compendio",
       "notes": "Note",
-      "templates": "Modelli"
+      "templates": "Modelli",
+      "battleRules": "Regole di battaglia"
     }
   },
   "header": {
@@ -987,6 +988,91 @@
         "title": "Il gruppo è vuoto",
         "description": "Aggiungi qui i personaggi giocanti una volta sola. Aggiungi il gruppo li inserisce in qualsiasi incontro."
       }
+    },
+    "rule": {
+      "label": "Regola di battaglia",
+      "ariaLabel": "Regola di battaglia di questo incontro",
+      "campaignDefault": "Regola della campagna",
+      "builtInDefault": "Integrata",
+      "saved": "Regola di battaglia salvata",
+      "saveError": "Impossibile cambiare la regola di battaglia"
+    },
+    "roll": {
+      "button": "Tira l'iniziativa",
+      "select": "Seleziona",
+      "selectAll": "Seleziona tutti",
+      "clear": "Azzera",
+      "selected": "{{count}} selezionati",
+      "none": "Seleziona chi tira",
+      "done": "Tirato per {{count}}",
+      "cleared": "Iniziativa azzerata per {{count}}",
+      "failed": "{{count}} non hanno potuto tirare: {{reason}}",
+      "error": "Impossibile tirare l'iniziativa",
+      "hint": "Tira per le entità selezionate. Chi non può tirare (manca un valore) perde l'iniziativa."
+    }
+  },
+  "battleRules": {
+    "missing": "{{path}} (mancante)",
+    "createError": "Impossibile creare la regola di battaglia",
+    "loadError": "Impossibile caricare la regola di battaglia",
+    "library": {
+      "title": "Regole di battaglia",
+      "empty": "Scegli una regola di battaglia a sinistra, o creane una."
+    },
+    "create": {
+      "button": "Nuova regola di battaglia",
+      "title": "Nuova regola di battaglia",
+      "description": "Crea una regola in _battle-rules/ alla radice del vault, partendo da quella integrata.",
+      "nameLabel": "Nome",
+      "namePlaceholder": "Fantasy 5e",
+      "submit": "Crea"
+    },
+    "delete": {
+      "title": "Eliminare {{name}}?",
+      "description": "{{path}} verrà eliminato. Le campagne e gli incontri che lo usavano tornano alla regola integrata.",
+      "done": "{{name}} eliminata",
+      "error": "Impossibile eliminare la regola di battaglia"
+    },
+    "components": {
+      "initiative": "Iniziativa",
+      "number": "Numero",
+      "text": "Testo",
+      "healthbar": "Barra della salute",
+      "statuses": "Stati",
+      "side": "Fazione",
+      "note-link": "Nota collegata"
+    },
+    "editor": {
+      "builtInHint": "Integrata, sola lettura. Personalizza ne crea una copia modificabile.",
+      "saved": "Regola di battaglia salvata",
+      "saveError": "Impossibile salvare la regola di battaglia",
+      "conflict": "La regola di battaglia è cambiata sul disco.",
+      "formulaInvalid": "Correggi prima la formula dell'iniziativa",
+      "name": "Nome",
+      "template": "Attributi da",
+      "noTemplate": "Nessun template",
+      "builtInTemplate": "Integrato · {{type}}",
+      "templateHint": "Le chiavi del frontmatter di questo template sono ciò che la regola può leggere dalla nota di un'entità.",
+      "initiative": "Iniziativa",
+      "rolled": "Tira l'iniziativa da una formula",
+      "formula": "Formula",
+      "formulaHint": "Dadi come 1d20, 1d100 o 2d6, numeri interi e {chiave} per un numero dal frontmatter della nota. Un numero negativo sottrae.",
+      "variables": "Aggiungi",
+      "unknownVariable": "{{key}} non è un attributo del template.",
+      "fields": "Riga dell'entità",
+      "fieldsHint": "Cosa mostra ogni entità, in ordine. Il nome e l'iniziativa sono in ogni regola.",
+      "alwaysThere": "Sempre presente",
+      "label": "Etichetta",
+      "key": "Chiave",
+      "source": "Valore da",
+      "sourceEntity": "L'entità stessa",
+      "sourceNote": "Nota · {{key}}",
+      "sides": "Fazioni (separate da virgola)",
+      "showInRow": "Mostra nella riga",
+      "moveUp": "Sposta su",
+      "moveDown": "Sposta giù",
+      "removeField": "Rimuovi il campo",
+      "addField": "Aggiungi un campo"
     }
   }
 }

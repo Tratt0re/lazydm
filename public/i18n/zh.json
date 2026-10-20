@@ -27,7 +27,8 @@
       "compendium": "纲要",
       "backToCompendium": "返回纲要",
       "notes": "笔记",
-      "templates": "模板"
+      "templates": "模板",
+      "battleRules": "战斗规则"
     }
   },
   "header": {
@@ -987,6 +988,91 @@
         "title": "队伍为空",
         "description": "在此一次性添加玩家角色。“添加队伍”可将他们加入任意遭遇。"
       }
+    },
+    "rule": {
+      "label": "战斗规则",
+      "ariaLabel": "此遭遇的战斗规则",
+      "campaignDefault": "战役的规则",
+      "builtInDefault": "内置",
+      "saved": "战斗规则已保存",
+      "saveError": "无法更改战斗规则"
+    },
+    "roll": {
+      "button": "掷先攻",
+      "select": "选择",
+      "selectAll": "全选",
+      "clear": "清除",
+      "selected": "已选 {{count}} 个",
+      "none": "选择谁来掷",
+      "done": "已为 {{count}} 个掷出",
+      "cleared": "已清除 {{count}} 个的先攻",
+      "failed": "{{count}} 个无法掷出：{{reason}}",
+      "error": "无法掷先攻",
+      "hint": "为所选单位掷骰。无法掷的（缺少数值）会失去先攻。"
+    }
+  },
+  "battleRules": {
+    "missing": "{{path}}（缺失）",
+    "createError": "无法创建战斗规则",
+    "loadError": "无法加载战斗规则",
+    "library": {
+      "title": "战斗规则",
+      "empty": "在左侧选择一条战斗规则，或新建一条。"
+    },
+    "create": {
+      "button": "新建战斗规则",
+      "title": "新建战斗规则",
+      "description": "在库根目录的 _battle-rules/ 中以内置规则为基础创建规则。",
+      "nameLabel": "名称",
+      "namePlaceholder": "Fantasy 5e",
+      "submit": "创建"
+    },
+    "delete": {
+      "title": "删除 {{name}}？",
+      "description": "将删除 {{path}}。使用过它的战役和遭遇会回到内置规则。",
+      "done": "已删除 {{name}}",
+      "error": "无法删除战斗规则"
+    },
+    "components": {
+      "initiative": "先攻",
+      "number": "数字",
+      "text": "文本",
+      "healthbar": "生命条",
+      "statuses": "状态",
+      "side": "阵营",
+      "note-link": "关联笔记"
+    },
+    "editor": {
+      "builtInHint": "内置，只读。“自定义”会复制一份供编辑。",
+      "saved": "战斗规则已保存",
+      "saveError": "无法保存战斗规则",
+      "conflict": "战斗规则已在磁盘上更改。",
+      "formulaInvalid": "请先修正先攻公式",
+      "name": "名称",
+      "template": "属性来自",
+      "noTemplate": "无模板",
+      "builtInTemplate": "内置 · {{type}}",
+      "templateHint": "此模板的 frontmatter 键就是规则可从单位笔记中读取的内容。",
+      "initiative": "先攻",
+      "rolled": "用公式掷先攻",
+      "formula": "公式",
+      "formulaHint": "如 1d20、1d100 或 2d6 的骰子、整数，以及用于笔记 frontmatter 数字的 {键}。负数会相减。",
+      "variables": "添加",
+      "unknownVariable": "{{key}} 不是该模板的属性。",
+      "fields": "单位行",
+      "fieldsHint": "每个单位显示的内容，按顺序。每条规则都有名称和先攻。",
+      "alwaysThere": "始终存在",
+      "label": "标签",
+      "key": "键",
+      "source": "值来自",
+      "sourceEntity": "单位本身",
+      "sourceNote": "笔记 · {{key}}",
+      "sides": "阵营（用逗号分隔）",
+      "showInRow": "在行中显示",
+      "moveUp": "上移",
+      "moveDown": "下移",
+      "removeField": "移除字段",
+      "addField": "添加字段"
     }
   }
 }

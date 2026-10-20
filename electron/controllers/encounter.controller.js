@@ -12,11 +12,19 @@ function read(payload) {
   return encounterModel.readEncounter(vaultController.getReadyVaultPath(), requirePath(body));
 }
 
-/** Battle rule of an encounter. Only the built-in rule exists for now; rule files and campaign choices come later. */
-function rule(payload) {
+/**
+ * Battle rule of an encounter: its own choice, else its campaign's, else the built-in. `rule` in the payload is
+ * the choice the page has just made (a path or `builtin`; null for none), before it reaches the file.
+ */
+async function rule(payload) {
   const body = ensurePlainObject(payload, 'payload');
-  requirePath(body);
-  return battleRuleModel.DEFAULT_BATTLE_RULE;
+  const vaultPath = vaultController.getReadyVaultPath();
+  const encounterPath = requirePath(body);
+  const selection =
+    body.rule === undefined
+      ? (await encounterModel.readEncounter(vaultPath, encounterPath)).encounter.rule
+      : (normalizeOptionalString(body.rule, 'payload.rule', { allowNull: true }) ?? null);
+  return battleRuleModel.resolveBattleRule(vaultPath, encounterPath, selection);
 }
 
 /** The party roster of the campaign or system at `scope`, created the first time. */

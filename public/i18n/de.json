@@ -27,7 +27,8 @@
       "compendium": "Kompendium",
       "backToCompendium": "Zurück zum Kompendium",
       "notes": "Notizen",
-      "templates": "Vorlagen"
+      "templates": "Vorlagen",
+      "battleRules": "Kampfregeln"
     }
   },
   "header": {
@@ -987,6 +988,91 @@
         "title": "Die Gruppe ist leer",
         "description": "Füge die Spielercharaktere hier einmal hinzu. „Gruppe hinzufügen“ setzt sie in jede Begegnung."
       }
+    },
+    "rule": {
+      "label": "Kampfregel",
+      "ariaLabel": "Kampfregel dieser Begegnung",
+      "campaignDefault": "Regel der Kampagne",
+      "builtInDefault": "Integriert",
+      "saved": "Kampfregel gespeichert",
+      "saveError": "Die Kampfregel konnte nicht geändert werden"
+    },
+    "roll": {
+      "button": "Initiative würfeln",
+      "select": "Auswählen",
+      "selectAll": "Alle auswählen",
+      "clear": "Leeren",
+      "selected": "{{count}} ausgewählt",
+      "none": "Wähle, wer würfelt",
+      "done": "Für {{count}} gewürfelt",
+      "cleared": "Initiative für {{count}} gelöscht",
+      "failed": "{{count}} konnten nicht würfeln: {{reason}}",
+      "error": "Die Initiative konnte nicht gewürfelt werden",
+      "hint": "Würfelt für die ausgewählten Einheiten. Wer nicht würfeln kann (fehlender Wert), verliert die Initiative."
+    }
+  },
+  "battleRules": {
+    "missing": "{{path}} (fehlt)",
+    "createError": "Die Kampfregel konnte nicht erstellt werden",
+    "loadError": "Die Kampfregel konnte nicht geladen werden",
+    "library": {
+      "title": "Kampfregeln",
+      "empty": "Wähle links eine Kampfregel oder erstelle eine."
+    },
+    "create": {
+      "button": "Neue Kampfregel",
+      "title": "Neue Kampfregel",
+      "description": "Erstellt eine Regel in _battle-rules/ im Vault-Stamm, ausgehend von der integrierten.",
+      "nameLabel": "Name",
+      "namePlaceholder": "Fantasy 5e",
+      "submit": "Erstellen"
+    },
+    "delete": {
+      "title": "{{name}} löschen?",
+      "description": "{{path}} wird gelöscht. Kampagnen und Begegnungen, die sie nutzten, fallen auf die integrierte Regel zurück.",
+      "done": "{{name}} gelöscht",
+      "error": "Die Kampfregel konnte nicht gelöscht werden"
+    },
+    "components": {
+      "initiative": "Initiative",
+      "number": "Zahl",
+      "text": "Text",
+      "healthbar": "Lebensbalken",
+      "statuses": "Zustände",
+      "side": "Seite",
+      "note-link": "Verknüpfte Notiz"
+    },
+    "editor": {
+      "builtInHint": "Integriert, schreibgeschützt. „Anpassen“ kopiert sie zum Bearbeiten.",
+      "saved": "Kampfregel gespeichert",
+      "saveError": "Die Kampfregel konnte nicht gespeichert werden",
+      "conflict": "Die Kampfregel wurde auf dem Datenträger geändert.",
+      "formulaInvalid": "Korrigiere zuerst die Initiative-Formel",
+      "name": "Name",
+      "template": "Attribute aus",
+      "noTemplate": "Keine Vorlage",
+      "builtInTemplate": "Integriert · {{type}}",
+      "templateHint": "Die Frontmatter-Schlüssel dieser Vorlage kann die Regel aus der Notiz einer Einheit lesen.",
+      "initiative": "Initiative",
+      "rolled": "Initiative aus einer Formel würfeln",
+      "formula": "Formel",
+      "formulaHint": "Würfel wie 1d20, 1d100 oder 2d6, ganze Zahlen und {Schlüssel} für eine Zahl aus dem Frontmatter der Notiz. Eine negative Zahl wird abgezogen.",
+      "variables": "Hinzufügen",
+      "unknownVariable": "{{key}} ist kein Attribut der Vorlage.",
+      "fields": "Einheitenzeile",
+      "fieldsHint": "Was jede Einheit zeigt, in Reihenfolge. Name und Initiative sind in jeder Regel.",
+      "alwaysThere": "Immer dabei",
+      "label": "Beschriftung",
+      "key": "Schlüssel",
+      "source": "Wert aus",
+      "sourceEntity": "Die Einheit selbst",
+      "sourceNote": "Notiz · {{key}}",
+      "sides": "Seiten (kommagetrennt)",
+      "showInRow": "In der Zeile zeigen",
+      "moveUp": "Nach oben",
+      "moveDown": "Nach unten",
+      "removeField": "Feld entfernen",
+      "addField": "Feld hinzufügen"
     }
   }
 }

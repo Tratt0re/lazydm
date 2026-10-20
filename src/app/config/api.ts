@@ -14,6 +14,7 @@ export interface ElectronAppInfo {
 export enum APIChannel {
   APP_META = 'appMeta',
   ASSETS = 'assets',
+  BATTLE_RULES = 'battleRules',
   CAMPAIGNS = 'campaigns',
   CHARACTERS = 'characters',
   CLOUD = 'cloud',
@@ -37,6 +38,19 @@ export interface ElectronIpcClient {
   readonly assets: {
     readonly save: IpcRequest<DTO.SaveAssetPayload, DTO.SavedAssetDto>;
     readonly import: IpcRequest<DTO.AssetTarget, { files: DTO.SavedAssetDto[] }>;
+  };
+  readonly battleRules: {
+    readonly list: OptionalIpcRequest<void, DTO.BattleRuleListDto>;
+    readonly read: IpcRequest<{ path: string }, DTO.BattleRuleFileDto>;
+    readonly write: IpcRequest<
+      { path: string; rule: DTO.BattleRuleDto; expectedHash: string | null },
+      DTO.WriteBattleRuleResultDto
+    >;
+    readonly create: IpcRequest<{ name: string }, { path: string }>;
+    readonly remove: IpcRequest<{ path: string }, { path: string }>;
+    readonly getChoice: IpcRequest<{ campaign: string }, { rule: string | null }>;
+    readonly setChoice: IpcRequest<{ campaign: string; rule: string | null }, { rule: string | null }>;
+    readonly attributes: IpcRequest<{ template: string }, { keys: readonly string[] }>;
   };
   readonly campaigns: {
     readonly list: OptionalIpcRequest<void, { rows: DTO.CampaignDto[] }>;
@@ -97,7 +111,7 @@ export interface ElectronIpcClient {
   };
   readonly encounters: {
     readonly read: IpcRequest<{ path: string }, DTO.EncounterFileDto>;
-    readonly rule: IpcRequest<{ path: string }, DTO.BattleRuleDto>;
+    readonly rule: IpcRequest<{ path: string; rule?: string | null }, DTO.BattleRuleDto>;
     readonly party: IpcRequest<{ scope: string; name: string }, DTO.EncounterFileDto>;
     readonly write: IpcRequest<DTO.WriteEncounterPayload, DTO.WriteEncounterResultDto>;
     readonly create: IpcRequest<DTO.CreateEncounterPayload, DTO.EncounterFileDto>;

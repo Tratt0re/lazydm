@@ -29,6 +29,7 @@ import type {
   BattleFieldComponent,
   BattleRuleDto,
   BattleRuleFieldDto,
+  BattleRuleRowDto,
   EncounterDto,
   EncounterEntityDto,
   EncounterFileDto,
@@ -37,6 +38,11 @@ import type {
 import { ASSET_FILE_PARAM, ASSET_SUBFOLDER_PARAM } from '@/pages/asset-page/asset-page';
 import { CAMPAIGN_SECTION_PARAM } from '@/pages/campaign-section-page/campaign-section-page';
 import { DocumentService } from '@/services/document.service';
+import {
+  BattleRuleService,
+  BUILT_IN_BATTLE_RULE,
+  DEFAULT_BATTLE_RULE_CHOICE,
+} from '@/services/battle-rule.service';
 import { EncounterService, PARTY_FILE_NAME } from '@/services/encounter.service';
 import { FileActionsService } from '@/services/file-actions.service';
 import { getNoteScopeKind, NoteScopeService } from '@/services/note-scope.service';
@@ -48,7 +54,9 @@ import { ArcTechButtonComponent } from '@/shared/components/button';
 import { ArcTechEmptyComponent } from '@/shared/components/empty';
 import { ArcTechIconComponent } from '@/shared/components/icon';
 import { ArcTechSheetService } from '@/shared/components/sheet';
+import { ArcTechCheckboxComponent } from '@/shared/components/checkbox';
 import { ArcTechTooltipImports } from '@/shared/components/tooltip';
+import { rollDice } from '@/shared/utils/dice';
 
 /** Health points of an entity (`values[<healthbar field key>]`); each part is optional. */
 interface HealthValue {
@@ -109,6 +117,7 @@ function parseNumber(value: unknown): number | null {
     ArcTechAlertComponent,
     ArcTechBadgeComponent,
     ArcTechButtonComponent,
+    ArcTechCheckboxComponent,
     ArcTechEmptyComponent,
     ArcTechIconComponent,
     ArcTechTooltipImports,
@@ -128,6 +137,7 @@ export class EncounterPage {
   private readonly fileActions = inject(FileActionsService);
   private readonly encounterService = inject(EncounterService);
   private readonly documentService = inject(DocumentService);
+  private readonly battleRuleService = inject(BattleRuleService);
   private readonly sheetFormService = inject(AppSheetFormService);
   private readonly sheetService = inject(ArcTechSheetService);
   private loadToken = 0;
@@ -186,6 +196,11 @@ export class EncounterPage {
     (this.encounter()?.entities ?? []).filter((entity) => entity.isDead),
   );
   protected readonly isCemeteryOpen = signal(false);
+  /** Rules the encounter can pick (the toolbar's select), and the campaign's own choice for the label. */
+  private readonly ruleRows = signal<readonly BattleRuleRowDto[]>([]);
+  private readonly campaignRule = signal<string | null>(null);
+  /** Entities picked for *Roll initiative* (by id). */
+  protected readonly selectedIds = signal<ReadonlySet<string>>(new Set());
   /** Note shown in the side panel (vault path), from an entity's linked note. */
   protected readonly openNotePath = signal<string | null>(null);
   /** Notes of the scope an entity can be linked to (the picker's options), by path. */
@@ -221,6 +236,7 @@ export class EncounterPage {
       const isEditable = this.isEditable();
       const isRunning = this.isRunning();
       const isParty = this.isParty();
+      const ruleActions: readonly ToolbarItemAction[] = isParty ? [] : this.ruleToolbarActions(scope.rootPath);
       const battleActions: readonly ToolbarItemAction[] = isParty
         ? []
         : isRunning
@@ -276,6 +292,7 @@ export class EncounterPage {
               : []),
           ],
           itemActions: [
+            ...ruleActions,
             ...battleActions,
             ...(isParty
               ? []
@@ -1299,7 +1316,9 @@ export class EncounterPage {
         this.encounter.set(file.encounter);
         this.rule.set(rule);
         this.openNotePath.set(null);
+        this.selectedIds.set(new Set());
         void this.loadNotes(path, file.encounter);
+        void this.loadRuleChoices();
       }
     } catch (error) {
       if (token === this.loadToken) {
@@ -1351,6 +1370,167 @@ export class EncounterPage {
       }),
     );
     this.noteFrontmatter.update((map) => new Map([...map, ...loaded]));
+  }
+
+  // --- Battle rule -------------------------------------------------------------------------------------
+
+  /** Rules the select offers, and the campaign's current choice (for the first option's label). */
+  private async loadRuleChoices(): Promise<void> {
+    const scope = this.scope();
+    try {
+      const library = await this.battleRuleService.list();
+      this.ruleRows.set(library.rows);
+      this.campaignRule.set(
+        scope?.kind === 'campaign' ? await this.battleRuleService.getChoice(scope.rootPath) : null,
+      );
+    } catch (error) {
+      console.warn('[app] Failed to list the battle rules:', error);
+    }
+  }
+
+  /** The toolbar's *Battle rule* select: this encounter's own rule, or the campaign's. */
+  private ruleToolbarActions(campaign: string): readonly ToolbarItemAction[] {
+    const current = this.encounter()?.rule ?? null;
+    const campaignRule = this.campaignRule();
+    const campaignLabel =
+      campaignRule === null || campaignRule === BUILT_IN_BATTLE_RULE
+        ? this.translateService.instant('encounters.rule.builtInDefault')
+        : (this.ruleRows().find((row) => row.path === campaignRule)?.name ??
+          this.translateService.instant('encounters.rule.campaignDefault'));
+    return [
+      {
+        id: 'encounter-rule',
+        type: 'select',
+        label: 'encounters.rule.label',
+        ariaLabel: this.translateService.instant('encounters.rule.ariaLabel'),
+        class: 'w-56',
+        disabled: !this.isEditable(),
+        value: () => current ?? DEFAULT_BATTLE_RULE_CHOICE,
+        options: this.battleRuleService.getOptions(this.ruleRows(), campaign, current, campaignLabel),
+        change: (value) => this.setRuleChoice(value),
+      },
+    ];
+  }
+
+  /** Picks the rule of this encounter (`default`: the campaign's); the rows follow the new rule right away. */
+  private async setRuleChoice(value: string): Promise<void> {
+    const encounter = this.encounter();
+    const choice = value === DEFAULT_BATTLE_RULE_CHOICE ? null : value;
+    if (!encounter || choice === encounter.rule) {
+      return;
+    }
+
+    try {
+      this.rule.set(await this.encounterService.rule(this.encounterPath(), choice));
+      this.updateEncounter((current) => ({ ...current, rule: choice }));
+      this.selectedIds.set(new Set());
+    } catch (error) {
+      toast.error(this.translateService.instant('encounters.rule.saveError'), {
+        description: error instanceof Error ? error.message : String(error),
+      });
+    }
+  }
+
+  // --- Roll initiative ---------------------------------------------------------------------------------
+
+  /** The rule rolls its initiative (a dice formula); without one it is typed by hand. */
+  protected readonly canRoll = computed(
+    () => !this.isParty() && this.isEditable() && !!this.rule()?.initiative.roll,
+  );
+  protected readonly selectedCount = computed(
+    () => this.entities().filter((entity) => this.selectedIds().has(entity.id)).length,
+  );
+
+  protected toggleSelected(entity: EncounterEntityDto): void {
+    this.selectedIds.update((ids) => {
+      const next = new Set(ids);
+      if (!next.delete(entity.id)) {
+        next.add(entity.id);
+      }
+      return next;
+    });
+  }
+
+  protected selectAll(): void {
+    this.selectedIds.set(new Set(this.entities().map((entity) => entity.id)));
+  }
+
+  protected clearSelection(): void {
+    this.selectedIds.set(new Set());
+  }
+
+  /** Whole number of a frontmatter value (`14`, or `"14"` written as text); null for anything else. */
+  private toInteger(value: unknown): number | null {
+    const number = typeof value === 'string' && /^-?\d+$/.test(value.trim()) ? Number(value) : value;
+    return typeof number === 'number' && Number.isInteger(number) ? number : null;
+  }
+
+  /**
+   * *Roll initiative* for the selected entities: the rule's formula, with `{key}` taken from the integer of that
+   * frontmatter key of the entity's note (a negative one subtracts). An entity the formula cannot be rolled for
+   * (no note, no such key, not a whole number) has its initiative erased instead. The list is sorted after.
+   */
+  protected async rollInitiative(): Promise<void> {
+    const formula = this.rule()?.initiative.roll;
+    const key = this.initiativeKey();
+    const encounter = this.encounter();
+    if (!formula || !key || !encounter) {
+      return;
+    }
+
+    const targets = this.entities().filter((entity) => this.selectedIds().has(entity.id));
+    if (targets.length === 0) {
+      toast.info(this.translateService.instant('encounters.roll.none'));
+      return;
+    }
+
+    await this.loadFrontmatter(targets);
+    const results = new Map<string, number | null>();
+    const reasons = new Set<string>();
+    for (const entity of targets) {
+      const notePath = this.noteOf(entity);
+      const frontmatter = notePath ? this.noteFrontmatter().get(notePath) : undefined;
+      const variables: Record<string, number> = {};
+      for (const [name, value] of Object.entries(frontmatter ?? {})) {
+        const integer = this.toInteger(value);
+        if (integer !== null) {
+          variables[name] = integer;
+        }
+      }
+
+      try {
+        results.set(entity.id, rollDice(formula, variables).total);
+      } catch (error) {
+        results.set(entity.id, null);
+        reasons.add(error instanceof Error ? error.message : String(error));
+      }
+    }
+
+    this.updateEncounter((current) => ({
+      ...current,
+      entities: this.sortByInitiative(
+        current.entities.map((entity) => {
+          if (!results.has(entity.id)) {
+            return entity;
+          }
+
+          const values = { ...entity.values };
+          this.setOrClear(values, key, results.get(entity.id));
+          return { ...entity, values };
+        }),
+      ),
+    }));
+
+    const failed = [...results.values()].filter((total) => total === null).length;
+    toast.success(this.translateService.instant('encounters.roll.done', { count: results.size - failed }));
+    if (failed > 0) {
+      toast.warning(
+        this.translateService.instant('encounters.roll.failed', {
+          count: failed,
+          reason: [...reasons].join('; '),
+        }),
+      );
+    }
   }
 
   /** Saves the encounter; changes made while a save runs are saved right after it, in order. */

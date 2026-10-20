@@ -27,7 +27,8 @@
       "compendium": "Compendium",
       "backToCompendium": "Retour au compendium",
       "notes": "Notes",
-      "templates": "Modèles"
+      "templates": "Modèles",
+      "battleRules": "Règles de combat"
     }
   },
   "header": {
@@ -987,6 +988,91 @@
         "title": "Le groupe est vide",
         "description": "Ajoutez ici les personnages joueurs une seule fois. Ajouter le groupe les place dans n'importe quelle rencontre."
       }
+    },
+    "rule": {
+      "label": "Règle de combat",
+      "ariaLabel": "Règle de combat de cette rencontre",
+      "campaignDefault": "Règle de la campagne",
+      "builtInDefault": "Intégrée",
+      "saved": "Règle de combat enregistrée",
+      "saveError": "Impossible de changer la règle de combat"
+    },
+    "roll": {
+      "button": "Lancer l'initiative",
+      "select": "Sélectionner",
+      "selectAll": "Tout sélectionner",
+      "clear": "Vider",
+      "selected": "{{count}} sélectionnées",
+      "none": "Sélectionnez qui lance",
+      "done": "Lancé pour {{count}}",
+      "cleared": "Initiative effacée pour {{count}}",
+      "failed": "{{count}} n'ont pas pu lancer : {{reason}}",
+      "error": "Impossible de lancer l'initiative",
+      "hint": "Lance pour les entités sélectionnées. Celle qui ne peut pas lancer (valeur manquante) perd son initiative."
+    }
+  },
+  "battleRules": {
+    "missing": "{{path}} (manquante)",
+    "createError": "Impossible de créer la règle de combat",
+    "loadError": "Impossible de charger la règle de combat",
+    "library": {
+      "title": "Règles de combat",
+      "empty": "Choisissez une règle de combat à gauche, ou créez-en une."
+    },
+    "create": {
+      "button": "Nouvelle règle de combat",
+      "title": "Nouvelle règle de combat",
+      "description": "Crée une règle dans _battle-rules/ à la racine du vault, à partir de celle intégrée.",
+      "nameLabel": "Nom",
+      "namePlaceholder": "Fantasy 5e",
+      "submit": "Créer"
+    },
+    "delete": {
+      "title": "Supprimer {{name}} ?",
+      "description": "{{path}} sera supprimé. Les campagnes et rencontres qui l'utilisaient reviennent à la règle intégrée.",
+      "done": "{{name}} supprimée",
+      "error": "Impossible de supprimer la règle de combat"
+    },
+    "components": {
+      "initiative": "Initiative",
+      "number": "Nombre",
+      "text": "Texte",
+      "healthbar": "Barre de vie",
+      "statuses": "États",
+      "side": "Camp",
+      "note-link": "Note liée"
+    },
+    "editor": {
+      "builtInHint": "Intégrée, en lecture seule. Personnaliser en crée une copie modifiable.",
+      "saved": "Règle de combat enregistrée",
+      "saveError": "Impossible d'enregistrer la règle de combat",
+      "conflict": "La règle de combat a changé sur le disque.",
+      "formulaInvalid": "Corrigez d'abord la formule d'initiative",
+      "name": "Nom",
+      "template": "Attributs de",
+      "noTemplate": "Aucun modèle",
+      "builtInTemplate": "Intégré · {{type}}",
+      "templateHint": "Les clés du frontmatter de ce modèle sont ce que la règle peut lire dans la note d'une entité.",
+      "initiative": "Initiative",
+      "rolled": "Lancer l'initiative depuis une formule",
+      "formula": "Formule",
+      "formulaHint": "Des dés comme 1d20, 1d100 ou 2d6, des nombres entiers et {clé} pour un nombre du frontmatter de la note. Un nombre négatif soustrait.",
+      "variables": "Ajouter",
+      "unknownVariable": "{{key}} n'est pas un attribut du modèle.",
+      "fields": "Ligne de l'entité",
+      "fieldsHint": "Ce que montre chaque entité, dans l'ordre. Le nom et l'initiative sont dans toute règle.",
+      "alwaysThere": "Toujours présent",
+      "label": "Libellé",
+      "key": "Clé",
+      "source": "Valeur de",
+      "sourceEntity": "L'entité elle-même",
+      "sourceNote": "Note · {{key}}",
+      "sides": "Camps (séparés par des virgules)",
+      "showInRow": "Afficher dans la ligne",
+      "moveUp": "Monter",
+      "moveDown": "Descendre",
+      "removeField": "Retirer le champ",
+      "addField": "Ajouter un champ"
     }
   }
 }

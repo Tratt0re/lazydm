@@ -43,6 +43,7 @@ export class Header {
   }[] = [
     { kind: 'compendium', label: 'nav.items.compendium', icon: 'library-big' },
     { kind: 'templates', label: 'nav.items.templates', icon: 'layout-template' },
+    { kind: 'battle-rules', label: 'nav.items.battleRules', icon: 'dices' },
     { kind: 'settings', label: 'nav.items.settings', icon: 'settings' },
   ];
   protected readonly vault = inject(VaultService).currentVault;

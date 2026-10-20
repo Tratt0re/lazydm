@@ -27,7 +27,8 @@
       "compendium": "Compendio",
       "backToCompendium": "Volver al compendio",
       "notes": "Notas",
-      "templates": "Plantillas"
+      "templates": "Plantillas",
+      "battleRules": "Reglas de combate"
     }
   },
   "header": {
@@ -987,6 +988,91 @@
         "title": "El grupo está vacío",
         "description": "Añade aquí los personajes jugadores una sola vez. Añadir el grupo los pone en cualquier encuentro."
       }
+    },
+    "rule": {
+      "label": "Regla de combate",
+      "ariaLabel": "Regla de combate de este encuentro",
+      "campaignDefault": "Regla de la campaña",
+      "builtInDefault": "Integrada",
+      "saved": "Regla de combate guardada",
+      "saveError": "No se pudo cambiar la regla de combate"
+    },
+    "roll": {
+      "button": "Tirar iniciativa",
+      "select": "Seleccionar",
+      "selectAll": "Seleccionar todo",
+      "clear": "Limpiar",
+      "selected": "{{count}} seleccionadas",
+      "none": "Selecciona quién tira",
+      "done": "Tirado para {{count}}",
+      "cleared": "Iniciativa borrada para {{count}}",
+      "failed": "{{count}} no pudieron tirar: {{reason}}",
+      "error": "No se pudo tirar la iniciativa",
+      "hint": "Tira por las entidades seleccionadas. La que no puede tirar (falta un valor) pierde su iniciativa."
+    }
+  },
+  "battleRules": {
+    "missing": "{{path}} (falta)",
+    "createError": "No se pudo crear la regla de combate",
+    "loadError": "No se pudo cargar la regla de combate",
+    "library": {
+      "title": "Reglas de combate",
+      "empty": "Elige una regla de combate a la izquierda, o crea una."
+    },
+    "create": {
+      "button": "Nueva regla de combate",
+      "title": "Nueva regla de combate",
+      "description": "Crea una regla en _battle-rules/ en la raíz del vault, a partir de la integrada.",
+      "nameLabel": "Nombre",
+      "namePlaceholder": "Fantasy 5e",
+      "submit": "Crear"
+    },
+    "delete": {
+      "title": "¿Eliminar {{name}}?",
+      "description": "Se eliminará {{path}}. Las campañas y encuentros que la usaban vuelven a la regla integrada.",
+      "done": "{{name}} eliminada",
+      "error": "No se pudo eliminar la regla de combate"
+    },
+    "components": {
+      "initiative": "Iniciativa",
+      "number": "Número",
+      "text": "Texto",
+      "healthbar": "Barra de salud",
+      "statuses": "Estados",
+      "side": "Bando",
+      "note-link": "Nota vinculada"
+    },
+    "editor": {
+      "builtInHint": "Integrada, solo lectura. Personalizar crea una copia editable.",
+      "saved": "Regla de combate guardada",
+      "saveError": "No se pudo guardar la regla de combate",
+      "conflict": "La regla de combate cambió en el disco.",
+      "formulaInvalid": "Corrige primero la fórmula de iniciativa",
+      "name": "Nombre",
+      "template": "Atributos de",
+      "noTemplate": "Sin plantilla",
+      "builtInTemplate": "Integrada · {{type}}",
+      "templateHint": "Las claves del frontmatter de esta plantilla son lo que la regla puede leer de la nota de una entidad.",
+      "initiative": "Iniciativa",
+      "rolled": "Tirar la iniciativa con una fórmula",
+      "formula": "Fórmula",
+      "formulaHint": "Dados como 1d20, 1d100 o 2d6, números enteros y {clave} para un número del frontmatter de la nota. Un número negativo resta.",
+      "variables": "Añadir",
+      "unknownVariable": "{{key}} no es un atributo de la plantilla.",
+      "fields": "Fila de la entidad",
+      "fieldsHint": "Lo que muestra cada entidad, en orden. El nombre y la iniciativa están en toda regla.",
+      "alwaysThere": "Siempre presente",
+      "label": "Etiqueta",
+      "key": "Clave",
+      "source": "Valor de",
+      "sourceEntity": "La propia entidad",
+      "sourceNote": "Nota · {{key}}",
+      "sides": "Bandos (separados por comas)",
+      "showInRow": "Mostrar en la fila",
+      "moveUp": "Subir",
+      "moveDown": "Bajar",
+      "removeField": "Quitar el campo",
+      "addField": "Añadir un campo"
     }
   }
 }

@@ -27,7 +27,8 @@
       "compendium": "Compendium",
       "backToCompendium": "Back to compendium",
       "notes": "Notes",
-      "templates": "Templates"
+      "templates": "Templates",
+      "battleRules": "Battle rules"
     }
   },
   "header": {
@@ -987,6 +988,91 @@
         "title": "The party is empty",
         "description": "Add the player characters here once. Add party puts them in any encounter."
       }
+    },
+    "rule": {
+      "label": "Battle rule",
+      "ariaLabel": "Battle rule of this encounter",
+      "campaignDefault": "Campaign's rule",
+      "builtInDefault": "Built-in",
+      "saved": "Battle rule saved",
+      "saveError": "Couldn't change the battle rule"
+    },
+    "roll": {
+      "button": "Roll initiative",
+      "select": "Select",
+      "selectAll": "Select all",
+      "clear": "Clear",
+      "selected": "{{count}} selected",
+      "none": "Select who rolls",
+      "done": "Rolled for {{count}}",
+      "cleared": "Initiative cleared for {{count}}",
+      "failed": "{{count}} could not roll: {{reason}}",
+      "error": "Couldn't roll the initiative",
+      "hint": "Rolls for the selected entities. One that can't roll (a missing value) loses its initiative."
+    }
+  },
+  "battleRules": {
+    "missing": "{{path}} (missing)",
+    "createError": "Couldn't create the battle rule",
+    "loadError": "Couldn't load the battle rule",
+    "library": {
+      "title": "Battle rules",
+      "empty": "Pick a battle rule on the left, or create one."
+    },
+    "create": {
+      "button": "New battle rule",
+      "title": "New battle rule",
+      "description": "Creates a rule in _battle-rules/ at the vault root, starting from the built-in one.",
+      "nameLabel": "Name",
+      "namePlaceholder": "Fantasy 5e",
+      "submit": "Create"
+    },
+    "delete": {
+      "title": "Delete {{name}}?",
+      "description": "{{path}} will be deleted. Campaigns and encounters that used it go back to the built-in rule.",
+      "done": "{{name}} deleted",
+      "error": "Couldn't delete the battle rule"
+    },
+    "components": {
+      "initiative": "Initiative",
+      "number": "Number",
+      "text": "Text",
+      "healthbar": "Health bar",
+      "statuses": "Statuses",
+      "side": "Side",
+      "note-link": "Linked note"
+    },
+    "editor": {
+      "builtInHint": "Built-in, read-only. Customize copies it so you can edit it.",
+      "saved": "Battle rule saved",
+      "saveError": "Couldn't save the battle rule",
+      "conflict": "The battle rule changed on disk.",
+      "formulaInvalid": "Fix the initiative formula first",
+      "name": "Name",
+      "template": "Attributes from",
+      "noTemplate": "No template",
+      "builtInTemplate": "Built-in · {{type}}",
+      "templateHint": "The frontmatter keys of this template are what the rule can read from an entity's note.",
+      "initiative": "Initiative",
+      "rolled": "Roll the initiative from a formula",
+      "formula": "Formula",
+      "formulaHint": "Dice like 1d20, 1d100 or 2d6, whole numbers, and {key} for a number from the note's frontmatter. A negative number subtracts.",
+      "variables": "Add",
+      "unknownVariable": "{{key}} is not an attribute of the template.",
+      "fields": "Entity row",
+      "fieldsHint": "What each entity shows, in order. The name and the initiative are in every rule.",
+      "alwaysThere": "Always there",
+      "label": "Label",
+      "key": "Key",
+      "source": "Value from",
+      "sourceEntity": "The entity itself",
+      "sourceNote": "Note · {{key}}",
+      "sides": "Sides (comma separated)",
+      "showInRow": "Show in the row",
+      "moveUp": "Move up",
+      "moveDown": "Move down",
+      "removeField": "Remove the field",
+      "addField": "Add a field"
     }
   }
 }

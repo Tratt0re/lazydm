@@ -1,6 +1,7 @@
 const {
   appMetaController,
   assetController,
+  battleRuleController,
   campaignController,
   cloudReadinessController,
   compendiumController,
@@ -29,6 +30,15 @@ const IPC_HANDLERS = Object.freeze({
 
   [CHANNELS.assets.save]: assetController.save,
   [CHANNELS.assets.import]: assetController.importFiles,
+
+  [CHANNELS.battleRules.list]: battleRuleController.list,
+  [CHANNELS.battleRules.read]: battleRuleController.read,
+  [CHANNELS.battleRules.write]: battleRuleController.write,
+  [CHANNELS.battleRules.create]: battleRuleController.create,
+  [CHANNELS.battleRules.remove]: battleRuleController.remove,
+  [CHANNELS.battleRules.getChoice]: battleRuleController.getChoice,
+  [CHANNELS.battleRules.setChoice]: battleRuleController.setChoice,
+  [CHANNELS.battleRules.attributes]: battleRuleController.attributes,
 
   [CHANNELS.campaigns.list]: campaignController.list,
   [CHANNELS.campaigns.get]: campaignController.get,

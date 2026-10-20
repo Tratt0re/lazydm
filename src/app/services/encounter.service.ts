@@ -27,8 +27,8 @@ export class EncounterService extends BaseIpcService<APIChannel.ENCOUNTERS> {
   }
 
   /** The battle rule that drives the rows of this encounter. */
-  rule(path: string): Promise<BattleRuleDto> {
-    return this.ipcClient.rule({ path });
+  rule(path: string, selection?: string | null): Promise<BattleRuleDto> {
+    return this.ipcClient.rule(selection === undefined ? { path } : { path, rule: selection });
   }
 
   /** The party roster of a scope (`name` is its title when it is created now). */

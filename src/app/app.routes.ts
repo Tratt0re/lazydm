@@ -70,7 +70,7 @@ const NOTE_ROUTES: Routes = [
 ];
 
 function matchSheetPaths(segments: UrlSegment[]): UrlMatchResult | null {
-  return ['compendium', 'templates', 'settings'].includes(segments[0]?.path ?? '')
+  return ['compendium', 'templates', 'battle-rules', 'settings'].includes(segments[0]?.path ?? '')
     ? { consumed: segments }
     : null;
 }
@@ -152,6 +152,22 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./pages/template-library-page/template-library-page').then(
             (m) => m.TemplateLibraryPage,
+          ),
+      },
+    ],
+  },
+  {
+    path: 'battle-rules',
+    outlet: APP_SHEET_OUTLET,
+    canMatch: [vaultGuard],
+    data: { [APP_SHEET_TITLE_ROUTE_DATA]: 'nav.items.battleRules' },
+    loadComponent: () => import('./layout/app-sheet/app-sheet').then((m) => m.AppSheet),
+    children: [
+      {
+        path: '',
+        loadComponent: () =>
+          import('./pages/battle-rule-library-page/battle-rule-library-page').then(
+            (m) => m.BattleRuleLibraryPage,
           ),
       },
     ],

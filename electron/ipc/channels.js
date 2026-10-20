@@ -11,6 +11,16 @@ const CHANNELS = Object.freeze({
     save: 'assets:save',
     import: 'assets:import',
   }),
+  battleRules: Object.freeze({
+    list: 'battleRules:list',
+    read: 'battleRules:read',
+    write: 'battleRules:write',
+    create: 'battleRules:create',
+    remove: 'battleRules:remove',
+    getChoice: 'battleRules:getChoice',
+    setChoice: 'battleRules:setChoice',
+    attributes: 'battleRules:attributes',
+  }),
   campaigns: Object.freeze({
     list: 'campaigns:list',
     get: 'campaigns:get',

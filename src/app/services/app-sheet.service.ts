@@ -8,14 +8,15 @@ export const APP_SHEET_OUTLET = 'overlay';
 /** Route data key with the i18n key of the sheet title. */
 export const APP_SHEET_TITLE_ROUTE_DATA = 'sheetTitle';
 
-export type AppSheetKind = 'compendium' | 'templates' | 'settings';
+export type AppSheetKind = 'compendium' | 'templates' | 'battle-rules' | 'settings';
 
-const APP_SHEET_KINDS: readonly AppSheetKind[] = ['compendium', 'templates', 'settings'];
+const APP_SHEET_KINDS: readonly AppSheetKind[] = ['compendium', 'templates', 'battle-rules', 'settings'];
 /** Length of the closing slide (`.app-sheet-leave` in styles.css). */
 const SHEET_CLOSE_ANIMATION_MS = 260;
 const DEFAULT_SHEET_PATHS: Readonly<Record<AppSheetKind, string>> = {
   compendium: 'compendium',
   templates: 'templates',
+  'battle-rules': 'battle-rules',
   settings: 'settings/general',
 };
 

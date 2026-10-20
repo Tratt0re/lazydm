@@ -1,5 +1,6 @@
 const appMetaController = require('./app-meta.controller');
 const assetController = require('./asset.controller');
+const battleRuleController = require('./battle-rule.controller');
 const campaignController = require('./campaign.controller');
 const cloudReadinessController = require('./cloud-readiness.controller');
 const compendiumController = require('./compendium.controller');
@@ -19,6 +20,7 @@ const workspaceController = require('./workspace.controller');
 module.exports = {
   appMetaController,
   assetController,
+  battleRuleController,
   campaignController,
   cloudReadinessController,
   compendiumController,
