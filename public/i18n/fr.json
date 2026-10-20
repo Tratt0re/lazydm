@@ -952,12 +952,14 @@
       "turnOf": "Tour de {{name}}",
       "stopTitle": "Arrêter le combat ?",
       "stopDescription": "Les initiatives et les états sont effacés et les points de vie reviennent au maximum là où il y en a un. Les noms et autres valeurs restent.",
-      "stopConfirm": "Arrêter le combat"
+      "stopConfirm": "Arrêter le combat",
+      "idle": "Prêt"
     },
     "cemetery": {
       "title": "Cimetière",
       "empty": "Personne n'est encore tombé.",
-      "recover": "Récupérer"
+      "recover": "Récupérer",
+      "deleteForever": "Supprimer définitivement"
     },
     "status": {
       "add": "Ajouter un état",
@@ -1009,6 +1011,15 @@
       "failed": "{{count}} n'ont pas pu lancer : {{reason}}",
       "error": "Impossible de lancer l'initiative",
       "hint": "Lance pour les entités sélectionnées. Celle qui ne peut pas lancer (valeur manquante) perd son initiative."
+    },
+    "delete": {
+      "title": "Supprimer {{name}} pour de bon ?",
+      "description": "L'entité quitte cette rencontre et ne peut pas être récupérée.",
+      "confirm": "Supprimer définitivement"
+    },
+    "header": {
+      "label": "Actions de la rencontre",
+      "count": "{{count}} dans l'ordre"
     }
   },
   "battleRules": {

@@ -46,6 +46,19 @@ import { ArcTechTooltipImports } from '@/shared/components/tooltip';
             >
               <arc-icon arcType="rotate-ccw" />
             </button>
+            <button
+              type="button"
+              arc-button
+              arcType="ghost"
+              arcSize="sm"
+              class="size-8 shrink-0 hover:text-destructive"
+              [attr.aria-label]="'encounters.cemetery.deleteForever' | translate"
+              [arcTooltip]="'encounters.cemetery.deleteForever' | translate"
+              [arcDisabled]="isDisabled()"
+              (click)="deleteForever.emit(entity)"
+            >
+              <arc-icon arcType="trash" />
+            </button>
           </li>
         }
       </ul>
@@ -60,4 +73,6 @@ export class AppEncounterCemeteryComponent {
   readonly entities = input.required<readonly EncounterEntityDto[]>();
   readonly isDisabled = input(false);
   readonly recover = output<EncounterEntityDto>();
+  /** Remove the entity from the encounter for good (the page asks first). */
+  readonly deleteForever = output<EncounterEntityDto>();
 }

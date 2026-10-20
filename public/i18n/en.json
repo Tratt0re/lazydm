@@ -952,12 +952,14 @@
       "turnOf": "Turn of {{name}}",
       "stopTitle": "Stop the battle?",
       "stopDescription": "Initiatives and statuses are cleared and hit points go back to their maximum where there is one. Names and other values stay.",
-      "stopConfirm": "Stop battle"
+      "stopConfirm": "Stop battle",
+      "idle": "Ready"
     },
     "cemetery": {
       "title": "Cemetery",
       "empty": "No one has fallen yet.",
-      "recover": "Recover"
+      "recover": "Recover",
+      "deleteForever": "Delete permanently"
     },
     "status": {
       "add": "Add status",
@@ -1009,6 +1011,15 @@
       "failed": "{{count}} could not roll: {{reason}}",
       "error": "Couldn't roll the initiative",
       "hint": "Rolls for the selected entities. One that can't roll (a missing value) loses its initiative."
+    },
+    "delete": {
+      "title": "Delete {{name}} for good?",
+      "description": "The entity leaves this encounter and cannot be recovered.",
+      "confirm": "Delete permanently"
+    },
+    "header": {
+      "label": "Encounter actions",
+      "count": "{{count}} in the order"
     }
   },
   "battleRules": {

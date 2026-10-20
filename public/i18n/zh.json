@@ -952,12 +952,14 @@
       "turnOf": "{{name}} 的回合",
       "stopTitle": "结束战斗？",
       "stopDescription": "先攻和状态将被清除，生命值恢复到最大值（如有）。名称和其他数值保留。",
-      "stopConfirm": "结束战斗"
+      "stopConfirm": "结束战斗",
+      "idle": "就绪"
     },
     "cemetery": {
       "title": "墓地",
       "empty": "还没有人倒下。",
-      "recover": "恢复"
+      "recover": "恢复",
+      "deleteForever": "永久删除"
     },
     "status": {
       "add": "添加状态",
@@ -1009,6 +1011,15 @@
       "failed": "{{count}} 个无法掷出：{{reason}}",
       "error": "无法掷先攻",
       "hint": "为所选单位掷骰。无法掷的（缺少数值）会失去先攻。"
+    },
+    "delete": {
+      "title": "永久删除 {{name}}？",
+      "description": "该单位将离开此遭遇，且无法恢复。",
+      "confirm": "永久删除"
+    },
+    "header": {
+      "label": "遭遇操作",
+      "count": "顺序中有 {{count}} 个"
     }
   },
   "battleRules": {

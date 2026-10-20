@@ -24,6 +24,20 @@ const FIELD_KEY_MAX_LENGTH = 40;
 const FIELD_LABEL_MAX_LENGTH = 60;
 const INITIATIVE_ROLL_MAX_LENGTH = 40;
 const FIELD_KEY_PATTERN = /^[a-z][a-z0-9_]*$/;
+/** The entity row is a grid of this many columns and (at most) this many rows; a field takes `span` columns. */
+const LAYOUT_COLUMNS = 12;
+const LAYOUT_ROWS_MAX = 4;
+/** Columns a field takes when the rule gives it no place of its own. */
+const DEFAULT_SPANS = Object.freeze({
+  initiative: 1,
+  name: 3,
+  side: 1,
+  number: 1,
+  'note-link': 1,
+  healthbar: 3,
+  text: 3,
+  statuses: 6,
+});
 const FRONTMATTER_SOURCE_PREFIX = 'frontmatter:';
 
 /** What a field shows and edits: the components the encounter page knows. */
@@ -42,6 +56,10 @@ const DEFAULT_SIDES = Object.freeze(['enemy', 'player', 'ally']);
 
 /** Rule value of a campaign or an encounter that uses the built-in rule. */
 const BUILT_IN_RULE = 'builtin';
+
+function area(row, column, span) {
+  return Object.freeze({ row, column, span });
+}
 
 function entityField(key, component, extra = {}) {
   return Object.freeze({
@@ -64,13 +82,21 @@ const DEFAULT_BATTLE_RULE = Object.freeze({
   // Where the frontmatter keys a field can read (and a formula can use) come from: a template.
   template: 'builtin:enemy',
   initiative: Object.freeze({ roll: null }),
+  // Where the name sits in the row grid (it is in every rule).
+  nameArea: area(1, 2, 3),
   fields: Object.freeze([
-    entityField('initiative', 'initiative'),
-    entityField('side', 'side', { options: DEFAULT_SIDES }),
-    entityField('ac', 'number', { source: `${FRONTMATTER_SOURCE_PREFIX}ac` }),
-    entityField('hp', 'healthbar', { source: `${FRONTMATTER_SOURCE_PREFIX}hp` }),
-    entityField('statuses', 'statuses'),
-    entityField('note', 'note-link'),
+    entityField('initiative', 'initiative', { area: area(1, 1, 1) }),
+    entityField('side', 'side', { options: DEFAULT_SIDES, area: area(1, 5, 1) }),
+    entityField('ac', 'number', {
+      source: `${FRONTMATTER_SOURCE_PREFIX}ac`,
+      area: area(1, 6, 1),
+    }),
+    entityField('hp', 'healthbar', {
+      source: `${FRONTMATTER_SOURCE_PREFIX}hp`,
+      area: area(1, 7, 3),
+    }),
+    entityField('statuses', 'statuses', { area: area(2, 2, 6) }),
+    entityField('note', 'note-link', { area: area(1, 10, 1) }),
   ]),
 });
 
@@ -121,14 +147,81 @@ function normalizeField(field) {
   const options = Array.isArray(field.options)
     ? field.options.map((option) => toText(option, FIELD_KEY_MAX_LENGTH)).filter(Boolean)
     : [];
+  const placed = normalizeArea(field.area);
   return {
     key,
     component: field.component,
     label: toText(field.label, FIELD_LABEL_MAX_LENGTH) ?? key,
     source: normalizeSource(field.source),
     showInRow: field.showInRow !== false,
+    ...(placed ? { area: placed } : {}),
     ...(options.length > 0 ? { options } : {}),
   };
+}
+
+/** `{ row, column, span }` inside the grid, or null when it is missing or out of it. */
+function normalizeArea(value) {
+  if (!isPlainObject(value)) {
+    return null;
+  }
+
+  const { row, column, span } = value;
+  const isInteger = (number) => Number.isInteger(number);
+  return isInteger(row) &&
+    isInteger(column) &&
+    isInteger(span) &&
+    row >= 1 &&
+    row <= LAYOUT_ROWS_MAX &&
+    column >= 1 &&
+    span >= 1 &&
+    column + span - 1 <= LAYOUT_COLUMNS
+    ? { row, column, span }
+    : null;
+}
+
+function overlaps(first, second) {
+  return (
+    first.row === second.row &&
+    first.column <= second.column + second.span - 1 &&
+    second.column <= first.column + first.span - 1
+  );
+}
+
+/**
+ * Gives every element of the row a place in the grid. Elements that have one keep it (the first of two
+ * overlapping ones wins); the others, in order, take the first free run of their width, a narrower one when the
+ * rows are crowded. `items` are `{ id, area, width }`; returns `id → area`.
+ */
+function placeInGrid(items) {
+  const placed = new Map();
+  const taken = [];
+  for (const item of items) {
+    if (item.area && !taken.some((other) => overlaps(item.area, other))) {
+      placed.set(item.id, item.area);
+      taken.push(item.area);
+    }
+  }
+
+  for (const item of items.filter((candidate) => !placed.has(candidate.id))) {
+    let found = null;
+    for (let width = item.width; width >= 1 && !found; width--) {
+      for (let row = 1; row <= LAYOUT_ROWS_MAX && !found; row++) {
+        for (let column = 1; column + width - 1 <= LAYOUT_COLUMNS && !found; column++) {
+          const candidate = { row, column, span: width };
+          if (!taken.some((other) => overlaps(candidate, other))) {
+            found = candidate;
+          }
+        }
+      }
+    }
+
+    // No room left at all: stack it on the last row (a rule this crowded is hand-made).
+    const area = found ?? { row: LAYOUT_ROWS_MAX, column: LAYOUT_COLUMNS, span: 1 };
+    placed.set(item.id, area);
+    taken.push(area);
+  }
+
+  return placed;
 }
 
 /**
@@ -157,14 +250,37 @@ function normalizeBattleRule(value) {
   }
 
   // Every rule has an initiative (with the name, the one thing a battle cannot do without).
-  const fields = listed.some((field) => field.component === 'initiative')
+  const withInitiative = listed.some((field) => field.component === 'initiative')
     ? listed
-    : [normalizeField({ ...DEFAULT_BATTLE_RULE.fields[0], key: pickFreeKey(seen, 'initiative') }), ...listed];
+    : [
+        normalizeField({
+          ...DEFAULT_BATTLE_RULE.fields[0],
+          key: pickFreeKey(seen, 'initiative'),
+          area: undefined,
+        }),
+        ...listed,
+      ];
+
+  // The row grid: the name comes right after the initiative when nobody gave it a place.
+  const nameIndex = withInitiative.findIndex((field) => field.component === 'initiative') + 1;
+  const items = withInitiative.map((field) => ({
+    id: field.key,
+    area: field.area ?? null,
+    width: DEFAULT_SPANS[field.component] ?? 1,
+  }));
+  items.splice(nameIndex, 0, {
+    id: '$name',
+    area: normalizeArea(value.nameArea),
+    width: DEFAULT_SPANS.name,
+  });
+  const places = placeInGrid(items);
+  const fields = withInitiative.map((field) => ({ ...field, area: places.get(field.key) }));
 
   return {
     version: BATTLE_RULE_VERSION,
     name: toText(value.name, BATTLE_RULE_NAME_MAX_LENGTH) ?? DEFAULT_BATTLE_RULE.name,
     template: toText(value.template, TEMPLATE_REF_MAX_LENGTH),
+    nameArea: places.get('$name'),
     initiative: {
       roll: isPlainObject(value.initiative)
         ? toText(value.initiative.roll, INITIATIVE_ROLL_MAX_LENGTH)
@@ -389,6 +505,8 @@ async function resolveBattleRule(rootPath, encounterPath, selection) {
 }
 
 module.exports = {
+  LAYOUT_COLUMNS,
+  LAYOUT_ROWS_MAX,
   BATTLE_RULES_DIR_NAME,
   BATTLE_RULE_VERSION,
   BUILT_IN_RULE,

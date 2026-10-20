@@ -2,6 +2,14 @@
 export type BattleFieldComponent =
   'initiative' | 'text' | 'number' | 'healthbar' | 'statuses' | 'side' | 'note-link';
 
+/** Where an element sits in the entity row: a grid of 12 columns and up to 4 rows. */
+export interface BattleRuleAreaDto {
+  readonly row: number;
+  readonly column: number;
+  /** Columns it takes. */
+  readonly span: number;
+}
+
 export interface BattleRuleFieldDto {
   /** Key the entities store their value under. */
   readonly key: string;
@@ -12,6 +20,8 @@ export interface BattleRuleFieldDto {
   readonly source: string;
   /** Shown in the row; otherwise only in the entity's detail. */
   readonly showInRow: boolean;
+  /** Its place in the row grid. */
+  readonly area?: BattleRuleAreaDto;
   /** Choices of a `side` field. */
   readonly options?: readonly string[];
 }
@@ -23,6 +33,8 @@ export interface BattleRuleDto {
   readonly template: string | null;
   /** `roll`: a dice formula for the initiative (`1d20 + {dex}`); null means it is typed by hand. */
   readonly initiative: { readonly roll: string | null };
+  /** Where the name sits in the row grid (it is in every rule). */
+  readonly nameArea?: BattleRuleAreaDto;
   readonly fields: readonly BattleRuleFieldDto[];
 }
 

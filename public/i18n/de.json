@@ -952,12 +952,14 @@
       "turnOf": "{{name}} ist am Zug",
       "stopTitle": "Kampf beenden?",
       "stopDescription": "Initiativen und Zustände werden gelöscht, Trefferpunkte gehen auf das Maximum zurück, wo eines vorhanden ist. Namen und andere Werte bleiben.",
-      "stopConfirm": "Kampf beenden"
+      "stopConfirm": "Kampf beenden",
+      "idle": "Bereit"
     },
     "cemetery": {
       "title": "Friedhof",
       "empty": "Noch ist niemand gefallen.",
-      "recover": "Wiederbeleben"
+      "recover": "Wiederbeleben",
+      "deleteForever": "Endgültig löschen"
     },
     "status": {
       "add": "Zustand hinzufügen",
@@ -1009,6 +1011,15 @@
       "failed": "{{count}} konnten nicht würfeln: {{reason}}",
       "error": "Die Initiative konnte nicht gewürfelt werden",
       "hint": "Würfelt für die ausgewählten Einheiten. Wer nicht würfeln kann (fehlender Wert), verliert die Initiative."
+    },
+    "delete": {
+      "title": "{{name}} endgültig löschen?",
+      "description": "Die Einheit verlässt diese Begegnung und kann nicht wiederhergestellt werden.",
+      "confirm": "Endgültig löschen"
+    },
+    "header": {
+      "label": "Aktionen der Begegnung",
+      "count": "{{count}} in der Reihenfolge"
     }
   },
   "battleRules": {

@@ -952,12 +952,14 @@
       "turnOf": "Turno di {{name}}",
       "stopTitle": "Terminare la battaglia?",
       "stopDescription": "Iniziative e stati vengono azzerati e i punti ferita tornano al massimo dove c'è. Nomi e altri valori restano.",
-      "stopConfirm": "Termina battaglia"
+      "stopConfirm": "Termina battaglia",
+      "idle": "Pronto"
     },
     "cemetery": {
       "title": "Cimitero",
       "empty": "Nessuno è ancora caduto.",
-      "recover": "Recupera"
+      "recover": "Recupera",
+      "deleteForever": "Elimina definitivamente"
     },
     "status": {
       "add": "Aggiungi stato",
@@ -1009,6 +1011,15 @@
       "failed": "{{count}} non hanno potuto tirare: {{reason}}",
       "error": "Impossibile tirare l'iniziativa",
       "hint": "Tira per le entità selezionate. Chi non può tirare (manca un valore) perde l'iniziativa."
+    },
+    "delete": {
+      "title": "Eliminare {{name}} per sempre?",
+      "description": "L'entità lascia questo incontro e non può essere recuperata.",
+      "confirm": "Elimina definitivamente"
+    },
+    "header": {
+      "label": "Azioni dell'incontro",
+      "count": "{{count}} nell'ordine"
     }
   },
   "battleRules": {

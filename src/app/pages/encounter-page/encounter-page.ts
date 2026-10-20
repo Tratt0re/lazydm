@@ -21,7 +21,10 @@ import { toast } from 'ngx-sonner';
 import { AppEncounterCemeteryComponent } from '@/components/encounter-cemetery/encounter-cemetery.component';
 import { AppEncounterNotePanelComponent } from '@/components/encounter-note-panel/encounter-note-panel.component';
 import { AppEncounterHealthBarComponent } from '@/components/encounter-health-bar/encounter-health-bar.component';
-import { toInAppEncounterRoute } from '@/components/document-preview/document-preview.markdown';
+import {
+  toInAppEncounterRoute,
+  toInAppNoteRoute,
+} from '@/components/document-preview/document-preview.markdown';
 import type { AppSheetFormComponent } from '@/components/sheet-form/sheet-form.component';
 import { AppSheetFormService } from '@/components/sheet-form/sheet-form.service';
 import type { AppSheetField } from '@/components/sheet-form/sheet-form.types';
@@ -53,6 +56,7 @@ import { ArcTechBadgeComponent } from '@/shared/components/badge';
 import { ArcTechButtonComponent } from '@/shared/components/button';
 import { ArcTechEmptyComponent } from '@/shared/components/empty';
 import { ArcTechIconComponent } from '@/shared/components/icon';
+import { ArcTechAlertDialogService } from '@/shared/components/alert-dialog';
 import { ArcTechSheetService } from '@/shared/components/sheet';
 import { ArcTechCheckboxComponent } from '@/shared/components/checkbox';
 import { ArcTechTooltipImports } from '@/shared/components/tooltip';
@@ -113,7 +117,6 @@ function parseNumber(value: unknown): number | null {
     TranslatePipe,
     AppEncounterCemeteryComponent,
     AppEncounterHealthBarComponent,
-    AppEncounterNotePanelComponent,
     ArcTechAlertComponent,
     ArcTechBadgeComponent,
     ArcTechButtonComponent,
@@ -140,6 +143,7 @@ export class EncounterPage {
   private readonly battleRuleService = inject(BattleRuleService);
   private readonly sheetFormService = inject(AppSheetFormService);
   private readonly sheetService = inject(ArcTechSheetService);
+  private readonly alertDialogService = inject(ArcTechAlertDialogService);
   private loadToken = 0;
   private isSaving = false;
   private needsSave = false;
@@ -166,6 +170,7 @@ export class EncounterPage {
   protected readonly errorMessage = signal<string | null>(null);
   protected readonly isLoading = signal(true);
   private readonly hpUndoSteps = signal<readonly HpUndoStep[]>([]);
+  protected readonly hpUndoCount = computed(() => this.hpUndoSteps().length);
 
   /** The party roster of the scope: the same page, without the battle (it only holds who can be added to one). */
   protected readonly isParty = computed(() => this.fileName() === PARTY_FILE_NAME);
@@ -201,8 +206,6 @@ export class EncounterPage {
   private readonly campaignRule = signal<string | null>(null);
   /** Entities picked for *Roll initiative* (by id). */
   protected readonly selectedIds = signal<ReadonlySet<string>>(new Set());
-  /** Note shown in the side panel (vault path), from an entity's linked note. */
-  protected readonly openNotePath = signal<string | null>(null);
   /** Notes of the scope an entity can be linked to (the picker's options), by path. */
   private readonly scopeNotes = signal<readonly LinkTargetDto[]>([]);
   /** Frontmatter of the linked notes already read, by note path (rule fields can read from it). */
@@ -233,42 +236,8 @@ export class EncounterPage {
 
       const sectionPath = `${scope.routeBase}/${this.sectionKey()}`;
       const subfolder = this.subfolder();
-      const isEditable = this.isEditable();
-      const isRunning = this.isRunning();
       const isParty = this.isParty();
       const ruleActions: readonly ToolbarItemAction[] = isParty ? [] : this.ruleToolbarActions(scope.rootPath);
-      const battleActions: readonly ToolbarItemAction[] = isParty
-        ? []
-        : isRunning
-        ? [
-            {
-              id: 'next-turn',
-              label: this.translateService.instant('encounters.battle.next'),
-              icon: 'chevrons-right',
-              iconOnly: true,
-              disabled: () => !isEditable || this.entities().length === 0,
-              action: () => this.nextTurn(),
-            },
-            {
-              id: 'stop-battle',
-              label: this.translateService.instant('encounters.battle.stop'),
-              icon: 'square',
-              buttonType: 'outline',
-              iconOnly: true,
-              disabled: !isEditable,
-              action: () => this.openStopSheet(),
-            },
-          ]
-        : [
-            {
-              id: 'start-battle',
-              label: this.translateService.instant('encounters.battle.start'),
-              icon: 'play',
-              iconOnly: true,
-              disabled: () => !isEditable || this.entities().length === 0,
-              action: () => this.startBattle(),
-            },
-          ];
       onCleanup(
         this.toolbarContext.activate({
           title: this.title(),
@@ -291,54 +260,12 @@ export class EncounterPage {
                 ]
               : []),
           ],
+          // Only the main and utility actions live here; the battle itself is in the page's own header.
           itemActions: [
             ...ruleActions,
-            ...battleActions,
             ...(isParty
               ? []
               : [
-                  {
-                    id: 'add-party',
-                    label: this.translateService.instant('encounters.party.add'),
-                    icon: 'users' as const,
-                    buttonType: 'outline' as const,
-                    iconOnly: true,
-                    disabled: !isEditable,
-                    action: () => void this.addParty(),
-                  },
-                ]),
-            {
-              id: 'add-entity',
-              label: this.translateService.instant('encounters.entity.add'),
-              icon: 'plus',
-              buttonType: 'outline',
-              iconOnly: true,
-              disabled: !isEditable,
-              action: () => this.openEntitySheet(null),
-            },
-            {
-              id: 'cemetery',
-              label: this.translateService.instant('encounters.cemetery.title'),
-              icon: 'ghost',
-              buttonType: 'outline',
-              iconOnly: true,
-              action: () => {
-                this.openNotePath.set(null);
-                this.isCemeteryOpen.update((isOpen) => !isOpen);
-              },
-            },
-            ...(isParty
-              ? []
-              : [
-                  {
-                    id: 'undo-hp',
-                    label: this.translateService.instant('encounters.hp.undo'),
-                    icon: 'rotate-ccw' as const,
-                    buttonType: 'outline' as const,
-                    iconOnly: true,
-                    disabled: () => !isEditable || this.hpUndoSteps().length === 0,
-                    action: () => this.undoHpChange(),
-                  },
                   {
                     id: 'rename',
                     label: this.translateService.instant('campaigns.sections.renameAsset.menu'),
@@ -799,7 +726,7 @@ export class EncounterPage {
    * *Add party*: the roster's entities join the battle (also a running one), in initiative order. A member
    * whose name is already in the battle is skipped; one with no name is always added.
    */
-  private async addParty(): Promise<void> {
+  protected async addParty(): Promise<void> {
     const scope = this.scope();
     if (!scope) {
       return;
@@ -938,7 +865,7 @@ export class EncounterPage {
   }
 
   /** *Stop battle* asks first: it clears initiatives and statuses and refills the HP. */
-  private openStopSheet(): void {
+  protected openStopSheet(): void {
     const sheetRef = this.sheetService.create({
       arcTitle: this.translateService.instant('encounters.battle.stopTitle'),
       arcContent: this.translateService.instant('encounters.battle.stopDescription'),
@@ -1059,6 +986,40 @@ export class EncounterPage {
     });
   }
 
+  /**
+   * *Delete permanently*: the entity leaves the encounter for good (asks first). A living one is taken out of the
+   * turn order like *Remove*; a dead one just leaves the cemetery.
+   */
+  protected confirmDeleteEntity(entity: EncounterEntityDto): void {
+    this.alertDialogService.confirm({
+      arcTitle: this.translateService.instant('encounters.delete.title', {
+        name: this.entityName(entity.name),
+      }),
+      arcDescription: this.translateService.instant('encounters.delete.description'),
+      arcOkText: this.translateService.instant('encounters.delete.confirm'),
+      arcCancelText: this.translateService.instant('campaigns.sections.newNote.cancel'),
+      arcOkDestructive: true,
+      arcOnOk: () => this.deleteEntity(entity),
+    });
+  }
+
+  private deleteEntity(entity: EncounterEntityDto): void {
+    // Passing the turn on is the same as for a removal; then the entity is dropped from the file.
+    if (!entity.isDead) {
+      this.removeEntity(entity);
+    }
+
+    this.updateEncounter((encounter) => ({
+      ...encounter,
+      entities: encounter.entities.filter((candidate) => candidate.id !== entity.id),
+    }));
+    this.selectedIds.update((ids) => {
+      const next = new Set(ids);
+      next.delete(entity.id);
+      return next;
+    });
+  }
+
   /** *Recover*: back among the living, in its place by initiative; the turn does not move. */
   protected recoverEntity(entity: EncounterEntityDto): void {
     this.updateEncounter((encounter) => {
@@ -1097,10 +1058,31 @@ export class EncounterPage {
   /** Opens the linked note of an entity in the side panel (the cemetery gives way to it). */
   protected openNote(entity: EncounterEntityDto): void {
     const notePath = this.noteOf(entity);
-    if (notePath) {
-      this.isCemeteryOpen.set(false);
-      this.openNotePath.set(notePath);
+    if (!notePath) {
+      return;
     }
+
+    // The same side sheet as the editor reference: read-only, rendered as in Reading, with a link to open it.
+    const title =
+      this.scopeNotes().find((note) => note.path === notePath)?.title ??
+      notePath.split('/').pop()?.replace(/\.md$/i, '') ??
+      notePath;
+    this.sheetService.create<AppEncounterNotePanelComponent, { path: string }>({
+      arcTitle: title,
+      arcDescription: notePath,
+      arcContent: AppEncounterNotePanelComponent,
+      arcData: { path: notePath },
+      arcSide: 'right',
+      arcWidth: '560px',
+      arcOkText: this.translateService.instant('encounters.note.open'),
+      arcCancelText: this.translateService.instant('encounters.note.close'),
+      arcOnOk: () => {
+        const route = toInAppNoteRoute(notePath);
+        if (route) {
+          void this.router.navigateByUrl(route);
+        }
+      },
+    });
   }
 
   /** *Add status*: a name, and optionally the number of rounds it lasts (it counts down on the entity's turns). */
@@ -1281,7 +1263,7 @@ export class EncounterPage {
   }
 
   /** Puts back the health an entity had before the last *Manage HP* change (other edits are kept). */
-  private undoHpChange(): void {
+  protected undoHpChange(): void {
     const step = this.hpUndoSteps().at(-1);
     if (!step) {
       return;
@@ -1315,7 +1297,6 @@ export class EncounterPage {
         this.file.set(file);
         this.encounter.set(file.encounter);
         this.rule.set(rule);
-        this.openNotePath.set(null);
         this.selectedIds.set(new Set());
         void this.loadNotes(path, file.encounter);
         void this.loadRuleChoices();
