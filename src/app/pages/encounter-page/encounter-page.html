@@ -173,7 +173,7 @@
         @for (entity of entities(); track entity.id) {
           <li
             cdkDrag
-            class="flex flex-wrap items-center gap-x-4 gap-y-2 border-b border-l-[3px] border-b-border bg-card p-4 last:border-b-0 [&.cdk-drag-placeholder]:opacity-40"
+            class="flex items-center gap-x-3 border-b border-l-[3px] border-b-border bg-card p-4 last:border-b-0 [&.cdk-drag-placeholder]:opacity-40"
             [class]="isRunning() && entity.id === turnId() ? 'border-l-primary bg-accent' : 'border-l-transparent'"
             [attr.aria-current]="isRunning() && entity.id === turnId() ? 'step' : null"
           >
@@ -194,117 +194,128 @@
               <arc-icon arcType="grip-vertical" class="size-4" aria-hidden="true" />
             </span>
 
-            @for (field of leadFields(); track field.key) {
-              @let initiative = numberOf(entity, field);
-              <span
-                class="flex size-10 shrink-0 items-center justify-center border border-border bg-recessed font-display text-xl font-extrabold"
-                [class.text-muted-foreground]="initiative === null"
-                [attr.title]="fieldLabel(field)"
-              >
-                {{ initiative ?? '–' }}
-              </span>
-            }
-
-            <span
-              class="min-w-0 flex-1 basis-40 truncate text-sm font-semibold"
-              [class.text-muted-foreground]="entity.name === null"
-            >
-              {{ entityName(entity.name) }}
-            </span>
-
-            @for (field of otherFields(); track field.key) {
-              @switch (field.component) {
-                @case ('side') {
-                  @if (textOf(entity, field); as side) {
-                    <arc-badge arcType="secondary">{{ sideLabel(side) }}</arc-badge>
-                  }
-                }
-                @case ('number') {
-                  @if (numberOf(entity, field); as value) {
-                    <span class="flex items-baseline gap-1 font-mono text-xs">
-                      <span class="text-muted-foreground uppercase">{{ fieldLabel(field) }}</span>
-                      <span class="font-semibold">{{ value }}</span>
+            <!-- The row is the rule's grid: each element sits where the rule put it. -->
+            <div class="grid min-w-0 flex-1 grid-cols-12 items-center gap-x-3 gap-y-2">
+              @for (cell of rowCells(); track cell.id) {
+                <div
+                  class="flex min-w-0 items-center gap-1"
+                  [style.grid-row]="cell.area.row"
+                  [style.grid-column]="cell.area.column + ' / span ' + cell.area.span"
+                >
+                  @if (cell.field === null) {
+                    <span
+                      class="min-w-0 truncate text-sm font-semibold"
+                      [class.text-muted-foreground]="entity.name === null"
+                    >
+                      {{ entityName(entity.name) }}
                     </span>
-                  }
-                }
-                @case ('healthbar') {
-                  @let health = healthOf(entity, field);
-                  <app-encounter-health-bar
-                    class="w-44"
-                    [current]="health.current ?? null"
-                    [max]="health.max ?? null"
-                    [temp]="health.temp ?? 0"
-                    [label]="fieldLabel(field)"
-                  />
-                  @if (!isParty()) {
-                  <button
-                    type="button"
-                    arc-button
-                    arcType="outline"
-                    arcSize="sm"
-                    class="shrink-0"
-                    [arcDisabled]="!isEditable()"
-                    (click)="openHpSheet(entity, field)"
-                  >
-                    <arc-icon arcType="heart" />
-                    {{ 'encounters.hp.manage' | translate }}
-                  </button>
-                  }
-                }
-                @case ('statuses') {
-                  <span class="flex flex-wrap items-center gap-1">
-                    @for (status of statusesOf(entity, field); track $index) {
-                      <arc-badge arcType="outline" class="gap-1 pr-0.5">
-                        {{ status.name }}@if (status.rounds !== undefined) { · {{ status.rounds }} }
-                        <button
-                          type="button"
-                          class="flex size-4 cursor-pointer items-center justify-center hover:text-destructive focus-visible:outline-2 focus-visible:outline-ring"
-                          [disabled]="!isEditable()"
-                          [attr.aria-label]="'encounters.status.remove' | translate: { name: status.name }"
-                          (click)="removeStatus(entity, field, $index)"
+                  } @else {
+                    @let field = cell.field;
+                    @switch (field.component) {
+                      @case ('initiative') {
+                        @let initiative = numberOf(entity, field);
+                        <span
+                          class="flex size-10 shrink-0 items-center justify-center border border-border bg-recessed font-display text-xl font-extrabold"
+                          [class.text-muted-foreground]="initiative === null"
+                          [attr.title]="fieldLabel(field)"
                         >
-                          <arc-icon arcType="x" />
-                        </button>
-                      </arc-badge>
+                          {{ initiative ?? '–' }}
+                        </span>
+                      }
+                      @case ('side') {
+                        @if (textOf(entity, field); as side) {
+                          <arc-badge arcType="secondary">{{ sideLabel(side) }}</arc-badge>
+                        }
+                      }
+                      @case ('number') {
+                        @if (numberOf(entity, field); as value) {
+                          <span class="flex items-baseline gap-1 font-mono text-xs">
+                            <span class="text-muted-foreground uppercase">{{ fieldLabel(field) }}</span>
+                            <span class="font-semibold">{{ value }}</span>
+                          </span>
+                        }
+                      }
+                      @case ('healthbar') {
+                        @let health = healthOf(entity, field);
+                        <app-encounter-health-bar
+                          class="min-w-0 flex-1"
+                          [current]="health.current ?? null"
+                          [max]="health.max ?? null"
+                          [temp]="health.temp ?? 0"
+                          [label]="fieldLabel(field)"
+                        />
+                        @if (!isParty()) {
+                          <button
+                            type="button"
+                            arc-button
+                            arcType="outline"
+                            arcSize="sm"
+                            class="shrink-0"
+                            [arcDisabled]="!isEditable()"
+                            (click)="openHpSheet(entity, field)"
+                          >
+                            <arc-icon arcType="heart" />
+                            {{ 'encounters.hp.manage' | translate }}
+                          </button>
+                        }
+                      }
+                      @case ('statuses') {
+                        <span class="flex flex-wrap items-center gap-1">
+                          @for (status of statusesOf(entity, field); track $index) {
+                            <arc-badge arcType="outline" class="gap-1 pr-0.5">
+                              {{ status.name }}@if (status.rounds !== undefined) { · {{ status.rounds }} }
+                              <button
+                                type="button"
+                                class="flex size-4 cursor-pointer items-center justify-center hover:text-destructive focus-visible:outline-2 focus-visible:outline-ring"
+                                [disabled]="!isEditable()"
+                                [attr.aria-label]="'encounters.status.remove' | translate: { name: status.name }"
+                                (click)="removeStatus(entity, field, $index)"
+                              >
+                                <arc-icon arcType="x" />
+                              </button>
+                            </arc-badge>
+                          }
+                          <button
+                            type="button"
+                            arc-button
+                            arcType="ghost"
+                            arcSize="sm"
+                            class="size-6"
+                            [arcDisabled]="!isEditable()"
+                            [attr.aria-label]="'encounters.status.add' | translate"
+                            [arcTooltip]="'encounters.status.add' | translate"
+                            (click)="openStatusSheet(entity, field)"
+                          >
+                            <arc-icon arcType="plus" />
+                          </button>
+                        </span>
+                      }
+                      @case ('text') {
+                        @if (textOf(entity, field); as text) {
+                          <span class="truncate text-xs text-muted-foreground">{{ text }}</span>
+                        }
+                      }
+                      @case ('note-link') {
+                        @if (textOf(entity, field); as note) {
+                          <button
+                            type="button"
+                            arc-button
+                            arcType="ghost"
+                            arcSize="sm"
+                            class="size-8 shrink-0"
+                            [attr.aria-label]="'encounters.note.show' | translate"
+                            [arcTooltip]="'encounters.note.show' | translate"
+                            (click)="openNote(entity)"
+                          >
+                            <arc-icon arcType="file-text" />
+                          </button>
+                        }
+                      }
                     }
-                    <button
-                      type="button"
-                      arc-button
-                      arcType="ghost"
-                      arcSize="sm"
-                      class="size-6"
-                      [arcDisabled]="!isEditable()"
-                      [attr.aria-label]="'encounters.status.add' | translate"
-                      [arcTooltip]="'encounters.status.add' | translate"
-                      (click)="openStatusSheet(entity, field)"
-                    >
-                      <arc-icon arcType="plus" />
-                    </button>
-                  </span>
-                }
-                @case ('text') {
-                  @if (textOf(entity, field); as text) {
-                    <span class="truncate text-xs text-muted-foreground">{{ text }}</span>
                   }
-                }
-                @case ('note-link') {
-                  @if (textOf(entity, field); as note) {
-                    <button
-                      type="button"
-                      arc-button
-                      arcType="ghost"
-                      arcSize="sm"
-                      class="size-8 shrink-0"
-                      [attr.aria-label]="'encounters.note.show' | translate"
-                      [arcTooltip]="'encounters.note.show' | translate"
-                      (click)="openNote(entity)"
-                    >
-                      <arc-icon arcType="file-text" />
-                    </button>
-                  }
-                }
+                </div>
               }
-            }
+            </div>
 
             <span class="ml-auto flex shrink-0 items-center">
             <button

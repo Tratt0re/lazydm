@@ -1083,7 +1083,28 @@
       "moveUp": "Subir",
       "moveDown": "Bajar",
       "removeField": "Quitar el campo",
-      "addField": "Añadir un campo"
+      "addField": "Añadir un campo",
+      "close": "Cerrar"
+    },
+    "row": {
+      "hint": "Arrastra un elemento a otro lugar de la fila, pulsa su engranaje para ver sus ajustes y arrástralo al recuadro de abajo para ocultarlo. El nombre y la iniciativa se quedan.",
+      "label": "Fila de ejemplo de la entidad",
+      "settings": "Ajustes de {{name}}",
+      "settingsTip": "Ajustes",
+      "overlap": "Ese lugar está ocupado o fuera de la fila.",
+      "noRoom": "Ya no queda sitio libre en la fila.",
+      "keyInvalid": "La clave necesita minúsculas, dígitos o _ y no debe estar usada.",
+      "row": "Fila",
+      "column": "Columna",
+      "width": "Ancho (columnas)",
+      "left": "Mover a la izquierda",
+      "right": "Mover a la derecha",
+      "up": "Subir una fila",
+      "down": "Bajar una fila",
+      "hide": "Ocultar de la fila",
+      "palette": "Fuera de la fila · arrastra dentro, o haz clic",
+      "show": "Mostrar {{name}} en la fila",
+      "add": "Añadir {{name}}"
     }
   }
 }

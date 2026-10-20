@@ -1083,7 +1083,28 @@
       "moveUp": "Sposta su",
       "moveDown": "Sposta giù",
       "removeField": "Rimuovi il campo",
-      "addField": "Aggiungi un campo"
+      "addField": "Aggiungi un campo",
+      "close": "Chiudi"
+    },
+    "row": {
+      "hint": "Trascina un elemento in un altro punto della riga, premi l'ingranaggio per le sue impostazioni e trascinalo sul riquadro sotto per nasconderlo. Il nome e l'iniziativa restano.",
+      "label": "Riga di esempio dell'entità",
+      "settings": "Impostazioni di {{name}}",
+      "settingsTip": "Impostazioni",
+      "overlap": "Quel posto è occupato o fuori dalla riga.",
+      "noRoom": "Non c'è più posto libero nella riga.",
+      "keyInvalid": "La chiave richiede lettere minuscole, cifre o _ e non deve essere già usata.",
+      "row": "Riga",
+      "column": "Colonna",
+      "width": "Larghezza (colonne)",
+      "left": "Sposta a sinistra",
+      "right": "Sposta a destra",
+      "up": "Sposta su di una riga",
+      "down": "Sposta giù di una riga",
+      "hide": "Nascondi dalla riga",
+      "palette": "Non nella riga · trascina dentro, o clicca",
+      "show": "Mostra {{name}} nella riga",
+      "add": "Aggiungi {{name}}"
     }
   }
 }

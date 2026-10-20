@@ -30,6 +30,7 @@ import { AppSheetFormService } from '@/components/sheet-form/sheet-form.service'
 import type { AppSheetField } from '@/components/sheet-form/sheet-form.types';
 import type {
   BattleFieldComponent,
+  BattleRuleAreaDto,
   BattleRuleDto,
   BattleRuleFieldDto,
   BattleRuleRowDto,
@@ -80,6 +81,13 @@ interface HpUndoStep {
   readonly entityId: string;
   readonly key: string;
   readonly previous: HealthValue | undefined;
+}
+
+/** An element of the entity row and the grid cells it takes (the name has no field). */
+interface RowCell {
+  readonly id: string;
+  readonly field: BattleRuleFieldDto | null;
+  readonly area: BattleRuleAreaDto;
 }
 
 /** A status: a free tag the user types on an entity, with an optional number of rounds left. */
@@ -182,9 +190,27 @@ export class EncounterPage {
   /** A file that is not valid JSON opens empty; editing would replace it, so it stays read-only. */
   protected readonly isEditable = computed(() => this.encounter() !== null && !this.parseError());
 
-  /** Fields shown in the row: the initiative ones lead, the name follows, the others come after. */
-  protected readonly leadFields = computed(() => this.rowFields('initiative'));
-  protected readonly otherFields = computed(() => this.rowFields('other'));
+  /**
+   * What the row shows, each element in its place of the rule's grid (12 columns): the name, then every field the
+   * rule shows in the row. A rule written before the grid existed gets places from the model.
+   */
+  protected readonly rowCells = computed<readonly RowCell[]>(() => {
+    const rule = this.rule();
+    if (!rule) {
+      return [];
+    }
+
+    return [
+      { id: '$name', field: null, area: rule.nameArea ?? { row: 1, column: 2, span: 3 } },
+      ...rule.fields
+        .filter((field) => field.showInRow)
+        .map((field) => ({
+          id: field.key,
+          field,
+          area: field.area ?? { row: 1, column: 1, span: 1 },
+        })),
+    ];
+  });
   /** Key of the rule's initiative field (null when the rule has none). */
   private readonly initiativeKey = computed(
     () => this.rule()?.fields.find((field) => field.component === 'initiative')?.key ?? null,
@@ -365,12 +391,6 @@ export class EncounterPage {
 
   protected fieldLabel(field: BattleRuleFieldDto): string {
     return this.translateService.instant(field.label);
-  }
-
-  private rowFields(group: 'initiative' | 'other'): readonly BattleRuleFieldDto[] {
-    return (this.rule()?.fields ?? []).filter(
-      (field) => field.showInRow && (field.component === 'initiative') === (group === 'initiative'),
-    );
   }
 
   // --- Editing -----------------------------------------------------------------------------------------

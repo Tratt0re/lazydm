@@ -136,156 +136,18 @@
           }
         </section>
 
-        <!-- Fields of the entity row, in order. The name and the initiative are in every rule. -->
+        <!-- The entity row: a mock row where the elements are placed, with a gear for each one's settings. -->
         <section class="flex flex-col gap-3">
           <h3 class="font-display text-lg font-semibold tracking-wide uppercase">
             {{ 'battleRules.editor.fields' | translate }}<span class="text-primary" aria-hidden="true">.</span>
           </h3>
-          <p class="text-xs text-muted-foreground">{{ 'battleRules.editor.fieldsHint' | translate }}</p>
-
-          <ul class="flex flex-col border border-border">
-            <li class="flex items-center gap-3 border-b border-border bg-recessed px-3 py-2 text-sm">
-              <arc-icon arcType="lock" class="size-4 shrink-0 text-muted-foreground" aria-hidden="true" />
-              <span class="font-semibold">{{ 'encounters.entity.name' | translate }}</span>
-              <span class="ml-auto font-mono text-xs text-muted-foreground">
-                {{ 'battleRules.editor.alwaysThere' | translate }}
-              </span>
-            </li>
-
-            @for (field of current.fields; track $index) {
-              <li class="flex flex-col gap-3 border-b border-border p-3 last:border-b-0">
-                <div class="flex flex-wrap items-center gap-3">
-                  <span class="border border-border bg-recessed px-2 py-0.5 font-mono text-[11px] tracking-wider uppercase">
-                    {{ componentLabel(field.component) }}
-                  </span>
-                  @if (isRequired(field)) {
-                    <span class="font-mono text-xs text-muted-foreground">
-                      {{ 'battleRules.editor.alwaysThere' | translate }}
-                    </span>
-                  }
-                  <span class="ml-auto flex items-center gap-1">
-                    <button
-                      type="button"
-                      arc-button
-                      arcType="ghost"
-                      arcSize="sm"
-                      class="size-8"
-                      [arcDisabled]="isBuiltIn() || $first"
-                      [attr.aria-label]="'battleRules.editor.moveUp' | translate"
-                      [arcTooltip]="'battleRules.editor.moveUp' | translate"
-                      (click)="moveField($index, -1)"
-                    >
-                      <arc-icon arcType="arrow-up" />
-                    </button>
-                    <button
-                      type="button"
-                      arc-button
-                      arcType="ghost"
-                      arcSize="sm"
-                      class="size-8"
-                      [arcDisabled]="isBuiltIn() || $last"
-                      [attr.aria-label]="'battleRules.editor.moveDown' | translate"
-                      [arcTooltip]="'battleRules.editor.moveDown' | translate"
-                      (click)="moveField($index, 1)"
-                    >
-                      <arc-icon arcType="arrow-down" />
-                    </button>
-                    <button
-                      type="button"
-                      arc-button
-                      arcType="ghost"
-                      arcSize="sm"
-                      class="size-8"
-                      [arcDisabled]="isBuiltIn() || isRequired(field)"
-                      [attr.aria-label]="'battleRules.editor.removeField' | translate"
-                      [arcTooltip]="'battleRules.editor.removeField' | translate"
-                      (click)="removeField($index)"
-                    >
-                      <arc-icon arcType="trash" />
-                    </button>
-                  </span>
-                </div>
-
-                <div class="grid gap-3 md:grid-cols-3">
-                  <label class="flex flex-col gap-1 text-xs font-medium">
-                    {{ 'battleRules.editor.label' | translate }}
-                    <input
-                      arc-input
-                      type="text"
-                      [value]="field.label"
-                      [disabled]="isBuiltIn()"
-                      (input)="updateField($index, { label: $any($event.target).value })"
-                    />
-                  </label>
-                  <label class="flex flex-col gap-1 text-xs font-medium">
-                    {{ 'battleRules.editor.key' | translate }}
-                    <input
-                      arc-input
-                      type="text"
-                      class="font-mono"
-                      [value]="field.key"
-                      [disabled]="isBuiltIn()"
-                      (change)="setFieldKey($index, $any($event.target).value)"
-                    />
-                  </label>
-                  @if (canReadFromNote(field)) {
-                    <div class="flex flex-col gap-1 text-xs font-medium">
-                      <span>{{ 'battleRules.editor.source' | translate }}</span>
-                      <arc-select
-                        [arcDisabled]="isBuiltIn()"
-                        [arcValue]="field.source"
-                        (arcSelectionChange)="updateField($index, { source: $any($event) })"
-                      >
-                        @for (option of sourceOptions(field); track option.value) {
-                          <arc-select-item [arcValue]="option.value" [arcLabel]="option.label" />
-                        }
-                      </arc-select>
-                    </div>
-                  }
-                  @if (field.component === 'side') {
-                    <label class="flex flex-col gap-1 text-xs font-medium md:col-span-3">
-                      {{ 'battleRules.editor.sides' | translate }}
-                      <input
-                        arc-input
-                        type="text"
-                        [value]="(field.options ?? []).join(', ')"
-                        [disabled]="isBuiltIn()"
-                        (change)="setSides($index, $any($event.target).value)"
-                      />
-                    </label>
-                  }
-                </div>
-
-                <arc-checkbox
-                  [arcChecked]="field.showInRow"
-                  [arcDisabled]="isBuiltIn()"
-                  (checkChange)="updateField($index, { showInRow: $event })"
-                >
-                  {{ 'battleRules.editor.showInRow' | translate }}
-                </arc-checkbox>
-              </li>
-            }
-          </ul>
-
-          @if (!isBuiltIn()) {
-            <div class="flex flex-wrap items-center gap-2">
-              <span class="font-mono text-xs tracking-wider text-muted-foreground uppercase">
-                {{ 'battleRules.editor.addField' | translate }}
-              </span>
-              @for (component of addableComponents; track component) {
-                <button
-                  type="button"
-                  arc-button
-                  arcType="outline"
-                  arcSize="sm"
-                  (click)="addField(component)"
-                >
-                  <arc-icon arcType="plus" />
-                  {{ componentLabel(component) }}
-                </button>
-              }
-            </div>
-          }
+          <app-battle-rule-row-editor
+            [fields]="current.fields"
+            [nameArea]="current.nameArea ?? { row: 1, column: 2, span: 3 }"
+            [attributeKeys]="attributeKeys()"
+            [isReadOnly]="isBuiltIn()"
+            (layoutChange)="setLayout($event)"
+          />
         </section>
       </div>
     } @else {

@@ -15,12 +15,11 @@ import {
   type SecondarySidebarItem,
 } from '@/components/secondary-sidebar/secondary-sidebar.component';
 import { AppSheetFormService } from '@/components/sheet-form/sheet-form.service';
-import type {
-  BattleFieldComponent,
-  BattleRuleDto,
-  BattleRuleFieldDto,
-  BattleRuleRowDto,
-} from '@/dtos';
+import {
+  AppBattleRuleRowEditorComponent,
+  type RowLayout,
+} from '@/components/battle-rule-row-editor/battle-rule-row-editor.component';
+import type { BattleRuleDto, BattleRuleRowDto } from '@/dtos';
 import { BattleRuleService } from '@/services/battle-rule.service';
 import { TemplateService } from '@/services/template.service';
 import { ArcTechAlertDialogService } from '@/shared/components/alert-dialog';
@@ -35,32 +34,11 @@ import { getDiceFormulaError } from '@/shared/utils/dice';
 const BUILT_IN_KEY = 'builtin';
 const GROUP_KEY_PREFIX = 'group:';
 const BUILT_IN_REF_PREFIX = 'builtin:';
-const FRONTMATTER_PREFIX = 'frontmatter:';
-/** Source value of a field that holds its own value (not read from a note). */
-const ENTITY_SOURCE = 'entity';
 const SOURCE_ICONS: Record<BattleRuleRowDto['source'], ArcTechIcon> = {
   vault: 'vault',
   system: 'library-big',
   campaign: 'scroll-text',
 };
-/** Field types a rule can add: the initiative is always there already, once. */
-const ADDABLE_COMPONENTS: readonly BattleFieldComponent[] = [
-  'number',
-  'text',
-  'healthbar',
-  'side',
-  'statuses',
-  'note-link',
-];
-/** Types whose value can come from a frontmatter key of the linked note (a number or a text). */
-const NOTE_READABLE_COMPONENTS: readonly BattleFieldComponent[] = [
-  'initiative',
-  'number',
-  'text',
-  'healthbar',
-];
-const FIELD_KEY_PATTERN = /^[a-z][a-z0-9_]*$/;
-
 interface SelectedRule {
   /** Rule path, or `builtin` for the read-only built-in. */
   readonly key: string;
@@ -78,6 +56,7 @@ interface SelectedRule {
   selector: 'app-battle-rule-library-page',
   imports: [
     TranslatePipe,
+    AppBattleRuleRowEditorComponent,
     AppSecondarySidebarComponent,
     ArcTechButtonComponent,
     ArcTechCheckboxComponent,
@@ -120,7 +99,6 @@ export class BattleRuleLibraryPage implements OnInit {
   protected readonly selectedRow = computed(
     () => this.rows().find((row) => row.path === this.selected()?.key) ?? null,
   );
-  protected readonly addableComponents = ADDABLE_COMPONENTS;
 
   /** Why the initiative formula cannot be rolled (null when it can, or when the initiative is typed). */
   protected readonly formulaError = computed(() => {
@@ -198,33 +176,6 @@ export class BattleRuleLibraryPage implements OnInit {
     void this.loadTemplates();
   }
 
-  /** The frontmatter keys a field can read, as select choices (plus the field's own current source). */
-  protected sourceOptions(field: BattleRuleFieldDto): readonly { value: string; label: string }[] {
-    const keys = this.attributeKeys();
-    const current = field.source.startsWith(FRONTMATTER_PREFIX)
-      ? field.source.slice(FRONTMATTER_PREFIX.length)
-      : null;
-    const shown = current && !keys.includes(current) ? [...keys, current] : keys;
-    return [
-      {
-        value: ENTITY_SOURCE,
-        label: this.translateService.instant('battleRules.editor.sourceEntity'),
-      },
-      ...shown.map((key) => ({
-        value: `${FRONTMATTER_PREFIX}${key}`,
-        label: this.translateService.instant('battleRules.editor.sourceNote', { key }),
-      })),
-    ];
-  }
-
-  protected canReadFromNote(field: BattleRuleFieldDto): boolean {
-    return NOTE_READABLE_COMPONENTS.includes(field.component);
-  }
-
-  protected componentLabel(component: BattleFieldComponent): string {
-    return this.translateService.instant(`battleRules.components.${component}`);
-  }
-
   protected async onLibrarySelected(item: SecondarySidebarItem): Promise<void> {
     if (item.key === this.selected()?.key || item.key.startsWith(GROUP_KEY_PREFIX)) {
       return;
@@ -270,78 +221,9 @@ export class BattleRuleLibraryPage implements OnInit {
     this.setFormula(`${roll.trimEnd()} + {${key}}`.trim());
   }
 
-  protected updateField(index: number, change: Partial<BattleRuleFieldDto>): void {
-    this.update((rule) => ({
-      ...rule,
-      fields: rule.fields.map((field, i) => (i === index ? { ...field, ...change } : field)),
-    }));
-  }
-
-  protected setFieldKey(index: number, key: string): void {
-    const clean = key.trim().toLocaleLowerCase();
-    const isTaken = this.rule()?.fields.some((field, i) => i !== index && field.key === clean);
-    if (FIELD_KEY_PATTERN.test(clean) && !isTaken) {
-      this.updateField(index, { key: clean });
-    }
-  }
-
-  protected setSides(index: number, text: string): void {
-    const options = text
-      .split(',')
-      .map((option) => option.trim())
-      .filter(Boolean);
-    this.updateField(index, { options });
-  }
-
-  protected moveField(index: number, offset: -1 | 1): void {
-    this.update((rule) => {
-      const target = index + offset;
-      if (target < 0 || target >= rule.fields.length) {
-        return rule;
-      }
-
-      const fields = [...rule.fields];
-      [fields[index], fields[target]] = [fields[target], fields[index]];
-      return { ...rule, fields };
-    });
-  }
-
-  /** The initiative is part of every rule (with the name): it cannot be removed. */
-  protected isRequired(field: BattleRuleFieldDto): boolean {
-    return field.component === 'initiative';
-  }
-
-  protected removeField(index: number): void {
-    this.update((rule) => ({
-      ...rule,
-      fields: rule.fields.filter((field, i) => i !== index || this.isRequired(field)),
-    }));
-  }
-
-  protected addField(component: BattleFieldComponent): void {
-    this.update((rule) => {
-      const base = component.replace('-', '_');
-      const taken = new Set(rule.fields.map((field) => field.key));
-      let key = base;
-      for (let index = 2; taken.has(key); index++) {
-        key = `${base}_${index}`;
-      }
-
-      return {
-        ...rule,
-        fields: [
-          ...rule.fields,
-          {
-            key,
-            component,
-            label: key,
-            source: ENTITY_SOURCE,
-            showInRow: true,
-            ...(component === 'side' ? { options: ['enemy', 'player', 'ally'] } : {}),
-          },
-        ],
-      };
-    });
+  /** The mock row changed (an element moved, added, hidden or its settings edited). */
+  protected setLayout(layout: RowLayout): void {
+    this.update((rule) => ({ ...rule, fields: layout.fields, nameArea: layout.nameArea }));
   }
 
   // --- Library -----------------------------------------------------------------------------------------

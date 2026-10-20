@@ -1083,7 +1083,28 @@
       "moveUp": "上移",
       "moveDown": "下移",
       "removeField": "移除字段",
-      "addField": "添加字段"
+      "addField": "添加字段",
+      "close": "关闭"
+    },
+    "row": {
+      "hint": "将元素拖到行中的其他位置，点击其齿轮查看设置，拖到下方框中可隐藏。名称和先攻会保留。",
+      "label": "单位行示意",
+      "settings": "{{name}} 的设置",
+      "settingsTip": "设置",
+      "overlap": "该位置已被占用或超出行范围。",
+      "noRoom": "行中已没有空位。",
+      "keyInvalid": "键需为小写字母、数字或 _，且不能重复。",
+      "row": "行",
+      "column": "列",
+      "width": "宽度（列）",
+      "left": "左移",
+      "right": "右移",
+      "up": "上移一行",
+      "down": "下移一行",
+      "hide": "从行中隐藏",
+      "palette": "不在行中 · 拖入或点击",
+      "show": "在行中显示 {{name}}",
+      "add": "添加 {{name}}"
     }
   }
 }

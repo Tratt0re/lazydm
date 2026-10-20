@@ -263,18 +263,24 @@ function normalizeBattleRule(value) {
 
   // The row grid: the name comes right after the initiative when nobody gave it a place.
   const nameIndex = withInitiative.findIndex((field) => field.component === 'initiative') + 1;
-  const items = withInitiative.map((field) => ({
-    id: field.key,
-    area: field.area ?? null,
-    width: DEFAULT_SPANS[field.component] ?? 1,
-  }));
+  // A field hidden from the row takes no place in the grid (it keeps its own, for when it comes back).
+  const items = withInitiative
+    .filter((field) => field.showInRow)
+    .map((field) => ({
+      id: field.key,
+      area: field.area ?? null,
+      width: DEFAULT_SPANS[field.component] ?? 1,
+    }));
   items.splice(nameIndex, 0, {
     id: '$name',
     area: normalizeArea(value.nameArea),
     width: DEFAULT_SPANS.name,
   });
   const places = placeInGrid(items);
-  const fields = withInitiative.map((field) => ({ ...field, area: places.get(field.key) }));
+  const fields = withInitiative.map((field) => {
+    const place = places.get(field.key) ?? field.area;
+    return place ? { ...field, area: place } : field;
+  });
 
   return {
     version: BATTLE_RULE_VERSION,
@@ -505,6 +511,7 @@ async function resolveBattleRule(rootPath, encounterPath, selection) {
 }
 
 module.exports = {
+  DEFAULT_SPANS,
   LAYOUT_COLUMNS,
   LAYOUT_ROWS_MAX,
   BATTLE_RULES_DIR_NAME,

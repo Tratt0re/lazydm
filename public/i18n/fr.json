@@ -1083,7 +1083,28 @@
       "moveUp": "Monter",
       "moveDown": "Descendre",
       "removeField": "Retirer le champ",
-      "addField": "Ajouter un champ"
+      "addField": "Ajouter un champ",
+      "close": "Fermer"
+    },
+    "row": {
+      "hint": "Faites glisser un élément à un autre endroit de la ligne, appuyez sur son engrenage pour ses réglages et faites-le glisser sur la zone du bas pour le masquer. Le nom et l'initiative restent.",
+      "label": "Ligne d'exemple de l'entité",
+      "settings": "Réglages de {{name}}",
+      "settingsTip": "Réglages",
+      "overlap": "Cet emplacement est pris ou hors de la ligne.",
+      "noRoom": "Il n'y a plus de place libre dans la ligne.",
+      "keyInvalid": "La clé demande des minuscules, des chiffres ou _ et ne doit pas être déjà utilisée.",
+      "row": "Ligne",
+      "column": "Colonne",
+      "width": "Largeur (colonnes)",
+      "left": "Déplacer à gauche",
+      "right": "Déplacer à droite",
+      "up": "Monter d'une ligne",
+      "down": "Descendre d'une ligne",
+      "hide": "Masquer de la ligne",
+      "palette": "Hors de la ligne · glissez dedans, ou cliquez",
+      "show": "Afficher {{name}} dans la ligne",
+      "add": "Ajouter {{name}}"
     }
   }
 }

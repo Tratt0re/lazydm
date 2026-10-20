@@ -1083,7 +1083,28 @@
       "moveUp": "Move up",
       "moveDown": "Move down",
       "removeField": "Remove the field",
-      "addField": "Add a field"
+      "addField": "Add a field",
+      "close": "Close"
+    },
+    "row": {
+      "hint": "Drag an element to another place of the row, press its gear for its settings, and drag it onto the box below to hide it. The name and the initiative stay.",
+      "label": "Mock entity row",
+      "settings": "Settings of {{name}}",
+      "settingsTip": "Settings",
+      "overlap": "That place is taken or out of the row.",
+      "noRoom": "There is no free place left in the row.",
+      "keyInvalid": "The key needs lowercase letters, digits or _ and must be unused.",
+      "row": "Row",
+      "column": "Column",
+      "width": "Width (columns)",
+      "left": "Move left",
+      "right": "Move right",
+      "up": "Move up a row",
+      "down": "Move down a row",
+      "hide": "Hide from the row",
+      "palette": "Not in the row · drag in, or click",
+      "show": "Show {{name}} in the row",
+      "add": "Add {{name}}"
     }
   }
 }
