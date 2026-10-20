@@ -334,9 +334,10 @@ Planned Electron modules: `vault`, `cloud-readiness`, `campaign`, `document`, `i
 - **Values** are stored by the key of the battle-rule field that shows them (`initiative`, `ac`, `hp` =
   `{ current, max, temp }`, `statuses` = `[{ name, rounds? }]`, `note` = vault path of the linked note, …). A value
   the rule no longer lists survives a change of rule; empty values are not stored.
-- **Page** (`/<scope>/encounters/<file>`, own tab title and breadcrumb): the initiative list, a bar with the round
-  and whose turn it is, and a toolbar with *Battle rule*, *Start battle* / *Next turn* / *Stop battle*, *Add party*,
-  *Add entity*, *Cemetery*, *Undo last HP change*, *Rename…* and *Delete…*. Every edit is saved right away.
+- **Page** (`/<scope>/encounters/<file>`, own tab title and breadcrumb): the initiative list under a **page header**
+  (round and whose turn it is, *Start battle* / *Next turn* / *Stop battle*, *Roll initiative*, *Add party*, *Add
+  entity*, *Undo last HP change*, *Cemetery*). The **toolbar keeps only the main and utility actions**: *Battle rule*,
+  *Rename…* and *Delete…*. Every edit is saved right away.
   - **Battle**: *Start* sorts by initiative (highest first, entities without one last), sets round 1 and gives the
     first entity the turn; *Next turn* moves on and starts a new round after the last; *Stop* asks first, then
     clears initiatives and statuses and refills HP to the maximum where one is known (temporary HP go too). There
@@ -354,8 +355,9 @@ Planned Electron modules: `vault`, `cloud-readiness`, `campaign`, `document`, `i
   - **Statuses** are **free tags** typed on an entity, with an optional number of rounds that counts down at the
     end of that entity's turn and removes the tag at 0. They are not notes and have no section.
   - **Cemetery**: *Remove* sends an entity to a side panel (it leaves the order; if it had the turn, the turn
-    passes on); *Recover* puts it back by initiative. It shares the right-hand slot with the **note panel**, which
-    shows an entity's linked note read-only, as in Reading.
+    passes on); *Recover* puts it back by initiative; *Delete forever* (confirmed) removes it from the file for
+    good. An entity's **linked note** opens read-only, as in Reading, in a **right-hand sheet** like the editor
+    reference.
 - **Party roster**: a hidden `encounters/_party.json` per campaign (the same file format and page, without the
   battle), reached from the *Party roster* button of the Encounters section — it is not listed or offered as a link.
   *Add party* copies its entities into an encounter (also a running one), skipping a member whose name is already
@@ -369,7 +371,9 @@ Planned Electron modules: `vault`, `cloud-readiness`, `campaign`, `document`, `i
     *Customize* copies it out. Unknown or duplicate fields are dropped on read, and a rule always has an initiative.
   - A rule has a `name`, a `template` (a template path or `builtin:<type>`) whose **frontmatter keys** are the
     attributes it may read from an entity's note, an `initiative` (`roll`: null when typed by hand, or a dice
-    formula) and an ordered list of `fields`: `{ key, component, label, source, showInRow, options? }`.
+    formula) and an ordered list of `fields`: `{ key, component, label, source, showInRow, area, options? }`. The row is a
+    **12-column grid of up to 4 rows**: `area` is `{ row, column, span }` of a field and `nameArea` the name's (a rule
+    without areas is laid out left to right; a field with `showInRow: false` takes no place).
     `component` is `initiative`, `number`, `text`, `healthbar`, `statuses`, `side` or `note-link`; `source` is `entity`
     or `frontmatter:<key>`. The name and the initiative are in every rule. The system is not assumed: nothing in the
     battle code names a game's fields.
@@ -385,8 +389,11 @@ Planned Electron modules: `vault`, `cloud-readiness`, `campaign`, `document`, `i
     key, not a whole number) has its initiative **erased**, and the failures are reported.
   - **Editor**: the *Battle rules* sheet (title-bar button next to Templates) has the same library layout: built-in,
     vault, systems and campaigns in the secondary sidebar, with a form for the name, the template, the initiative
-    (typed or rolled, formula and the template's keys as chips) and the field list (label, key, value source, sides,
-    *Show in the row*, reorder, remove, add by type). Unsaved edits are saved when another rule is selected or the
+    (typed or rolled, formula and the template's keys as chips) and a **mock entity row**: each element sits where
+    the real row will show it and is **dragged** to another place (a preview shows whether it fits; overlapping or leaving
+    the grid is refused). A **gear** on each element opens its settings (label, key, value source, sides, row, column,
+    width, arrows, hide, remove). A **palette** holds the hidden and the addable types: drag one in or click it to put it
+    in the first free place; dropping an element on the palette hides it. The name and the initiative can move but not go. Unsaved edits are saved when another rule is selected or the
     sheet is closed.
 
 ## 7. Security
