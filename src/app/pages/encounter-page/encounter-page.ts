@@ -293,6 +293,9 @@ export class EncounterPage {
           // Only the main and utility actions live here; the battle itself is in the page's own header.
           itemActions: [
             ...ruleActions,
+            ...(isParty
+              ? []
+              : [
             {
               id: 'cemetery',
               label: this.translateService.instant('encounters.cemetery.title'),
@@ -301,6 +304,7 @@ export class EncounterPage {
               iconOnly: true,
               action: () => this.isCemeteryOpen.update((isOpen) => !isOpen),
             },
+              ]),
             ...(isParty
               ? []
               : [
@@ -1087,6 +1091,11 @@ export class EncounterPage {
     });
   }
 
+  /** The trash icon of the card header: gone for good, without asking (the skull is the reversible one). */
+  protected deleteEntityNow(entity: EncounterEntityDto): void {
+    this.deleteEntity(entity);
+  }
+
   private deleteEntity(entity: EncounterEntityDto): void {
     // Passing the turn on is the same as for a removal; then the entity is dropped from the file.
     if (!entity.isDead) {
@@ -1154,7 +1163,6 @@ export class EncounterPage {
     // Information only: no footer buttons (the close button is in the header; a link inside opens its note).
     this.sheetService.create<AppEncounterNotePanelComponent, { path: string }>({
       arcTitle: title,
-      arcDescription: notePath,
       arcContent: AppEncounterNotePanelComponent,
       arcData: { path: notePath },
       arcSide: 'right',

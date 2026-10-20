@@ -90,7 +90,7 @@ export class ArcTechSheetOptions<T, U> {
               data-slot="sheet-title"
               class="font-display text-[35px] leading-none font-extrabold tracking-[0.025em] text-foreground-strong uppercase"
             >
-              {{ config.arcTitle }}
+              {{ config.arcTitle }}<span class="text-primary" aria-hidden="true">.</span>
             </h4>
             <div class="arc-engraved-divider mt-2" aria-hidden="true"><span></span></div>
 

@@ -36,7 +36,9 @@ export function attachLinkPreviewHover(
   button.dataset['linkPreview'] = '';
   button.innerHTML = EYE_ICON;
   button.hidden = true;
-  document.body.append(button);
+  // A host inside a sheet or a modal lives in the browser's top layer (the CDK overlay container is a popover):
+  // only something inside that same layer paints above it, so the button goes in the host's own top-layer root.
+  (host.closest<HTMLElement>('[popover]') ?? document.body).append(button);
 
   let current: HTMLElement | null = null;
   let hideTimer = 0;

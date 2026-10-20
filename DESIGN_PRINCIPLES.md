@@ -334,7 +334,7 @@ Planned Electron modules: `vault`, `cloud-readiness`, `campaign`, `document`, `i
 - **Values** are stored by the key of the battle-rule field that shows them (`initiative`, `ac`, `hp` =
   `{ current, max, temp }`, `statuses` = `[{ name, rounds? }]`, `note` = vault path of the linked note, …). A value
   the rule no longer lists survives a change of rule; empty values are not stored.
-- **Page** (`/<scope>/encounters/<file>`, own tab title and breadcrumb): the round and whose turn it is
+- **Page** (`/<scope>/encounters/<file>`, own tab title and breadcrumb): the round (`03 / ROUND`: a big two-digit number and a smaller, quieter word) and whose turn it is
   on top, then the **battle bar** (*Start battle* or *Stop battle* / *Next turn* on the left; *Roll initiative* and
   the *Add party* and *Add entity* icon buttons on the right), then the initiative list. The **toolbar keeps the
   main and utility actions**: *Battle rule*, *Cemetery* (opens the side panel), *Rename…* and *Delete…*. Every edit
@@ -351,15 +351,15 @@ Planned Electron modules: `vault`, `cloud-readiness`, `campaign`, `document`, `i
     button reads *Insert N* and the copies are numbered ("Goblin 1", "Goblin 2"…). *Duplicate* numbers the same way.
     A field the rule reads from the note shows the note's value **only when the entity has none of its own**;
     nothing is copied into the file.
-  - **Hit points**: one bar with `current / max` written over it (temporary HP as a second
-    segment). *Manage HP* (an icon button) applies damage (temporary HP first, never below 0), healing (up to the
+  - **Hit points**: a labelled bar: the label on the left, `+temp  current / max` on the right of the same row, the
+    meter under it (temporary HP as a second segment); the bar slides when the value goes down or up. *Manage HP* (an icon button) applies damage (temporary HP first, never below 0), healing (up to the
     maximum) or sets the temporary HP. There is no undo.
   - **Statuses** are **free tags** typed in place on an entity (one line, no dialog): `stunned`, space, `3`, space
     makes the tag *stunned · 3* (it counts down at the end of that entity's turn and goes at 0); a second space right
     after the name makes it without rounds. Enter or leaving the field also makes one, Backspace on an empty field
     removes the last tag. They are not notes and have no section.
   - **Entity card**: a small header holds the system actions (drag handle, roll selection checkbox, edit, duplicate,
-    send to the cemetery); the rule's grid is below it.
+    send to the cemetery, delete permanently without asking); the rule's grid is below it.
   - **Cemetery**: *Remove* sends an entity to a side panel (it leaves the order; if it had the turn, the turn
     passes on); *Recover* puts it back by initiative; *Delete forever* (confirmed) removes it from the file for
     good. An entity's **linked note** opens read-only, as in Reading, in a **right-hand sheet** like the editor

@@ -28,7 +28,7 @@ import type { LinkPreviewRequest } from '@/components/link-preview-card/link-pre
     } @else if (document(); as note) {
       <div class="relative h-full min-h-0">
         <app-document-preview
-          class="h-full"
+          class="h-full border-0!"
           [isCompact]="true"
           [body]="note.body"
           [links]="note.links"

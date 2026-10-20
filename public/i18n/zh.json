@@ -906,7 +906,8 @@
       "quantity": "数量",
       "quantityHint": "插入数量：1 到 15。超过 1 个时会自动编号。",
       "quantityError": "请输入 1 到 {{max}} 之间的数量。",
-      "insertCount": "插入 {{count}} 个"
+      "insertCount": "插入 {{count}} 个",
+      "deleteNow": "永久删除"
     },
     "fields": {
       "initiative": "先攻",
@@ -952,7 +953,8 @@
       "stopTitle": "结束战斗？",
       "stopDescription": "先攻和状态将被清除，生命值恢复到最大值（如有）。名称和其他数值保留。",
       "stopConfirm": "结束战斗",
-      "idle": "就绪"
+      "idle": "就绪",
+      "roundWord": "回合"
     },
     "cemetery": {
       "title": "墓地",

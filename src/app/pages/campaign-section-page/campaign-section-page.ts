@@ -262,6 +262,25 @@ export class CampaignSectionPage {
       });
     }
 
+    if (section?.key === ENCOUNTERS_SECTION_KEY && scope?.kind === 'campaign') {
+      const campaign = scope.rootPath;
+      actions.push({
+        id: 'section-battle-rule',
+        type: 'select',
+        label: 'encounters.rule.label',
+        ariaLabel: this.translateService.instant('encounters.rule.campaignAriaLabel'),
+        class: 'w-56',
+        value: () => this.battleRuleChoice() ?? DEFAULT_BATTLE_RULE_CHOICE,
+        options: this.battleRuleService.getOptions(
+          this.battleRules(),
+          campaign,
+          this.battleRuleChoice(),
+          this.translateService.instant('encounters.rule.builtInDefault'),
+        ),
+        change: (value) => this.setBattleRuleChoice(campaign, value),
+      });
+    }
+
     if (section?.key === ASSETS_SECTION_KEY) {
       actions.push({
         id: 'section-import-disk',
@@ -294,33 +313,7 @@ export class CampaignSectionPage {
       });
     }
 
-    if (section?.key === ENCOUNTERS_SECTION_KEY && scope?.kind === 'campaign') {
-      const campaign = scope.rootPath;
-      actions.push({
-        id: 'section-battle-rule',
-        type: 'select',
-        label: 'encounters.rule.label',
-        ariaLabel: this.translateService.instant('encounters.rule.campaignAriaLabel'),
-        class: 'w-56',
-        value: () => this.battleRuleChoice() ?? DEFAULT_BATTLE_RULE_CHOICE,
-        options: this.battleRuleService.getOptions(
-          this.battleRules(),
-          campaign,
-          this.battleRuleChoice(),
-          this.translateService.instant('encounters.rule.builtInDefault'),
-        ),
-        change: (value) => this.setBattleRuleChoice(campaign, value),
-      });
-    }
-
     if (section?.key === ENCOUNTERS_SECTION_KEY) {
-      actions.push({
-        id: 'section-new-encounter',
-        label: 'encounters.new.button',
-        icon: 'swords',
-        iconOnly: true,
-        action: () => this.fileActions.openCreateEncounterSheet(this.folderPath()),
-      });
       // The party roster is hidden from the list: this is how it is always reached.
       actions.push({
         id: 'section-party',
@@ -332,6 +325,13 @@ export class CampaignSectionPage {
           void this.router.navigateByUrl(
             `${this.scopeRoute()}/${ENCOUNTERS_SECTION_KEY}/${PARTY_FILE_NAME}`,
           ),
+      });
+      actions.push({
+        id: 'section-new-encounter',
+        label: 'encounters.new.button',
+        icon: 'swords',
+        iconOnly: true,
+        action: () => this.fileActions.openCreateEncounterSheet(this.folderPath()),
       });
     }
 

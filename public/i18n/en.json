@@ -906,7 +906,8 @@
       "quantity": "Quantity",
       "quantityHint": "How many to insert: 1 to 15. Above 1 they are numbered.",
       "quantityError": "Enter a quantity from 1 to {{max}}.",
-      "insertCount": "Insert {{count}}"
+      "insertCount": "Insert {{count}}",
+      "deleteNow": "Delete permanently"
     },
     "fields": {
       "initiative": "Initiative",
@@ -952,7 +953,8 @@
       "stopTitle": "Stop the battle?",
       "stopDescription": "Initiatives and statuses are cleared and hit points go back to their maximum where there is one. Names and other values stay.",
       "stopConfirm": "Stop battle",
-      "idle": "Ready"
+      "idle": "Ready",
+      "roundWord": "Round"
     },
     "cemetery": {
       "title": "Cemetery",

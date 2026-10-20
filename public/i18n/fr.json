@@ -906,7 +906,8 @@
       "quantity": "Quantité",
       "quantityHint": "Combien en insérer : de 1 à 15. Au-delà de 1, ils sont numérotés.",
       "quantityError": "Saisissez une quantité de 1 à {{max}}.",
-      "insertCount": "Insérer {{count}}"
+      "insertCount": "Insérer {{count}}",
+      "deleteNow": "Supprimer définitivement"
     },
     "fields": {
       "initiative": "Initiative",
@@ -952,7 +953,8 @@
       "stopTitle": "Arrêter le combat ?",
       "stopDescription": "Les initiatives et les états sont effacés et les points de vie reviennent au maximum là où il y en a un. Les noms et autres valeurs restent.",
       "stopConfirm": "Arrêter le combat",
-      "idle": "Prêt"
+      "idle": "Prêt",
+      "roundWord": "Tour"
     },
     "cemetery": {
       "title": "Cimetière",

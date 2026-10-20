@@ -906,7 +906,8 @@
       "quantity": "Quantità",
       "quantityHint": "Quante inserirne: da 1 a 15. Oltre 1 vengono numerate.",
       "quantityError": "Inserisci una quantità da 1 a {{max}}.",
-      "insertCount": "Inserisci {{count}}"
+      "insertCount": "Inserisci {{count}}",
+      "deleteNow": "Elimina definitivamente"
     },
     "fields": {
       "initiative": "Iniziativa",
@@ -952,7 +953,8 @@
       "stopTitle": "Terminare la battaglia?",
       "stopDescription": "Iniziative e stati vengono azzerati e i punti ferita tornano al massimo dove c'è. Nomi e altri valori restano.",
       "stopConfirm": "Termina battaglia",
-      "idle": "Pronto"
+      "idle": "Pronto",
+      "roundWord": "Round"
     },
     "cemetery": {
       "title": "Cimitero",
