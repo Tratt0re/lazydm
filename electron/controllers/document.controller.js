@@ -6,6 +6,7 @@ const {
   campaignModel,
   compendiumModel,
   documentModel,
+  encounterModel,
   sectionModel,
   vaultIndexModel,
   vaultModel,
@@ -476,7 +477,13 @@ function linkTargets(payload) {
 
   const scope = vaultIndexModel.getCampaignSlug(sourcePath);
   return {
-    rows: vaultIndexModel.listScopeFiles(scope).filter((file) => file.path !== sourcePath),
+    // The party roster is hidden from the lists, so it is not offered as a link either.
+    rows: vaultIndexModel
+      .listScopeFiles(scope)
+      .filter(
+        (file) =>
+          file.path !== sourcePath && !file.path.endsWith(`/encounters/${encounterModel.PARTY_FILE_NAME}`),
+      ),
   };
 }
 

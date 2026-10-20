@@ -18,6 +18,7 @@ import {
 
 import {
   getMediaEmbedKind,
+  type MediaEmbedKind,
   type MediaEmbedLabels,
   renderMarkdownToSafeHtml,
   renderMediaEmbedHtml,
@@ -182,7 +183,7 @@ class ImageWidget extends WidgetType {
 /** An embedded audio (play/stop) or PDF (opens in the system viewer): the reading view's row. */
 class MediaEmbedWidget extends WidgetType {
   constructor(
-    private readonly kind: 'audio' | 'pdf',
+    private readonly kind: MediaEmbedKind,
     private readonly path: string,
     private readonly name: string,
     private readonly labels: MediaEmbedLabels | undefined,

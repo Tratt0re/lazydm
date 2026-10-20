@@ -58,6 +58,8 @@ const SVG_ATTRIBUTES =
 const PLAY_ICON = `<svg class="arc-embed-file-play" ${SVG_ATTRIBUTES}><polygon points="6 3 20 12 6 21 6 3"/></svg>`;
 const STOP_ICON = `<svg class="arc-embed-file-stop" ${SVG_ATTRIBUTES}><rect x="5" y="5" width="14" height="14"/></svg>`;
 const FILE_ICON = `<svg class="arc-embed-file-icon" ${SVG_ATTRIBUTES}><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/></svg>`;
+/** Lucide `swords`, the battle icon of an embedded encounter. */
+const SWORDS_ICON = `<svg class="arc-embed-file-icon" ${SVG_ATTRIBUTES}><polyline points="14.5 17.5 3 6 3 3 6 3 17.5 14.5"/><line x1="13" x2="19" y1="19" y2="13"/><line x1="16" x2="20" y1="16" y2="20"/><line x1="19" x2="21" y1="21" y2="19"/><polyline points="14.5 6.5 18 3 21 3 21 6 17.5 9.5"/><line x1="5" x2="9" y1="14" y2="18"/><line x1="7" x2="4" y1="17" y2="20"/><line x1="3" x2="5" y1="19" y2="21"/></svg>`;
 const VOLUME_ICON = `<svg class="arc-embed-file-volume-icon" ${SVG_ATTRIBUTES}><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>`;
 
 /**
@@ -68,13 +70,18 @@ export function renderTaskBoxHtml(isChecked: boolean): string {
   return `<span class="arc-task-box" role="checkbox" aria-checked="${isChecked}" data-checked="${isChecked}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="square" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span>`;
 }
 
-/** An embed shown as a media row rather than an image: audio or PDF (null for anything else). */
-export function getMediaEmbedKind(path: string): 'audio' | 'pdf' | null {
+/** What an embed row is: a sound, a PDF, or an encounter (opens its battle page). */
+export type MediaEmbedKind = 'audio' | 'pdf' | 'encounter';
+
+/** An embed shown as a row rather than an image: audio, PDF or encounter (null for anything else). */
+export function getMediaEmbedKind(path: string): MediaEmbedKind | null {
   return AUDIO_EXTENSION_PATTERN.test(path)
     ? 'audio'
     : PDF_EXTENSION_PATTERN.test(path)
       ? 'pdf'
-      : null;
+      : toInAppEncounterRoute(path)
+        ? 'encounter'
+        : null;
 }
 
 /**
@@ -103,7 +110,7 @@ function formatAudioTime(isPlaying: boolean, currentSeconds: number, durationSec
  * `data-asset-path`. Shared by the reading view and the live preview.
  */
 export function renderMediaEmbedHtml(
-  kind: 'audio' | 'pdf',
+  kind: MediaEmbedKind,
   path: string,
   name: string,
   labels: MediaEmbedLabels = DEFAULT_MEDIA_LABELS,
@@ -114,6 +121,12 @@ export function renderMediaEmbedHtml(
 ): string {
   const assetPath = escapeHtml(path);
   const label = escapeHtml(name);
+  if (kind === 'encounter') {
+    // A link to the battle page, like a note link: the views open its route (a new tab on Cmd/Ctrl-click).
+    const route = escapeHtml(toInAppEncounterRoute(path) ?? '');
+    return `<a class="arc-embed-file" data-asset-kind="encounter" data-route="${route}" data-path="${assetPath}" href="#" title="${escapeHtml(labels.open)}: ${label}">${SWORDS_ICON}<span class="arc-embed-file-name">${label}</span></a>`;
+  }
+
   if (kind === 'pdf') {
     return `<button type="button" class="arc-embed-file" data-asset-kind="pdf" data-asset-action="open" data-asset-path="${assetPath}" title="${escapeHtml(labels.open)}: ${label}">${FILE_ICON}<span class="arc-embed-file-name">${label}</span></button>`;
   }
@@ -306,7 +319,7 @@ function renderWikilinkToken(token: Token): string {
     return `<a class="arc-wikilink" href="#${anchor}">${displayText}</a>`;
   }
 
-  const route = toInAppNoteRoute(resolvedPath);
+  const route = toInAppNoteRoute(resolvedPath) ?? toInAppEncounterRoute(resolvedPath);
   if (route) {
     return `<a class="arc-wikilink" data-route="${escapeHtml(route)}" data-path="${escapeHtml(resolvedPath)}" href="#">${displayText}</a>`;
   }

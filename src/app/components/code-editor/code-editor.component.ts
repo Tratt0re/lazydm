@@ -70,7 +70,7 @@ export interface CodeEditorBrokenLinkEvent {
 
 /** Links of the live preview and of its rendered blocks (tables, callouts). */
 const LIVE_LINK_SELECTOR =
-  '.cm-lp-link, .cm-lp-block a[data-route], .cm-lp-block [data-broken-raw], [data-asset-action]:not([data-asset-action="set-volume"])';
+  '.cm-lp-link, .cm-lp-block a[data-route], .cm-lp-block [data-broken-raw], a.arc-embed-file[data-route], [data-asset-action]:not([data-asset-action="set-volume"])';
 
 /** A control of an embedded audio / PDF row: play/stop, open in the system viewer, or set volume. */
 export interface CodeEditorAssetAction {
