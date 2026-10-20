@@ -19,6 +19,7 @@ import {
   inject,
   NgModule,
   output,
+  signal,
   type TemplateRef,
   type Type,
   viewChild,
@@ -33,6 +34,7 @@ import { dialogVariants } from './dialog.variants';
 import { ArcTechButtonComponent } from '@/shared/components/button/button.component';
 import { ArcTechIconComponent } from '@/shared/components/icon/icon.component';
 import type { ArcTechIcon } from '@/shared/components/icon/icons';
+import type { ArcTechButtonTypeVariants } from '@/shared/components/button/button.variants';
 
 // Used by the NgModule provider definition
 let nextDialogInstanceId = 0;
@@ -48,11 +50,16 @@ export class ArcTechDialogOptions<T, U> {
   arcDescription?: string;
   arcHideFooter?: boolean;
   arcMaskClosable?: boolean;
+  arcMiddleDisabled?: boolean;
+  arcMiddleIcon?: ArcTechIcon;
+  arcMiddleText?: string | null;
+  arcMiddleType?: ArcTechButtonTypeVariants;
   arcOkDestructive?: boolean;
   arcOkDisabled?: boolean;
   arcOkIcon?: ArcTechIcon;
   arcOkText?: string | null;
   arcOnCancel?: EventEmitter<T> | OnClickCallback<T> = noopFn;
+  arcOnMiddle?: EventEmitter<T> | OnClickCallback<T> = noopFn;
   arcOnOk?: EventEmitter<T> | OnClickCallback<T> = noopFn;
   arcTitle?: string | TemplateRef<T>;
   arcViewContainerRef?: ViewContainerRef;
@@ -125,6 +132,23 @@ export class ArcTechDialogOptions<T, U> {
             </button>
           }
 
+          @if (config.arcMiddleText !== null && config.arcMiddleText !== undefined) {
+            <button
+              type="button"
+              data-testid="arc-middle-button"
+              arc-button
+              [arcType]="config.arcMiddleType ?? 'outline'"
+              [disabled]="config.arcMiddleDisabled"
+              (click)="onMiddleClick()"
+            >
+              @if (config.arcMiddleIcon) {
+                <arc-icon [arcType]="config.arcMiddleIcon" />
+              }
+
+              {{ config.arcMiddleText }}
+            </button>
+          }
+
           @if (config.arcOkText !== null) {
             <button
               type="button"
@@ -138,7 +162,7 @@ export class ArcTechDialogOptions<T, U> {
                 <arc-icon [arcType]="config.arcOkIcon" />
               }
 
-              {{ config.arcOkText ?? 'OK' }}
+              {{ okText() ?? config.arcOkText ?? 'OK' }}
             </button>
           }
         </footer>
@@ -202,6 +226,9 @@ export class ArcTechDialogComponent<T, U> extends BasePortalOutlet {
 
   okTriggered = output<void>();
   cancelTriggered = output<void>();
+  middleTriggered = output<void>();
+  /** Text of the confirm button set while the dialog is open (it follows the form's values). */
+  readonly okText = signal<string | null>(null);
 
   constructor() {
     super();
@@ -236,6 +263,10 @@ export class ArcTechDialogComponent<T, U> extends BasePortalOutlet {
 
   onOkClick() {
     this.okTriggered.emit();
+  }
+
+  onMiddleClick() {
+    this.middleTriggered.emit();
   }
 
   onCloseClick() {

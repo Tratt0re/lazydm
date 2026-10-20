@@ -3,7 +3,7 @@ import { Router, RouterLink } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { toast } from 'ngx-sonner';
 
-import { AppSheetFormService } from '@/components/sheet-form/sheet-form.service';
+import { AppDialogFormService } from '@/components/sheet-form/dialog-form.service';
 import type { AppSheetField } from '@/components/sheet-form/sheet-form.types';
 import { Toolbar } from '@/layout/toolbar/toolbar';
 import { CampaignService } from '@/services/campaign.service';
@@ -52,7 +52,7 @@ export class CampaignListPage implements OnInit {
   private readonly campaignService = inject(CampaignService);
   private readonly vaultService = inject(VaultService);
   private readonly sectionService = inject(SectionService);
-  private readonly sheetFormService = inject(AppSheetFormService);
+  private readonly dialogFormService = inject(AppDialogFormService);
   private readonly translateService = inject(TranslateService);
   private readonly router = inject(Router);
 
@@ -85,7 +85,7 @@ export class CampaignListPage implements OnInit {
     let isSubmitting = false;
     const presets = this.sectionService.presetSections();
 
-    const sheetRef = this.sheetFormService.open({
+    const dialogRef = this.dialogFormService.open({
       arcTitle: this.translateService.instant('campaigns.create.title'),
       arcDescription: this.translateService.instant('campaigns.create.description'),
       arcOkText: this.translateService.instant('campaigns.create.submit'),
@@ -121,7 +121,7 @@ export class CampaignListPage implements OnInit {
             (created) => {
               isSubmitting = false;
               if (created) {
-                sheetRef.close();
+                dialogRef.close();
               }
             },
           );

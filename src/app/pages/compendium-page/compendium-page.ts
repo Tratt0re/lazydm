@@ -3,7 +3,7 @@ import { Router, RouterLink } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { toast } from 'ngx-sonner';
 
-import { AppSheetFormService } from '@/components/sheet-form/sheet-form.service';
+import { AppDialogFormService } from '@/components/sheet-form/dialog-form.service';
 import type { AppSheetField } from '@/components/sheet-form/sheet-form.types';
 import type { CompendiumSystemDto } from '@/dtos';
 import { CompendiumService } from '@/services/compendium.service';
@@ -53,7 +53,7 @@ const CREATE_SYSTEM_FIELDS: readonly AppSheetField[] = [
 export class CompendiumPage implements OnInit {
   private readonly compendiumService = inject(CompendiumService);
   private readonly vaultService = inject(VaultService);
-  private readonly sheetFormService = inject(AppSheetFormService);
+  private readonly dialogFormService = inject(AppDialogFormService);
   private readonly alertDialogService = inject(ArcTechAlertDialogService);
   private readonly translateService = inject(TranslateService);
   private readonly router = inject(Router);
@@ -79,7 +79,7 @@ export class CompendiumPage implements OnInit {
   protected openCreateSheet(): void {
     let isSubmitting = false;
 
-    const sheetRef = this.sheetFormService.open({
+    const dialogRef = this.dialogFormService.open({
       arcTitle: this.translateService.instant('compendium.create.title'),
       arcDescription: this.translateService.instant('compendium.create.description'),
       arcOkText: this.translateService.instant('compendium.create.submit'),
@@ -95,7 +95,7 @@ export class CompendiumPage implements OnInit {
           ).then((created) => {
             isSubmitting = false;
             if (created) {
-              sheetRef.close();
+              dialogRef.close();
             }
           });
         }

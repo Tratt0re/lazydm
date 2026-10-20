@@ -7,7 +7,7 @@ import {
   parseVaultFilePath,
   toInAppNoteRoute,
 } from '@/components/document-preview/document-preview.markdown';
-import { AppSheetFormService } from '@/components/sheet-form/sheet-form.service';
+import { AppDialogFormService } from '@/components/sheet-form/dialog-form.service';
 import type { AppSheetComboboxGroup } from '@/components/sheet-form/sheet-form.types';
 import type { CopyPlanDto } from '@/dtos';
 import { CampaignService } from '@/services/campaign.service';
@@ -37,7 +37,7 @@ export class CopyToService {
   private readonly sectionService = inject(SectionService);
   private readonly campaignService = inject(CampaignService);
   private readonly compendiumService = inject(CompendiumService);
-  private readonly sheetFormService = inject(AppSheetFormService);
+  private readonly dialogFormService = inject(AppDialogFormService);
   private readonly translateService = inject(TranslateService);
   private readonly router = inject(Router);
 
@@ -62,7 +62,7 @@ export class CopyToService {
       return;
     }
 
-    const sheetRef = this.sheetFormService.open({
+    const dialogRef = this.dialogFormService.open({
       arcTitle: this.translateService.instant(
         toCompendium ? 'compendium.copy.toCompendium' : 'compendium.copy.toCampaign',
       ),
@@ -85,7 +85,7 @@ export class CopyToService {
       onSubmit: (form) => {
         const target =
           targets.find((item) => item.value === form.getValues()['target']) ?? targets[0];
-        sheetRef.close();
+        dialogRef.close();
         void this.copyWithLinkedChoice(path, target);
         return false;
       },
@@ -137,7 +137,7 @@ export class CopyToService {
     }
 
     const target: CopyTarget = { value: scope.rootPath, label: scope.name };
-    const sheetRef = this.sheetFormService.open({
+    const dialogRef = this.dialogFormService.open({
       arcTitle: this.translateService.instant(
         fromCompendium ? 'compendium.import.fromCompendium' : 'compendium.import.fromCampaign',
       ),
@@ -164,7 +164,7 @@ export class CopyToService {
           return false;
         }
 
-        sheetRef.close();
+        dialogRef.close();
         void this.copyWithLinkedChoice(sourcePath, target, onImported);
         return false;
       },
@@ -194,7 +194,7 @@ export class CopyToService {
     const listedTitles = titles.slice(0, LINKED_PREVIEW_MAX_TITLES).join(', ');
 
     let isSubmitting = false;
-    const sheetRef = this.sheetFormService.open({
+    const dialogRef = this.dialogFormService.open({
       arcTitle: this.translateService.instant('compendium.linked.title'),
       arcDescription: this.translateService.instant('compendium.linked.description', {
         target: target.label,
@@ -219,7 +219,7 @@ export class CopyToService {
           void this.copy(path, target, null, includeLinked, onCopied).then((isDone) => {
             isSubmitting = false;
             if (isDone) {
-              sheetRef.close();
+              dialogRef.close();
             }
           });
         }
@@ -289,7 +289,7 @@ export class CopyToService {
     const location = parseVaultFilePath(path);
     const baseName = (location?.name ?? path.split('/').pop() ?? '').replace(/\.[^.]+$/, '');
     let isSubmitting = false;
-    const sheetRef = this.sheetFormService.open({
+    const dialogRef = this.dialogFormService.open({
       arcTitle: this.translateService.instant('compendium.copy.existsTitle'),
       arcDescription: this.translateService.instant('compendium.copy.existsDescription', {
         path: takenPath,
@@ -313,7 +313,7 @@ export class CopyToService {
           void this.copy(path, target, fileName, includeLinked, onCopied).then((isDone) => {
             isSubmitting = false;
             if (isDone) {
-              sheetRef.close();
+              dialogRef.close();
             }
           });
         }

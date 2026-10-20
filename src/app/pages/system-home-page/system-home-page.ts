@@ -3,7 +3,7 @@ import { Router, RouterLink } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { toast } from 'ngx-sonner';
 
-import { AppSheetFormService } from '@/components/sheet-form/sheet-form.service';
+import { AppDialogFormService } from '@/components/sheet-form/dialog-form.service';
 import { CompendiumService } from '@/services/compendium.service';
 import { DocumentService } from '@/services/document.service';
 import { countReviewItems, ReviewService } from '@/services/review.service';
@@ -104,7 +104,7 @@ export class SystemHomePage {
   private readonly compendiumService = inject(CompendiumService);
   private readonly documentService = inject(DocumentService);
   private readonly reviewService = inject(ReviewService);
-  private readonly sheetFormService = inject(AppSheetFormService);
+  private readonly dialogFormService = inject(AppDialogFormService);
   private readonly translateService = inject(TranslateService);
   private readonly toolbarContext = inject(ToolbarContextService);
   private readonly router = inject(Router);
@@ -146,7 +146,7 @@ export class SystemHomePage {
   protected openCreateSheet(): void {
     const noteSections = this.noteSections();
     let isSubmitting = false;
-    const sheetRef = this.sheetFormService.open({
+    const dialogRef = this.dialogFormService.open({
       arcTitle: this.translateService.instant('compendium.system.newNote'),
       arcOkText: this.translateService.instant('campaigns.sections.newNote.submit'),
       arcCancelText: this.translateService.instant('campaigns.sections.newNote.cancel'),
@@ -187,7 +187,7 @@ export class SystemHomePage {
           ).then((created) => {
             isSubmitting = false;
             if (created) {
-              sheetRef.close();
+              dialogRef.close();
             }
           });
         }

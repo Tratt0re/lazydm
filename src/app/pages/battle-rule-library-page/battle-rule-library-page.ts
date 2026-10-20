@@ -14,7 +14,7 @@ import {
   AppSecondarySidebarComponent,
   type SecondarySidebarItem,
 } from '@/components/secondary-sidebar/secondary-sidebar.component';
-import { AppSheetFormService } from '@/components/sheet-form/sheet-form.service';
+import { AppDialogFormService } from '@/components/sheet-form/dialog-form.service';
 import {
   AppBattleRuleRowEditorComponent,
   type RowLayout,
@@ -73,7 +73,7 @@ interface SelectedRule {
 export class BattleRuleLibraryPage implements OnInit {
   private readonly battleRuleService = inject(BattleRuleService);
   private readonly templateService = inject(TemplateService);
-  private readonly sheetFormService = inject(AppSheetFormService);
+  private readonly dialogFormService = inject(AppDialogFormService);
   private readonly alertDialogService = inject(ArcTechAlertDialogService);
   private readonly translateService = inject(TranslateService);
 
@@ -230,7 +230,7 @@ export class BattleRuleLibraryPage implements OnInit {
 
   protected openCreateSheet(): void {
     let isSubmitting = false;
-    const sheetRef = this.sheetFormService.open({
+    const dialogRef = this.dialogFormService.open({
       arcTitle: this.translateService.instant('battleRules.create.title'),
       arcDescription: this.translateService.instant('battleRules.create.description'),
       arcOkText: this.translateService.instant('battleRules.create.submit'),
@@ -251,7 +251,7 @@ export class BattleRuleLibraryPage implements OnInit {
           void this.create(String(form.getValues()['name'] ?? '')).then((isDone) => {
             isSubmitting = false;
             if (isDone) {
-              sheetRef.close();
+              dialogRef.close();
             }
           });
         }

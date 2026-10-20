@@ -27,7 +27,7 @@ import {
   toInAppNoteRoute,
 } from '@/components/document-preview/document-preview.markdown';
 import type { AppSheetFormComponent } from '@/components/sheet-form/sheet-form.component';
-import { AppSheetFormService } from '@/components/sheet-form/sheet-form.service';
+import { AppDialogFormService } from '@/components/sheet-form/dialog-form.service';
 import type { AppSheetField } from '@/components/sheet-form/sheet-form.types';
 import type {
   BattleFieldComponent,
@@ -59,6 +59,7 @@ import { ArcTechButtonComponent } from '@/shared/components/button';
 import { ArcTechEmptyComponent } from '@/shared/components/empty';
 import { ArcTechIconComponent } from '@/shared/components/icon';
 import { ArcTechAlertDialogService } from '@/shared/components/alert-dialog';
+import { ArcTechDialogService } from '@/shared/components/dialog';
 import { ArcTechSheetService } from '@/shared/components/sheet';
 import { ArcTechCheckboxComponent } from '@/shared/components/checkbox';
 import { ArcTechTooltipImports } from '@/shared/components/tooltip';
@@ -150,8 +151,9 @@ export class EncounterPage {
   private readonly encounterService = inject(EncounterService);
   private readonly documentService = inject(DocumentService);
   private readonly battleRuleService = inject(BattleRuleService);
-  private readonly sheetFormService = inject(AppSheetFormService);
+  private readonly dialogFormService = inject(AppDialogFormService);
   private readonly sheetService = inject(ArcTechSheetService);
+  private readonly dialogService = inject(ArcTechDialogService);
   private readonly alertDialogService = inject(ArcTechAlertDialogService);
   private loadToken = 0;
   private isSaving = false;
@@ -429,7 +431,7 @@ export class EncounterPage {
     // Fields the user changed by hand: picking a note fills in the others, never those.
     const touched = new Set<string>();
     let isDone = false;
-    const sheetRef = this.sheetFormService.open({
+    const dialogRef = this.dialogFormService.open({
       arcTitle: this.translateService.instant(
         entity ? 'encounters.entity.editTitle' : 'encounters.entity.addTitle',
       ),
@@ -464,7 +466,7 @@ export class EncounterPage {
           } else {
             this.saveEntityForm(entity, rule, values);
           }
-          sheetRef.close();
+          dialogRef.close();
         }
 
         return false;
@@ -887,7 +889,7 @@ export class EncounterPage {
 
   /** *Stop battle* asks first: it clears initiatives and statuses and refills the HP. */
   protected openStopSheet(): void {
-    const sheetRef = this.sheetService.create({
+    const dialogRef = this.dialogService.create({
       arcTitle: this.translateService.instant('encounters.battle.stopTitle'),
       arcContent: this.translateService.instant('encounters.battle.stopDescription'),
       arcOkText: this.translateService.instant('encounters.battle.stopConfirm'),
@@ -895,7 +897,7 @@ export class EncounterPage {
       arcCancelText: this.translateService.instant('campaigns.sections.newNote.cancel'),
       arcOnOk: () => {
         this.stopBattle();
-        sheetRef.close();
+        dialogRef.close();
         return false;
       },
     });
@@ -1216,7 +1218,7 @@ export class EncounterPage {
   /** *Manage HP*: damage (temporary HP first), healing (up to the maximum) or setting the temporary HP. */
   protected openHpSheet(entity: EncounterEntityDto, field: BattleRuleFieldDto): void {
     let isDone = false;
-    const sheetRef = this.sheetFormService.open({
+    const dialogRef = this.dialogFormService.open({
       arcTitle: this.translateService.instant('encounters.hp.title', {
         name: this.entityName(entity.name),
       }),
@@ -1251,7 +1253,7 @@ export class EncounterPage {
         if (!isDone && amount !== null && amount >= 0) {
           isDone = true;
           this.changeHp(entity.id, field.key, String(values['mode']) as HpChangeMode, amount);
-          sheetRef.close();
+          dialogRef.close();
         }
 
         return false;
@@ -1594,7 +1596,7 @@ export class EncounterPage {
 
   /** The file changed elsewhere while it was open: keep this version, or load the other one. */
   private openConflictSheet(current: EncounterFileDto): void {
-    const sheetRef = this.sheetService.create({
+    const dialogRef = this.dialogService.create({
       arcTitle: this.translateService.instant('encounters.conflict.title'),
       arcContent: this.translateService.instant('encounters.conflict.description'),
       arcOkText: this.translateService.instant('encounters.conflict.keepMine'),
@@ -1604,7 +1606,7 @@ export class EncounterPage {
         // Overwrite: the next save is checked against the other version.
         this.file.set(current);
         void this.save();
-        sheetRef.close();
+        dialogRef.close();
         return false;
       },
       arcOnCancel: () => {
@@ -1621,7 +1623,7 @@ export class EncounterPage {
   private openRenameSheet(): void {
     const oldPath = this.encounterPath();
     void this.fileActions.openRenameAssetSheet(
-      { path: oldPath, name: this.fileName() },
+      { path: oldPath, name: this.fileName(), label: this.title() },
       (newPath) => void this.followRename(oldPath, newPath),
     );
   }

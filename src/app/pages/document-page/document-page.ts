@@ -43,7 +43,7 @@ import { WorkspaceService } from '@/services/workspace.service';
 import { ArcTechAlertComponent } from '@/shared/components/alert';
 import { ArcTechButtonComponent } from '@/shared/components/button';
 import { ArcTechIconComponent, type ArcTechIcon } from '@/shared/components/icon';
-import type { ArcTechSheetRef } from '@/shared/components/sheet';
+import { ArcTechDialogService, type ArcTechDialogRef } from '@/shared/components/dialog';
 import { ArcTechSheetService } from '@/shared/components/sheet';
 import { ArcTechTooltipImports } from '@/shared/components/tooltip';
 
@@ -94,6 +94,7 @@ export class DocumentPage {
   private readonly documentService = inject(DocumentService);
   private readonly sectionService = inject(SectionService);
   private readonly sheetService = inject(ArcTechSheetService);
+  private readonly dialogService = inject(ArcTechDialogService);
   private readonly translateService = inject(TranslateService);
   private readonly toolbarContext = inject(ToolbarContextService);
   private readonly localPreferences = inject(LocalPreferencesService);
@@ -598,7 +599,7 @@ export class DocumentPage {
   private openConflictSheet(current: DocumentDto): void {
     let isBusy = false;
 
-    const sheetRef: ArcTechSheetRef = this.sheetService.create({
+    const dialogRef: ArcTechDialogRef = this.dialogService.create({
       arcTitle: this.translateService.instant('document.conflict.title'),
       arcContent: this.translateService.instant('document.conflict.description'),
       arcOkText: this.translateService.instant('document.conflict.keepMine'),
@@ -610,7 +611,7 @@ export class DocumentPage {
           isBusy = true;
           void this.forceOverwrite(current).finally(() => {
             isBusy = false;
-            sheetRef.close();
+            dialogRef.close();
           });
         }
         return false;
@@ -620,7 +621,7 @@ export class DocumentPage {
           isBusy = true;
           void this.saveAsCopy().finally(() => {
             isBusy = false;
-            sheetRef.close();
+            dialogRef.close();
           });
         }
         return false;

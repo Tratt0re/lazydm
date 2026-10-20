@@ -5,7 +5,7 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { toast } from 'ngx-sonner';
 
 import { toInAppNoteRoute } from '@/components/document-preview/document-preview.markdown';
-import { AppSheetFormService } from '@/components/sheet-form/sheet-form.service';
+import { AppDialogFormService } from '@/components/sheet-form/dialog-form.service';
 import type { ReviewDto, ReviewMisplacedNoteDto, ReviewNoteDto, ReviewPlacedNoteDto } from '@/dtos';
 import { BrokenLinksPage } from '@/pages/broken-links-page/broken-links-page';
 import { DocumentService } from '@/services/document.service';
@@ -64,7 +64,7 @@ export class ReviewPage {
   private readonly sectionService = inject(SectionService);
   private readonly workspace = inject(WorkspaceService);
   private readonly toolbarContext = inject(ToolbarContextService);
-  private readonly sheetFormService = inject(AppSheetFormService);
+  private readonly dialogFormService = inject(AppDialogFormService);
   private readonly alertDialogService = inject(ArcTechAlertDialogService);
   private readonly translateService = inject(TranslateService);
   private loadToken = 0;
@@ -159,7 +159,7 @@ export class ReviewPage {
 
     const preferred = sections.find((section) => section.type === note.type) ?? sections[0];
     let isSubmitting = false;
-    const sheetRef = this.sheetFormService.open({
+    const dialogRef = this.dialogFormService.open({
       arcTitle: this.translateService.instant('review.move.title', { title: note.title }),
       arcDescription: this.translateService.instant('review.move.description'),
       arcOkText: this.translateService.instant('review.move.submit'),
@@ -187,7 +187,7 @@ export class ReviewPage {
           void this.moveNote(note, `${scope.rootPath}/${key}`).then((isMoved) => {
             isSubmitting = false;
             if (isMoved) {
-              sheetRef.close();
+              dialogRef.close();
             }
           });
         }
@@ -205,7 +205,7 @@ export class ReviewPage {
     }
 
     let isSubmitting = false;
-    const sheetRef = this.sheetFormService.open({
+    const dialogRef = this.dialogFormService.open({
       arcTitle: this.translateService.instant('review.addSection.title', { folder: `${folder}/` }),
       arcDescription: this.translateService.instant('review.addSection.description'),
       arcOkText: this.translateService.instant('review.addSection.submit'),
@@ -255,7 +255,7 @@ export class ReviewPage {
           }).then((isAdded) => {
             isSubmitting = false;
             if (isAdded) {
-              sheetRef.close();
+              dialogRef.close();
             }
           });
         }

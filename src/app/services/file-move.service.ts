@@ -3,7 +3,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { toast } from 'ngx-sonner';
 
 import { toInAppNoteRoute } from '@/components/document-preview/document-preview.markdown';
-import { AppSheetFormService } from '@/components/sheet-form/sheet-form.service';
+import { AppDialogFormService } from '@/components/sheet-form/dialog-form.service';
 import type { DocumentFileListItemDto } from '@/dtos';
 import { DocumentService } from '@/services/document.service';
 import { toSubfolderLabel } from '@/services/section.service';
@@ -30,7 +30,7 @@ export interface MoveSection {
 @Injectable({ providedIn: 'root' })
 export class FileMoveService {
   private readonly documentService = inject(DocumentService);
-  private readonly sheetFormService = inject(AppSheetFormService);
+  private readonly dialogFormService = inject(AppDialogFormService);
   private readonly translateService = inject(TranslateService);
   private readonly workspace = inject(WorkspaceService);
 
@@ -61,7 +61,7 @@ export class FileMoveService {
     }
 
     let isSubmitting = false;
-    const sheetRef = this.sheetFormService.open({
+    const dialogRef = this.dialogFormService.open({
       arcTitle: this.translateService.instant('review.move.title', {
         title: file.kind === 'md' ? file.title : file.name,
       }),
@@ -85,7 +85,7 @@ export class FileMoveService {
           const target = String(form.getValues()['folder'] ?? targets[0].value);
           void this.move(file.path, section, target).then((isMoved) => {
             isSubmitting = false;
-            sheetRef.close();
+            dialogRef.close();
             if (isMoved) {
               onMoved?.();
             }

@@ -4,7 +4,7 @@ import { toast } from 'ngx-sonner';
 
 import { DocumentService } from '@/services/document.service';
 import { FileActionsService } from '@/services/file-actions.service';
-import { AppSheetFormService } from '@/components/sheet-form/sheet-form.service';
+import { AppDialogFormService } from '@/components/sheet-form/dialog-form.service';
 import type { CustomSectionPayload, SectionSettingsPayload } from '@/dtos';
 import {
   type AppSection,
@@ -25,7 +25,7 @@ export class SectionActionsService {
   private readonly templateService = inject(TemplateService);
   private readonly documentService = inject(DocumentService);
   private readonly fileActions = inject(FileActionsService);
-  private readonly sheetFormService = inject(AppSheetFormService);
+  private readonly dialogFormService = inject(AppDialogFormService);
   private readonly translateService = inject(TranslateService);
 
   /**
@@ -45,7 +45,7 @@ export class SectionActionsService {
       (section?.type ? rules[section.type] : undefined) ?? AUTOMATIC_TEMPLATE_RULE;
     const prefix = section ? 'settings.campaignSections.edit' : 'settings.campaignSections.create';
     let isSubmitting = false;
-    const sheetRef = this.sheetFormService.open({
+    const dialogRef = this.dialogFormService.open({
       arcTitle: this.translateService.instant(`${prefix}.title`),
       arcDescription: this.translateService.instant(`${prefix}.description`),
       arcOkText: this.translateService.instant(`${prefix}.submit`),
@@ -126,7 +126,7 @@ export class SectionActionsService {
           void this.saveSection(campaign, section, custom, rule, currentRule).then((rows) => {
             isSubmitting = false;
             if (rows) {
-              sheetRef.close();
+              dialogRef.close();
               onSaved?.(rows);
             }
           });
@@ -144,7 +144,7 @@ export class SectionActionsService {
   openDeleteSectionSheet(campaign: string, section: AppSection, onDeleted?: () => void): void {
     let isSubmitting = false;
     const name = this.sectionService.labelOf(section);
-    const sheetRef = this.sheetFormService.open({
+    const dialogRef = this.dialogFormService.open({
       arcTitle: this.translateService.instant('settings.campaignSections.remove.title', { name }),
       arcDescription: this.translateService.instant(
         'settings.campaignSections.remove.description',
@@ -170,7 +170,7 @@ export class SectionActionsService {
           void this.deleteSection(campaign, section, name, rewriteLinks).then((isDeleted) => {
             isSubmitting = false;
             if (isDeleted) {
-              sheetRef.close();
+              dialogRef.close();
               onDeleted?.();
             }
           });

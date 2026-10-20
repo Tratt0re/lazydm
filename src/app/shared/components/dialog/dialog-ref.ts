@@ -8,6 +8,7 @@ import type { ArcTechDialogComponent, ArcTechDialogOptions } from './dialog.comp
 
 const enum eTriggerAction {
   CANCEL = 'cancel',
+  MIDDLE = 'middle',
   OK = 'ok',
 }
 
@@ -24,6 +25,7 @@ export class ArcTechDialogRef<T = any, R = any, U = any> {
     @Inject(PLATFORM_ID) private platformId: object,
   ) {
     this.containerInstance.cancelTriggered.subscribe(() => this.trigger(eTriggerAction.CANCEL));
+    this.containerInstance.middleTriggered.subscribe(() => this.trigger(eTriggerAction.MIDDLE));
     this.containerInstance.okTriggered.subscribe(() => this.trigger(eTriggerAction.OK));
 
     if ((this.config.arcMaskClosable ?? true) && isPlatformBrowser(this.platformId)) {
@@ -41,6 +43,11 @@ export class ArcTechDialogRef<T = any, R = any, U = any> {
         )
         .subscribe(() => this.close());
     }
+  }
+
+  /** Changes the text of the confirm button while the dialog is open. */
+  setOkText(text: string): void {
+    this.containerInstance.okText.set(text);
   }
 
   close(result?: R) {
@@ -74,7 +81,11 @@ export class ArcTechDialogRef<T = any, R = any, U = any> {
   }
 
   private trigger(action: eTriggerAction) {
-    const trigger = { ok: this.config.arcOnOk, cancel: this.config.arcOnCancel }[action];
+    const trigger = {
+      ok: this.config.arcOnOk,
+      middle: this.config.arcOnMiddle,
+      cancel: this.config.arcOnCancel,
+    }[action];
 
     if (trigger instanceof EventEmitter) {
       trigger.emit(this.getContentComponent());

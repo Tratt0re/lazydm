@@ -10,7 +10,7 @@ import {
   AppSecondarySidebarComponent,
   type SecondarySidebarItem,
 } from '@/components/secondary-sidebar/secondary-sidebar.component';
-import { AppSheetFormService } from '@/components/sheet-form/sheet-form.service';
+import { AppDialogFormService } from '@/components/sheet-form/dialog-form.service';
 import type { TemplateDto } from '@/dtos';
 import { DocumentService } from '@/services/document.service';
 import { SectionService } from '@/services/section.service';
@@ -71,7 +71,7 @@ interface SelectedTemplate {
 export class TemplateLibraryPage implements OnInit {
   private readonly templateService = inject(TemplateService);
   private readonly documentService = inject(DocumentService);
-  private readonly sheetFormService = inject(AppSheetFormService);
+  private readonly dialogFormService = inject(AppDialogFormService);
   private readonly alertDialogService = inject(ArcTechAlertDialogService);
   private readonly translateService = inject(TranslateService);
   private readonly sectionService = inject(SectionService);
@@ -239,7 +239,7 @@ export class TemplateLibraryPage implements OnInit {
 
   protected openCreateSheet(): void {
     let isSubmitting = false;
-    const sheetRef = this.sheetFormService.open({
+    const dialogRef = this.dialogFormService.open({
       arcTitle: this.translateService.instant('settings.templates.create.title'),
       arcDescription: this.translateService.instant('settings.templates.create.description'),
       arcOkText: this.translateService.instant('settings.templates.create.submit'),
@@ -282,7 +282,7 @@ export class TemplateLibraryPage implements OnInit {
           void this.create(String(values['name'] ?? ''), type).then((isDone) => {
             isSubmitting = false;
             if (isDone) {
-              sheetRef.close();
+              dialogRef.close();
             }
           });
         }

@@ -11,6 +11,7 @@ import {
 import { ArcTechDatePickerComponent } from '@/shared/components/date-picker';
 import { ArcTechInputDirective } from '@/shared/components/input';
 import { ArcTechSelectImports } from '@/shared/components/select';
+import { ARC_MODAL_DATA } from '@/shared/components/dialog';
 import { ARC_SHEET_DATA } from '@/shared/components/sheet';
 import { mergeClasses } from '@/shared/utils/merge-classes';
 import type {
@@ -56,7 +57,10 @@ const GRID_SPAN_CLASS_BY_VALUE = {
 export class AppSheetFormComponent {
   private readonly numberFormatService = inject(NumberFormatService);
   private readonly translateService = inject(TranslateService);
-  private readonly sheetData = inject<AppSheetFormData | null>(ARC_SHEET_DATA, { optional: true });
+  /** The form's data: handed over by the sheet or by the modal that hosts it. */
+  private readonly sheetData =
+    inject<AppSheetFormData | null>(ARC_SHEET_DATA, { optional: true }) ??
+    inject<AppSheetFormData | null>(ARC_MODAL_DATA, { optional: true });
 
   readonly fields = input<readonly AppSheetField[] | null>(null);
   readonly values = input<AppSheetFieldValueMap | null>(null);

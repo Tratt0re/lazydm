@@ -9,7 +9,7 @@ import {
   toInAppEncounterRoute,
   toInAppNoteRoute,
 } from '@/components/document-preview/document-preview.markdown';
-import { AppSheetFormService } from '@/components/sheet-form/sheet-form.service';
+import { AppDialogFormService } from '@/components/sheet-form/dialog-form.service';
 import type { AppSheetField } from '@/components/sheet-form/sheet-form.types';
 import type { BacklinkDto, DeleteFolderMode, DocumentFileListItemDto, SavedAssetDto } from '@/dtos';
 import { AssetService } from '@/services/asset.service';
@@ -54,7 +54,7 @@ const NEW_FOLDER_NAME_FIELD: AppSheetField = {
 export class FileActionsService {
   private readonly documentService = inject(DocumentService);
   private readonly encounterService = inject(EncounterService);
-  private readonly sheetFormService = inject(AppSheetFormService);
+  private readonly dialogFormService = inject(AppDialogFormService);
   private readonly translateService = inject(TranslateService);
   private readonly workspace = inject(WorkspaceService);
   private readonly assetService = inject(AssetService);
@@ -145,7 +145,7 @@ export class FileActionsService {
    */
   openCreateNoteSheet(folder: { readonly path: string; readonly type: string; readonly sectionLabel: string }): void {
     let isSubmitting = false;
-    const sheetRef = this.sheetFormService.open({
+    const dialogRef = this.dialogFormService.open({
       arcTitle: this.translateService.instant('campaigns.sections.newNote.title'),
       arcOkText: this.translateService.instant('campaigns.sections.newNote.submit'),
       arcCancelText: this.translateService.instant('campaigns.sections.newNote.cancel'),
@@ -156,7 +156,7 @@ export class FileActionsService {
           void this.createNote(folder, String(form.getValues()['title'] ?? '')).then((isCreated) => {
             isSubmitting = false;
             if (isCreated) {
-              sheetRef.close();
+              dialogRef.close();
             }
           });
         }
@@ -169,7 +169,7 @@ export class FileActionsService {
   /** *New encounter* in the Encounters section or one of its sub-folders (`folderPath`); opens the new encounter. */
   openCreateEncounterSheet(folderPath: string): void {
     let isSubmitting = false;
-    const sheetRef = this.sheetFormService.open({
+    const dialogRef = this.dialogFormService.open({
       arcTitle: this.translateService.instant('encounters.new.title'),
       arcOkText: this.translateService.instant('encounters.new.submit'),
       arcCancelText: this.translateService.instant('campaigns.sections.newNote.cancel'),
@@ -181,7 +181,7 @@ export class FileActionsService {
             (isCreated) => {
               isSubmitting = false;
               if (isCreated) {
-                sheetRef.close();
+                dialogRef.close();
               }
             },
           );
@@ -201,7 +201,7 @@ export class FileActionsService {
     onCreated?: (name: string) => void,
   ): void {
     let isSubmitting = false;
-    const sheetRef = this.sheetFormService.open({
+    const dialogRef = this.dialogFormService.open({
       arcTitle: this.translateService.instant('campaigns.sections.newFolder.title'),
       arcDescription: this.translateService.instant(
         section.isSpecial
@@ -218,7 +218,7 @@ export class FileActionsService {
           void this.createFolder(section.path, String(form.getValues()['name'] ?? '')).then((name) => {
             isSubmitting = false;
             if (name) {
-              sheetRef.close();
+              dialogRef.close();
               onCreated?.(name);
             }
           });
@@ -318,7 +318,7 @@ export class FileActionsService {
     }
 
     let isSubmitting = false;
-    const sheetRef = this.sheetFormService.open({
+    const dialogRef = this.dialogFormService.open({
       arcTitle: this.translateService.instant('document.rename.title'),
       arcDescription:
         sourceTitles.length > 0
@@ -339,7 +339,7 @@ export class FileActionsService {
           ).then((isRenamed) => {
             isSubmitting = false;
             if (isRenamed) {
-              sheetRef.close();
+              dialogRef.close();
             }
           });
         }
@@ -396,7 +396,7 @@ export class FileActionsService {
     }
 
     let isSubmitting = false;
-    const sheetRef = this.sheetFormService.open({
+    const dialogRef = this.dialogFormService.open({
       arcTitle: this.translateService.instant('files.renameFolder.title', { name: folder.label }),
       arcDescription: this.translateService.instant('files.renameFolder.description', {
         count: folder.fileCount,
@@ -420,7 +420,7 @@ export class FileActionsService {
             (name) => {
               isSubmitting = false;
               if (name) {
-                sheetRef.close();
+                dialogRef.close();
                 onRenamed?.(name);
               }
             },
@@ -487,7 +487,7 @@ export class FileActionsService {
     onDeleted?: () => void,
   ): Promise<void> {
     let isSubmitting = false;
-    const sheetRef = this.sheetFormService.open({
+    const dialogRef = this.dialogFormService.open({
       arcTitle: this.translateService.instant('files.deleteFolder.title', { name: folder.label }),
       arcDescription: this.translateService.instant('files.deleteFolder.description', {
         count: folder.fileCount,
@@ -534,7 +534,7 @@ export class FileActionsService {
             (isDeleted) => {
               isSubmitting = false;
               if (isDeleted) {
-                sheetRef.close();
+                dialogRef.close();
                 onDeleted?.();
               }
             },
@@ -665,7 +665,7 @@ export class FileActionsService {
    * linking to it and *Update links* (default on). `onRenamed` gets the new path.
    */
   async openRenameAssetSheet(
-    file: Pick<DocumentFileListItemDto, 'path' | 'name'>,
+    file: Pick<DocumentFileListItemDto, 'path' | 'name'> & { readonly label?: string },
     onRenamed?: (path: string) => void,
   ): Promise<void> {
     const { backlinks, sourceTitles, preview } = await this.loadLinkingNotes(file.path);
@@ -693,9 +693,9 @@ export class FileActionsService {
     }
 
     let isSubmitting = false;
-    const sheetRef = this.sheetFormService.open({
+    const dialogRef = this.dialogFormService.open({
       arcTitle: this.translateService.instant('campaigns.sections.renameAsset.title', {
-        name: file.name,
+        name: file.label ?? file.name,
       }),
       arcDescription:
         sourceTitles.length > 0
@@ -715,7 +715,7 @@ export class FileActionsService {
           ).then((path) => {
             isSubmitting = false;
             if (path) {
-              sheetRef.close();
+              dialogRef.close();
               onRenamed?.(path);
             }
           });
@@ -753,7 +753,7 @@ export class FileActionsService {
         : [];
 
     let isSubmitting = false;
-    const sheetRef = this.sheetFormService.open({
+    const dialogRef = this.dialogFormService.open({
       arcTitle: this.translateService.instant('files.delete.title', { name: file.label }),
       arcDescription: [
         sourceTitles.length > 0
@@ -775,7 +775,7 @@ export class FileActionsService {
           void this.deleteFile(file, rewriteLinks, onDeleted).then((isDeleted) => {
             isSubmitting = false;
             if (isDeleted) {
-              sheetRef.close();
+              dialogRef.close();
             }
           });
         }

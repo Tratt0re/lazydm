@@ -1,32 +1,39 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 
 import {
-  type SheetOnClickCallback,
-  type ArcTechSheetOptions,
-  ArcTechSheetRef,
-  ArcTechSheetService,
-} from '@/shared/components/sheet';
+  type ArcTechDialogOptions,
+  ArcTechDialogRef,
+  ArcTechDialogService,
+  type DialogOnClickCallback,
+} from '@/shared/components/dialog';
 import { AppSheetFormComponent } from './sheet-form.component';
 import type { AppSheetField, AppSheetFieldValueMap, AppSheetFormData } from './sheet-form.types';
 
-export interface AppSheetFormOpenOptions
-  extends Omit<ArcTechSheetOptions<AppSheetFormComponent, AppSheetFormData>, 'arcContent' | 'arcData' | 'arcOnOk'> {
+export interface AppDialogFormOpenOptions
+  extends Omit<
+    ArcTechDialogOptions<AppSheetFormComponent, AppSheetFormData>,
+    'arcContent' | 'arcData' | 'arcOnOk'
+  > {
   readonly fields: readonly AppSheetField[];
   readonly values?: AppSheetFieldValueMap;
   readonly validateBeforeSubmit?: boolean;
   readonly onFieldChange?: AppSheetFormData['onFieldChange'];
   /** Text of the confirm button for the current values; it is updated as the user changes fields. */
   readonly okTextFor?: (values: AppSheetFieldValueMap) => string;
-  readonly onSubmit?: SheetOnClickCallback<AppSheetFormComponent>;
+  readonly onSubmit?: DialogOnClickCallback<AppSheetFormComponent>;
 }
 
+/**
+ * Creates and edits go in a modal: the same form (fields, validation, confirm text that follows the values) as
+ * the sheet form service used to host in a side sheet. Side sheets are for information.
+ */
 @Injectable({
   providedIn: 'root',
 })
-export class AppSheetFormService {
-  constructor(private readonly arcTechSheetService: ArcTechSheetService) {}
+export class AppDialogFormService {
+  private readonly dialogService = inject(ArcTechDialogService);
 
-  open(options: AppSheetFormOpenOptions): ArcTechSheetRef<AppSheetFormComponent> {
+  open(options: AppDialogFormOpenOptions): ArcTechDialogRef<AppSheetFormComponent> {
     const {
       fields,
       values,
@@ -34,23 +41,24 @@ export class AppSheetFormService {
       onFieldChange,
       okTextFor,
       onSubmit,
-      ...sheetOptions
+      ...dialogOptions
     } = options;
 
-    let sheetRef: ArcTechSheetRef<AppSheetFormComponent> | null = null;
+    let dialogRef: ArcTechDialogRef<AppSheetFormComponent> | null = null;
     const data: AppSheetFormData = {
       fields,
       values,
       onFieldChange: (fieldId, value, form) => {
         onFieldChange?.(fieldId, value, form);
         if (okTextFor) {
-          sheetRef?.setOkText(okTextFor(form.getValues()));
+          dialogRef?.setOkText(okTextFor(form.getValues()));
         }
       },
     };
 
-    sheetRef = this.arcTechSheetService.create<AppSheetFormComponent, AppSheetFormData>({
-      ...sheetOptions,
+    dialogRef = this.dialogService.create<AppSheetFormComponent, AppSheetFormData>({
+      arcCustomClasses: 'sm:max-w-lg',
+      ...dialogOptions,
       arcContent: AppSheetFormComponent,
       arcData: data,
       arcOnOk: (component) => {
@@ -65,6 +73,6 @@ export class AppSheetFormService {
         return component.getValues();
       },
     });
-    return sheetRef;
+    return dialogRef;
   }
 }

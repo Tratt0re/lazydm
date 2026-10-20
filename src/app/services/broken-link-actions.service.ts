@@ -7,7 +7,7 @@ import {
   parseVaultFilePath,
   toInAppNoteRoute,
 } from '@/components/document-preview/document-preview.markdown';
-import { AppSheetFormService } from '@/components/sheet-form/sheet-form.service';
+import { AppDialogFormService } from '@/components/sheet-form/dialog-form.service';
 import { DocumentService } from '@/services/document.service';
 import { type AppSection, SectionService } from '@/services/section.service';
 
@@ -41,7 +41,7 @@ function toSuggestedTitle(targetName: string): string {
 })
 export class BrokenLinkActionsService {
   private readonly documentService = inject(DocumentService);
-  private readonly sheetFormService = inject(AppSheetFormService);
+  private readonly dialogFormService = inject(AppDialogFormService);
   private readonly translateService = inject(TranslateService);
   private readonly router = inject(Router);
   private readonly sectionService = inject(SectionService);
@@ -73,7 +73,7 @@ export class BrokenLinkActionsService {
     }
 
     let isSubmitting = false;
-    const sheetRef = this.sheetFormService.open({
+    const dialogRef = this.dialogFormService.open({
       arcTitle: this.translateService.instant('links.actions.createTitle'),
       arcDescription: this.translateService.instant('links.actions.createDescription', {
         link: link.raw,
@@ -113,7 +113,7 @@ export class BrokenLinkActionsService {
           void this.createNote(link, scopePath, section, String(values['title'] ?? '')).then((isCreated) => {
             isSubmitting = false;
             if (isCreated) {
-              sheetRef.close();
+              dialogRef.close();
             }
           });
         }

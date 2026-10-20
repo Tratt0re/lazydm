@@ -108,7 +108,7 @@ LazyDM works like **Obsidian**, specialised for Dungeon Masters.
   (`/<section>/…/<file name with extension>`, its own tab title and breadcrumb; a rename moves it): only the
   image, fitted to the page, with *Rename*, *Copy to compendium / campaign* and *Delete* in the toolbar.
 - **Renaming and deleting** (notes, assets, sub-folders) — every link change is conflict-checked like a save:
-  - *Rename* a note: the note page's sheet (§6), also from the section page. *Rename* an asset: the new name gives
+  - *Rename* a note: the note page's modal (§6), also from the section page. *Rename* an asset: the new name gives
     the slug, the extension stays; embeds and links to it are rewritten.
   - *Rename* a sub-folder: the folder on disk, the `subtype` of its notes, and path links through it
     (`[[enemies/humans/bandit]]`) — the same rewrite as the `monsters/` → `enemies/` migration. A taken name is
@@ -125,7 +125,7 @@ LazyDM works like **Obsidian**, specialised for Dungeon Masters.
     asset toolbars and in the file right-click menus of the section page and the explorer.
   - **Folder right-click menus** (explorer and section page) offer what the folder takes: a section *New note*
     (not the special sections) and *New folder*; a sub-folder *New note* (it gets the sub-folder's sub-type) but no
-    *New folder* (one level only). The same sheets as the section toolbar; a new note opens right away.
+    *New folder* (one level only). The same modals as the section toolbar; a new note opens right away.
 - **Special sections**: *Assets* (any non-`.md` file) and *Encounters* (`.json` files, see §6d) hold no plain notes —
   they offer *New folder* and *Import* but no *New note* (*Encounters* offers *New encounter*, *Party roster* and a
   *Battle rule* select instead); their sub-folders only organise files (no `subtype`), and the
@@ -238,7 +238,7 @@ Planned Electron modules: `vault`, `cloud-readiness`, `campaign`, `document`, `i
   relative to the note (`../assets/map.png`). The closing `]]` / `)` is added unless already there. The list comes
   from the index (`documents:linkTargets`) and follows index updates.
 - **Rename** (note toolbar → *Rename*): the new title gives the new kebab-case file name in the same folder;
-  `title:` and the `# Heading` (if it still shows the old title) are updated. The sheet previews the notes linking
+  `title:` and the `# Heading` (if it still shows the old title) are updated. The modal previews the notes linking
   here; with *Update links* (default on) every link the index resolved to the note is rewritten, keeping its form
   (bare name or path, `.md`, `#heading`, `|alias`, markdown links and embeds). Code blocks and inline code are never
   touched. Each rewrite is conflict-checked like a save: a note changed meanwhile is reported, not overwritten.
@@ -315,7 +315,7 @@ Planned Electron modules: `vault`, `cloud-readiness`, `campaign`, `document`, `i
     campaign list); the Templates sheet itself opens from the title bar.
   - **Campaign section pages**: a *Template* select in the toolbar for the section's note type (Automatic, Built-in,
     the vault's, the systems' and the campaign's own templates). This is how a template is linked to a section;
-    the *New section* sheet offers the same select.
+    the *New section* modal offers the same select.
 - **Section pages keep their actions in the toolbar** (template select, *Import*, *New note*), never in a button
   row above the list — the same rule as every other page.
 
@@ -343,7 +343,7 @@ Planned Electron modules: `vault`, `cloud-readiness`, `campaign`, `document`, `i
     clears initiatives and statuses and refills HP to the maximum where one is known (temporary HP go too). There
     is no reset. Entities can be added, edited and removed while the battle runs; a new one takes its place by
     initiative and the current turn does not move. Rows can be dragged to any order.
-  - **Entities**: *Add entity* leads with the **note picker** (searchable list of the scope's notes); picking one
+  - **Entities**: *Add entity* (a modal) leads with the **note picker** (searchable list of the scope's notes); picking one
     fills the name and the values the rule reads from its frontmatter, without touching what the user already
     typed. Then name, initiative, maximum HP and AC, and a **quantity** (1–15, default 1); above 1 the confirm
     button reads *Insert N* and the copies are numbered ("Goblin 1", "Goblin 2"…). *Duplicate* numbers the same way.
@@ -352,12 +352,17 @@ Planned Electron modules: `vault`, `cloud-readiness`, `campaign`, `document`, `i
   - **Hit points**: a health bar (current over maximum, temporary HP as a second segment, the numbers always
     written). *Manage HP* applies damage (temporary HP first, never below 0), healing (up to the maximum) or sets
     the temporary HP; the last 30 changes can be undone.
-  - **Statuses** are **free tags** typed on an entity, with an optional number of rounds that counts down at the
-    end of that entity's turn and removes the tag at 0. They are not notes and have no section.
+  - **Statuses** are **free tags** typed in place on an entity (one line, no dialog): `stunned`, space, `3`, space
+    makes the tag *stunned · 3* (it counts down at the end of that entity's turn and goes at 0); a second space right
+    after the name makes it without rounds. Enter or leaving the field also makes one, Backspace on an empty field
+    removes the last tag. They are not notes and have no section.
+  - **Entity card**: a small header holds the system actions (drag handle, roll selection checkbox, edit, duplicate,
+    send to the cemetery); the rule's grid is below it.
   - **Cemetery**: *Remove* sends an entity to a side panel (it leaves the order; if it had the turn, the turn
     passes on); *Recover* puts it back by initiative; *Delete forever* (confirmed) removes it from the file for
     good. An entity's **linked note** opens read-only, as in Reading, in a **right-hand sheet** like the editor
-    reference.
+    reference, rendered by the Reading view (links open their note, embeds and previews work). An encounter is
+    always shown by its **name**, never by the `.json` file name (the index stores it as the title).
 - **Party roster**: a hidden `encounters/_party.json` per campaign (the same file format and page, without the
   battle), reached from the *Party roster* button of the Encounters section — it is not listed or offered as a link.
   *Add party* copies its entities into an encounter (also a running one), skipping a member whose name is already
@@ -418,7 +423,11 @@ Planned Electron modules: `vault`, `cloud-readiness`, `campaign`, `document`, `i
   Cmd/Ctrl+W, or the same title-bar button) brings it back. Each sheet reopens where it was left. Links to
   `/compendium/...` or `/settings/...` open in the sheet. Inside, a system has its own toolbar and appears in the sheet's cascading sidebar; sheet
   pages have their own toolbar context, so they never touch the campaign toolbar or tab titles.
-- Sheets (and dialogs) share one header: big condensed title, engraved divider, square close button.
+- **Sheet or modal**: a **side sheet shows information** (the entity's linked note, the editor reference) and the
+  **full-page sheets** (Compendium, Templates, Battle rules, Settings, Import from disk) are libraries and big
+  editors. Anything that **creates, edits or deletes** — a form, a confirmation, a conflict — is a **modal**
+  (`AppDialogFormService` for forms, `ArcTechAlertDialogService` for confirmations). A form never opens in a side sheet.
+- Sheets and modals share one header: big condensed title, engraved divider, square close button.
 - Sheets open like a **gate**: they slide down from under the title bar and slide back up when closed
   (no motion with *reduce motion*).
 - **Sidebars**, three kinds:
@@ -463,7 +472,7 @@ Planned Electron modules: `vault`, `cloud-readiness`, `campaign`, `document`, `i
 - **Breadcrumb**: section and note pages show the path (`CAMPAIGN / SECTION /`, mono, linked) above the page title
   in the toolbar, so a restored tab always tells where it points.
 - **Leaving a note with unsaved edits autosaves it** (tab switch, link, sidebar). If the save hits a conflict or an
-  error, the navigation is cancelled and the conflict sheet / error toast is shown.
+  error, the navigation is cancelled and the conflict modal / error toast is shown.
 - **Title bar**: the Compendium, Templates, Battle rules and Settings sheet buttons are square icon buttons (tooltip and
   accessible name from the label).
 - **Note toolbar**: the note actions (*Links*, *Copy to compendium / campaign*, *Rename*, *Save*) are square icon
