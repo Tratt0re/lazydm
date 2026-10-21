@@ -227,7 +227,7 @@
                   [arcDisabled]="!isEditable()"
                   [attr.aria-label]="'encounters.entity.deleteNow' | translate"
                   [arcTooltip]="'encounters.entity.deleteNow' | translate"
-                  (click)="deleteEntityNow(entity)"
+                  (click)="confirmDeleteEntity(entity)"
                 >
                   <arc-icon arcType="trash" />
                 </button>

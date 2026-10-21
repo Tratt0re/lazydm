@@ -1091,11 +1091,6 @@ export class EncounterPage {
     });
   }
 
-  /** The trash icon of the card header: gone for good, without asking (the skull is the reversible one). */
-  protected deleteEntityNow(entity: EncounterEntityDto): void {
-    this.deleteEntity(entity);
-  }
-
   private deleteEntity(entity: EncounterEntityDto): void {
     // Passing the turn on is the same as for a removal; then the entity is dropped from the file.
     if (!entity.isDead) {

@@ -18,6 +18,7 @@ import { filter, map } from 'rxjs';
 
 import {
   toInAppAssetRoute,
+  toInAppEncounterRoute,
   toInAppNoteRoute,
 } from '@/components/document-preview/document-preview.markdown';
 import type { DocumentFileListItemDto, DocumentFolderDto } from '@/dtos';
@@ -310,9 +311,14 @@ export class AppExplorerTreeComponent {
     const isNote = file.kind === 'md';
     void this.fileActions.openDeleteSheet({
       path: file.path,
-      label: isNote ? file.title : file.name,
+      label: isNote || this.isEncounter(file) ? file.title : file.name,
       isNote,
     });
+  }
+
+  /** An encounter is listed by its name (the index keeps it as the title), never by `x.json`. */
+  protected isEncounter(file: DocumentFileListItemDto): boolean {
+    return toInAppEncounterRoute(file.path) !== null;
   }
 
   /** Icon of an asset in the tree: image, sound or PDF. */

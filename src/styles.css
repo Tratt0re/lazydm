@@ -986,6 +986,8 @@ button.arc-embed-file:hover,
 /* Eye button after a hovered note link (Live and Reading): opens the linked note's preview card. */
 .arc-link-preview-eye {
   position: fixed;
+  /* Inside the overlay container (pointer-events: none) when its note is in a sheet or a modal. */
+  pointer-events: auto;
   /* Above the overlay container (sheets, modals: z-index 1000), so previews also work inside them. */
   z-index: 1001;
   display: inline-flex;

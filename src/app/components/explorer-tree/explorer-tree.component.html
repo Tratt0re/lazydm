@@ -201,13 +201,13 @@
     (click)="navigated.emit()"
     [class]="rowClass(!!ownRoute && isActive(ownRoute), false) + ' gap-2 pl-[26px] pr-3 font-normal'"
     [attr.aria-current]="ownRoute && isActive(ownRoute) ? 'page' : null"
-    [attr.title]="isNote ? file.title : file.name"
+    [attr.title]="isNote || isEncounter(file) ? file.title : file.name"
     arc-context-menu
     [arcContextMenuTriggerFor]="fileMenu"
     [style.cursor]="'pointer'"
   >
     <arc-icon [arcType]="isNote ? 'file-text' : assetIcon(file)" class="size-3.5 shrink-0 text-sidebar-primary" aria-hidden="true" />
-    <span class="truncate">{{ isNote ? file.title : file.name }}</span>
+    <span class="truncate">{{ isNote || isEncounter(file) ? file.title : file.name }}</span>
   </a>
 
   <ng-template #fileMenu>
