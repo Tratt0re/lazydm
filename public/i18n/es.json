@@ -299,7 +299,7 @@
       "reset": {
         "heading": "Restablecer la app",
         "explanation": "Olvida la bóveda abierta y los ajustes de este dispositivo (tema, idioma, editor, diseños guardados) y reinicia la app desde cero. La carpeta de la bóveda y tus notas no se tocan.",
-        "action": "Restablecer la app…",
+        "action": "Restablecer la app",
         "title": "¿Restablecer la app?",
         "description": "Se olvidan la bóveda abierta y todos los ajustes de este dispositivo. Tus notas siguen en su carpeta y no se elimina nada.",
         "confirm": "Restablecer la app",

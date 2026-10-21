@@ -17,8 +17,8 @@
       </dl>
       <p class="mt-3 text-xs text-muted-foreground">{{ 'settings.vault.current.hint' | translate }}</p>
 
-      <div class="mt-4">
-        <button type="button" arc-button arcType="outline" [disabled]="isBusy()" (click)="confirmClose()">
+      <div class="mt-4 flex justify-end">
+        <button type="button" arc-button arcType="secondary" [disabled]="isBusy()" (click)="confirmClose()">
           {{ 'settings.vault.close.action' | translate }}
         </button>
       </div>
@@ -32,8 +32,15 @@
       {{ 'settings.vault.reset.heading' | translate }}<span class="text-primary" aria-hidden="true">.</span>
     </h3>
     <p class="text-sm text-muted-foreground">{{ 'settings.vault.reset.explanation' | translate }}</p>
-    <div class="mt-4">
-      <button type="button" arc-button arcType="destructive" [disabled]="isBusy()" (click)="confirmReset()">
+    <div class="mt-4 flex justify-end">
+      <button
+        type="button"
+        arc-button
+        arcType="secondary"
+        class="border-destructive text-destructive hover:bg-destructive hover:text-destructive-foreground"
+        [disabled]="isBusy()"
+        (click)="confirmReset()"
+      >
         {{ 'settings.vault.reset.action' | translate }}
       </button>
     </div>

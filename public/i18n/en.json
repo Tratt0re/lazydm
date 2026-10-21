@@ -299,7 +299,7 @@
       "reset": {
         "heading": "Reset the app",
         "explanation": "Forgets the open vault and this device’s settings (theme, language, editor, saved layouts) and starts the app again from scratch. The vault folder and your notes are not touched.",
-        "action": "Reset the app…",
+        "action": "Reset the app",
         "title": "Reset the app?",
         "description": "The open vault and all settings of this device are forgotten. Your notes stay in their folder and nothing is deleted.",
         "confirm": "Reset the app",

@@ -299,7 +299,7 @@
       "reset": {
         "heading": "Réinitialiser l'application",
         "explanation": "Oublie le coffre ouvert et les réglages de cet appareil (thème, langue, éditeur, dispositions enregistrées) et repart de zéro. Le dossier du coffre et vos notes ne sont pas touchés.",
-        "action": "Réinitialiser l'application…",
+        "action": "Réinitialiser l'application",
         "title": "Réinitialiser l'application ?",
         "description": "Le coffre ouvert et tous les réglages de cet appareil sont oubliés. Vos notes restent dans leur dossier et rien n’est supprimé.",
         "confirm": "Réinitialiser l'application",
