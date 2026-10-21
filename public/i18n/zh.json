@@ -142,7 +142,7 @@
       "delete": {
         "button": "删除",
         "title": "删除 {{name}}？",
-        "description": "{{path}} 将被永久删除。使用它的战役将恢复为自动。",
+        "description": "{{path}} 将被移到废纸篓。使用它的战役将恢复为自动。",
         "confirm": "删除",
         "cancel": "取消",
         "done": "{{name}} 已删除",
@@ -692,8 +692,8 @@
     "delete": {
       "action": "删除 {{name}}",
       "title": "删除 {{name}}？",
-      "description": "{{path}} 及其中的 {{count}} 个文件将被永久删除。战役不受影响。",
-      "confirm": "永久删除",
+      "description": "{{path}} 及其中的 {{count}} 个文件将被移到废纸篓。战役不受影响。",
+      "confirm": "移到废纸篓",
       "cancel": "取消",
       "done": "已删除 {{name}}",
       "error": "无法删除系统"
@@ -1102,7 +1102,7 @@
     },
     "delete": {
       "title": "删除 {{name}}？",
-      "description": "将删除 {{path}}。使用过它的战役和遭遇会回到内置规则。",
+      "description": "{{path}} 将被移到废纸篓。使用它的战役和遭遇将恢复为内置规则。",
       "done": "已删除 {{name}}",
       "error": "无法删除战斗规则"
     },

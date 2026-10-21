@@ -282,7 +282,7 @@ Planned Electron modules: `vault`, `cloud-readiness`, `campaign`, `document`, `i
   the user chooses whether to copy it too (default on, list shown); otherwise the option does not appear.
 - Systems have their own **Broken links** page and overview alert; the fix menu (create note / remove link) works
   there like in campaigns.
-- Deleting a system is **permanent** (folder and every file in it), after a confirmation showing the file count.
+- Deleting a system sends its folder (every file in it) to the **system Trash** (recoverable), after a confirmation showing the file count.
 - UI: the Compendium page (from the campaign list and the campaign sidebar) lists systems; a system has its own
   shell (sidebar with the folders it has, overview, section lists and the note editor — rename and links included).
   Compendium pages are outside campaigns, so they have no tab bar.

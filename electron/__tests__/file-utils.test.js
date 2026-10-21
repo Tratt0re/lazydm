@@ -73,3 +73,18 @@ describe('resolveInsideVault', () => {
     expect(resolveInsideVault(dir, 'camp/new.md')).toContain('camp');
   });
 });
+
+describe('safeWriteFileAtomic durability', () => {
+  it('leaves no temp files behind after a successful write', () => {
+    const file = path.join(dir, 'durable.md');
+    safeWriteFileAtomic(file, 'content');
+    expect(fs.readdirSync(dir)).toEqual(['durable.md']);
+    expect(fs.readFileSync(file, 'utf8')).toBe('content');
+  });
+
+  it('writes Buffers as well as strings', () => {
+    const file = path.join(dir, 'bin.dat');
+    safeWriteFileAtomic(file, Buffer.from([1, 2, 3]));
+    expect([...fs.readFileSync(file)]).toEqual([1, 2, 3]);
+  });
+});

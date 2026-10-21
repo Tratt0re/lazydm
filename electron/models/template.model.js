@@ -1,6 +1,6 @@
 const fs = require('node:fs');
 const path = require('node:path');
-const { resolveInsideVault, safeWriteFileAtomic } = require('../utils/file-utils');
+const { resolveInsideVault, safeWriteFileAtomic, trashVaultItem } = require('../utils/file-utils');
 const { listCampaigns, readCampaign, NOTE_TYPE_DIR_NAMES } = require('./campaign.model');
 const { COMPENDIUM_DIR_NAME, listSystems, readSystem } = require('./compendium.model');
 const { listCampaignNoteTypes } = require('./section.model');
@@ -411,7 +411,7 @@ async function createTemplate(rootPath, slug, content) {
 }
 
 async function deleteTemplate(rootPath, templatePath) {
-  await fs.promises.rm(resolveInsideVault(rootPath, templatePath));
+  await trashVaultItem(resolveInsideVault(rootPath, templatePath));
   clearRulesForTemplate(rootPath, templatePath);
 }
 

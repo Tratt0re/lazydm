@@ -142,7 +142,7 @@
       "delete": {
         "button": "Löschen",
         "title": "{{name}} löschen?",
-        "description": "{{path}} wird endgültig gelöscht. Kampagnen, die sie nutzen, wechseln zurück auf automatisch.",
+        "description": "{{path}} wird in den Papierkorb verschoben. Kampagnen, die sie nutzen, wechseln zurück auf automatisch.",
         "confirm": "Löschen",
         "cancel": "Abbrechen",
         "done": "{{name}} gelöscht",
@@ -692,8 +692,8 @@
     "delete": {
       "action": "{{name}} löschen",
       "title": "{{name}} löschen?",
-      "description": "{{path}} und die {{count}} Dateien darin werden endgültig gelöscht. Kampagnen sind nicht betroffen.",
-      "confirm": "Endgültig löschen",
+      "description": "{{path}} und die {{count}} Dateien darin werden in den Papierkorb verschoben. Kampagnen sind nicht betroffen.",
+      "confirm": "In den Papierkorb",
       "cancel": "Abbrechen",
       "done": "{{name}} gelöscht",
       "error": "Das System konnte nicht gelöscht werden"
@@ -1102,7 +1102,7 @@
     },
     "delete": {
       "title": "{{name}} löschen?",
-      "description": "{{path}} wird gelöscht. Kampagnen und Begegnungen, die sie nutzten, fallen auf die integrierte Regel zurück.",
+      "description": "{{path}} wird in den Papierkorb verschoben. Kampagnen und Begegnungen, die sie nutzten, wechseln zurück zur integrierten Regel.",
       "done": "{{name}} gelöscht",
       "error": "Die Kampfregel konnte nicht gelöscht werden"
     },

@@ -9,6 +9,7 @@ const {
   hashContent,
   resolveInsideVault,
   safeWriteFileAtomic,
+  trashVaultItem,
 } = require('../utils/file-utils');
 const { listCampaigns } = require('./campaign.model');
 const { COMPENDIUM_DIR_NAME, listSystems } = require('./compendium.model');
@@ -475,7 +476,7 @@ function setCampaignChoice(rootPath, campaignSlug, value) {
 }
 
 async function deleteBattleRuleFile(rootPath, rulePath) {
-  await fs.promises.rm(resolveInsideVault(rootPath, rulePath));
+  await trashVaultItem(resolveInsideVault(rootPath, rulePath));
   if (readVaultConfig(rootPath)?.battleRules?.campaigns) {
     updateCampaignChoices(rootPath, (campaigns) => {
       for (const [slug, value] of Object.entries(campaigns)) {

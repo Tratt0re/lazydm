@@ -142,7 +142,7 @@
       "delete": {
         "button": "Eliminar",
         "title": "¿Eliminar {{name}}?",
-        "description": "{{path}} se eliminará definitivamente. Las campañas que la usan vuelven a automático.",
+        "description": "{{path}} se moverá a la papelera. Las campañas que la usan vuelven a automático.",
         "confirm": "Eliminar",
         "cancel": "Cancelar",
         "done": "{{name}} eliminada",
@@ -692,8 +692,8 @@
     "delete": {
       "action": "Eliminar {{name}}",
       "title": "¿Eliminar {{name}}?",
-      "description": "{{path}} y los {{count}} archivos que contiene se eliminarán definitivamente. Las campañas no se ven afectadas.",
-      "confirm": "Eliminar definitivamente",
+      "description": "{{path}} y los {{count}} archivos que contiene se moverán a la papelera. Las campañas no se ven afectadas.",
+      "confirm": "Mover a la papelera",
       "cancel": "Cancelar",
       "done": "{{name}} eliminado",
       "error": "No se pudo eliminar el sistema"
@@ -1102,7 +1102,7 @@
     },
     "delete": {
       "title": "¿Eliminar {{name}}?",
-      "description": "Se eliminará {{path}}. Las campañas y encuentros que la usaban vuelven a la regla integrada.",
+      "description": "{{path}} se moverá a la papelera. Las campañas y encuentros que la usaban vuelven a la regla integrada.",
       "done": "{{name}} eliminada",
       "error": "No se pudo eliminar la regla de combate"
     },

@@ -1480,27 +1480,35 @@ async function copy(payload) {
     return { ...result, linkedPaths: [] };
   }
 
-  if (extension.toLocaleLowerCase() === MARKDOWN_EXTENSION && subfolder !== location.subfolder) {
-    await syncCopiedSubtype(vaultPath, targetPath, subfolder);
-  }
-
   const linkedPaths = [];
-  for (const linkedFile of linkedFiles) {
-    const extension = path.posix.extname(linkedFile.path);
-    const linkedLocation = await getCopyLocation(vaultPath, linkedFile.path, target);
-    const linkedTargetPath = `${target}/${toCopyFolder(linkedLocation, linkedLocation.subfolder)}/${path.posix.basename(linkedFile.path, extension)}${extension}`;
-    const linkedResult = await documentModel.copyVaultFile(
-      vaultPath,
-      linkedFile.path,
-      linkedTargetPath,
-    );
-    if (linkedResult.status === 'copied') {
-      linkedPaths.push(linkedTargetPath);
+  try {
+    if (extension.toLocaleLowerCase() === MARKDOWN_EXTENSION && subfolder !== location.subfolder) {
+      await syncCopiedSubtype(vaultPath, targetPath, subfolder);
     }
-  }
 
-  if (indexerController.isOpen()) {
-    await indexerController.reindexPaths([targetPath, ...linkedPaths]);
+    for (const linkedFile of linkedFiles) {
+      const linkedExtension = path.posix.extname(linkedFile.path);
+      const linkedLocation = await getCopyLocation(vaultPath, linkedFile.path, target);
+      const linkedTargetPath = `${target}/${toCopyFolder(linkedLocation, linkedLocation.subfolder)}/${path.posix.basename(linkedFile.path, linkedExtension)}${linkedExtension}`;
+      try {
+        const linkedResult = await documentModel.copyVaultFile(
+          vaultPath,
+          linkedFile.path,
+          linkedTargetPath,
+        );
+        if (linkedResult.status === 'copied') {
+          linkedPaths.push(linkedTargetPath);
+        }
+      } catch (error) {
+        // One linked file failing must not undo or hide the copies that already happened.
+        console.warn('[electron] Failed to copy a linked file ->', linkedFile.path, error);
+      }
+    }
+  } finally {
+    // The main copy exists on disk even when a later step threw: the index must follow it.
+    if (indexerController.isOpen()) {
+      await indexerController.reindexPaths([targetPath, ...linkedPaths]);
+    }
   }
 
   return { ...result, linkedPaths };

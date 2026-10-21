@@ -1,6 +1,6 @@
 const fs = require('node:fs');
 const YAML = require('yaml');
-const { resolveInsideVault, safeWriteFileAtomic } = require('../utils/file-utils');
+const { resolveInsideVault, safeWriteFileAtomic, trashVaultItem } = require('../utils/file-utils');
 const { parseMarkdownDocument } = require('../utils/markdown-parse');
 const { listVaultFiles } = require('./vault.model');
 
@@ -108,9 +108,9 @@ async function countSystemFiles(rootPath, slug) {
   return (await listVaultFiles(rootPath, getSystemPath(slug))).length;
 }
 
-/** Permanently deletes a system folder and everything in it. */
+/** Sends a system folder and everything in it to the system Trash (recoverable). */
 async function deleteSystem(rootPath, slug) {
-  await fs.promises.rm(resolveInsideVault(rootPath, getSystemPath(slug)), { recursive: true });
+  await trashVaultItem(resolveInsideVault(rootPath, getSystemPath(slug)));
 }
 
 module.exports = {

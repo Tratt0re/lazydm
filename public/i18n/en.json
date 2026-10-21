@@ -142,7 +142,7 @@
       "delete": {
         "button": "Delete",
         "title": "Delete {{name}}?",
-        "description": "{{path}} will be deleted permanently. Campaigns using it go back to automatic.",
+        "description": "{{path}} will be moved to the Trash. Campaigns using it go back to automatic.",
         "confirm": "Delete",
         "cancel": "Cancel",
         "done": "{{name}} deleted",
@@ -692,8 +692,8 @@
     "delete": {
       "action": "Delete {{name}}",
       "title": "Delete {{name}}?",
-      "description": "{{path}} and the {{count}} files in it will be deleted permanently. Campaigns are not affected.",
-      "confirm": "Delete permanently",
+      "description": "{{path}} and the {{count}} files in it will be moved to the Trash. Campaigns are not affected.",
+      "confirm": "Move to Trash",
       "cancel": "Cancel",
       "done": "{{name}} deleted",
       "error": "Couldn't delete the system"
@@ -1102,7 +1102,7 @@
     },
     "delete": {
       "title": "Delete {{name}}?",
-      "description": "{{path}} will be deleted. Campaigns and encounters that used it go back to the built-in rule.",
+      "description": "{{path}} will be moved to the Trash. Campaigns and encounters that used it go back to the built-in rule.",
       "done": "{{name}} deleted",
       "error": "Couldn't delete the battle rule"
     },

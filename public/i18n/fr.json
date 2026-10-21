@@ -142,7 +142,7 @@
       "delete": {
         "button": "Supprimer",
         "title": "Supprimer {{name}} ?",
-        "description": "{{path}} sera supprimé définitivement. Les campagnes qui l’utilisent repassent en automatique.",
+        "description": "{{path}} sera placé dans la corbeille. Les campagnes qui l’utilisent repassent en automatique.",
         "confirm": "Supprimer",
         "cancel": "Annuler",
         "done": "{{name}} supprimé",
@@ -692,8 +692,8 @@
     "delete": {
       "action": "Supprimer {{name}}",
       "title": "Supprimer {{name}} ?",
-      "description": "{{path}} et les {{count}} fichiers qu’il contient seront supprimés définitivement. Les campagnes ne sont pas touchées.",
-      "confirm": "Supprimer définitivement",
+      "description": "{{path}} et les {{count}} fichiers qu’il contient seront placés dans la corbeille. Les campagnes ne sont pas concernées.",
+      "confirm": "Mettre à la corbeille",
       "cancel": "Annuler",
       "done": "{{name}} supprimé",
       "error": "Impossible de supprimer le système"
@@ -1102,7 +1102,7 @@
     },
     "delete": {
       "title": "Supprimer {{name}} ?",
-      "description": "{{path}} sera supprimé. Les campagnes et rencontres qui l'utilisaient reviennent à la règle intégrée.",
+      "description": "{{path}} sera placé dans la corbeille. Les campagnes et rencontres qui l’utilisaient repassent à la règle intégrée.",
       "done": "{{name}} supprimée",
       "error": "Impossible de supprimer la règle de combat"
     },

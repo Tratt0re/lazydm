@@ -112,6 +112,12 @@ async function moveFileNoOverwrite(fromAbsolutePath, toAbsolutePath) {
   await fs.promises.unlink(fromAbsolutePath);
 }
 
+/** Sends a vault file or folder to the system Trash (recoverable); electron is loaded lazily so tests can stub it. */
+async function trashVaultItem(absolutePath) {
+  const { shell } = require('electron');
+  await shell.trashItem(absolutePath);
+}
+
 /** True when `error` says the target of a no-overwrite operation is already taken. */
 function isAlreadyExistsError(error) {
   return error?.code === 'EEXIST';
@@ -134,7 +140,15 @@ function safeWriteFileAtomic(filePath, content, { overwrite = true } = {}) {
   const temporaryPath = `${normalizedPath}.tmp-${process.pid}-${Date.now()}-${randomBytes(4).toString('hex')}`;
 
   try {
-    fs.writeFileSync(temporaryPath, content);
+    // fsync so a crash or power cut right after the save cannot leave an empty file behind the rename.
+    const descriptor = fs.openSync(temporaryPath, 'w');
+    try {
+      fs.writeFileSync(descriptor, content);
+      fs.fsyncSync(descriptor);
+    } finally {
+      fs.closeSync(descriptor);
+    }
+
     if (overwrite) {
       fs.renameSync(temporaryPath, normalizedPath);
     } else {
@@ -208,4 +222,5 @@ module.exports = {
   moveFileNoOverwrite,
   resolveInsideVault,
   safeWriteFileAtomic,
+  trashVaultItem,
 };

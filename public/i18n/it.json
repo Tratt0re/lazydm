@@ -142,7 +142,7 @@
       "delete": {
         "button": "Elimina",
         "title": "Eliminare {{name}}?",
-        "description": "{{path}} sarà eliminato definitivamente. Le campagne che lo usano tornano su automatico.",
+        "description": "{{path}} verrà spostato nel Cestino. Le campagne che lo usano tornano in automatico.",
         "confirm": "Elimina",
         "cancel": "Annulla",
         "done": "{{name}} eliminato",
@@ -692,8 +692,8 @@
     "delete": {
       "action": "Elimina {{name}}",
       "title": "Eliminare {{name}}?",
-      "description": "{{path}} e i {{count}} file che contiene saranno eliminati definitivamente. Le campagne non sono toccate.",
-      "confirm": "Elimina definitivamente",
+      "description": "{{path}} e i {{count}} file al suo interno verranno spostati nel Cestino. Le campagne non sono interessate.",
+      "confirm": "Sposta nel Cestino",
       "cancel": "Annulla",
       "done": "{{name}} eliminato",
       "error": "Impossibile eliminare il sistema"
@@ -1102,7 +1102,7 @@
     },
     "delete": {
       "title": "Eliminare {{name}}?",
-      "description": "{{path}} verrà eliminato. Le campagne e gli incontri che lo usavano tornano alla regola integrata.",
+      "description": "{{path}} verrà spostato nel Cestino. Le campagne e gli incontri che lo usavano tornano alla regola integrata.",
       "done": "{{name}} eliminata",
       "error": "Impossibile eliminare la regola di battaglia"
     },
