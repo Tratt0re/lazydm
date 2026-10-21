@@ -39,7 +39,6 @@ A build with no errors is the minimum check after every change. The 3 `NG8113` w
 | `src/styles.css`, `src/styles/fonts.css` | theme tokens (Nordic Relic dark + light), utilities, fonts |
 | `src/assetts/` | bundled fonts and icons (the folder name `assetts` is intentional — do not rename) |
 | `public/i18n/*.json` | translations (en, it, de, es, fr, uk, zh) |
-| `nordic-relic-v033/` | reference design system (spec, tokens, demo; look only, not app code) |
 
 ## Conventions
 
@@ -61,7 +60,7 @@ A build with no errors is the minimum check after every change. The 3 `NG8113` w
 - Square shapes; `font-display` (Barlow Condensed) for titles, `font-sans` (Plex Sans) for UI, `font-mono` (Plex Mono) for labels/metadata. Use the Nordic Relic surface tokens (`bg-recessed`, `bg-card`, `bg-raised`) — see DESIGN_PRINCIPLES.md §9.
 - **Page, route and card titles end with a primary-coloured dot**:
   `{{ title }}<span class="text-primary" aria-hidden="true">.</span>` — no whitespace before the span.
-- No decorative text/glyphs from the reference demo.
+- No decorative text/glyphs (runes, mottos, fake codes…).
 
 ## Workflow
 

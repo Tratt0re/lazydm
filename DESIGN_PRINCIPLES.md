@@ -545,9 +545,9 @@ Planned Electron modules: `vault`, `cloud-readiness`, `campaign`, `document`, `i
 ## 9. ArcTechUI visual style (Nordic Relic)
 
 The component library is **ArcTechUI** (formerly ZardUI): classes `ArcTech*`, selectors `arc-*`, inputs/outputs `arc*`,
-provider `provideArcTech()`. Reference design: **Nordic Relic v0.3.3** in `nordic-relic-v033/` (`DESIGN-SPEC.md`,
-`tokens.css`, `index.html`). Its palette and aesthetics are applied to the existing components; their behaviour,
-variant keys and configuration stay as they are.
+provider `provideArcTech()`. The visual style is **Nordic Relic**. The library is self-contained: the original
+reference template has been removed, and the existing components and `src/styles.css` tokens are the reference now.
+Component behaviour, variant keys and configuration stay as they are.
 
 - **Theme and language are per-device** preferences (never stored in the vault).
 - **Two themes**: the Nordic Relic dark and light palettes (cold mineral neutrals, a single bronze accent). Both are
@@ -580,7 +580,7 @@ variant keys and configuration stay as they are.
     description, square close button on the right.
   - Tooltips: raised surface with a bronze border. Everything from the toolbar up (title bar, tab bar, toolbar)
     shows its tooltips **below** the element (`arcPosition="bottom"`), never over the window edge.
-- **No decorative text or glyphs** from the reference demo (runes, mottos, fake archive codes, background grids…).
+- **No decorative text or glyphs** (runes, mottos, fake archive codes, background grids…).
   Lucide icons stay.
 - Changes to components are **look only**: variant keys, inputs, outputs and behaviour stay stable.
 
