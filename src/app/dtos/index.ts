@@ -8,5 +8,6 @@ export * from './review.dto';
 export * from './search.dto';
 export * from './section.dto';
 export * from './template.dto';
+export * from './update.dto';
 export * from './vault.dto';
 export * from './workspace.dto';

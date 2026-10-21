@@ -1167,5 +1167,19 @@
   },
   "breadcrumb": {
     "ariaLabel": "Fil d'Ariane"
+  },
+  "update": {
+    "sidebar": {
+      "label": "Passer à {{latest}}"
+    },
+    "modal": {
+      "title": "Mise à jour disponible",
+      "body": "La version {{latest}} est disponible. Vous utilisez la {{current}}.",
+      "ignore": "Ne plus me rappeler la {{latest}}",
+      "cta": {
+        "dismiss": "Pas maintenant",
+        "update": "Voir la version"
+      }
+    }
   }
 }

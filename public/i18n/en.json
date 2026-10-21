@@ -1167,5 +1167,19 @@
   },
   "breadcrumb": {
     "ariaLabel": "Breadcrumb"
+  },
+  "update": {
+    "sidebar": {
+      "label": "Update to {{latest}}"
+    },
+    "modal": {
+      "title": "Update available",
+      "body": "Version {{latest}} is available. You are using {{current}}.",
+      "ignore": "Don't remind me about {{latest}}",
+      "cta": {
+        "dismiss": "Not now",
+        "update": "View release"
+      }
+    }
   }
 }

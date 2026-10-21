@@ -1,33 +1,50 @@
 import { Injectable, signal } from '@angular/core';
 
-export interface UpdateResult {
-  currentVersion: string;
-  latestVersion: string;
-  updateAvailable: boolean;
-}
+import { APIChannel } from '@/config/api';
+import type { UpdateCheckDto } from '@/dtos';
+import { BaseIpcService } from '@/services/base-ipc.service';
 
+/** Checks GitHub (through the main process) for a newer release and offers to open its page. */
 @Injectable({ providedIn: 'root' })
-export class UpdateService {
-  private readonly _updateResult = signal<UpdateResult | null>(null);
-  private readonly _updateAvailable = signal(false);
+export class UpdateService extends BaseIpcService<APIChannel.UPDATE> {
+  private readonly updateResultSignal = signal<UpdateCheckDto | null>(null);
+  private readonly updateAvailableSignal = signal(false);
+  private readonly modalOpenSignal = signal(false);
 
-  readonly updateResult = this._updateResult.asReadonly();
-  readonly updateAvailable = this._updateAvailable.asReadonly();
+  readonly updateResult = this.updateResultSignal.asReadonly();
+  readonly updateAvailable = this.updateAvailableSignal.asReadonly();
+  /** The pop-up is shown once per version: not when the user chose to ignore it. */
+  readonly modalOpen = this.modalOpenSignal.asReadonly();
+
+  constructor() {
+    super(APIChannel.UPDATE);
+    if (window.electronAPI?.ipcClient?.update) {
+      void this.check();
+    }
+  }
+
+  private async check(): Promise<void> {
+    try {
+      const result = await this.ipcClient.forceCheck();
+      this.updateResultSignal.set(result);
+      this.updateAvailableSignal.set(result.updateAvailable && result.releaseUrl !== null);
+      this.modalOpenSignal.set(this.updateAvailableSignal() && !result.popupDismissedForThisVersion);
+    } catch (error) {
+      console.warn('[app] Update check failed:', error);
+    }
+  }
 
   openReleasePage(): void {
-    // TODO: Implement opening release page
-    console.log('Opening release page...');
+    this.ipcClient.openRelease().catch((error) => console.warn('[app] Failed to open the release:', error));
   }
 
   dismissModal(): void {
-    // TODO: Implement dismissing modal
-    console.log('Dismissing update modal...');
+    this.modalOpenSignal.set(false);
   }
 
   ignoreVersion(version: string): void {
-    // TODO: Implement ignoring version
-    console.log('Ignoring version:', version);
+    this.ipcClient
+      .ignoreVersion({ version })
+      .catch((error) => console.warn('[app] Failed to ignore the version:', error));
   }
 }
-
-// Made with Bob

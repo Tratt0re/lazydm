@@ -1167,5 +1167,19 @@
   },
   "breadcrumb": {
     "ariaLabel": "面包屑导航"
+  },
+  "update": {
+    "sidebar": {
+      "label": "更新到 {{latest}}"
+    },
+    "modal": {
+      "title": "有可用更新",
+      "body": "版本 {{latest}} 已发布，您当前使用的是 {{current}}。",
+      "ignore": "不再提醒 {{latest}}",
+      "cta": {
+        "dismiss": "暂不更新",
+        "update": "查看发布"
+      }
+    }
   }
 }

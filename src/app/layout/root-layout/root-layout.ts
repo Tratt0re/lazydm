@@ -4,7 +4,6 @@ import {
   computed,
   HostListener,
   inject,
-  OnDestroy,
   OnInit,
   signal,
   ViewEncapsulation,
@@ -21,6 +20,9 @@ import { CampaignService } from '@/services/campaign.service';
 import { SectionService } from '@/services/section.service';
 import { ToolbarContextService } from '@/services/toolbar-context.service';
 import { detectSmallScreenViewport } from '@/shared/utils';
+import { listenToIpcEvent } from '@/services/ipc-events';
+import { UpdateModalComponent } from '@/shared/components/update-modal/update-modal.component';
+import { UpdateService } from '@/shared/core/services/update.service';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -33,12 +35,14 @@ import { detectSmallScreenViewport } from '@/shared/utils';
     Sidebar,
     TabBar,
     VaultSyncStatusComponent,
+    UpdateModalComponent,
   ],
   templateUrl: './root-layout.html',
   encapsulation: ViewEncapsulation.None,
 })
-export class RootLayout implements OnInit, OnDestroy {
+export class RootLayout implements OnInit {
   private readonly toolbarContextService = inject(ToolbarContextService);
+  protected readonly updateService = inject(UpdateService);
   private readonly handleFullscreenChangeEvent = (payload: unknown) => {
     this.isFullscreen.set(this.resolveFullscreenState(payload));
   };
@@ -67,15 +71,12 @@ export class RootLayout implements OnInit, OnDestroy {
     if (this.isSmallScreen()) {
       this.sidebarCollapsed.set(true);
     }
+
+    listenToIpcEvent('window:fullscreenChanged', this.handleFullscreenChangeEvent);
   }
 
   ngOnInit(): void {
     this.isFullscreen.set(this.readDocumentFullscreenState());
-    window.electronAPI?.onIpcEvent?.('window:fullscreenChanged', this.handleFullscreenChangeEvent);
-  }
-
-  ngOnDestroy(): void {
-    window.electronAPI?.offIpcEvent?.('window:fullscreenChanged', this.handleFullscreenChangeEvent);
   }
 
   protected setSidebarCollapsed(isCollapsed: boolean): void {

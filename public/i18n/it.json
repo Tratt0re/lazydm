@@ -1167,5 +1167,19 @@
   },
   "breadcrumb": {
     "ariaLabel": "Percorso"
+  },
+  "update": {
+    "sidebar": {
+      "label": "Aggiorna a {{latest}}"
+    },
+    "modal": {
+      "title": "Aggiornamento disponibile",
+      "body": "È disponibile la versione {{latest}}. Stai usando la {{current}}.",
+      "ignore": "Non ricordarmelo per la {{latest}}",
+      "cta": {
+        "dismiss": "Non ora",
+        "update": "Vedi la release"
+      }
+    }
   }
 }

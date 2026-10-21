@@ -16,15 +16,16 @@ export enum APIChannel {
   ASSETS = 'assets',
   BATTLE_RULES = 'battleRules',
   CAMPAIGNS = 'campaigns',
-  CHARACTERS = 'characters',
   CLOUD = 'cloud',
   COMPENDIUM = 'compendium',
   DOCUMENTS = 'documents',
   ENCOUNTERS = 'encounters',
+  INDEX = 'index',
   REVIEW = 'review',
   SECTIONS = 'sections',
   TEMPLATES = 'templates',
   SEARCH = 'search',
+  UPDATE = 'update',
   VAULT = 'vault',
   WINDOW = 'window',
   WORKSPACE = 'workspace',
@@ -33,7 +34,7 @@ export enum APIChannel {
 export interface ElectronIpcClient {
   readonly appMeta: {
     readonly get: IpcRequest<{ key: string }, { value: string | null }>;
-    readonly set: IpcRequest<{ key: string; value: string }, { success: boolean }>;
+    readonly upsert: IpcRequest<{ key: string; value: string }, unknown>;
   };
   readonly assets: {
     readonly save: IpcRequest<DTO.SaveAssetPayload, DTO.SavedAssetDto>;
@@ -59,9 +60,6 @@ export interface ElectronIpcClient {
     readonly list: OptionalIpcRequest<void, { rows: DTO.CampaignDto[] }>;
     readonly get: IpcRequest<{ slug: string }, DTO.CampaignDto>;
     readonly create: IpcRequest<DTO.CreateCampaignPayload, DTO.CampaignDto>;
-  };
-  readonly characters: {
-    readonly list: OptionalIpcRequest<void, { rows: any[] }>;
   };
   readonly cloud: {
     readonly getStatus: OptionalIpcRequest<void, DTO.CloudReadinessStatusDto>;
@@ -152,6 +150,16 @@ export interface ElectronIpcClient {
     readonly inspect: IpcRequest<{ folderPath: string }, DTO.VaultInspectionDto>;
     readonly open: IpcRequest<{ folderPath: string }, DTO.VaultStateDto>;
     readonly close: OptionalIpcRequest<void, DTO.VaultStateDto>;
+  };
+  readonly index: {
+    readonly getStatus: OptionalIpcRequest<void, unknown>;
+    readonly rebuild: OptionalIpcRequest<void, unknown>;
+  };
+  readonly update: {
+    readonly check: OptionalIpcRequest<void, DTO.UpdateCheckDto>;
+    readonly forceCheck: OptionalIpcRequest<void, DTO.UpdateCheckDto>;
+    readonly openRelease: OptionalIpcRequest<void, void>;
+    readonly ignoreVersion: IpcRequest<{ version: string }, void>;
   };
   readonly window: {
     readonly reload: OptionalIpcRequest<void, void>;

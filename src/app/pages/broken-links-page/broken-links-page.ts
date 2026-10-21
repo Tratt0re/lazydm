@@ -23,10 +23,9 @@ import { ArcTechAlertComponent } from '@/shared/components/alert';
 import { ArcTechEmptyComponent } from '@/shared/components/empty';
 import { ArcTechIconComponent } from '@/shared/components/icon';
 import { ArcTechMenuImports } from '@/shared/components/menu';
+import { onIndexUpdated } from '@/services/ipc-events';
 
 export const BROKEN_LINKS_ROUTE_SEGMENT = 'broken-links';
-
-const INDEX_UPDATED_EVENT = 'index:updated';
 
 interface BrokenLinkGroup {
   readonly sourcePath: string;
@@ -111,10 +110,7 @@ export class BrokenLinksPage {
       void this.load(scope.rootPath);
     });
 
-    window.electronAPI?.onIpcEvent?.(INDEX_UPDATED_EVENT, this.handleIndexUpdated);
-    inject(DestroyRef).onDestroy(() =>
-      window.electronAPI?.offIpcEvent?.(INDEX_UPDATED_EVENT, this.handleIndexUpdated),
-    );
+    onIndexUpdated(this.handleIndexUpdated);
   }
 
   private async load(scopePath: string): Promise<void> {

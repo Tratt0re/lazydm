@@ -55,6 +55,7 @@ import { ArcTechIconComponent, type ArcTechIcon } from '@/shared/components/icon
 import { ArcTechDialogService, type ArcTechDialogRef } from '@/shared/components/dialog';
 import { ArcTechSheetService } from '@/shared/components/sheet';
 import { ArcTechTooltipImports } from '@/shared/components/tooltip';
+import { onIndexUpdated } from '@/services/ipc-events';
 
 export const DOCUMENT_NOTE_PARAM = 'note';
 /** Sub-folder of the section the note is in (its sub-type), when it is in one. */
@@ -66,8 +67,6 @@ const FRONTMATTER_FENCE_PATTERN = /^---\r?\n[\s\S]*?\r?\n(?:---|\.\.\.)\r?\n?/;
 function stripFrontmatterFence(content: string): string {
   return content.replace(FRONTMATTER_FENCE_PATTERN, '');
 }
-
-const INDEX_UPDATED_EVENT = 'index:updated';
 
 const EDITOR_MODES: readonly { value: DocumentViewMode; label: string; icon: ArcTechIcon }[] = [
   { value: 'live', label: 'document.toolbar.live', icon: 'pencil-line' },
@@ -189,9 +188,8 @@ export class DocumentPage {
   );
 
   constructor() {
-    window.electronAPI?.onIpcEvent?.(INDEX_UPDATED_EVENT, this.handleIndexUpdated);
+    onIndexUpdated(this.handleIndexUpdated);
     inject(DestroyRef).onDestroy(() => {
-      window.electronAPI?.offIpcEvent?.(INDEX_UPDATED_EVENT, this.handleIndexUpdated);
       this.unregisterOpenNote?.();
       this.noteAudio.stop();
     });

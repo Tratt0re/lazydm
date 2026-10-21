@@ -8,6 +8,7 @@ import { WorkspaceService } from '@/services/workspace.service';
 import { ArcTechButtonComponent } from '@/shared/components/button';
 import { ArcTechIconComponent, type ArcTechIcon } from '@/shared/components/icon';
 import { ArcTechTooltipImports } from '@/shared/components/tooltip';
+import { listenToIpcEvent } from '@/services/ipc-events';
 
 const MAXIMIZED_CHANGED_EVENT = 'window:maximizedChanged';
 const FULLSCREEN_CHANGED_EVENT = 'window:fullscreenChanged';
@@ -64,14 +65,9 @@ export class Header {
         this.isMaximized.set(state.isMaximized);
         this.isFullscreen.set(state.isFullscreen);
       })
-      .catch(() => undefined);
-    window.electronAPI?.onIpcEvent?.(MAXIMIZED_CHANGED_EVENT, this.handleMaximizedChanged);
-    window.electronAPI?.onIpcEvent?.(FULLSCREEN_CHANGED_EVENT, this.handleFullscreenChanged);
-
-    inject(DestroyRef).onDestroy(() => {
-      window.electronAPI?.offIpcEvent?.(MAXIMIZED_CHANGED_EVENT, this.handleMaximizedChanged);
-      window.electronAPI?.offIpcEvent?.(FULLSCREEN_CHANGED_EVENT, this.handleFullscreenChanged);
-    });
+      .catch((error) => console.warn('[app] Failed to read the window state:', error));
+    listenToIpcEvent(MAXIMIZED_CHANGED_EVENT, this.handleMaximizedChanged);
+    listenToIpcEvent(FULLSCREEN_CHANGED_EVENT, this.handleFullscreenChanged);
   }
 
   protected minimize(): void {

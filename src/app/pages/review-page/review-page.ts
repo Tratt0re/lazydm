@@ -29,10 +29,10 @@ import { ArcTechButtonComponent } from '@/shared/components/button';
 import { ArcTechEmptyComponent } from '@/shared/components/empty';
 import { ArcTechIconComponent } from '@/shared/components/icon';
 import { ArcTechTooltipImports } from '@/shared/components/tooltip';
+import { onIndexUpdated } from '@/services/ipc-events';
 
 export const REVIEW_ROUTE_SEGMENT = 'review';
 
-const INDEX_UPDATED_EVENT = 'index:updated';
 /** Paths a *Fix all* confirmation lists before "and N more". */
 const FIX_ALL_PREVIEW_MAX = 8;
 /** Encounters are linkable special files, not a folder to move notes to. */
@@ -111,10 +111,7 @@ export class ReviewPage {
       void this.load(scope.rootPath);
     });
 
-    window.electronAPI?.onIpcEvent?.(INDEX_UPDATED_EVENT, this.handleIndexUpdated);
-    inject(DestroyRef).onDestroy(() =>
-      window.electronAPI?.offIpcEvent?.(INDEX_UPDATED_EVENT, this.handleIndexUpdated),
-    );
+    onIndexUpdated(this.handleIndexUpdated);
   }
 
   protected noteRoute(note: ReviewNoteDto): string | null {

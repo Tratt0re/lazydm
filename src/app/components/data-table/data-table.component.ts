@@ -1020,7 +1020,11 @@ export class AppDataTableComponent {
     return this.isRegisteredIcon(normalizedValue) ? (normalizedValue as ArcTechIcon) : null;
   }
 
-  /** Readable text colour (white or near-black) for a user-chosen badge background; white if not a hex. */
+  /**
+   * Readable text colour (white or near-black) for a user-chosen badge background; white if not a hex.
+   * Deliberately not a theme token: the background is arbitrary and the same in both themes, so the text must
+   * be picked by contrast against it, not by the theme.
+   */
   private badgeForeground(background: string): string {
     const match = /^#?([0-9a-f]{3}|[0-9a-f]{6})$/i.exec(background.trim());
     if (!match) {

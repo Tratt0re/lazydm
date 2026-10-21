@@ -1167,5 +1167,19 @@
   },
   "breadcrumb": {
     "ariaLabel": "Brotkrumennavigation"
+  },
+  "update": {
+    "sidebar": {
+      "label": "Auf {{latest}} aktualisieren"
+    },
+    "modal": {
+      "title": "Update verfügbar",
+      "body": "Version {{latest}} ist verfügbar. Sie verwenden {{current}}.",
+      "ignore": "Nicht mehr an {{latest}} erinnern",
+      "cta": {
+        "dismiss": "Nicht jetzt",
+        "update": "Release ansehen"
+      }
+    }
   }
 }

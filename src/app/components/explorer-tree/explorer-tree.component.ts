@@ -33,6 +33,10 @@ import { ArcTechIconComponent, type ArcTechIcon } from '@/shared/components/icon
 import { ArcTechMenuImports } from '@/shared/components/menu';
 import { ArcTechTooltipImports } from '@/shared/components/tooltip';
 import { mergeClasses } from '@/shared/utils/merge-classes';
+import { onIndexUpdated } from '@/services/ipc-events';
+
+/** Wait for the index updates of one scan to settle before reloading the open folders. */
+const INDEX_RELOAD_DEBOUNCE_MS = 150;
 
 /** Query parameter of the sub-folder a section page shows (`?folder=humans`). */
 const FOLDER_QUERY_PARAM = 'folder';
@@ -127,17 +131,31 @@ export class AppExplorerTreeComponent {
   /** Section paths being loaded (not a signal: only guards against loading twice). */
   private readonly loadingPaths = new Set<string>();
 
+  /** Section paths whose index changed while they were loading: loaded once more when that load ends. */
+  private readonly staleWhileLoading = new Set<string>();
+  private reloadTimer: ReturnType<typeof setTimeout> | null = null;
+
+  /** A scan can emit many updates in a row: they are coalesced into one reload of the open trees. */
   private readonly handleIndexUpdated = () => {
-    for (const path of this.trees().keys()) {
-      void this.loadTree(path);
+    if (this.reloadTimer !== null) {
+      return;
     }
+
+    this.reloadTimer = setTimeout(() => {
+      this.reloadTimer = null;
+      for (const path of this.trees().keys()) {
+        void this.loadTree(path);
+      }
+    }, INDEX_RELOAD_DEBOUNCE_MS);
   };
 
   constructor() {
-    window.electronAPI?.onIpcEvent?.('index:updated', this.handleIndexUpdated);
-    inject(DestroyRef).onDestroy(() =>
-      window.electronAPI?.offIpcEvent?.('index:updated', this.handleIndexUpdated),
-    );
+    onIndexUpdated(this.handleIndexUpdated);
+    inject(DestroyRef).onDestroy(() => {
+      if (this.reloadTimer !== null) {
+        clearTimeout(this.reloadTimer);
+      }
+    });
 
     // The folders left open last time (before revealing the open page, which adds to them).
     effect(() => {
@@ -415,6 +433,7 @@ export class AppExplorerTreeComponent {
 
   private async loadTree(path: string): Promise<void> {
     if (this.loadingPaths.has(path)) {
+      this.staleWhileLoading.add(path);
       return;
     }
 
@@ -428,6 +447,9 @@ export class AppExplorerTreeComponent {
       console.warn('[app] Failed to load the explorer folder:', path, error);
     } finally {
       this.loadingPaths.delete(path);
+      if (this.staleWhileLoading.delete(path)) {
+        void this.loadTree(path);
+      }
     }
   }
 }

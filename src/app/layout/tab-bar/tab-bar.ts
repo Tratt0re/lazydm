@@ -25,6 +25,7 @@ import { ArcTechIconComponent } from '@/shared/components/icon';
 import type { ArcTechIcon } from '@/shared/components/icon';
 import { ArcTechMenuImports } from '@/shared/components/menu';
 import { ArcTechTooltipImports } from '@/shared/components/tooltip';
+import { listenToIpcEvent } from '@/services/ipc-events';
 
 const WORKSPACE_SHORTCUT_EVENT = 'workspace:shortcut';
 const isMac = typeof navigator !== 'undefined' && /mac/i.test(navigator.platform);
@@ -138,13 +139,12 @@ export class TabBar {
   };
 
   constructor() {
-    window.electronAPI?.onIpcEvent?.(WORKSPACE_SHORTCUT_EVENT, this.handleShortcutEvent);
+    listenToIpcEvent(WORKSPACE_SHORTCUT_EVENT, this.handleShortcutEvent);
     document.addEventListener('click', this.handleLinkClick, true);
     document.addEventListener('auxclick', this.handleLinkClick, true);
     document.addEventListener('contextmenu', this.handleContextMenu, true);
 
     inject(DestroyRef).onDestroy(() => {
-      window.electronAPI?.offIpcEvent?.(WORKSPACE_SHORTCUT_EVENT, this.handleShortcutEvent);
       document.removeEventListener('click', this.handleLinkClick, true);
       document.removeEventListener('auxclick', this.handleLinkClick, true);
       document.removeEventListener('contextmenu', this.handleContextMenu, true);

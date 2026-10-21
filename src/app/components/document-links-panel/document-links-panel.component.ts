@@ -25,8 +25,7 @@ import { ArcTechBadgeComponent } from '@/shared/components/badge';
 import { ArcTechIconComponent } from '@/shared/components/icon';
 import { ArcTechMenuImports } from '@/shared/components/menu';
 import { ArcTechTooltipImports } from '@/shared/components/tooltip';
-
-const INDEX_UPDATED_EVENT = 'index:updated';
+import { onIndexUpdated } from '@/services/ipc-events';
 
 /** A file linked with the note, in either direction. */
 interface LinkedFile {
@@ -131,10 +130,7 @@ export class AppDocumentLinksPanelComponent {
   constructor() {
     effect(() => void this.load(this.path()));
 
-    window.electronAPI?.onIpcEvent?.(INDEX_UPDATED_EVENT, this.handleIndexUpdated);
-    inject(DestroyRef).onDestroy(() =>
-      window.electronAPI?.offIpcEvent?.(INDEX_UPDATED_EVENT, this.handleIndexUpdated),
-    );
+    onIndexUpdated(this.handleIndexUpdated);
   }
 
   private async load(path: string): Promise<void> {

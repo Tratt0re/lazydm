@@ -13,7 +13,8 @@ function getOwnerRepo() {
     const pkg = require('../../package.json');
     const url = pkg.repository?.url ?? '';
     const match = url.match(/github\.com[/:]([^/]+)\/([^/.]+)/);
-    if (match) return { owner: match[1], repo: match[2] };
+    // The placeholder from `npm init` is not a real repository: nothing to check (see DESIGN_PRINCIPLES §12).
+    if (match && match[1].toLowerCase() !== 'yourusername') return { owner: match[1], repo: match[2] };
   } catch (_) {}
   return null;
 }
