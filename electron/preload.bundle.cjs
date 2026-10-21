@@ -195,6 +195,7 @@ var require_package = __commonJS({
         "dist:linux": "npm run build:prod && electron-builder --linux --publish never",
         watch: "ng build --watch --configuration development",
         test: "ng test",
+        "test:electron": "vitest run --config vitest.electron.config.mjs",
         postinstall: "electron-rebuild -f -w better-sqlite3",
         "electron:dev": "npm run build:preload && electronmon .",
         "electron:start": "npm run build:preload && electron .",
