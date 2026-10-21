@@ -216,6 +216,10 @@
         "gem": "Gem",
         "book-open": "Book",
         "feather": "Feather"
+      },
+      "rename": {
+        "title": "Rename section",
+        "description": "Leave it empty to go back to the default name, {{name}}. The folder keeps its name."
       }
     },
     "editor": {
@@ -489,6 +493,30 @@
     "assets": {
       "loadError": "Couldn't load this image",
       "loadErrorAudio": "Couldn't play this sound"
+    },
+    "menu": {
+      "edit": "Edit",
+      "delete": "Delete",
+      "open": "Open"
+    },
+    "edit": {
+      "title": "Edit campaign",
+      "description": "Change the name and the description of the campaign.",
+      "nameDescription": "The folder keeps its name, so links and files are not affected.",
+      "submit": "Save",
+      "done": "{{name}} saved",
+      "error": "Couldn't save the campaign"
+    },
+    "remove": {
+      "title": "Delete {{name}}?",
+      "description": "{{folder}} and the {{count}} files in it will be moved to the Trash, and the settings of this campaign are forgotten.",
+      "confirm": "Move to Trash",
+      "done": "{{name}} moved to the Trash",
+      "error": "Couldn't delete the campaign"
+    },
+    "overview": {
+      "edit": "Edit campaign",
+      "delete": "Delete campaign"
     }
   },
   "document": {

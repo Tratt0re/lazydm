@@ -216,6 +216,10 @@
         "gem": "Edelstein",
         "book-open": "Buch",
         "feather": "Feder"
+      },
+      "rename": {
+        "title": "Abschnitt umbenennen",
+        "description": "Leer lassen, um zum Standardnamen {{name}} zurückzukehren. Der Ordner behält seinen Namen."
       }
     },
     "editor": {
@@ -489,6 +493,30 @@
     "assets": {
       "loadError": "Dieses Bild konnte nicht geladen werden",
       "loadErrorAudio": "Dieser Klang konnte nicht abgespielt werden"
+    },
+    "menu": {
+      "edit": "Bearbeiten",
+      "delete": "Löschen",
+      "open": "Öffnen"
+    },
+    "edit": {
+      "title": "Kampagne bearbeiten",
+      "description": "Ändere Namen und Beschreibung der Kampagne.",
+      "nameDescription": "Der Ordner behält seinen Namen, Links und Dateien bleiben unberührt.",
+      "submit": "Speichern",
+      "done": "{{name}} gespeichert",
+      "error": "Die Kampagne konnte nicht gespeichert werden"
+    },
+    "remove": {
+      "title": "{{name}} löschen?",
+      "description": "{{folder}} und die {{count}} Dateien darin werden in den Papierkorb verschoben, die Einstellungen dieser Kampagne werden vergessen.",
+      "confirm": "In den Papierkorb",
+      "done": "{{name}} in den Papierkorb verschoben",
+      "error": "Die Kampagne konnte nicht gelöscht werden"
+    },
+    "overview": {
+      "edit": "Kampagne bearbeiten",
+      "delete": "Kampagne löschen"
     }
   },
   "document": {

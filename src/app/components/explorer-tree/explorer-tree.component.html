@@ -64,6 +64,19 @@
             <arc-icon arcType="folder-plus" />
             {{ 'campaigns.sections.newFolder.button' | translate }}
           </button>
+          @if (canManageSection(node)) {
+            <div class="-mx-1 my-1 h-px bg-border-subtle" role="separator"></div>
+            <button type="button" arc-menu-item (click)="editSection(node, section)">
+              <arc-icon arcType="pencil" />
+              {{ 'settings.campaignSections.edit.title' | translate }}
+            </button>
+            @if (!section.isSpecial) {
+              <button type="button" arc-menu-item arcType="destructive" (click)="deleteSection(node, section)">
+                <arc-icon arcType="trash" />
+                {{ 'settings.campaignSections.remove.button' | translate }}
+              </button>
+            }
+          }
           <div class="-mx-1 my-1 h-px bg-border-subtle" role="separator"></div>
         }
         @if (node.path) {

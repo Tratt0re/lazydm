@@ -216,6 +216,10 @@
         "gem": "宝石",
         "book-open": "书",
         "feather": "羽毛"
+      },
+      "rename": {
+        "title": "重命名分区",
+        "description": "留空则恢复默认名称 {{name}}。文件夹名称不变。"
       }
     },
     "editor": {
@@ -489,6 +493,30 @@
     "assets": {
       "loadError": "无法加载此图片",
       "loadErrorAudio": "无法播放此声音"
+    },
+    "menu": {
+      "edit": "编辑",
+      "delete": "删除",
+      "open": "打开"
+    },
+    "edit": {
+      "title": "编辑战役",
+      "description": "修改战役的名称和描述。",
+      "nameDescription": "文件夹名称不变，链接和文件不受影响。",
+      "submit": "保存",
+      "done": "已保存 {{name}}",
+      "error": "无法保存战役"
+    },
+    "remove": {
+      "title": "删除 {{name}}？",
+      "description": "{{folder}} 及其中的 {{count}} 个文件将被移到废纸篓，此战役的设置也会被清除。",
+      "confirm": "移到废纸篓",
+      "done": "{{name}} 已移到废纸篓",
+      "error": "无法删除战役"
+    },
+    "overview": {
+      "edit": "编辑战役",
+      "delete": "删除战役"
     }
   },
   "document": {

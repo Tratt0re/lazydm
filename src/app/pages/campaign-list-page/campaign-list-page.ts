@@ -6,6 +6,8 @@ import { toast } from 'ngx-sonner';
 import { AppDialogFormService } from '@/components/sheet-form/dialog-form.service';
 import type { AppSheetField } from '@/components/sheet-form/sheet-form.types';
 import { Toolbar } from '@/layout/toolbar/toolbar';
+import type { CampaignDto } from '@/dtos';
+import { CampaignActionsService } from '@/services/campaign-actions.service';
 import { CampaignService } from '@/services/campaign.service';
 import { SectionService } from '@/services/section.service';
 import type { ToolbarItemAction, ToolbarTitleBreadcrumbItem } from '@/services/toolbar-context.service';
@@ -14,6 +16,7 @@ import { ArcTechAlertComponent } from '@/shared/components/alert';
 import { ArcTechButtonComponent } from '@/shared/components/button';
 import { ArcTechEmptyComponent } from '@/shared/components/empty';
 import { ArcTechIconComponent } from '@/shared/components/icon';
+import { ArcTechMenuImports } from '@/shared/components/menu';
 
 const CREATE_CAMPAIGN_FIELDS: readonly AppSheetField[] = [
   {
@@ -45,11 +48,13 @@ const CREATE_CAMPAIGN_FIELDS: readonly AppSheetField[] = [
     ArcTechButtonComponent,
     ArcTechEmptyComponent,
     ArcTechIconComponent,
+    ArcTechMenuImports,
   ],
   templateUrl: './campaign-list-page.html',
 })
 export class CampaignListPage implements OnInit {
   private readonly campaignService = inject(CampaignService);
+  private readonly campaignActions = inject(CampaignActionsService);
   private readonly vaultService = inject(VaultService);
   private readonly sectionService = inject(SectionService);
   private readonly dialogFormService = inject(AppDialogFormService);
@@ -79,6 +84,14 @@ export class CampaignListPage implements OnInit {
 
   ngOnInit(): void {
     void this.loadCampaigns();
+  }
+
+  protected editCampaign(campaign: CampaignDto): void {
+    this.campaignActions.openEditSheet(campaign);
+  }
+
+  protected deleteCampaign(campaign: CampaignDto): void {
+    void this.campaignActions.openDeleteSheet(campaign);
   }
 
   protected openCreateSheet(): void {

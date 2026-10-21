@@ -138,6 +138,77 @@ export class SectionActionsService {
   }
 
   /**
+   * *Edit* from a menu or a toolbar: a custom section opens the full sheet (name, description, icon, template);
+   * a preset section only has a name to change (its description and icon are built in).
+   */
+  async openEditSectionSheet(
+    campaign: string,
+    section: AppSection,
+    onSaved?: (rows: readonly AppSection[]) => void,
+  ): Promise<void> {
+    if (section.isCustom) {
+      await this.openSectionSheet(campaign, section, onSaved);
+      return;
+    }
+
+    let isSubmitting = false;
+    const defaultLabel = this.sectionService.labelOf({ key: section.key, customLabel: null });
+    const dialogRef = this.dialogFormService.open({
+      arcTitle: this.translateService.instant('settings.campaignSections.rename.title'),
+      arcDescription: this.translateService.instant('settings.campaignSections.rename.description', {
+        name: defaultLabel,
+      }),
+      arcOkText: this.translateService.instant('settings.campaignSections.edit.submit'),
+      arcCancelText: this.translateService.instant('settings.campaignSections.cancel'),
+      fields: [
+        {
+          id: 'label',
+          type: 'input',
+          label: 'settings.campaignSections.create.nameLabel',
+          placeholder: defaultLabel,
+          value: section.customLabel ?? '',
+          translate: true,
+        },
+      ],
+      onSubmit: (form) => {
+        if (!isSubmitting) {
+          isSubmitting = true;
+          const value = String(form.getValues()['label'] ?? '').trim();
+          const customLabel = value && value !== defaultLabel ? value : null;
+          void this.saveLabel(campaign, section, customLabel).then((rows) => {
+            isSubmitting = false;
+            if (rows) {
+              dialogRef.close();
+              onSaved?.(rows);
+            }
+          });
+        }
+
+        return false;
+      },
+    });
+  }
+
+  private async saveLabel(
+    campaign: string,
+    section: AppSection,
+    customLabel: string | null,
+  ): Promise<readonly AppSection[] | null> {
+    try {
+      const rows = await this.sectionService.list(campaign);
+      return await this.sectionService.save(
+        campaign,
+        toSectionSettings(rows.map((row) => (row.key === section.key ? { ...row, customLabel } : row))),
+      );
+    } catch (error) {
+      toast.error(this.translateService.instant('settings.campaignSections.saveError'), {
+        description: error instanceof Error ? error.message : String(error),
+      });
+      return null;
+    }
+  }
+
+  /**
    * *Delete…* a section with all its content, after a confirmation with its file count: the folder goes to the
    * system Trash; links to its files become plain text / embeds are removed unless unticked.
    */

@@ -61,6 +61,9 @@ export interface ElectronIpcClient {
     readonly list: OptionalIpcRequest<void, { rows: DTO.CampaignDto[] }>;
     readonly get: IpcRequest<{ slug: string }, DTO.CampaignDto>;
     readonly create: IpcRequest<DTO.CreateCampaignPayload, DTO.CampaignDto>;
+    readonly update: IpcRequest<DTO.UpdateCampaignPayload, DTO.CampaignDto>;
+    readonly countFiles: IpcRequest<{ slug: string }, { count: number }>;
+    readonly remove: IpcRequest<{ slug: string }, { slug: string; deleted: number }>;
   };
   readonly cloud: {
     readonly getStatus: OptionalIpcRequest<void, DTO.CloudReadinessStatusDto>;

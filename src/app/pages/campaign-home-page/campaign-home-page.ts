@@ -2,19 +2,28 @@ import { ChangeDetectionStrategy, Component, effect, inject, signal } from '@ang
 import { RouterLink } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 
+import { CampaignActionsService } from '@/services/campaign-actions.service';
 import { CampaignService } from '@/services/campaign.service';
 import { countReviewItems, ReviewService } from '@/services/review.service';
 import { SectionActionsService } from '@/services/section-actions.service';
-import { SectionService } from '@/services/section.service';
+import { type AppSection, SectionService } from '@/services/section.service';
 import { ToolbarContextService } from '@/services/toolbar-context.service';
 import { ArcTechAlertComponent } from '@/shared/components/alert';
 import { ArcTechButtonComponent } from '@/shared/components/button';
 import { ArcTechIconComponent } from '@/shared/components/icon';
+import { ArcTechMenuImports } from '@/shared/components/menu';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-campaign-home-page',
-  imports: [RouterLink, TranslatePipe, ArcTechAlertComponent, ArcTechButtonComponent, ArcTechIconComponent],
+  imports: [
+    RouterLink,
+    TranslatePipe,
+    ArcTechAlertComponent,
+    ArcTechButtonComponent,
+    ArcTechIconComponent,
+    ArcTechMenuImports,
+  ],
   template: `
     @if (campaign(); as campaign) {
       <div class="mx-auto flex w-full max-w-5xl flex-col gap-6 p-6">
@@ -46,6 +55,8 @@ import { ArcTechIconComponent } from '@/shared/components/icon';
             <li>
               <a
                 [routerLink]="['/campaigns', campaign.slug, section.key]"
+                arc-context-menu
+                [arcContextMenuTriggerFor]="sectionMenu"
                 class="flex h-full flex-col gap-3 border border-border bg-card p-4 transition-colors hover:border-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
               >
                 <arc-icon [arcType]="section.icon" class="size-6 text-primary" />
@@ -65,6 +76,26 @@ import { ArcTechIconComponent } from '@/shared/components/icon';
                   }
                 </p>
               </a>
+
+              <ng-template #sectionMenu>
+                <div arc-menu-content class="w-56">
+                  <a arc-menu-item [routerLink]="['/campaigns', campaign.slug, section.key]">
+                    <arc-icon arcType="arrow-up-right" />
+                    {{ 'explorer.openPage' | translate }}
+                  </a>
+                  <div class="-mx-1 my-1 h-px bg-border-subtle" role="separator"></div>
+                  <button type="button" arc-menu-item (click)="editSection(campaign.slug, section)">
+                    <arc-icon arcType="pencil" />
+                    {{ 'settings.campaignSections.edit.title' | translate }}
+                  </button>
+                  @if (!section.isSpecial) {
+                    <button type="button" arc-menu-item arcType="destructive" (click)="deleteSection(campaign.slug, section)">
+                      <arc-icon arcType="trash" />
+                      {{ 'settings.campaignSections.remove.button' | translate }}
+                    </button>
+                  }
+                </div>
+              </ng-template>
             </li>
           }
         </ul>
@@ -78,9 +109,18 @@ export class CampaignHomePage {
   private readonly reviewService = inject(ReviewService);
   private readonly toolbarContext = inject(ToolbarContextService);
   private readonly sectionActions = inject(SectionActionsService);
+  private readonly campaignActions = inject(CampaignActionsService);
   protected readonly sectionService = inject(SectionService);
 
   protected readonly campaign = this.campaignService.activeCampaign;
+
+  protected editSection(campaignSlug: string, section: AppSection): void {
+    void this.sectionActions.openEditSectionSheet(campaignSlug, section);
+  }
+
+  protected deleteSection(campaignSlug: string, section: AppSection): void {
+    this.sectionActions.openDeleteSectionSheet(campaignSlug, section);
+  }
   protected readonly sections = this.sectionService.visibleCampaignSections;
   /** Things the Review page lists (broken links, misplaced notes, unknown folders…). */
   protected readonly reviewCount = signal(0);
@@ -99,6 +139,23 @@ export class CampaignHomePage {
                 icon: 'grid-2x2-plus',
                 iconOnly: true,
                 action: () => void this.sectionActions.openSectionSheet(campaign.slug, null),
+              },
+              {
+                id: 'edit-campaign',
+                label: 'campaigns.overview.edit',
+                icon: 'pencil',
+                buttonType: 'outline',
+                iconOnly: true,
+                action: () => this.campaignActions.openEditSheet(campaign),
+              },
+              {
+                id: 'delete-campaign',
+                label: 'campaigns.overview.delete',
+                icon: 'trash',
+                buttonType: 'secondary',
+                destructive: true,
+                iconOnly: true,
+                action: () => void this.campaignActions.openDeleteSheet(campaign),
               },
             ],
           }),

@@ -216,6 +216,10 @@
         "gem": "Gemme",
         "book-open": "Livre",
         "feather": "Plume"
+      },
+      "rename": {
+        "title": "Renommer la section",
+        "description": "Laissez vide pour revenir au nom par défaut, {{name}}. Le dossier garde son nom."
       }
     },
     "editor": {
@@ -489,6 +493,30 @@
     "assets": {
       "loadError": "Impossible de charger cette image",
       "loadErrorAudio": "Impossible de lire ce son"
+    },
+    "menu": {
+      "edit": "Modifier",
+      "delete": "Supprimer",
+      "open": "Ouvrir"
+    },
+    "edit": {
+      "title": "Modifier la campagne",
+      "description": "Modifiez le nom et la description de la campagne.",
+      "nameDescription": "Le dossier garde son nom : les liens et les fichiers ne changent pas.",
+      "submit": "Enregistrer",
+      "done": "{{name}} enregistrée",
+      "error": "Impossible d'enregistrer la campagne"
+    },
+    "remove": {
+      "title": "Supprimer {{name}} ?",
+      "description": "{{folder}} et les {{count}} fichiers qu’il contient seront placés dans la corbeille, et les réglages de cette campagne oubliés.",
+      "confirm": "Mettre à la corbeille",
+      "done": "{{name}} mise à la corbeille",
+      "error": "Impossible de supprimer la campagne"
+    },
+    "overview": {
+      "edit": "Modifier la campagne",
+      "delete": "Supprimer la campagne"
     }
   },
   "document": {

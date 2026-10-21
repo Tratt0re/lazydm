@@ -449,6 +449,43 @@
   transform: rotate(45deg);
 }
 
+/*
+ * Campaign card (Nordic Relic "engraved geometry"): bronze corner brackets that grow on hover/focus.
+ * Decoration only: no text, aria-hidden in the markup.
+ */
+.arc-campaign-card {
+  --bracket-size: 14px;
+  --bracket-grow: 22px;
+  position: relative;
+  transition: border-color 150ms;
+}
+
+.arc-campaign-card > .arc-card-corner {
+  position: absolute;
+  width: var(--bracket-size);
+  height: var(--bracket-size);
+  border: 0 solid var(--primary);
+  pointer-events: none;
+  transition: width 180ms ease-out, height 180ms ease-out;
+}
+
+.arc-campaign-card > .arc-card-corner-tl { top: -1px; left: -1px; border-top-width: 2px; border-left-width: 2px; }
+.arc-campaign-card > .arc-card-corner-tr { top: -1px; right: -1px; border-top-width: 2px; border-right-width: 2px; }
+.arc-campaign-card > .arc-card-corner-bl { bottom: -1px; left: -1px; border-bottom-width: 2px; border-left-width: 2px; }
+.arc-campaign-card > .arc-card-corner-br { bottom: -1px; right: -1px; border-bottom-width: 2px; border-right-width: 2px; }
+
+.arc-campaign-card:hover > .arc-card-corner,
+.arc-campaign-card:focus-within > .arc-card-corner {
+  width: var(--bracket-grow);
+  height: var(--bracket-grow);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .arc-campaign-card > .arc-card-corner {
+    transition: none;
+  }
+}
+
 /* The note page fills the content area: the editor (and its code map) scrolls inside it, not the page. */
 arc-content > main:has(> app-document-page) {
   min-height: 0;

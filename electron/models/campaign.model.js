@@ -1,9 +1,14 @@
 const fs = require('node:fs');
 const YAML = require('yaml');
 const { resolveInsideVault, safeWriteFileAtomic } = require('../utils/file-utils');
-const { parseMarkdownDocument } = require('../utils/markdown-parse');
+const {
+  parseMarkdownDocument,
+  removeFrontmatterField,
+  replaceDocumentTitle,
+  setFrontmatterField,
+} = require('../utils/markdown-parse');
 const { DEFAULT_SECTIONS } = require('./section.model');
-const { isCampaignDirName } = require('./vault.model');
+const { isCampaignDirName, readVaultConfig, writeVaultConfig } = require('./vault.model');
 
 const CAMPAIGN_FILE_NAME = 'campaign.md';
 const CAMPAIGN_NOTE_TYPE = 'campaign';
@@ -107,11 +112,67 @@ async function createCampaign(rootPath, { slug, name, description }) {
   return readCampaign(rootPath, slug);
 }
 
+/**
+ * Changes the name and description of a campaign in its `campaign.md` (frontmatter `title` / `description` and
+ * the `# Heading`). The folder keeps its name: the readable name lives in the content, never in the folder.
+ */
+async function updateCampaign(rootPath, slug, { name, description }) {
+  const filePath = getCampaignFilePath(rootPath, slug);
+  const original = await fs.promises.readFile(filePath, 'utf8');
+  const oldTitle =
+    toOptionalString(
+      parseMarkdownDocument(original, { sourcePath: `${slug}/${CAMPAIGN_FILE_NAME}` }).frontmatter
+        .title,
+    ) ?? null;
+
+  let content = replaceDocumentTitle(original, oldTitle, name);
+  content = description
+    ? setFrontmatterField(content, 'description', description)
+    : removeFrontmatterField(content, 'description');
+  if (content !== original) {
+    safeWriteFileAtomic(filePath, content);
+  }
+
+  return readCampaign(rootPath, slug);
+}
+
+/** Config maps of `.lazydm/vault.json` that hold per-campaign entries, by their path. */
+const CAMPAIGN_CONFIG_PATHS = Object.freeze([
+  ['sections', 'campaigns'],
+  ['templates', 'campaigns'],
+  ['battleRules', 'campaigns'],
+]);
+
+/** Drops the entries of a deleted campaign (sections, template and battle rule choices) from the vault config. */
+function forgetCampaignSettings(rootPath, slug) {
+  const config = readVaultConfig(rootPath);
+  if (!config) {
+    return;
+  }
+
+  let changed = false;
+  const next = { ...config };
+  for (const [group, key] of CAMPAIGN_CONFIG_PATHS) {
+    const map = config[group]?.[key];
+    if (map && typeof map === 'object' && Object.hasOwn(map, slug)) {
+      const { [slug]: _removed, ...rest } = map;
+      next[group] = { ...config[group], [key]: rest };
+      changed = true;
+    }
+  }
+
+  if (changed) {
+    writeVaultConfig(rootPath, next);
+  }
+}
+
 module.exports = {
   CAMPAIGN_SECTION_DIR_NAMES,
   NOTE_TYPE_DIR_NAMES,
   campaignFolderExists,
   createCampaign,
+  forgetCampaignSettings,
   listCampaigns,
   readCampaign,
+  updateCampaign,
 };

@@ -425,6 +425,14 @@ Planned Electron modules: `vault`, `cloud-readiness`, `campaign`, `document`, `i
 
 ## 8. UI and navigation
 
+- **Campaign and section management**: *Edit* and *Delete* are in the right-click menu of a campaign card (campaigns
+  page) and in the toolbar of the campaign overview. Editing changes the name and description in `campaign.md`;
+  **the folder (slug) never changes**. Deleting sends the folder to the system Trash after a confirmation with the
+  file count, and forgets the campaign's entries in `vault.json`, its saved tabs and its index rows. For a section,
+  *Edit* and *Delete* are in the right-click menu of the explorer and of the overview cards, and in the toolbar of
+  the section page. A custom section opens the full edit sheet; a preset section can only be renamed. *Assets* and
+  *Encounters* can be edited but never deleted. Sections of a compendium system are not editable.
+
 - **First start** → vault setup page (select or create the root folder). Until a vault exists, every route redirects there.
 - **Title bar** (app header, every page): drag area, **Compendium** and **Settings**, window buttons (no app name).
 - The **toolbar's bottom edge** is the ornamental rule from *engraved geometry* (bronze bar, ◇ ✣ ◇, hairline) —
@@ -571,6 +579,9 @@ Component behaviour, variant keys and configuration stay as they are.
 - **Square everything**: `--radius: 0`. Only popups and dialogs get a shadow.
 - **Fonts** (bundled locally): Barlow Condensed (`font-display`) for titles and big numbers, IBM Plex Sans
   (`font-sans`) for UI and body, IBM Plex Mono (`font-mono`) for labels, nav items, table headers, chips and metadata.
+- **Campaign cards** (the campaigns page) carry bronze **corner brackets** (`.arc-campaign-card`, four
+  `.arc-card-corner` spans, decoration only, `aria-hidden`) that grow on hover and focus; the card shows the
+  standard pointer cursor. No glyph on the border.
 - **Titles of pages, routes and cards end with a dot in the primary colour**:
   `{{ title }}<span class="text-primary" aria-hidden="true">.</span>` (no whitespace between text and dot).
 - **Component rules**:

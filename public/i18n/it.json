@@ -216,6 +216,10 @@
         "gem": "Gemma",
         "book-open": "Libro",
         "feather": "Piuma"
+      },
+      "rename": {
+        "title": "Rinomina sezione",
+        "description": "Lascia vuoto per tornare al nome predefinito, {{name}}. La cartella mantiene il suo nome."
       }
     },
     "editor": {
@@ -489,6 +493,30 @@
     "assets": {
       "loadError": "Impossibile caricare questa immagine",
       "loadErrorAudio": "Impossibile riprodurre questo suono"
+    },
+    "menu": {
+      "edit": "Modifica",
+      "delete": "Elimina",
+      "open": "Apri"
+    },
+    "edit": {
+      "title": "Modifica campagna",
+      "description": "Cambia il nome e la descrizione della campagna.",
+      "nameDescription": "La cartella mantiene il suo nome, quindi link e file non cambiano.",
+      "submit": "Salva",
+      "done": "{{name}} salvata",
+      "error": "Impossibile salvare la campagna"
+    },
+    "remove": {
+      "title": "Eliminare {{name}}?",
+      "description": "{{folder}} e i {{count}} file al suo interno verranno spostati nel Cestino e le impostazioni di questa campagna dimenticate.",
+      "confirm": "Sposta nel Cestino",
+      "done": "{{name}} spostata nel Cestino",
+      "error": "Impossibile eliminare la campagna"
+    },
+    "overview": {
+      "edit": "Modifica campagna",
+      "delete": "Elimina campagna"
     }
   },
   "document": {

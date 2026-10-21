@@ -25,6 +25,9 @@ const CHANNELS = Object.freeze({
     list: 'campaigns:list',
     get: 'campaigns:get',
     create: 'campaigns:create',
+    update: 'campaigns:update',
+    countFiles: 'campaigns:countFiles',
+    remove: 'campaigns:remove',
   }),
   cloud: Object.freeze({
     getStatus: 'cloud:getStatus',

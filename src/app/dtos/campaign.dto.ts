@@ -13,3 +13,9 @@ export interface CreateCampaignPayload {
   /** Keys of the preset sections the campaign starts with; none given = all of them. */
   readonly presets?: readonly string[];
 }
+
+export interface UpdateCampaignPayload {
+  readonly slug: string;
+  readonly name: string;
+  readonly description?: string | null;
+}

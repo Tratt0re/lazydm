@@ -28,6 +28,7 @@ import { FileActionsService } from '@/services/file-actions.service';
 import { FileMoveService } from '@/services/file-move.service';
 import { LocalPreferencesService } from '@/services/local-preferences.service';
 import { type AppSection, SectionService, toSubfolderLabel } from '@/services/section.service';
+import { SectionActionsService } from '@/services/section-actions.service';
 import { WorkspaceService } from '@/services/workspace.service';
 import { ArcTechIconComponent, type ArcTechIcon } from '@/shared/components/icon';
 import { ArcTechMenuImports } from '@/shared/components/menu';
@@ -94,6 +95,7 @@ export class AppExplorerTreeComponent {
   protected readonly workspace = inject(WorkspaceService);
   private readonly localPreferences = inject(LocalPreferencesService);
   private readonly sectionService = inject(SectionService);
+  private readonly sectionActions = inject(SectionActionsService);
   protected readonly toSubfolderLabel = toSubfolderLabel;
 
   readonly nodes = input.required<readonly ExplorerNode[]>();
@@ -263,6 +265,26 @@ export class AppExplorerTreeComponent {
     return isSystem
       ? this.sectionService.findSystemSection(key)
       : this.sectionService.findCampaignSection(key);
+  }
+
+  /** Edit and delete apply to the sections of a campaign (`<slug>/<section>`), not to those of a compendium system. */
+  protected canManageSection(node: ExplorerNode): boolean {
+    const segments = node.path?.split('/') ?? [];
+    return segments.length === 2 && segments[0] !== 'compendium';
+  }
+
+  protected editSection(node: ExplorerNode, section: AppSection | null): void {
+    const campaign = node.path?.split('/')[0];
+    if (section && campaign) {
+      void this.sectionActions.openEditSectionSheet(campaign, section);
+    }
+  }
+
+  protected deleteSection(node: ExplorerNode, section: AppSection | null): void {
+    const campaign = node.path?.split('/')[0];
+    if (section && campaign) {
+      this.sectionActions.openDeleteSectionSheet(campaign, section);
+    }
   }
 
   /** Notes go in sections with a note type (not assets or encounters), and in their sub-folders. */

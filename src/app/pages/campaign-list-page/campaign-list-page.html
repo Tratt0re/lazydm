@@ -33,12 +33,20 @@
           </button>
         </ng-template>
       } @else {
-        <ul class="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+        <ul class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           @for (campaign of campaigns(); track campaign.slug) {
-            <li>
+            <li class="arc-campaign-card h-full border border-border bg-card hover:border-primary">
+              <span class="arc-card-corner arc-card-corner-tl" aria-hidden="true"></span>
+              <span class="arc-card-corner arc-card-corner-tr" aria-hidden="true"></span>
+              <span class="arc-card-corner arc-card-corner-bl" aria-hidden="true"></span>
+              <span class="arc-card-corner arc-card-corner-br" aria-hidden="true"></span>
+
               <a
                 [routerLink]="['/campaigns', campaign.slug]"
-                class="flex h-full flex-col gap-3 border border-border bg-card p-5 transition-colors hover:border-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+                arc-context-menu
+                [arcContextMenuTriggerFor]="campaignMenu"
+                [style.cursor]="'pointer'"
+                class="flex h-full flex-col gap-3 p-6 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
               >
                 <h2 class="font-display text-3xl leading-none font-extrabold tracking-[0.02em] uppercase">
                   {{ campaign.name }}<span class="text-primary" aria-hidden="true">.</span>
@@ -50,6 +58,24 @@
                   {{ campaign.slug }}
                 </p>
               </a>
+
+              <ng-template #campaignMenu>
+                <div arc-menu-content class="w-56">
+                  <a arc-menu-item [routerLink]="['/campaigns', campaign.slug]">
+                    <arc-icon arcType="arrow-up-right" />
+                    {{ 'campaigns.menu.open' | translate }}
+                  </a>
+                  <div class="-mx-1 my-1 h-px bg-border-subtle" role="separator"></div>
+                  <button type="button" arc-menu-item (click)="editCampaign(campaign)">
+                    <arc-icon arcType="pencil" />
+                    {{ 'campaigns.menu.edit' | translate }}
+                  </button>
+                  <button type="button" arc-menu-item arcType="destructive" (click)="deleteCampaign(campaign)">
+                    <arc-icon arcType="trash" />
+                    {{ 'campaigns.menu.delete' | translate }}
+                  </button>
+                </div>
+              </ng-template>
             </li>
           }
         </ul>

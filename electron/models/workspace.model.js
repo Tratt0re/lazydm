@@ -23,6 +23,11 @@ function getWorkspace(campaign) {
   };
 }
 
+/** Forgets the saved tabs of a campaign (it was deleted). */
+function deleteWorkspace(campaign) {
+  getVaultIndexDatabase().prepare('DELETE FROM workspace WHERE campaign = ?').run(campaign);
+}
+
 function saveWorkspace(campaign, { tabs, activeTabId }) {
   const updatedAtMs = Date.now();
   getVaultIndexDatabase()
@@ -39,6 +44,7 @@ function saveWorkspace(campaign, { tabs, activeTabId }) {
 }
 
 module.exports = {
+  deleteWorkspace,
   getWorkspace,
   saveWorkspace,
 };

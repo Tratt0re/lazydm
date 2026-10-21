@@ -38,7 +38,10 @@ var require_channels = __commonJS({
       campaigns: Object.freeze({
         list: "campaigns:list",
         get: "campaigns:get",
-        create: "campaigns:create"
+        create: "campaigns:create",
+        update: "campaigns:update",
+        countFiles: "campaigns:countFiles",
+        remove: "campaigns:remove"
       }),
       cloud: Object.freeze({
         getStatus: "cloud:getStatus",
@@ -408,4 +411,3 @@ contextBridge.exposeInMainWorld("electronAPI", {
     node: process.versions.node
   })
 });
-//# sourceMappingURL=preload.bundle.cjs.map

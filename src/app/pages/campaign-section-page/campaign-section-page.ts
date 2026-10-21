@@ -50,6 +50,7 @@ import { ArcTechIconComponent, type ArcTechIcon } from '@/shared/components/icon
 import { ArcTechMenuImports } from '@/shared/components/menu';
 import { ArcTechSheetService } from '@/shared/components/sheet';
 import { ArcTechTooltipImports } from '@/shared/components/tooltip';
+import { SectionActionsService } from '@/services/section-actions.service';
 
 export const CAMPAIGN_SECTION_PARAM = 'section';
 /** Query parameter of the sub-folder the section page shows (`?folder=humans`). */
@@ -96,6 +97,7 @@ export class CampaignSectionPage {
   /** A campaign, or a compendium system (the same page lists both). */
   private readonly scope = inject(NoteScopeService).scopeOf(getNoteScopeKind(this.route));
   private readonly documentService = inject(DocumentService);
+  private readonly sectionActions = inject(SectionActionsService);
   private readonly translateService = inject(TranslateService);
   private readonly toolbarContext = inject(ToolbarContextService);
   private readonly templateService = inject(TemplateService);
@@ -348,6 +350,31 @@ export class CampaignSectionPage {
         iconOnly: true,
         action: () => this.openCreateSheet(),
       });
+    }
+
+    // Managing the section itself: campaign sections only (a system's sections are fixed); Assets and Encounters
+    // can be edited but never deleted.
+    if (scope?.kind === 'campaign' && section && !this.subfolder()) {
+      const campaign = scope.rootPath;
+      actions.push({
+        id: 'section-edit',
+        label: 'settings.campaignSections.edit.title',
+        icon: 'pencil',
+        buttonType: 'outline',
+        iconOnly: true,
+        action: () => void this.sectionActions.openEditSectionSheet(campaign, section),
+      });
+      if (!section.isSpecial) {
+        actions.push({
+          id: 'section-delete',
+          label: 'settings.campaignSections.remove.button',
+          icon: 'trash',
+          buttonType: 'secondary',
+          destructive: true,
+          iconOnly: true,
+          action: () => this.sectionActions.openDeleteSectionSheet(campaign, section),
+        });
+      }
     }
 
     return actions;

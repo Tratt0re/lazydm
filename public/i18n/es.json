@@ -216,6 +216,10 @@
         "gem": "Gema",
         "book-open": "Libro",
         "feather": "Pluma"
+      },
+      "rename": {
+        "title": "Renombrar sección",
+        "description": "Déjalo vacío para volver al nombre por defecto, {{name}}. La carpeta mantiene su nombre."
       }
     },
     "editor": {
@@ -489,6 +493,30 @@
     "assets": {
       "loadError": "No se pudo cargar esta imagen",
       "loadErrorAudio": "No se pudo reproducir este sonido"
+    },
+    "menu": {
+      "edit": "Editar",
+      "delete": "Eliminar",
+      "open": "Abrir"
+    },
+    "edit": {
+      "title": "Editar campaña",
+      "description": "Cambia el nombre y la descripción de la campaña.",
+      "nameDescription": "La carpeta mantiene su nombre, así que los enlaces y archivos no cambian.",
+      "submit": "Guardar",
+      "done": "{{name}} guardada",
+      "error": "No se pudo guardar la campaña"
+    },
+    "remove": {
+      "title": "¿Eliminar {{name}}?",
+      "description": "{{folder}} y los {{count}} archivos que contiene se moverán a la papelera y se olvidarán los ajustes de esta campaña.",
+      "confirm": "Mover a la papelera",
+      "done": "{{name}} movida a la papelera",
+      "error": "No se pudo eliminar la campaña"
+    },
+    "overview": {
+      "edit": "Editar campaña",
+      "delete": "Eliminar campaña"
     }
   },
   "document": {

@@ -43,6 +43,9 @@ const IPC_HANDLERS = Object.freeze({
   [CHANNELS.campaigns.list]: campaignController.list,
   [CHANNELS.campaigns.get]: campaignController.get,
   [CHANNELS.campaigns.create]: campaignController.create,
+  [CHANNELS.campaigns.update]: campaignController.update,
+  [CHANNELS.campaigns.countFiles]: campaignController.countFiles,
+  [CHANNELS.campaigns.remove]: campaignController.remove,
 
   [CHANNELS.cloud.getStatus]: cloudReadinessController.getStatus,
   [CHANNELS.cloud.skipWait]: cloudReadinessController.skipWait,
