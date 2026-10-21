@@ -1046,7 +1046,7 @@
       "initiative": "Initiative",
       "number": "Zahl",
       "text": "Text",
-      "healthbar": "Lebensbalken",
+      "healthbar": "Balken",
       "statuses": "Zustände",
       "side": "Seite",
       "note-link": "Verknüpfte Notiz"
@@ -1085,24 +1085,21 @@
       "close": "Schließen"
     },
     "row": {
-      "hint": "Ziehe ein Element an eine andere Stelle der Zeile, öffne mit dem Zahnrad seine Einstellungen und ziehe es auf das Feld unten, um es auszublenden. Name und Initiative bleiben.",
+      "hint": "Ziehe ein Element, um es zu verschieben (auf ein anderes, um sie zu tauschen), ziehe den rechten Rand, um die Größe zu ändern, öffne mit dem Zahnrad die Einstellungen und lege es im Feld darunter ab, um es auszublenden. Name und Initiative bleiben.",
       "label": "Beispiel-Einheitenzeile",
       "settings": "Einstellungen von {{name}}",
       "settingsTip": "Einstellungen",
       "overlap": "Dieser Platz ist belegt oder außerhalb der Zeile.",
       "noRoom": "In der Zeile ist kein Platz mehr frei.",
       "keyInvalid": "Der Schlüssel braucht Kleinbuchstaben, Ziffern oder _ und muss frei sein.",
-      "row": "Zeile",
-      "column": "Spalte",
-      "width": "Breite (Spalten)",
-      "left": "Nach links",
-      "right": "Nach rechts",
-      "up": "Eine Zeile höher",
-      "down": "Eine Zeile tiefer",
       "hide": "In der Zeile ausblenden",
       "palette": "Nicht in der Zeile · hineinziehen oder klicken",
       "show": "{{name}} in der Zeile zeigen",
-      "add": "{{name}} hinzufügen"
+      "add": "{{name}} hinzufügen",
+      "apply": "Übernehmen",
+      "discard": "Verwerfen",
+      "unconfirmed": "Noch nicht übernommen",
+      "resize": "{{name}} anpassen"
     }
   }
 }

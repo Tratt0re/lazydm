@@ -1046,7 +1046,7 @@
       "initiative": "Iniziativa",
       "number": "Numero",
       "text": "Testo",
-      "healthbar": "Barra della salute",
+      "healthbar": "Barra",
       "statuses": "Stati",
       "side": "Fazione",
       "note-link": "Nota collegata"
@@ -1085,24 +1085,21 @@
       "close": "Chiudi"
     },
     "row": {
-      "hint": "Trascina un elemento in un altro punto della riga, premi l'ingranaggio per le sue impostazioni e trascinalo sul riquadro sotto per nasconderlo. Il nome e l'iniziativa restano.",
+      "hint": "Trascina un elemento per spostarlo (su un altro per scambiarli), trascina il suo bordo destro per ridimensionarlo, premi l'ingranaggio per le impostazioni e rilascialo nel riquadro sotto per nasconderlo. Nome e iniziativa restano.",
       "label": "Riga di esempio dell'entità",
       "settings": "Impostazioni di {{name}}",
       "settingsTip": "Impostazioni",
       "overlap": "Quel posto è occupato o fuori dalla riga.",
       "noRoom": "Non c'è più posto libero nella riga.",
       "keyInvalid": "La chiave richiede lettere minuscole, cifre o _ e non deve essere già usata.",
-      "row": "Riga",
-      "column": "Colonna",
-      "width": "Larghezza (colonne)",
-      "left": "Sposta a sinistra",
-      "right": "Sposta a destra",
-      "up": "Sposta su di una riga",
-      "down": "Sposta giù di una riga",
       "hide": "Nascondi dalla riga",
       "palette": "Non nella riga · trascina dentro, o clicca",
       "show": "Mostra {{name}} nella riga",
-      "add": "Aggiungi {{name}}"
+      "add": "Aggiungi {{name}}",
+      "apply": "Applica",
+      "discard": "Annulla",
+      "unconfirmed": "Non ancora applicato",
+      "resize": "Ridimensiona {{name}}"
     }
   }
 }

@@ -1046,7 +1046,7 @@
       "initiative": "先攻",
       "number": "数字",
       "text": "文本",
-      "healthbar": "生命条",
+      "healthbar": "条",
       "statuses": "状态",
       "side": "阵营",
       "note-link": "关联笔记"
@@ -1085,24 +1085,21 @@
       "close": "关闭"
     },
     "row": {
-      "hint": "将元素拖到行中的其他位置，点击其齿轮查看设置，拖到下方框中可隐藏。名称和先攻会保留。",
+      "hint": "拖动元素可移动它（拖到另一个元素上会互换位置），拖动右边缘可调整宽度，点击齿轮打开设置，拖到下方框中可隐藏。名称和先攻始终保留。",
       "label": "单位行示意",
       "settings": "{{name}} 的设置",
       "settingsTip": "设置",
       "overlap": "该位置已被占用或超出行范围。",
       "noRoom": "行中已没有空位。",
       "keyInvalid": "键需为小写字母、数字或 _，且不能重复。",
-      "row": "行",
-      "column": "列",
-      "width": "宽度（列）",
-      "left": "左移",
-      "right": "右移",
-      "up": "上移一行",
-      "down": "下移一行",
       "hide": "从行中隐藏",
       "palette": "不在行中 · 拖入或点击",
       "show": "在行中显示 {{name}}",
-      "add": "添加 {{name}}"
+      "add": "添加 {{name}}",
+      "apply": "应用",
+      "discard": "放弃",
+      "unconfirmed": "尚未应用",
+      "resize": "调整 {{name}} 大小"
     }
   }
 }

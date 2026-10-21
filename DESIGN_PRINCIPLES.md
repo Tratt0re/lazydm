@@ -397,10 +397,14 @@ Planned Electron modules: `vault`, `cloud-readiness`, `campaign`, `document`, `i
   - **Editor**: the *Battle rules* sheet (title-bar button next to Templates) has the same library layout: built-in,
     vault, systems and campaigns in the secondary sidebar, with a form for the name, the template, the initiative
     (typed or rolled, formula and the template's keys as chips) and a **mock entity row**: each element sits where
-    the real row will show it and is **dragged** to another place (a preview shows whether it fits; overlapping or leaving
-    the grid is refused). A **gear** on each element opens its settings (label, key, value source, sides, row, column,
-    width, arrows, hide, remove). A **palette** holds the hidden and the addable types: drag one in or click it to put it
-    in the first free place; dropping an element on the palette hides it. The name and the initiative can move but not go. Unsaved edits are saved when another rule is selected or the
+    the real row will show it. **Drag** an element to move it (a preview shows whether it fits); dropped **on another
+    element** the two swap places when each fits where the other was; the **right edge** is dragged to resize it, a
+    column at a time, until it meets a neighbour. There are no row, column or width fields and no arrows. A **gear** on
+    each element opens its settings (label, key, value source, sides, hide, remove); they are typed into a draft and only
+    reach the rule when *Apply* is pressed (*Discard* drops them). A **palette** holds the hidden elements and the types
+    that can be added (drag in, or click to use the first free place); dropping an element on it hides it. *Linked note*,
+    *Statuses* and *Side* can only exist once in a rule; the health bar type is called *Bar*. The name and the initiative
+    can move but not go. Unsaved edits are saved when another rule is selected or the
     sheet is closed.
 
 ## 7. Security

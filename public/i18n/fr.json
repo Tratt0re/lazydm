@@ -1046,7 +1046,7 @@
       "initiative": "Initiative",
       "number": "Nombre",
       "text": "Texte",
-      "healthbar": "Barre de vie",
+      "healthbar": "Barre",
       "statuses": "États",
       "side": "Camp",
       "note-link": "Note liée"
@@ -1085,24 +1085,21 @@
       "close": "Fermer"
     },
     "row": {
-      "hint": "Faites glisser un élément à un autre endroit de la ligne, appuyez sur son engrenage pour ses réglages et faites-le glisser sur la zone du bas pour le masquer. Le nom et l'initiative restent.",
+      "hint": "Faites glisser un élément pour le déplacer (sur un autre pour les échanger), faites glisser son bord droit pour le redimensionner, appuyez sur son engrenage pour ses réglages et déposez-le dans la zone du dessous pour le masquer. Le nom et l'initiative restent.",
       "label": "Ligne d'exemple de l'entité",
       "settings": "Réglages de {{name}}",
       "settingsTip": "Réglages",
       "overlap": "Cet emplacement est pris ou hors de la ligne.",
       "noRoom": "Il n'y a plus de place libre dans la ligne.",
       "keyInvalid": "La clé demande des minuscules, des chiffres ou _ et ne doit pas être déjà utilisée.",
-      "row": "Ligne",
-      "column": "Colonne",
-      "width": "Largeur (colonnes)",
-      "left": "Déplacer à gauche",
-      "right": "Déplacer à droite",
-      "up": "Monter d'une ligne",
-      "down": "Descendre d'une ligne",
       "hide": "Masquer de la ligne",
       "palette": "Hors de la ligne · glissez dedans, ou cliquez",
       "show": "Afficher {{name}} dans la ligne",
-      "add": "Ajouter {{name}}"
+      "add": "Ajouter {{name}}",
+      "apply": "Appliquer",
+      "discard": "Annuler",
+      "unconfirmed": "Pas encore appliqué",
+      "resize": "Redimensionner {{name}}"
     }
   }
 }

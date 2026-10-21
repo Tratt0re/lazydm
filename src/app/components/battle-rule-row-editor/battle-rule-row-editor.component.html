@@ -11,6 +11,7 @@
 
     @for (row of rows(); track row) {
       <div
+        data-grid-row
         class="relative mb-1 grid min-h-14 grid-cols-12 gap-1 border border-dashed border-border-subtle bg-card/40 p-1"
         (dragover)="onGridDragOver($event, row)"
         (drop)="onGridDrop($event, row)"
@@ -55,6 +56,27 @@
               >
                 <arc-icon arcType="settings" class="size-3.5" />
               </button>
+              @if (!isReadOnly()) {
+                <!-- Drag the right edge to give the element more or fewer columns. -->
+                <span
+                  class="absolute inset-y-0 -right-1 z-30 flex w-2 cursor-ew-resize touch-none items-center justify-center hover:bg-primary/30 focus-visible:bg-primary/40 focus-visible:outline-2 focus-visible:outline-ring"
+                  role="separator"
+                  aria-orientation="vertical"
+                  tabindex="0"
+                  draggable="false"
+                  [attr.aria-label]="'battleRules.row.resize' | translate: { name: elementLabel(element) }"
+                  [attr.aria-valuenow]="element.area.span"
+                  aria-valuemin="1"
+                  [attr.aria-valuemax]="12"
+                  (pointerdown)="onResizeStart($event, element)"
+                  (pointermove)="onResizeMove($event, element)"
+                  (pointerup)="onResizeEnd($event, element)"
+                  (pointercancel)="onResizeEnd($event, element)"
+                  (keydown)="onResizeKey($event, element)"
+                >
+                  <span class="h-5 w-0.5 bg-border-strong" aria-hidden="true"></span>
+                </span>
+              }
             </div>
           }
         }
@@ -95,55 +117,52 @@
       <p class="font-mono text-xs text-muted-foreground">{{ 'battleRules.editor.alwaysThere' | translate }}</p>
     }
 
-    <!-- Place: row, first column and width in columns. -->
-    <div class="grid gap-3 sm:grid-cols-3">
-      <label class="flex flex-col gap-1 text-xs font-medium">
-        {{ 'battleRules.row.row' | translate }}
-        <input arc-input type="number" min="1" max="4" [value]="element.area.row.toString()" [disabled]="isReadOnly()" (change)="setAreaPart('row', $any($event.target).value)" />
-      </label>
-      <label class="flex flex-col gap-1 text-xs font-medium">
-        {{ 'battleRules.row.column' | translate }}
-        <input arc-input type="number" min="1" max="12" [value]="element.area.column.toString()" [disabled]="isReadOnly()" (change)="setAreaPart('column', $any($event.target).value)" />
-      </label>
-      <label class="flex flex-col gap-1 text-xs font-medium">
-        {{ 'battleRules.row.width' | translate }}
-        <input arc-input type="number" min="1" max="12" [value]="element.area.span.toString()" [disabled]="isReadOnly()" (change)="setAreaPart('span', $any($event.target).value)" />
-      </label>
-    </div>
-    <div class="flex flex-wrap items-center gap-1">
-      <button type="button" arc-button arcType="outline" arcSize="sm" class="size-8" [arcDisabled]="isReadOnly()" [attr.aria-label]="'battleRules.row.left' | translate" (click)="nudge(-1, 0)"><arc-icon arcType="arrow-left" /></button>
-      <button type="button" arc-button arcType="outline" arcSize="sm" class="size-8" [arcDisabled]="isReadOnly()" [attr.aria-label]="'battleRules.row.right' | translate" (click)="nudge(1, 0)"><arc-icon arcType="move-right" /></button>
-      <button type="button" arc-button arcType="outline" arcSize="sm" class="size-8" [arcDisabled]="isReadOnly()" [attr.aria-label]="'battleRules.row.up' | translate" (click)="nudge(0, -1)"><arc-icon arcType="arrow-up" /></button>
-      <button type="button" arc-button arcType="outline" arcSize="sm" class="size-8" [arcDisabled]="isReadOnly()" [attr.aria-label]="'battleRules.row.down' | translate" (click)="nudge(0, 1)"><arc-icon arcType="arrow-down" /></button>
-    </div>
-
+    <!-- The element's place and width are set on the mock row above (drag it, drag its right edge). -->
     @if (element.field; as field) {
-      <div class="grid gap-3 md:grid-cols-2">
-        <label class="flex flex-col gap-1 text-xs font-medium">
-          {{ 'battleRules.editor.label' | translate }}
-          <input arc-input type="text" [value]="field.label" [disabled]="isReadOnly()" (input)="updateField(field.key, { label: $any($event.target).value })" />
-        </label>
-        <label class="flex flex-col gap-1 text-xs font-medium">
-          {{ 'battleRules.editor.key' | translate }}
-          <input arc-input type="text" class="font-mono" [value]="field.key" [disabled]="isReadOnly()" (change)="setKey(field.key, $any($event.target).value)" />
-        </label>
-        @if (canReadFromNote(field)) {
-          <div class="flex flex-col gap-1 text-xs font-medium md:col-span-2">
-            <span>{{ 'battleRules.editor.source' | translate }}</span>
-            <arc-select [arcDisabled]="isReadOnly()" [arcValue]="field.source" (arcSelectionChange)="updateField(field.key, { source: $any($event) })">
-              @for (option of sourceOptions(); track option.value) {
-                <arc-select-item [arcValue]="option.value" [arcLabel]="option.label" />
-              }
-            </arc-select>
+      @if (draft(); as values) {
+        <div class="grid gap-3 md:grid-cols-2">
+          <label class="flex flex-col gap-1 text-xs font-medium">
+            {{ 'battleRules.editor.label' | translate }}
+            <input arc-input type="text" [value]="values.label" [disabled]="isReadOnly()" (input)="patchDraft({ label: $any($event.target).value })" />
+          </label>
+          <label class="flex flex-col gap-1 text-xs font-medium">
+            {{ 'battleRules.editor.key' | translate }}
+            <input arc-input type="text" class="font-mono" [value]="values.key" [disabled]="isReadOnly()" (input)="patchDraft({ key: $any($event.target).value })" />
+          </label>
+          @if (canReadFromNote(field)) {
+            <div class="flex flex-col gap-1 text-xs font-medium md:col-span-2">
+              <span>{{ 'battleRules.editor.source' | translate }}</span>
+              <arc-select [arcDisabled]="isReadOnly()" [arcValue]="values.source" (arcSelectionChange)="patchDraft({ source: $any($event) })">
+                @for (option of sourceOptions(); track option.value) {
+                  <arc-select-item [arcValue]="option.value" [arcLabel]="option.label" />
+                }
+              </arc-select>
+            </div>
+          }
+          @if (field.component === 'side') {
+            <label class="flex flex-col gap-1 text-xs font-medium md:col-span-2">
+              {{ 'battleRules.editor.sides' | translate }}
+              <input arc-input type="text" [value]="values.sides" [disabled]="isReadOnly()" (input)="patchDraft({ sides: $any($event.target).value })" />
+            </label>
+          }
+        </div>
+
+        @if (!isReadOnly()) {
+          <!-- Nothing changes in the rule until it is confirmed. -->
+          <div class="flex flex-wrap items-center gap-2 border-t border-border pt-3">
+            <button type="button" arc-button arcSize="sm" [arcDisabled]="!isDraftDirty()" (click)="applyDraft()">
+              <arc-icon arcType="check" />
+              {{ 'battleRules.row.apply' | translate }}
+            </button>
+            <button type="button" arc-button arcType="outline" arcSize="sm" [arcDisabled]="!isDraftDirty()" (click)="resetDraft()">
+              {{ 'battleRules.row.discard' | translate }}
+            </button>
+            @if (isDraftDirty()) {
+              <span class="font-mono text-[11px] text-muted-foreground">{{ 'battleRules.row.unconfirmed' | translate }}</span>
+            }
           </div>
         }
-        @if (field.component === 'side') {
-          <label class="flex flex-col gap-1 text-xs font-medium md:col-span-2">
-            {{ 'battleRules.editor.sides' | translate }}
-            <input arc-input type="text" [value]="(field.options ?? []).join(', ')" [disabled]="isReadOnly()" (change)="setSides(field.key, $any($event.target).value)" />
-          </label>
-        }
-      </div>
+      }
     }
 
     @if (!isReadOnly() && !isRequired()) {
@@ -189,7 +208,7 @@
           {{ fieldLabel(field) }}
         </button>
       }
-      @for (component of addable; track component) {
+      @for (component of addable(); track component) {
         <button
           type="button"
           class="flex cursor-grab items-center gap-1.5 border border-dashed border-border bg-card px-2 py-1 text-xs hover:border-primary focus-visible:outline-2 focus-visible:outline-ring"

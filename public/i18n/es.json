@@ -1046,7 +1046,7 @@
       "initiative": "Iniciativa",
       "number": "Número",
       "text": "Texto",
-      "healthbar": "Barra de salud",
+      "healthbar": "Barra",
       "statuses": "Estados",
       "side": "Bando",
       "note-link": "Nota vinculada"
@@ -1085,24 +1085,21 @@
       "close": "Cerrar"
     },
     "row": {
-      "hint": "Arrastra un elemento a otro lugar de la fila, pulsa su engranaje para ver sus ajustes y arrástralo al recuadro de abajo para ocultarlo. El nombre y la iniciativa se quedan.",
+      "hint": "Arrastra un elemento para moverlo (sobre otro para intercambiarlos), arrastra su borde derecho para cambiar su tamaño, pulsa su engranaje para los ajustes y suéltalo en el cuadro de abajo para ocultarlo. El nombre y la iniciativa se quedan.",
       "label": "Fila de ejemplo de la entidad",
       "settings": "Ajustes de {{name}}",
       "settingsTip": "Ajustes",
       "overlap": "Ese lugar está ocupado o fuera de la fila.",
       "noRoom": "Ya no queda sitio libre en la fila.",
       "keyInvalid": "La clave necesita minúsculas, dígitos o _ y no debe estar usada.",
-      "row": "Fila",
-      "column": "Columna",
-      "width": "Ancho (columnas)",
-      "left": "Mover a la izquierda",
-      "right": "Mover a la derecha",
-      "up": "Subir una fila",
-      "down": "Bajar una fila",
       "hide": "Ocultar de la fila",
       "palette": "Fuera de la fila · arrastra dentro, o haz clic",
       "show": "Mostrar {{name}} en la fila",
-      "add": "Añadir {{name}}"
+      "add": "Añadir {{name}}",
+      "apply": "Aplicar",
+      "discard": "Descartar",
+      "unconfirmed": "Aún sin aplicar",
+      "resize": "Redimensionar {{name}}"
     }
   }
 }
