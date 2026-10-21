@@ -219,6 +219,7 @@ export class AppEditorReferenceSheetComponent {
     play: this.translate.instant('document.media.play'),
     open: this.translate.instant('document.media.open'),
     volume: this.translate.instant('document.media.volume'),
+    brokenNote: this.translate.instant('document.brokenLinkTitle', { name: '{{name}}' }),
   };
 
   protected readonly shortcuts = SHORTCUTS;

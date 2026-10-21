@@ -1,4 +1,5 @@
 import { A11yModule } from '@angular/cdk/a11y';
+import { TranslatePipe } from '@ngx-translate/core';
 import { OverlayModule } from '@angular/cdk/overlay';
 import {
   BasePortalOutlet,
@@ -68,7 +69,14 @@ export class ArcTechDialogOptions<T, U> {
 
 @Component({
   selector: 'arc-dialog',
-  imports: [A11yModule, OverlayModule, PortalModule, ArcTechButtonComponent, ArcTechIconComponent],
+  imports: [
+    A11yModule,
+    OverlayModule,
+    PortalModule,
+    ArcTechButtonComponent,
+    ArcTechIconComponent,
+    TranslatePipe,
+  ],
   template: `
     <div #dialogSurface cdkTrapFocus [cdkTrapFocusAutoCapture]="true" tabindex="-1" class="flex h-full min-h-0 flex-col">
       @if (config.arcClosable || config.arcClosable === undefined) {
@@ -79,8 +87,8 @@ export class ArcTechDialogOptions<T, U> {
           arcType="ghost"
           arcSize="sm"
           class="absolute top-4 right-4 z-10 border border-input"
-          aria-label="Close dialog"
-          title="Close dialog"
+          [attr.aria-label]="'common.closeDialog' | translate"
+          [attr.title]="'common.closeDialog' | translate"
           (click)="onCloseClick()"
         >
           <arc-icon arcType="x" />
@@ -128,7 +136,7 @@ export class ArcTechDialogOptions<T, U> {
                 <arc-icon [arcType]="config.arcCancelIcon" />
               }
 
-              {{ config.arcCancelText ?? 'Cancel' }}
+              {{ config.arcCancelText ?? ('common.cancel' | translate) }}
             </button>
           }
 
@@ -162,7 +170,7 @@ export class ArcTechDialogOptions<T, U> {
                 <arc-icon [arcType]="config.arcOkIcon" />
               }
 
-              {{ okText() ?? config.arcOkText ?? 'OK' }}
+              {{ okText() ?? config.arcOkText ?? ('common.ok' | translate) }}
             </button>
           }
         </footer>

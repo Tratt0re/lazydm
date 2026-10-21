@@ -618,7 +618,8 @@
         "insertMenu": "Clic droit : insérer mise en forme, blocs, liens et ressources",
         "openInNewTab": "Cmd/Ctrl-clic sur un lien : l’ouvrir dans un nouvel onglet"
       }
-    }
+    },
+    "brokenLinkTitle": "Note introuvable : {{name}}"
   },
   "tabs": {
     "ariaLabel": "Onglets ouverts",
@@ -757,7 +758,41 @@
     "close": "Fermer",
     "skipToContent": "Aller au contenu",
     "selectAllRows": "Sélectionner toutes les lignes",
-    "selectRow": "Sélectionner la ligne"
+    "selectRow": "Sélectionner la ligne",
+    "cancel": "Annuler",
+    "ok": "OK",
+    "confirm": "Confirmer",
+    "closeDialog": "Fermer la boîte de dialogue",
+    "empty": "Rien ici",
+    "pagination": {
+      "previous": "Précédent",
+      "next": "Suivant",
+      "counter": "Page {{current}} sur {{total}}",
+      "tooltips": {
+        "previousPage": "Page précédente",
+        "nextPage": "Page suivante",
+        "firstPage": "Première page",
+        "lastPage": "Dernière page",
+        "toPage": "Aller à la page",
+        "toLastPage": "Aller à la dernière page"
+      }
+    },
+    "calendar": {
+      "actions": {
+        "previousMonth": "Mois précédent",
+        "nextMonth": "Mois suivant"
+      },
+      "aria": {
+        "chooseDate": "Choisir une date",
+        "today": "aujourd'hui",
+        "selected": "sélectionné",
+        "rangeStart": "début de la plage",
+        "rangeEnd": "fin de la plage",
+        "inRange": "dans la plage",
+        "outsideMonth": "hors du mois en cours",
+        "disabled": "indisponible"
+      }
+    }
   },
   "templates": {
     "library": {
@@ -1021,7 +1056,8 @@
       "campaignDefault": "Règle de la campagne",
       "builtInDefault": "Intégrée",
       "saved": "Règle de combat enregistrée",
-      "saveError": "Impossible de changer la règle de combat"
+      "saveError": "Impossible de changer la règle de combat",
+      "campaignAriaLabel": "Règle de combat de cette campagne"
     },
     "roll": {
       "button": "Lancer l'initiative",
@@ -1128,5 +1164,8 @@
       "unconfirmed": "Pas encore appliqué",
       "resize": "Redimensionner {{name}}"
     }
+  },
+  "breadcrumb": {
+    "ariaLabel": "Fil d'Ariane"
   }
 }

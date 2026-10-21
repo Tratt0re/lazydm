@@ -618,7 +618,8 @@
         "insertMenu": "Правий клік: вставити форматування, блоки, посилання й ресурси",
         "openInNewTab": "Cmd/Ctrl-клік на посиланні: відкрити в новій вкладці"
       }
-    }
+    },
+    "brokenLinkTitle": "Нотатку не знайдено: {{name}}"
   },
   "tabs": {
     "ariaLabel": "Відкриті вкладки",
@@ -757,7 +758,41 @@
     "close": "Закрити",
     "skipToContent": "Перейти до вмісту",
     "selectAllRows": "Вибрати всі рядки",
-    "selectRow": "Вибрати рядок"
+    "selectRow": "Вибрати рядок",
+    "cancel": "Скасувати",
+    "ok": "OK",
+    "confirm": "Підтвердити",
+    "closeDialog": "Закрити діалог",
+    "empty": "Тут нічого немає",
+    "pagination": {
+      "previous": "Назад",
+      "next": "Далі",
+      "counter": "Сторінка {{current}} з {{total}}",
+      "tooltips": {
+        "previousPage": "Попередня сторінка",
+        "nextPage": "Наступна сторінка",
+        "firstPage": "Перша сторінка",
+        "lastPage": "Остання сторінка",
+        "toPage": "Перейти до сторінки",
+        "toLastPage": "Перейти до останньої сторінки"
+      }
+    },
+    "calendar": {
+      "actions": {
+        "previousMonth": "Попередній місяць",
+        "nextMonth": "Наступний місяць"
+      },
+      "aria": {
+        "chooseDate": "Обрати дату",
+        "today": "сьогодні",
+        "selected": "обрано",
+        "rangeStart": "початок діапазону",
+        "rangeEnd": "кінець діапазону",
+        "inRange": "у діапазоні",
+        "outsideMonth": "поза поточним місяцем",
+        "disabled": "недоступно"
+      }
+    }
   },
   "templates": {
     "library": {
@@ -1021,7 +1056,8 @@
       "campaignDefault": "Правило кампанії",
       "builtInDefault": "Вбудоване",
       "saved": "Правило бою збережено",
-      "saveError": "Не вдалося змінити правило бою"
+      "saveError": "Не вдалося змінити правило бою",
+      "campaignAriaLabel": "Правило бою цієї кампанії"
     },
     "roll": {
       "button": "Кинути ініціативу",
@@ -1128,5 +1164,8 @@
       "unconfirmed": "Ще не застосовано",
       "resize": "Змінити розмір {{name}}"
     }
+  },
+  "breadcrumb": {
+    "ariaLabel": "Навігаційний ланцюжок"
   }
 }

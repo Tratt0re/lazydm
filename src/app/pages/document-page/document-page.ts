@@ -119,6 +119,7 @@ export class DocumentPage {
     play: this.translateService.instant('document.media.play'),
     open: this.translateService.instant('document.media.open'),
     volume: this.translateService.instant('document.media.volume'),
+    brokenNote: this.translateService.instant('document.brokenLinkTitle', { name: '{{name}}' }),
   };
   private readonly editor = viewChild(AppCodeEditorComponent);
   private readonly brokenLinkMenu = viewChild(AppBrokenLinkMenuComponent);

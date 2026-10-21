@@ -618,7 +618,8 @@
         "insertMenu": "Clic derecho: insertar formato, bloques, enlaces y recursos",
         "openInNewTab": "Cmd/Ctrl-clic en un enlace: abrirlo en una pestaña nueva"
       }
-    }
+    },
+    "brokenLinkTitle": "Nota no encontrada: {{name}}"
   },
   "tabs": {
     "ariaLabel": "Pestañas abiertas",
@@ -757,7 +758,41 @@
     "close": "Cerrar",
     "skipToContent": "Saltar al contenido",
     "selectAllRows": "Seleccionar todas las filas",
-    "selectRow": "Seleccionar fila"
+    "selectRow": "Seleccionar fila",
+    "cancel": "Cancelar",
+    "ok": "Aceptar",
+    "confirm": "Confirmar",
+    "closeDialog": "Cerrar diálogo",
+    "empty": "Nada aquí",
+    "pagination": {
+      "previous": "Anterior",
+      "next": "Siguiente",
+      "counter": "Página {{current}} de {{total}}",
+      "tooltips": {
+        "previousPage": "Página anterior",
+        "nextPage": "Página siguiente",
+        "firstPage": "Primera página",
+        "lastPage": "Última página",
+        "toPage": "Ir a la página",
+        "toLastPage": "Ir a la última página"
+      }
+    },
+    "calendar": {
+      "actions": {
+        "previousMonth": "Mes anterior",
+        "nextMonth": "Mes siguiente"
+      },
+      "aria": {
+        "chooseDate": "Elegir fecha",
+        "today": "hoy",
+        "selected": "seleccionado",
+        "rangeStart": "inicio del rango",
+        "rangeEnd": "fin del rango",
+        "inRange": "en el rango",
+        "outsideMonth": "fuera del mes actual",
+        "disabled": "no disponible"
+      }
+    }
   },
   "templates": {
     "library": {
@@ -1021,7 +1056,8 @@
       "campaignDefault": "Regla de la campaña",
       "builtInDefault": "Integrada",
       "saved": "Regla de combate guardada",
-      "saveError": "No se pudo cambiar la regla de combate"
+      "saveError": "No se pudo cambiar la regla de combate",
+      "campaignAriaLabel": "Regla de batalla de esta campaña"
     },
     "roll": {
       "button": "Tirar iniciativa",
@@ -1128,5 +1164,8 @@
       "unconfirmed": "Aún sin aplicar",
       "resize": "Redimensionar {{name}}"
     }
+  },
+  "breadcrumb": {
+    "ariaLabel": "Ruta de navegación"
   }
 }

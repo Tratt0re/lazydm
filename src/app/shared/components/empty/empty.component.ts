@@ -1,4 +1,5 @@
 import { NgOptimizedImage } from '@angular/common';
+import { TranslatePipe } from '@ngx-translate/core';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -27,7 +28,12 @@ import { type ArcTechIcon } from '@/shared/components/icon/icons';
 
 @Component({
   selector: 'arc-empty',
-  imports: [NgOptimizedImage, ArcTechIconComponent, ArcTechStringTemplateOutletDirective],
+  imports: [
+    NgOptimizedImage,
+    ArcTechIconComponent,
+    ArcTechStringTemplateOutletDirective,
+    TranslatePipe,
+  ],
   template: `
     @let image = arcImage();
     @let icon = arcIcon();
@@ -39,7 +45,7 @@ import { type ArcTechIcon } from '@/shared/components/icon/icons';
       @if (image) {
         <div [class]="imageClasses()">
           <ng-container *arcStringTemplateOutlet="image">
-            <img [ngSrc]="image" width="64" height="64" alt="Empty" class="mx-auto" />
+            <img [ngSrc]="image" width="64" height="64" [alt]="'common.empty' | translate" class="mx-auto" />
           </ng-container>
         </div>
       } @else if (icon) {

@@ -1,5 +1,6 @@
 import { OverlayModule } from '@angular/cdk/overlay';
 import { A11yModule } from '@angular/cdk/a11y';
+import { TranslatePipe } from '@ngx-translate/core';
 import {
   BasePortalOutlet,
   CdkPortalOutlet,
@@ -65,7 +66,14 @@ export class ArcTechSheetOptions<T, U> {
 
 @Component({
   selector: 'arc-sheet',
-  imports: [OverlayModule, PortalModule, A11yModule, ArcTechButtonComponent, ArcTechIconComponent],
+  imports: [
+    OverlayModule,
+    PortalModule,
+    A11yModule,
+    ArcTechButtonComponent,
+    ArcTechIconComponent,
+    TranslatePipe,
+  ],
   template: `
     <div cdkTrapFocus [cdkTrapFocusAutoCapture]="true" tabindex="-1" class="flex h-full min-h-0 flex-col">
       @if (config.arcClosable || config.arcClosable === undefined) {
@@ -76,9 +84,10 @@ export class ArcTechSheetOptions<T, U> {
           arcType="ghost"
           arcSize="sm"
           class="absolute top-4 right-4 z-10 cursor-pointer border border-input"
+          [attr.aria-label]="'common.close' | translate"
           (click)="onCloseClick()"
         >
-          <arc-icon arcType="x" />
+          <arc-icon arcType="x" aria-hidden="true" />
         </button>
       }
 
@@ -127,7 +136,7 @@ export class ArcTechSheetOptions<T, U> {
                 <arc-icon [arcType]="config.arcOkIcon" />
               }
 
-              {{ okText() ?? config.arcOkText ?? 'OK' }}
+              {{ okText() ?? config.arcOkText ?? ('common.ok' | translate) }}
             </button>
           }
 
@@ -162,7 +171,7 @@ export class ArcTechSheetOptions<T, U> {
                 <arc-icon [arcType]="config.arcCancelIcon" />
               }
 
-              {{ config.arcCancelText ?? 'Cancel' }}
+              {{ config.arcCancelText ?? ('common.cancel' | translate) }}
             </button>
           }
         </footer>

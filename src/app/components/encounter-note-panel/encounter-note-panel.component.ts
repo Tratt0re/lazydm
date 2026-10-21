@@ -69,6 +69,7 @@ export class AppEncounterNotePanelComponent {
     play: this.translateService.instant('document.media.play'),
     open: this.translateService.instant('document.media.open'),
     volume: this.translateService.instant('document.media.volume'),
+    brokenNote: this.translateService.instant('document.brokenLinkTitle', { name: '{{name}}' }),
   };
   protected readonly linkPreviewLabel = this.translateService.instant('document.linkPreview.show');
   protected readonly imagePreviewLabel = this.translateService.instant('document.linkPreview.showImage');

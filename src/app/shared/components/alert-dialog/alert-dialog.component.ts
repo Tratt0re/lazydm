@@ -1,4 +1,5 @@
 import { A11yModule } from '@angular/cdk/a11y';
+import { TranslatePipe } from '@ngx-translate/core';
 import { OverlayModule } from '@angular/cdk/overlay';
 import {
   BasePortalOutlet,
@@ -58,7 +59,15 @@ export class ArcTechAlertDialogOptions<T> {
 
 @Component({
   selector: 'arc-alert-dialog',
-  imports: [OverlayModule, PortalModule, ArcTechButtonComponent, ArcTechIconComponent, A11yModule, ArcTechIdDirective],
+  imports: [
+    OverlayModule,
+    PortalModule,
+    ArcTechButtonComponent,
+    ArcTechIconComponent,
+    A11yModule,
+    ArcTechIdDirective,
+    TranslatePipe,
+  ],
   templateUrl: './alert-dialog.component.html',
   styles: `
     arc-alert-dialog {

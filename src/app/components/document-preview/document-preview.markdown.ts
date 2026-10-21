@@ -47,9 +47,16 @@ export interface MediaEmbedLabels {
   readonly play: string;
   readonly open: string;
   readonly volume: string;
+  /** Tooltip of a link to a missing note; `{{name}}` stands for the target. */
+  readonly brokenNote?: string;
 }
 
-const DEFAULT_MEDIA_LABELS: MediaEmbedLabels = { play: 'Play', open: 'Open', volume: 'Volume' };
+const DEFAULT_MEDIA_LABELS: MediaEmbedLabels = {
+  play: 'Play',
+  open: 'Open',
+  volume: 'Volume',
+  brokenNote: 'Note not found: {{name}}',
+};
 export const AUDIO_EXTENSION_PATTERN = /\.(mp3|wav|ogg|m4a|flac)$/i;
 const PDF_EXTENSION_PATTERN = /\.pdf$/i;
 const SVG_ATTRIBUTES =
@@ -312,12 +319,12 @@ function renderWikilinkToken(token: Token): string {
   }
 
   if (isEmbed) {
-    return `<span class="arc-embed-missing" title="${displayText}">📎 ${displayText}</span>`;
+    return `<span class="arc-embed-missing" title="${displayText}">${displayText}</span>`;
   }
 
   if (!resolvedPath) {
     // A menu trigger: the preview offers to create the note or turn the link into plain text.
-    return `<span class="arc-wikilink arc-wikilink-broken" role="button" tabindex="0" aria-haspopup="menu" data-broken-raw="${escapeHtml(raw)}" data-broken-target="${escapeHtml(targetName)}" title="Note not found: ${escapeHtml(targetName)}">${displayText}</span>`;
+    return `<span class="arc-wikilink arc-wikilink-broken" role="button" tabindex="0" aria-haspopup="menu" data-broken-raw="${escapeHtml(raw)}" data-broken-target="${escapeHtml(targetName)}" title="${escapeHtml((mediaLabels?.brokenNote ?? DEFAULT_MEDIA_LABELS.brokenNote ?? '').replace('{{name}}', targetName))}">${displayText}</span>`;
   }
 
   // Same note: a plain in-page anchor jump, so it works without any router navigation.

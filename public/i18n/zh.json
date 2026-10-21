@@ -618,7 +618,8 @@
         "insertMenu": "右键：插入格式、块、链接和资源",
         "openInNewTab": "Cmd/Ctrl 点击链接：在新标签页中打开"
       }
-    }
+    },
+    "brokenLinkTitle": "未找到笔记：{{name}}"
   },
   "tabs": {
     "ariaLabel": "已打开的标签页",
@@ -757,7 +758,41 @@
     "close": "关闭",
     "skipToContent": "跳到内容",
     "selectAllRows": "选择所有行",
-    "selectRow": "选择行"
+    "selectRow": "选择行",
+    "cancel": "取消",
+    "ok": "确定",
+    "confirm": "确认",
+    "closeDialog": "关闭对话框",
+    "empty": "这里空空如也",
+    "pagination": {
+      "previous": "上一页",
+      "next": "下一页",
+      "counter": "第 {{current}} 页，共 {{total}} 页",
+      "tooltips": {
+        "previousPage": "上一页",
+        "nextPage": "下一页",
+        "firstPage": "第一页",
+        "lastPage": "最后一页",
+        "toPage": "转到第",
+        "toLastPage": "转到最后一页"
+      }
+    },
+    "calendar": {
+      "actions": {
+        "previousMonth": "上个月",
+        "nextMonth": "下个月"
+      },
+      "aria": {
+        "chooseDate": "选择日期",
+        "today": "今天",
+        "selected": "已选择",
+        "rangeStart": "范围开始",
+        "rangeEnd": "范围结束",
+        "inRange": "在范围内",
+        "outsideMonth": "不在当前月份",
+        "disabled": "不可用"
+      }
+    }
   },
   "templates": {
     "library": {
@@ -1021,7 +1056,8 @@
       "campaignDefault": "战役的规则",
       "builtInDefault": "内置",
       "saved": "战斗规则已保存",
-      "saveError": "无法更改战斗规则"
+      "saveError": "无法更改战斗规则",
+      "campaignAriaLabel": "此战役的战斗规则"
     },
     "roll": {
       "button": "掷先攻",
@@ -1128,5 +1164,8 @@
       "unconfirmed": "尚未应用",
       "resize": "调整 {{name}} 大小"
     }
+  },
+  "breadcrumb": {
+    "ariaLabel": "面包屑导航"
   }
 }

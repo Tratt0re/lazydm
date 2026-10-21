@@ -618,7 +618,8 @@
         "insertMenu": "Rechtsklick: Formatierung, Blöcke, Links und Assets einfügen",
         "openInNewTab": "Cmd/Strg-Klick auf einen Link: in neuem Tab öffnen"
       }
-    }
+    },
+    "brokenLinkTitle": "Notiz nicht gefunden: {{name}}"
   },
   "tabs": {
     "ariaLabel": "Geöffnete Tabs",
@@ -757,7 +758,41 @@
     "close": "Schließen",
     "skipToContent": "Zum Inhalt springen",
     "selectAllRows": "Alle Zeilen auswählen",
-    "selectRow": "Zeile auswählen"
+    "selectRow": "Zeile auswählen",
+    "cancel": "Abbrechen",
+    "ok": "OK",
+    "confirm": "Bestätigen",
+    "closeDialog": "Dialog schließen",
+    "empty": "Hier ist nichts",
+    "pagination": {
+      "previous": "Zurück",
+      "next": "Weiter",
+      "counter": "Seite {{current}} von {{total}}",
+      "tooltips": {
+        "previousPage": "Vorherige Seite",
+        "nextPage": "Nächste Seite",
+        "firstPage": "Erste Seite",
+        "lastPage": "Letzte Seite",
+        "toPage": "Gehe zu Seite",
+        "toLastPage": "Zur letzten Seite"
+      }
+    },
+    "calendar": {
+      "actions": {
+        "previousMonth": "Vorheriger Monat",
+        "nextMonth": "Nächster Monat"
+      },
+      "aria": {
+        "chooseDate": "Datum wählen",
+        "today": "heute",
+        "selected": "ausgewählt",
+        "rangeStart": "Beginn des Zeitraums",
+        "rangeEnd": "Ende des Zeitraums",
+        "inRange": "im Zeitraum",
+        "outsideMonth": "außerhalb des aktuellen Monats",
+        "disabled": "nicht verfügbar"
+      }
+    }
   },
   "templates": {
     "library": {
@@ -1021,7 +1056,8 @@
       "campaignDefault": "Regel der Kampagne",
       "builtInDefault": "Integriert",
       "saved": "Kampfregel gespeichert",
-      "saveError": "Die Kampfregel konnte nicht geändert werden"
+      "saveError": "Die Kampfregel konnte nicht geändert werden",
+      "campaignAriaLabel": "Kampfregel dieser Kampagne"
     },
     "roll": {
       "button": "Initiative würfeln",
@@ -1128,5 +1164,8 @@
       "unconfirmed": "Noch nicht übernommen",
       "resize": "{{name}} anpassen"
     }
+  },
+  "breadcrumb": {
+    "ariaLabel": "Brotkrumennavigation"
   }
 }

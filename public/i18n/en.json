@@ -618,7 +618,8 @@
         "insertMenu": "Right-click: insert formatting, blocks, links and assets",
         "openInNewTab": "Cmd/Ctrl-click a link: open it in a new tab"
       }
-    }
+    },
+    "brokenLinkTitle": "Note not found: {{name}}"
   },
   "tabs": {
     "ariaLabel": "Open tabs",
@@ -757,7 +758,41 @@
     "close": "Close",
     "skipToContent": "Skip to content",
     "selectAllRows": "Select all rows",
-    "selectRow": "Select row"
+    "selectRow": "Select row",
+    "cancel": "Cancel",
+    "ok": "OK",
+    "confirm": "Confirm",
+    "closeDialog": "Close dialog",
+    "empty": "Nothing here",
+    "pagination": {
+      "previous": "Previous",
+      "next": "Next",
+      "counter": "Page {{current}} of {{total}}",
+      "tooltips": {
+        "previousPage": "Previous page",
+        "nextPage": "Next page",
+        "firstPage": "First page",
+        "lastPage": "Last page",
+        "toPage": "Go to page",
+        "toLastPage": "Go to last page"
+      }
+    },
+    "calendar": {
+      "actions": {
+        "previousMonth": "Previous month",
+        "nextMonth": "Next month"
+      },
+      "aria": {
+        "chooseDate": "Choose date",
+        "today": "today",
+        "selected": "selected",
+        "rangeStart": "range start",
+        "rangeEnd": "range end",
+        "inRange": "in range",
+        "outsideMonth": "outside current month",
+        "disabled": "unavailable"
+      }
+    }
   },
   "templates": {
     "library": {
@@ -1021,7 +1056,8 @@
       "campaignDefault": "Campaign's rule",
       "builtInDefault": "Built-in",
       "saved": "Battle rule saved",
-      "saveError": "Couldn't change the battle rule"
+      "saveError": "Couldn't change the battle rule",
+      "campaignAriaLabel": "Battle rule of this campaign"
     },
     "roll": {
       "button": "Roll initiative",
@@ -1128,5 +1164,8 @@
       "unconfirmed": "Not applied yet",
       "resize": "Resize {{name}}"
     }
+  },
+  "breadcrumb": {
+    "ariaLabel": "Breadcrumb"
   }
 }

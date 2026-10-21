@@ -1,3 +1,4 @@
+import { TranslateService } from '@ngx-translate/core';
 import { type ComponentType, Overlay, OverlayConfig, OverlayRef } from '@angular/cdk/overlay';
 import { ComponentPortal, TemplatePortal } from '@angular/cdk/portal';
 import { isPlatformBrowser } from '@angular/common';
@@ -25,6 +26,7 @@ export class ArcTechAlertDialogService {
   private readonly overlay = inject(Overlay);
   private readonly injector = inject(Injector);
   private readonly platformId = inject(PLATFORM_ID);
+  private readonly translate = inject(TranslateService);
 
   create<T>(config: ArcTechAlertDialogOptions<T>): ArcTechAlertDialogRef<T> {
     return this.open<T>(config.arcContent, config);
@@ -38,8 +40,8 @@ export class ArcTechAlertDialogService {
   ): ArcTechAlertDialogRef<T> {
     const confirmConfig: ArcTechAlertDialogOptions<T> = {
       ...config,
-      arcOkText: config.arcOkText ?? 'Confirm',
-      arcCancelText: config.arcCancelText ?? 'Cancel',
+      arcOkText: config.arcOkText ?? this.translate.instant('common.confirm'),
+      arcCancelText: config.arcCancelText ?? this.translate.instant('common.cancel'),
       arcOkDestructive: config.arcOkDestructive ?? false,
     };
     return this.create(confirmConfig);
@@ -48,7 +50,7 @@ export class ArcTechAlertDialogService {
   warning<T>(config: Omit<ArcTechAlertDialogOptions<T>, 'arcOkText'> & { arcOkText?: string }): ArcTechAlertDialogRef<T> {
     const warningConfig: ArcTechAlertDialogOptions<T> = {
       ...config,
-      arcOkText: config.arcOkText ?? 'OK',
+      arcOkText: config.arcOkText ?? this.translate.instant('common.ok'),
       arcCancelText: null,
     };
     return this.create(warningConfig);
@@ -57,7 +59,7 @@ export class ArcTechAlertDialogService {
   info<T>(config: Omit<ArcTechAlertDialogOptions<T>, 'arcOkText'> & { arcOkText?: string }): ArcTechAlertDialogRef<T> {
     const infoConfig: ArcTechAlertDialogOptions<T> = {
       ...config,
-      arcOkText: config.arcOkText ?? 'OK',
+      arcOkText: config.arcOkText ?? this.translate.instant('common.ok'),
       arcCancelText: null,
     };
     return this.create(infoConfig);

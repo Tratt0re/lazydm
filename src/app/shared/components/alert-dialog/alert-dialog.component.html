@@ -44,7 +44,7 @@
   <footer class="flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
     @if (config.arcCancelText !== null) {
       <button type="button" data-testid="arc-alert-cancel-button" arc-button arcType="outline" (click)="onCancelClick()">
-        {{ config.arcCancelText || 'Cancel' }}
+        {{ config.arcCancelText || ('common.cancel' | translate) }}
       </button>
     }
 

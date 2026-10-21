@@ -618,7 +618,8 @@
         "insertMenu": "Clic destro: inserisci formattazione, blocchi, collegamenti e risorse",
         "openInNewTab": "Cmd/Ctrl-clic su un collegamento: lo apre in una nuova scheda"
       }
-    }
+    },
+    "brokenLinkTitle": "Nota non trovata: {{name}}"
   },
   "tabs": {
     "ariaLabel": "Schede aperte",
@@ -757,7 +758,41 @@
     "close": "Chiudi",
     "skipToContent": "Vai al contenuto",
     "selectAllRows": "Seleziona tutte le righe",
-    "selectRow": "Seleziona riga"
+    "selectRow": "Seleziona riga",
+    "cancel": "Annulla",
+    "ok": "OK",
+    "confirm": "Conferma",
+    "closeDialog": "Chiudi finestra",
+    "empty": "Niente qui",
+    "pagination": {
+      "previous": "Precedente",
+      "next": "Successiva",
+      "counter": "Pagina {{current}} di {{total}}",
+      "tooltips": {
+        "previousPage": "Pagina precedente",
+        "nextPage": "Pagina successiva",
+        "firstPage": "Prima pagina",
+        "lastPage": "Ultima pagina",
+        "toPage": "Vai alla pagina",
+        "toLastPage": "Vai all'ultima pagina"
+      }
+    },
+    "calendar": {
+      "actions": {
+        "previousMonth": "Mese precedente",
+        "nextMonth": "Mese successivo"
+      },
+      "aria": {
+        "chooseDate": "Scegli la data",
+        "today": "oggi",
+        "selected": "selezionato",
+        "rangeStart": "inizio dell'intervallo",
+        "rangeEnd": "fine dell'intervallo",
+        "inRange": "nell'intervallo",
+        "outsideMonth": "fuori dal mese corrente",
+        "disabled": "non disponibile"
+      }
+    }
   },
   "templates": {
     "library": {
@@ -1021,7 +1056,8 @@
       "campaignDefault": "Regola della campagna",
       "builtInDefault": "Integrata",
       "saved": "Regola di battaglia salvata",
-      "saveError": "Impossibile cambiare la regola di battaglia"
+      "saveError": "Impossibile cambiare la regola di battaglia",
+      "campaignAriaLabel": "Regola di battaglia di questa campagna"
     },
     "roll": {
       "button": "Tira l'iniziativa",
@@ -1128,5 +1164,8 @@
       "unconfirmed": "Non ancora applicato",
       "resize": "Ridimensiona {{name}}"
     }
+  },
+  "breadcrumb": {
+    "ariaLabel": "Percorso"
   }
 }
