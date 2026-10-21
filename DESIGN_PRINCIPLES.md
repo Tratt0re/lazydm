@@ -662,6 +662,10 @@ Component behaviour, variant keys and configuration stay as they are.
 
 ## 12. Open decisions
 
+- **TODO — settings for the open vault and a factory reset**: Settings has no place to see or manage the current
+  vault (path, close it, switch) nor to reset the app. Add both, and make `factoryReset` stop the indexer and the
+  cloud controllers first.
+
 - **TODO — update check repository**: `package.json` `repository.url` is still a placeholder
   (`github.com/yourusername/lazy_dm`). Set the real GitHub repository once it exists; the update check and the
   release-URL allowlist both derive from it.

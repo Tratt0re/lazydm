@@ -128,7 +128,11 @@ function registerWindowLifecycle(mainWindow) {
   });
 }
 
-/** Whether `url` is the app itself: the dev server origin, or the built index.html (any hash/query). */
+/**
+ * Whether `url` is the app itself: the dev server origin, or a route of the built renderer. The app uses path
+ * routing, so its pages are `file://<build folder>/<route>` rather than `index.html`; anything outside that
+ * folder (another local file) is not the app.
+ */
 function isAppUrl(url, isDev) {
   try {
     const target = new URL(url);
@@ -136,10 +140,12 @@ function isAppUrl(url, isDev) {
       return target.origin === new URL(DEV_SERVER_URL).origin;
     }
 
-    return (
-      target.protocol === 'file:' &&
-      target.pathname === pathToFileURL(resolveRendererIndexPath()).pathname
-    );
+    if (target.protocol !== 'file:') {
+      return false;
+    }
+
+    const buildDir = pathToFileURL(path.dirname(resolveRendererIndexPath())).pathname;
+    return target.pathname === buildDir || target.pathname.startsWith(`${buildDir}/`);
   } catch {
     return false;
   }
