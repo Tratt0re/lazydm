@@ -157,33 +157,45 @@ function open(payload) {
   return { status: VAULT_STATUS.ready, vault };
 }
 
+/** Bumped by every new or closed session, so a slower older start does nothing (and never migrates twice). */
+let activeSessionToken = 0;
+
 /**
  * Waits for the cloud client to download the vault notes, brings an older vault to the current format, then
  * indexes the vault. Runs in the background.
  */
 function startSession(vault) {
-  void cloudReadinessController.prepare(vault).then(async () => {
-    if (readCurrentVaultId() !== vault.id) {
-      return;
-    }
+  const sessionToken = ++activeSessionToken;
+  const isCurrentSession = () => sessionToken === activeSessionToken && readCurrentVaultId() === vault.id;
 
-    try {
-      const report = await vaultMigrationModel.migrateVault(vault.path);
-      if (report) {
-        console.info('[electron] Vault migrated ->', report);
+  void cloudReadinessController
+    .prepare(vault)
+    .then(async () => {
+      if (!isCurrentSession()) {
+        return;
       }
-    } catch (error) {
-      // Not marked as migrated: the next start tries again. The vault still opens.
-      console.error('[electron] Vault migration failed ->', error);
-    }
 
-    if (readCurrentVaultId() === vault.id) {
-      indexerController.start(vault);
-    }
-  });
+      try {
+        const report = await vaultMigrationModel.migrateVault(vault.path);
+        if (report) {
+          console.info('[electron] Vault migrated ->', report);
+        }
+      } catch (error) {
+        // Not marked as migrated: the next start tries again. The vault still opens.
+        console.error('[electron] Vault migration failed ->', error);
+      }
+
+      if (isCurrentSession()) {
+        indexerController.start(vault);
+      }
+    })
+    .catch((error) => {
+      console.error('[electron] Vault session failed to start ->', error);
+    });
 }
 
 function close() {
+  activeSessionToken += 1;
   cloudReadinessController.cancel();
   indexerController.stop();
   if (readCurrentVaultId()) {

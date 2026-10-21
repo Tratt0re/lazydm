@@ -78,8 +78,16 @@ function enqueueDetached(token, task) {
   enqueue(token, task).catch(() => undefined);
 }
 
+/** A file touched this recently can change again with the same size and mtime tick: its hash decides. */
+const RECENT_EDIT_WINDOW_MS = 1000;
+
 function isFileChanged(file, knownState) {
-  return !knownState || knownState.size !== file.size || knownState.mtime_ms !== file.mtimeMs;
+  return (
+    !knownState ||
+    knownState.size !== file.size ||
+    knownState.mtime_ms !== file.mtimeMs ||
+    Date.now() - file.mtimeMs < RECENT_EDIT_WINDOW_MS
+  );
 }
 
 /** An encounter (`.json` of an Encounters section) is listed by its `name`, like a note by its title; null for any other file. */
@@ -258,6 +266,18 @@ function startWatcher() {
   watcher.on('error', (error) => {
     console.warn('[electron] Vault watcher error:', error);
     setIndexState({ lastError: error instanceof Error ? error.message : String(error) });
+    if (!isCurrent(token)) {
+      return;
+    }
+
+    // A dead watcher would miss every later external edit: start a new one, then catch up on what was missed.
+    stopWatcher();
+    try {
+      startWatcher();
+      enqueueDetached(token, () => runFullReconcile(token));
+    } catch (restartError) {
+      console.error('[electron] Vault watcher could not restart:', restartError);
+    }
   });
 }
 

@@ -57,6 +57,26 @@ function initIndexSchema(database) {
     .run(INDEX_SCHEMA_VERSION_KEY, String(INDEX_SCHEMA_VERSION));
 }
 
+/** Connects, drops a file with another schema version, and makes sure the schema exists. */
+function openAndPrepare(databasePath) {
+  let database = connect(databasePath);
+  try {
+    const existingVersion = readSchemaVersion(database);
+    if (Number.isInteger(existingVersion) && existingVersion !== INDEX_SCHEMA_VERSION) {
+      database.close();
+      removeDatabaseFiles(databasePath);
+      database = connect(databasePath);
+      console.log('[electron] Vault index schema changed, rebuilding ->', databasePath);
+    }
+
+    initIndexSchema(database);
+    return database;
+  } catch (error) {
+    database.close();
+    throw error;
+  }
+}
+
 /**
  * Opens the rebuildable index database of a vault. A file with another schema version
  * is deleted and recreated: the index never migrates, it is rebuilt from the vault files.
@@ -69,17 +89,16 @@ function openVaultIndexDatabase(vaultId) {
   closeVaultIndexDatabase();
 
   const databasePath = getVaultIndexDatabasePath(vaultId);
-  let database = connect(databasePath);
-  const existingVersion = readSchemaVersion(database);
-
-  if (Number.isInteger(existingVersion) && existingVersion !== INDEX_SCHEMA_VERSION) {
-    database.close();
+  let database;
+  try {
+    database = openAndPrepare(databasePath);
+  } catch (error) {
+    // A truncated or corrupt file is only a cache: drop it and rebuild from the vault files.
+    console.warn('[electron] Vault index unreadable, rebuilding ->', databasePath, error);
     removeDatabaseFiles(databasePath);
-    database = connect(databasePath);
-    console.log('[electron] Vault index schema changed, rebuilding ->', databasePath);
+    database = openAndPrepare(databasePath);
   }
 
-  initIndexSchema(database);
   indexDb = database;
   indexDbVaultId = vaultId;
 

@@ -190,7 +190,11 @@ function recheck() {
     throw new Error('No vault is open.');
   }
 
-  void prepare(activeVault);
+  // A check already running owns the download workers; starting another would double them.
+  const { status } = getStatus();
+  if (status !== CLOUD_STATUS.checking && status !== CLOUD_STATUS.downloading) {
+    void prepare(activeVault);
+  }
   return getStatus();
 }
 

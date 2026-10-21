@@ -34,7 +34,15 @@ function readVaultConfig(rootPath) {
     return null;
   }
 
-  const parsed = JSON.parse(fs.readFileSync(configPath, 'utf8'));
+  let parsed;
+  try {
+    parsed = JSON.parse(fs.readFileSync(configPath, 'utf8'));
+  } catch (error) {
+    throw new Error(`Vault config is not valid JSON: ${configPath} (${error.message})`, {
+      cause: error,
+    });
+  }
+
   if (!isPlainObject(parsed)) {
     throw new Error(`Vault config is not a JSON object: ${configPath}`);
   }

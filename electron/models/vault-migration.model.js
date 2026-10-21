@@ -126,7 +126,12 @@ async function rewriteNotes(rootPath, scopeDirs, report) {
   const parents = new Set(['', ...scopeDirs]);
   const files = await listVaultFiles(rootPath);
   for (const file of files) {
-    if (file.isDataless || !file.path.toLocaleLowerCase().endsWith(MARKDOWN_EXTENSION)) {
+    if (!file.path.toLocaleLowerCase().endsWith(MARKDOWN_EXTENSION)) {
+      continue;
+    }
+    if (file.isDataless) {
+      // Not downloaded yet: it cannot be read now, so it is retried on the next start.
+      report.pending.push(file.path);
       continue;
     }
 
@@ -150,6 +155,7 @@ async function rewriteNotes(rootPath, scopeDirs, report) {
     } catch (error) {
       console.warn('[electron] Vault migration could not rewrite ->', file.path, error);
       report.skipped.push(file.path);
+      report.pending.push(file.path);
     }
   }
 }
@@ -192,7 +198,7 @@ function migrateTemplateRules(config, renamedTemplates) {
  * paths and the template choices follow. Nothing is overwritten: what cannot move stays and is reported.
  * Every step can run again and the version is written last, so an interrupted run resumes next time.
  *
- * @returns {Promise<{ moved: string[], rewritten: string[], skipped: string[] } | null>} Null when up to date.
+ * @returns {Promise<{ moved: string[], rewritten: string[], skipped: string[], pending: string[] } | null>} Null when up to date.
  */
 async function migrateVault(rootPath) {
   const config = readVaultConfig(rootPath);
@@ -201,7 +207,7 @@ async function migrateVault(rootPath) {
     return null;
   }
 
-  const report = { moved: [], rewritten: [], skipped: [] };
+  const report = { moved: [], rewritten: [], skipped: [], pending: [] };
   const scopeDirs = await listScopeDirs(rootPath);
   const renamedTemplates = new Map();
 
@@ -225,6 +231,14 @@ async function migrateVault(rootPath) {
   }
 
   await rewriteNotes(rootPath, scopeDirs, report);
+
+  if (report.pending.length > 0) {
+    // Notes still to download or that failed to rewrite keep their old format: stay on the old version so the
+    // next start finishes them (every step above is safe to run again). Name clashes (`skipped` only) would
+    // never resolve on their own, so they do not hold the version back.
+    console.warn('[electron] Vault migration incomplete, will retry ->', report.pending);
+    return report;
+  }
 
   writeVaultConfig(rootPath, {
     ...migrateTemplateRules(readVaultConfig(rootPath) ?? config, renamedTemplates),
