@@ -732,6 +732,7 @@
   },
   "common": {
     "close": "Fermer",
+    "skipToContent": "Aller au contenu",
     "selectAllRows": "Sélectionner toutes les lignes",
     "selectRow": "Sélectionner la ligne"
   },

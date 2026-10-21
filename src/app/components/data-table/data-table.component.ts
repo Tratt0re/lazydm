@@ -909,7 +909,7 @@ export class AppDataTableComponent {
     const colorValue = this.badgeColorHex(row, column);
     const colorMode = column.badge?.colorMode ?? 'badge';
     if (colorMode === 'badge' && colorValue) {
-      styles.push(`background-color:${colorValue};border-color:${colorValue};color:#fff;`);
+      styles.push(`background-color:${colorValue};border-color:${colorValue};color:${this.badgeForeground(colorValue)};`);
     }
 
     return styles.length > 0 ? styles.join('') : null;
@@ -1018,6 +1018,22 @@ export class AppDataTableComponent {
     }
 
     return this.isRegisteredIcon(normalizedValue) ? (normalizedValue as ArcTechIcon) : null;
+  }
+
+  /** Readable text colour (white or near-black) for a user-chosen badge background; white if not a hex. */
+  private badgeForeground(background: string): string {
+    const match = /^#?([0-9a-f]{3}|[0-9a-f]{6})$/i.exec(background.trim());
+    if (!match) {
+      return '#fff';
+    }
+    const hex = match[1].length === 3 ? [...match[1]].map((c) => c + c).join('') : match[1];
+    const [r, g, b] = [0, 2, 4].map((i) => {
+      const channel = parseInt(hex.slice(i, i + 2), 16) / 255;
+      return channel <= 0.03928 ? channel / 12.92 : ((channel + 0.055) / 1.055) ** 2.4;
+    });
+    const luminance = 0.2126 * r + 0.7152 * g + 0.0722 * b;
+    // White wins over the dark text only while its contrast is the higher of the two.
+    return 1.05 / (luminance + 0.05) >= (luminance + 0.05) / 0.06 ? '#fff' : '#101114';
   }
 
   private badgeColorHex(row: TableRow, column: ColumnDataItem): string | null {

@@ -732,6 +732,7 @@
   },
   "common": {
     "close": "Закрити",
+    "skipToContent": "Перейти до вмісту",
     "selectAllRows": "Вибрати всі рядки",
     "selectRow": "Вибрати рядок"
   },

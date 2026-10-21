@@ -732,6 +732,7 @@
   },
   "common": {
     "close": "Close",
+    "skipToContent": "Skip to content",
     "selectAllRows": "Select all rows",
     "selectRow": "Select row"
   },

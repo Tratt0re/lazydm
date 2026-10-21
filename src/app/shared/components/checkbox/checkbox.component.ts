@@ -33,7 +33,7 @@ type OnChangeType = (value: boolean) => void;
   selector: 'arc-checkbox, [arc-checkbox]',
   imports: [ArcTechIconComponent, ArcTechIdDirective],
   template: `
-    <main class="relative flex" arcTechId="checkbox" #z="arcTechId">
+    <div class="relative flex" arcTechId="checkbox" #z="arcTechId">
       <input
         #input
         type="checkbox"
@@ -52,7 +52,7 @@ type OnChangeType = (value: boolean) => void;
           (arcChecked() ? 'opacity-100' : 'opacity-0')
         "
       />
-    </main>
+    </div>
     <label [class]="labelClasses()" [for]="z.id()">
       <ng-content />
     </label>

@@ -33,13 +33,13 @@
     </header>
   }
 
-  <main>
+  <div>
     <ng-template cdkPortalOutlet />
 
     @if (isStringContent()) {
       <div data-testid="arc-alert-content" [innerHTML]="config.arcContent"></div>
     }
-  </main>
+  </div>
 
   <footer class="flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
     @if (config.arcCancelText !== null) {
