@@ -68,6 +68,10 @@
       "editor": {
         "title": "Editor",
         "description": "Wie Notizen beim Schreiben aussehen und sich verhalten, auf diesem Gerät."
+      },
+      "vault": {
+        "title": "Vault",
+        "description": "Der Ordner mit deinen Notizen und das Zurücksetzen der App."
       }
     },
     "general": {
@@ -275,6 +279,31 @@
           "medium": "Mittel",
           "large": "Groß"
         }
+      }
+    },
+    "vault": {
+      "current": {
+        "title": "Geöffneter Vault",
+        "name": "Name",
+        "path": "Ordner",
+        "hint": "Deine Notizen sind einfache .md-Dateien in diesem Ordner. Das Schließen löscht sie nicht.",
+        "none": "Kein Vault geöffnet."
+      },
+      "close": {
+        "action": "Vault schließen",
+        "title": "Diesen Vault schließen?",
+        "description": "Du kehrst zur Vault-Auswahl zurück. Die Notizen bleiben im Ordner, nichts wird gelöscht.",
+        "confirm": "Vault schließen",
+        "error": "Der Vault konnte nicht geschlossen werden"
+      },
+      "reset": {
+        "heading": "App zurücksetzen",
+        "explanation": "Vergisst den geöffneten Vault und die Einstellungen dieses Geräts (Design, Sprache, Editor, gespeicherte Layouts) und startet die App neu. Der Vault-Ordner und deine Notizen bleiben unberührt.",
+        "action": "App zurücksetzen…",
+        "title": "App zurücksetzen?",
+        "description": "Der geöffnete Vault und alle Einstellungen dieses Geräts werden vergessen. Die Notizen bleiben im Ordner, nichts wird gelöscht.",
+        "confirm": "App zurücksetzen",
+        "error": "Die App konnte nicht zurückgesetzt werden"
       }
     }
   },

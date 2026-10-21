@@ -68,6 +68,10 @@
       "editor": {
         "title": "Editor",
         "description": "How notes look and behave while you write, on this device."
+      },
+      "vault": {
+        "title": "Vault",
+        "description": "The folder your notes live in, and a reset of this app."
       }
     },
     "general": {
@@ -275,6 +279,31 @@
           "medium": "Medium",
           "large": "Large"
         }
+      }
+    },
+    "vault": {
+      "current": {
+        "title": "Open vault",
+        "name": "Name",
+        "path": "Folder",
+        "hint": "Your notes are plain .md files in this folder. Closing the vault does not delete them.",
+        "none": "No vault is open."
+      },
+      "close": {
+        "action": "Close vault",
+        "title": "Close this vault?",
+        "description": "You go back to the vault chooser. Your notes stay in the folder and nothing is deleted.",
+        "confirm": "Close vault",
+        "error": "Couldn't close the vault"
+      },
+      "reset": {
+        "heading": "Reset the app",
+        "explanation": "Forgets the open vault and this device’s settings (theme, language, editor, saved layouts) and starts the app again from scratch. The vault folder and your notes are not touched.",
+        "action": "Reset the app…",
+        "title": "Reset the app?",
+        "description": "The open vault and all settings of this device are forgotten. Your notes stay in their folder and nothing is deleted.",
+        "confirm": "Reset the app",
+        "error": "Couldn't reset the app"
       }
     }
   },

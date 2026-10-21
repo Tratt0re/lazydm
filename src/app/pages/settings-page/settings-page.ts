@@ -22,6 +22,7 @@ import { EditorSectionComponent } from './components/sections/editor-section/edi
 import { GeneralSectionComponent } from './components/sections/general-section/general-section.component';
 import { SectionsSectionComponent } from './components/sections/sections-section/sections-section.component';
 import { TemplatesSectionComponent } from './components/sections/templates-section/templates-section.component';
+import { VaultSectionComponent } from './components/sections/vault-section/vault-section.component';
 import {
   DEFAULT_SETTINGS_SECTION,
   SETTINGS_NAV_ITEMS,
@@ -39,6 +40,7 @@ import {
     EditorSectionComponent,
     SectionsSectionComponent,
     TemplatesSectionComponent,
+    VaultSectionComponent,
   ],
   template: `
     <section
@@ -72,6 +74,9 @@ import {
           }
           @case ('templates') {
             <app-templates-section />
+          }
+          @case ('vault') {
+            <app-vault-section />
           }
         }
       </div>

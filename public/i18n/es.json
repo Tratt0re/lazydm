@@ -68,6 +68,10 @@
       "editor": {
         "title": "Editor",
         "description": "Cómo se ven y se comportan las notas mientras escribes, en este dispositivo."
+      },
+      "vault": {
+        "title": "Bóveda",
+        "description": "La carpeta donde viven tus notas y el restablecimiento de la app."
       }
     },
     "general": {
@@ -275,6 +279,31 @@
           "medium": "Mediano",
           "large": "Grande"
         }
+      }
+    },
+    "vault": {
+      "current": {
+        "title": "Bóveda abierta",
+        "name": "Nombre",
+        "path": "Carpeta",
+        "hint": "Tus notas son archivos .md en esta carpeta. Cerrar la bóveda no las elimina.",
+        "none": "Ninguna bóveda abierta."
+      },
+      "close": {
+        "action": "Cerrar bóveda",
+        "title": "¿Cerrar esta bóveda?",
+        "description": "Vuelves al selector de bóvedas. Tus notas siguen en la carpeta y no se elimina nada.",
+        "confirm": "Cerrar bóveda",
+        "error": "No se pudo cerrar la bóveda"
+      },
+      "reset": {
+        "heading": "Restablecer la app",
+        "explanation": "Olvida la bóveda abierta y los ajustes de este dispositivo (tema, idioma, editor, diseños guardados) y reinicia la app desde cero. La carpeta de la bóveda y tus notas no se tocan.",
+        "action": "Restablecer la app…",
+        "title": "¿Restablecer la app?",
+        "description": "Se olvidan la bóveda abierta y todos los ajustes de este dispositivo. Tus notas siguen en su carpeta y no se elimina nada.",
+        "confirm": "Restablecer la app",
+        "error": "No se pudo restablecer la app"
       }
     }
   },

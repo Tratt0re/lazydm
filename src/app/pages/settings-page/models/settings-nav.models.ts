@@ -1,4 +1,4 @@
-export const SETTINGS_SECTION_KEYS = ['general', 'editor', 'sections', 'templates'] as const;
+export const SETTINGS_SECTION_KEYS = ['general', 'editor', 'sections', 'templates', 'vault'] as const;
 
 export type SettingsSectionKey = typeof SETTINGS_SECTION_KEYS[number];
 
@@ -30,6 +30,11 @@ export const SETTINGS_NAV_ITEMS: readonly SettingsNavItem[] = [
     key: 'templates',
     label: 'settings.sections.templates.title',
     description: 'settings.sections.templates.description',
+  },
+  {
+    key: 'vault',
+    label: 'settings.sections.vault.title',
+    description: 'settings.sections.vault.description',
   },
 ] as const;
 

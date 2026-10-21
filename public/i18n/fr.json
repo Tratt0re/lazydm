@@ -68,6 +68,10 @@
       "editor": {
         "title": "Éditeur",
         "description": "L'apparence et le comportement des notes pendant l'écriture, sur cet appareil."
+      },
+      "vault": {
+        "title": "Coffre",
+        "description": "Le dossier de vos notes et la réinitialisation de l'application."
       }
     },
     "general": {
@@ -275,6 +279,31 @@
           "medium": "Moyenne",
           "large": "Grande"
         }
+      }
+    },
+    "vault": {
+      "current": {
+        "title": "Coffre ouvert",
+        "name": "Nom",
+        "path": "Dossier",
+        "hint": "Vos notes sont des fichiers .md dans ce dossier. Fermer le coffre ne les supprime pas.",
+        "none": "Aucun coffre ouvert."
+      },
+      "close": {
+        "action": "Fermer le coffre",
+        "title": "Fermer ce coffre ?",
+        "description": "Vous revenez au choix du coffre. Vos notes restent dans le dossier et rien n’est supprimé.",
+        "confirm": "Fermer le coffre",
+        "error": "Impossible de fermer le coffre"
+      },
+      "reset": {
+        "heading": "Réinitialiser l'application",
+        "explanation": "Oublie le coffre ouvert et les réglages de cet appareil (thème, langue, éditeur, dispositions enregistrées) et repart de zéro. Le dossier du coffre et vos notes ne sont pas touchés.",
+        "action": "Réinitialiser l'application…",
+        "title": "Réinitialiser l'application ?",
+        "description": "Le coffre ouvert et tous les réglages de cet appareil sont oubliés. Vos notes restent dans leur dossier et rien n’est supprimé.",
+        "confirm": "Réinitialiser l'application",
+        "error": "Impossible de réinitialiser l'application"
       }
     }
   },

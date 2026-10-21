@@ -408,4 +408,3 @@ contextBridge.exposeInMainWorld("electronAPI", {
     node: process.versions.node
   })
 });
-//# sourceMappingURL=preload.bundle.cjs.map

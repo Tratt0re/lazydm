@@ -24,6 +24,7 @@ export enum APIChannel {
   REVIEW = 'review',
   SECTIONS = 'sections',
   TEMPLATES = 'templates',
+  RESET = 'reset',
   SEARCH = 'search',
   UPDATE = 'update',
   VAULT = 'vault',
@@ -154,6 +155,9 @@ export interface ElectronIpcClient {
   readonly index: {
     readonly getStatus: OptionalIpcRequest<void, unknown>;
     readonly rebuild: OptionalIpcRequest<void, unknown>;
+  };
+  readonly reset: {
+    readonly factoryReset: OptionalIpcRequest<void, { ok: boolean; error?: string }>;
   };
   readonly update: {
     readonly check: OptionalIpcRequest<void, DTO.UpdateCheckDto>;

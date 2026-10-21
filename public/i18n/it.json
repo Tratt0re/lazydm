@@ -68,6 +68,10 @@
       "editor": {
         "title": "Editor",
         "description": "Come appaiono e si comportano le note mentre scrivi, su questo dispositivo."
+      },
+      "vault": {
+        "title": "Vault",
+        "description": "La cartella dove vivono le tue note e il ripristino dell'app."
       }
     },
     "general": {
@@ -275,6 +279,31 @@
           "medium": "Medio",
           "large": "Grande"
         }
+      }
+    },
+    "vault": {
+      "current": {
+        "title": "Vault aperto",
+        "name": "Nome",
+        "path": "Cartella",
+        "hint": "Le tue note sono file .md in questa cartella. Chiudere il vault non le elimina.",
+        "none": "Nessun vault aperto."
+      },
+      "close": {
+        "action": "Chiudi vault",
+        "title": "Chiudere questo vault?",
+        "description": "Torni alla scelta del vault. Le note restano nella cartella e nulla viene eliminato.",
+        "confirm": "Chiudi vault",
+        "error": "Impossibile chiudere il vault"
+      },
+      "reset": {
+        "heading": "Ripristina l'app",
+        "explanation": "Dimentica il vault aperto e le impostazioni di questo dispositivo (tema, lingua, editor, layout salvati) e riparte da zero. La cartella del vault e le tue note non vengono toccate.",
+        "action": "Ripristina l'app…",
+        "title": "Ripristinare l'app?",
+        "description": "Il vault aperto e tutte le impostazioni di questo dispositivo vengono dimenticati. Le note restano nella cartella e nulla viene eliminato.",
+        "confirm": "Ripristina l'app",
+        "error": "Impossibile ripristinare l'app"
       }
     }
   },
