@@ -184,7 +184,8 @@ function retargetMovedLink(link, sourcePath, newPath, scope) {
 
 /**
  * Moves a note file and updates it: `type` / `subtype` follow a note section (special sections keep them),
- * relative links are recomputed from the new folder. The rewrite is conflict-checked like a save.
+ * relative links are recomputed from the new folder. The rewrite is conflict-checked like a save; returns
+ * false when it was not saved (the file moved but kept its old type and links).
  */
 async function moveNoteFile(vaultPath, relativePath, newPath, section, subfolder) {
   const current = await documentModel.readDocument(vaultPath, relativePath);
@@ -207,9 +208,17 @@ async function moveNoteFile(vaultPath, relativePath, newPath, section, subfolder
   ).content;
 
   await documentModel.renameDocumentFile(vaultPath, relativePath, newPath);
-  if (ownContent !== current.content) {
-    await documentModel.writeDocument(vaultPath, newPath, ownContent, current.contentHash);
+  if (ownContent === current.content) {
+    return true;
   }
+
+  const result = await documentModel.writeDocument(
+    vaultPath,
+    newPath,
+    ownContent,
+    current.contentHash,
+  );
+  return result.status === 'saved';
 }
 
 /**
@@ -244,51 +253,73 @@ async function move(payload) {
 
   const isNote = relativePath.toLocaleLowerCase().endsWith(MARKDOWN_EXTENSION);
   const rawsBySource = groupRawsBySource(vaultIndexModel.listIncomingLinks(relativePath));
-  if (isNote) {
-    await moveNoteFile(vaultPath, relativePath, newPath, section, location.subfolder);
-  } else {
-    await documentModel.moveVaultFile(vaultPath, relativePath, newPath);
-  }
-
   const updatedPaths = [];
   const failedPaths = [];
   let linkCount = 0;
-  for (const [sourcePath, raws] of rawsBySource) {
-    if (sourcePath === relativePath) {
-      continue;
+  let isMoved = false;
+  try {
+    if (isNote) {
+      const isOwnContentSaved = await moveNoteFile(
+        vaultPath,
+        relativePath,
+        newPath,
+        section,
+        location.subfolder,
+      );
+      isMoved = true;
+      if (!isOwnContentSaved) {
+        failedPaths.push(newPath);
+      }
+    } else {
+      await documentModel.moveVaultFile(vaultPath, relativePath, newPath);
+      isMoved = true;
     }
 
-    try {
-      const source = await documentModel.readDocument(vaultPath, sourcePath);
-      const rewritten = rewriteLinks(
-        source.content,
-        (link) => (raws.has(link.raw) ? retargetMovedLink(link, sourcePath, newPath, scope) : null),
-        { sourcePath },
-      );
-      if (rewritten.count === 0) {
+    await rewriteMovedLinks();
+  } finally {
+    // The file may have moved even when a later step threw: the index must follow what is on disk.
+    await indexerController.reindexPaths(
+      isMoved ? [relativePath, newPath, ...updatedPaths] : [relativePath],
+    );
+  }
+
+  return { path: newPath, updatedPaths, failedPaths, linkCount };
+
+  async function rewriteMovedLinks() {
+    for (const [sourcePath, raws] of rawsBySource) {
+      if (sourcePath === relativePath) {
         continue;
       }
 
-      const result = await documentModel.writeDocument(
-        vaultPath,
-        sourcePath,
-        rewritten.content,
-        source.contentHash,
-      );
-      if (result.status === 'saved') {
-        updatedPaths.push(sourcePath);
-        linkCount += rewritten.count;
-      } else {
+      try {
+        const source = await documentModel.readDocument(vaultPath, sourcePath);
+        const rewritten = rewriteLinks(
+          source.content,
+          (link) => (raws.has(link.raw) ? retargetMovedLink(link, sourcePath, newPath, scope) : null),
+          { sourcePath },
+        );
+        if (rewritten.count === 0) {
+          continue;
+        }
+
+        const result = await documentModel.writeDocument(
+          vaultPath,
+          sourcePath,
+          rewritten.content,
+          source.contentHash,
+        );
+        if (result.status === 'saved') {
+          updatedPaths.push(sourcePath);
+          linkCount += rewritten.count;
+        } else {
+          failedPaths.push(sourcePath);
+        }
+      } catch (error) {
+        console.warn('[electron] Failed to update links ->', sourcePath, error);
         failedPaths.push(sourcePath);
       }
-    } catch (error) {
-      console.warn('[electron] Failed to update links ->', sourcePath, error);
-      failedPaths.push(sourcePath);
     }
   }
-
-  await indexerController.reindexPaths([relativePath, newPath, ...updatedPaths]);
-  return { path: newPath, updatedPaths, failedPaths, linkCount };
 }
 
 /** Shows a vault file or folder in the system file manager (Finder, Explorer…). */
@@ -538,36 +569,55 @@ async function rename(payload) {
   const isNameChanged = oldName !== slug;
   const rawsBySource = groupRawsBySource(vaultIndexModel.listIncomingLinks(relativePath));
 
-  let ownContent = replaceDocumentTitle(current.content, current.title, title);
-  if (isNameChanged) {
-    ownContent = rewriteRenamedLinks(
-      ownContent,
-      relativePath,
-      rawsBySource.get(relativePath),
-      oldName,
-      slug,
-    ).content;
-    await documentModel.renameDocumentFile(vaultPath, relativePath, newPath);
+  let isRenamed = false;
+  const ownFailedPaths = [];
+  let updatedPaths = [];
+  let failedPaths = [];
+  let linkCount = 0;
+  try {
+    let ownContent = replaceDocumentTitle(current.content, current.title, title);
+    if (isNameChanged) {
+      ownContent = rewriteRenamedLinks(
+        ownContent,
+        relativePath,
+        rawsBySource.get(relativePath),
+        oldName,
+        slug,
+      ).content;
+      await documentModel.renameDocumentFile(vaultPath, relativePath, newPath);
+      isRenamed = true;
+    }
+
+    if (ownContent !== current.content) {
+      const result = await documentModel.writeDocument(
+        vaultPath,
+        newPath,
+        ownContent,
+        current.contentHash,
+      );
+      if (result.status !== 'saved') {
+        ownFailedPaths.push(newPath);
+      }
+    }
+
+    ({ updatedPaths, failedPaths, linkCount } =
+      updateLinks && isNameChanged
+        ? await rewriteIncomingLinks(
+            vaultPath,
+            rawsBySource,
+            relativePath,
+            (content, sourcePath, raws) =>
+              rewriteRenamedLinks(content, sourcePath, raws, oldName, slug),
+          )
+        : { updatedPaths: [], failedPaths: [], linkCount: 0 });
+  } finally {
+    // The file may have been renamed even when a later step threw: the index must follow the disk.
+    await indexerController.reindexPaths(
+      isRenamed ? [relativePath, newPath, ...updatedPaths] : [relativePath],
+    );
   }
 
-  if (ownContent !== current.content) {
-    await documentModel.writeDocument(vaultPath, newPath, ownContent, current.contentHash);
-  }
-
-  const { updatedPaths, failedPaths, linkCount } =
-    updateLinks && isNameChanged
-      ? await rewriteIncomingLinks(
-          vaultPath,
-          rawsBySource,
-          relativePath,
-          (content, sourcePath, raws) =>
-            rewriteRenamedLinks(content, sourcePath, raws, oldName, slug),
-        )
-      : { updatedPaths: [], failedPaths: [], linkCount: 0 };
-
-  await indexerController.reindexPaths([relativePath, newPath, ...updatedPaths]);
-
-  return { path: newPath, updatedPaths, failedPaths, linkCount };
+  return { path: newPath, updatedPaths, failedPaths: [...ownFailedPaths, ...failedPaths], linkCount };
 }
 
 /**
