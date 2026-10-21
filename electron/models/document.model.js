@@ -4,6 +4,8 @@ const YAML = require('yaml');
 const {
   formatTimestampForFilename,
   hashContent,
+  isAlreadyExistsError,
+  moveFileNoOverwrite,
   resolveInsideVault,
   safeWriteFileAtomic,
 } = require('../utils/file-utils');
@@ -104,7 +106,22 @@ async function renameDocumentFile(rootPath, fromPath, toPath) {
   }
 
   await fs.promises.mkdir(path.dirname(toAbsolutePath), { recursive: true });
-  await fs.promises.rename(fromAbsolutePath, toAbsolutePath);
+  if (isCaseOnlyRename) {
+    await fs.promises.rename(fromAbsolutePath, toAbsolutePath);
+    return;
+  }
+
+  try {
+    await moveFileNoOverwrite(fromAbsolutePath, toAbsolutePath);
+  } catch (error) {
+    if (isAlreadyExistsError(error)) {
+      throw new Error(
+        `A note named "${path.posix.basename(toPath)}" already exists in ${path.posix.dirname(toPath)}.`,
+      );
+    }
+
+    throw error;
+  }
 }
 
 /**
@@ -174,10 +191,19 @@ async function createDocument(
         });
   await fs.promises.mkdir(path.dirname(absolutePath), { recursive: true });
   // A note created in a sub-folder of its section gets the sub-folder as its sub-type.
-  safeWriteFileAtomic(
-    absolutePath,
-    subtype ? setFrontmatterField(content, 'subtype', subtype) : content,
-  );
+  try {
+    safeWriteFileAtomic(
+      absolutePath,
+      subtype ? setFrontmatterField(content, 'subtype', subtype) : content,
+      { overwrite: false },
+    );
+  } catch (error) {
+    if (isAlreadyExistsError(error)) {
+      throw new Error(`A note named "${slug}${MARKDOWN_EXTENSION}" already exists in ${folderPath}.`);
+    }
+
+    throw error;
+  }
 
   return readDocument(rootPath, relativePath);
 }
@@ -192,7 +218,17 @@ async function moveVaultFile(rootPath, fromPath, toPath) {
   }
 
   await fs.promises.mkdir(path.dirname(toAbsolutePath), { recursive: true });
-  await fs.promises.rename(resolveInsideVault(rootPath, fromPath), toAbsolutePath);
+  try {
+    await moveFileNoOverwrite(resolveInsideVault(rootPath, fromPath), toAbsolutePath);
+  } catch (error) {
+    if (isAlreadyExistsError(error)) {
+      throw new Error(
+        `A file named "${path.posix.basename(toPath)}" already exists in ${path.posix.dirname(toPath)}.`,
+      );
+    }
+
+    throw error;
+  }
 }
 
 /** Moves (renames) a vault folder with everything in it; never overwrites an existing folder or file. */

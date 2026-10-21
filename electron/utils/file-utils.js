@@ -1,6 +1,6 @@
 const fs = require('node:fs');
 const path = require('node:path');
-const { createHash } = require('node:crypto');
+const { createHash, randomBytes } = require('node:crypto');
 
 function pad2(value) {
   return String(value).padStart(2, '0');
@@ -93,7 +93,32 @@ function resolveInsideVault(rootPath, relativePath = '') {
   return resolvedPath;
 }
 
-function safeWriteFileAtomic(filePath, content) {
+/**
+ * Moves a file without ever replacing an existing target: a hard link fails with EEXIST where `rename` would
+ * silently overwrite (a sync client or Obsidian may create the target between a check and the move). Falls back
+ * to an exclusive copy where hard links are unsupported (exFAT, some network shares).
+ */
+async function moveFileNoOverwrite(fromAbsolutePath, toAbsolutePath) {
+  try {
+    await fs.promises.link(fromAbsolutePath, toAbsolutePath);
+  } catch (error) {
+    if (error?.code === 'EEXIST') {
+      throw error;
+    }
+
+    await fs.promises.copyFile(fromAbsolutePath, toAbsolutePath, fs.constants.COPYFILE_EXCL);
+  }
+
+  await fs.promises.unlink(fromAbsolutePath);
+}
+
+/** True when `error` says the target of a no-overwrite operation is already taken. */
+function isAlreadyExistsError(error) {
+  return error?.code === 'EEXIST';
+}
+
+/** Writes via a temporary file; with `overwrite: false` it fails with EEXIST instead of replacing the target. */
+function safeWriteFileAtomic(filePath, content, { overwrite = true } = {}) {
   if (typeof filePath !== 'string' || filePath.trim().length === 0) {
     throw new Error('filePath must be a non-empty string.');
   }
@@ -106,11 +131,16 @@ function safeWriteFileAtomic(filePath, content) {
   const directoryPath = path.dirname(normalizedPath);
   fs.mkdirSync(directoryPath, { recursive: true });
 
-  const temporaryPath = `${normalizedPath}.tmp-${process.pid}-${Date.now()}`;
+  const temporaryPath = `${normalizedPath}.tmp-${process.pid}-${Date.now()}-${randomBytes(4).toString('hex')}`;
 
   try {
     fs.writeFileSync(temporaryPath, content);
-    fs.renameSync(temporaryPath, normalizedPath);
+    if (overwrite) {
+      fs.renameSync(temporaryPath, normalizedPath);
+    } else {
+      fs.linkSync(temporaryPath, normalizedPath);
+      fs.unlinkSync(temporaryPath);
+    }
   } catch (error) {
     if (fs.existsSync(temporaryPath)) {
       fs.unlinkSync(temporaryPath);
@@ -173,7 +203,9 @@ module.exports = {
   assertWritableDirectory,
   formatTimestampForFilename,
   hashContent,
+  isAlreadyExistsError,
   listFilesSortedByMtime,
+  moveFileNoOverwrite,
   resolveInsideVault,
   safeWriteFileAtomic,
 };
