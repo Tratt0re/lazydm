@@ -713,50 +713,55 @@ async function renameFolder(payload) {
 
   await documentModel.moveVaultFolder(vaultPath, folderPath, newFolderPath);
 
+  const moved = files.map((file) => ({ from: file.path, to: toNewPath(file.path) }));
   const failedPaths = [];
   const subtypePaths = [];
-  if (!sectionModel.SPECIAL_SECTION_KEYS.includes(location.section)) {
-    for (const file of files.filter((item) => item.kind === 'md')) {
-      const newPath = toNewPath(file.path);
-      try {
-        const note = await documentModel.readDocument(vaultPath, newPath);
-        if (note.frontmatter?.subtype === slug) {
-          continue;
-        }
+  let links = { updatedPaths: [], failedPaths: [], linkCount: 0 };
+  try {
+    if (!sectionModel.SPECIAL_SECTION_KEYS.includes(location.section)) {
+      for (const file of files.filter((item) => item.kind === 'md')) {
+        const newPath = toNewPath(file.path);
+        try {
+          const note = await documentModel.readDocument(vaultPath, newPath);
+          if (note.frontmatter?.subtype === slug) {
+            continue;
+          }
 
-        const result = await documentModel.writeDocument(
-          vaultPath,
-          newPath,
-          setFrontmatterField(note.content, 'subtype', slug),
-          note.contentHash,
-        );
-        (result.status === 'saved' ? subtypePaths : failedPaths).push(newPath);
-      } catch (error) {
-        console.warn('[electron] Failed to set the sub-type ->', newPath, error);
-        failedPaths.push(newPath);
+          const result = await documentModel.writeDocument(
+            vaultPath,
+            newPath,
+            setFrontmatterField(note.content, 'subtype', slug),
+            note.contentHash,
+          );
+          (result.status === 'saved' ? subtypePaths : failedPaths).push(newPath);
+        } catch (error) {
+          console.warn('[electron] Failed to set the sub-type ->', newPath, error);
+          failedPaths.push(newPath);
+        }
       }
     }
+
+    const parents = new Set(['', location.section, sectionPath]);
+    links = await rewriteIncomingLinks(
+      vaultPath,
+      rawsBySource,
+      null,
+      (content, sourcePath, raws) =>
+        rewriteLinks(
+          content,
+          (link) =>
+            raws?.has(link.raw) ? renameLinkFolder(link, location.subfolder, slug, parents) : null,
+          { sourcePath },
+        ),
+    );
+  } finally {
+    // The folder has moved even when a later step threw: the index must follow the disk.
+    await indexerController.reindexPaths([
+      ...moved.flatMap((move) => [move.from, move.to]),
+      ...links.updatedPaths,
+    ]);
   }
 
-  const parents = new Set(['', location.section, sectionPath]);
-  const links = await rewriteIncomingLinks(
-    vaultPath,
-    rawsBySource,
-    null,
-    (content, sourcePath, raws) =>
-      rewriteLinks(
-        content,
-        (link) =>
-          raws?.has(link.raw) ? renameLinkFolder(link, location.subfolder, slug, parents) : null,
-        { sourcePath },
-      ),
-  );
-
-  const moved = files.map((file) => ({ from: file.path, to: toNewPath(file.path) }));
-  await indexerController.reindexPaths([
-    ...moved.flatMap((move) => [move.from, move.to]),
-    ...links.updatedPaths,
-  ]);
   return {
     path: newFolderPath,
     name: slug,
@@ -870,39 +875,48 @@ async function deleteFolder(payload) {
   const updatedPaths = new Set();
   const failedPaths = new Set();
   let linkCount = 0;
+  let isTrashed = false;
 
-  if (mode === 'moveToMain') {
-    const names = files.map((file) => path.posix.basename(file.path));
-    const clashes = names.filter(
-      (name, index) =>
-        names.indexOf(name) !== index ||
-        fs.existsSync(resolveInsideVault(vaultPath, `${sectionPath}/${name}`)),
-    );
-    if (clashes.length > 0) {
-      return { status: 'clashes', clashes: [...new Set(clashes)] };
+  try {
+    if (mode === 'moveToMain') {
+      const names = files.map((file) => path.posix.basename(file.path));
+      const clashes = names.filter(
+        (name, index) =>
+          names.indexOf(name) !== index ||
+          fs.existsSync(resolveInsideVault(vaultPath, `${sectionPath}/${name}`)),
+      );
+      if (clashes.length > 0) {
+        return { status: 'clashes', clashes: [...new Set(clashes)] };
+      }
+
+      // One by one, like *Move to…*: each move re-indexes, so links between these files stay right too.
+      // A failure stops here, before the folder goes to the Trash: what already moved stays moved (and indexed).
+      for (const file of files) {
+        const result = await move({ path: file.path, folder: sectionPath });
+        moved.push({ from: file.path, to: result.path });
+        result.updatedPaths.forEach((item) => updatedPaths.add(item));
+        result.failedPaths.forEach((item) => failedPaths.add(item));
+        linkCount += result.linkCount;
+      }
     }
 
-    // One by one, like *Move to…*: each move re-indexes, so links between these files stay right too.
-    for (const file of files) {
-      const result = await move({ path: file.path, folder: sectionPath });
-      moved.push({ from: file.path, to: result.path });
+    // The Trash comes first: if it fails nothing was rewritten, and the links are rewritten from the index.
+    await shell.trashItem(absolutePath);
+    isTrashed = true;
+    if (mode !== 'moveToMain' && rewriteLinksToText) {
+      const result = await rewriteLinksToDeletedFiles(vaultPath, files, prefix);
       result.updatedPaths.forEach((item) => updatedPaths.add(item));
       result.failedPaths.forEach((item) => failedPaths.add(item));
-      linkCount += result.linkCount;
+      linkCount = result.linkCount;
     }
-  } else if (rewriteLinksToText) {
-    const result = await rewriteLinksToDeletedFiles(vaultPath, files, prefix);
-    result.updatedPaths.forEach((item) => updatedPaths.add(item));
-    result.failedPaths.forEach((item) => failedPaths.add(item));
-    linkCount = result.linkCount;
+  } finally {
+    await indexerController.reindexPaths([
+      ...(isTrashed ? files.map((file) => file.path) : []),
+      ...moved.map((item) => item.to),
+      ...updatedPaths,
+    ]);
   }
 
-  await shell.trashItem(absolutePath);
-  await indexerController.reindexPaths([
-    ...files.map((file) => file.path),
-    ...moved.map((item) => item.to),
-    ...updatedPaths,
-  ]);
   return {
     status: 'deleted',
     path: folderPath,
@@ -950,34 +964,44 @@ async function deleteSection(payload) {
   const files = vaultIndexModel
     .listScopeFiles(campaign)
     .filter((file) => file.path.startsWith(prefix));
-  const links = rewriteLinksToText
-    ? await rewriteLinksToDeletedFiles(vaultPath, files, prefix)
-    : { updatedPaths: [], failedPaths: [], linkCount: 0 };
+  let links = { updatedPaths: [], failedPaths: [], linkCount: 0 };
+  let isTrashed = false;
+  try {
+    // The Trash comes first: if it fails nothing was rewritten or changed (links are rewritten from the index).
+    if (fs.existsSync(absolutePath)) {
+      await shell.trashItem(absolutePath);
+    }
+    isTrashed = true;
 
-  if (fs.existsSync(absolutePath)) {
-    await shell.trashItem(absolutePath);
+    // Custom sections leave `custom`; a preset is marked `removed` (it would come back as a default otherwise).
+    const stored = sectionModel.readCampaignSectionSettings(vaultPath, campaign);
+    const rows = sectionModel.listCampaignSections(vaultPath, campaign);
+    sectionModel.saveCampaignSectionSettings(vaultPath, campaign, {
+      hidden: stored.hidden,
+      order: stored.order,
+      labels: stored.labels,
+      removed: section.isCustom ? stored.removed : [...stored.removed, key],
+      custom: rows
+        .filter((row) => row.isCustom && row.key !== key)
+        .map(({ key: rowKey, type, label, icon, description }) => ({
+          key: rowKey,
+          type,
+          label,
+          icon,
+          description,
+        })),
+    });
+
+    if (rewriteLinksToText) {
+      links = await rewriteLinksToDeletedFiles(vaultPath, files, prefix);
+    }
+  } finally {
+    await indexerController.reindexPaths([
+      ...(isTrashed ? files.map((file) => file.path) : []),
+      ...links.updatedPaths,
+    ]);
   }
 
-  // Custom sections leave `custom`; a preset is marked `removed` (it would come back as a default otherwise).
-  const stored = sectionModel.readCampaignSectionSettings(vaultPath, campaign);
-  const rows = sectionModel.listCampaignSections(vaultPath, campaign);
-  sectionModel.saveCampaignSectionSettings(vaultPath, campaign, {
-    hidden: stored.hidden,
-    order: stored.order,
-    labels: stored.labels,
-    removed: section.isCustom ? stored.removed : [...stored.removed, key],
-    custom: rows
-      .filter((row) => row.isCustom && row.key !== key)
-      .map(({ key: rowKey, type, label, icon, description }) => ({
-        key: rowKey,
-        type,
-        label,
-        icon,
-        description,
-      })),
-  });
-
-  await indexerController.reindexPaths([...files.map((file) => file.path), ...links.updatedPaths]);
   return {
     status: 'deleted',
     path: folderPath,
@@ -1016,12 +1040,21 @@ async function deleteStrayFolder(payload) {
   const files = vaultIndexModel
     .listScopeFiles(scope)
     .filter((file) => file.path.startsWith(prefix));
-  const links = rewriteLinksToText
-    ? await rewriteLinksToDeletedFiles(vaultPath, files, prefix)
-    : { updatedPaths: [], failedPaths: [], linkCount: 0 };
+  let links = { updatedPaths: [], failedPaths: [], linkCount: 0 };
+  let isTrashed = false;
+  try {
+    await shell.trashItem(absolutePath);
+    isTrashed = true;
+    if (rewriteLinksToText) {
+      links = await rewriteLinksToDeletedFiles(vaultPath, files, prefix);
+    }
+  } finally {
+    await indexerController.reindexPaths([
+      ...(isTrashed ? files.map((file) => file.path) : []),
+      ...links.updatedPaths,
+    ]);
+  }
 
-  await shell.trashItem(absolutePath);
-  await indexerController.reindexPaths([...files.map((file) => file.path), ...links.updatedPaths]);
   return {
     status: 'deleted',
     path: folderPath,
@@ -1052,8 +1085,13 @@ async function deleteFile(payload) {
 
   const isNote = vaultIndexModel.getFileKind(relativePath) === 'md';
   const rawsBySource = groupRawsBySource(vaultIndexModel.listIncomingLinks(relativePath));
-  const { updatedPaths, failedPaths, linkCount } = rewriteLinksToText
-    ? await rewriteIncomingLinks(
+  let result = { updatedPaths: [], failedPaths: [], linkCount: 0 };
+  let isTrashed = false;
+  try {
+    await shell.trashItem(absolutePath);
+    isTrashed = true;
+    if (rewriteLinksToText) {
+      result = await rewriteIncomingLinks(
         vaultPath,
         rawsBySource,
         relativePath,
@@ -1063,11 +1101,16 @@ async function deleteFile(payload) {
             (link) => (raws?.has(link.raw) ? { text: getDeletedLinkText(link, isNote) } : null),
             { sourcePath },
           ),
-      )
-    : { updatedPaths: [], failedPaths: [], linkCount: 0 };
+      );
+    }
+  } finally {
+    await indexerController.reindexPaths([
+      ...(isTrashed ? [relativePath] : []),
+      ...result.updatedPaths,
+    ]);
+  }
 
-  await shell.trashItem(absolutePath);
-  await indexerController.reindexPaths([relativePath, ...updatedPaths]);
+  const { updatedPaths, failedPaths, linkCount } = result;
   return { path: relativePath, updatedPaths, failedPaths, linkCount };
 }
 
