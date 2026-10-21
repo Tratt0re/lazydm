@@ -104,6 +104,19 @@
                       {{ 'review.fix.moveTo' | translate: { place: sectionLabel(note.section) + ' / ' + toSubfolderLabel(note.subtype) } }}
                     </button>
                   }
+                  <button
+                    arc-button
+                    type="button"
+                    arcType="ghost"
+                    arcSize="sm"
+                    class="size-8 text-destructive hover:text-destructive"
+                    [arcDisabled]="isFixing()"
+                    [attr.aria-label]="'files.delete.menu' | translate"
+                    [arcTooltip]="'files.delete.menu' | translate"
+                    (click)="openDeleteNoteSheet(note)"
+                  >
+                    <arc-icon arcType="trash" />
+                  </button>
                 </div>
               </li>
             }
@@ -127,10 +140,25 @@
                 <ng-container *ngTemplateOutlet="noteTitle; context: { $implicit: note }" />
                 <p class="truncate font-mono text-[11px] tracking-[0.04em] text-muted-foreground">{{ note.path }}</p>
               </div>
-              <button arc-button type="button" arcType="outline" arcSize="sm" [arcDisabled]="isFixing()" (click)="openMoveSheet(note)">
-                <arc-icon arcType="move-right" />
-                {{ 'review.fix.moveToEllipsis' | translate }}
-              </button>
+              <div class="flex shrink-0 flex-wrap items-center gap-2">
+                <button arc-button type="button" arcType="outline" arcSize="sm" [arcDisabled]="isFixing()" (click)="openMoveSheet(note)">
+                  <arc-icon arcType="move-right" />
+                  {{ 'review.fix.moveToEllipsis' | translate }}
+                </button>
+                <button
+                  arc-button
+                  type="button"
+                  arcType="ghost"
+                  arcSize="sm"
+                  class="size-8 text-destructive hover:text-destructive"
+                  [arcDisabled]="isFixing()"
+                  [attr.aria-label]="'files.delete.menu' | translate"
+                  [arcTooltip]="'files.delete.menu' | translate"
+                  (click)="openDeleteNoteSheet(note)"
+                >
+                  <arc-icon arcType="trash" />
+                </button>
+              </div>
             </li>
           }
         </ul>
@@ -155,10 +183,25 @@
                   · {{ 'campaigns.sections.folderFiles' | translate: { count: folder.fileCount } }}
                 </span>
               </span>
-              <button arc-button type="button" arcType="outline" arcSize="sm" (click)="openAddSectionSheet(folder.name)">
-                <arc-icon arcType="plus" />
-                {{ 'review.fix.addSection' | translate }}
-              </button>
+              <div class="flex shrink-0 flex-wrap items-center gap-2">
+                <button arc-button type="button" arcType="outline" arcSize="sm" (click)="openAddSectionSheet(folder.name)">
+                  <arc-icon arcType="plus" />
+                  {{ 'review.fix.addSection' | translate }}
+                </button>
+                <button
+                  arc-button
+                  type="button"
+                  arcType="ghost"
+                  arcSize="sm"
+                  class="size-8 text-destructive hover:text-destructive"
+                  [arcDisabled]="isFixing()"
+                  [attr.aria-label]="'files.deleteFolder.title' | translate: { name: folder.name }"
+                  [arcTooltip]="'files.delete.menu' | translate"
+                  (click)="openDeleteFolderSheet(scope()!.rootPath + '/' + folder.name, folder.fileCount)"
+                >
+                  <arc-icon arcType="trash" />
+                </button>
+              </div>
             </li>
           }
         </ul>
@@ -180,6 +223,19 @@
               <span class="ml-auto shrink-0 text-muted-foreground">
                 {{ 'campaigns.sections.folderFiles' | translate: { count: folder.fileCount } }}
               </span>
+              <button
+                arc-button
+                type="button"
+                arcType="ghost"
+                arcSize="sm"
+                class="size-8 shrink-0 text-destructive hover:text-destructive"
+                [arcDisabled]="isFixing()"
+                [attr.aria-label]="'files.deleteFolder.title' | translate: { name: folder.folder }"
+                [arcTooltip]="'files.delete.menu' | translate"
+                (click)="openDeleteFolderSheet(folder.folder, folder.fileCount)"
+              >
+                <arc-icon arcType="trash" />
+              </button>
             </li>
           }
         </ul>

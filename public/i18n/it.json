@@ -87,6 +87,13 @@
           "description": "Scegli la lingua usata in navigazione, etichette e messaggi in tutta l'app.",
           "fieldLabel": "Lingua app"
         }
+      },
+      "lists": {
+        "title": "Elenchi",
+        "fileSizes": {
+          "label": "Mostra le dimensioni dei file",
+          "description": "Mostra la dimensione di ogni nota, incontro e risorsa negli elenchi delle pagine delle sezioni, su questo dispositivo."
+        }
       }
     },
     "sidebarAriaLabel": "Sezioni delle impostazioni",
@@ -361,7 +368,8 @@
         "titlePlaceholder": "Capo dei Goblin",
         "submit": "Crea nota",
         "cancel": "Annulla",
-        "error": "Impossibile creare la nota"
+        "error": "Impossibile creare la nota",
+        "exists": "Esiste già una nota con questo nome in questa cartella. Scegli un altro titolo."
       },
       "loadError": "Impossibile caricare questa sezione",
       "scenes": {
@@ -427,7 +435,8 @@
         "mainFolder": "{{section}} (cartella principale)",
         "noFolders": "Questa sezione non ha ancora sottocartelle.",
         "done": "{{name}} spostato in {{folder}}",
-        "dropMain": "Rilascia qui per spostare in {{section}}"
+        "dropMain": "Rilascia qui per spostare in {{section}}",
+        "exists": "“{{name}}” esiste già in {{folder}}. Rinomina uno dei due file oppure spostalo altrove."
       },
       "reveal": {
         "mac": "Mostra nel Finder",
@@ -728,7 +737,21 @@
       "description": "Questo file rimanda a file che {{target}} non ha: {{files}}. Quelli già presenti non vengono copiati di nuovo.",
       "include": "Copia anche i file collegati ({{count}})"
     },
-    "sidebarAriaLabel": "Sistemi del compendio"
+    "sidebarAriaLabel": "Sistemi del compendio",
+    "subfolder": {
+      "title": "Sottocartella",
+      "description": "{{name}} è nella sottocartella “{{subfolder}}” di {{section}}. Come va copiato?",
+      "exists": "{{target}} ha già questa sottocartella.",
+      "fileExists": "Un file con questo nome è già al suo interno.",
+      "placementLabel": "Copia",
+      "keep": "Il file e la sua sottocartella “{{subfolder}}”",
+      "merge": "Il file, nella sottocartella esistente “{{subfolder}}”",
+      "root": "Solo il file, in {{section}}",
+      "rename": "Il file e la sua sottocartella, con un altro nome",
+      "nameTitle": "Nome della sottocartella",
+      "nameDescription": "Il file va in questa sottocartella; viene creata se non esiste.",
+      "nameLabel": "Nome della sottocartella"
+    }
   },
   "common": {
     "close": "Chiudi",
@@ -816,6 +839,10 @@
       "description": "La cartella diventa una sezione di questa campagna con le sue note; nulla viene spostato o rinominato.",
       "submit": "Aggiungi sezione",
       "done": "{{name}} aggiunta alle sezioni"
+    },
+    "delete": {
+      "folderTitle": "Eliminare {{name}}?",
+      "folderDescription": "La cartella {{folder}} e i {{count}} file al suo interno vanno nel Cestino, dove puoi ripristinarli."
     }
   },
   "sidebar": {
@@ -1081,7 +1108,7 @@
       "showInRow": "Mostra nella riga",
       "moveUp": "Sposta su",
       "moveDown": "Sposta giù",
-      "removeField": "Rimuovi il campo",
+      "removeField": "Rimuovi campo",
       "addField": "Aggiungi un campo",
       "close": "Chiudi"
     },
@@ -1093,7 +1120,6 @@
       "overlap": "Quel posto è occupato o fuori dalla riga.",
       "noRoom": "Non c'è più posto libero nella riga.",
       "keyInvalid": "La chiave richiede lettere minuscole, cifre o _ e non deve essere già usata.",
-      "hide": "Nascondi dalla riga",
       "palette": "Non nella riga · trascina dentro, o clicca",
       "show": "Mostra {{name}} nella riga",
       "add": "Aggiungi {{name}}",

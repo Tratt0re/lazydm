@@ -297,15 +297,15 @@ export class EncounterPage {
             ...(isParty
               ? []
               : [
-            {
-              id: 'cemetery',
-              label: this.translateService.instant('encounters.cemetery.title'),
-              icon: 'ghost' as const,
-              buttonType: this.isCemeteryOpen() ? ('default' as const) : ('outline' as const),
-              iconOnly: true,
-              action: () => this.isCemeteryOpen.update((isOpen) => !isOpen),
-            },
-              ]),
+                  {
+                    id: 'cemetery',
+                    label: this.translateService.instant('encounters.cemetery.title'),
+                    icon: 'ghost' as const,
+                    buttonType: this.isCemeteryOpen() ? ('default' as const) : ('outline' as const),
+                    iconOnly: true,
+                    action: () => this.isCemeteryOpen.update((isOpen) => !isOpen),
+                  },
+                ]),
             ...(isParty
               ? []
               : [
@@ -321,7 +321,8 @@ export class EncounterPage {
                     id: 'delete',
                     label: this.translateService.instant('files.delete.menu'),
                     icon: 'trash' as const,
-                    buttonType: 'outline' as const,
+                    buttonType: 'secondary' as const,
+                    destructive: true,
                     iconOnly: true,
                     action: () => this.openDeleteSheet(),
                   },
@@ -492,7 +493,10 @@ export class EncounterPage {
    * Fields of the add / edit sheet: the note first, then the name and the values. Adding asks for the few
    * that matter at the table (initiative, maximum HP, AC) and for a quantity; editing shows every rule field.
    */
-  private entitySheetFields(rule: BattleRuleDto, entity: EncounterEntityDto | null): AppSheetField[] {
+  private entitySheetFields(
+    rule: BattleRuleDto,
+    entity: EncounterEntityDto | null,
+  ): AppSheetField[] {
     const isNew = entity === null;
     const fields: AppSheetField[] = [];
     const noteField = rule.fields.find((field) => field.component === 'note-link');
@@ -823,12 +827,16 @@ export class EncounterPage {
     }
 
     try {
-      const party = await this.encounterService.party(scope.rootPath, this.translateService.instant('encounters.party.title'));
+      const party = await this.encounterService.party(
+        scope.rootPath,
+        this.translateService.instant('encounters.party.title'),
+      );
       const present = new Set(
         (this.encounter()?.entities ?? []).map((entity) => entity.name?.trim().toLocaleLowerCase()),
       );
       const joining = party.encounter.entities.filter(
-        (member) => !member.isDead && !(member.name && present.has(member.name.trim().toLocaleLowerCase())),
+        (member) =>
+          !member.isDead && !(member.name && present.has(member.name.trim().toLocaleLowerCase())),
       );
       if (joining.length > 0) {
         this.updateEncounter((encounter) => ({
@@ -846,7 +854,8 @@ export class EncounterPage {
         void this.loadFrontmatter(joining);
       }
 
-      const skipped = party.encounter.entities.filter((member) => !member.isDead).length - joining.length;
+      const skipped =
+        party.encounter.entities.filter((member) => !member.isDead).length - joining.length;
       toast.success(
         this.translateService.instant(
           joining.length > 0 ? 'encounters.party.added' : 'encounters.party.nothingToAdd',
@@ -1490,7 +1499,12 @@ export class EncounterPage {
         class: 'w-56',
         disabled: !this.isEditable(),
         value: () => current ?? DEFAULT_BATTLE_RULE_CHOICE,
-        options: this.battleRuleService.getOptions(this.ruleRows(), campaign, current, campaignLabel),
+        options: this.battleRuleService.getOptions(
+          this.ruleRows(),
+          campaign,
+          current,
+          campaignLabel,
+        ),
         change: (value) => this.setRuleChoice(value),
       },
     ];
@@ -1545,7 +1559,8 @@ export class EncounterPage {
 
   /** Whole number of a frontmatter value (`14`, or `"14"` written as text); null for anything else. */
   private toInteger(value: unknown): number | null {
-    const number = typeof value === 'string' && /^-?\d+$/.test(value.trim()) ? Number(value) : value;
+    const number =
+      typeof value === 'string' && /^-?\d+$/.test(value.trim()) ? Number(value) : value;
     return typeof number === 'number' && Number.isInteger(number) ? number : null;
   }
 
@@ -1606,7 +1621,9 @@ export class EncounterPage {
     }));
 
     const failed = [...results.values()].filter((total) => total === null).length;
-    toast.success(this.translateService.instant('encounters.roll.done', { count: results.size - failed }));
+    toast.success(
+      this.translateService.instant('encounters.roll.done', { count: results.size - failed }),
+    );
     if (failed > 0) {
       toast.warning(
         this.translateService.instant('encounters.roll.failed', {

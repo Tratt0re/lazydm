@@ -49,7 +49,10 @@ export interface ElectronIpcClient {
     readonly create: IpcRequest<{ name: string }, { path: string }>;
     readonly remove: IpcRequest<{ path: string }, { path: string }>;
     readonly getChoice: IpcRequest<{ campaign: string }, { rule: string | null }>;
-    readonly setChoice: IpcRequest<{ campaign: string; rule: string | null }, { rule: string | null }>;
+    readonly setChoice: IpcRequest<
+      { campaign: string; rule: string | null },
+      { rule: string | null }
+    >;
     readonly attributes: IpcRequest<{ template: string }, { keys: readonly string[] }>;
   };
   readonly campaigns: {
@@ -88,6 +91,10 @@ export interface ElectronIpcClient {
     >;
     readonly deleteSection: IpcRequest<
       { campaign: string; section: string; rewriteLinks: boolean },
+      DTO.DeleteSectionResultDto
+    >;
+    readonly deleteStrayFolder: IpcRequest<
+      { folder: string; rewriteLinks: boolean },
       DTO.DeleteSectionResultDto
     >;
     readonly links: IpcRequest<DTO.ReadDocumentPayload, DTO.DocumentLinksDto>;

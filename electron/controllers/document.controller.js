@@ -482,7 +482,8 @@ function linkTargets(payload) {
       .listScopeFiles(scope)
       .filter(
         (file) =>
-          file.path !== sourcePath && !file.path.endsWith(`/encounters/${encounterModel.PARTY_FILE_NAME}`),
+          file.path !== sourcePath &&
+          !file.path.endsWith(`/encounters/${encounterModel.PARTY_FILE_NAME}`),
       ),
   };
 }
@@ -753,6 +754,32 @@ async function rewriteLinksToDeletedFiles(vaultPath, files, prefix) {
 const FOLDER_DELETE_MODES = new Set(['delete', 'moveToMain']);
 
 /**
+ * A folder the Review page lists and the user may delete: in a campaign, a folder that is not one of its
+ * sections; in a campaign or a system, a folder deeper than one sub-folder of a note section. Real sections,
+ * special sections and hidden / `_` folders are never stray.
+ */
+function isStrayFolder(vaultPath, folderPath) {
+  const scope = vaultIndexModel.getCampaignSlug(folderPath);
+  if (!scope || !folderPath.startsWith(`${scope}/`)) {
+    return false;
+  }
+
+  const segments = folderPath.slice(scope.length + 1).split('/');
+  if (segments.some((segment) => segment.length === 0 || /^[._]/.test(segment))) {
+    return false;
+  }
+
+  const section = sectionModel
+    .listScopeSections(vaultPath, scope)
+    .find((item) => item.key === segments[0]);
+  if (segments.length === 1) {
+    return !scope.includes('/') && !section;
+  }
+
+  return !!section?.type && !section.isSpecial && segments.length > 2;
+}
+
+/**
  * Deletes a sub-folder of a section; the folder goes to the system Trash. `mode`:
  * - `delete`: its files go with it; with `rewriteLinks` the links from notes outside it are handled like a
  *   file delete (plain text, embeds removed);
@@ -890,6 +917,50 @@ async function deleteSection(payload) {
       })),
   });
 
+  await indexerController.reindexPaths([...files.map((file) => file.path), ...links.updatedPaths]);
+  return {
+    status: 'deleted',
+    path: folderPath,
+    deleted: files.map((file) => file.path),
+    updatedPaths: links.updatedPaths,
+    failedPaths: links.failedPaths,
+    linkCount: links.linkCount,
+  };
+}
+
+/**
+ * Deletes a folder the Review page lists (an unknown folder of a campaign, or one nested too deep): the folder
+ * goes to the system Trash (recoverable) with everything in it. With `rewriteLinks`, links from notes outside it
+ * are handled like a file delete (plain text, embeds removed). Sections and their sub-folders are refused:
+ * they have their own delete.
+ */
+async function deleteStrayFolder(payload) {
+  const body = ensurePlainObject(payload, 'payload');
+  const folderPath = requirePath(body, 'folder').replace(/\/+$/, '');
+  const rewriteLinksToText =
+    normalizeOptionalBooleanFlag(body.rewriteLinks, 'payload.rewriteLinks') !== 0;
+
+  requireIndexOpen();
+  const vaultPath = vaultController.getReadyVaultPath();
+  if (!isStrayFolder(vaultPath, folderPath)) {
+    throw new Error(`Not a folder the Review page can delete: ${folderPath}`);
+  }
+
+  const absolutePath = resolveInsideVault(vaultPath, folderPath);
+  if (!fs.existsSync(absolutePath) || !fs.statSync(absolutePath).isDirectory()) {
+    throw new Error(`Not a folder: ${folderPath}`);
+  }
+
+  const scope = vaultIndexModel.getCampaignSlug(folderPath);
+  const prefix = `${folderPath}/`;
+  const files = vaultIndexModel
+    .listScopeFiles(scope)
+    .filter((file) => file.path.startsWith(prefix));
+  const links = rewriteLinksToText
+    ? await rewriteLinksToDeletedFiles(vaultPath, files, prefix)
+    : { updatedPaths: [], failedPaths: [], linkCount: 0 };
+
+  await shell.trashItem(absolutePath);
   await indexerController.reindexPaths([...files.map((file) => file.path), ...links.updatedPaths]);
   return {
     status: 'deleted',
@@ -1098,6 +1169,7 @@ async function createFromLink(payload) {
 const TEMPLATES_DIR_NAME = '_templates';
 const ASSETS_DIR_NAME = 'assets';
 const UNTYPED_NOTES_DIR_NAME = 'notes';
+const ENCOUNTERS_DIR_NAME = 'encounters';
 
 /** A copy target: a campaign (`lost-mine`) or a compendium system (`compendium/my-system`). */
 async function requireCopyTarget(vaultPath, target) {
@@ -1123,18 +1195,30 @@ async function requireCopyTarget(vaultPath, target) {
 }
 
 /**
- * Folder of the target the copy goes to: templates stay templates, files go to assets, notes follow their
- * type — the target's section for it (a campaign's custom sections included), else the folder the source
- * scope keeps that type in (reported on the target's Review page), else `notes/`.
+ * Where a copy goes in the target. `section` is its folder: templates stay templates, encounters (`.json`
+ * of an Encounters section) go to encounters, any other non-note file to assets, notes follow their type —
+ * the target's section for it (a campaign's custom sections included), else the folder the source scope
+ * keeps that type in (reported on the target's Review page), else `notes/`. `subfolder` is the sub-folder
+ * (one level) the source keeps the file in; `canHaveSubfolder` is false for templates and untyped notes.
  */
-async function getCopyFolder(vaultPath, relativePath, target) {
+async function getCopyLocation(vaultPath, relativePath, target) {
   const segments = relativePath.split('/');
   if (segments.slice(0, -1).includes(TEMPLATES_DIR_NAME)) {
-    return TEMPLATES_DIR_NAME;
+    return { section: TEMPLATES_DIR_NAME, subfolder: null, canHaveSubfolder: false };
   }
 
-  if (path.posix.extname(relativePath).toLocaleLowerCase() !== MARKDOWN_EXTENSION) {
-    return ASSETS_DIR_NAME;
+  const sourceFolder = sectionModel.parseSectionFolder(path.posix.dirname(relativePath));
+  const extension = path.posix.extname(relativePath).toLocaleLowerCase();
+  if (extension !== MARKDOWN_EXTENSION) {
+    const isEncounter =
+      extension === encounterModel.ENCOUNTER_EXTENSION &&
+      sourceFolder?.section === ENCOUNTERS_DIR_NAME;
+    const section = isEncounter ? ENCOUNTERS_DIR_NAME : ASSETS_DIR_NAME;
+    return {
+      section,
+      subfolder: sourceFolder?.section === section ? sourceFolder.subfolder : null,
+      canHaveSubfolder: true,
+    };
   }
 
   const document = await documentModel.readDocument(vaultPath, relativePath);
@@ -1143,12 +1227,50 @@ async function getCopyFolder(vaultPath, relativePath, target) {
     sectionModel.findSectionKeyForType(vaultPath, target, document.type) ??
     sectionModel.findSectionKeyForType(vaultPath, sourceScope, document.type);
   if (!sectionFolder) {
-    return UNTYPED_NOTES_DIR_NAME;
+    return { section: UNTYPED_NOTES_DIR_NAME, subfolder: null, canHaveSubfolder: false };
   }
 
-  // The sub-folder (sub-type) comes along: `enemies/humans/x.md` → `<target>/enemies/humans/`.
-  const subfolder = sectionModel.parseSectionFolder(path.posix.dirname(relativePath))?.subfolder;
-  return subfolder ? `${sectionFolder}/${subfolder}` : sectionFolder;
+  return {
+    section: sectionFolder,
+    subfolder: sourceFolder?.subfolder ?? null,
+    canHaveSubfolder: true,
+  };
+}
+
+/** Folder inside the target: the section, plus the sub-folder when there is one. */
+function toCopyFolder(location, subfolder) {
+  return subfolder ? `${location.section}/${subfolder}` : location.section;
+}
+
+/**
+ * The sub-folder a copy would come with (the source keeps the file in one) and what the target already has:
+ * whether it has that sub-folder, and a file of the same name in it. Null when the source file is not in one.
+ */
+async function describeCopySubfolder(vaultPath, relativePath, target, location) {
+  if (!location.subfolder) {
+    return null;
+  }
+
+  const existing = await documentModel.listSubfolders(vaultPath, `${target}/${location.section}`);
+  const isExisting = existing.includes(location.subfolder);
+  const filePath = `${target}/${location.section}/${location.subfolder}/${path.posix.basename(relativePath)}`;
+  return {
+    name: location.subfolder,
+    section: location.section,
+    exists: isExisting,
+    fileExists: isExisting && fs.existsSync(resolveInsideVault(vaultPath, filePath)),
+  };
+}
+
+/** A copied note's `subtype` follows the sub-folder it ended up in (none in the section itself). */
+async function syncCopiedSubtype(vaultPath, targetPath, subfolder) {
+  const copied = await documentModel.readDocument(vaultPath, targetPath);
+  const content = subfolder
+    ? setFrontmatterField(copied.content, 'subtype', subfolder)
+    : removeFrontmatterField(copied.content, 'subtype');
+  if (content !== copied.content) {
+    await documentModel.writeDocument(vaultPath, targetPath, content, copied.contentHash);
+  }
 }
 
 const LINKED_COPY_MAX_FILES = 200;
@@ -1187,21 +1309,29 @@ function collectMissingLinkedFiles(sourcePath, target) {
   return missing;
 }
 
-/** What copying a file to a target would also need: its linked files the target is missing. */
+/**
+ * What copying a file to a target involves: its linked files the target is missing, and the sub-folder the
+ * file sits in (with what the target already has of it), so the user can choose how to place it.
+ */
 async function copyPlan(payload) {
   const body = ensurePlainObject(payload, 'payload');
   const relativePath = requirePath(body);
   const target = requireString(body.target, 'payload.target');
-  await requireCopyTarget(vaultController.getReadyVaultPath(), target);
+  const vaultPath = vaultController.getReadyVaultPath();
+  await requireCopyTarget(vaultPath, target);
 
+  const location = await getCopyLocation(vaultPath, relativePath, target);
   return {
     linked: indexerController.isOpen() ? collectMissingLinkedFiles(relativePath, target) : [],
+    subfolder: await describeCopySubfolder(vaultPath, relativePath, target, location),
   };
 }
 
 /**
- * Copies a note, asset or template into a campaign or a compendium system (the original stays). The
- * folder comes from the note type and is created on demand. Never overwrites: a taken name returns
+ * Copies a note, asset, encounter or template into a campaign or a compendium system (the original stays).
+ * The section comes from the file kind or note type and is created on demand; `subfolder` is the sub-folder
+ * of that section it goes into (none: the section itself; ignored where there are no sub-folders), created
+ * on demand. Linked files keep their own sub-folders. Never overwrites: a taken name returns
  * `{ status: 'exists' }` so the user can pick another `fileName` (without extension).
  */
 async function copy(payload) {
@@ -1211,9 +1341,21 @@ async function copy(payload) {
   const fileName = normalizeOptionalString(body.fileName, 'payload.fileName', { allowNull: true });
   const includeLinked =
     normalizeOptionalBooleanFlag(body.includeLinked, 'payload.includeLinked') === 1;
+  const chosenSubfolder = normalizeOptionalString(body.subfolder, 'payload.subfolder', {
+    allowNull: true,
+  });
 
   const vaultPath = vaultController.getReadyVaultPath();
   await requireCopyTarget(vaultPath, target);
+
+  const location = await getCopyLocation(vaultPath, relativePath, target);
+  let subfolder = null;
+  if (chosenSubfolder && location.canHaveSubfolder) {
+    subfolder = toSlug(chosenSubfolder);
+    if (subfolder.length === 0) {
+      throw new Error('payload.subfolder must contain at least one letter or number.');
+    }
+  }
 
   const extension = path.posix.extname(relativePath);
   const baseName = fileName ? toSlug(fileName) : path.posix.basename(relativePath, extension);
@@ -1221,8 +1363,7 @@ async function copy(payload) {
     throw new Error('payload.fileName must contain at least one letter or number.');
   }
 
-  const folder = await getCopyFolder(vaultPath, relativePath, target);
-  const targetPath = `${target}/${folder}/${baseName}${extension}`;
+  const targetPath = `${target}/${toCopyFolder(location, subfolder)}/${baseName}${extension}`;
   if (targetPath === relativePath) {
     return { status: 'exists', path: targetPath };
   }
@@ -1236,10 +1377,15 @@ async function copy(payload) {
     return { ...result, linkedPaths: [] };
   }
 
+  if (extension.toLocaleLowerCase() === MARKDOWN_EXTENSION && subfolder !== location.subfolder) {
+    await syncCopiedSubtype(vaultPath, targetPath, subfolder);
+  }
+
   const linkedPaths = [];
   for (const linkedFile of linkedFiles) {
     const extension = path.posix.extname(linkedFile.path);
-    const linkedTargetPath = `${target}/${await getCopyFolder(vaultPath, linkedFile.path, target)}/${path.posix.basename(linkedFile.path, extension)}${extension}`;
+    const linkedLocation = await getCopyLocation(vaultPath, linkedFile.path, target);
+    const linkedTargetPath = `${target}/${toCopyFolder(linkedLocation, linkedLocation.subfolder)}/${path.posix.basename(linkedFile.path, extension)}${extension}`;
     const linkedResult = await documentModel.copyVaultFile(
       vaultPath,
       linkedFile.path,
@@ -1267,6 +1413,7 @@ module.exports = {
   deleteFile,
   deleteFolder,
   deleteSection,
+  deleteStrayFolder,
   linkTargets,
   links,
   list,

@@ -705,13 +705,6 @@ export class AppBattleRuleRowEditorComponent {
     }
   }
 
-  protected hideSelected(): void {
-    const selected = this.selected();
-    if (selected && !this.isRequired()) {
-      this.hide(selected.id);
-    }
-  }
-
   protected deleteField(field: BattleRuleFieldDto): void {
     if (field.component === 'initiative') {
       return;

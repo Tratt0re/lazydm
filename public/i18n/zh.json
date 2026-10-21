@@ -87,6 +87,13 @@
           "description": "选择应用导航、标签和消息所用的语言。",
           "fieldLabel": "应用语言"
         }
+      },
+      "lists": {
+        "title": "列表",
+        "fileSizes": {
+          "label": "显示文件大小",
+          "description": "在此设备上，于各分区页面的文件列表中显示每条笔记、遭遇和资源的大小。"
+        }
       }
     },
     "sidebarAriaLabel": "设置分区",
@@ -361,7 +368,8 @@
         "titlePlaceholder": "哥布林头目",
         "submit": "创建笔记",
         "cancel": "取消",
-        "error": "无法创建笔记"
+        "error": "无法创建笔记",
+        "exists": "此文件夹中已有同名笔记。请换一个标题。"
       },
       "loadError": "无法加载此分区",
       "scenes": {
@@ -427,7 +435,8 @@
         "mainFolder": "{{section}}（主文件夹）",
         "noFolders": "此分区还没有子文件夹。",
         "done": "已将 {{name}} 移动到 {{folder}}",
-        "dropMain": "拖放到此处以移动到 {{section}}"
+        "dropMain": "拖放到此处以移动到 {{section}}",
+        "exists": "“{{name}}”已存在于 {{folder}}。请重命名其中一个文件，或将其移到别处。"
       },
       "reveal": {
         "mac": "在访达中显示",
@@ -728,7 +737,21 @@
       "description": "此文件链接到 {{target}} 中没有的文件：{{files}}。已存在的文件不会再次复制。",
       "include": "同时复制关联文件（{{count}}）"
     },
-    "sidebarAriaLabel": "纲要系统"
+    "sidebarAriaLabel": "纲要系统",
+    "subfolder": {
+      "title": "子文件夹",
+      "description": "{{name}} 位于 {{section}} 的子文件夹“{{subfolder}}”中。要如何复制？",
+      "exists": "{{target}} 已有这个子文件夹。",
+      "fileExists": "其中已有同名文件。",
+      "placementLabel": "复制",
+      "keep": "文件及其子文件夹“{{subfolder}}”",
+      "merge": "文件，放入已有的子文件夹“{{subfolder}}”",
+      "root": "仅文件，放入 {{section}}",
+      "rename": "文件及其子文件夹，使用其他名称",
+      "nameTitle": "子文件夹名称",
+      "nameDescription": "文件将放入此子文件夹；若不存在则创建。",
+      "nameLabel": "子文件夹名称"
+    }
   },
   "common": {
     "close": "关闭",
@@ -816,6 +839,10 @@
       "description": "该文件夹连同其笔记成为此战役的分区；不会移动或重命名任何内容。",
       "submit": "添加分区",
       "done": "已将 {{name}} 添加到分区"
+    },
+    "delete": {
+      "folderTitle": "删除 {{name}}？",
+      "folderDescription": "文件夹 {{folder}} 及其中的 {{count}} 个文件将移到废纸篓，你可以从中恢复。"
     }
   },
   "sidebar": {
@@ -1093,7 +1120,6 @@
       "overlap": "该位置已被占用或超出行范围。",
       "noRoom": "行中已没有空位。",
       "keyInvalid": "键需为小写字母、数字或 _，且不能重复。",
-      "hide": "从行中隐藏",
       "palette": "不在行中 · 拖入或点击",
       "show": "在行中显示 {{name}}",
       "add": "添加 {{name}}",

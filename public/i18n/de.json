@@ -87,6 +87,13 @@
           "description": "Sprache für Navigation, Beschriftungen und Meldungen in der gesamten App auswählen.",
           "fieldLabel": "App-Sprache"
         }
+      },
+      "lists": {
+        "title": "Listen",
+        "fileSizes": {
+          "label": "Dateigrößen anzeigen",
+          "description": "Zeigt die Größe jeder Notiz, Begegnung und Ressource in den Dateilisten der Abschnittsseiten, auf diesem Gerät."
+        }
       }
     },
     "sidebarAriaLabel": "Einstellungsbereiche",
@@ -361,7 +368,8 @@
         "titlePlaceholder": "Goblin-Boss",
         "submit": "Notiz erstellen",
         "cancel": "Abbrechen",
-        "error": "Die Notiz konnte nicht erstellt werden"
+        "error": "Die Notiz konnte nicht erstellt werden",
+        "exists": "In diesem Ordner gibt es bereits eine Notiz mit diesem Namen. Wähle einen anderen Titel."
       },
       "loadError": "Dieser Bereich konnte nicht geladen werden",
       "scenes": {
@@ -427,7 +435,8 @@
         "mainFolder": "{{section}} (Hauptordner)",
         "noFolders": "Dieser Bereich hat noch keine Unterordner.",
         "done": "{{name}} nach {{folder}} verschoben",
-        "dropMain": "Hier ablegen, um nach {{section}} zu verschieben"
+        "dropMain": "Hier ablegen, um nach {{section}} zu verschieben",
+        "exists": "„{{name}}“ existiert in {{folder}} bereits. Benenne eine der beiden Dateien um oder verschiebe sie woanders hin."
       },
       "reveal": {
         "mac": "Im Finder zeigen",
@@ -728,7 +737,21 @@
       "description": "Diese Datei verlinkt auf Dateien, die {{target}} nicht hat: {{files}}. Bereits vorhandene werden nicht erneut kopiert.",
       "include": "Auch die verlinkten Dateien kopieren ({{count}})"
     },
-    "sidebarAriaLabel": "Systeme des Kompendiums"
+    "sidebarAriaLabel": "Systeme des Kompendiums",
+    "subfolder": {
+      "title": "Unterordner",
+      "description": "{{name}} liegt im Unterordner „{{subfolder}}“ von {{section}}. Wie soll kopiert werden?",
+      "exists": "{{target}} hat diesen Unterordner bereits.",
+      "fileExists": "Eine Datei mit diesem Namen liegt schon darin.",
+      "placementLabel": "Kopieren",
+      "keep": "Die Datei und ihren Unterordner „{{subfolder}}“",
+      "merge": "Die Datei, in den vorhandenen Unterordner „{{subfolder}}“",
+      "root": "Nur die Datei, nach {{section}}",
+      "rename": "Die Datei und ihren Unterordner, unter anderem Namen",
+      "nameTitle": "Name des Unterordners",
+      "nameDescription": "Die Datei kommt in diesen Unterordner; er wird angelegt, falls er fehlt.",
+      "nameLabel": "Name des Unterordners"
+    }
   },
   "common": {
     "close": "Schließen",
@@ -816,6 +839,10 @@
       "description": "Der Ordner wird mit seinen Notizen ein Bereich dieser Kampagne; nichts wird verschoben oder umbenannt.",
       "submit": "Bereich hinzufügen",
       "done": "{{name}} zu den Bereichen hinzugefügt"
+    },
+    "delete": {
+      "folderTitle": "{{name}} löschen?",
+      "folderDescription": "Der Ordner {{folder}} und die {{count}} Dateien darin kommen in den Papierkorb, wo du sie wiederherstellen kannst."
     }
   },
   "sidebar": {
@@ -1093,7 +1120,6 @@
       "overlap": "Dieser Platz ist belegt oder außerhalb der Zeile.",
       "noRoom": "In der Zeile ist kein Platz mehr frei.",
       "keyInvalid": "Der Schlüssel braucht Kleinbuchstaben, Ziffern oder _ und muss frei sein.",
-      "hide": "In der Zeile ausblenden",
       "palette": "Nicht in der Zeile · hineinziehen oder klicken",
       "show": "{{name}} in der Zeile zeigen",
       "add": "{{name}} hinzufügen",

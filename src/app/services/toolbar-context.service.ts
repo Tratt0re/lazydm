@@ -90,6 +90,8 @@ export interface ToolbarAction {
   readonly buttonShape?: ArcTechButtonShapeVariants;
   /** Square icon button: the label becomes its tooltip and accessible name. */
   readonly iconOnly?: boolean;
+  /** Destructive operation (delete…): keeps its `buttonType` and takes the danger colour. */
+  readonly destructive?: boolean;
   readonly disabled?: ToolbarActionDisabled;
   readonly action: ToolbarActionHandler;
 }

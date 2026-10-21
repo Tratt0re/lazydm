@@ -72,13 +72,26 @@
               {{ 'settings.templates.editor.customize' | translate }}
             </button>
           } @else {
-            <button arc-button type="button" arcType="outline" (click)="confirmDelete()">
+            <button
+              arc-button
+              type="button"
+              arcType="secondary"
+              class="border-destructive text-destructive hover:bg-destructive hover:text-destructive-foreground"
+              [attr.aria-label]="'settings.templates.delete.button' | translate"
+              [arcTooltip]="'settings.templates.delete.button' | translate"
+              (click)="confirmDelete()"
+            >
               <arc-icon arcType="trash" />
-              {{ 'settings.templates.delete.button' | translate }}
             </button>
-            <button arc-button type="button" [arcDisabled]="!isDirty() || isSaving()" (click)="save()">
+            <button
+              arc-button
+              type="button"
+              [arcDisabled]="!isDirty() || isSaving()"
+              [attr.aria-label]="'settings.templates.editor.save' | translate"
+              [arcTooltip]="'settings.templates.editor.save' | translate"
+              (click)="save()"
+            >
               <arc-icon arcType="save" />
-              {{ 'settings.templates.editor.save' | translate }}
             </button>
           }
         </div>

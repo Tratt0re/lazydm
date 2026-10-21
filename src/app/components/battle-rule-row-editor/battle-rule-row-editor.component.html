@@ -118,7 +118,7 @@
     }
 
     <!-- The element's place and width are set on the mock row above (drag it, drag its right edge). -->
-    @if (element.field; as field) {
+    @if (!isRequired() && element.field; as field) {
       @if (draft(); as values) {
         <div class="grid gap-3 md:grid-cols-2">
           <label class="flex flex-col gap-1 text-xs font-medium">
@@ -146,33 +146,26 @@
             </label>
           }
         </div>
-
-        @if (!isReadOnly()) {
-          <!-- Nothing changes in the rule until it is confirmed. -->
-          <div class="flex flex-wrap items-center gap-2 border-t border-border pt-3">
-            <button type="button" arc-button arcSize="sm" [arcDisabled]="!isDraftDirty()" (click)="applyDraft()">
-              <arc-icon arcType="check" />
-              {{ 'battleRules.row.apply' | translate }}
-            </button>
-            <button type="button" arc-button arcType="outline" arcSize="sm" [arcDisabled]="!isDraftDirty()" (click)="resetDraft()">
-              {{ 'battleRules.row.discard' | translate }}
-            </button>
-            @if (isDraftDirty()) {
-              <span class="font-mono text-[11px] text-muted-foreground">{{ 'battleRules.row.unconfirmed' | translate }}</span>
-            }
-          </div>
-        }
       }
     }
 
     @if (!isReadOnly() && !isRequired()) {
-      <div class="flex flex-wrap gap-2">
-        <button type="button" arc-button arcType="outline" arcSize="sm" (click)="hideSelected()">
-          <arc-icon arcType="minus" />
-          {{ 'battleRules.row.hide' | translate }}
-        </button>
+      <div class="flex flex-wrap items-center gap-2 border-t border-border pt-3">
+        @if (draft()) {
+          <!-- Nothing changes in the rule until it is confirmed. -->
+          <button type="button" arc-button arcSize="sm" [arcDisabled]="!isDraftDirty()" (click)="applyDraft()">
+            <arc-icon arcType="check" />
+            {{ 'battleRules.row.apply' | translate }}
+          </button>
+          <button type="button" arc-button arcType="outline" arcSize="sm" [arcDisabled]="!isDraftDirty()" (click)="resetDraft()">
+            {{ 'battleRules.row.discard' | translate }}
+          </button>
+          @if (isDraftDirty()) {
+            <span class="font-mono text-[11px] text-muted-foreground">{{ 'battleRules.row.unconfirmed' | translate }}</span>
+          }
+        }
         @if (element.field; as field) {
-          <button type="button" arc-button arcType="outline" arcSize="sm" (click)="deleteField(field)">
+          <button type="button" arc-button arcType="secondary" arcSize="sm" class="ml-auto border-destructive text-destructive hover:bg-destructive hover:text-destructive-foreground" (click)="deleteField(field)">
             <arc-icon arcType="trash" />
             {{ 'battleRules.editor.removeField' | translate }}
           </button>

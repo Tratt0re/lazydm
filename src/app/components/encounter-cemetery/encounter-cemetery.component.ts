@@ -26,7 +26,11 @@ import { ArcTechTooltipImports } from '@/shared/components/tooltip';
       <ul class="flex min-h-0 flex-1 flex-col gap-1 overflow-y-auto">
         @for (entity of entities(); track entity.id) {
           <li class="flex items-center gap-2 border border-border-subtle bg-recessed px-3 py-2">
-            <arc-icon arcType="skull" class="size-4 shrink-0 text-muted-foreground" aria-hidden="true" />
+            <arc-icon
+              arcType="skull"
+              class="size-4 shrink-0 text-muted-foreground"
+              aria-hidden="true"
+            />
             <span
               class="min-w-0 flex-1 truncate text-sm"
               [class.text-muted-foreground]="entity.name === null"
@@ -51,7 +55,7 @@ import { ArcTechTooltipImports } from '@/shared/components/tooltip';
               arc-button
               arcType="ghost"
               arcSize="sm"
-              class="size-8 shrink-0 hover:text-destructive"
+              class="size-8 shrink-0 text-destructive hover:text-destructive"
               [attr.aria-label]="'encounters.cemetery.deleteForever' | translate"
               [arcTooltip]="'encounters.cemetery.deleteForever' | translate"
               [arcDisabled]="isDisabled()"

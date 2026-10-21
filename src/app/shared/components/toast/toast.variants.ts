@@ -27,6 +27,16 @@ export const toastVariants = cva(
 export type ArcTechToastVariants = VariantProps<typeof toastVariants>;
 
 /**
+ * `classes.actionButton` of a toast whose action opens something: a square icon button (the app's
+ * arrow-up-right "open" icon) placed next to the close button. The label stays for screen readers.
+ */
+export const toastOpenActionClass = mergeClasses(
+  'toast-open-action !absolute !top-2.5 !right-[2.75rem] !m-0 !flex !size-7 !items-center !justify-center !overflow-hidden !p-0',
+  '!rounded-none !border !border-border !bg-transparent !text-[0px] !leading-none !text-muted-foreground',
+  'hover:!bg-accent hover:!text-foreground focus-visible:!outline-2 focus-visible:!outline-ring',
+);
+
+/**
  * Nordic Relic notification banner: card surface, 1px border in the state colour, strong uppercase
  * title, muted mono description and a square close button on the right.
  */
@@ -34,11 +44,13 @@ export const toastClasses = {
   toast: mergeClasses(
     '!items-start !gap-3 !border !border-border-strong !bg-card !py-3.5 !pr-12 !pl-3.5 !text-card-foreground',
     '!shadow-overlay [&_[data-icon]]:mt-px',
+    // Room for the close button and the Open icon button side by side.
+    '[&:has(.toast-open-action)]:!pr-[4.75rem]',
   ),
   title: '!text-[12px] !font-bold !uppercase !tracking-[0.05em] !text-foreground-strong',
   description: '!mt-1 !font-mono !text-[11px] !leading-[1.5] !text-muted-foreground',
   closeButton: mergeClasses(
-    '!top-1/2 !right-2.5 !left-auto ![transform:none] -translate-y-1/2',
+    '!top-2.5 !right-2.5 !left-auto ![transform:none]',
     '!size-7 !rounded-none !border !border-border !bg-transparent',
     '!text-muted-foreground hover:!bg-accent hover:!text-foreground focus-visible:!outline-2 focus-visible:!outline-ring',
   ),

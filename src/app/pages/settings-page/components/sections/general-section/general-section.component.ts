@@ -2,14 +2,16 @@ import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 
 import { I18nService } from '@/services/i18n.service';
+import { LocalPreferencesService } from '@/services/local-preferences.service';
 import { ArcTechSelectImports } from '@/shared/components/select';
+import { ArcTechSwitchComponent } from '@/shared/components/switch';
 import { EDarkModes, ArcTechDarkMode } from '@/shared/services/dark-mode';
 import { applyThemeTransition } from '@/shared/utils/theme-transition';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-general-section',
-  imports: [TranslatePipe, ...ArcTechSelectImports],
+  imports: [TranslatePipe, ArcTechSwitchComponent, ...ArcTechSelectImports],
   templateUrl: './general-section.component.html',
 })
 export class GeneralSectionComponent {
@@ -19,6 +21,12 @@ export class GeneralSectionComponent {
   protected readonly languages = this.i18nService.supportedLanguages;
   protected readonly selectedTheme = this.darkMode.currentTheme;
   protected readonly selectedLanguage = this.i18nService.language;
+  private readonly localPreferences = inject(LocalPreferencesService);
+  protected readonly showFileSizes = this.localPreferences.showFileSizes;
+
+  protected setShowFileSizes(show: boolean): void {
+    this.localPreferences.setShowFileSizes(show);
+  }
 
   protected getLanguageLabelKey(language: string): string {
     return `header.language.options.${language}`;
@@ -38,7 +46,11 @@ export class GeneralSectionComponent {
 
   protected onThemeChange(value: string | string[]): void {
     const selectedValue = this.asSingleValue(value);
-    if (selectedValue === EDarkModes.SYSTEM || selectedValue === EDarkModes.LIGHT || selectedValue === EDarkModes.DARK) {
+    if (
+      selectedValue === EDarkModes.SYSTEM ||
+      selectedValue === EDarkModes.LIGHT ||
+      selectedValue === EDarkModes.DARK
+    ) {
       applyThemeTransition(this.darkMode, {
         targetMode: selectedValue,
       });
@@ -47,7 +59,10 @@ export class GeneralSectionComponent {
 
   protected onLanguageChange(value: string | string[]): void {
     const selectedValue = this.asSingleValue(value);
-    if (selectedValue && this.languages.includes(selectedValue as (typeof this.languages)[number])) {
+    if (
+      selectedValue &&
+      this.languages.includes(selectedValue as (typeof this.languages)[number])
+    ) {
       void this.i18nService.use(selectedValue);
     }
   }

@@ -1,4 +1,11 @@
-import { ChangeDetectionStrategy, Component, computed, effect, inject, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  effect,
+  inject,
+  signal,
+} from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
@@ -162,7 +169,8 @@ export class AssetPage {
               id: 'delete',
               label: this.translateService.instant('files.delete.menu'),
               icon: 'trash',
-              buttonType: 'outline',
+              buttonType: 'secondary',
+              destructive: true,
               iconOnly: true,
               action: () => this.openDeleteSheet(),
             },

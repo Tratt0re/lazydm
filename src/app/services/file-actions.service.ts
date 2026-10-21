@@ -143,7 +143,11 @@ export class FileActionsService {
    * `type`; a sub-folder gives its sub-type (Electron side). Opens the new note, which is how both the section
    * page and the explorer create one.
    */
-  openCreateNoteSheet(folder: { readonly path: string; readonly type: string; readonly sectionLabel: string }): void {
+  openCreateNoteSheet(folder: {
+    readonly path: string;
+    readonly type: string;
+    readonly sectionLabel: string;
+  }): void {
     let isSubmitting = false;
     const dialogRef = this.dialogFormService.open({
       arcTitle: this.translateService.instant('campaigns.sections.newNote.title'),
@@ -153,12 +157,14 @@ export class FileActionsService {
       onSubmit: (form) => {
         if (!isSubmitting) {
           isSubmitting = true;
-          void this.createNote(folder, String(form.getValues()['title'] ?? '')).then((isCreated) => {
-            isSubmitting = false;
-            if (isCreated) {
-              dialogRef.close();
-            }
-          });
+          void this.createNote(folder, String(form.getValues()['title'] ?? '')).then(
+            (isCreated) => {
+              isSubmitting = false;
+              if (isCreated) {
+                dialogRef.close();
+              }
+            },
+          );
         }
 
         return false;
@@ -215,13 +221,15 @@ export class FileActionsService {
       onSubmit: (form) => {
         if (!isSubmitting) {
           isSubmitting = true;
-          void this.createFolder(section.path, String(form.getValues()['name'] ?? '')).then((name) => {
-            isSubmitting = false;
-            if (name) {
-              dialogRef.close();
-              onCreated?.(name);
-            }
-          });
+          void this.createFolder(section.path, String(form.getValues()['name'] ?? '')).then(
+            (name) => {
+              isSubmitting = false;
+              if (name) {
+                dialogRef.close();
+                onCreated?.(name);
+              }
+            },
+          );
         }
 
         return false;
@@ -246,8 +254,11 @@ export class FileActionsService {
       }
       return true;
     } catch (error) {
+      const message = error instanceof Error ? error.message : String(error);
       toast.error(this.translateService.instant('campaigns.sections.newNote.error'), {
-        description: error instanceof Error ? error.message : String(error),
+        description: message.includes('already exists')
+          ? this.translateService.instant('campaigns.sections.newNote.exists')
+          : message,
       });
       return false;
     }
@@ -651,6 +662,21 @@ export class FileActionsService {
       );
     }
     await this.followInTabs(sectionRoute, overviewRoute);
+  }
+
+  /**
+   * A folder outside the sections (an unknown or too deep one) was deleted with its files: tabs showing one of
+   * them go to the overview of their campaign or system, and the deleted notes are never saved back.
+   */
+  async followDeletedFolder(deletedPaths: readonly string[]): Promise<void> {
+    for (const deletedPath of deletedPaths) {
+      this.deletedPaths.add(deletedPath);
+      const location = parseVaultFilePath(deletedPath);
+      await this.followInTabs(
+        toInAppNoteRoute(deletedPath) ?? toInAppAssetRoute(deletedPath),
+        location?.scopeRoute ?? null,
+      );
+    }
   }
 
   /** Campaign tabs and history pointing to a renamed file follow it (a system page navigates itself). */

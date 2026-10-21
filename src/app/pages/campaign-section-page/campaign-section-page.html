@@ -1,12 +1,53 @@
 @if (section(); as section) {
   <!-- On the Assets section, files from the file manager can be dropped anywhere on the page. -->
+  <!-- The wrapper covers the whole content area (it cancels the content's own padding and gives it back), so a
+       right-click or a drop anywhere under the toolbar reaches it; rows and other elements keep their own menus. -->
   <div
-    class="mx-auto flex w-full max-w-5xl flex-col gap-4 p-6 outline-2 -outline-offset-2 transition-[outline-color]"
+    class="-m-6 flex flex-1 flex-col p-6 outline-2 -outline-offset-2 transition-[outline-color]"
     [class]="isFileDragOverPage() ? 'outline-dashed outline-primary' : 'outline-transparent'"
+    arc-context-menu
+    [arcContextMenuTriggerFor]="pageMenu"
+    [style.cursor]="'auto'"
     (dragover)="onPageDragOver($event)"
     (dragleave)="onPageDragLeave($event)"
     (drop)="onPageDrop($event)"
   >
+  <div class="mx-auto flex w-full max-w-5xl flex-col gap-4 p-6">
+    <!-- Right-click on the folder home: new folder, new note / encounter / asset, import from the other side. -->
+    <ng-template #pageMenu>
+      <div arc-menu-content class="w-56">
+        @if (canCreateFolder()) {
+          <button type="button" arc-menu-item (click)="openCreateFolderSheet()">
+            <arc-icon arcType="folder-plus" />
+            {{ 'campaigns.sections.newFolder.button' | translate }}
+          </button>
+        }
+        @if (canCreateNote()) {
+          <button type="button" arc-menu-item (click)="openCreateSheet()">
+            <arc-icon arcType="file-plus" />
+            {{ 'campaigns.sections.newNote.create' | translate }}
+          </button>
+        }
+        @if (isEncountersSection()) {
+          <button type="button" arc-menu-item (click)="openCreateEncounterSheet()">
+            <arc-icon arcType="swords" />
+            {{ 'encounters.new.button' | translate }}
+          </button>
+        }
+        @if (isAssetsSection()) {
+          <button type="button" arc-menu-item (click)="openImportFromDiskSheet()">
+            <arc-icon arcType="file-up" />
+            {{ 'files.importFromDisk.button' | translate }}
+          </button>
+        }
+        <div class="-mx-1 my-1 h-px bg-border-subtle" role="separator"></div>
+        <button type="button" arc-menu-item (click)="openImportSheet()">
+          <arc-icon arcType="library-big" />
+          {{ importLabel() | translate }}
+        </button>
+      </div>
+    </ng-template>
+
     @if (partyRoute(); as party) {
       <!-- A different part of the Encounters page: the roster of player characters. -->
       <div class="flex justify-end">
@@ -26,6 +67,53 @@
       />
     }
 
+    <!-- Row buttons of a note, asset or encounter: copy to the compendium (or a campaign), rename, delete. -->
+    <ng-template #fileActions let-file>
+      <span class="flex shrink-0 items-center gap-1">
+        @if (showFileSizes()) {
+          <span class="mr-2 font-mono text-[11px] font-semibold tracking-[0.1em] text-muted-foreground uppercase">
+            {{ formatFileSize(file.size) }}
+          </span>
+        }
+        <button
+          type="button"
+          arc-button
+          arcType="ghost"
+          arcSize="sm"
+          class="size-8"
+          [attr.aria-label]="copyLabel(file) | translate"
+          [arcTooltip]="copyLabel(file) | translate"
+          (click)="copyTo.openCopySheet(file.path)"
+        >
+          <arc-icon arcType="copy-plus" />
+        </button>
+        <button
+          type="button"
+          arc-button
+          arcType="ghost"
+          arcSize="sm"
+          class="size-8"
+          [attr.aria-label]="'campaigns.sections.renameAsset.menu' | translate"
+          [arcTooltip]="'campaigns.sections.renameAsset.menu' | translate"
+          (click)="openRenameSheet(file)"
+        >
+          <arc-icon arcType="text-cursor-input" />
+        </button>
+        <button
+          type="button"
+          arc-button
+          arcType="ghost"
+          arcSize="sm"
+          class="size-8 text-destructive hover:text-destructive"
+          [attr.aria-label]="'files.delete.menu' | translate"
+          [arcTooltip]="'files.delete.menu' | translate"
+          (click)="openDeleteSheet(file)"
+        >
+          <arc-icon arcType="trash" />
+        </button>
+      </span>
+    </ng-template>
+
     <!-- One file row: draggable onto a folder, right-click for Move to / Reveal. -->
     <ng-template #fileRow let-file let-isNested="isNested">
       <li
@@ -39,22 +127,24 @@
         (dragend)="onDragEnd()"
       >
         @if (file.kind === 'md') {
-          <a
-            [routerLink]="noteRoute(file)"
-            draggable="false"
-            class="flex items-center justify-between gap-4 p-4 transition-colors hover:bg-accent/60 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-ring"
-            [class.pl-14]="isNested"
-          >
-            <span class="flex min-w-0 items-center gap-3">
-              <arc-icon arcType="file-text" class="size-4 shrink-0 text-primary" />
-              <span class="truncate text-sm font-semibold">{{ file.title }}</span>
-            </span>
-            @if (file.tags.length > 0) {
-              <span class="hidden shrink-0 truncate text-[11px] font-semibold tracking-[0.1em] text-muted-foreground uppercase sm:block">
-                {{ file.tags.join(' · ') }}
+          <div class="flex items-center gap-2 pr-2 transition-colors hover:bg-accent/60" [class.pl-10]="isNested">
+            <a
+              [routerLink]="noteRoute(file)"
+              draggable="false"
+              class="flex min-w-0 flex-1 items-center justify-between gap-4 p-4 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-ring"
+            >
+              <span class="flex min-w-0 items-center gap-3">
+                <arc-icon arcType="file-text" class="size-4 shrink-0 text-primary" />
+                <span class="truncate text-sm font-semibold">{{ file.title }}</span>
               </span>
-            }
-          </a>
+              @if (file.tags.length > 0) {
+                <span class="hidden shrink-0 truncate text-[11px] font-semibold tracking-[0.1em] text-muted-foreground uppercase sm:block">
+                  {{ file.tags.join(' · ') }}
+                </span>
+              }
+            </a>
+            <ng-container *ngTemplateOutlet="fileActions; context: { $implicit: file }" />
+          </div>
         } @else {
           <div class="flex items-center justify-between gap-4 px-4 py-2 text-muted-foreground" [class.pl-14]="isNested">
             @if (thumbnailUrl(file); as thumbnail) {
@@ -118,40 +208,16 @@
                 <span class="truncate text-sm text-foreground">{{ file.name }}</span>
               </span>
             }
-            <span class="flex shrink-0 items-center gap-3">
-              <span class="text-[11px] font-semibold tracking-[0.1em] uppercase">
-                {{ formatFileSize(file.size) }}
-              </span>
-              <button
-                type="button"
-                arc-button
-                arcType="ghost"
-                arcSize="sm"
-                class="size-8"
-                [attr.aria-label]="'campaigns.sections.renameAsset.menu' | translate"
-                [arcTooltip]="'campaigns.sections.renameAsset.menu' | translate"
-                (click)="openRenameAssetSheet(file)"
-              >
-                <arc-icon arcType="text-cursor-input" />
-              </button>
-              <button
-                type="button"
-                arc-button
-                arcType="ghost"
-                arcSize="sm"
-                class="size-8"
-                [attr.aria-label]="copyLabel(file) | translate"
-                [arcTooltip]="copyLabel(file) | translate"
-                (click)="copyTo.openCopySheet(file.path)"
-              >
-                <arc-icon arcType="copy-plus" />
-              </button>
-            </span>
+            <ng-container *ngTemplateOutlet="fileActions; context: { $implicit: file }" />
           </div>
         }
 
         <ng-template #fileMenu>
           <div arc-menu-content class="w-56">
+            <button type="button" arc-menu-item (click)="copyTo.openCopySheet(file.path)">
+              <arc-icon arcType="copy-plus" />
+              {{ copyLabel(file) | translate }}
+            </button>
             <button type="button" arc-menu-item (click)="openRenameSheet(file)">
               <arc-icon arcType="text-cursor-input" />
               {{ 'campaigns.sections.renameAsset.menu' | translate }}
@@ -269,6 +335,18 @@
                       {{ 'campaigns.sections.newNote.create' | translate }}
                     </button>
                   }
+                  @if (isEncountersSection()) {
+                    <button type="button" arc-menu-item (click)="openCreateEncounterSheet(folder.name)">
+                      <arc-icon arcType="swords" />
+                      {{ 'encounters.new.button' | translate }}
+                    </button>
+                  }
+                  @if (isAssetsSection()) {
+                    <button type="button" arc-menu-item (click)="openImportFromDiskSheet(folder.name)">
+                      <arc-icon arcType="file-up" />
+                      {{ 'files.importFromDisk.button' | translate }}
+                    </button>
+                  }
                   <div class="-mx-1 my-1 h-px bg-border-subtle" role="separator"></div>
                   <button type="button" arc-menu-item (click)="openRenameFolderSheet(folder)">
                     <arc-icon arcType="text-cursor-input" />
@@ -294,5 +372,6 @@
         </ul>
       }
     }
+  </div>
   </div>
 }

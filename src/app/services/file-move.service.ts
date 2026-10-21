@@ -127,8 +127,14 @@ export class FileMoveService {
       );
       return true;
     } catch (error) {
+      const message = error instanceof Error ? error.message : String(error);
       toast.error(this.translateService.instant('review.move.error'), {
-        description: error instanceof Error ? error.message : String(error),
+        description: message.includes('already exists')
+          ? this.translateService.instant('campaigns.sections.move.exists', {
+              name: path.split('/').pop(),
+              folder: target ? toSubfolderLabel(target) : section.label,
+            })
+          : message,
       });
       return false;
     }

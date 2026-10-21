@@ -63,7 +63,8 @@ export class DocumentService extends BaseIpcService<APIChannel.DOCUMENTS> {
     const { rows: listed, folders } = await this.ipcClient.list({ folder });
     const rows = listed.filter((file) => !file.path.endsWith(`/encounters/${PARTY_FILE_NAME}`));
     const prefix = `${folder.replace(/\/+$/, '')}/`;
-    const depthOf = (file: DocumentFileListItemDto) => file.path.slice(prefix.length).split('/').length;
+    const depthOf = (file: DocumentFileListItemDto) =>
+      file.path.slice(prefix.length).split('/').length;
     return {
       files: rows.filter((file) => depthOf(file) === 1),
       folders: folders.map((item) => ({
@@ -151,6 +152,11 @@ export class DocumentService extends BaseIpcService<APIChannel.DOCUMENTS> {
     rewriteLinks: boolean,
   ): Promise<DeleteSectionResultDto> {
     return this.ipcClient.deleteSection({ campaign, section, rewriteLinks });
+  }
+
+  /** Deletes a folder the Review page lists (unknown or too deep) with its files (to the system Trash). */
+  deleteStrayFolder(folder: string, rewriteLinks: boolean): Promise<DeleteSectionResultDto> {
+    return this.ipcClient.deleteStrayFolder({ folder, rewriteLinks });
   }
 
   links(path: string): Promise<DocumentLinksDto> {

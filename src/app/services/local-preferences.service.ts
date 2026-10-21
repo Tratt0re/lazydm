@@ -27,6 +27,9 @@ export class LocalPreferencesService {
 
   readonly themePreference = this.themePreferenceSignal.asReadonly();
   readonly languagePreference = this.languagePreferenceSignal.asReadonly();
+  private readonly showFileSizesSignal = signal<boolean>(LOCAL_PREFERENCE_DEFAULTS.showFileSizes);
+  /** Settings → General → file sizes in the section lists, on this device. */
+  readonly showFileSizes = this.showFileSizesSignal.asReadonly();
   private readonly editorSettingsSignal = signal<EditorSettings>(EDITOR_SETTINGS_DEFAULTS);
   /** Settings → Editor, on this device. */
   readonly editorSettings = this.editorSettingsSignal.asReadonly();
@@ -41,6 +44,7 @@ export class LocalPreferencesService {
     this.setLanguage(this.getLanguage());
     this.setOnboardingCompleted(this.getOnboardingCompleted());
     this.applyEditorSettings(this.readEditorSettings());
+    this.showFileSizesSignal.set(this.getShowFileSizes());
   }
 
   getTheme(): ThemePreference {
@@ -107,6 +111,16 @@ export class LocalPreferencesService {
 
   setOnboardingCompleted(onboardingCompleted: boolean): void {
     this.setText(LocalPreferenceKey.ONBOARDING_COMPLETED, onboardingCompleted ? '1' : '0');
+  }
+
+  getShowFileSizes(): boolean {
+    const value = this.getText(LocalPreferenceKey.SHOW_FILE_SIZES);
+    return value === undefined ? LOCAL_PREFERENCE_DEFAULTS.showFileSizes : value === '1';
+  }
+
+  setShowFileSizes(show: boolean): void {
+    this.showFileSizesSignal.set(show);
+    this.setText(LocalPreferenceKey.SHOW_FILE_SIZES, show ? '1' : '0');
   }
 
   /** Whether the backlinks panel of notes is open (per device). */

@@ -112,7 +112,7 @@
         <button
           arc-button
           type="button"
-          class="shrink-0"
+          [class]="item.destructive ? 'shrink-0 border-destructive text-destructive hover:bg-destructive hover:text-destructive-foreground' : 'shrink-0'"
           [arcType]="item.buttonType ?? 'default'"
           [arcSize]="item.buttonSize ?? 'sm'"
           [arcShape]="item.buttonShape ?? 'default'"

@@ -87,6 +87,13 @@
           "description": "Choisir la langue utilisée dans la navigation, les libellés et les messages de l'application.",
           "fieldLabel": "Langue de l'application"
         }
+      },
+      "lists": {
+        "title": "Listes",
+        "fileSizes": {
+          "label": "Afficher la taille des fichiers",
+          "description": "Affiche la taille de chaque note, rencontre et ressource dans les listes de fichiers des pages de section, sur cet appareil."
+        }
       }
     },
     "sidebarAriaLabel": "Sections des paramètres",
@@ -361,7 +368,8 @@
         "titlePlaceholder": "Chef gobelin",
         "submit": "Créer la note",
         "cancel": "Annuler",
-        "error": "Impossible de créer la note"
+        "error": "Impossible de créer la note",
+        "exists": "Une note de ce nom existe déjà dans ce dossier. Choisissez un autre titre."
       },
       "loadError": "Impossible de charger cette section",
       "scenes": {
@@ -427,7 +435,8 @@
         "mainFolder": "{{section}} (dossier principal)",
         "noFolders": "Cette section n’a pas encore de sous-dossiers.",
         "done": "{{name}} déplacé vers {{folder}}",
-        "dropMain": "Déposer ici pour déplacer vers {{section}}"
+        "dropMain": "Déposer ici pour déplacer vers {{section}}",
+        "exists": "« {{name}} » existe déjà dans {{folder}}. Renommez l’un des deux fichiers ou déplacez-le ailleurs."
       },
       "reveal": {
         "mac": "Afficher dans le Finder",
@@ -728,7 +737,21 @@
       "description": "Ce fichier pointe vers des fichiers que {{target}} n’a pas : {{files}}. Ceux qu’il a déjà ne sont pas recopiés.",
       "include": "Copier aussi les fichiers liés ({{count}})"
     },
-    "sidebarAriaLabel": "Systèmes du compendium"
+    "sidebarAriaLabel": "Systèmes du compendium",
+    "subfolder": {
+      "title": "Sous-dossier",
+      "description": "{{name}} est dans le sous-dossier « {{subfolder}} » de {{section}}. Comment le copier ?",
+      "exists": "{{target}} a déjà ce sous-dossier.",
+      "fileExists": "Un fichier de ce nom s’y trouve déjà.",
+      "placementLabel": "Copier",
+      "keep": "Le fichier et son sous-dossier « {{subfolder}} »",
+      "merge": "Le fichier, dans le sous-dossier existant « {{subfolder}} »",
+      "root": "Le fichier seul, dans {{section}}",
+      "rename": "Le fichier et son sous-dossier, sous un autre nom",
+      "nameTitle": "Nom du sous-dossier",
+      "nameDescription": "Le fichier va dans ce sous-dossier ; il est créé s’il n’existe pas.",
+      "nameLabel": "Nom du sous-dossier"
+    }
   },
   "common": {
     "close": "Fermer",
@@ -816,6 +839,10 @@
       "description": "Le dossier devient une section de cette campagne avec ses notes ; rien n’est déplacé ni renommé.",
       "submit": "Ajouter la section",
       "done": "{{name}} ajoutée aux sections"
+    },
+    "delete": {
+      "folderTitle": "Supprimer {{name}} ?",
+      "folderDescription": "Le dossier {{folder}} et les {{count}} fichiers qu’il contient vont dans la corbeille, où vous pouvez les restaurer."
     }
   },
   "sidebar": {
@@ -1093,7 +1120,6 @@
       "overlap": "Cet emplacement est pris ou hors de la ligne.",
       "noRoom": "Il n'y a plus de place libre dans la ligne.",
       "keyInvalid": "La clé demande des minuscules, des chiffres ou _ et ne doit pas être déjà utilisée.",
-      "hide": "Masquer de la ligne",
       "palette": "Hors de la ligne · glissez dedans, ou cliquez",
       "show": "Afficher {{name}} dans la ligne",
       "add": "Ajouter {{name}}",

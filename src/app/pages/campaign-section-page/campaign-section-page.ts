@@ -1,5 +1,12 @@
 import { NgTemplateOutlet } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, effect, inject, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  effect,
+  inject,
+  signal,
+} from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
@@ -32,6 +39,7 @@ import { BattleRuleService, DEFAULT_BATTLE_RULE_CHOICE } from '@/services/battle
 import { PARTY_FILE_NAME } from '@/services/encounter.service';
 import { FileActionsService } from '@/services/file-actions.service';
 import { FileMoveService, type MoveSection } from '@/services/file-move.service';
+import { LocalPreferencesService } from '@/services/local-preferences.service';
 import { SectionService, toSubfolderLabel } from '@/services/section.service';
 import { AUTOMATIC_TEMPLATE_RULE, TemplateService } from '@/services/template.service';
 import { ToolbarContextService, type ToolbarItemAction } from '@/services/toolbar-context.service';
@@ -80,6 +88,7 @@ function formatFileSize(sizeInBytes: number): string {
     ArcTechTooltipImports,
   ],
   templateUrl: './campaign-section-page.html',
+  host: { class: 'flex flex-1 flex-col' },
 })
 export class CampaignSectionPage {
   private readonly route = inject(ActivatedRoute);
@@ -168,16 +177,24 @@ export class CampaignSectionPage {
   /** Files from the file manager dragged over the Assets section page (not over a sub-folder row). */
   protected readonly isFileDragOverPage = signal(false);
   protected readonly isAssetsSection = computed(() => this.section()?.key === ASSETS_SECTION_KEY);
+  protected readonly isEncountersSection = computed(
+    () => this.section()?.key === ENCOUNTERS_SECTION_KEY,
+  );
+  /** One level of sub-folders: not inside a sub-folder, and only where the section keeps folders. */
+  protected readonly canCreateFolder = computed(() => {
+    const section = this.section();
+    return !!(section?.type || section?.isSpecial) && !this.subfolder();
+  });
   private readonly fileMove = inject(FileMoveService);
   private readonly fileActions = inject(FileActionsService);
   private readonly sheetService = inject(ArcTechSheetService);
   private readonly assetService = inject(AssetService);
   protected readonly revealLabel = this.fileMove.revealLabel;
   protected readonly toSubfolderLabel = toSubfolderLabel;
+  protected readonly showFileSizes = inject(LocalPreferencesService).showFileSizes;
+  protected readonly formatFileSize = formatFileSize;
   protected readonly isLoading = signal(true);
   protected readonly errorMessage = signal<string | null>(null);
-
-  protected readonly formatFileSize = formatFileSize;
 
   constructor() {
     effect((onCleanup) => {
@@ -500,16 +517,18 @@ export class CampaignSectionPage {
     }
   }
 
-  /** *Import from disk* (Assets section): a sheet with a drop zone and *Select files*, into this folder. */
-  protected openImportFromDiskSheet(): void {
+  /**
+   * *Import from disk* (Assets section): a sheet with a drop zone and *Select files*, into the folder
+   * shown or one of its sub-folders (folder right-click menu).
+   */
+  protected openImportFromDiskSheet(subfolder: string | null = this.subfolder()): void {
+    const folder = subfolder ? this.folderPathOf(subfolder) : this.sectionPath();
     this.sheetService.create<AppAssetImportSheetComponent, AssetImportSheetData>({
       arcTitle: this.translateService.instant('files.importFromDisk.title'),
-      arcDescription: this.translateService.instant('files.importFromDisk.description', {
-        folder: this.folderPath(),
-      }),
+      arcDescription: this.translateService.instant('files.importFromDisk.description', { folder }),
       arcContent: AppAssetImportSheetComponent,
       arcData: {
-        folder: this.folderPath(),
+        folder,
         onImported: () => void this.loadTree(this.sectionPath()),
       },
       arcOkText: null,
@@ -691,6 +710,13 @@ export class CampaignSectionPage {
         () => void this.loadTree(this.sectionPath()),
       );
     }
+  }
+
+  /** *New encounter* in the folder shown, or in one of its sub-folders (folder right-click menu). */
+  protected openCreateEncounterSheet(subfolder: string | null = this.subfolder()): void {
+    this.fileActions.openCreateEncounterSheet(
+      subfolder ? this.folderPathOf(subfolder) : this.sectionPath(),
+    );
   }
 
   /** Whether the section's folders take new notes (not the special sections: assets, encounters). */

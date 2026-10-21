@@ -87,6 +87,13 @@
           "description": "Choose the language used in navigation, labels, and messages throughout the app.",
           "fieldLabel": "App language"
         }
+      },
+      "lists": {
+        "title": "Lists",
+        "fileSizes": {
+          "label": "Show file sizes",
+          "description": "Show the size of each note, encounter and asset in the file lists of the section pages, on this device."
+        }
       }
     },
     "sidebarAriaLabel": "Settings sections",
@@ -361,7 +368,8 @@
         "titlePlaceholder": "Goblin Boss",
         "submit": "Create note",
         "cancel": "Cancel",
-        "error": "Couldn't create the note"
+        "error": "Couldn't create the note",
+        "exists": "A note with this name already exists in this folder. Choose another title."
       },
       "loadError": "Couldn't load this section",
       "scenes": {
@@ -427,7 +435,8 @@
         "mainFolder": "{{section}} (main folder)",
         "noFolders": "This section has no sub-folders yet.",
         "done": "{{name}} moved to {{folder}}",
-        "dropMain": "Drop here to move to {{section}}"
+        "dropMain": "Drop here to move to {{section}}",
+        "exists": "“{{name}}” already exists in {{folder}}. Rename one of the two files, or move it somewhere else."
       },
       "reveal": {
         "mac": "Reveal in Finder",
@@ -728,7 +737,21 @@
       "description": "This file links to files {{target}} doesn't have: {{files}}. Files it already has are not copied again.",
       "include": "Also copy the linked files ({{count}})"
     },
-    "sidebarAriaLabel": "Compendium systems"
+    "sidebarAriaLabel": "Compendium systems",
+    "subfolder": {
+      "title": "Sub-folder",
+      "description": "{{name}} is in the sub-folder “{{subfolder}}” of {{section}}. How should it be copied?",
+      "exists": "{{target}} already has this sub-folder.",
+      "fileExists": "A file with this name is already in it.",
+      "placementLabel": "Copy",
+      "keep": "The file and its sub-folder “{{subfolder}}”",
+      "merge": "The file, into the existing sub-folder “{{subfolder}}”",
+      "root": "Only the file, into {{section}}",
+      "rename": "The file and its sub-folder, with another name",
+      "nameTitle": "Sub-folder name",
+      "nameDescription": "The file goes into this sub-folder; it is created if it does not exist.",
+      "nameLabel": "Sub-folder name"
+    }
   },
   "common": {
     "close": "Close",
@@ -816,6 +839,10 @@
       "description": "The folder becomes a section of this campaign with its notes; nothing is moved or renamed.",
       "submit": "Add section",
       "done": "{{name}} added to the sections"
+    },
+    "delete": {
+      "folderTitle": "Delete {{name}}?",
+      "folderDescription": "The {{folder}} folder and the {{count}} files in it go to the Trash, where you can restore them."
     }
   },
   "sidebar": {
@@ -1081,7 +1108,7 @@
       "showInRow": "Show in the row",
       "moveUp": "Move up",
       "moveDown": "Move down",
-      "removeField": "Remove the field",
+      "removeField": "Remove field",
       "addField": "Add a field",
       "close": "Close"
     },
@@ -1093,7 +1120,6 @@
       "overlap": "That place is taken or out of the row.",
       "noRoom": "There is no free place left in the row.",
       "keyInvalid": "The key needs lowercase letters, digits or _ and must be unused.",
-      "hide": "Hide from the row",
       "palette": "Not in the row · drag in, or click",
       "show": "Show {{name}} in the row",
       "add": "Add {{name}}",

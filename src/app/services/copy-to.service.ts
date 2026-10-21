@@ -13,7 +13,8 @@ import type { CopyPlanDto } from '@/dtos';
 import { CampaignService } from '@/services/campaign.service';
 import { CompendiumService } from '@/services/compendium.service';
 import { DocumentService } from '@/services/document.service';
-import { SectionService } from '@/services/section.service';
+import { SectionService, toSubfolderLabel } from '@/services/section.service';
+import { toastOpenActionClass } from '@/shared/components/toast';
 import type { NoteScope } from '@/services/note-scope.service';
 
 interface CopyTarget {
@@ -171,21 +172,158 @@ export class CopyToService {
     });
   }
 
-  /** Asks whether to bring the linked files the target is missing (only when there are some), then copies. */
+  /**
+   * Asks how to place a file that sits in a sub-folder (only then), then whether to bring the linked files
+   * the target is missing (only when there are some), then copies.
+   */
   private async copyWithLinkedChoice(
     path: string,
     target: CopyTarget,
     onCopied?: () => void,
   ): Promise<void> {
-    let plan: CopyPlanDto = { linked: [] };
+    let plan: CopyPlanDto = { linked: [], subfolder: null };
     try {
       plan = await this.documentService.copyPlan(path, target.value);
     } catch (error) {
       console.warn('[app] Failed to plan the copy:', path, error);
     }
 
+    const placed = plan.subfolder;
+    if (!placed) {
+      await this.copyWithLinkedFiles(path, target, plan, null, onCopied);
+      return;
+    }
+
+    this.openPlacementSheet(
+      path,
+      target,
+      placed,
+      (subfolder) => void this.copyWithLinkedFiles(path, target, plan, subfolder, onCopied),
+    );
+  }
+
+  /**
+   * The file is in a sub-folder: bring the sub-folder too (merging into the target's one when it has it),
+   * copy only the file into the section, or use another sub-folder name. `onChosen` gets the sub-folder
+   * to put the file in (null: the section itself).
+   */
+  private openPlacementSheet(
+    path: string,
+    target: CopyTarget,
+    placed: NonNullable<CopyPlanDto['subfolder']>,
+    onChosen: (subfolder: string | null) => void,
+  ): void {
+    const section = this.sectionService.labelOfKey(
+      placed.section,
+      target.value.startsWith('compendium/') ? 'system' : 'campaign',
+    );
+    const subfolderLabel = toSubfolderLabel(placed.name);
+    const notes = [
+      placed.exists
+        ? this.translateService.instant('compendium.subfolder.exists', { target: target.label })
+        : null,
+      placed.fileExists ? this.translateService.instant('compendium.subfolder.fileExists') : null,
+    ].filter((note): note is string => note !== null);
+
+    const dialogRef = this.dialogFormService.open({
+      arcTitle: this.translateService.instant('compendium.subfolder.title'),
+      arcDescription: [
+        this.translateService.instant('compendium.subfolder.description', {
+          name: path.split('/').pop() ?? path,
+          subfolder: subfolderLabel,
+          section,
+        }),
+        ...notes,
+      ].join(' '),
+      arcOkText: this.translateService.instant('compendium.copy.next'),
+      arcCancelText: this.translateService.instant('compendium.copy.cancel'),
+      fields: [
+        {
+          id: 'placement',
+          type: 'select',
+          label: 'compendium.subfolder.placementLabel',
+          value: 'keep',
+          required: true,
+          translate: true,
+          options: [
+            {
+              value: 'keep',
+              label: this.translateService.instant(
+                placed.exists ? 'compendium.subfolder.merge' : 'compendium.subfolder.keep',
+                { subfolder: subfolderLabel },
+              ),
+              icon: 'folder',
+              translate: false,
+            },
+            {
+              value: 'root',
+              label: this.translateService.instant('compendium.subfolder.root', { section }),
+              icon: 'file',
+              translate: false,
+            },
+            {
+              value: 'rename',
+              label: this.translateService.instant('compendium.subfolder.rename'),
+              icon: 'text-cursor-input',
+              translate: false,
+            },
+          ],
+        },
+      ],
+      onSubmit: (form) => {
+        const placement = String(form.getValues()['placement'] ?? 'keep');
+        dialogRef.close();
+        if (placement === 'rename') {
+          this.openSubfolderNameSheet(placed.name, onChosen);
+        } else {
+          onChosen(placement === 'root' ? null : placed.name);
+        }
+
+        return false;
+      },
+    });
+  }
+
+  /** Another name for the sub-folder the file comes with (created in the target when it has none of that name). */
+  private openSubfolderNameSheet(name: string, onChosen: (subfolder: string | null) => void): void {
+    const dialogRef = this.dialogFormService.open({
+      arcTitle: this.translateService.instant('compendium.subfolder.nameTitle'),
+      arcDescription: this.translateService.instant('compendium.subfolder.nameDescription'),
+      arcOkText: this.translateService.instant('compendium.copy.next'),
+      arcCancelText: this.translateService.instant('compendium.copy.cancel'),
+      fields: [
+        {
+          id: 'subfolder',
+          type: 'input',
+          label: 'compendium.subfolder.nameLabel',
+          value: name,
+          required: true,
+          translate: true,
+        },
+      ],
+      onSubmit: (form) => {
+        const subfolder = String(form.getValues()['subfolder'] ?? '').trim();
+        if (!subfolder) {
+          return false;
+        }
+
+        dialogRef.close();
+        onChosen(subfolder);
+        return false;
+      },
+    });
+  }
+
+  /** Asks whether to bring the linked files the target is missing (only when there are some), then copies. */
+  private async copyWithLinkedFiles(
+    path: string,
+    target: CopyTarget,
+    plan: CopyPlanDto,
+    subfolder: string | null,
+    onCopied?: () => void,
+  ): Promise<void> {
     if (plan.linked.length === 0) {
-      await this.copy(path, target, null, false, onCopied);
+      await this.copy(path, target, null, false, subfolder, onCopied);
       return;
     }
 
@@ -216,7 +354,7 @@ export class CopyToService {
         if (!isSubmitting) {
           isSubmitting = true;
           const includeLinked = form.getValues()['includeLinked'] !== false;
-          void this.copy(path, target, null, includeLinked, onCopied).then((isDone) => {
+          void this.copy(path, target, null, includeLinked, subfolder, onCopied).then((isDone) => {
             isSubmitting = false;
             if (isDone) {
               dialogRef.close();
@@ -235,6 +373,7 @@ export class CopyToService {
     target: CopyTarget,
     fileName: string | null,
     includeLinked: boolean,
+    subfolder: string | null,
     onCopied?: () => void,
   ): Promise<boolean> {
     try {
@@ -243,9 +382,10 @@ export class CopyToService {
         target: target.value,
         fileName,
         includeLinked,
+        subfolder,
       });
       if (result.status === 'exists') {
-        this.openRenameSheet(path, target, result.path, includeLinked, onCopied);
+        this.openRenameSheet(path, target, result.path, includeLinked, subfolder, onCopied);
         return true;
       }
 
@@ -262,6 +402,7 @@ export class CopyToService {
         ),
         {
           description: result.path,
+          classes: route ? { actionButton: toastOpenActionClass } : undefined,
           action: route
             ? {
                 label: this.translateService.instant('compendium.copy.open'),
@@ -284,6 +425,7 @@ export class CopyToService {
     target: CopyTarget,
     takenPath: string,
     includeLinked: boolean,
+    subfolder: string | null,
     onCopied?: () => void,
   ): void {
     const location = parseVaultFilePath(path);
@@ -310,12 +452,14 @@ export class CopyToService {
         if (!isSubmitting) {
           isSubmitting = true;
           const fileName = String(form.getValues()['fileName'] ?? '');
-          void this.copy(path, target, fileName, includeLinked, onCopied).then((isDone) => {
-            isSubmitting = false;
-            if (isDone) {
-              dialogRef.close();
-            }
-          });
+          void this.copy(path, target, fileName, includeLinked, subfolder, onCopied).then(
+            (isDone) => {
+              isSubmitting = false;
+              if (isDone) {
+                dialogRef.close();
+              }
+            },
+          );
         }
 
         return false;

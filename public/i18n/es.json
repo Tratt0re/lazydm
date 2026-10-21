@@ -87,6 +87,13 @@
           "description": "Elige el idioma de la navegación, las etiquetas y los mensajes de toda la app.",
           "fieldLabel": "Idioma de la app"
         }
+      },
+      "lists": {
+        "title": "Listas",
+        "fileSizes": {
+          "label": "Mostrar el tamaño de los archivos",
+          "description": "Muestra el tamaño de cada nota, encuentro y recurso en las listas de archivos de las páginas de sección, en este dispositivo."
+        }
       }
     },
     "sidebarAriaLabel": "Secciones de ajustes",
@@ -361,7 +368,8 @@
         "titlePlaceholder": "Jefe goblin",
         "submit": "Crear nota",
         "cancel": "Cancelar",
-        "error": "No se pudo crear la nota"
+        "error": "No se pudo crear la nota",
+        "exists": "Ya existe una nota con este nombre en esta carpeta. Elige otro título."
       },
       "loadError": "No se pudo cargar esta sección",
       "scenes": {
@@ -427,7 +435,8 @@
         "mainFolder": "{{section}} (carpeta principal)",
         "noFolders": "Esta sección aún no tiene subcarpetas.",
         "done": "{{name}} movido a {{folder}}",
-        "dropMain": "Suelta aquí para mover a {{section}}"
+        "dropMain": "Suelta aquí para mover a {{section}}",
+        "exists": "«{{name}}» ya existe en {{folder}}. Cambia el nombre de uno de los dos archivos o muévelo a otro sitio."
       },
       "reveal": {
         "mac": "Mostrar en Finder",
@@ -728,7 +737,21 @@
       "description": "Este archivo enlaza a archivos que {{target}} no tiene: {{files}}. Los que ya tiene no se vuelven a copiar.",
       "include": "Copiar también los archivos enlazados ({{count}})"
     },
-    "sidebarAriaLabel": "Sistemas del compendio"
+    "sidebarAriaLabel": "Sistemas del compendio",
+    "subfolder": {
+      "title": "Subcarpeta",
+      "description": "{{name}} está en la subcarpeta «{{subfolder}}» de {{section}}. ¿Cómo se copia?",
+      "exists": "{{target}} ya tiene esta subcarpeta.",
+      "fileExists": "Ya hay un archivo con este nombre dentro.",
+      "placementLabel": "Copiar",
+      "keep": "El archivo y su subcarpeta «{{subfolder}}»",
+      "merge": "El archivo, en la subcarpeta existente «{{subfolder}}»",
+      "root": "Solo el archivo, en {{section}}",
+      "rename": "El archivo y su subcarpeta, con otro nombre",
+      "nameTitle": "Nombre de la subcarpeta",
+      "nameDescription": "El archivo va a esta subcarpeta; se crea si no existe.",
+      "nameLabel": "Nombre de la subcarpeta"
+    }
   },
   "common": {
     "close": "Cerrar",
@@ -816,6 +839,10 @@
       "description": "La carpeta se convierte en una sección de esta campaña con sus notas; no se mueve ni se renombra nada.",
       "submit": "Añadir sección",
       "done": "{{name}} añadida a las secciones"
+    },
+    "delete": {
+      "folderTitle": "¿Eliminar {{name}}?",
+      "folderDescription": "La carpeta {{folder}} y los {{count}} archivos que contiene van a la papelera, donde puedes restaurarlos."
     }
   },
   "sidebar": {
@@ -1081,7 +1108,7 @@
       "showInRow": "Mostrar en la fila",
       "moveUp": "Subir",
       "moveDown": "Bajar",
-      "removeField": "Quitar el campo",
+      "removeField": "Quitar campo",
       "addField": "Añadir un campo",
       "close": "Cerrar"
     },
@@ -1093,7 +1120,6 @@
       "overlap": "Ese lugar está ocupado o fuera de la fila.",
       "noRoom": "Ya no queda sitio libre en la fila.",
       "keyInvalid": "La clave necesita minúsculas, dígitos o _ y no debe estar usada.",
-      "hide": "Ocultar de la fila",
       "palette": "Fuera de la fila · arrastra dentro, o haz clic",
       "show": "Mostrar {{name}} en la fila",
       "add": "Añadir {{name}}",

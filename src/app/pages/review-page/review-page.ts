@@ -1,5 +1,13 @@
 import { NgTemplateOutlet } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, DestroyRef, effect, inject, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  DestroyRef,
+  effect,
+  inject,
+  signal,
+} from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { toast } from 'ngx-sonner';
@@ -9,6 +17,7 @@ import { AppDialogFormService } from '@/components/sheet-form/dialog-form.servic
 import type { ReviewDto, ReviewMisplacedNoteDto, ReviewNoteDto, ReviewPlacedNoteDto } from '@/dtos';
 import { BrokenLinksPage } from '@/pages/broken-links-page/broken-links-page';
 import { DocumentService } from '@/services/document.service';
+import { FileActionsService } from '@/services/file-actions.service';
 import { getNoteScopeKind, NoteScopeService } from '@/services/note-scope.service';
 import { countReviewItems, ReviewService } from '@/services/review.service';
 import { CUSTOM_SECTION_ICONS, SectionService, toSubfolderLabel } from '@/services/section.service';
@@ -19,6 +28,7 @@ import { ArcTechAlertDialogService } from '@/shared/components/alert-dialog';
 import { ArcTechButtonComponent } from '@/shared/components/button';
 import { ArcTechEmptyComponent } from '@/shared/components/empty';
 import { ArcTechIconComponent } from '@/shared/components/icon';
+import { ArcTechTooltipImports } from '@/shared/components/tooltip';
 
 export const REVIEW_ROUTE_SEGMENT = 'review';
 
@@ -52,6 +62,7 @@ interface TypeFix {
     ArcTechButtonComponent,
     ArcTechEmptyComponent,
     ArcTechIconComponent,
+    ArcTechTooltipImports,
   ],
   templateUrl: './review-page.html',
 })
@@ -61,6 +72,7 @@ export class ReviewPage {
   );
   private readonly reviewService = inject(ReviewService);
   private readonly documentService = inject(DocumentService);
+  private readonly fileActions = inject(FileActionsService);
   private readonly sectionService = inject(SectionService);
   private readonly workspace = inject(WorkspaceService);
   private readonly toolbarContext = inject(ToolbarContextService);
@@ -124,6 +136,90 @@ export class ReviewPage {
   protected placeLabel(note: ReviewPlacedNoteDto): string {
     const section = this.sectionLabel(note.section);
     return note.subfolder ? `${section} / ${toSubfolderLabel(note.subfolder)}` : section;
+  }
+
+  // --- Deleting what the review lists -------------------------------------------------------------
+
+  /** Delete a note the review lists (to the system Trash, after the usual confirmation); the review reloads. */
+  protected openDeleteNoteSheet(note: ReviewNoteDto): void {
+    void this.fileActions.openDeleteSheet(
+      { path: note.path, label: note.title, isNote: true },
+      () => this.reload(),
+    );
+  }
+
+  /**
+   * Delete a folder the review lists (an unknown folder, or one nested too deep) with its files: to the system
+   * Trash, after a confirmation with the file count; links to its files become plain text unless unticked.
+   */
+  protected openDeleteFolderSheet(folder: string, fileCount: number): void {
+    const name = folder.split('/').pop() ?? folder;
+    let isSubmitting = false;
+    const dialogRef = this.dialogFormService.open({
+      arcTitle: this.translateService.instant('review.delete.folderTitle', { name }),
+      arcDescription: this.translateService.instant('review.delete.folderDescription', {
+        folder: `${name}/`,
+        count: fileCount,
+      }),
+      arcOkText: this.translateService.instant('files.delete.submit'),
+      arcOkDestructive: true,
+      arcCancelText: this.translateService.instant('review.cancel'),
+      fields: [
+        {
+          id: 'rewriteLinks',
+          type: 'checkbox',
+          value: true,
+          checkboxLabel: this.translateService.instant('files.deleteFolder.rewriteLinks'),
+        },
+      ],
+      onSubmit: (form) => {
+        if (!isSubmitting) {
+          isSubmitting = true;
+          const rewriteLinks = form.getValues()['rewriteLinks'] !== false;
+          void this.deleteFolder(folder, name, rewriteLinks).then((isDeleted) => {
+            isSubmitting = false;
+            if (isDeleted) {
+              dialogRef.close();
+            }
+          });
+        }
+
+        return false;
+      },
+    });
+  }
+
+  private async deleteFolder(
+    folder: string,
+    name: string,
+    rewriteLinks: boolean,
+  ): Promise<boolean> {
+    try {
+      const result = await this.documentService.deleteStrayFolder(folder, rewriteLinks);
+      await this.fileActions.followDeletedFolder(result.deleted);
+      toast.success(this.translateService.instant('files.deleteFolder.done', { name }), {
+        description:
+          result.linkCount > 0
+            ? this.translateService.instant('files.delete.linksUpdated', {
+                links: result.linkCount,
+                notes: result.updatedPaths.length,
+              })
+            : undefined,
+      });
+      if (result.failedPaths.length > 0) {
+        toast.warning(this.translateService.instant('document.rename.failed'), {
+          description: result.failedPaths.join(', '),
+        });
+      }
+
+      this.reload();
+      return true;
+    } catch (error) {
+      toast.error(this.translateService.instant('files.deleteFolder.error'), {
+        description: error instanceof Error ? error.message : String(error),
+      });
+      return false;
+    }
   }
 
   // --- Single fixes --------------------------------------------------------------------------------

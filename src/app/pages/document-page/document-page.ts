@@ -1,4 +1,13 @@
-import { ChangeDetectionStrategy, Component, computed, DestroyRef, effect, inject, signal, viewChild } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  DestroyRef,
+  effect,
+  inject,
+  signal,
+  viewChild,
+} from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
@@ -115,7 +124,9 @@ export class DocumentPage {
   private readonly brokenLinkMenu = viewChild(AppBrokenLinkMenuComponent);
   private readonly linkPreviewCard = viewChild(AppLinkPreviewCardComponent);
   protected readonly linkPreviewLabel = this.translateService.instant('document.linkPreview.show');
-  protected readonly imagePreviewLabel = this.translateService.instant('document.linkPreview.showImage');
+  protected readonly imagePreviewLabel = this.translateService.instant(
+    'document.linkPreview.showImage',
+  );
   private loadToken = 0;
   private unregisterOpenNote: (() => void) | null = null;
 
@@ -146,7 +157,8 @@ export class DocumentPage {
   /** Editor views, switched by the toggle buttons above the editor (Source only when enabled in Settings). */
   protected readonly editorModes = computed(() =>
     EDITOR_MODES.filter(
-      (option) => option.value !== 'source' || this.localPreferences.editorSettings().showSourceView,
+      (option) =>
+        option.value !== 'source' || this.localPreferences.editorSettings().showSourceView,
     ),
   );
   /** Links the live editor resolves with; refreshed when the vault index re-reads this note. */
@@ -207,8 +219,8 @@ export class DocumentPage {
             {
               id: 'links',
               label: this.translateService.instant('document.toolbar.links'),
-              icon: 'panel-right',
-              buttonType: 'outline',
+              icon: 'link',
+              buttonType: this.isLinksPanelOpen() ? 'default' : 'outline',
               iconOnly: true,
               action: () => this.toggleLinksPanel(),
             },
@@ -238,7 +250,8 @@ export class DocumentPage {
               id: 'delete',
               label: this.translateService.instant('files.delete.menu'),
               icon: 'trash',
-              buttonType: 'outline',
+              buttonType: 'secondary',
+              destructive: true,
               iconOnly: true,
               disabled: () => !this.document() || this.isSaving(),
               action: () => this.openDeleteSheet(),
