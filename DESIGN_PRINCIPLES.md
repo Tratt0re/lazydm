@@ -413,6 +413,15 @@ Planned Electron modules: `vault`, `cloud-readiness`, `campaign`, `document`, `i
 - Rendered markdown is **sanitized** (vault content may come from other people through a shared folder).
 - External links open in the system browser, never inside the app window.
 - Assets are served through the `lazydm-asset://` protocol, scoped to the vault.
+- **External URLs** go through `openExternalSafe` (`electron/utils/external-url.js`): only `https:`, `http:` and
+  `mailto:` are handed to the system. `update:open-release` ignores the renderer and opens only the release page
+  found by the last update check, on the configured GitHub repository.
+- **Navigation** is limited to the app itself (exact dev origin, or the built `index.html`); IPC calls from any
+  other frame are rejected.
+- **CSP** is a `<meta>` tag in `src/index.html` (no remote scripts; the inline theme script is allowed by hash —
+  update the hash if that script changes). Production builds do not inline critical CSS, which would need
+  `unsafe-inline` scripts.
+- `documents:open` only opens media files (images, PDFs, audio), never executables or scripts.
 
 ## 8. UI and navigation
 
@@ -652,6 +661,10 @@ Component behaviour, variant keys and configuration stay as they are.
 | 14.11 | Docs: §6d written, §2, §3, §8 and §12 updated with the final encounter design |
 
 ## 12. Open decisions
+
+- **TODO — update check repository**: `package.json` `repository.url` is still a placeholder
+  (`github.com/yourusername/lazy_dm`). Set the real GitHub repository once it exists; the update check and the
+  release-URL allowlist both derive from it.
 
 - **Encounters, later**: richer statuses (shared definitions with descriptions), combat timers, delay / hold turns,
   a roll for several encounters at once, and a starting-HP reset are left out on purpose and can be added without

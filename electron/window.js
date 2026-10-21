@@ -1,6 +1,8 @@
-const { app, BrowserWindow, shell } = require('electron');
+const { app, BrowserWindow } = require('electron');
 const fs = require('node:fs');
 const path = require('node:path');
+const { pathToFileURL } = require('node:url');
+const { openExternalSafe } = require('./utils/external-url');
 
 const isMac = process.platform === 'darwin';
 
@@ -126,20 +128,36 @@ function registerWindowLifecycle(mainWindow) {
   });
 }
 
+/** Whether `url` is the app itself: the dev server origin, or the built index.html (any hash/query). */
+function isAppUrl(url, isDev) {
+  try {
+    const target = new URL(url);
+    if (isDev) {
+      return target.origin === new URL(DEV_SERVER_URL).origin;
+    }
+
+    return (
+      target.protocol === 'file:' &&
+      target.pathname === pathToFileURL(resolveRendererIndexPath()).pathname
+    );
+  } catch {
+    return false;
+  }
+}
+
 function registerNavigationGuards(mainWindow, isDev) {
   mainWindow.webContents.setWindowOpenHandler(({ url }) => {
-    void shell.openExternal(url);
+    void openExternalSafe(url);
     return { action: 'deny' };
   });
 
   mainWindow.webContents.on('will-navigate', (event, url) => {
-    const sameAppNavigation = isDev ? url.startsWith(DEV_SERVER_URL) : url.startsWith('file://');
-    if (sameAppNavigation) {
+    if (isAppUrl(url, isDev)) {
       return;
     }
 
     event.preventDefault();
-    void shell.openExternal(url);
+    void openExternalSafe(url);
   });
 }
 
@@ -232,6 +250,8 @@ function reloadOpenWindows() {
 
 module.exports = {
   createWindow,
+  isAppUrl,
+  isProductionCliMode,
   initMainWindow,
   reloadOpenWindows,
 };

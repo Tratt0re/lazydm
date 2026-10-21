@@ -509,7 +509,7 @@ function decorateSyntax(target: DecorationContext, frontmatterEnd: number): void
         const textTo = marks[1].from;
         ranges.push(hidden.range(node.from, textFrom), hidden.range(textTo, node.to));
         if (textTo > textFrom) {
-          const external = /^[a-z][a-z0-9+.-]*:/i.test(href);
+          const external = /^(https?|mailto):/i.test(href);
           const { className, attributes } = external
             ? { className: 'cm-lp-link', attributes: { 'data-href': href, title: href } }
             : linkAttributes(context, findLink(context, href), href);

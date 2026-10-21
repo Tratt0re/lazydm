@@ -1,8 +1,12 @@
-const { app, shell } = require('electron');
+const { app } = require('electron');
 const semver = require('semver');
 const { appMetaModel } = require('../models');
+const { openExternalSafe } = require('../utils/external-url');
 
 const CHECK_INTERVAL_MS = 6 * 60 * 60 * 1000; // 6 hours
+
+/** Release page found by the last check: the only URL `openRelease` will open. */
+let lastReleaseUrl = null;
 
 function getOwnerRepo() {
   try {
@@ -12,6 +16,23 @@ function getOwnerRepo() {
     if (match) return { owner: match[1], repo: match[2] };
   } catch (_) {}
   return null;
+}
+
+/** Whether `value` is an https page of the configured GitHub repository. */
+function isTrustedReleaseUrl(value) {
+  const ownerRepo = getOwnerRepo();
+  if (!ownerRepo || typeof value !== 'string') return false;
+
+  try {
+    const url = new URL(value);
+    return (
+      url.protocol === 'https:' &&
+      url.hostname === 'github.com' &&
+      url.pathname.toLowerCase().startsWith(`/${ownerRepo.owner}/${ownerRepo.repo}/`.toLowerCase())
+    );
+  } catch {
+    return false;
+  }
 }
 
 function shouldSkipCheck() {
@@ -70,6 +91,8 @@ async function performCheck(currentVersion) {
   const normalizedLatest = semver.valid(latestVersion);
   if (!normalizedLatest) return errorResult(currentVersion);
 
+  lastReleaseUrl = isTrustedReleaseUrl(release.htmlUrl) ? release.htmlUrl : null;
+
   const updateAvailable = semver.gt(normalizedLatest, currentVersion);
 
   const ignoredRow = appMetaModel.getByKey('ignoredUpdateVersion');
@@ -80,7 +103,7 @@ async function performCheck(currentVersion) {
     updateAvailable,
     currentVersion,
     latestVersion: normalizedLatest,
-    releaseUrl: release.htmlUrl,
+    releaseUrl: lastReleaseUrl,
     popupDismissedForThisVersion,
   });
 }
@@ -117,9 +140,9 @@ async function forceCheck() {
   }
 }
 
-async function openRelease(payload) {
-  const url = payload?.url;
-  if (url) await shell.openExternal(url);
+/** Opens the release page of the last check; the renderer's payload is ignored on purpose. */
+async function openRelease() {
+  if (lastReleaseUrl) await openExternalSafe(lastReleaseUrl);
 }
 
 function ignoreVersion(payload) {

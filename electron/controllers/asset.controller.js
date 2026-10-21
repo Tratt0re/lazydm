@@ -89,6 +89,12 @@ function getMediaType(fileName, mimeType) {
   return { kind, extension };
 }
 
+/** Whether `fileName` has a media extension (image, PDF, audio): the only files the app hands to the system. */
+function isMediaFileName(fileName) {
+  const extension = path.posix.extname(fileName).slice(1).toLocaleLowerCase();
+  return Object.values(MEDIA_EXTENSIONS).some((extensions) => extensions.includes(extension));
+}
+
 /** `<campaign>/assets` or `compendium/<system>/assets`: where the assets of a note's scope go. */
 function getAssetsFolder(sourcePath) {
   const scope = vaultIndexModel.getCampaignSlug(sourcePath);
@@ -267,6 +273,7 @@ async function importFiles(payload) {
 module.exports = {
   handleAssetRequests,
   importFiles,
+  isMediaFileName,
   registerAssetScheme,
   save,
 };

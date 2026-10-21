@@ -22,6 +22,7 @@ const {
   setFrontmatterField,
 } = require('../utils/markdown-parse');
 const { toSlug } = require('../utils/string-sanitize');
+const { isMediaFileName } = require('./asset.controller');
 const indexerController = require('./indexer.controller');
 const vaultController = require('./vault.controller');
 const {
@@ -311,7 +312,13 @@ async function openFile(payload) {
   const body = ensurePlainObject(payload, 'payload');
   const relativePath = requirePath(body);
   const absolutePath = resolveInsideVault(vaultController.getReadyVaultPath(), relativePath);
-  if (!fs.existsSync(absolutePath) || !fs.statSync(absolutePath).isFile()) {
+  if (!isMediaFileName(absolutePath)) {
+    throw new Error(`Only images, PDFs and audio can be opened: ${relativePath}`);
+  }
+
+  // lstat, so a symlink to something else is not followed.
+  const stats = fs.existsSync(absolutePath) ? fs.lstatSync(absolutePath) : null;
+  if (!stats?.isFile()) {
     throw new Error(`Not found: ${relativePath}`);
   }
 
