@@ -51,23 +51,31 @@ function isCurrent(token) {
   return activeVault !== null && token === activeToken;
 }
 
-/** Index work runs one task at a time; a task started for a vault that was closed meanwhile does nothing. */
+/**
+ * Index work runs one task at a time; a task started for a vault that was closed meanwhile does nothing.
+ * A failure is recorded in the index state and keeps the queue going, and also rejects the returned promise,
+ * so a caller that awaits it (a move, a delete) learns that the index is stale.
+ */
 function enqueue(token, task) {
-  taskQueue = taskQueue
-    .then(() => (isCurrent(token) ? task() : undefined))
-    .catch((error) => {
-      if (!isCurrent(token)) {
-        return;
-      }
+  const run = taskQueue.then(() => (isCurrent(token) ? task() : undefined));
+  taskQueue = run.catch((error) => {
+    if (!isCurrent(token)) {
+      return;
+    }
 
-      console.error('[electron] Vault index task failed:', error);
-      setIndexState({
-        status: INDEX_STATUS.error,
-        lastError: error instanceof Error ? error.message : String(error),
-      });
+    console.error('[electron] Vault index task failed:', error);
+    setIndexState({
+      status: INDEX_STATUS.error,
+      lastError: error instanceof Error ? error.message : String(error),
     });
+  });
 
-  return taskQueue;
+  return run;
+}
+
+/** Enqueues a task nobody awaits: its failure is already recorded in the index state. */
+function enqueueDetached(token, task) {
+  enqueue(token, task).catch(() => undefined);
 }
 
 function isFileChanged(file, knownState) {
@@ -227,7 +235,7 @@ function flushWatchedPaths() {
   pendingWatchPaths = new Set();
 
   const token = activeToken;
-  enqueue(token, () => reindexWatchedPaths(token, relativePaths));
+  enqueueDetached(token, () => reindexWatchedPaths(token, relativePaths));
 }
 
 function startWatcher() {
@@ -238,7 +246,7 @@ function startWatcher() {
     }
 
     if (!fileName) {
-      enqueue(token, () => runFullReconcile(token));
+      enqueueDetached(token, () => runFullReconcile(token));
       return;
     }
 
@@ -281,7 +289,7 @@ function start(vault) {
 
   const token = activeToken;
   startWatcher();
-  enqueue(token, () => runFullReconcile(token));
+  enqueueDetached(token, () => runFullReconcile(token));
 
   return getStatus();
 }
@@ -305,7 +313,7 @@ function rebuild() {
   }
 
   const token = activeToken;
-  enqueue(token, async () => {
+  enqueueDetached(token, async () => {
     vaultIndexModel.deleteAll();
     await runFullReconcile(token);
   });
