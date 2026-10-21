@@ -284,6 +284,11 @@ function findSectionKeyForType(rootPath, scope, type) {
   return sections.find((section) => section.type === type)?.key ?? null;
 }
 
+/** A folder name that is neither `.`/`..` nor hidden/special (`.x`, `_x`): `..` would resolve to the parent folder. */
+function isPlainFolderSegment(segment) {
+  return segment !== '.' && segment !== '..' && !segment.startsWith('.') && !segment.startsWith('_');
+}
+
 /**
  * Where a folder sits in the section layout: `<scope>/<section>` or one sub-folder below it,
  * `<scope>/<section>/<sub-folder>` (scope: a campaign or `compendium/<system>`). Null for anything else
@@ -291,6 +296,10 @@ function findSectionKeyForType(rootPath, scope, type) {
  */
 function parseSectionFolder(folderPath) {
   const segments = String(folderPath ?? '').replace(/\/+$/, '').split('/').filter(Boolean);
+  if (!segments.every(isPlainFolderSegment)) {
+    return null;
+  }
+
   const depth = segments[0] === COMPENDIUM_DIR_NAME ? 2 : 1;
   if (segments.length !== depth + 1 && segments.length !== depth + 2) {
     return null;
@@ -331,6 +340,7 @@ module.exports = {
   listCampaignSections,
   listNoteTypes,
   listScopeSections,
+  isPlainFolderSegment,
   parseSectionFolder,
   readCampaignSectionSettings,
   saveCampaignSectionSettings,

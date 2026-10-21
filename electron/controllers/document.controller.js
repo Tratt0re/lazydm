@@ -875,6 +875,9 @@ async function deleteSection(payload) {
   const key = requireString(body.section, 'payload.section');
   const rewriteLinksToText =
     normalizeOptionalBooleanFlag(body.rewriteLinks, 'payload.rewriteLinks') !== 0;
+  if (!sectionModel.isPlainFolderSegment(campaign) || !sectionModel.isPlainFolderSegment(key)) {
+    throw new Error('Not a section of a campaign.');
+  }
   if (campaign.includes('/') || key.includes('/')) {
     throw new Error('Not a section of a campaign.');
   }
