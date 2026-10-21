@@ -267,7 +267,8 @@ export class EncounterPage {
       const sectionPath = `${scope.routeBase}/${this.sectionKey()}`;
       const subfolder = this.subfolder();
       const isParty = this.isParty();
-      const ruleActions: readonly ToolbarItemAction[] = isParty ? [] : this.ruleToolbarActions(scope.rootPath);
+      // The roster has a rule of its own too (default: the campaign's), so what the rows show is never a guess.
+      const ruleActions: readonly ToolbarItemAction[] = this.ruleToolbarActions(scope.rootPath);
       onCleanup(
         this.toolbarContext.activate({
           title: this.title(),

@@ -314,18 +314,6 @@ export class CampaignSectionPage {
     }
 
     if (section?.key === ENCOUNTERS_SECTION_KEY) {
-      // The party roster is hidden from the list: this is how it is always reached.
-      actions.push({
-        id: 'section-party',
-        label: 'encounters.party.open',
-        icon: 'users',
-        buttonType: 'outline',
-        iconOnly: true,
-        action: () =>
-          void this.router.navigateByUrl(
-            `${this.scopeRoute()}/${ENCOUNTERS_SECTION_KEY}/${PARTY_FILE_NAME}`,
-          ),
-      });
       actions.push({
         id: 'section-new-encounter',
         label: 'encounters.new.button',
@@ -628,6 +616,13 @@ export class CampaignSectionPage {
   protected encounterRoute(file: DocumentFileListItemDto): string | null {
     return toInAppEncounterRoute(file.path);
   }
+
+  /** Route of the party roster (hidden from the list): the Encounters page links to it with a full button. */
+  protected readonly partyRoute = computed(() =>
+    this.section()?.key === ENCOUNTERS_SECTION_KEY
+      ? `${this.scopeRoute()}/${ENCOUNTERS_SECTION_KEY}/${PARTY_FILE_NAME}`
+      : null,
+  );
 
   protected isPdf(file: DocumentFileListItemDto): boolean {
     return this.assetService.getAssetKind(file.path) === 'pdf';

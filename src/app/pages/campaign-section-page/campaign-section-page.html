@@ -7,6 +7,16 @@
     (dragleave)="onPageDragLeave($event)"
     (drop)="onPageDrop($event)"
   >
+    @if (partyRoute(); as party) {
+      <!-- A different part of the Encounters page: the roster of player characters. -->
+      <div class="flex justify-end">
+        <a arc-button arcType="outline" [routerLink]="party">
+          <arc-icon arcType="users" />
+          {{ 'encounters.party.open' | translate }}
+        </a>
+      </div>
+    }
+
     @if (errorMessage(); as message) {
       <arc-alert
         arcType="destructive"
