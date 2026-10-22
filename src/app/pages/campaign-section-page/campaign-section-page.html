@@ -1,9 +1,14 @@
 @if (section(); as section) {
+  <!-- The folder's icon, huge and fixed to the bottom right corner of the window: it stays put while the list scrolls. -->
+  <span class="arc-page-watermark" aria-hidden="true">
+    <arc-icon [arcType]="section.icon" [arcStrokeWidth]="1" />
+  </span>
+
   <!-- On the Assets section, files from the file manager can be dropped anywhere on the page. -->
   <!-- The wrapper covers the whole content area (it cancels the content's own padding and gives it back), so a
        right-click or a drop anywhere under the toolbar reaches it; rows and other elements keep their own menus. -->
   <div
-    class="-m-6 flex flex-1 flex-col p-6 outline-2 -outline-offset-2 transition-[outline-color]"
+    class="relative -m-6 flex flex-1 flex-col p-6 outline-2 -outline-offset-2 transition-[outline-color]"
     [class]="isFileDragOverPage() ? 'outline-dashed outline-primary' : 'outline-transparent'"
     arc-context-menu
     [arcContextMenuTriggerFor]="pageMenu"

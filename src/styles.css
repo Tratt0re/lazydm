@@ -542,6 +542,34 @@
   }
 }
 
+/*
+ * Folder overview watermark: the folder's icon, very large and faded, pinned to the bottom right corner of the
+ * window with some padding (fixed, so it stays while the content scrolls). It does not move. The page content is `relative` and
+ * comes after it in the DOM, so it paints above. Decoration only: aria-hidden in the markup.
+ */
+.arc-page-watermark {
+  --watermark-size: min(42rem, 75vh);
+  position: fixed;
+  right: 0.5rem;
+  bottom: 0.5rem;
+  display: flex;
+  font-size: var(--watermark-size);
+  line-height: 1;
+  color: var(--primary);
+  opacity: 0.07;
+  /* Same tilt the overview cards reach on hover, here by default and without any animation. */
+  transform: rotate(-8deg);
+  pointer-events: none;
+  user-select: none;
+}
+
+.arc-page-watermark lucide-angular,
+.arc-page-watermark svg.lucide {
+  width: 1em;
+  height: 1em;
+  font-size: 1em;
+}
+
 /* The note page fills the content area: the editor (and its code map) scrolls inside it, not the page. */
 arc-content > main:has(> app-document-page) {
   min-height: 0;
