@@ -90,9 +90,9 @@ function isFileChanged(file, knownState) {
   );
 }
 
-/** An encounter (`.json` of an Encounters section) is listed by its `name`, like a note by its title; null for any other file. */
+/** An encounter or a map (`.json` of the Encounters / Maps section) is listed by its `name`, like a note by its title; null for any other file. */
 async function readEncounterTitle(rootPath, relativePath) {
-  if (!/(^|\/)encounters\/(.+\/)?[^/]+\.json$/i.test(relativePath)) {
+  if (!/(^|\/)(encounters|maps)\/(.+\/)?[^/]+\.json$/i.test(relativePath)) {
     return null;
   }
 

@@ -7,6 +7,7 @@ const {
   compendiumModel,
   documentModel,
   encounterModel,
+  mapModel,
   sectionModel,
   vaultIndexModel,
   vaultModel,
@@ -1316,7 +1317,13 @@ async function getCopyLocation(vaultPath, relativePath, target) {
     const isEncounter =
       extension === encounterModel.ENCOUNTER_EXTENSION &&
       sourceFolder?.section === ENCOUNTERS_DIR_NAME;
-    const section = isEncounter ? ENCOUNTERS_DIR_NAME : ASSETS_DIR_NAME;
+    const isMap =
+      extension === mapModel.MAP_EXTENSION && sourceFolder?.section === mapModel.MAPS_SECTION_KEY;
+    const section = isEncounter
+      ? ENCOUNTERS_DIR_NAME
+      : isMap
+        ? mapModel.MAPS_SECTION_KEY
+        : ASSETS_DIR_NAME;
     return {
       section,
       subfolder: sourceFolder?.section === section ? sourceFolder.subfolder : null,

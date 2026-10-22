@@ -7,6 +7,7 @@ const {
   compendiumController,
   documentController,
   encounterController,
+  mapController,
   indexerController,
   resetController,
   reviewController,
@@ -87,6 +88,9 @@ const IPC_HANDLERS = Object.freeze({
   [CHANNELS.encounters.party]: encounterController.party,
   [CHANNELS.encounters.write]: encounterController.write,
   [CHANNELS.encounters.create]: encounterController.create,
+  [CHANNELS.maps.read]: mapController.read,
+  [CHANNELS.maps.write]: mapController.write,
+  [CHANNELS.maps.create]: mapController.create,
 
   [CHANNELS.review.list]: reviewController.list,
   [CHANNELS.search.query]: searchController.query,

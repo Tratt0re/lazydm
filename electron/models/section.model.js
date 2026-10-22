@@ -17,6 +17,7 @@ const DEFAULT_SECTIONS = Object.freeze([
   { key: 'locations', type: 'location', icon: 'map-pin' },
   { key: 'world', type: 'world', icon: 'globe' },
   { key: 'encounters', type: 'encounter', icon: 'swords', isSpecial: true },
+  { key: 'maps', type: 'map', icon: 'map', isSpecial: true },
   { key: 'handouts', type: 'handout', icon: 'mail-open' },
   { key: 'sessions', type: 'session', icon: 'calendar' },
   { key: 'assets', type: null, icon: 'image', isSpecial: true },

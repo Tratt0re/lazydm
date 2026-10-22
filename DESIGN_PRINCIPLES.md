@@ -39,6 +39,7 @@ LazyDM works like **Obsidian**, specialised for Dungeon Masters.
     ├── locations/                     type: location
     ├── world/                         type: world (lore, factions, history, deities)
     ├── encounters/                    encounters: .json files, not notes (see §6d); _party.json = the party roster
+    ├── maps/                          interactive maps: .json files, not notes (see §6e); the image stays in assets/
     ├── handouts/                      type: handout (letters, clues; may embed images from assets/)
     ├── sessions/                      type: session
     ├── assets/                        every non-.md file: images, maps, pdfs, sounds…
@@ -51,7 +52,8 @@ LazyDM works like **Obsidian**, specialised for Dungeon Masters.
 - A note's **`type` (and optional `subtype`) in its frontmatter decides what it is**, and its folder should agree
   with it (§2a). When they disagree LazyDM **reports it and offers a fix; it never blocks the note and never moves
   it on its own**. Links resolve by name, so a note in the wrong folder keeps working.
-- A map is an image in `assets/` plus a `.md` card that embeds it.
+- A plain map is an image in `assets/` plus a `.md` card that embeds it. An **interactive map** (pins, paths, notes)
+  is a `.json` file of the *Maps* section that points at an image in `assets/` (see §6e).
 - **Media files** (images: png, jpg, gif, webp, svg, avif; pdf; audio: mp3, wav, ogg, m4a, flac) pasted into a
   note, dropped on the Assets section or imported from disk are **saved right away** in the scope's own `assets/`
   (`<campaign>/assets/`, `compendium/<system>/assets/`) and, from a note, embedded at the cursor as `![[name.ext]]`
@@ -65,11 +67,11 @@ LazyDM works like **Obsidian**, specialised for Dungeon Masters.
 - A **section** is a top-level folder of a campaign bound to one note type: key (folder slug), type, label, icon,
   optional description. Sections are **user-managed**: the user creates them (name, optional description, icon,
   optional template) from the campaign overview toolbar (*New section*) or Settings → Sections, and can reorder,
-  hide, rename and delete them. Only *Assets* and *Encounters* are fixed (special sections, see below).
+  hide, rename and delete them. Only *Assets*, *Encounters* and *Maps* are fixed (special sections, see below).
 - **Presets**: the sections in §2 (scenes, characters, enemies…) are **presets** with their built-in template
   already set. They are offered as a checklist when a campaign is created (*New campaign*), as a way to
   pre-initialise its spaces; Assets and Encounters are always included. Campaigns that already exist keep the
-  sections they have. Electron owns the list and sends it to Angular, with each campaign's settings applied — no
+  sections they have (the special ones are listed for every campaign). Electron owns the list and sends it to Angular, with each campaign's settings applied — no
   list kept in sync by hand.
 - **Per-campaign settings** in `.lazydm/vault.json` → `sections.campaigns.<slug>`:
   - `hidden`: default sections not shown in the sidebar (their files stay indexed and linkable; the settings show
@@ -126,9 +128,10 @@ LazyDM works like **Obsidian**, specialised for Dungeon Masters.
   - **Folder right-click menus** (explorer and section page) offer what the folder takes: a section *New note*
     (not the special sections) and *New folder*; a sub-folder *New note* (it gets the sub-folder's sub-type) but no
     *New folder* (one level only). The same modals as the section toolbar; a new note opens right away.
-- **Special sections**: *Assets* (any non-`.md` file) and *Encounters* (`.json` files, see §6d) hold no plain notes —
+- **Special sections**: *Assets* (any non-`.md` file), *Encounters* (`.json` files, see §6d) and *Maps* (`.json`
+  files, see §6e) hold no plain notes —
   they offer *New folder* and *Import* but no *New note* (*Encounters* offers *New encounter*, *Party roster* and a
-  *Battle rule* select instead); their sub-folders only organise files (no `subtype`), and the
+  *Battle rule* select instead; *Maps* offers *New map*); their sub-folders only organise files (no `subtype`), and the
   Review page does not check them. *Assets* also offers **Import from disk** (toolbar): a sheet with *Select
   files* (the system file dialog) and a drop zone; media files can also be dropped straight on the section page
   (or on one of its sub-folders).
@@ -406,6 +409,38 @@ Planned Electron modules: `vault`, `cloud-readiness`, `campaign`, `document`, `i
     *Statuses* and *Side* can only exist once in a rule; the health bar type is called *Bar*. The name and the initiative
     can move but not go. Unsaved edits are saved when another rule is selected or the
     sheet is closed.
+
+## 6e. Maps
+
+- An **interactive map** is a **`.json` file** of the *Maps* section (`<scope>/maps/<slug>.json`, or one sub-folder
+  deeper). It is not a note: no frontmatter, no `type`. The index lists it as an asset, titled by its `name`, and it
+  is linked **like an asset** with its full file name (`![[world.json]]`). Section-aware: a `.json` in `maps/` opens
+  the map page, a `.json` in `encounters/` the encounter page.
+- **The image stays in `assets/`** (§2): the map only stores its vault-relative path (`image`). The map never copies,
+  moves or edits the image. *New map* picks an existing image of the scope's assets or imports one from disk into
+  `assets/` first (the usual import rules). Renaming an image rewrites the `image` of the maps pointing at it;
+  deleting it leaves those maps open with a *missing image* state (never a crash).
+- **File format** (`version: 1`): `name`, `image`, `pins`, `paths`, `notes`. Coordinates are **fractions of the image**
+  (`x`, `y` in 0..1, origin top-left), so a map survives a replaced image of another size. Everything is optional and
+  normalised when read, like encounters; unknown fields are dropped, numbers clamped, colours validated against the
+  palette. Saves are atomic and conflict-checked by content hash (*Keep my version* / *Load the other version*).
+  - **Pin**: `{ id, x, y, label, color, icon, link }`; `link` is a vault path of a note, asset or encounter of the same
+    scope (null for none).
+  - **Path**: `{ id, points: [{ x, y }], color, width, label }`.
+  - **Note**: `{ id, x, y, text, color }`, a free text box anchored to a point.
+- **Library**: Leaflet (core only) with `CRS.Simple`, the image as an overlay. Pins and notes are `divIcon` markers
+  styled by us; no Leaflet default marker images and no drawing plugin. Leaflet's own chrome (zoom control,
+  attribution) is replaced by ArcTechUI controls.
+- **Page** (`/<scope>/maps/<file>`, own tab title and breadcrumb): the toolbar keeps the main actions (*Rename…*,
+  *Delete…*); a **tool palette** over the map holds *Select*, *Pin*, *Path*, *Note* and the zoom buttons (zoom in /
+  out / fit). Wheel and pinch zoom, drag to pan. Every edit is saved right away. A pin or note selected shows its
+  details in a **side sheet** (information: label, colour, link, and the open-link button); editing happens in place on
+  the map, and destructive actions (delete) ask in a modal (§8).
+- **Style**: the map is part of the app, not a widget: square shapes, Nordic Relic surface tokens
+  (`bg-card`, `bg-raised`), `font-mono` labels, semantic colours for the chrome in both themes. User colours come from
+  a fixed palette of theme-independent tokens, never free hex input.
+- **Drawing**: *Path* adds a point per click, *Enter* or double-click finishes, *Esc* cancels, vertices of the selected
+  path are dragged to edit; *Delete* removes the selection after a confirmation.
 
 ## 7. Security
 

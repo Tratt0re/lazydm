@@ -74,6 +74,11 @@ const CHANNELS = Object.freeze({
     write: 'encounters:write',
     create: 'encounters:create',
   }),
+  maps: Object.freeze({
+    read: 'maps:read',
+    write: 'maps:write',
+    create: 'maps:create',
+  }),
   review: Object.freeze({
     list: 'review:list',
   }),

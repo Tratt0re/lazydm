@@ -7,6 +7,7 @@ const compendiumController = require('./compendium.controller');
 const documentController = require('./document.controller');
 const encounterController = require('./encounter.controller');
 const indexerController = require('./indexer.controller');
+const mapController = require('./map.controller');
 const resetController = require('./reset.controller');
 const reviewController = require('./review.controller');
 const searchController = require('./search.controller');
@@ -27,6 +28,7 @@ module.exports = {
   documentController,
   encounterController,
   indexerController,
+  mapController,
   resetController,
   reviewController,
   searchController,

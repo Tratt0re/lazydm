@@ -21,6 +21,7 @@ export enum APIChannel {
   DOCUMENTS = 'documents',
   ENCOUNTERS = 'encounters',
   INDEX = 'index',
+  MAPS = 'maps',
   REVIEW = 'review',
   SECTIONS = 'sections',
   TEMPLATES = 'templates',
@@ -124,6 +125,11 @@ export interface ElectronIpcClient {
     readonly party: IpcRequest<{ scope: string; name: string }, DTO.EncounterFileDto>;
     readonly write: IpcRequest<DTO.WriteEncounterPayload, DTO.WriteEncounterResultDto>;
     readonly create: IpcRequest<DTO.CreateEncounterPayload, DTO.EncounterFileDto>;
+  };
+  readonly maps: {
+    readonly read: IpcRequest<{ path: string }, DTO.MapFileDto>;
+    readonly write: IpcRequest<DTO.WriteMapPayload, DTO.WriteMapResultDto>;
+    readonly create: IpcRequest<DTO.CreateMapPayload, DTO.MapFileDto>;
   };
   readonly review: {
     readonly list: IpcRequest<{ scope: string }, DTO.ReviewDto>;
