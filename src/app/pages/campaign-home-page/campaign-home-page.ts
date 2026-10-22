@@ -57,13 +57,17 @@ import { ArcTechMenuImports } from '@/shared/components/menu';
                 [routerLink]="['/campaigns', campaign.slug, section.key]"
                 arc-context-menu
                 [arcContextMenuTriggerFor]="sectionMenu"
-                class="flex h-full flex-col gap-3 border border-border bg-card p-4 transition-colors hover:border-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+                [style.cursor]="'pointer'"
+                class="arc-section-card flex h-full flex-col gap-3 border border-border bg-card p-4 pr-32 hover:border-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
               >
-                <arc-icon [arcType]="section.icon" class="size-6 text-primary" />
-                <h2 class="text-xs font-bold tracking-[0.08em] uppercase">
-                  {{ sectionService.labelOf(section) }}<span class="text-primary" aria-hidden="true">.</span>
+                <span class="arc-section-card-icon" aria-hidden="true">
+                  <arc-icon [arcType]="section.icon" [arcStrokeWidth]="1.25" />
+                </span>
+                <h2 class="relative text-xs font-bold tracking-[0.08em] uppercase">
+                  {{ sectionService.labelOf(section)
+                  }}<span class="text-primary" aria-hidden="true">.</span>
                 </h2>
-                <p class="text-sm text-muted-foreground">
+                <p class="relative text-sm text-muted-foreground">
                   @if (section.description) {
                     {{ section.description }}
                   } @else {
@@ -89,7 +93,12 @@ import { ArcTechMenuImports } from '@/shared/components/menu';
                     {{ 'settings.campaignSections.edit.title' | translate }}
                   </button>
                   @if (!section.isSpecial) {
-                    <button type="button" arc-menu-item arcType="destructive" (click)="deleteSection(campaign.slug, section)">
+                    <button
+                      type="button"
+                      arc-menu-item
+                      arcType="destructive"
+                      (click)="deleteSection(campaign.slug, section)"
+                    >
                       <arc-icon arcType="trash" />
                       {{ 'settings.campaignSections.remove.button' | translate }}
                     </button>
@@ -99,7 +108,6 @@ import { ArcTechMenuImports } from '@/shared/components/menu';
             </li>
           }
         </ul>
-
       </div>
     }
   `,

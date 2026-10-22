@@ -1,4 +1,11 @@
-import { ChangeDetectionStrategy, Component, computed, effect, inject, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  effect,
+  inject,
+  signal,
+} from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { toast } from 'ngx-sonner';
@@ -13,7 +20,6 @@ import { ArcTechAlertComponent } from '@/shared/components/alert';
 import { ArcTechButtonComponent } from '@/shared/components/button';
 import { ArcTechEmptyComponent } from '@/shared/components/empty';
 import { ArcTechIconComponent } from '@/shared/components/icon';
-
 
 /** Overview of a compendium system: the folders it has so far, and a way to create notes in it. */
 @Component({
@@ -81,14 +87,16 @@ import { ArcTechIconComponent } from '@/shared/components/icon';
               <li>
                 <a
                   [routerLink]="['/compendium', system.slug, section.key]"
-                  class="flex h-full flex-col gap-3 border border-border bg-card p-4 transition-colors hover:border-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+                  class="arc-section-card flex h-full flex-col gap-3 border border-border bg-card p-4 pr-32 hover:border-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
                 >
-                  <arc-icon [arcType]="section.icon" class="size-6 text-primary" />
-                  <h2 class="text-xs font-bold tracking-[0.08em] uppercase">
+                  <span class="arc-section-card-icon" aria-hidden="true">
+                    <arc-icon [arcType]="section.icon" [arcStrokeWidth]="1.25" />
+                  </span>
+                  <h2 class="relative text-xs font-bold tracking-[0.08em] uppercase">
                     {{ 'nav.items.' + section.key | translate
                     }}<span class="text-primary" aria-hidden="true">.</span>
                   </h2>
-                  <p class="text-sm text-muted-foreground">
+                  <p class="relative text-sm text-muted-foreground">
                     {{ 'campaigns.sections.' + section.key + '.description' | translate }}
                   </p>
                 </a>
@@ -180,16 +188,14 @@ export class SystemHomePage {
           const values = form.getValues();
           const section =
             noteSections.find((item) => item.key === values['section']) ?? noteSections[0];
-          void this.createNote(
-            String(values['title'] ?? ''),
-            section.key,
-            section.type ?? '',
-          ).then((created) => {
-            isSubmitting = false;
-            if (created) {
-              dialogRef.close();
-            }
-          });
+          void this.createNote(String(values['title'] ?? ''), section.key, section.type ?? '').then(
+            (created) => {
+              isSubmitting = false;
+              if (created) {
+                dialogRef.close();
+              }
+            },
+          );
         }
 
         return false;
