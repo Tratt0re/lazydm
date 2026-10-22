@@ -1,4 +1,13 @@
-import { ChangeDetectionStrategy, Component, computed, effect, ElementRef, inject, input, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  effect,
+  ElementRef,
+  inject,
+  input,
+  signal,
+} from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 
 import { NumberFormatService } from '@/services/number-format.service';
@@ -84,12 +93,16 @@ export class AppSheetFormComponent {
   /** Set once the user tried to confirm with fields missing: required fields then show their message. */
   private readonly showRequiredErrors = signal(false);
 
-  protected readonly resolvedFields = computed<readonly AppSheetField[]>(() => this.fields() ?? this.sheetData?.fields ?? []);
+  protected readonly resolvedFields = computed<readonly AppSheetField[]>(
+    () => this.fields() ?? this.sheetData?.fields ?? [],
+  );
   protected readonly resolvedClass = computed(() => this.class().trim());
   protected readonly containerClasses = computed(() =>
     mergeClasses('grid grid-cols-12 gap-4 p-4', this.resolvedClass()),
   );
-  private readonly resolvedInitialValues = computed<AppSheetFieldValueMap>(() => this.values() ?? this.sheetData?.values ?? {});
+  private readonly resolvedInitialValues = computed<AppSheetFieldValueMap>(
+    () => this.values() ?? this.sheetData?.values ?? {},
+  );
 
   constructor() {
     effect(() => {
@@ -153,7 +166,8 @@ export class AppSheetFormComponent {
 
   /** The message under a field: what its `validate` refuses, else "required" for an empty required field. */
   protected fieldError(field: AppSheetField): string | null {
-    const validate = field.validate as ((value: AppSheetFieldValue | undefined) => string | null) | undefined;
+    const validate = field.validate as
+      ((value: AppSheetFieldValue | undefined) => string | null) | undefined;
     const value = this.fieldValueState()[field.id];
     const custom = validate?.(value) ?? null;
     if (custom !== null) {
@@ -168,7 +182,9 @@ export class AppSheetFormComponent {
   }
 
   private focusField(fieldId: string): void {
-    const target = this.host.nativeElement.querySelector<HTMLElement>(`[data-field-id="${fieldId}"]`);
+    const target = this.host.nativeElement.querySelector<HTMLElement>(
+      `[data-field-id="${fieldId}"]`,
+    );
     const focusable = target?.matches('input, button, [tabindex]')
       ? target
       : target?.querySelector<HTMLElement>('input, button, [tabindex]');
@@ -277,7 +293,9 @@ export class AppSheetFormComponent {
   protected comboboxGroups(field: AppSheetComboboxField): ArcTechComboboxGroup[] {
     const fieldTranslate = field.translate ?? false;
     return (field.groups ?? []).map((group) => ({
-      label: group.label ? this.translateMaybe(group.label, group.translate ?? fieldTranslate) : undefined,
+      label: group.label
+        ? this.translateMaybe(group.label, group.translate ?? fieldTranslate)
+        : undefined,
       options: group.options.map((option) => ({
         ...option,
         label: this.translateMaybe(option.label, option.translate ?? fieldTranslate),
@@ -307,7 +325,10 @@ export class AppSheetFormComponent {
   }
 
   protected displaySearchPlaceholder(field: AppSheetComboboxField): string {
-    return this.translateMaybe(field.searchPlaceholder ?? DEFAULT_SEARCH_PLACEHOLDER, field.translate ?? false);
+    return this.translateMaybe(
+      field.searchPlaceholder ?? DEFAULT_SEARCH_PLACEHOLDER,
+      field.translate ?? false,
+    );
   }
 
   protected displayEmptyText(field: AppSheetComboboxField): string {
@@ -348,7 +369,10 @@ export class AppSheetFormComponent {
   }
 
   /** The button inside an input was pressed: its result, when there is one, becomes the input's value. */
-  protected async runInputAction(field: AppSheetInputField, action: AppSheetInputAction): Promise<void> {
+  protected async runInputAction(
+    field: AppSheetInputField,
+    action: AppSheetInputAction,
+  ): Promise<void> {
     const value = await action.run(this);
     if (value !== null) {
       this.setValue(field.id, value);
@@ -394,7 +418,12 @@ export class AppSheetFormComponent {
     const numerator = Number.parseInt(match[1], 10);
     const denominator = Number.parseInt(match[2], 10);
 
-    if (!Number.isFinite(numerator) || !Number.isFinite(denominator) || numerator <= 0 || denominator <= 0) {
+    if (
+      !Number.isFinite(numerator) ||
+      !Number.isFinite(denominator) ||
+      numerator <= 0 ||
+      denominator <= 0
+    ) {
       return DEFAULT_GRID_COLUMNS;
     }
 
@@ -482,9 +511,10 @@ export class AppSheetFormComponent {
           return null;
         }
 
-        const normalizedValue = field.inputType === 'number'
-          ? this.numberFormatService.normalizeInput(value)
-          : value.trim();
+        const normalizedValue =
+          field.inputType === 'number'
+            ? this.numberFormatService.normalizeInput(value)
+            : value.trim();
         return normalizedValue.length > 0 ? normalizedValue : null;
       }
       default:

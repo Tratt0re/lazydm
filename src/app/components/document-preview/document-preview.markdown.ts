@@ -105,7 +105,11 @@ export function formatDuration(totalSeconds: number, roundUp = false): string {
 }
 
 /** Time of an audio row: its length while stopped, `elapsed / length` while it plays. */
-function formatAudioTime(isPlaying: boolean, currentSeconds: number, durationSeconds: number): string {
+function formatAudioTime(
+  isPlaying: boolean,
+  currentSeconds: number,
+  durationSeconds: number,
+): string {
   const length = formatDuration(durationSeconds, true);
   return isPlaying ? `${formatDuration(currentSeconds)} / ${length}` : length;
 }
@@ -297,8 +301,17 @@ export function toInAppEncounterRoute(resolvedPath: string): string | null {
 }
 
 function renderWikilinkToken(token: Token): string {
-  const { isEmbed, raw, resolvedPath, resolvedTitle, targetName, heading, label, sourcePath, mediaLabels } =
-    token.meta as unknown as WikilinkTokenMeta;
+  const {
+    isEmbed,
+    raw,
+    resolvedPath,
+    resolvedTitle,
+    targetName,
+    heading,
+    label,
+    sourcePath,
+    mediaLabels,
+  } = token.meta as unknown as WikilinkTokenMeta;
   const displayText = escapeHtml(
     label ?? (heading ? `${targetName} > ${heading}` : targetName || 'this note'),
   );
@@ -468,7 +481,10 @@ function taskListRule(state: StateCore): void {
 
     inlineToken.content = inlineToken.content.slice(match[0].length);
     const isChecked = match[1] !== ' ';
-    tokens[index - 2].attrJoin('class', isChecked ? 'arc-task-item arc-task-done' : 'arc-task-item');
+    tokens[index - 2].attrJoin(
+      'class',
+      isChecked ? 'arc-task-item arc-task-done' : 'arc-task-item',
+    );
     tokens[index - 2].meta = { taskChecked: isChecked };
     for (let listIndex = index - 3; listIndex >= 0; listIndex--) {
       const token = tokens[listIndex];
@@ -507,7 +523,8 @@ function createRenderer(): MarkdownItInstance {
   md.renderer.rules['paragraph_open'] = (tokens, index, options, env, self) => {
     const open = defaultParagraphOpen(tokens, index, options, env, self);
     const item = tokens[index - 1];
-    const meta = item?.type === 'list_item_open' ? (item.meta as { taskChecked?: boolean } | null) : null;
+    const meta =
+      item?.type === 'list_item_open' ? (item.meta as { taskChecked?: boolean } | null) : null;
     return meta?.taskChecked === undefined || tokens[index].hidden
       ? open
       : open + renderTaskBoxHtml(meta.taskChecked);

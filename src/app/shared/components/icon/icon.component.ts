@@ -1,4 +1,10 @@
-import { ChangeDetectionStrategy, Component, computed, input, ViewEncapsulation } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  input,
+  ViewEncapsulation,
+} from '@angular/core';
 
 import type { ClassValue } from 'clsx';
 import { LucideAngularModule } from 'lucide-angular';
@@ -30,7 +36,11 @@ export class ArcTechIconComponent {
   readonly class = input<ClassValue>('');
 
   protected readonly classes = computed(() =>
-    mergeClasses(iconVariants({ arcSize: this.arcSize() }), this.class(), this.arcStrokeWidth() === 0 ? 'stroke-none' : ''),
+    mergeClasses(
+      iconVariants({ arcSize: this.arcSize() }),
+      this.class(),
+      this.arcStrokeWidth() === 0 ? 'stroke-none' : '',
+    ),
   );
 
   protected readonly icon = computed(() => {
