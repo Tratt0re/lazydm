@@ -62,7 +62,7 @@
 
       @if (hint(); as key) {
         <p
-          class="absolute bottom-4 left-1/2 z-[500] max-w-[calc(100%-2rem)] -translate-x-1/2 border border-border bg-raised px-3 py-2 font-mono text-xs text-muted-foreground"
+          class="pointer-events-none absolute bottom-4 left-1/2 z-[500] max-w-[calc(100%-2rem)] -translate-x-1/2 border border-border bg-raised px-3 py-2 font-mono text-xs text-muted-foreground"
           role="status"
         >
           {{ key | translate }}
