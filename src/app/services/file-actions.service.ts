@@ -7,6 +7,7 @@ import {
   parseVaultFilePath,
   toInAppAssetRoute,
   toInAppEncounterRoute,
+  toInAppMapRoute,
   toInAppNoteRoute,
 } from '@/components/document-preview/document-preview.markdown';
 import { AppDialogFormService } from '@/components/sheet-form/dialog-form.service';
@@ -15,6 +16,7 @@ import type { BacklinkDto, DeleteFolderMode, DocumentFileListItemDto, SavedAsset
 import { AssetService } from '@/services/asset.service';
 import { DocumentService } from '@/services/document.service';
 import { EncounterService } from '@/services/encounter.service';
+import { MapService } from '@/services/map.service';
 import { WorkspaceService } from '@/services/workspace.service';
 
 const LINKING_PREVIEW_MAX_TITLES = 5;
@@ -37,6 +39,17 @@ const NEW_ENCOUNTER_NAME_FIELD: AppSheetField = {
   translate: true,
 };
 
+const NEW_MAP_NAME_FIELD: AppSheetField = {
+  id: 'name',
+  type: 'input',
+  label: 'maps.new.nameLabel',
+  placeholder: 'maps.new.namePlaceholder',
+  required: true,
+  translate: true,
+};
+
+const MAP_IMAGE_PATTERN = /\.(png|jpe?g|gif|webp|svg|avif)$/i;
+
 const NEW_FOLDER_NAME_FIELD: AppSheetField = {
   id: 'name',
   type: 'input',
@@ -54,6 +67,7 @@ const NEW_FOLDER_NAME_FIELD: AppSheetField = {
 export class FileActionsService {
   private readonly documentService = inject(DocumentService);
   private readonly encounterService = inject(EncounterService);
+  private readonly mapService = inject(MapService);
   private readonly dialogFormService = inject(AppDialogFormService);
   private readonly translateService = inject(TranslateService);
   private readonly workspace = inject(WorkspaceService);
@@ -199,6 +213,65 @@ export class FileActionsService {
   }
 
   /**
+   * *New map* in the Maps section or one of its sub-folders (`folderPath`): a name and one image of the scope's
+   * assets. The image stays in assets/ (it can be imported there first); opens the new map.
+   */
+  async openCreateMapSheet(folderPath: string): Promise<void> {
+    const segments = folderPath.split('/');
+    const scope = segments.slice(0, segments[0] === 'compendium' ? 2 : 1).join('/');
+    const images = (await this.documentService.listFolder(`${scope}/assets`)).filter((file) =>
+      MAP_IMAGE_PATTERN.test(file.name),
+    );
+    if (images.length === 0) {
+      toast.info(this.translateService.instant('maps.new.noImages'), {
+        description: this.translateService.instant('maps.new.noImagesHint'),
+      });
+      return;
+    }
+
+    let isSubmitting = false;
+    const dialogRef = this.dialogFormService.open({
+      arcTitle: this.translateService.instant('maps.new.title'),
+      arcDescription: this.translateService.instant('maps.new.description'),
+      arcOkText: this.translateService.instant('maps.new.submit'),
+      arcCancelText: this.translateService.instant('campaigns.sections.newNote.cancel'),
+      fields: [
+        NEW_MAP_NAME_FIELD,
+        {
+          id: 'image',
+          type: 'combobox',
+          label: 'maps.new.imageLabel',
+          placeholder: 'maps.new.imagePlaceholder',
+          searchPlaceholder: 'maps.new.imageSearch',
+          emptyText: 'maps.new.imageEmpty',
+          searchable: true,
+          required: true,
+          translate: true,
+          options: images.map((file) => ({ value: file.path, label: file.name })),
+        },
+      ],
+      onSubmit: (form) => {
+        if (!isSubmitting) {
+          isSubmitting = true;
+          const values = form.getValues();
+          void this.createMap(
+            folderPath,
+            String(values['name'] ?? ''),
+            String(values['image'] ?? ''),
+          ).then((isCreated) => {
+            isSubmitting = false;
+            if (isCreated) {
+              dialogRef.close();
+            }
+          });
+        }
+
+        return false;
+      },
+    });
+  }
+
+  /**
    * *New folder* directly in a section (`sectionPath`, vault path): one level of sub-folders, the sub-types of
    * its notes (plain folders in the special sections). `onCreated` gets the new folder's name.
    */
@@ -274,6 +347,22 @@ export class FileActionsService {
       return true;
     } catch (error) {
       toast.error(this.translateService.instant('encounters.new.error'), {
+        description: error instanceof Error ? error.message : String(error),
+      });
+      return false;
+    }
+  }
+
+  private async createMap(folderPath: string, name: string, image: string): Promise<boolean> {
+    try {
+      const map = await this.mapService.create({ folder: folderPath, name, image });
+      const route = toInAppMapRoute(map.path);
+      if (route) {
+        await this.router.navigateByUrl(route);
+      }
+      return true;
+    } catch (error) {
+      toast.error(this.translateService.instant('maps.new.error'), {
         description: error instanceof Error ? error.message : String(error),
       });
       return false;

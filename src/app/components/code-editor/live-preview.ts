@@ -697,7 +697,7 @@ function decorateWikilinks(target: DecorationContext, frontmatterEnd: number): v
             link.resolvedPath,
             pipeIndex >= 0
               ? raw.slice(pipeIndex + 1)
-              : mediaKind === 'encounter'
+              : mediaKind === 'encounter' || mediaKind === 'map'
                 ? (link.resolvedTitle ?? link.targetName)
                 : link.targetName,
             context.mediaLabels,

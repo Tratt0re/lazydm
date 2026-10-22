@@ -180,6 +180,18 @@
                 </span>
                 <span class="truncate text-sm text-foreground">{{ file.title }}</span>
               </a>
+            } @else if (mapRoute(file); as map) {
+              <!-- A map opens its own page. -->
+              <a
+                [routerLink]="map"
+                draggable="false"
+                class="flex min-w-0 flex-1 items-center gap-3 hover:text-primary focus-visible:outline-2 focus-visible:outline-ring"
+              >
+                <span class="flex size-10 shrink-0 items-center justify-center border border-border bg-recessed">
+                  <arc-icon arcType="map" class="size-4 text-primary" />
+                </span>
+                <span class="truncate text-sm text-foreground">{{ file.title }}</span>
+              </a>
             } @else if (assetRoute(file) !== scopeRoute()) {
               <!-- A sound opens its player page. -->
               <a

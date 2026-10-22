@@ -1,12 +1,7 @@
 import { Injectable } from '@angular/core';
 
 import { APIChannel } from '@/config/api';
-import type {
-  CreateMapPayload,
-  MapFileDto,
-  WriteMapPayload,
-  WriteMapResultDto,
-} from '@/dtos';
+import type { CreateMapPayload, MapFileDto, WriteMapPayload, WriteMapResultDto } from '@/dtos';
 import { BaseIpcService } from '@/services/base-ipc.service';
 
 /** Maps: `.json` files of the Maps section, read and saved with conflict detection. */

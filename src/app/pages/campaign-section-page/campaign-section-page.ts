@@ -21,6 +21,7 @@ import {
   toAssetUrl,
   toInAppAssetRoute,
   toInAppEncounterRoute,
+  toInAppMapRoute,
   toInAppNoteRoute,
 } from '@/components/document-preview/document-preview.markdown';
 import type {
@@ -59,6 +60,8 @@ export const SECTION_FOLDER_QUERY_PARAM = 'folder';
 const ASSETS_SECTION_KEY = 'assets';
 /** The Encounters section: `.json` files with their own page, created with *New encounter*. */
 const ENCOUNTERS_SECTION_KEY = 'encounters';
+/** The Maps section: `.json` files with their own page, created with *New map*. */
+const MAPS_SECTION_KEY = 'maps';
 
 /** A sub-folder of the section with the files directly in it. */
 interface SectionTreeFolder extends DocumentFolderDto {
@@ -339,6 +342,16 @@ export class CampaignSectionPage {
         icon: 'swords',
         iconOnly: true,
         action: () => this.fileActions.openCreateEncounterSheet(this.folderPath()),
+      });
+    }
+
+    if (section?.key === MAPS_SECTION_KEY) {
+      actions.push({
+        id: 'section-new-map',
+        label: 'maps.new.button',
+        icon: 'map',
+        iconOnly: true,
+        action: () => void this.fileActions.openCreateMapSheet(this.folderPath()),
       });
     }
 
@@ -663,6 +676,11 @@ export class CampaignSectionPage {
     return toInAppEncounterRoute(file.path);
   }
 
+  /** Map page of a `.json` file of the Maps section; null for any other file. */
+  protected mapRoute(file: DocumentFileListItemDto): string | null {
+    return toInAppMapRoute(file.path);
+  }
+
   /** Route of the party roster (hidden from the list): the Encounters page links to it with a full button. */
   protected readonly partyRoute = computed(() =>
     this.section()?.key === ENCOUNTERS_SECTION_KEY
@@ -696,7 +714,9 @@ export class CampaignSectionPage {
         ? 'file-music'
         : this.encounterRoute(file)
           ? 'swords'
-          : 'file';
+          : this.mapRoute(file)
+            ? 'map'
+            : 'file';
   }
 
   protected reveal(path: string): void {

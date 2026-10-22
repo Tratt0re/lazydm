@@ -28,7 +28,8 @@
       "backToCompendium": "Retour au compendium",
       "notes": "Notes",
       "templates": "Modèles",
-      "battleRules": "Règles de combat"
+      "battleRules": "Règles de combat",
+      "maps": "Cartes"
     }
   },
   "header": {
@@ -490,6 +491,9 @@
         "noBacklinks": "Aucune note ne renvoie à ce fichier.",
         "done": "Renommé en {{name}} — {{links}} liens mis à jour dans {{notes}} notes",
         "error": "Impossible de renommer le fichier"
+      },
+      "maps": {
+        "description": "Interactive maps with pins, paths and notes."
       }
     },
     "assets": {
@@ -1247,5 +1251,116 @@
   },
   "form": {
     "required": "Ce champ est obligatoire"
+  },
+  "maps": {
+    "new": {
+      "button": "New map",
+      "title": "New map",
+      "description": "A map is drawn over an image of your assets. The image is not changed.",
+      "nameLabel": "Name",
+      "namePlaceholder": "The Sword Coast",
+      "imageLabel": "Image",
+      "imagePlaceholder": "Choose an image",
+      "imageSearch": "Search images",
+      "imageEmpty": "No image found",
+      "submit": "Create map",
+      "error": "Couldn't create the map",
+      "noImages": "No image in the assets yet",
+      "noImagesHint": "Add an image to the Assets section first, then create the map."
+    },
+    "page": {
+      "loadError": "Couldn't load this map",
+      "parseError": "This file is not valid JSON",
+      "missingImage": "The image of this map is missing",
+      "missingImageHint": "It was moved or deleted from the assets: {{image}}",
+      "noImage": "This map has no image",
+      "saveError": "Couldn't save the map",
+      "conflictTitle": "This map changed elsewhere",
+      "conflictDescription": "The file was modified outside this page. Keep your version or load the other one.",
+      "keepMine": "Keep my version",
+      "loadOther": "Load the other version"
+    },
+    "tools": {
+      "label": "Map tools",
+      "select": "Select",
+      "pin": "Add pin",
+      "path": "Draw path",
+      "note": "Add note",
+      "zoomIn": "Zoom in",
+      "zoomOut": "Zoom out",
+      "fit": "Fit to window"
+    },
+    "hint": {
+      "pin": "Click on the map to place a pin.",
+      "path": "Click to add points. Enter or double-click to finish, Esc to cancel.",
+      "note": "Click on the map to place a note."
+    },
+    "item": {
+      "pin": "Pin",
+      "path": "Path",
+      "note": "Note",
+      "label": "Label",
+      "labelPlaceholder": "Name of the place",
+      "color": "Colour",
+      "icon": "Icon",
+      "width": "Width",
+      "text": "Text",
+      "textPlaceholder": "Write a note",
+      "link": "Linked file",
+      "noLink": "No linked file",
+      "openLink": "Open linked file",
+      "setLink": "Link a file",
+      "removeLink": "Remove link",
+      "delete": "Delete",
+      "deleteTitle": "Delete this item?",
+      "deleteDescription": "It is removed from the map. This cannot be undone.",
+      "empty": "Nothing selected",
+      "emptyHint": "Select a pin, path or note to see its details.",
+      "unnamed": "Unnamed",
+      "edit": "Edit",
+      "editPin": "Edit pin",
+      "editPath": "Edit path",
+      "editNote": "Edit note",
+      "save": "Save",
+      "points": "Points",
+      "linkPlaceholder": "Choose a file",
+      "linkSearch": "Search files",
+      "linkEmpty": "No file found"
+    },
+    "colors": {
+      "red": "Red",
+      "orange": "Orange",
+      "yellow": "Yellow",
+      "green": "Green",
+      "teal": "Teal",
+      "blue": "Blue",
+      "purple": "Purple",
+      "pink": "Pink",
+      "gray": "Gray"
+    },
+    "icons": {
+      "map-pin": "Pin",
+      "castle": "Castle",
+      "house": "House",
+      "tent": "Camp",
+      "skull": "Danger",
+      "swords": "Battle",
+      "flag": "Flag",
+      "star": "Star",
+      "gem": "Treasure",
+      "landmark": "Landmark",
+      "trees": "Forest",
+      "mountain": "Mountain",
+      "anchor": "Harbour",
+      "door-open": "Entrance",
+      "triangle-alert": "Warning"
+    },
+    "panel": {
+      "title": "On this map",
+      "label": "Map details",
+      "toggle": "Details",
+      "back": "Back to the list",
+      "empty": "Nothing here yet. Use the tools on the map to add a pin, a path or a note."
+    }
   }
 }

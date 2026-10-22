@@ -296,7 +296,8 @@ async function move(payload) {
         const source = await documentModel.readDocument(vaultPath, sourcePath);
         const rewritten = rewriteLinks(
           source.content,
-          (link) => (raws.has(link.raw) ? retargetMovedLink(link, sourcePath, newPath, scope) : null),
+          (link) =>
+            raws.has(link.raw) ? retargetMovedLink(link, sourcePath, newPath, scope) : null,
           { sourcePath },
         );
         if (rewritten.count === 0) {
@@ -618,7 +619,12 @@ async function rename(payload) {
     );
   }
 
-  return { path: newPath, updatedPaths, failedPaths: [...ownFailedPaths, ...failedPaths], linkCount };
+  return {
+    path: newPath,
+    updatedPaths,
+    failedPaths: [...ownFailedPaths, ...failedPaths],
+    linkCount,
+  };
 }
 
 /**
@@ -743,17 +749,13 @@ async function renameFolder(payload) {
     }
 
     const parents = new Set(['', location.section, sectionPath]);
-    links = await rewriteIncomingLinks(
-      vaultPath,
-      rawsBySource,
-      null,
-      (content, sourcePath, raws) =>
-        rewriteLinks(
-          content,
-          (link) =>
-            raws?.has(link.raw) ? renameLinkFolder(link, location.subfolder, slug, parents) : null,
-          { sourcePath },
-        ),
+    links = await rewriteIncomingLinks(vaultPath, rawsBySource, null, (content, sourcePath, raws) =>
+      rewriteLinks(
+        content,
+        (link) =>
+          raws?.has(link.raw) ? renameLinkFolder(link, location.subfolder, slug, parents) : null,
+        { sourcePath },
+      ),
     );
   } finally {
     // The folder has moved even when a later step threw: the index must follow the disk.

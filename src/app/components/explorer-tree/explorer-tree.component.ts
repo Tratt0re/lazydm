@@ -19,6 +19,7 @@ import { filter, map } from 'rxjs';
 import {
   toInAppAssetRoute,
   toInAppEncounterRoute,
+  toInAppMapRoute,
   toInAppNoteRoute,
 } from '@/components/document-preview/document-preview.markdown';
 import type { DocumentFileListItemDto, DocumentFolderDto } from '@/dtos';
@@ -358,13 +359,18 @@ export class AppExplorerTreeComponent {
 
   /** An encounter is listed by its name (the index keeps it as the title), never by `x.json`. */
   protected isEncounter(file: DocumentFileListItemDto): boolean {
-    return toInAppEncounterRoute(file.path) !== null;
+    return toInAppEncounterRoute(file.path) !== null || toInAppMapRoute(file.path) !== null;
   }
 
   /** Icon of an asset in the tree: image, sound or PDF. */
-  protected assetIcon(file: DocumentFileListItemDto): 'image' | 'file-music' | 'file-text' | 'swords' {
+  protected assetIcon(
+    file: DocumentFileListItemDto,
+  ): 'image' | 'file-music' | 'file-text' | 'swords' | 'map' {
     if (/\.pdf$/i.test(file.path)) {
       return 'file-text';
+    }
+    if (toInAppMapRoute(file.path)) {
+      return 'map';
     }
     if (/\.json$/i.test(file.path) && toInAppAssetRoute(file.path)) {
       return 'swords';

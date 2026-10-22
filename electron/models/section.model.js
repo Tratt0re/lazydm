@@ -287,7 +287,9 @@ function findSectionKeyForType(rootPath, scope, type) {
 
 /** A folder name that is neither `.`/`..` nor hidden/special (`.x`, `_x`): `..` would resolve to the parent folder. */
 function isPlainFolderSegment(segment) {
-  return segment !== '.' && segment !== '..' && !segment.startsWith('.') && !segment.startsWith('_');
+  return (
+    segment !== '.' && segment !== '..' && !segment.startsWith('.') && !segment.startsWith('_')
+  );
 }
 
 /**
@@ -296,7 +298,10 @@ function isPlainFolderSegment(segment) {
  * (vault root, scope root, deeper folders).
  */
 function parseSectionFolder(folderPath) {
-  const segments = String(folderPath ?? '').replace(/\/+$/, '').split('/').filter(Boolean);
+  const segments = String(folderPath ?? '')
+    .replace(/\/+$/, '')
+    .split('/')
+    .filter(Boolean);
   if (!segments.every(isPlainFolderSegment)) {
     return null;
   }

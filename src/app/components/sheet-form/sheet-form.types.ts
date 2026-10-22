@@ -93,6 +93,8 @@ export interface AppSheetInputAction {
 export interface AppSheetInputField extends AppSheetFieldBase<'input', string | null> {
   readonly inputType?: AppSheetInputType;
   readonly action?: AppSheetInputAction;
+  /** A text area of a few lines instead of a one-line input (a note's text). */
+  readonly multiline?: boolean;
 }
 
 export type AppSheetField =

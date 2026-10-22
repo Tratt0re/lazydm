@@ -1,4 +1,4 @@
-import type { Routes, UrlMatchResult, UrlSegment } from '@angular/router';
+import type { Route, Routes, UrlMatchResult, UrlSegment } from '@angular/router';
 
 import { openInSheetGuard } from '@/guards/app-sheet.guard';
 import { CAMPAIGN_SLUG_PARAM, campaignEntryGuard, campaignGuard } from '@/guards/campaign.guard';
@@ -48,6 +48,36 @@ function matchEncounter(segments: UrlSegment[]): UrlMatchResult | null {
   };
 }
 
+const MAPS_SECTION_PATH = 'maps';
+
+/**
+ * A map file (`.json`) of the Maps section, directly in it or in one of its sub-folders. Matched before
+ * `:section` because a `.json` file elsewhere is an encounter; it supplies the same params as `:section`.
+ */
+function matchMap(segments: UrlSegment[]): UrlMatchResult | null {
+  const file = segments[segments.length - 1];
+  if (
+    (segments.length !== 2 && segments.length !== 3) ||
+    segments[0].path !== MAPS_SECTION_PATH ||
+    !ENCOUNTER_FILE_PATTERN.test(file.path)
+  ) {
+    return null;
+  }
+
+  return {
+    consumed: segments,
+    posParams:
+      segments.length === 3
+        ? { section: segments[0], subfolder: segments[1], file }
+        : { section: segments[0], file },
+  };
+}
+
+const MAP_ROUTE: Route = {
+  matcher: matchMap,
+  loadComponent: () => import('./pages/map-page/map-page').then((m) => m.MapPage),
+};
+
 /**
  * A note: directly in its section (`:note`) or in one of its sub-folders (`:subfolder/:note`). Images at
  * those places open the asset page instead.
@@ -89,6 +119,7 @@ const SYSTEM_SHEET_ROUTES: Routes = [
   },
   { path: 'broken-links', pathMatch: 'full', redirectTo: 'review' },
   ...RENAMED_SECTION_ROUTES,
+  MAP_ROUTE,
   {
     path: ':section',
     children: [
@@ -229,6 +260,7 @@ export const routes: Routes = [
               },
               { path: 'broken-links', pathMatch: 'full', redirectTo: 'review' },
               ...RENAMED_SECTION_ROUTES,
+              MAP_ROUTE,
               {
                 path: ':section',
                 children: [

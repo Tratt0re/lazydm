@@ -1,5 +1,6 @@
 @import 'tailwindcss';
 @import './styles/fonts.css';
+@import 'leaflet/dist/leaflet.css';
 @plugin "tailwindcss-animate";
 
 @custom-variant dark (&:is(.dark *));
@@ -1186,4 +1187,154 @@ button.arc-embed-file:hover,
   -webkit-mask: var(--toast-open-icon) center / contain no-repeat;
   mask: var(--toast-open-icon) center / contain no-repeat;
   --toast-open-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M7 7h10v10'/%3E%3Cpath d='M7 17 17 7'/%3E%3C/svg%3E");
+}
+
+/* Interactive maps (Leaflet). Pins, paths and notes take the app's theme-aware colour tokens. */
+.arc-map {
+  background: var(--recessed);
+  font-family: var(--font-sans);
+  outline: none;
+  cursor: grab;
+}
+
+.arc-map.leaflet-drag-dragging,
+.arc-map.leaflet-drag-dragging .leaflet-interactive {
+  cursor: grabbing;
+}
+
+.arc-map.arc-map-drawing,
+.arc-map.arc-map-drawing .leaflet-interactive {
+  cursor: crosshair;
+}
+
+.arc-map .leaflet-interactive {
+  cursor: pointer;
+}
+
+.arc-map .arc-map-marker {
+  background: transparent;
+  border: 0;
+}
+
+.arc-map .arc-map-marker:focus-visible {
+  outline: none;
+}
+
+.arc-map .arc-map-marker:focus-visible .arc-map-pin-dot,
+.arc-map .arc-map-marker:focus-visible .arc-map-note {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+}
+
+.arc-map-color-red { --arc-map-color: var(--system-app-color-1); }
+.arc-map-color-orange { --arc-map-color: var(--system-app-color-2); }
+.arc-map-color-yellow { --arc-map-color: var(--system-app-color-3); }
+.arc-map-color-green { --arc-map-color: var(--system-app-color-5); }
+.arc-map-color-teal { --arc-map-color: var(--system-app-color-6); }
+.arc-map-color-blue { --arc-map-color: var(--system-app-color-8); }
+.arc-map-color-purple { --arc-map-color: var(--system-app-color-9); }
+.arc-map-color-pink { --arc-map-color: var(--system-app-color-10); }
+.arc-map-color-gray { --arc-map-color: var(--system-app-color-11); }
+
+/* A pin: a square tile in the colour, with the label beside it. */
+.arc-map-pin {
+  position: relative;
+  width: 28px;
+  height: 28px;
+}
+
+.arc-map-pin-dot {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  background: var(--arc-map-color);
+  color: var(--card);
+  border: 2px solid var(--card);
+  box-shadow: 0 0 0 1px var(--border-strong);
+}
+
+.arc-map-pin.is-selected .arc-map-pin-dot {
+  box-shadow:
+    0 0 0 2px var(--foreground-strong),
+    0 0 0 4px var(--ring);
+}
+
+.arc-map-pin-label {
+  position: absolute;
+  top: 50%;
+  left: calc(100% + 6px);
+  transform: translateY(-50%);
+  max-width: 14rem;
+  padding: 2px 6px;
+  overflow: hidden;
+  background: var(--card);
+  color: var(--foreground-strong);
+  border: 1px solid var(--border);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  line-height: 16px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+/* A note: a free text box anchored by its top-left corner, with a coloured edge. */
+.arc-map-note {
+  width: max-content;
+  max-width: 16rem;
+  padding: 6px 10px;
+  background: var(--card);
+  color: var(--foreground);
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--arc-map-color);
+  font-size: 12px;
+  line-height: 18px;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.arc-map-note.is-selected {
+  box-shadow:
+    0 0 0 2px var(--foreground-strong),
+    0 0 0 4px var(--ring);
+}
+
+/* Paths: the stroke takes the colour; a wider invisible line under it makes it easy to click. */
+.arc-map-path {
+  stroke: var(--arc-map-color);
+  stroke-linecap: square;
+  stroke-linejoin: miter;
+  fill: none;
+}
+
+.arc-map-path.is-selected {
+  filter: drop-shadow(0 0 3px var(--foreground-strong));
+}
+
+.arc-map-path-hit {
+  stroke: transparent;
+  fill: none;
+}
+
+.arc-map-draw {
+  stroke: var(--primary);
+  stroke-dasharray: 6 4;
+  fill: none;
+}
+
+.arc-map-vertex {
+  display: block;
+  width: 14px;
+  height: 14px;
+  background: var(--card);
+  border: 2px solid var(--primary);
+  cursor: move;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .arc-map .leaflet-zoom-anim .leaflet-zoom-animated {
+    transition: none;
+  }
 }

@@ -137,16 +137,29 @@
           }
 
           <div class="relative">
-            <input
-              arc-input
-              [type]="field.inputType ?? 'text'"
-              [class.pr-10]="field.action"
-              [value]="inputValue(field)"
-              [placeholder]="displayPlaceholder(field)"
-              [disabled]="field.disabled ?? false"
-              [attr.aria-invalid]="fieldError(field) ? 'true' : null"
-              (input)="onInputChange(field, $any($event.target).value)"
-            />
+            @if (field.multiline) {
+              <textarea
+                arc-input
+                rows="5"
+                class="h-auto min-h-24 resize-y py-2"
+                [value]="inputValue(field)"
+                [placeholder]="displayPlaceholder(field)"
+                [disabled]="field.disabled ?? false"
+                [attr.aria-invalid]="fieldError(field) ? 'true' : null"
+                (input)="onInputChange(field, $any($event.target).value)"
+              ></textarea>
+            } @else {
+              <input
+                arc-input
+                [type]="field.inputType ?? 'text'"
+                [class.pr-10]="field.action"
+                [value]="inputValue(field)"
+                [placeholder]="displayPlaceholder(field)"
+                [disabled]="field.disabled ?? false"
+                [attr.aria-invalid]="fieldError(field) ? 'true' : null"
+                (input)="onInputChange(field, $any($event.target).value)"
+              />
+            }
             @if (field.action; as action) {
               <button
                 type="button"

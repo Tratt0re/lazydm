@@ -184,6 +184,18 @@ import {
   Play,
   Volume2,
   VolumeX,
+  Map,
+  Trees,
+  Mountain,
+  Anchor,
+  DoorOpen,
+  Maximize,
+  Route,
+  StickyNote,
+  MousePointer2,
+  ZoomIn,
+  ZoomOut,
+  ExternalLink,
 } from 'lucide-angular';
 
 export const ARCTECH_ICONS = {
@@ -371,6 +383,18 @@ export const ARCTECH_ICONS = {
   play: Play,
   'volume-2': Volume2,
   'volume-x': VolumeX,
+  'map': Map,
+  'trees': Trees,
+  'mountain': Mountain,
+  'anchor': Anchor,
+  'door-open': DoorOpen,
+  'maximize': Maximize,
+  'route': Route,
+  'sticky-note': StickyNote,
+  'mouse-pointer-2': MousePointer2,
+  'zoom-in': ZoomIn,
+  'zoom-out': ZoomOut,
+  'external-link': ExternalLink,
 } as const satisfies Record<string, LucideIconData>;
 
 export declare type ArcTechIcon = keyof typeof ARCTECH_ICONS | LucideIconData;

@@ -1,0 +1,295 @@
+<div class="flex min-h-0 flex-1">
+  <div class="relative min-h-0 min-w-0 flex-1 border-r border-border bg-recessed">
+    <!-- Leaflet owns this element. It stays mounted in every state so the map is ready when the image is. -->
+    <div #canvas class="arc-map absolute inset-0" [attr.aria-label]="title()"></div>
+
+    @if (imageState() === 'ready') {
+      <!-- Tools: select, pin, path, note. -->
+      <div
+        class="absolute top-4 left-4 z-[500] flex flex-col border border-border bg-raised"
+        role="toolbar"
+        [attr.aria-label]="'maps.tools.label' | translate"
+      >
+        @for (item of tools; track item.tool) {
+          <button
+            type="button"
+            arc-button
+            [arcType]="tool() === item.tool ? 'default' : 'ghost'"
+            [arcDisabled]="!isEditable() && item.tool !== 'select'"
+            [arcTooltip]="item.label | translate"
+            [attr.aria-label]="item.label | translate"
+            [attr.aria-pressed]="tool() === item.tool"
+            (click)="selectTool(item.tool)"
+          >
+            <arc-icon [arcType]="item.icon" />
+          </button>
+        }
+      </div>
+
+      <!-- Zoom. -->
+      <div class="absolute top-4 right-4 z-[500] flex flex-col border border-border bg-raised">
+        <button
+          type="button"
+          arc-button
+          arcType="ghost"
+          [arcTooltip]="'maps.tools.zoomIn' | translate"
+          [attr.aria-label]="'maps.tools.zoomIn' | translate"
+          (click)="zoomIn()"
+        >
+          <arc-icon arcType="zoom-in" />
+        </button>
+        <button
+          type="button"
+          arc-button
+          arcType="ghost"
+          [arcTooltip]="'maps.tools.zoomOut' | translate"
+          [attr.aria-label]="'maps.tools.zoomOut' | translate"
+          (click)="zoomOut()"
+        >
+          <arc-icon arcType="zoom-out" />
+        </button>
+        <button
+          type="button"
+          arc-button
+          arcType="ghost"
+          [arcTooltip]="'maps.tools.fit' | translate"
+          [attr.aria-label]="'maps.tools.fit' | translate"
+          (click)="fit()"
+        >
+          <arc-icon arcType="maximize" />
+        </button>
+      </div>
+
+      @if (hint(); as key) {
+        <p
+          class="absolute bottom-4 left-1/2 z-[500] max-w-[calc(100%-2rem)] -translate-x-1/2 border border-border bg-raised px-3 py-2 font-mono text-xs text-muted-foreground"
+          role="status"
+        >
+          {{ key | translate }}
+        </p>
+      }
+    }
+
+    <!-- Everything that is not the map itself. -->
+    @if (errorMessage(); as message) {
+      <div class="absolute inset-0 z-[600] flex items-start justify-center bg-background/80 p-6">
+        <arc-alert
+          class="max-w-xl"
+          arcType="destructive"
+          arcIcon="circle-alert"
+          [arcTitle]="'maps.page.loadError' | translate"
+          [arcDescription]="message"
+        />
+      </div>
+    } @else if (parseError(); as message) {
+      <div class="absolute bottom-4 left-4 z-[600] max-w-xl">
+        <arc-alert
+          arcType="destructive"
+          arcIcon="circle-alert"
+          [arcTitle]="'maps.page.parseError' | translate"
+          [arcDescription]="message"
+        />
+      </div>
+    }
+
+    @if (!errorMessage() && imageState() === 'missing') {
+      <div class="absolute inset-0 z-[600] flex items-start justify-center bg-background/80 p-6">
+        <arc-alert
+          class="max-w-xl"
+          arcType="destructive"
+          arcIcon="image"
+          [arcTitle]="'maps.page.missingImage' | translate"
+          [arcDescription]="'maps.page.missingImageHint' | translate: { image: data()?.image }"
+        />
+      </div>
+    } @else if (!errorMessage() && data() && imageState() === 'none') {
+      <div class="absolute inset-0 z-[600] flex items-start justify-center bg-background/80 p-6">
+        <arc-alert
+          class="max-w-xl"
+          arcType="destructive"
+          arcIcon="image"
+          [arcTitle]="'maps.page.noImage' | translate"
+        />
+      </div>
+    }
+  </div>
+
+  <!-- Information about the map and what is selected. Editing is in modals. -->
+  <aside
+    class="shrink-0 overflow-hidden bg-card transition-[width,opacity] duration-200 ease-out motion-reduce:transition-none"
+    [class]="isPanelOpen() ? 'w-80 opacity-100' : 'w-0 opacity-0'"
+    [attr.inert]="isPanelOpen() ? null : ''"
+    [attr.aria-hidden]="isPanelOpen() ? null : 'true'"
+    [attr.aria-label]="'maps.panel.label' | translate"
+  >
+    <div class="flex h-full w-80 flex-col">
+      @if (selection(); as current) {
+        <div class="flex h-12 shrink-0 items-center justify-between gap-2 border-b border-border px-4">
+          <h2 class="font-mono text-[11px] font-semibold tracking-[0.11em] text-muted-foreground uppercase">
+            {{ 'maps.item.' + current.kind | translate }}
+          </h2>
+          <button
+            type="button"
+            arc-button
+            arcType="ghost"
+            arcSize="sm"
+            [arcTooltip]="'maps.panel.back' | translate"
+            [attr.aria-label]="'maps.panel.back' | translate"
+            (click)="clearSelection()"
+          >
+            <arc-icon arcType="x" />
+          </button>
+        </div>
+
+        <div class="flex min-h-0 flex-1 flex-col gap-4 overflow-y-auto p-4">
+          @if (selectedPin(); as pin) {
+            <div class="flex items-center gap-3">
+              <span
+                class="flex size-10 shrink-0 items-center justify-center border border-border bg-recessed"
+                [style.color]="colorVar(pin.color)"
+              >
+                <arc-icon [arcType]="pin.icon" />
+              </span>
+              <span class="font-display min-w-0 text-xl leading-tight font-bold uppercase break-words">{{
+                pin.label || ('maps.item.unnamed' | translate)
+              }}<span class="text-primary" aria-hidden="true">.</span></span>
+            </div>
+            <dl class="flex flex-col gap-3">
+              <div>
+                <dt class="font-mono text-[11px] tracking-[0.11em] text-muted-foreground uppercase">
+                  {{ 'maps.item.color' | translate }}
+                </dt>
+                <dd class="mt-1 flex items-center gap-2 text-sm">
+                  <span class="size-3 border border-border" [style.background]="colorVar(pin.color)"></span>
+                  {{ colorLabel(pin.color) }}
+                </dd>
+              </div>
+              <div>
+                <dt class="font-mono text-[11px] tracking-[0.11em] text-muted-foreground uppercase">
+                  {{ 'maps.item.link' | translate }}
+                </dt>
+                <dd class="mt-1 text-sm">
+                  @if (pin.link; as link) {
+                    <button
+                      type="button"
+                      class="flex max-w-full cursor-pointer items-center gap-2 text-left text-primary hover:underline focus-visible:outline-2 focus-visible:outline-ring"
+                      [attr.title]="link"
+                      (click)="openLink(link)"
+                    >
+                      <arc-icon arcType="external-link" class="size-4 shrink-0" />
+                      <span class="truncate">{{ linkName(link) }}</span>
+                    </button>
+                  } @else {
+                    <span class="text-muted-foreground">{{ 'maps.item.noLink' | translate }}</span>
+                  }
+                </dd>
+              </div>
+            </dl>
+          } @else if (selectedPath(); as path) {
+            <div class="flex items-center gap-3">
+              <span
+                class="flex size-10 shrink-0 items-center justify-center border border-border bg-recessed"
+                [style.color]="colorVar(path.color)"
+              >
+                <arc-icon arcType="route" />
+              </span>
+              <span class="font-display min-w-0 text-xl leading-tight font-bold uppercase break-words">{{
+                path.label || ('maps.item.unnamed' | translate)
+              }}<span class="text-primary" aria-hidden="true">.</span></span>
+            </div>
+            <dl class="flex flex-col gap-3">
+              <div>
+                <dt class="font-mono text-[11px] tracking-[0.11em] text-muted-foreground uppercase">
+                  {{ 'maps.item.color' | translate }}
+                </dt>
+                <dd class="mt-1 flex items-center gap-2 text-sm">
+                  <span class="size-3 border border-border" [style.background]="colorVar(path.color)"></span>
+                  {{ colorLabel(path.color) }}
+                </dd>
+              </div>
+              <div>
+                <dt class="font-mono text-[11px] tracking-[0.11em] text-muted-foreground uppercase">
+                  {{ 'maps.item.width' | translate }}
+                </dt>
+                <dd class="mt-1 font-mono text-sm">{{ path.width }} px</dd>
+              </div>
+              <div>
+                <dt class="font-mono text-[11px] tracking-[0.11em] text-muted-foreground uppercase">
+                  {{ 'maps.item.points' | translate }}
+                </dt>
+                <dd class="mt-1 font-mono text-sm">{{ path.points.length }}</dd>
+              </div>
+            </dl>
+          } @else if (selectedNote(); as note) {
+            <div class="flex items-center gap-3">
+              <span
+                class="flex size-10 shrink-0 items-center justify-center border border-border bg-recessed"
+                [style.color]="colorVar(note.color)"
+              >
+                <arc-icon arcType="sticky-note" />
+              </span>
+              <span class="flex items-center gap-2 text-sm">
+                <span class="size-3 border border-border" [style.background]="colorVar(note.color)"></span>
+                {{ colorLabel(note.color) }}
+              </span>
+            </div>
+            <p class="text-sm leading-6 break-words whitespace-pre-wrap">{{ note.text }}</p>
+          }
+        </div>
+
+        <div class="flex shrink-0 items-center gap-2 border-t border-border p-4">
+          <button
+            type="button"
+            arc-button
+            arcType="outline"
+            class="flex-1"
+            [arcDisabled]="!isEditable()"
+            (click)="editSelected()"
+          >
+            <arc-icon arcType="pencil" />
+            {{ 'maps.item.edit' | translate }}
+          </button>
+          <button
+            type="button"
+            arc-button
+            arcType="secondary"
+            [arcDisabled]="!isEditable()"
+            [arcTooltip]="'maps.item.delete' | translate"
+            [attr.aria-label]="'maps.item.delete' | translate"
+            (click)="confirmDelete()"
+          >
+            <arc-icon arcType="trash" />
+          </button>
+        </div>
+      } @else {
+        <div class="flex h-12 shrink-0 items-center justify-between border-b border-border px-4">
+          <h2 class="font-mono text-[11px] font-semibold tracking-[0.11em] text-muted-foreground uppercase">
+            {{ 'maps.panel.title' | translate }}
+          </h2>
+          <span class="font-mono text-[11px] text-muted-foreground">{{ rows().length }}</span>
+        </div>
+        @if (rows().length === 0) {
+          <p class="p-4 text-sm leading-6 text-muted-foreground">{{ 'maps.panel.empty' | translate }}</p>
+        } @else {
+          <ul class="flex min-h-0 flex-1 flex-col gap-1 overflow-y-auto p-2">
+            @for (row of rows(); track row.id) {
+              <li>
+                <button
+                  type="button"
+                  class="flex w-full cursor-pointer items-center gap-3 border border-border-subtle bg-recessed px-3 py-2 text-left hover:border-border-strong focus-visible:outline-2 focus-visible:outline-ring"
+                  (click)="selectRow(row)"
+                >
+                  <arc-icon [arcType]="row.icon" class="size-4 shrink-0" [style.color]="colorVar(row.color)" />
+                  <span class="min-w-0 flex-1 truncate text-sm">{{ row.label }}</span>
+                  <span class="font-mono text-[11px] text-muted-foreground uppercase">{{
+                    'maps.item.' + row.kind | translate
+                  }}</span>
+                </button>
+              </li>
+            }
+          </ul>
+        }
+      }
+    </div>
+  </aside>
+</div>

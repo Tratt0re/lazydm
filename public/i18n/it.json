@@ -28,7 +28,8 @@
       "backToCompendium": "Torna al compendio",
       "notes": "Note",
       "templates": "Modelli",
-      "battleRules": "Regole di battaglia"
+      "battleRules": "Regole di battaglia",
+      "maps": "Mappe"
     }
   },
   "header": {
@@ -490,6 +491,9 @@
         "noBacklinks": "Nessuna nota collega questo file.",
         "done": "Rinominato in {{name}} — {{links}} collegamenti aggiornati in {{notes}} note",
         "error": "Impossibile rinominare il file"
+      },
+      "maps": {
+        "description": "Mappe interattive con segnalini, percorsi e note."
       }
     },
     "assets": {
@@ -1247,5 +1251,116 @@
   },
   "form": {
     "required": "Questo campo è obbligatorio"
+  },
+  "maps": {
+    "new": {
+      "button": "Nuova mappa",
+      "title": "Nuova mappa",
+      "description": "Una mappa si disegna sopra un'immagine dei tuoi asset. L'immagine non viene modificata.",
+      "nameLabel": "Nome",
+      "namePlaceholder": "La Costa della Spada",
+      "imageLabel": "Immagine",
+      "imagePlaceholder": "Scegli un'immagine",
+      "imageSearch": "Cerca immagini",
+      "imageEmpty": "Nessuna immagine trovata",
+      "submit": "Crea mappa",
+      "error": "Impossibile creare la mappa",
+      "noImages": "Ancora nessuna immagine negli asset",
+      "noImagesHint": "Aggiungi prima un'immagine alla sezione Asset, poi crea la mappa."
+    },
+    "page": {
+      "loadError": "Impossibile caricare questa mappa",
+      "parseError": "Questo file non è un JSON valido",
+      "missingImage": "L'immagine di questa mappa manca",
+      "missingImageHint": "È stata spostata o eliminata dagli asset: {{image}}",
+      "noImage": "Questa mappa non ha un'immagine",
+      "saveError": "Impossibile salvare la mappa",
+      "conflictTitle": "Questa mappa è cambiata altrove",
+      "conflictDescription": "Il file è stato modificato fuori da questa pagina. Mantieni la tua versione o carica l'altra.",
+      "keepMine": "Mantieni la mia versione",
+      "loadOther": "Carica l'altra versione"
+    },
+    "tools": {
+      "label": "Strumenti della mappa",
+      "select": "Seleziona",
+      "pin": "Aggiungi segnalino",
+      "path": "Disegna percorso",
+      "note": "Aggiungi nota",
+      "zoomIn": "Ingrandisci",
+      "zoomOut": "Riduci",
+      "fit": "Adatta alla finestra"
+    },
+    "hint": {
+      "pin": "Clicca sulla mappa per posizionare un segnalino.",
+      "path": "Clicca per aggiungere punti. Invio o doppio clic per finire, Esc per annullare.",
+      "note": "Clicca sulla mappa per posizionare una nota."
+    },
+    "item": {
+      "pin": "Segnalino",
+      "path": "Percorso",
+      "note": "Nota",
+      "label": "Etichetta",
+      "labelPlaceholder": "Nome del luogo",
+      "color": "Colore",
+      "icon": "Icona",
+      "width": "Spessore",
+      "text": "Testo",
+      "textPlaceholder": "Scrivi una nota",
+      "link": "File collegato",
+      "noLink": "Nessun file collegato",
+      "openLink": "Apri il file collegato",
+      "setLink": "Collega un file",
+      "removeLink": "Rimuovi collegamento",
+      "delete": "Elimina",
+      "deleteTitle": "Eliminare questo elemento?",
+      "deleteDescription": "Viene rimosso dalla mappa. Non si può annullare.",
+      "empty": "Nessuna selezione",
+      "emptyHint": "Seleziona un segnalino, un percorso o una nota per vederne i dettagli.",
+      "unnamed": "Senza nome",
+      "edit": "Modifica",
+      "editPin": "Modifica segnalino",
+      "editPath": "Modifica percorso",
+      "editNote": "Modifica nota",
+      "save": "Salva",
+      "points": "Punti",
+      "linkPlaceholder": "Scegli un file",
+      "linkSearch": "Cerca file",
+      "linkEmpty": "Nessun file trovato"
+    },
+    "colors": {
+      "red": "Rosso",
+      "orange": "Arancione",
+      "yellow": "Giallo",
+      "green": "Verde",
+      "teal": "Verde acqua",
+      "blue": "Blu",
+      "purple": "Viola",
+      "pink": "Rosa",
+      "gray": "Grigio"
+    },
+    "icons": {
+      "map-pin": "Segnalino",
+      "castle": "Castello",
+      "house": "Casa",
+      "tent": "Accampamento",
+      "skull": "Pericolo",
+      "swords": "Battaglia",
+      "flag": "Bandiera",
+      "star": "Stella",
+      "gem": "Tesoro",
+      "landmark": "Punto di riferimento",
+      "trees": "Foresta",
+      "mountain": "Montagna",
+      "anchor": "Porto",
+      "door-open": "Ingresso",
+      "triangle-alert": "Avviso"
+    },
+    "panel": {
+      "title": "Su questa mappa",
+      "label": "Dettagli della mappa",
+      "toggle": "Dettagli",
+      "back": "Torna all'elenco",
+      "empty": "Ancora niente. Usa gli strumenti sulla mappa per aggiungere un segnalino, un percorso o una nota."
+    }
   }
 }
