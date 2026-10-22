@@ -1244,5 +1244,8 @@
   "iconPicker": {
     "search": "搜索图标…",
     "empty": "未找到图标"
+  },
+  "form": {
+    "required": "此字段为必填项"
   }
 }

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, effect, inject, input, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, effect, ElementRef, inject, input, signal } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 
 import { NumberFormatService } from '@/services/number-format.service';
@@ -68,6 +68,7 @@ const GRID_SPAN_CLASS_BY_VALUE = {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppSheetFormComponent {
+  private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
   private readonly numberFormatService = inject(NumberFormatService);
   private readonly translateService = inject(TranslateService);
   /** The form's data: handed over by the sheet or by the modal that hosts it. */
@@ -80,6 +81,8 @@ export class AppSheetFormComponent {
   readonly class = input<string>('');
 
   private readonly fieldValueState = signal<AppSheetFieldValueMap>({});
+  /** Set once the user tried to confirm with fields missing: required fields then show their message. */
+  private readonly showRequiredErrors = signal(false);
 
   protected readonly resolvedFields = computed<readonly AppSheetField[]>(() => this.fields() ?? this.sheetData?.fields ?? []);
   protected readonly resolvedClass = computed(() => this.class().trim());
@@ -136,10 +139,50 @@ export class AppSheetFormComponent {
     return true;
   }
 
-  /** The message of a field whose value its `validate` refuses (shown under the field), else null. */
+  /**
+   * Called when the user confirms with the form not valid: required fields that are empty now show their
+   * message, and the first field with a problem gets the focus.
+   */
+  public revealErrors(): void {
+    this.showRequiredErrors.set(true);
+    const first = this.resolvedFields().find((field) => this.fieldError(field) !== null);
+    if (first) {
+      queueMicrotask(() => this.focusField(first.id));
+    }
+  }
+
+  /** The message under a field: what its `validate` refuses, else "required" for an empty required field. */
   protected fieldError(field: AppSheetField): string | null {
     const validate = field.validate as ((value: AppSheetFieldValue | undefined) => string | null) | undefined;
-    return validate?.(this.fieldValueState()[field.id]) ?? null;
+    const value = this.fieldValueState()[field.id];
+    const custom = validate?.(value) ?? null;
+    if (custom !== null) {
+      return custom;
+    }
+
+    if (this.showRequiredErrors() && field.required && this.isFieldValueEmpty(field, value)) {
+      return this.translateService.instant('form.required');
+    }
+
+    return null;
+  }
+
+  private focusField(fieldId: string): void {
+    const target = this.host.nativeElement.querySelector<HTMLElement>(`[data-field-id="${fieldId}"]`);
+    const focusable = target?.matches('input, button, [tabindex]')
+      ? target
+      : target?.querySelector<HTMLElement>('input, button, [tabindex]');
+    focusable?.focus();
+  }
+
+  /** Enter in a text field confirms the modal, like a native form (the confirm button lives in the footer). */
+  protected onEnter(event: Event): void {
+    const target = event.target;
+    const isComposing = event instanceof KeyboardEvent && event.isComposing;
+    if (target instanceof HTMLInputElement && !target.disabled && !isComposing) {
+      event.preventDefault();
+      this.sheetData?.submit?.();
+    }
   }
 
   protected onDateChange(field: AppSheetDatePickerField, value: Date | null): void {

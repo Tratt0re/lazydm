@@ -105,6 +105,8 @@ export type AppSheetField =
 export interface AppSheetFormData {
   readonly fields: readonly AppSheetField[];
   readonly values?: AppSheetFieldValueMap;
+  /** Confirms the modal that hosts the form (what Enter in a text field does). */
+  readonly submit?: () => void;
   /** Called when the user changes a field; `form.setValue` can fill in the others. */
   readonly onFieldChange?: (
     fieldId: string,

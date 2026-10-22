@@ -48,6 +48,7 @@ export class AppDialogFormService {
     const data: AppSheetFormData = {
       fields,
       values,
+      submit: () => dialogRef?.confirm(),
       onFieldChange: (fieldId, value, form) => {
         onFieldChange?.(fieldId, value, form);
         if (okTextFor) {
@@ -63,6 +64,8 @@ export class AppDialogFormService {
       arcData: data,
       arcOnOk: (component) => {
         if (validateBeforeSubmit && !component.isValid()) {
+          // Stay open, but say what is missing (red message under each empty required field).
+          component.revealErrors();
           return false;
         }
 

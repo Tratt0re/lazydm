@@ -45,6 +45,11 @@ export class ArcTechDialogRef<T = any, R = any, U = any> {
     }
   }
 
+  /** Does what the confirm button does (the form's Enter key). */
+  confirm(): void {
+    this.trigger(eTriggerAction.OK);
+  }
+
   /** Changes the text of the confirm button while the dialog is open. */
   setOkText(text: string): void {
     this.containerInstance.okText.set(text);

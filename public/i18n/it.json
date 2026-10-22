@@ -1244,5 +1244,8 @@
   "iconPicker": {
     "search": "Cerca icone…",
     "empty": "Nessuna icona trovata"
+  },
+  "form": {
+    "required": "Questo campo è obbligatorio"
   }
 }

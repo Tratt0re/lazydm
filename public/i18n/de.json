@@ -1244,5 +1244,8 @@
   "iconPicker": {
     "search": "Symbole suchen…",
     "empty": "Kein Symbol gefunden"
+  },
+  "form": {
+    "required": "Dieses Feld ist erforderlich"
   }
 }
