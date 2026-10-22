@@ -570,8 +570,9 @@
   font-size: 1em;
 }
 
-/* The note page fills the content area: the editor (and its code map) scrolls inside it, not the page. */
-arc-content > main:has(> app-document-page) {
+/* The note and encounter pages fill the content area and scroll inside it, not the page (the encounter's battle bar is sticky in that scroller). */
+arc-content > main:has(> app-document-page),
+arc-content > main:has(> app-encounter-page) {
   min-height: 0;
 }
 

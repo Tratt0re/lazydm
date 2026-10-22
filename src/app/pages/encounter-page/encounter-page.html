@@ -2,6 +2,9 @@
 <div class="min-h-0 min-w-0 flex-1 overflow-y-auto">
 <div class="mx-auto flex w-full max-w-5xl flex-col gap-4 p-6">
   @if (encounter()) {
+    <!-- Round and bar stay pinned to the top while the list scrolls, so Next is always within reach. The negative
+         margin and the padding give the page's own top padding back, so rows never show above the pinned bar. -->
+    <div class="sticky top-0 z-10 -mt-6 flex flex-col gap-4 bg-background pt-6 pb-3">
     <!-- Battle state, above the bar: the round and whose turn it is. -->
     @if (!isParty()) {
       <div class="flex flex-col">
@@ -18,7 +21,9 @@
         }
         <span class="truncate font-mono text-xs text-muted-foreground">
           @if (isRunning() && turnName(); as name) {
-            {{ 'encounters.battle.turnOf' | translate: { name } }}
+            <!-- The name is cut out of the translated sentence (any language) so only it is bold; it stays text. -->
+            @let parts = ('encounters.battle.turnOf' | translate: { name: '%%NAME%%' }).split('%%NAME%%');
+            {{ parts[0] }}<strong class="font-bold text-foreground">{{ name }}</strong>{{ parts[1] }}
           } @else {
             {{ 'encounters.header.count' | translate: { count: entities().length } }}
           }
@@ -120,6 +125,7 @@
         </button>
       </div>
     </header>
+    </div>
   }
 
   @if (errorMessage(); as message) {
@@ -157,8 +163,12 @@
         @for (entity of entities(); track entity.id) {
           <li
             cdkDrag
-            class="flex flex-col border-b border-l-[3px] border-b-border bg-card last:border-b-0 [&.cdk-drag-placeholder]:opacity-40"
-            [class]="isRunning() && entity.id === turnId() ? 'border-l-primary bg-accent' : 'border-l-transparent'"
+            class="relative flex scroll-mt-40 flex-col border-b border-l-4 border-b-border bg-card last:border-b-0 [&.cdk-drag-placeholder]:opacity-40"
+            [class]="
+              isRunning() && entity.id === turnId()
+                ? 'z-1 border-l-primary bg-accent outline-2 -outline-offset-2 outline-primary'
+                : 'border-l-transparent'
+            "
             [attr.aria-current]="isRunning() && entity.id === turnId() ? 'step' : null"
           >
             <!-- Card header: the system actions of the entity. -->
@@ -205,19 +215,22 @@
                 >
                   <arc-icon arcType="copy-plus" />
                 </button>
-                <button
-                  type="button"
-                  arc-button
-                  arcType="ghost"
-                  arcSize="sm"
-                  class="size-6! shrink-0 p-0!"
-                  [arcDisabled]="!isEditable()"
-                  [attr.aria-label]="'encounters.entity.remove' | translate"
-                  [arcTooltip]="'encounters.entity.remove' | translate"
-                  (click)="removeEntity(entity)"
-                >
-                  <arc-icon arcType="skull" />
-                </button>
+                @if (!isParty()) {
+                  <!-- To the cemetery: the roster has none, so there it is only delete. -->
+                  <button
+                    type="button"
+                    arc-button
+                    arcType="ghost"
+                    arcSize="sm"
+                    class="size-6! shrink-0 p-0!"
+                    [arcDisabled]="!isEditable()"
+                    [attr.aria-label]="'encounters.entity.remove' | translate"
+                    [arcTooltip]="'encounters.entity.remove' | translate"
+                    (click)="removeEntity(entity)"
+                  >
+                    <arc-icon arcType="skull" />
+                  </button>
+                }
                 <button
                   type="button"
                   arc-button

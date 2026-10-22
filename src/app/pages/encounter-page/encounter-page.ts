@@ -1,9 +1,12 @@
 import {
+  afterNextRender,
   ChangeDetectionStrategy,
   Component,
   computed,
   effect,
+  ElementRef,
   inject,
+  Injector,
   signal,
   untracked,
 } from '@angular/core';
@@ -135,6 +138,8 @@ function parseNumber(value: unknown): number | null {
 export class EncounterPage {
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
+  private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
+  private readonly injector = inject(Injector);
   private readonly scope = inject(NoteScopeService).scopeOf(getNoteScopeKind(this.route));
   private readonly sectionService = inject(SectionService);
   private readonly toolbarContext = inject(ToolbarContextService);
@@ -422,6 +427,21 @@ export class EncounterPage {
       ...encounter,
       entities: encounter.entities.map((entity) => (entity.id === id ? change(entity) : entity)),
     }));
+  }
+
+  /**
+   * Once the list has rendered the new turn, brings its row to the middle of the view (the bar is sticky, so the
+   * user never has to go looking for it on a long list). No animation for users who asked for less motion.
+   */
+  private scrollToCurrentTurn(): void {
+    afterNextRender(
+      () => {
+        const row = this.host.nativeElement.querySelector<HTMLElement>('li[aria-current="step"]');
+        const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        row?.scrollIntoView({ block: 'center', behavior: reduceMotion ? 'auto' : 'smooth' });
+      },
+      { injector: this.injector },
+    );
   }
 
   private updateEncounter(change: (encounter: EncounterDto) => EncounterDto): void {
@@ -937,6 +957,7 @@ export class EncounterPage {
         },
       };
     });
+    this.scrollToCurrentTurn();
   }
 
   /** *Next turn*: the entity after the current one; after the last one a new round begins. */
@@ -961,6 +982,7 @@ export class EncounterPage {
         },
       };
     });
+    this.scrollToCurrentTurn();
   }
 
   /** *Stop battle* asks first: it clears initiatives and statuses and refills the HP. */
@@ -1060,6 +1082,7 @@ export class EncounterPage {
    * round when it was the last); with no one left the battle keeps its round and has no turn.
    */
   protected removeEntity(entity: EncounterEntityDto): void {
+    const hadTurn = this.isRunning() && this.turnId() === entity.id;
     this.updateEncounter((encounter) => {
       const alive = encounter.entities.filter((candidate) => !candidate.isDead);
       const index = alive.findIndex((candidate) => candidate.id === entity.id);
@@ -1082,6 +1105,9 @@ export class EncounterPage {
         ),
       };
     });
+    if (hadTurn) {
+      this.scrollToCurrentTurn();
+    }
   }
 
   /**
