@@ -4,8 +4,28 @@ import { TranslateService } from '@ngx-translate/core';
 import { toast } from 'ngx-sonner';
 
 import { AppDialogFormService } from '@/components/sheet-form/dialog-form.service';
+import type { AppSheetComboboxField } from '@/components/sheet-form/sheet-form.types';
+import { buildIconPickerField, DEFAULT_CAMPAIGN_ICON } from '@/config/icon-picker.config';
 import type { CampaignDto } from '@/dtos';
 import { CampaignService } from '@/services/campaign.service';
+import { CUSTOM_SECTION_ICONS } from '@/services/section.service';
+
+/** Icon field of the new / edit campaign forms. */
+export function buildCampaignIconField(current: string | null): AppSheetComboboxField {
+  return buildIconPickerField({
+    id: 'icon',
+    label: 'campaigns.create.iconLabel',
+    value: current ?? DEFAULT_CAMPAIGN_ICON,
+    curated: [DEFAULT_CAMPAIGN_ICON, ...CUSTOM_SECTION_ICONS],
+    labelPrefix: 'settings.campaignSections.icons',
+  });
+}
+
+/** What goes into `campaign.md`: nothing for the default icon, so campaigns without a choice stay untouched. */
+export function toStoredCampaignIcon(value: unknown): string | null {
+  const icon = typeof value === 'string' ? value : '';
+  return icon && icon !== DEFAULT_CAMPAIGN_ICON ? icon : null;
+}
 
 /** Editing and deleting a campaign, shared by the campaign list (menu) and the campaign overview (toolbar). */
 @Injectable({ providedIn: 'root' })
@@ -42,20 +62,24 @@ export class CampaignActionsService {
           value: campaign.description ?? '',
           translate: true,
         },
+        buildCampaignIconField(campaign.icon),
       ],
       onSubmit: (form) => {
         if (!isSubmitting) {
           isSubmitting = true;
           const values = form.getValues();
-          void this.save(campaign.slug, String(values['name'] ?? ''), String(values['description'] ?? '')).then(
-            (updated) => {
-              isSubmitting = false;
-              if (updated) {
-                dialogRef.close();
-                onSaved?.(updated);
-              }
-            },
-          );
+          void this.save(
+            campaign.slug,
+            String(values['name'] ?? ''),
+            String(values['description'] ?? ''),
+            toStoredCampaignIcon(values['icon']),
+          ).then((updated) => {
+            isSubmitting = false;
+            if (updated) {
+              dialogRef.close();
+              onSaved?.(updated);
+            }
+          });
         }
 
         return false;
@@ -100,12 +124,18 @@ export class CampaignActionsService {
     });
   }
 
-  private async save(slug: string, name: string, description: string): Promise<CampaignDto | null> {
+  private async save(
+    slug: string,
+    name: string,
+    description: string,
+    icon: string | null,
+  ): Promise<CampaignDto | null> {
     try {
       const updated = await this.campaignService.update({
         slug,
         name: name.trim(),
         description: description.trim() || null,
+        icon,
       });
       toast.success(this.translateService.instant('campaigns.edit.done', { name: updated.name }));
       return updated;
@@ -120,7 +150,9 @@ export class CampaignActionsService {
   private async remove(campaign: CampaignDto): Promise<boolean> {
     try {
       await this.campaignService.remove(campaign.slug);
-      toast.success(this.translateService.instant('campaigns.remove.done', { name: campaign.name }));
+      toast.success(
+        this.translateService.instant('campaigns.remove.done', { name: campaign.name }),
+      );
       if (this.router.url.startsWith(`/campaigns/${campaign.slug}`)) {
         await this.router.navigateByUrl('/campaigns');
       }

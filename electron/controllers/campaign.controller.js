@@ -42,7 +42,10 @@ async function create(payload) {
     throw new Error(`A folder named "${slug}" already exists in the vault.`);
   }
 
-  const campaign = await campaignModel.createCampaign(vaultPath, { slug, name, description });
+  const icon =
+    normalizeOptionalString(body.icon, 'payload.icon', { allowEmpty: true, maxLength: 40 }) || null;
+
+  const campaign = await campaignModel.createCampaign(vaultPath, { slug, name, description, icon });
   // Starting sections: the chosen presets (no list = all of them, like campaigns before presets).
   if (Array.isArray(body.presets)) {
     sectionModel.initCampaignSections(vaultPath, slug, body.presets);
@@ -76,7 +79,10 @@ async function update(payload) {
   const vaultPath = vaultController.getReadyVaultPath();
   const slug = await requireExistingCampaign(body, vaultPath);
 
-  const campaign = await campaignModel.updateCampaign(vaultPath, slug, { name, description });
+  const icon =
+    normalizeOptionalString(body.icon, 'payload.icon', { allowEmpty: true, maxLength: 40 }) || null;
+
+  const campaign = await campaignModel.updateCampaign(vaultPath, slug, { name, description, icon });
   if (indexerController.isOpen()) {
     await indexerController.reindexPaths([`${slug}/campaign.md`]);
   }

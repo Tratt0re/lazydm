@@ -5,6 +5,7 @@ import { toast } from 'ngx-sonner';
 import { DocumentService } from '@/services/document.service';
 import { FileActionsService } from '@/services/file-actions.service';
 import { AppDialogFormService } from '@/components/sheet-form/dialog-form.service';
+import { buildIconPickerField } from '@/config/icon-picker.config';
 import type { CustomSectionPayload, SectionSettingsPayload } from '@/dtos';
 import {
   type AppSection,
@@ -68,20 +69,13 @@ export class SectionActionsService {
           value: section?.description ?? '',
           translate: true,
         },
-        {
+        buildIconPickerField({
           id: 'icon',
-          type: 'select',
           label: 'settings.campaignSections.create.iconLabel',
           value: section?.icon ?? CUSTOM_SECTION_ICONS[0],
-          required: true,
-          translate: true,
-          options: CUSTOM_SECTION_ICONS.map((icon) => ({
-            value: icon,
-            label: `settings.campaignSections.icons.${icon}`,
-            icon,
-            translate: true,
-          })),
-        },
+          curated: CUSTOM_SECTION_ICONS,
+          labelPrefix: 'settings.campaignSections.icons',
+        }),
         {
           id: 'template',
           type: 'select',
@@ -155,9 +149,12 @@ export class SectionActionsService {
     const defaultLabel = this.sectionService.labelOf({ key: section.key, customLabel: null });
     const dialogRef = this.dialogFormService.open({
       arcTitle: this.translateService.instant('settings.campaignSections.rename.title'),
-      arcDescription: this.translateService.instant('settings.campaignSections.rename.description', {
-        name: defaultLabel,
-      }),
+      arcDescription: this.translateService.instant(
+        'settings.campaignSections.rename.description',
+        {
+          name: defaultLabel,
+        },
+      ),
       arcOkText: this.translateService.instant('settings.campaignSections.edit.submit'),
       arcCancelText: this.translateService.instant('settings.campaignSections.cancel'),
       fields: [
@@ -198,7 +195,9 @@ export class SectionActionsService {
       const rows = await this.sectionService.list(campaign);
       return await this.sectionService.save(
         campaign,
-        toSectionSettings(rows.map((row) => (row.key === section.key ? { ...row, customLabel } : row))),
+        toSectionSettings(
+          rows.map((row) => (row.key === section.key ? { ...row, customLabel } : row)),
+        ),
       );
     } catch (error) {
       toast.error(this.translateService.instant('settings.campaignSections.saveError'), {

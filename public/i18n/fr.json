@@ -215,7 +215,8 @@
         "ship": "Navire",
         "gem": "Gemme",
         "book-open": "Livre",
-        "feather": "Plume"
+        "feather": "Plume",
+        "book-open-text": "Livre ouvert"
       },
       "rename": {
         "title": "Renommer la section",
@@ -389,7 +390,8 @@
       "cancel": "Annuler",
       "error": "Impossible de créer la campagne",
       "presetsLabel": "Sections de départ",
-      "presetsDescription": "Ressources et Rencontres sont toujours incluses. Vous pourrez ajouter, modifier ou supprimer des sections ensuite."
+      "presetsDescription": "Ressources et Rencontres sont toujours incluses. Vous pourrez ajouter, modifier ou supprimer des sections ensuite.",
+      "iconLabel": "Icône"
     },
     "sections": {
       "emptyTitle": "Aucun élément dans {{section}}",
@@ -1238,5 +1240,9 @@
         "update": "Voir la version"
       }
     }
+  },
+  "iconPicker": {
+    "search": "Rechercher des icônes…",
+    "empty": "Aucune icône trouvée"
   }
 }

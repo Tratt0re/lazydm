@@ -14,6 +14,7 @@ import { toast } from 'ngx-sonner';
 
 import { toInAppNoteRoute } from '@/components/document-preview/document-preview.markdown';
 import { AppDialogFormService } from '@/components/sheet-form/dialog-form.service';
+import { buildIconPickerField } from '@/config/icon-picker.config';
 import type { ReviewDto, ReviewMisplacedNoteDto, ReviewNoteDto, ReviewPlacedNoteDto } from '@/dtos';
 import { BrokenLinksPage } from '@/pages/broken-links-page/broken-links-page';
 import { DocumentService } from '@/services/document.service';
@@ -312,20 +313,13 @@ export class ReviewPage {
           required: true,
           translate: true,
         },
-        {
+        buildIconPickerField({
           id: 'icon',
-          type: 'select',
           label: 'settings.campaignSections.create.iconLabel',
           value: CUSTOM_SECTION_ICONS[0],
-          required: true,
-          translate: true,
-          options: CUSTOM_SECTION_ICONS.map((icon) => ({
-            value: icon,
-            label: `settings.campaignSections.icons.${icon}`,
-            icon,
-            translate: true,
-          })),
-        },
+          curated: CUSTOM_SECTION_ICONS,
+          labelPrefix: 'settings.campaignSections.icons',
+        }),
         {
           id: 'type',
           type: 'input',

@@ -35,18 +35,21 @@
       } @else {
         <ul class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           @for (campaign of campaigns(); track campaign.slug) {
-            <li class="arc-campaign-card h-full border border-border bg-card hover:border-primary">
+            <li class="arc-campaign-card arc-section-card h-full border border-border bg-card hover:border-primary">
               <span class="arc-card-corner arc-card-corner-tl" aria-hidden="true"></span>
               <span class="arc-card-corner arc-card-corner-tr" aria-hidden="true"></span>
               <span class="arc-card-corner arc-card-corner-bl" aria-hidden="true"></span>
               <span class="arc-card-corner arc-card-corner-br" aria-hidden="true"></span>
+              <span class="arc-section-card-icon" aria-hidden="true">
+                <arc-icon [arcType]="iconOf(campaign)" [arcStrokeWidth]="1.25" />
+              </span>
 
               <a
                 [routerLink]="['/campaigns', campaign.slug]"
                 arc-context-menu
                 [arcContextMenuTriggerFor]="campaignMenu"
                 [style.cursor]="'pointer'"
-                class="flex h-full flex-col gap-3 p-6 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+                class="relative flex h-full flex-col gap-3 p-6 pr-36 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
               >
                 <h2 class="font-display text-3xl leading-none font-extrabold tracking-[0.02em] uppercase">
                   {{ campaign.name }}<span class="text-primary" aria-hidden="true">.</span>

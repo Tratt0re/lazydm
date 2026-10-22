@@ -215,7 +215,8 @@
         "ship": "Ship",
         "gem": "Gem",
         "book-open": "Book",
-        "feather": "Feather"
+        "feather": "Feather",
+        "book-open-text": "Open book"
       },
       "rename": {
         "title": "Rename section",
@@ -389,7 +390,8 @@
       "cancel": "Cancel",
       "error": "Couldn't create the campaign",
       "presetsLabel": "Starting sections",
-      "presetsDescription": "Assets and Encounters are always included. You can add, change or delete sections later."
+      "presetsDescription": "Assets and Encounters are always included. You can add, change or delete sections later.",
+      "iconLabel": "Icon"
     },
     "sections": {
       "emptyTitle": "No {{section}} yet",
@@ -1238,5 +1240,9 @@
         "update": "View release"
       }
     }
+  },
+  "iconPicker": {
+    "search": "Search icons…",
+    "empty": "No icon found"
   }
 }

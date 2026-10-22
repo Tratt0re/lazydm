@@ -3,6 +3,8 @@ export interface CampaignDto {
   readonly slug: string;
   readonly name: string;
   readonly description: string | null;
+  /** Icon name (of the Lucide set) from `campaign.md`; null = the default icon. */
+  readonly icon: string | null;
   readonly created: string | null;
   readonly cover: string | null;
 }
@@ -10,6 +12,7 @@ export interface CampaignDto {
 export interface CreateCampaignPayload {
   readonly name: string;
   readonly description?: string | null;
+  readonly icon?: string | null;
   /** Keys of the preset sections the campaign starts with; none given = all of them. */
   readonly presets?: readonly string[];
 }
@@ -18,4 +21,5 @@ export interface UpdateCampaignPayload {
   readonly slug: string;
   readonly name: string;
   readonly description?: string | null;
+  readonly icon?: string | null;
 }

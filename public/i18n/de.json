@@ -215,7 +215,8 @@
         "ship": "Schiff",
         "gem": "Edelstein",
         "book-open": "Buch",
-        "feather": "Feder"
+        "feather": "Feder",
+        "book-open-text": "Aufgeschlagenes Buch"
       },
       "rename": {
         "title": "Abschnitt umbenennen",
@@ -389,7 +390,8 @@
       "cancel": "Abbrechen",
       "error": "Kampagne konnte nicht erstellt werden",
       "presetsLabel": "Start-Abschnitte",
-      "presetsDescription": "Assets und Begegnungen sind immer dabei. Abschnitte kannst du später hinzufügen, ändern oder löschen."
+      "presetsDescription": "Assets und Begegnungen sind immer dabei. Abschnitte kannst du später hinzufügen, ändern oder löschen.",
+      "iconLabel": "Symbol"
     },
     "sections": {
       "emptyTitle": "Noch keine Einträge in {{section}}",
@@ -1238,5 +1240,9 @@
         "update": "Release ansehen"
       }
     }
+  },
+  "iconPicker": {
+    "search": "Symbole suchen…",
+    "empty": "Kein Symbol gefunden"
   }
 }

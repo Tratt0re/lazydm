@@ -215,7 +215,8 @@
         "ship": "Nave",
         "gem": "Gemma",
         "book-open": "Libro",
-        "feather": "Piuma"
+        "feather": "Piuma",
+        "book-open-text": "Libro aperto"
       },
       "rename": {
         "title": "Rinomina sezione",
@@ -389,7 +390,8 @@
       "cancel": "Annulla",
       "error": "Impossibile creare la campagna",
       "presetsLabel": "Sezioni iniziali",
-      "presetsDescription": "Asset e Incontri sono sempre inclusi. Potrai aggiungere, modificare o eliminare le sezioni in seguito."
+      "presetsDescription": "Asset e Incontri sono sempre inclusi. Potrai aggiungere, modificare o eliminare le sezioni in seguito.",
+      "iconLabel": "Icona"
     },
     "sections": {
       "emptyTitle": "Ancora nessun elemento in {{section}}",
@@ -1238,5 +1240,9 @@
         "update": "Vedi la release"
       }
     }
+  },
+  "iconPicker": {
+    "search": "Cerca icone…",
+    "empty": "Nessuna icona trovata"
   }
 }

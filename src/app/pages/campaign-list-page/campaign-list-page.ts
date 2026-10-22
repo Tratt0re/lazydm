@@ -1,21 +1,36 @@
-import { ChangeDetectionStrategy, Component, computed, inject, OnInit, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  inject,
+  OnInit,
+  signal,
+} from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { toast } from 'ngx-sonner';
 
 import { AppDialogFormService } from '@/components/sheet-form/dialog-form.service';
 import type { AppSheetField } from '@/components/sheet-form/sheet-form.types';
+import { toCampaignIcon } from '@/config/icon-picker.config';
 import { Toolbar } from '@/layout/toolbar/toolbar';
 import type { CampaignDto } from '@/dtos';
-import { CampaignActionsService } from '@/services/campaign-actions.service';
+import {
+  buildCampaignIconField,
+  CampaignActionsService,
+  toStoredCampaignIcon,
+} from '@/services/campaign-actions.service';
 import { CampaignService } from '@/services/campaign.service';
 import { SectionService } from '@/services/section.service';
-import type { ToolbarItemAction, ToolbarTitleBreadcrumbItem } from '@/services/toolbar-context.service';
+import type {
+  ToolbarItemAction,
+  ToolbarTitleBreadcrumbItem,
+} from '@/services/toolbar-context.service';
 import { VaultService } from '@/services/vault.service';
 import { ArcTechAlertComponent } from '@/shared/components/alert';
 import { ArcTechButtonComponent } from '@/shared/components/button';
 import { ArcTechEmptyComponent } from '@/shared/components/empty';
-import { ArcTechIconComponent } from '@/shared/components/icon';
+import { ArcTechIconComponent, type ArcTechIcon } from '@/shared/components/icon';
 import { ArcTechMenuImports } from '@/shared/components/menu';
 
 const CREATE_CAMPAIGN_FIELDS: readonly AppSheetField[] = [
@@ -62,6 +77,7 @@ export class CampaignListPage implements OnInit {
   private readonly router = inject(Router);
 
   protected readonly campaigns = this.campaignService.campaigns;
+  protected readonly iconOf = (campaign: CampaignDto): ArcTechIcon => toCampaignIcon(campaign.icon);
   protected readonly vaultName = computed(() => this.vaultService.currentVault()?.name ?? '');
   protected readonly isLoading = signal(true);
   /** Same toolbar as the other pages: vault name as the path, "New campaign" as its action. */
@@ -105,6 +121,7 @@ export class CampaignListPage implements OnInit {
       arcCancelText: this.translateService.instant('campaigns.create.cancel'),
       fields: [
         ...CREATE_CAMPAIGN_FIELDS,
+        buildCampaignIconField(null),
         {
           id: 'presets',
           type: 'select',
@@ -129,15 +146,14 @@ export class CampaignListPage implements OnInit {
           void this.createCampaign(
             String(values['name'] ?? ''),
             String(values['description'] ?? ''),
+            toStoredCampaignIcon(values['icon']),
             Array.isArray(chosen) ? chosen.map(String) : [],
-          ).then(
-            (created) => {
-              isSubmitting = false;
-              if (created) {
-                dialogRef.close();
-              }
-            },
-          );
+          ).then((created) => {
+            isSubmitting = false;
+            if (created) {
+              dialogRef.close();
+            }
+          });
         }
 
         // The sheet is closed once the campaign folder exists (creation goes through IPC).
@@ -149,10 +165,11 @@ export class CampaignListPage implements OnInit {
   private async createCampaign(
     name: string,
     description: string,
+    icon: string | null,
     presets: readonly string[],
   ): Promise<boolean> {
     try {
-      const campaign = await this.campaignService.create({ name, description, presets });
+      const campaign = await this.campaignService.create({ name, description, icon, presets });
       await this.router.navigate(['/campaigns', campaign.slug]);
       return true;
     } catch (error) {

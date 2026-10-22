@@ -215,7 +215,8 @@
         "ship": "船",
         "gem": "宝石",
         "book-open": "书",
-        "feather": "羽毛"
+        "feather": "羽毛",
+        "book-open-text": "打开的书"
       },
       "rename": {
         "title": "重命名分区",
@@ -389,7 +390,8 @@
       "cancel": "取消",
       "error": "无法创建战役",
       "presetsLabel": "起始分区",
-      "presetsDescription": "资源和遭遇始终包含在内。之后可以添加、修改或删除分区。"
+      "presetsDescription": "资源和遭遇始终包含在内。之后可以添加、修改或删除分区。",
+      "iconLabel": "图标"
     },
     "sections": {
       "emptyTitle": "{{section}}中还没有内容",
@@ -1238,5 +1240,9 @@
         "update": "查看发布"
       }
     }
+  },
+  "iconPicker": {
+    "search": "搜索图标…",
+    "empty": "未找到图标"
   }
 }

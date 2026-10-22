@@ -36,11 +36,17 @@ function toOptionalString(value) {
   return typeof value === 'string' && value.trim().length > 0 ? value.trim() : null;
 }
 
+/** An icon name of the UI icon set (`book-open-text`, `skull`…), or null when absent or not a plain name. */
+function toOptionalIcon(value) {
+  return typeof value === 'string' && /^[a-z0-9-]{1,40}$/.test(value) ? value : null;
+}
+
 function toCampaign(slug, document) {
   return {
     slug,
     name: toOptionalString(document.frontmatter.title) ?? document.title ?? slug,
     description: toOptionalString(document.frontmatter.description),
+    icon: toOptionalIcon(document.frontmatter.icon),
     created: toOptionalString(document.frontmatter.created),
     cover: toOptionalString(document.frontmatter.cover),
   };
@@ -86,11 +92,12 @@ function campaignFolderExists(rootPath, slug) {
   return fs.existsSync(resolveInsideVault(rootPath, slug));
 }
 
-function buildCampaignNote({ name, description }) {
+function buildCampaignNote({ name, description, icon }) {
   const frontmatter = {
     type: CAMPAIGN_NOTE_TYPE,
     title: name,
     ...(description ? { description } : {}),
+    ...(icon ? { icon } : {}),
     created: new Date().toISOString().slice(0, 10),
   };
   const body = description ? `# ${name}\n\n${description}\n` : `# ${name}\n`;
@@ -102,12 +109,12 @@ function buildCampaignNote({ name, description }) {
  * Creates the campaign folder with its `campaign.md` note. Section folders appear with their first file
  * (folders on demand), so an unused section leaves nothing on disk.
  */
-async function createCampaign(rootPath, { slug, name, description }) {
+async function createCampaign(rootPath, { slug, name, description, icon }) {
   await fs.promises.mkdir(resolveInsideVault(rootPath, slug));
 
   safeWriteFileAtomic(
     getCampaignFilePath(rootPath, slug),
-    buildCampaignNote({ name, description }),
+    buildCampaignNote({ name, description, icon }),
   );
   return readCampaign(rootPath, slug);
 }
@@ -116,7 +123,7 @@ async function createCampaign(rootPath, { slug, name, description }) {
  * Changes the name and description of a campaign in its `campaign.md` (frontmatter `title` / `description` and
  * the `# Heading`). The folder keeps its name: the readable name lives in the content, never in the folder.
  */
-async function updateCampaign(rootPath, slug, { name, description }) {
+async function updateCampaign(rootPath, slug, { name, description, icon }) {
   const filePath = getCampaignFilePath(rootPath, slug);
   const original = await fs.promises.readFile(filePath, 'utf8');
   const oldTitle =
@@ -129,6 +136,9 @@ async function updateCampaign(rootPath, slug, { name, description }) {
   content = description
     ? setFrontmatterField(content, 'description', description)
     : removeFrontmatterField(content, 'description');
+  content = icon
+    ? setFrontmatterField(content, 'icon', icon)
+    : removeFrontmatterField(content, 'icon');
   if (content !== original) {
     safeWriteFileAtomic(filePath, content);
   }

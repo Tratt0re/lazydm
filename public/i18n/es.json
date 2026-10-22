@@ -215,7 +215,8 @@
         "ship": "Barco",
         "gem": "Gema",
         "book-open": "Libro",
-        "feather": "Pluma"
+        "feather": "Pluma",
+        "book-open-text": "Libro abierto"
       },
       "rename": {
         "title": "Renombrar sección",
@@ -389,7 +390,8 @@
       "cancel": "Cancelar",
       "error": "No se pudo crear la campaña",
       "presetsLabel": "Secciones iniciales",
-      "presetsDescription": "Recursos y Encuentros siempre se incluyen. Podrás añadir, cambiar o eliminar secciones después."
+      "presetsDescription": "Recursos y Encuentros siempre se incluyen. Podrás añadir, cambiar o eliminar secciones después.",
+      "iconLabel": "Icono"
     },
     "sections": {
       "emptyTitle": "Aún no hay {{section}}",
@@ -1238,5 +1240,9 @@
         "update": "Ver la versión"
       }
     }
+  },
+  "iconPicker": {
+    "search": "Buscar iconos…",
+    "empty": "No se encontró ningún icono"
   }
 }
