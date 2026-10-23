@@ -1469,20 +1469,19 @@
           "text": "Alles ist Markdown in einem Ordner deiner Wahl. Kein Konto, keine Bindung."
         }
       },
-      "preferencesHint": "Nur für dieses Gerät. Du kannst beides später in den Einstellungen ändern.",
       "continue": "Weiter"
     },
     "vault": {
       "back": "Zurück",
       "local": {
         "title": "Auf diesem Gerät.",
-        "text": " Die Dateien bleiben auf diesem Computer. Nichts wird geteilt, und Backups liegen bei dir.",
+        "text": "Die Dateien bleiben auf diesem Computer. Nichts wird geteilt, und Backups liegen bei dir.",
         "badge": "Nur auf diesem Gerät",
         "found": "Dieser Ordner liegt nur auf diesem Gerät: Er wird nicht mit deinen anderen Geräten synchronisiert."
       },
       "cloud": {
         "title": "In einem Cloud-Ordner.",
-        "text": " Wähle einen Ordner in iCloud Drive, Dropbox, OneDrive, Box oder Google Drive. Deine Cloud-App synchronisiert die Dateien zwischen deinen Geräten; LazyDM wartet beim Start auf ausstehende Downloads und warnt dich, wenn zwei Geräte dieselbe Notiz geändert haben.",
+        "text": "Wähle einen Ordner in iCloud Drive, Dropbox, OneDrive, Box oder Google Drive. Deine Cloud-App synchronisiert die Dateien zwischen deinen Geräten; LazyDM wartet beim Start auf ausstehende Downloads und warnt dich, wenn zwei Geräte dieselbe Notiz geändert haben.",
         "found": "Dieser Ordner liegt in {{provider}}: Deine Cloud-App synchronisiert ihn zwischen deinen Geräten. LazyDM wartet beim Start auf ausstehende Downloads und warnt dich, wenn zwei Geräte dieselbe Notiz geändert haben."
       },
       "providers": {

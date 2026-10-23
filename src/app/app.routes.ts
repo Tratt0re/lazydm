@@ -231,6 +231,7 @@ export const routes: Routes = [
       },
       {
         path: 'vault',
+        data: { setupWide: true },
         loadComponent: () =>
           import('./pages/vault-setup-page/vault-setup-page').then((m) => m.VaultSetupPage),
       },

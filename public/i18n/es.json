@@ -1469,20 +1469,19 @@
           "text": "Todo es Markdown en una carpeta que eliges. Sin cuenta, sin ataduras."
         }
       },
-      "preferencesHint": "Solo para este dispositivo. Puedes cambiar ambos después en Ajustes.",
       "continue": "Continuar"
     },
     "vault": {
       "back": "Atrás",
       "local": {
         "title": "En este dispositivo.",
-        "text": " Los archivos se quedan en este equipo. No se comparte nada y las copias de seguridad dependen de ti.",
+        "text": "Los archivos se quedan en este equipo. No se comparte nada y las copias de seguridad dependen de ti.",
         "badge": "Solo en este dispositivo",
         "found": "Esta carpeta está solo en este dispositivo: no se sincronizará con los demás."
       },
       "cloud": {
         "title": "En una carpeta en la nube.",
-        "text": " Elige una carpeta dentro de iCloud Drive, Dropbox, OneDrive, Box o Google Drive. Tu app de nube sincroniza los archivos entre tus dispositivos; LazyDM espera las descargas pendientes al iniciar y te avisa si dos dispositivos cambiaron la misma nota.",
+        "text": "Elige una carpeta dentro de iCloud Drive, Dropbox, OneDrive, Box o Google Drive. Tu app de nube sincroniza los archivos entre tus dispositivos; LazyDM espera las descargas pendientes al iniciar y te avisa si dos dispositivos cambiaron la misma nota.",
         "found": "Esta carpeta está en {{provider}}: tu app de nube la sincroniza entre tus dispositivos. LazyDM espera las descargas pendientes al iniciar y te avisa si dos dispositivos cambiaron la misma nota."
       },
       "providers": {

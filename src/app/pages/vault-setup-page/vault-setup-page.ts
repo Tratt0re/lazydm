@@ -18,7 +18,7 @@ import { VaultService } from '@/services/vault.service';
 import { ArcTechAlertComponent } from '@/shared/components/alert';
 import { ArcTechBadgeComponent } from '@/shared/components/badge';
 import { ArcTechButtonComponent } from '@/shared/components/button';
-import { ArcTechIconComponent } from '@/shared/components/icon';
+import { ArcTechIconComponent, type ArcTechIcon } from '@/shared/components/icon';
 
 type VaultFolderDetection = 'existing' | 'empty' | 'nonEmpty';
 
@@ -35,6 +35,10 @@ export class VaultSetupPage implements OnInit, AfterViewInit {
   private readonly preferences = inject(LocalPreferencesService);
   private readonly title = viewChild.required<ElementRef<HTMLElement>>('title');
 
+  protected readonly options: readonly { readonly key: 'local' | 'cloud'; readonly icon: ArcTechIcon }[] = [
+    { key: 'local', icon: 'hard-drive' },
+    { key: 'cloud', icon: 'cloud' },
+  ];
   protected readonly isDesktop = this.vaultService.isAvailable;
   protected readonly inspection = signal<VaultInspectionDto | null>(null);
   protected readonly isBusy = signal(false);

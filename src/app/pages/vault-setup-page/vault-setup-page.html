@@ -69,29 +69,33 @@
       />
     }
   } @else {
-    <div class="flex flex-col gap-3">
-      <div class="flex items-start gap-3">
-        <span class="flex size-9 shrink-0 items-center justify-center border border-input bg-recessed text-primary">
-          <arc-icon arcType="hard-drive" class="size-4" aria-hidden="true" />
-        </span>
-        <p class="min-w-0 text-sm">
-          <span class="font-semibold text-foreground-strong">{{ 'onboarding.vault.local.title' | translate }}</span>
-          <span class="text-muted-foreground">{{ 'onboarding.vault.local.text' | translate }}</span>
-        </p>
-      </div>
+    <ul class="grid gap-4 md:grid-cols-2">
+      @for (option of options; track option.key) {
+        <li class="flex flex-col gap-4 border border-border-subtle p-5">
+          <div class="flex items-center gap-3">
+            <span
+              class="flex size-10 shrink-0 items-center justify-center border border-input bg-recessed text-primary"
+              aria-hidden="true"
+            >
+              <arc-icon [arcType]="option.icon" class="size-5" />
+            </span>
+            <h2 class="min-w-0 text-xl font-bold text-foreground-strong">
+              {{ 'onboarding.vault.' + option.key + '.title' | translate }}
+            </h2>
+          </div>
 
-      <div class="arc-engraved-divider" aria-hidden="true"><span></span></div>
+          <div class="flex items-center gap-2" aria-hidden="true">
+            <span class="h-px w-3 bg-border"></span>
+            <span class="size-1.5 shrink-0 rotate-45 border border-primary"></span>
+            <span class="h-px flex-1 bg-border"></span>
+          </div>
 
-      <div class="flex items-start gap-3">
-        <span class="flex size-9 shrink-0 items-center justify-center border border-input bg-recessed text-primary">
-          <arc-icon arcType="cloud" class="size-4" aria-hidden="true" />
-        </span>
-        <p class="min-w-0 text-sm">
-          <span class="font-semibold text-foreground-strong">{{ 'onboarding.vault.cloud.title' | translate }}</span>
-          <span class="text-muted-foreground">{{ 'onboarding.vault.cloud.text' | translate }}</span>
-        </p>
-      </div>
-    </div>
+          <p class="text-base text-muted-foreground">
+            {{ 'onboarding.vault.' + option.key + '.text' | translate }}
+          </p>
+        </li>
+      }
+    </ul>
   }
 
   @if (errorMessage(); as message) {

@@ -1469,20 +1469,19 @@
           "text": "Everything is Markdown in a folder of your choice. No account, no lock-in."
         }
       },
-      "preferencesHint": "Only for this device. You can change both later in Settings.",
       "continue": "Continue"
     },
     "vault": {
       "back": "Back",
       "local": {
         "title": "On this device.",
-        "text": " The files stay on this computer. Nothing is shared, and backups are up to you.",
+        "text": "The files stay on this computer. Nothing is shared, and backups are up to you.",
         "badge": "Only on this device",
         "found": "This folder is only on this device: it will not sync to your other devices."
       },
       "cloud": {
         "title": "In a cloud folder.",
-        "text": " Pick a folder inside iCloud Drive, Dropbox, OneDrive, Box or Google Drive. Your cloud app syncs the files between your devices; LazyDM waits for pending downloads when it starts and warns you if two devices changed the same note.",
+        "text": "Pick a folder inside iCloud Drive, Dropbox, OneDrive, Box or Google Drive. Your cloud app syncs the files between your devices; LazyDM waits for pending downloads when it starts and warns you if two devices changed the same note.",
         "found": "This folder is in {{provider}}: your cloud app syncs it between your devices. LazyDM waits for pending downloads when it starts and warns you if two devices changed the same note."
       },
       "providers": {

@@ -17,11 +17,10 @@
         </label>
         <arc-select id="welcome-language" class="w-44" [arcValue]="selectedLanguage()" (arcSelectionChange)="onLanguageChange($event)">
           @for (language of languages; track language) {
-            <arc-select-item [arcValue]="language" [arcLabel]="getLanguageLabelKey(language) | translate" arcIcon="globe" />
+            <arc-select-item [arcValue]="language" [arcLabel]="getLanguageLabelKey(language) | translate" />
           }
         </arc-select>
       </div>
-      <span class="mt-2 h-12 w-px bg-border" aria-hidden="true"></span>
       <div>
         <label class="mb-1 block text-sm font-medium" for="welcome-theme">
           {{ 'settings.general.cards.theme.fieldLabel' | translate }}
@@ -45,24 +44,22 @@
 
   <ol class="grid gap-4 md:grid-cols-3">
     @for (point of points; track point.key; let index = $index) {
-      <li
-        class="arc-setup-panel relative flex flex-col gap-4 border border-border-subtle p-5 pt-9 [--bracket-size:12px]"
-      >
-        <span class="arc-card-corner arc-card-corner-tl" aria-hidden="true"></span>
-        <span class="arc-card-corner arc-card-corner-tr" aria-hidden="true"></span>
-        <span class="arc-card-corner arc-card-corner-bl" aria-hidden="true"></span>
-        <span class="arc-card-corner arc-card-corner-br" aria-hidden="true"></span>
-
+      <li class="relative flex flex-col gap-4 border border-border-subtle p-5 pt-9">
         <span class="absolute top-3 left-5 font-mono text-[11px] text-muted-foreground" aria-hidden="true">
           0{{ index + 1 }}
         </span>
 
-        <span
-          class="flex size-14 shrink-0 items-center justify-center border border-input bg-recessed text-primary"
-          aria-hidden="true"
-        >
-          <arc-icon [arcType]="point.icon" class="size-7" />
-        </span>
+        <div class="flex items-center gap-3">
+          <span
+            class="flex size-10 shrink-0 items-center justify-center border border-input bg-recessed text-primary"
+            aria-hidden="true"
+          >
+            <arc-icon [arcType]="point.icon" class="size-5" />
+          </span>
+          <h2 class="min-w-0 text-xl font-bold text-foreground-strong">
+            {{ 'onboarding.welcome.points.' + point.key + '.title' | translate }}
+          </h2>
+        </div>
 
         <div class="flex items-center gap-2" aria-hidden="true">
           <span class="h-px w-3 bg-border"></span>
@@ -70,28 +67,20 @@
           <span class="h-px flex-1 bg-border"></span>
         </div>
 
-        <div>
-          <h2 class="text-xl font-bold text-foreground-strong">
-            {{ 'onboarding.welcome.points.' + point.key + '.title' | translate }}
-          </h2>
-          <p class="mt-2 text-base text-muted-foreground">
-            {{ 'onboarding.welcome.points.' + point.key + '.text' | translate }}
-          </p>
-        </div>
+        <p class="text-base text-muted-foreground">
+          {{ 'onboarding.welcome.points.' + point.key + '.text' | translate }}
+        </p>
       </li>
     }
   </ol>
 </div>
 <footer class="flex shrink-0 items-center justify-between gap-4 border-t border-border p-4">
-  <div class="flex items-center gap-4">
-    <div
-      class="arc-step-marker"
-      role="img"
-      [attr.aria-label]="'onboarding.step' | translate: { current: 1, total: 2 }"
-    >
-      <span class="is-reached"></span><span></span>
-    </div>
-    <p class="hidden text-xs text-muted-foreground md:block">{{ 'onboarding.welcome.preferencesHint' | translate }}</p>
+  <div
+    class="arc-step-marker"
+    role="img"
+    [attr.aria-label]="'onboarding.step' | translate: { current: 1, total: 2 }"
+  >
+    <span class="is-reached"></span><span></span>
   </div>
   <button arc-button type="button" arcSize="lg" (click)="next()">
     {{ 'onboarding.welcome.continue' | translate }}
