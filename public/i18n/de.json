@@ -369,6 +369,12 @@
         "google-drive": "Google Drive",
         "generic": "Dein Cloud-Dienst"
       }
+    },
+    "activity": {
+      "checking": "Cloud wird auf Änderungen geprüft",
+      "downloading": "Notizen werden aus der Cloud geladen",
+      "indexing": "Vault wird indiziert",
+      "indexError": "Vault konnte nicht indiziert werden"
     }
   },
   "campaigns": {

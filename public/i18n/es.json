@@ -369,6 +369,12 @@
         "google-drive": "Google Drive",
         "generic": "Tu servicio en la nube"
       }
+    },
+    "activity": {
+      "checking": "Buscando cambios en la nube",
+      "downloading": "Descargando notas de la nube",
+      "indexing": "Indexando el vault",
+      "indexError": "No se pudo indexar el vault"
     }
   },
   "campaigns": {

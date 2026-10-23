@@ -23,7 +23,12 @@ const INDEX_STATE_DEFAULTS = Object.freeze({
   fileCount: 0,
   lastIndexedAtMs: null,
   lastError: null,
+  /** Files looked at so far / to look at in the running full scan (0 outside of one). */
+  scannedCount: 0,
+  scanTotal: 0,
 });
+/** A full scan reports its progress every this many files (each report is a broadcast). */
+const PROGRESS_STEP = 25;
 
 let indexState = { ...INDEX_STATE_DEFAULTS };
 let activeVault = null;
@@ -127,16 +132,23 @@ async function indexFile(rootPath, file, knownState) {
 }
 
 /** Brings the index in line with the files on disk: indexes new or changed files and drops deleted ones. */
-async function reconcile(token, rootPath, relativeDir = '') {
+async function reconcile(token, rootPath, relativeDir = '', onProgress = null) {
   const knownStates = vaultIndexModel.listFileStates();
   const files = await vaultModel.listVaultFiles(rootPath, relativeDir);
   const folderPrefix = relativeDir ? `${relativeDir}/` : '';
   const seenPaths = new Set();
   const changedPaths = [];
 
+  onProgress?.(0, files.length);
+  let scanned = 0;
   for (const file of files) {
     if (!isCurrent(token)) {
       return changedPaths;
+    }
+
+    scanned += 1;
+    if (onProgress && scanned % PROGRESS_STEP === 0) {
+      onProgress(scanned, files.length);
     }
 
     seenPaths.add(file.path);
@@ -174,9 +186,17 @@ function publishChanges(changedPaths) {
 }
 
 async function runFullReconcile(token) {
-  setIndexState({ status: INDEX_STATUS.indexing, vaultId: activeVault.id, lastError: null });
+  setIndexState({
+    status: INDEX_STATUS.indexing,
+    vaultId: activeVault.id,
+    lastError: null,
+    scannedCount: 0,
+    scanTotal: 0,
+  });
 
-  const changedPaths = await reconcile(token, activeVault.path);
+  const changedPaths = await reconcile(token, activeVault.path, '', (scannedCount, scanTotal) =>
+    setIndexState({ scannedCount, scanTotal }),
+  );
   if (!isCurrent(token)) {
     return;
   }
@@ -184,6 +204,8 @@ async function runFullReconcile(token) {
   publishChanges(changedPaths);
   setIndexState({
     status: INDEX_STATUS.ready,
+    scannedCount: 0,
+    scanTotal: 0,
     fileCount: vaultIndexModel.countFiles(),
     lastIndexedAtMs: Date.now(),
   });

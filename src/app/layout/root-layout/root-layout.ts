@@ -11,6 +11,7 @@ import {
 import { RouterOutlet } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 import { LayoutImports } from '@/shared/components/layout/layout.imports';
+import { VaultActivityBannerComponent } from '@/components/vault-activity-banner/vault-activity-banner.component';
 import { VaultSyncStatusComponent } from '@/components/vault-sync-status/vault-sync-status.component';
 import { Sidebar } from '../sidebar/sidebar';
 import { TabBar } from '../tab-bar/tab-bar';
@@ -34,6 +35,7 @@ import { UpdateService } from '@/shared/core/services/update.service';
     Toolbar,
     Sidebar,
     TabBar,
+    VaultActivityBannerComponent,
     VaultSyncStatusComponent,
     UpdateModalComponent,
   ],

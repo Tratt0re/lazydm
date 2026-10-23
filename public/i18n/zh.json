@@ -369,6 +369,12 @@
         "google-drive": "Google Drive",
         "generic": "你的云服务"
       }
+    },
+    "activity": {
+      "checking": "正在检查云端更改",
+      "downloading": "正在从云端下载笔记",
+      "indexing": "正在为库建立索引",
+      "indexError": "无法为库建立索引"
     }
   },
   "campaigns": {

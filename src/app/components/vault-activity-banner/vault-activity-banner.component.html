@@ -1,0 +1,23 @@
+@if (shown(); as activity) {
+  <div
+    class="relative flex items-center gap-3 border-b border-border border-l-[3px] border-l-primary bg-raised px-4 py-2"
+    role="status"
+    aria-live="polite"
+  >
+    <arc-icon arcType="loader-circle" class="size-4 shrink-0 animate-spin text-primary motion-reduce:animate-none" aria-hidden="true" />
+    <p class="min-w-0 flex-1 truncate font-mono text-[11px] font-semibold tracking-[0.1em] text-muted-foreground uppercase">
+      {{ 'vault.activity.' + activity.kind | translate }}
+      @if (activity.total > 0) {
+        <span class="text-foreground">· {{ activity.done }} / {{ activity.total }}</span>
+      }
+    </p>
+    <arc-progress-bar class="max-w-48" [arcIndeterminate]="isIndeterminate()" [progress]="progress()" />
+  </div>
+} @else if (indexError(); as error) {
+  <div class="flex items-center gap-3 border-b border-border border-l-[3px] border-l-destructive bg-card px-4 py-2" role="alert">
+    <arc-icon arcType="circle-alert" class="size-4 shrink-0 text-destructive" aria-hidden="true" />
+    <p class="min-w-0 flex-1 truncate font-mono text-[11px] font-semibold tracking-[0.1em] text-destructive uppercase">
+      {{ 'vault.activity.indexError' | translate }} · <span class="normal-case">{{ error }}</span>
+    </p>
+  </div>
+}

@@ -165,7 +165,7 @@ export interface ElectronIpcClient {
     readonly close: OptionalIpcRequest<void, DTO.VaultStateDto>;
   };
   readonly index: {
-    readonly getStatus: OptionalIpcRequest<void, unknown>;
+    readonly getStatus: OptionalIpcRequest<void, DTO.IndexStatusDto>;
     readonly rebuild: OptionalIpcRequest<void, unknown>;
   };
   readonly reset: {
