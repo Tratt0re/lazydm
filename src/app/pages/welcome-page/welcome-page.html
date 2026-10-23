@@ -1,0 +1,78 @@
+<div class="flex min-h-0 flex-1 flex-col overflow-y-auto p-6 sm:p-8">
+  <header class="flex items-center gap-5">
+    <arc-icon arcType="franco" class="size-24 shrink-0 text-primary" aria-hidden="true" />
+    <div class="min-w-0 flex-1">
+      <h1
+        #title
+        tabindex="-1"
+        class="font-display text-6xl leading-[0.9] font-black tracking-[0.015em] uppercase outline-none"
+      >
+        LazyDM<span class="text-primary" aria-hidden="true">.</span>
+      </h1>
+      <div class="arc-ornament-rule mt-4" aria-hidden="true"><span>◇</span><span>✣</span><span>◇</span></div>
+    </div>
+  </header>
+
+  <p class="mt-5 text-sm text-muted-foreground">{{ 'onboarding.welcome.lead' | translate }}</p>
+
+  <ul class="mt-5 flex flex-col gap-3">
+    @for (point of points; track point.key) {
+      <li class="flex items-start gap-3">
+        <span class="flex size-9 shrink-0 items-center justify-center border border-input bg-recessed text-primary">
+          <arc-icon [arcType]="point.icon" class="size-4" aria-hidden="true" />
+        </span>
+        <p class="min-w-0 text-sm">
+          <span class="font-semibold text-foreground-strong">
+            {{ 'onboarding.welcome.points.' + point.key + '.title' | translate }}
+          </span>
+          <span class="text-muted-foreground">
+            {{ 'onboarding.welcome.points.' + point.key + '.text' | translate }}
+          </span>
+        </p>
+      </li>
+    }
+  </ul>
+
+  <div class="mt-5 border border-input bg-background p-4">
+    <div class="grid gap-4 sm:grid-cols-2">
+      <div>
+        <label class="mb-1 block text-sm font-medium" for="welcome-language">
+          {{ 'settings.general.cards.language.fieldLabel' | translate }}
+        </label>
+        <arc-select id="welcome-language" [arcValue]="selectedLanguage()" (arcSelectionChange)="onLanguageChange($event)">
+          @for (language of languages; track language) {
+            <arc-select-item [arcValue]="language" [arcLabel]="getLanguageLabelKey(language) | translate" />
+          }
+        </arc-select>
+      </div>
+      <div>
+        <label class="mb-1 block text-sm font-medium" for="welcome-theme">
+          {{ 'settings.general.cards.theme.fieldLabel' | translate }}
+        </label>
+        <arc-select id="welcome-theme" [arcValue]="selectedTheme()" (arcSelectionChange)="onThemeChange($event)">
+          @for (theme of themeOptions; track theme) {
+            <arc-select-item
+              [arcValue]="theme"
+              [arcLabel]="themeOptionLabelKey(theme) | translate"
+              [arcIcon]="themeOptionIcon(theme)"
+            />
+          }
+        </arc-select>
+      </div>
+    </div>
+    <p class="mt-3 text-xs text-muted-foreground">{{ 'onboarding.welcome.preferencesHint' | translate }}</p>
+  </div>
+</div>
+<footer class="flex shrink-0 items-center justify-between gap-4 border-t border-border p-4">
+  <div
+    class="arc-step-marker"
+    role="img"
+    [attr.aria-label]="'onboarding.step' | translate: { current: 1, total: 2 }"
+  >
+    <span class="is-reached"></span><span></span>
+  </div>
+  <button arc-button type="button" arcSize="lg" (click)="next()">
+    {{ 'onboarding.welcome.continue' | translate }}
+    <arc-icon arcType="arrow-right" />
+  </button>
+</footer>

@@ -3,6 +3,7 @@ import type { Route, Routes, UrlMatchResult, UrlSegment } from '@angular/router'
 import { openInSheetGuard } from '@/guards/app-sheet.guard';
 import { CAMPAIGN_SLUG_PARAM, campaignEntryGuard, campaignGuard } from '@/guards/campaign.guard';
 import { documentLeaveGuard } from '@/guards/document-leave.guard';
+import { setupEntryGuard } from '@/guards/setup.guard';
 import { SYSTEM_SLUG_PARAM, systemGuard } from '@/guards/system.guard';
 import { vaultGuard } from '@/guards/vault.guard';
 import { RootLayout } from '@/layout/root-layout/root-layout';
@@ -220,8 +221,19 @@ export const routes: Routes = [
   },
   {
     path: 'setup',
-    loadComponent: () =>
-      import('./pages/vault-setup-page/vault-setup-page').then((m) => m.VaultSetupPage),
+    loadComponent: () => import('./pages/setup-layout/setup-layout').then((m) => m.SetupLayout),
+    children: [
+      { path: '', pathMatch: 'full', canActivate: [setupEntryGuard], children: [] },
+      {
+        path: 'welcome',
+        loadComponent: () => import('./pages/welcome-page/welcome-page').then((m) => m.WelcomePage),
+      },
+      {
+        path: 'vault',
+        loadComponent: () =>
+          import('./pages/vault-setup-page/vault-setup-page').then((m) => m.VaultSetupPage),
+      },
+    ],
   },
   {
     path: '',

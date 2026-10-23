@@ -1451,5 +1451,27 @@
       "previousTab": "Previous Tab",
       "shortcuts": "Keyboard Shortcuts"
     }
+  },
+  "onboarding": {
+    "step": "Step {{current}} of {{total}}",
+    "welcome": {
+      "lead": "Made by a Dungeon Master for Dungeon Masters, and lazy by design: you prepare less, and the session runs itself.",
+      "points": {
+        "prepare": {
+          "title": "Prepare once.",
+          "text": "Scenes, enemies, places and maps live together and link to each other."
+        },
+        "session": {
+          "title": "Run it at the table.",
+          "text": "Initiative, HP and maps sit next to your notes, so you never leave the game to look something up."
+        },
+        "files": {
+          "title": "Plain files you own.",
+          "text": "Everything is Markdown in a folder of your choice. No account, no lock-in."
+        }
+      },
+      "preferencesHint": "Only for this device. You can change both later in Settings.",
+      "continue": "Continue"
+    }
   }
 }
