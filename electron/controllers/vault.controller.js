@@ -1,7 +1,7 @@
 const { dialog } = require('electron');
 const path = require('node:path');
 const { randomUUID } = require('node:crypto');
-const { appMetaModel, vaultMigrationModel, vaultModel } = require('../models');
+const { appMetaModel, cloudReadinessModel, vaultMigrationModel, vaultModel } = require('../models');
 const {
   assertReadableDirectory,
   assertWritableDirectory,
@@ -114,6 +114,7 @@ function inspect(payload) {
     isVault: config !== null,
     isEmpty: vaultModel.isDirectoryEmpty(folderPath),
     isWritable,
+    cloudProvider: cloudReadinessModel.detectCloudProvider(folderPath),
   };
 }
 

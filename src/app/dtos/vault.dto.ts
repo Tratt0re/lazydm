@@ -23,4 +23,6 @@ export interface VaultInspectionDto {
   readonly isVault: boolean;
   readonly isEmpty: boolean;
   readonly isWritable: boolean;
+  /** Cloud drive the folder is in (`icloud`, `dropbox`, `onedrive`, `box`, `google-drive`); null when it is only on this device. */
+  readonly cloudProvider: string | null;
 }
