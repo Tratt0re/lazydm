@@ -252,7 +252,7 @@ var require_package = __commonJS({
           category: "public.app-category.utilities"
         },
         win: {
-          icon: "src/assets/icon/APP_ICON.png",
+          icon: "src/assets/icon/lazydm_ico_1024.png",
           target: [
             "nsis",
             "portable"
@@ -265,7 +265,7 @@ var require_package = __commonJS({
           artifactName: "lazydm-portable-${version}-${arch}.${ext}"
         },
         linux: {
-          icon: "src/assets/icon/APP_ICON.png",
+          icon: "src/assets/icon/lazydm_ico_1024.png",
           target: [
             "AppImage"
           ],
