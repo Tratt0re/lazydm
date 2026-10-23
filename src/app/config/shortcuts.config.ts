@@ -50,6 +50,8 @@ export const SHORTCUTS: readonly ShortcutDefinition[] = [
   { id: 'mapAddToSelection', scope: 'map', combos: [], gesture: true },
 ];
 
+import { TOOLTIP_SHORTCUT_SEPARATOR } from '@/shared/components/tooltip';
+
 const isMac = typeof navigator !== 'undefined' && /mac/i.test(navigator.platform);
 
 const KEY_NAMES: Readonly<Record<string, string>> = {
@@ -90,10 +92,10 @@ export function shortcutText(id: string): string {
   return keyCaps(combo).join(isMac ? '' : '+');
 }
 
-/** A tooltip text with its shortcut after it: `Save · ⌘S`. */
+/** A tooltip text with its shortcut after it (`Save`, then a smaller, dimmer `⌘S`). */
 export function withShortcut(label: string, id: string | undefined): string {
   const text = id ? shortcutText(id) : '';
-  return text ? `${label} · ${text}` : label;
+  return text ? `${label}${TOOLTIP_SHORTCUT_SEPARATOR}${text}` : label;
 }
 
 /** Whether a keyboard event is this combination (`mod` = Cmd on macOS, Ctrl elsewhere). */

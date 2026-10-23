@@ -38,6 +38,12 @@ import { ArcTechIdDirective } from '@/shared/core';
 import { ArcTechStringTemplateOutletDirective } from '@/shared/core/directives/string-template-outlet/string-template-outlet.directive';
 import { mergeClasses } from '@/shared/utils/merge-classes';
 
+/**
+ * Separates a tooltip's label from its keyboard shortcut (`label + separator + keys`): the keys are shown
+ * smaller and dimmer. A text without it is shown as it is.
+ */
+export const TOOLTIP_SHORTCUT_SEPARATOR = '\u001F';
+
 export type ArcTechTooltipTriggers = 'click' | 'hover';
 export type ArcTechTooltipType = string | TemplateRef<void> | null;
 
@@ -257,7 +263,10 @@ export class ArcTechTooltipDirective implements OnInit, OnDestroy {
   selector: 'arc-tooltip',
   imports: [ArcTechStringTemplateOutletDirective, ArcTechIdDirective],
   template: `
-    <ng-container *arcStringTemplateOutlet="tooltipText()" arcTechId="tooltip" #z="arcTechId">{{ tooltipText() }}</ng-container>
+    <ng-container *arcStringTemplateOutlet="tooltipText()" arcTechId="tooltip" #z="arcTechId">{{ label() }}</ng-container>
+    @if (shortcut(); as keys) {
+      <span class="ml-2 text-[10px] font-medium tracking-normal normal-case opacity-60">{{ keys }}</span>
+    }
 
     <span [class]="arrowClasses()">
       <svg
@@ -290,6 +299,13 @@ export class ArcTechTooltipComponent {
   readonly state = signal<'closed' | 'opened'>('closed');
   readonly uniqueId = viewChild<ArcTechIdDirective>('z');
   protected readonly tooltipText = signal<ArcTechTooltipType>(null);
+  /** A text from `withShortcut` has two parts: the label and its keys, shown smaller and dimmer. */
+  private readonly parts = computed(() => {
+    const text = this.tooltipText();
+    return typeof text === 'string' ? text.split(TOOLTIP_SHORTCUT_SEPARATOR) : [text];
+  });
+  protected readonly label = computed(() => this.parts()[0]);
+  protected readonly shortcut = computed(() => (this.parts()[1] as string | undefined) ?? '');
   protected readonly tooltipId = computed(() => this.uniqueId()?.id() ?? 'tooltip');
 
   setProps(tooltipText: ArcTechTooltipType, position: ArcTechTooltipPositionVariants) {
