@@ -39,20 +39,20 @@
                   arcType="ghost"
                   [arcDisabled]="drawCount() < 2"
                   [arcTooltip]="'maps.path.doneHint' | translate"
+                  [attr.aria-label]="'maps.path.done' | translate"
                   (click)="finishPath()"
                 >
                   <arc-icon arcType="check" />
-                  {{ 'maps.path.done' | translate }}
                 </button>
                 <button
                   type="button"
                   arc-button
                   arcType="ghost"
                   [arcTooltip]="'maps.path.cancelHint' | translate"
+                  [attr.aria-label]="'maps.path.cancel' | translate"
                   (click)="cancelPath()"
                 >
                   <arc-icon arcType="x" />
-                  {{ 'maps.path.cancel' | translate }}
                 </button>
               </div>
             }
@@ -312,10 +312,12 @@
               {{ 'maps.item.edit' | translate }}
             </button>
           }
+          <!-- Destructive like the toolbar's Delete: red outline, filled red on hover. -->
           <button
             type="button"
             arc-button
             arcType="secondary"
+            class="border-destructive text-destructive hover:bg-destructive hover:text-destructive-foreground"
             [class.flex-1]="!selection()"
             [arcDisabled]="!isEditable()"
             [arcTooltip]="'maps.item.delete' | translate"

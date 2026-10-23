@@ -1309,8 +1309,13 @@ button.arc-embed-file:hover,
   fill: none;
 }
 
-.arc-map-path.is-selected {
-  filter: drop-shadow(0 0 3px var(--foreground-strong));
+/* A selected path: a halo under the stroke (the stroke keeps its own colour) and its points on top. */
+.arc-map-path-halo {
+  stroke: var(--foreground-strong);
+  stroke-opacity: 0.55;
+  stroke-linecap: square;
+  stroke-linejoin: miter;
+  fill: none;
 }
 
 .arc-map-path-hit {
@@ -1352,6 +1357,12 @@ button.arc-embed-file:hover,
   background: var(--card);
   border: 2px solid var(--primary);
   cursor: move;
+}
+
+/* The points of a path selected together with other items: shown, but only the whole group moves. */
+.arc-map-vertex.is-static {
+  cursor: inherit;
+  border-color: var(--foreground-strong);
 }
 
 @media (prefers-reduced-motion: reduce) {

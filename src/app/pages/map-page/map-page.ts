@@ -91,6 +91,8 @@ interface ItemLayers {
   marker?: L.Marker;
   /** Polylines and polygons (a polygon is a polyline in Leaflet, but the types do not say so). */
   lines: (L.Polyline | L.Polygon)[];
+  /** The points of a selected path, shown on it (draggable only when it is the one item selected). */
+  vertices?: L.Marker[];
 }
 
 /** Items being moved together: where the pointer holds them and how far it has taken them. */
@@ -287,6 +289,8 @@ export class MapPage {
     null;
   private skipNextMapClick = false;
   private skipNextItemClick = false;
+  /** The mousedown an item took for itself (moving it), so the map does not also read it as a rectangle. */
+  private itemMouseDown: MouseEvent | null = null;
 
   private readonly params = toSignal(this.route.paramMap, {
     initialValue: this.route.snapshot.paramMap,
@@ -890,6 +894,14 @@ export class MapPage {
           interactive: false,
         })
       : L.polyline(latlngs, { weight: path.width, className, interactive: false });
+    // A selected path gets a wider halo under it, so it reads as selected whatever its colour.
+    const halo = isSelected
+      ? L.polyline(latlngs, {
+          weight: path.width + 8,
+          className: 'arc-map-path-halo',
+          interactive: false,
+        }).addTo(layers)
+      : null;
     line.addTo(layers);
     // A wide invisible line under the pointer: a 3 px stroke is hard to hit.
     const hitOptions: L.PolylineOptions = {
@@ -909,35 +921,99 @@ export class MapPage {
       )
       .on('mousedown', (event: L.LeafletMouseEvent) => this.onItemMouseDown(path.id, event))
       .addTo(layers);
-    this.layerIndex.set(path.id, { lines: [line, hit] });
+    const entry: ItemLayers = { lines: halo ? [halo, line, hit] : [line, hit] };
+    this.layerIndex.set(path.id, entry);
 
-    if (!isSelected || !canReshape) {
+    if (!isSelected) {
       return;
     }
 
+    // The points of every selected path are shown; they can be dragged when this is the one item selected.
     const vertices = path.points.map((point) =>
       L.marker(this.toLatLng(point), {
         icon: L.divIcon({
           className: 'arc-map-marker',
-          html: '<span class="arc-map-vertex"></span>',
+          html: `<span class="arc-map-vertex${canReshape ? '' : ' is-static'}"></span>`,
           iconSize: [14, 14],
           iconAnchor: [7, 7],
         }),
-        draggable: true,
+        interactive: canReshape,
+        keyboard: false,
       }),
     );
-    vertices.forEach((vertex) => {
-      vertex.on('drag', () => line.setLatLngs(vertices.map((item) => item.getLatLng())));
-      vertex.on('dragend', () => {
-        const points = vertices.map((item) => this.toPoint(item.getLatLng()));
-        if (points.every((point): point is MapPointDto => point !== null)) {
-          this.updatePath(path.id, { points });
-        } else {
-          this.viewVersion.update((version) => version + 1);
-        }
-      });
+    entry.vertices = vertices;
+    vertices.forEach((vertex, index) => {
+      if (canReshape) {
+        vertex.on('mousedown', (event: L.LeafletMouseEvent) =>
+          this.onVertexMouseDown(path.id, index, entry, event),
+        );
+      }
+
       vertex.addTo(layers);
     });
+  }
+
+  /**
+   * Moves one point of the selected path with the pointer (like items: Leaflet's own marker dragging does not
+   * report its end reliably). The path is saved once, when the button is released.
+   */
+  private onVertexMouseDown(
+    pathId: string,
+    index: number,
+    entry: ItemLayers,
+    event: L.LeafletMouseEvent,
+  ): void {
+    const instance = this.leaflet;
+    const bounds = this.bounds;
+    const original = event.originalEvent;
+    const vertices = entry.vertices;
+    if (!instance || !bounds || !vertices || !this.isEditable() || original.button !== 0) {
+      return;
+    }
+
+    original.preventDefault();
+    instance.dragging.disable();
+    let isMoving = false;
+    const start = instance.mouseEventToContainerPoint(original);
+    const onMove = (move: MouseEvent) => {
+      const point = instance.mouseEventToContainerPoint(move);
+      if (!isMoving && point.distanceTo(start) < DRAG_START_PIXELS) {
+        return;
+      }
+
+      isMoving = true;
+      const latlng = instance.mouseEventToLatLng(move);
+      // Kept inside the image.
+      vertices[index].setLatLng(
+        L.latLng(
+          Math.min(bounds.getNorth(), Math.max(bounds.getSouth(), latlng.lat)),
+          Math.min(bounds.getEast(), Math.max(bounds.getWest(), latlng.lng)),
+        ),
+      );
+      const moved = vertices.map((vertex) => vertex.getLatLng());
+      entry.lines.forEach((line) => line.setLatLngs(moved));
+    };
+    const onUp = () => {
+      document.removeEventListener('mousemove', onMove);
+      document.removeEventListener('mouseup', onUp);
+      window.removeEventListener('blur', onUp);
+      instance.dragging.enable();
+      if (!isMoving) {
+        return;
+      }
+
+      const points = vertices.map((vertex) => this.toPoint(vertex.getLatLng()));
+      if (points.every((point): point is MapPointDto => point !== null)) {
+        this.skipNextMapClick = true;
+        setTimeout(() => (this.skipNextMapClick = false), CLICK_AFTER_DRAG_MS);
+        this.updatePath(pathId, { points });
+      } else {
+        this.viewVersion.update((version) => version + 1);
+      }
+    };
+    document.addEventListener('mousemove', onMove);
+    document.addEventListener('mouseup', onUp);
+    window.addEventListener('blur', onUp);
   }
 
   private buildPinElement(pin: MapPinDto, isSelected: boolean): HTMLElement {
@@ -1106,9 +1182,9 @@ export class MapPage {
       const layers = this.layerIndex.get(id);
       const base = drag.base.get(id) ?? [];
       layers?.marker?.setLatLng(L.latLng(base[0].lat + lat, base[0].lng + lng));
-      layers?.lines.forEach((line) =>
-        line.setLatLngs(base.map((point) => L.latLng(point.lat + lat, point.lng + lng))),
-      );
+      const moved = base.map((point) => L.latLng(point.lat + lat, point.lng + lng));
+      layers?.lines.forEach((line) => line.setLatLngs(moved));
+      layers?.vertices?.forEach((vertex, index) => vertex.setLatLng(moved[index]));
     }
   }
 
@@ -1164,7 +1240,9 @@ export class MapPage {
     }
 
     // The map must not pan while an item is held (its own drag already started on this mousedown: disabling
-    // it ends that drag), and the browser must not start dragging the icon or selecting text.
+    // it ends that drag), and the browser must not start dragging the icon or selecting text. The same
+    // mousedown also reaches the map: it must not start a selection rectangle under the item.
+    this.itemMouseDown = original;
     original.preventDefault();
     instance.dragging.disable();
     const start = instance.mouseEventToContainerPoint(original);
@@ -1214,7 +1292,8 @@ export class MapPage {
       this.tool() !== 'select' ||
       this.isPanning() ||
       !this.isEditable() ||
-      original.button !== 0
+      original.button !== 0 ||
+      original === this.itemMouseDown
     ) {
       return;
     }
