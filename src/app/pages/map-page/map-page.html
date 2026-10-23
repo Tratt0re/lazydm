@@ -1,28 +1,62 @@
 <div class="flex min-h-0 flex-1">
-  <div class="relative min-h-0 min-w-0 flex-1 border-r border-border bg-recessed">
+  <!-- `isolate` makes the map its own stacking context: Leaflet's panes (z-index up to 700) and our tools stay
+       inside it and never show above a sheet, a modal, a menu or the sidebar. -->
+  <div class="relative isolate min-h-0 min-w-0 flex-1 border-r border-border bg-recessed">
     <!-- Leaflet owns this element. It stays mounted in every state so the map is ready when the image is. -->
     <div #canvas class="arc-map absolute inset-0" [attr.aria-label]="title()"></div>
 
     @if (imageState() === 'ready') {
-      <!-- Tools: select, pin, path, note. -->
+      <!-- Tools: interact, select, pin, path, note. Path shows Done / Cancel on its right while it is the tool. -->
       <div
         class="absolute top-4 left-4 z-[500] flex flex-col border border-border bg-raised"
         role="toolbar"
         [attr.aria-label]="'maps.tools.label' | translate"
       >
         @for (item of tools; track item.tool) {
-          <button
-            type="button"
-            arc-button
-            [arcType]="tool() === item.tool ? 'default' : 'ghost'"
-            [arcDisabled]="!isEditable() && item.tool !== 'select'"
-            [arcTooltip]="item.label | translate"
-            [attr.aria-label]="item.label | translate"
-            [attr.aria-pressed]="tool() === item.tool"
-            (click)="selectTool(item.tool)"
-          >
-            <arc-icon [arcType]="item.icon" />
-          </button>
+          <div class="relative">
+            <button
+              type="button"
+              arc-button
+              [arcType]="tool() === item.tool ? 'default' : 'ghost'"
+              [arcDisabled]="!isEditable() && item.tool !== 'interact'"
+              [arcTooltip]="item.label | translate"
+              [attr.aria-label]="item.label | translate"
+              [attr.aria-pressed]="tool() === item.tool"
+              (click)="selectTool(item.tool)"
+            >
+              <arc-icon [arcType]="item.icon" />
+            </button>
+
+            @if (item.tool === 'path' && tool() === 'path') {
+              <div
+                class="absolute top-0 left-full ml-2 flex items-center border border-border bg-raised"
+                role="group"
+                [attr.aria-label]="'maps.path.group' | translate"
+              >
+                <button
+                  type="button"
+                  arc-button
+                  arcType="ghost"
+                  [arcDisabled]="drawCount() < 2"
+                  [arcTooltip]="'maps.path.doneHint' | translate"
+                  (click)="finishPath()"
+                >
+                  <arc-icon arcType="check" />
+                  {{ 'maps.path.done' | translate }}
+                </button>
+                <button
+                  type="button"
+                  arc-button
+                  arcType="ghost"
+                  [arcTooltip]="'maps.path.cancelHint' | translate"
+                  (click)="cancelPath()"
+                >
+                  <arc-icon arcType="x" />
+                  {{ 'maps.path.cancel' | translate }}
+                </button>
+              </div>
+            }
+          </div>
         }
       </div>
 
@@ -123,10 +157,14 @@
     [attr.aria-label]="'maps.panel.label' | translate"
   >
     <div class="flex h-full w-80 flex-col">
-      @if (selection(); as current) {
+      @if (selectedCount() > 0) {
         <div class="flex h-12 shrink-0 items-center justify-between gap-2 border-b border-border px-4">
           <h2 class="font-mono text-[11px] font-semibold tracking-[0.11em] text-muted-foreground uppercase">
-            {{ 'maps.item.' + current.kind | translate }}
+            @if (selection(); as current) {
+              {{ 'maps.item.' + current.kind | translate }}
+            } @else {
+              {{ 'maps.panel.selected' | translate: { count: selectedCount() } }}
+            }
           </h2>
           <button
             type="button"
@@ -170,11 +208,13 @@
                 </dt>
                 <dd class="mt-1 text-sm">
                   @if (pin.link; as link) {
+                    <!-- A button: the app's document-wide Cmd / Ctrl-click handler only knows anchors, so the
+                         modifier is read here and goes to openLink (a background tab). -->
                     <button
                       type="button"
                       class="flex max-w-full cursor-pointer items-center gap-2 text-left text-primary hover:underline focus-visible:outline-2 focus-visible:outline-ring"
                       [attr.title]="link"
-                      (click)="openLink(link)"
+                      (click)="openLink(link, $event.metaKey || $event.ctrlKey)"
                     >
                       <arc-icon arcType="external-link" class="size-4 shrink-0" />
                       <span class="truncate">{{ linkName(link) }}</span>
@@ -209,6 +249,14 @@
               </div>
               <div>
                 <dt class="font-mono text-[11px] tracking-[0.11em] text-muted-foreground uppercase">
+                  {{ 'maps.item.shape' | translate }}
+                </dt>
+                <dd class="mt-1 text-sm">
+                  {{ (path.closed ? 'maps.item.shapeArea' : 'maps.item.shapeLine') | translate }}
+                </dd>
+              </div>
+              <div>
+                <dt class="font-mono text-[11px] tracking-[0.11em] text-muted-foreground uppercase">
                   {{ 'maps.item.width' | translate }}
                 </dt>
                 <dd class="mt-1 font-mono text-sm">{{ path.width }} px</dd>
@@ -234,31 +282,50 @@
               </span>
             </div>
             <p class="text-sm leading-6 break-words whitespace-pre-wrap">{{ note.text }}</p>
+          } @else {
+            <!-- Several items selected (Select tool): what is in the selection. -->
+            <ul class="flex flex-col gap-1">
+              @for (row of selectedRows(); track row.id) {
+                <li class="flex items-center gap-3 border border-border-subtle bg-recessed px-3 py-2">
+                  <arc-icon [arcType]="row.icon" class="size-4 shrink-0" [style.color]="colorVar(row.color)" />
+                  <span class="min-w-0 flex-1 truncate text-sm">{{ row.label }}</span>
+                  <span class="font-mono text-[11px] text-muted-foreground uppercase">{{
+                    'maps.item.' + row.kind | translate
+                  }}</span>
+                </li>
+              }
+            </ul>
           }
         </div>
 
         <div class="flex shrink-0 items-center gap-2 border-t border-border p-4">
-          <button
-            type="button"
-            arc-button
-            arcType="outline"
-            class="flex-1"
-            [arcDisabled]="!isEditable()"
-            (click)="editSelected()"
-          >
-            <arc-icon arcType="pencil" />
-            {{ 'maps.item.edit' | translate }}
-          </button>
+          @if (selection()) {
+            <button
+              type="button"
+              arc-button
+              arcType="outline"
+              class="flex-1"
+              [arcDisabled]="!isEditable()"
+              (click)="editSelected()"
+            >
+              <arc-icon arcType="pencil" />
+              {{ 'maps.item.edit' | translate }}
+            </button>
+          }
           <button
             type="button"
             arc-button
             arcType="secondary"
+            [class.flex-1]="!selection()"
             [arcDisabled]="!isEditable()"
             [arcTooltip]="'maps.item.delete' | translate"
             [attr.aria-label]="'maps.item.delete' | translate"
             (click)="confirmDelete()"
           >
             <arc-icon arcType="trash" />
+            @if (!selection()) {
+              {{ 'maps.item.delete' | translate }}
+            }
           </button>
         </div>
       } @else {
@@ -293,3 +360,87 @@
     </div>
   </aside>
 </div>
+
+<!-- The right-click menu is opened from code (on the map or on an item), like the tab bar's. -->
+<span class="hidden" arc-context-menu [arcContextMenuTriggerFor]="mapMenu" aria-hidden="true"></span>
+
+<ng-template #mapMenu>
+  <div arc-menu-content class="w-60">
+    @if (menuTarget(); as target) {
+      @if (target.kind === 'map') {
+        <button
+          type="button"
+          arc-menu-item
+          [arcDisabled]="!isEditable() || !target.point"
+          (click)="target.point && menuAddPin(target.point)"
+        >
+          <arc-icon arcType="map-pin" />
+          {{ 'maps.menu.addPin' | translate }}
+        </button>
+        <button
+          type="button"
+          arc-menu-item
+          [arcDisabled]="!isEditable() || !target.point"
+          (click)="target.point && menuAddNote(target.point)"
+        >
+          <arc-icon arcType="sticky-note" />
+          {{ 'maps.menu.addNote' | translate }}
+        </button>
+        <button
+          type="button"
+          arc-menu-item
+          [arcDisabled]="!isEditable() || !target.point"
+          (click)="target.point && menuDrawPath(target.point)"
+        >
+          <arc-icon arcType="route" />
+          {{ 'maps.menu.drawPath' | translate }}
+        </button>
+        <div class="-mx-1 my-1 h-px bg-border-subtle" role="separator"></div>
+        <button type="button" arc-menu-item (click)="menuZoomIn()">
+          <arc-icon arcType="zoom-in" />
+          {{ 'maps.tools.zoomIn' | translate }}
+        </button>
+        <button type="button" arc-menu-item (click)="menuZoomOut()">
+          <arc-icon arcType="zoom-out" />
+          {{ 'maps.tools.zoomOut' | translate }}
+        </button>
+        <button type="button" arc-menu-item (click)="fit()">
+          <arc-icon arcType="maximize" />
+          {{ 'maps.tools.fit' | translate }}
+        </button>
+      } @else {
+        @if (selectedCount() === 1) {
+          <button type="button" arc-menu-item [arcDisabled]="!isEditable()" (click)="menuEdit(target.item)">
+            <arc-icon arcType="pencil" />
+            {{ 'maps.menu.edit' | translate }}
+          </button>
+          @if (target.item.kind === 'pin' && pinLink(target.item.id); as link) {
+            <button type="button" arc-menu-item (click)="openLink(link)">
+              <arc-icon arcType="external-link" />
+              {{ 'maps.menu.openLink' | translate }}
+            </button>
+            <button type="button" arc-menu-item (click)="openLink(link, true)">
+              <arc-icon arcType="plus" />
+              {{ 'maps.menu.openLinkBackground' | translate }}
+            </button>
+          }
+          <div class="-mx-1 my-1 h-px bg-border-subtle" role="separator"></div>
+        }
+        <button
+          type="button"
+          arc-menu-item
+          arcType="destructive"
+          [arcDisabled]="!isEditable()"
+          (click)="confirmDelete()"
+        >
+          <arc-icon arcType="trash" />
+          @if (selectedCount() > 1) {
+            {{ 'maps.menu.deleteMany' | translate: { count: selectedCount() } }}
+          } @else {
+            {{ 'maps.menu.delete' | translate }}
+          }
+        </button>
+      }
+    }
+  </div>
+</ng-template>

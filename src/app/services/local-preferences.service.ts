@@ -11,11 +11,13 @@ import {
   type EditorSettings,
   LOCAL_PREFERENCE_DEFAULTS,
   LocalPreferenceKey,
+  type MapViewPreference,
   type ThemePreference,
 } from '@/config/local-preferences.config';
 
 const DOCUMENT_VIEW_MODES_MAX_ENTRIES = 500;
 const EXPLORER_EXPANDED_MAX_ENTRIES = 50;
+const MAP_VIEWS_MAX_ENTRIES = 200;
 
 @Injectable({
   providedIn: 'root',
@@ -220,6 +222,30 @@ export class LocalPreferencesService {
     all[stateKey] = [...keys];
     const entries = Object.entries(all).slice(-EXPLORER_EXPANDED_MAX_ENTRIES);
     this.setJson(LocalPreferenceKey.EXPLORER_EXPANDED, Object.fromEntries(entries));
+  }
+
+  /** Where a map (vault path) was left on this device; null when it was never moved. */
+  getMapView(path: string): MapViewPreference | null {
+    const view = this.readMapViews()[path] as Partial<MapViewPreference> | undefined;
+    return view && Number.isFinite(view.x) && Number.isFinite(view.y) && Number.isFinite(view.zoom)
+      ? { x: view.x as number, y: view.y as number, zoom: view.zoom as number }
+      : null;
+  }
+
+  /** Remembers where a map was left; only the most recent maps are kept. */
+  setMapView(path: string, view: MapViewPreference): void {
+    const all = this.readMapViews();
+    delete all[path];
+    all[path] = view;
+    const entries = Object.entries(all).slice(-MAP_VIEWS_MAX_ENTRIES);
+    this.setJson(LocalPreferenceKey.MAP_VIEWS, Object.fromEntries(entries));
+  }
+
+  private readMapViews(): Record<string, unknown> {
+    const parsed = this.getJson<unknown>(LocalPreferenceKey.MAP_VIEWS);
+    return parsed && typeof parsed === 'object' && !Array.isArray(parsed)
+      ? { ...(parsed as Record<string, unknown>) }
+      : {};
   }
 
   private readExplorerExpanded(): Record<string, unknown> {

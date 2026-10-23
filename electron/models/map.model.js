@@ -134,6 +134,8 @@ function normalizePath(item) {
     color: toColor(item.color, DEFAULT_PATH_COLOR),
     width: Math.min(PATH_WIDTH_MAX, Math.max(PATH_WIDTH_MIN, width)),
     label: toText(item.label, LABEL_MAX_LENGTH) ?? '',
+    // A closed path is a polygon: it needs a surface, so three points at least.
+    closed: item.closed === true && points.length >= 3,
   };
 }
 

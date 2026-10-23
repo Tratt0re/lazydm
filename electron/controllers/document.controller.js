@@ -274,6 +274,7 @@ async function move(payload) {
     } else {
       await documentModel.moveVaultFile(vaultPath, relativePath, newPath);
       isMoved = true;
+      updatedPaths.push(...(await rewriteMapImages(vaultPath, relativePath, newPath)));
     }
 
     await rewriteMovedLinks();
@@ -1118,6 +1119,41 @@ async function deleteFile(payload) {
 }
 
 /**
+ * An image of the assets was renamed or moved: the maps of its scope that show it follow, so they do not end up
+ * with a missing image. A map changed meanwhile is skipped (its file is left as it is). Returns the paths written.
+ */
+async function rewriteMapImages(vaultPath, oldPath, newPath) {
+  const scope = vaultIndexModel.getCampaignSlug(oldPath);
+  const mapPaths = vaultIndexModel
+    .listScopeFiles(scope)
+    .map((file) => file.path)
+    .filter((filePath) => /(^|\/)maps\/(.+\/)?[^/]+\.json$/i.test(filePath));
+  const updated = [];
+  for (const mapPath of mapPaths) {
+    try {
+      const file = await mapModel.readMap(vaultPath, mapPath);
+      if (file.parseError || file.map.image !== oldPath) {
+        continue;
+      }
+
+      const result = await mapModel.writeMap(
+        vaultPath,
+        mapPath,
+        { ...file.map, image: newPath },
+        file.contentHash,
+      );
+      if (result.status === 'saved') {
+        updated.push(mapPath);
+      }
+    } catch (error) {
+      console.warn('[maps] Could not follow the renamed image in', mapPath, error);
+    }
+  }
+
+  return updated;
+}
+
+/**
  * Renames an asset (image, PDF, audio…): the new name gives the slug, the extension stays, the folder too.
  * With `updateLinks`, the links and embeds resolving to it are rewritten like a note rename's.
  */
@@ -1161,7 +1197,8 @@ async function renameAsset(payload) {
       )
     : { updatedPaths: [], failedPaths: [], linkCount: 0 };
 
-  await indexerController.reindexPaths([relativePath, newPath, ...updatedPaths]);
+  const mapPaths = await rewriteMapImages(vaultPath, relativePath, newPath);
+  await indexerController.reindexPaths([relativePath, newPath, ...updatedPaths, ...mapPaths]);
   return { path: newPath, updatedPaths, failedPaths, linkCount };
 }
 

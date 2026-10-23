@@ -1288,12 +1288,14 @@
       "note": "Add note",
       "zoomIn": "Zoom in",
       "zoomOut": "Zoom out",
-      "fit": "Fit to window"
+      "fit": "Fit to window",
+      "interact": "Interact"
     },
     "hint": {
       "pin": "Click on the map to place a pin.",
-      "path": "Click to add points. Enter or double-click to finish, Esc to cancel.",
-      "note": "Click on the map to place a note."
+      "path": "Click to add points. Click the first point to close the shape. Done or Enter to finish.",
+      "note": "Click on the map to place a note.",
+      "select": "Drag a rectangle to select several items. Hold Space to move the map."
     },
     "item": {
       "pin": "Pin",
@@ -1325,7 +1327,12 @@
       "points": "Points",
       "linkPlaceholder": "Choose a file",
       "linkSearch": "Search files",
-      "linkEmpty": "No file found"
+      "linkEmpty": "No file found",
+      "deleteManyTitle": "Delete {{count}} items?",
+      "closedLabel": "Closed shape (an area)",
+      "shape": "Shape",
+      "shapeLine": "Line",
+      "shapeArea": "Closed area"
     },
     "colors": {
       "red": "Red",
@@ -1360,7 +1367,25 @@
       "label": "Map details",
       "toggle": "Details",
       "back": "Back to the list",
-      "empty": "Nothing here yet. Use the tools on the map to add a pin, a path or a note."
+      "empty": "Nothing here yet. Use the tools on the map to add a pin, a path or a note.",
+      "selected": "{{count}} selected"
+    },
+    "path": {
+      "group": "Path drawing",
+      "done": "Done",
+      "cancel": "Cancel",
+      "doneHint": "Finish the path (Enter)",
+      "cancelHint": "Drop the path (Esc)"
+    },
+    "menu": {
+      "addPin": "Add pin here",
+      "addNote": "Add note here",
+      "drawPath": "Draw a path from here",
+      "edit": "Edit…",
+      "openLink": "Open linked file",
+      "openLinkBackground": "Open in a background tab",
+      "delete": "Delete…",
+      "deleteMany": "Delete {{count}} items…"
     }
   }
 }

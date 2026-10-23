@@ -6,9 +6,20 @@ export enum LocalPreferenceKey {
   DOCUMENT_LINKS_PANEL_OPEN = 'document_links_panel_open',
   DOCUMENT_VIEW_MODES = 'document_view_modes',
   EXPLORER_EXPANDED = 'explorer_expanded',
+  MAP_VIEWS = 'map_views',
   EDITOR_SETTINGS = 'editor_settings',
   NOTE_AUDIO_VOLUME = 'note_audio_volume',
   SHOW_FILE_SIZES = 'show_file_sizes',
+}
+
+/**
+ * Where a map was left: the centre as fractions of its image and the zoom relative to the zoom that fits the
+ * image, so it holds for any window size.
+ */
+export interface MapViewPreference {
+  readonly x: number;
+  readonly y: number;
+  readonly zoom: number;
 }
 
 /** How a note is shown: live preview (editable, rendered), raw source, or read-only reading view. */

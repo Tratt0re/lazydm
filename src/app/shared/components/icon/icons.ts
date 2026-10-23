@@ -196,6 +196,8 @@ import {
   ZoomIn,
   ZoomOut,
   ExternalLink,
+  Hand,
+  SquareDashedMousePointer,
 } from 'lucide-angular';
 
 export const ARCTECH_ICONS = {
@@ -383,18 +385,20 @@ export const ARCTECH_ICONS = {
   play: Play,
   'volume-2': Volume2,
   'volume-x': VolumeX,
-  'map': Map,
-  'trees': Trees,
-  'mountain': Mountain,
-  'anchor': Anchor,
+  map: Map,
+  trees: Trees,
+  mountain: Mountain,
+  anchor: Anchor,
   'door-open': DoorOpen,
-  'maximize': Maximize,
-  'route': Route,
+  maximize: Maximize,
+  route: Route,
   'sticky-note': StickyNote,
   'mouse-pointer-2': MousePointer2,
   'zoom-in': ZoomIn,
   'zoom-out': ZoomOut,
   'external-link': ExternalLink,
+  hand: Hand,
+  'square-dashed-mouse-pointer': SquareDashedMousePointer,
 } as const satisfies Record<string, LucideIconData>;
 
 export declare type ArcTechIcon = keyof typeof ARCTECH_ICONS | LucideIconData;

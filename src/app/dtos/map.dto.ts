@@ -53,6 +53,8 @@ export interface MapPathDto {
   readonly color: MapColor;
   readonly width: number;
   readonly label: string;
+  /** A polygon: the last point joins the first and the area is filled. */
+  readonly closed: boolean;
 }
 
 export interface MapNoteDto extends MapPointDto {

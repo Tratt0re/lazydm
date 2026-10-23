@@ -426,21 +426,39 @@ Planned Electron modules: `vault`, `cloud-readiness`, `campaign`, `document`, `i
   palette. Saves are atomic and conflict-checked by content hash (*Keep my version* / *Load the other version*).
   - **Pin**: `{ id, x, y, label, color, icon, link }`; `link` is a vault path of a note, asset or encounter of the same
     scope (null for none).
-  - **Path**: `{ id, points: [{ x, y }], color, width, label }`.
+  - **Path**: `{ id, points: [{ x, y }], color, width, label, closed }`; `closed` (three points at least) is a
+    polygon: its area is filled with the colour at low opacity.
   - **Note**: `{ id, x, y, text, color }`, a free text box anchored to a point.
 - **Library**: Leaflet (core only) with `CRS.Simple`, the image as an overlay. Pins and notes are `divIcon` markers
   styled by us; no Leaflet default marker images and no drawing plugin. Leaflet's own chrome (zoom control,
   attribution) is replaced by ArcTechUI controls.
-- **Page** (`/<scope>/maps/<file>`, own tab title and breadcrumb): the toolbar keeps the main actions (*Rename…*,
-  *Delete…*); a **tool palette** over the map holds *Select*, *Pin*, *Path*, *Note* and the zoom buttons (zoom in /
-  out / fit). Wheel and pinch zoom, drag to pan. Every edit is saved right away. A pin or note selected shows its
-  details in a **side sheet** (information: label, colour, link, and the open-link button); editing happens in place on
-  the map, and destructive actions (delete) ask in a modal (§8).
+- **Page** (`/<scope>/maps/<file>`, own tab title and breadcrumb): the toolbar keeps the main actions (*Details*,
+  *Rename…*, *Delete…*); a **tool palette** over the map holds *Interact*, *Select*, *Pin*, *Path*, *Note* and
+  the zoom buttons (zoom in / out / fit). Every edit is saved right away. The map is a stacking context of its
+  own: nothing of it (panes, tools) ever shows above a sheet, a modal or a menu.
+  - **Interact** is the default: drag to pan, click an item to select it, drag a pin or a note to move it, drag the
+    points of the selected path to reshape it. **Double-click** on a pin with a linked file opens that file;
+    **Cmd/Ctrl-click** opens it in a background tab (any other double-click opens the item's form).
+  - **Select** drags a rectangle on the map and selects every pin, note and path it touches (Shift / Cmd / Ctrl add
+    to the selection, *Cmd/Ctrl+A* selects all). Dragging one selected item moves them all together (kept inside
+    the image); *Delete* removes them after one confirmation. Space held pans the map meanwhile.
+  - **Zoom** is eased: the wheel, a trackpad pinch and the buttons move a target zoom that the map follows frame by
+    frame around the pointer. The **view** (centre and zoom, relative to the fit zoom) is remembered per map on
+    this device (`LocalPreferencesService`), so coming back to a map shows it as it was left; *Fit* resets it.
+  - **Path**: each click adds a point; a click on the **first point** (three points at least) closes the shape and
+    ends the drawing, a click on another earlier point loops back to it and ends it too. A double-click does not
+    end it. While *Path* is the tool, *Done* and *Cancel* buttons sit on its right (*Enter* / *Esc* do the same);
+    the first point is highlighted when the pointer is close enough to close the shape.
+  - **Context menus** (right-click): on the map *Add pin here*, *Add note here*, *Draw a path from here*, *Zoom
+    in*, *Zoom out*, *Fit*; on an item *Edit…*, *Open linked file* (a pin with a link) and *Delete…* (on a selected
+    item of several: delete all of them).
+  - A selection of one shows its details in the **side panel** (information: label, colour, link — a real link, so
+    Cmd/Ctrl-click opens a background tab —, shape); a selection of several lists them. Editing happens in modals,
+    and so does every confirmation (§8).
+  - **Asset changes**: renaming or moving an image of the assets rewrites the `image` of the maps showing it.
 - **Style**: the map is part of the app, not a widget: square shapes, Nordic Relic surface tokens
   (`bg-card`, `bg-raised`), `font-mono` labels, semantic colours for the chrome in both themes. User colours come from
-  a fixed palette of theme-independent tokens, never free hex input.
-- **Drawing**: *Path* adds a point per click, *Enter* or double-click finishes, *Esc* cancels, vertices of the selected
-  path are dragged to edit; *Delete* removes the selection after a confirmation.
+  a fixed palette of the app's `--system-app-color-N` tokens, never free hex input.
 
 ## 7. Security
 

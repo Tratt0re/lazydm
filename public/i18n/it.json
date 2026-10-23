@@ -1288,12 +1288,14 @@
       "note": "Aggiungi nota",
       "zoomIn": "Ingrandisci",
       "zoomOut": "Riduci",
-      "fit": "Adatta alla finestra"
+      "fit": "Adatta alla finestra",
+      "interact": "Interagisci"
     },
     "hint": {
       "pin": "Clicca sulla mappa per posizionare un segnalino.",
-      "path": "Clicca per aggiungere punti. Invio o doppio clic per finire, Esc per annullare.",
-      "note": "Clicca sulla mappa per posizionare una nota."
+      "path": "Clicca per aggiungere punti. Clicca il primo punto per chiudere la forma. Fine o Invio per terminare.",
+      "note": "Clicca sulla mappa per posizionare una nota.",
+      "select": "Trascina un rettangolo per selezionare più elementi. Tieni premuto Spazio per spostare la mappa."
     },
     "item": {
       "pin": "Segnalino",
@@ -1325,7 +1327,12 @@
       "points": "Punti",
       "linkPlaceholder": "Scegli un file",
       "linkSearch": "Cerca file",
-      "linkEmpty": "Nessun file trovato"
+      "linkEmpty": "Nessun file trovato",
+      "deleteManyTitle": "Eliminare {{count}} elementi?",
+      "closedLabel": "Forma chiusa (un'area)",
+      "shape": "Forma",
+      "shapeLine": "Linea",
+      "shapeArea": "Area chiusa"
     },
     "colors": {
       "red": "Rosso",
@@ -1360,7 +1367,25 @@
       "label": "Dettagli della mappa",
       "toggle": "Dettagli",
       "back": "Torna all'elenco",
-      "empty": "Ancora niente. Usa gli strumenti sulla mappa per aggiungere un segnalino, un percorso o una nota."
+      "empty": "Ancora niente. Usa gli strumenti sulla mappa per aggiungere un segnalino, un percorso o una nota.",
+      "selected": "{{count}} selezionati"
+    },
+    "path": {
+      "group": "Disegno del percorso",
+      "done": "Fine",
+      "cancel": "Annulla",
+      "doneHint": "Termina il percorso (Invio)",
+      "cancelHint": "Scarta il percorso (Esc)"
+    },
+    "menu": {
+      "addPin": "Aggiungi segnalino qui",
+      "addNote": "Aggiungi nota qui",
+      "drawPath": "Disegna un percorso da qui",
+      "edit": "Modifica…",
+      "openLink": "Apri il file collegato",
+      "openLinkBackground": "Apri in una scheda in secondo piano",
+      "delete": "Elimina…",
+      "deleteMany": "Elimina {{count}} elementi…"
     }
   }
 }

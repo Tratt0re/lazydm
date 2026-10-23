@@ -91,6 +91,27 @@ describe('normalizeMap', () => {
     expect(map.paths[0].color).toBe('blue');
   });
 
+  it('keeps a path closed only when it has the three points of an area', () => {
+    const square = [
+      { x: 0, y: 0 },
+      { x: 1, y: 0 },
+      { x: 1, y: 1 },
+    ];
+    const map = normalizeMap(
+      {
+        paths: [
+          { id: 'area', closed: true, points: square },
+          { id: 'two', closed: true, points: square.slice(0, 2) },
+          { id: 'line', points: square },
+          { id: 'text', closed: 'yes', points: square },
+        ],
+      },
+      'm',
+    );
+    const closed = Object.fromEntries(map.paths.map((path) => [path.id, path.closed]));
+    expect(closed).toEqual({ area: true, two: false, line: false, text: false });
+  });
+
   it('keeps note text and drops notes without a position', () => {
     const map = normalizeMap(
       {

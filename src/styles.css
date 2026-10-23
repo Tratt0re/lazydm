@@ -1318,6 +1318,27 @@ button.arc-embed-file:hover,
   fill: none;
 }
 
+/* A closed path is an area: filled with its colour at low opacity (the hit shape stays clickable inside). */
+.arc-map-polygon {
+  fill: var(--arc-map-color);
+  fill-opacity: 0.18;
+}
+
+/* The rectangle of the Select tool. */
+.arc-map-marquee {
+  position: absolute;
+  z-index: 650;
+  pointer-events: none;
+  background: color-mix(in srgb, var(--primary) 14%, transparent);
+  border: 1px dashed var(--primary);
+}
+
+/* The first point of a path being drawn, while a click on it would close the shape. */
+.arc-map-vertex.is-closing {
+  background: var(--primary);
+  transform: scale(1.35);
+}
+
 .arc-map-draw {
   stroke: var(--primary);
   stroke-dasharray: 6 4;
