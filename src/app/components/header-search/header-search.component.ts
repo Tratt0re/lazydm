@@ -14,6 +14,7 @@ import { toInAppNoteRoute } from '@/components/document-preview/document-preview
 import type { SearchResultDto } from '@/dtos';
 import { CampaignService } from '@/services/campaign.service';
 import { SearchService } from '@/services/search.service';
+import { SectionService } from '@/services/section.service';
 import { ArcTechIconComponent } from '@/shared/components/icon';
 
 /** Milliseconds to wait after the user stops typing before firing a search. */
@@ -28,6 +29,8 @@ interface SnippetPart {
 /** A search result that opens a note, with its route and its snippet split for highlighting. */
 interface SearchHit extends SearchResultDto {
   readonly route: string;
+  /** Display name of the section the note's folder is, null outside a section. */
+  readonly sectionLabel: string | null;
   readonly snippetParts: readonly SnippetPart[];
 }
 
@@ -66,6 +69,7 @@ export class HeaderSearchComponent {
 
   private readonly searchService = inject(SearchService);
   private readonly campaignService = inject(CampaignService);
+  private readonly sectionService = inject(SectionService);
   private readonly router = inject(Router);
   protected readonly shortcutLabel = window.electronAPI?.platform === 'darwin' ? '⌘K' : 'Ctrl K';
   private debounceTimer?: ReturnType<typeof setTimeout>;
@@ -157,7 +161,12 @@ export class HeaderSearchComponent {
       for (const row of rows) {
         const route = toInAppNoteRoute(row.path);
         if (route) {
-          hits.push({ ...row, route, snippetParts: toSnippetParts(row.snippet ?? '') });
+          hits.push({
+            ...row,
+            route,
+            sectionLabel: row.type ? this.sectionService.labelOfPath(row.path) : null,
+            snippetParts: toSnippetParts(row.snippet ?? ''),
+          });
         }
       }
       this.results.set(hits);
