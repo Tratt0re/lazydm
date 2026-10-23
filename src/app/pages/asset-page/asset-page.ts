@@ -152,7 +152,7 @@ export class AssetPage {
                   ? 'compendium.copy.toCampaign'
                   : 'compendium.copy.toCompendium',
               ),
-              icon: 'copy-plus',
+              icon: 'book-copy',
               buttonType: 'outline',
               iconOnly: true,
               action: () => void this.copyTo.openCopySheet(this.assetPath()),

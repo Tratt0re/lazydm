@@ -251,7 +251,7 @@ export class DocumentPage {
                   ? 'compendium.copy.toCampaign'
                   : 'compendium.copy.toCompendium',
               ),
-              icon: 'copy-plus',
+              icon: 'book-copy',
               buttonType: 'outline',
               iconOnly: true,
               disabled: () => !this.document() || this.isSaving(),
