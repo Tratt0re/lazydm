@@ -1477,6 +1477,37 @@ async function copyPlan(payload) {
 }
 
 /**
+ * A copied map brings its image along: the image is copied into the target's assets (kept when the target
+ * already has a file of that name) and the copy points at it, so it never depends on the source's folder.
+ * Returns the image path written in the copy, null when there was nothing to do.
+ */
+async function copyMapImage(vaultPath, sourcePath, targetPath, target) {
+  const source = await mapModel.readMap(vaultPath, sourcePath);
+  if (source.parseError || !source.map.image) {
+    return null;
+  }
+
+  const imageLocation = await getCopyLocation(vaultPath, source.map.image, target);
+  const imageTarget = `${target}/${toCopyFolder(imageLocation, imageLocation.subfolder)}/${path.posix.basename(source.map.image)}`;
+  if (imageTarget !== source.map.image && fs.existsSync(resolveInsideVault(vaultPath, source.map.image))) {
+    await documentModel.copyVaultFile(vaultPath, source.map.image, imageTarget);
+  }
+
+  const copied = await mapModel.readMap(vaultPath, targetPath);
+  if (copied.parseError) {
+    return null;
+  }
+
+  const result = await mapModel.writeMap(
+    vaultPath,
+    targetPath,
+    { ...copied.map, image: imageTarget },
+    copied.contentHash,
+  );
+  return result.status === 'saved' ? imageTarget : null;
+}
+
+/**
  * Copies a note, asset, encounter or template into a campaign or a compendium system (the original stays).
  * The section comes from the file kind or note type and is created on demand; `subfolder` is the sub-folder
  * of that section it goes into (none: the section itself; ignored where there are no sub-folders), created
@@ -1528,6 +1559,13 @@ async function copy(payload) {
 
   const linkedPaths = [];
   try {
+    if (location.section === mapModel.MAPS_SECTION_KEY && extension.toLocaleLowerCase() === mapModel.MAP_EXTENSION) {
+      const imagePath = await copyMapImage(vaultPath, relativePath, targetPath, target);
+      if (imagePath) {
+        linkedPaths.push(imagePath);
+      }
+    }
+
     if (extension.toLocaleLowerCase() === MARKDOWN_EXTENSION && subfolder !== location.subfolder) {
       await syncCopiedSubtype(vaultPath, targetPath, subfolder);
     }
@@ -1563,6 +1601,7 @@ async function copy(payload) {
 module.exports = {
   brokenLinks,
   copy,
+  copyMapImage,
   copyPlan,
   createFolder,
   createFromLink,

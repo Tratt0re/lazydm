@@ -52,6 +52,7 @@ import {
   DEFAULT_BATTLE_RULE_CHOICE,
 } from '@/services/battle-rule.service';
 import { EncounterService, PARTY_FILE_NAME } from '@/services/encounter.service';
+import { CopyToService } from '@/services/copy-to.service';
 import { FileActionsService } from '@/services/file-actions.service';
 import { getNoteScopeKind, NoteScopeService } from '@/services/note-scope.service';
 import { SectionService, toSubfolderLabel } from '@/services/section.service';
@@ -145,6 +146,7 @@ export class EncounterPage {
   private readonly toolbarContext = inject(ToolbarContextService);
   private readonly translateService = inject(TranslateService);
   private readonly fileActions = inject(FileActionsService);
+  private readonly copyTo = inject(CopyToService);
   private readonly encounterService = inject(EncounterService);
   private readonly documentService = inject(DocumentService);
   private readonly battleRuleService = inject(BattleRuleService);
@@ -314,6 +316,18 @@ export class EncounterPage {
             ...(isParty
               ? []
               : [
+                  {
+                    id: 'copy',
+                    label: this.translateService.instant(
+                      scope.kind === 'system'
+                        ? 'compendium.copy.toCampaign'
+                        : 'compendium.copy.toCompendium',
+                    ),
+                    icon: (scope.kind === 'system' ? 'book-down' : 'book-up') as 'book-down' | 'book-up',
+                    buttonType: 'outline' as const,
+                    iconOnly: true,
+                    action: () => void this.copyTo.openCopySheet(this.encounterPath()),
+                  },
                   {
                     id: 'rename',
                     label: this.translateService.instant('campaigns.sections.renameAsset.menu'),

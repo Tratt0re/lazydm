@@ -51,6 +51,7 @@ import {
 import { ASSET_FILE_PARAM, ASSET_SUBFOLDER_PARAM } from '@/pages/asset-page/asset-page';
 import { CAMPAIGN_SECTION_PARAM } from '@/pages/campaign-section-page/campaign-section-page';
 import { DocumentService } from '@/services/document.service';
+import { CopyToService } from '@/services/copy-to.service';
 import { FileActionsService } from '@/services/file-actions.service';
 import { LocalPreferencesService } from '@/services/local-preferences.service';
 import { MapService } from '@/services/map.service';
@@ -247,6 +248,7 @@ export class MapPage {
   private readonly toolbarContext = inject(ToolbarContextService);
   private readonly translateService = inject(TranslateService);
   private readonly fileActions = inject(FileActionsService);
+  private readonly copyTo = inject(CopyToService);
   private readonly mapService = inject(MapService);
   private readonly documentService = inject(DocumentService);
   private readonly workspace = inject(WorkspaceService);
@@ -515,6 +517,16 @@ export class MapPage {
           buttonType: this.isPanelOpen() ? 'default' : 'outline',
           iconOnly: true,
           action: () => this.isPanelOpen.update((isOpen) => !isOpen),
+        },
+        {
+          id: 'copy',
+          label: this.translateService.instant(
+            scope.kind === 'system' ? 'compendium.copy.toCampaign' : 'compendium.copy.toCompendium',
+          ),
+          icon: scope.kind === 'system' ? 'book-down' : 'book-up',
+          buttonType: 'outline',
+          iconOnly: true,
+          action: () => void this.copyTo.openCopySheet(this.mapPath()),
         },
         {
           id: 'edit',

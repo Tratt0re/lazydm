@@ -317,7 +317,7 @@ export class CampaignSectionPage {
     actions.push({
       id: 'section-import',
       label: this.importLabel(),
-      icon: 'import',
+      icon: 'book-down',
       buttonType: 'outline',
       iconOnly: true,
       action: () => this.openImportSheet(),
