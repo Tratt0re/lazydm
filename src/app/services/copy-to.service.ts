@@ -42,6 +42,11 @@ export class CopyToService {
   private readonly translateService = inject(TranslateService);
   private readonly router = inject(Router);
 
+  /** Icon of *Copy to…*: down from the compendium to a campaign, up from a campaign to the compendium. */
+  copyIcon(path: string): 'book-down' | 'book-up' {
+    return this.isInCompendium(path) ? 'book-down' : 'book-up';
+  }
+
   isInCompendium(path: string): boolean {
     return parseVaultFilePath(path)?.scopePath.startsWith('compendium/') ?? false;
   }

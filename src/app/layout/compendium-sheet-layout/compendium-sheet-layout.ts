@@ -87,7 +87,7 @@ export class CompendiumSheetLayout implements OnInit {
     {
       key: 'all',
       label: 'compendium.list.allSystems',
-      icon: 'book-marked',
+      icon: 'square-library',
       route: '/compendium',
     },
     ...this.compendiumService.systems().map<ExplorerNode>((system) => ({

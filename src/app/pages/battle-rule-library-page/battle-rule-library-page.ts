@@ -36,7 +36,7 @@ const GROUP_KEY_PREFIX = 'group:';
 const BUILT_IN_REF_PREFIX = 'builtin:';
 const SOURCE_ICONS: Record<BattleRuleRowDto['source'], ArcTechIcon> = {
   vault: 'vault',
-  system: 'book-marked',
+  system: 'square-library',
   campaign: 'scroll-text',
 };
 interface SelectedRule {

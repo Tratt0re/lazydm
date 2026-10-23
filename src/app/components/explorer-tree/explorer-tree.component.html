@@ -259,7 +259,7 @@
       </button>
       @if (!isNote) {
         <button type="button" arc-menu-item (click)="copyTo.openCopySheet(file.path)">
-          <arc-icon arcType="book-copy" />
+          <arc-icon [arcType]="copyTo.copyIcon(file.path)" />
           {{ copyLabel(file) | translate }}
         </button>
       }

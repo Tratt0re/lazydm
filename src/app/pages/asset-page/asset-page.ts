@@ -152,7 +152,7 @@ export class AssetPage {
                   ? 'compendium.copy.toCampaign'
                   : 'compendium.copy.toCompendium',
               ),
-              icon: 'book-copy',
+              icon: scope.kind === 'system' ? 'book-down' : 'book-up',
               buttonType: 'outline',
               iconOnly: true,
               action: () => void this.copyTo.openCopySheet(this.assetPath()),

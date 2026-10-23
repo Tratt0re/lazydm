@@ -90,7 +90,7 @@
           [arcTooltip]="copyLabel(file) | translate"
           (click)="copyTo.openCopySheet(file.path)"
         >
-          <arc-icon arcType="book-copy" />
+          <arc-icon [arcType]="copyTo.copyIcon(file.path)" />
         </button>
         <button
           type="button"
@@ -232,7 +232,7 @@
         <ng-template #fileMenu>
           <div arc-menu-content class="w-56">
             <button type="button" arc-menu-item (click)="copyTo.openCopySheet(file.path)">
-              <arc-icon arcType="book-copy" />
+              <arc-icon [arcType]="copyTo.copyIcon(file.path)" />
               {{ copyLabel(file) | translate }}
             </button>
             <button type="button" arc-menu-item (click)="openRenameSheet(file)">
