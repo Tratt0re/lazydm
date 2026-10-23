@@ -1454,18 +1454,18 @@
   "onboarding": {
     "step": "Passo {{current}} di {{total}}",
     "welcome": {
-      "lead": "Fatto da un Dungeon Master per i Dungeon Master, e pigro per scelta: prepari meno e la sessione procede da sola.",
+      "lead": "Fatto da un Dungeon Master per i Dungeon Master, e pigro per scelta: meno preparazione, e tutto a portata di mano quando inizia la sessione.",
       "points": {
         "prepare": {
-          "title": "Prepara una volta.",
+          "title": "Prepara una volta",
           "text": "Scene, nemici, luoghi e mappe stanno insieme e si collegano tra loro."
         },
         "session": {
-          "title": "Giocala al tavolo.",
+          "title": "Giocala al tavolo",
           "text": "Iniziativa, PF e mappe stanno accanto alle tue note, così non lasci mai la partita per cercare qualcosa."
         },
         "files": {
-          "title": "File semplici, tuoi.",
+          "title": "File semplici, tuoi",
           "text": "Tutto è Markdown in una cartella a tua scelta. Nessun account, nessun vincolo."
         }
       },
@@ -1474,15 +1474,13 @@
     "vault": {
       "back": "Indietro",
       "local": {
-        "title": "Su questo dispositivo.",
+        "title": "Su questo dispositivo",
         "text": "I file restano su questo computer. Nulla viene condiviso e i backup sono a tuo carico.",
-        "badge": "Solo su questo dispositivo",
-        "found": "Questa cartella è solo su questo dispositivo: non verrà sincronizzata con gli altri."
+        "badge": "Solo su questo dispositivo"
       },
       "cloud": {
-        "title": "In una cartella cloud.",
-        "text": "Scegli una cartella dentro iCloud Drive, Dropbox, OneDrive, Box o Google Drive. La tua app cloud sincronizza i file tra i dispositivi; LazyDM aspetta i download in sospeso all’avvio e ti avvisa se due dispositivi hanno modificato la stessa nota.",
-        "found": "Questa cartella è in {{provider}}: la tua app cloud la sincronizza tra i dispositivi. LazyDM aspetta i download in sospeso all’avvio e ti avvisa se due dispositivi hanno modificato la stessa nota."
+        "title": "In una cartella cloud",
+        "text": "Scegli una cartella dentro iCloud Drive, Dropbox, OneDrive, Box o Google Drive. La tua app cloud sincronizza i file tra i dispositivi; LazyDM aspetta i download in sospeso all’avvio e ti avvisa se due dispositivi hanno modificato la stessa nota."
       },
       "providers": {
         "icloud": "iCloud Drive",
@@ -1490,7 +1488,8 @@
         "onedrive": "OneDrive",
         "box": "Box",
         "google-drive": "Google Drive"
-      }
+      },
+      "yours": "La tua cartella"
     }
   }
 }

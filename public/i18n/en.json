@@ -1454,18 +1454,18 @@
   "onboarding": {
     "step": "Step {{current}} of {{total}}",
     "welcome": {
-      "lead": "Made by a Dungeon Master for Dungeon Masters, and lazy by design: you prepare less, and the session runs itself.",
+      "lead": "Made by a Dungeon Master for Dungeon Masters, and lazy by design: less prep, and everything at hand when the session starts.",
       "points": {
         "prepare": {
-          "title": "Prepare once.",
+          "title": "Prepare once",
           "text": "Scenes, enemies, places and maps live together and link to each other."
         },
         "session": {
-          "title": "Run it at the table.",
+          "title": "Run it at the table",
           "text": "Initiative, HP and maps sit next to your notes, so you never leave the game to look something up."
         },
         "files": {
-          "title": "Plain files you own.",
+          "title": "Plain files you own",
           "text": "Everything is Markdown in a folder of your choice. No account, no lock-in."
         }
       },
@@ -1474,15 +1474,13 @@
     "vault": {
       "back": "Back",
       "local": {
-        "title": "On this device.",
+        "title": "On this device",
         "text": "The files stay on this computer. Nothing is shared, and backups are up to you.",
-        "badge": "Only on this device",
-        "found": "This folder is only on this device: it will not sync to your other devices."
+        "badge": "Only on this device"
       },
       "cloud": {
-        "title": "In a cloud folder.",
-        "text": "Pick a folder inside iCloud Drive, Dropbox, OneDrive, Box or Google Drive. Your cloud app syncs the files between your devices; LazyDM waits for pending downloads when it starts and warns you if two devices changed the same note.",
-        "found": "This folder is in {{provider}}: your cloud app syncs it between your devices. LazyDM waits for pending downloads when it starts and warns you if two devices changed the same note."
+        "title": "In a cloud folder",
+        "text": "Pick a folder inside iCloud Drive, Dropbox, OneDrive, Box or Google Drive. Your cloud app syncs the files between your devices; LazyDM waits for pending downloads when it starts and warns you if two devices changed the same note."
       },
       "providers": {
         "icloud": "iCloud Drive",
@@ -1490,7 +1488,8 @@
         "onedrive": "OneDrive",
         "box": "Box",
         "google-drive": "Google Drive"
-      }
+      },
+      "yours": "Your folder"
     }
   }
 }

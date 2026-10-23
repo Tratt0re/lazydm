@@ -66,6 +66,15 @@ export class VaultSetupPage implements OnInit, AfterViewInit {
 
   /** Cloud drive of the chosen folder (`icloud`, `dropbox`…), null when it is only on this device. */
   protected readonly cloudProvider = computed(() => this.inspection()?.cloudProvider ?? null);
+  /** The option card the chosen folder falls under; null before a folder is chosen. */
+  protected readonly selectedOption = computed<'local' | 'cloud' | null>(() => {
+    const inspection = this.inspection();
+    if (!inspection) {
+      return null;
+    }
+
+    return inspection.cloudProvider ? 'cloud' : 'local';
+  });
   /** Back to the welcome step, unless the vault is missing (the welcome has nothing to say then). */
   protected readonly canGoBack = computed(() => this.missingVault() === null);
 

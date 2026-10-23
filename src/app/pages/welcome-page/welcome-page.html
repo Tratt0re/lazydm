@@ -43,12 +43,8 @@
   <p class="max-w-3xl text-base text-foreground-secondary lg:text-lg">{{ 'onboarding.welcome.lead' | translate }}</p>
 
   <ol class="grid gap-4 md:grid-cols-3">
-    @for (point of points; track point.key; let index = $index) {
-      <li class="relative flex flex-col gap-4 border border-border-subtle p-5 pt-9">
-        <span class="absolute top-3 left-5 font-mono text-[11px] text-muted-foreground" aria-hidden="true">
-          0{{ index + 1 }}
-        </span>
-
+    @for (point of points; track point.key) {
+      <li class="flex flex-col gap-4 border border-border-subtle p-5">
         <div class="flex items-center gap-3">
           <span
             class="flex size-10 shrink-0 items-center justify-center border border-input bg-recessed text-primary"
@@ -56,8 +52,8 @@
           >
             <arc-icon [arcType]="point.icon" class="size-5" />
           </span>
-          <h2 class="min-w-0 text-xl font-bold text-foreground-strong">
-            {{ 'onboarding.welcome.points.' + point.key + '.title' | translate }}
+          <h2 class="min-w-0 font-display text-2xl leading-none font-black tracking-[0.015em] text-foreground-strong uppercase">
+            {{ 'onboarding.welcome.points.' + point.key + '.title' | translate }}<span class="text-primary" aria-hidden="true">.</span>
           </h2>
         </div>
 

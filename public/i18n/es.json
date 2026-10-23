@@ -1454,18 +1454,18 @@
   "onboarding": {
     "step": "Paso {{current}} de {{total}}",
     "welcome": {
-      "lead": "Hecho por un Dungeon Master para Dungeon Masters, y perezoso a propósito: preparas menos y la sesión casi se lleva sola.",
+      "lead": "Hecho por un Dungeon Master para Dungeon Masters, y perezoso a propósito: menos preparación y todo a mano cuando empieza la sesión.",
       "points": {
         "prepare": {
-          "title": "Prepara una vez.",
+          "title": "Prepara una vez",
           "text": "Escenas, enemigos, lugares y mapas viven juntos y se enlazan entre sí."
         },
         "session": {
-          "title": "Juégala en la mesa.",
+          "title": "Juégala en la mesa",
           "text": "Iniciativa, PG y mapas están junto a tus notas, así nunca sales de la partida para buscar algo."
         },
         "files": {
-          "title": "Archivos simples, tuyos.",
+          "title": "Archivos simples, tuyos",
           "text": "Todo es Markdown en una carpeta que eliges. Sin cuenta, sin ataduras."
         }
       },
@@ -1474,15 +1474,13 @@
     "vault": {
       "back": "Atrás",
       "local": {
-        "title": "En este dispositivo.",
+        "title": "En este dispositivo",
         "text": "Los archivos se quedan en este equipo. No se comparte nada y las copias de seguridad dependen de ti.",
-        "badge": "Solo en este dispositivo",
-        "found": "Esta carpeta está solo en este dispositivo: no se sincronizará con los demás."
+        "badge": "Solo en este dispositivo"
       },
       "cloud": {
-        "title": "En una carpeta en la nube.",
-        "text": "Elige una carpeta dentro de iCloud Drive, Dropbox, OneDrive, Box o Google Drive. Tu app de nube sincroniza los archivos entre tus dispositivos; LazyDM espera las descargas pendientes al iniciar y te avisa si dos dispositivos cambiaron la misma nota.",
-        "found": "Esta carpeta está en {{provider}}: tu app de nube la sincroniza entre tus dispositivos. LazyDM espera las descargas pendientes al iniciar y te avisa si dos dispositivos cambiaron la misma nota."
+        "title": "En una carpeta en la nube",
+        "text": "Elige una carpeta dentro de iCloud Drive, Dropbox, OneDrive, Box o Google Drive. Tu app de nube sincroniza los archivos entre tus dispositivos; LazyDM espera las descargas pendientes al iniciar y te avisa si dos dispositivos cambiaron la misma nota."
       },
       "providers": {
         "icloud": "iCloud Drive",
@@ -1490,7 +1488,8 @@
         "onedrive": "OneDrive",
         "box": "Box",
         "google-drive": "Google Drive"
-      }
+      },
+      "yours": "Tu carpeta"
     }
   }
 }

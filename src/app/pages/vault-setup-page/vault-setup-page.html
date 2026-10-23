@@ -28,6 +28,43 @@
     />
   }
 
+  <ul class="grid gap-4 md:grid-cols-2">
+    @for (option of options; track option.key) {
+      <li
+        class="flex flex-col gap-4 border p-5"
+        [class.border-border-subtle]="selectedOption() !== option.key"
+        [class.border-primary]="selectedOption() === option.key"
+        [class.opacity-60]="selectedOption() !== null && selectedOption() !== option.key"
+        [attr.aria-current]="selectedOption() === option.key ? 'true' : null"
+      >
+        <div class="flex items-center gap-3">
+          <span
+            class="flex size-10 shrink-0 items-center justify-center border border-input bg-recessed text-primary"
+            aria-hidden="true"
+          >
+            <arc-icon [arcType]="option.icon" class="size-5" />
+          </span>
+          <h2 class="min-w-0 font-display text-2xl leading-none font-black tracking-[0.015em] text-foreground-strong uppercase">
+            {{ 'onboarding.vault.' + option.key + '.title' | translate }}<span class="text-primary" aria-hidden="true">.</span>
+          </h2>
+          @if (selectedOption() === option.key) {
+            <arc-badge class="ml-auto shrink-0">{{ 'onboarding.vault.yours' | translate }}</arc-badge>
+          }
+        </div>
+
+        <div class="flex items-center gap-2" aria-hidden="true">
+          <span class="h-px w-3 bg-border"></span>
+          <span class="size-1.5 shrink-0 rotate-45 border border-primary"></span>
+          <span class="h-px flex-1 bg-border"></span>
+        </div>
+
+        <p class="text-base text-muted-foreground">
+          {{ 'onboarding.vault.' + option.key + '.text' | translate }}
+        </p>
+      </li>
+    }
+  </ul>
+
   @if (inspection(); as info) {
     <div class="border border-input bg-background p-4">
       <p class="text-[11px] font-semibold tracking-[0.12em] text-muted-foreground uppercase">
@@ -51,13 +88,6 @@
           {{ 'vault.setup.detected.' + detected + '.description' | translate }}
         </p>
       }
-      <p class="mt-2 text-sm text-muted-foreground">
-        @if (cloudProvider(); as provider) {
-          {{ 'onboarding.vault.cloud.found' | translate: { provider: 'onboarding.vault.providers.' + provider | translate } }}
-        } @else {
-          {{ 'onboarding.vault.local.found' | translate }}
-        }
-      </p>
     </div>
 
     @if (!info.isWritable) {
@@ -68,34 +98,6 @@
         [arcDescription]="'vault.setup.errors.readOnly' | translate"
       />
     }
-  } @else {
-    <ul class="grid gap-4 md:grid-cols-2">
-      @for (option of options; track option.key) {
-        <li class="flex flex-col gap-4 border border-border-subtle p-5">
-          <div class="flex items-center gap-3">
-            <span
-              class="flex size-10 shrink-0 items-center justify-center border border-input bg-recessed text-primary"
-              aria-hidden="true"
-            >
-              <arc-icon [arcType]="option.icon" class="size-5" />
-            </span>
-            <h2 class="min-w-0 text-xl font-bold text-foreground-strong">
-              {{ 'onboarding.vault.' + option.key + '.title' | translate }}
-            </h2>
-          </div>
-
-          <div class="flex items-center gap-2" aria-hidden="true">
-            <span class="h-px w-3 bg-border"></span>
-            <span class="size-1.5 shrink-0 rotate-45 border border-primary"></span>
-            <span class="h-px flex-1 bg-border"></span>
-          </div>
-
-          <p class="text-base text-muted-foreground">
-            {{ 'onboarding.vault.' + option.key + '.text' | translate }}
-          </p>
-        </li>
-      }
-    </ul>
   }
 
   @if (errorMessage(); as message) {
