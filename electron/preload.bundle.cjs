@@ -198,6 +198,7 @@ var require_package = __commonJS({
         "build:preload:prod": "node scripts/build-preload.js --prod",
         "build:prod": "npm run build:web && npm run build:preload:prod",
         "preload:watch": "node scripts/build-preload.js --watch",
+        "icons:mac": "bash scripts/make-mac-icon.sh",
         "build:desktop": "npm run build:prod && electron-builder --dir --publish never",
         dist: "npm run build:prod && electron-builder --publish never",
         "dist:mac": "npm run build:prod && electron-builder --mac --publish never",
@@ -229,7 +230,6 @@ var require_package = __commonJS({
       build: {
         appId: "com.lazydm.desktop",
         productName: "LazyDM",
-        icon: "src/assets/icon/app_icon.png",
         directories: {
           output: "release",
           buildResources: "."
@@ -244,6 +244,7 @@ var require_package = __commonJS({
           "package.json"
         ],
         mac: {
+          icon: "build/icon.icns",
           target: [
             "dmg",
             "zip"
@@ -251,7 +252,7 @@ var require_package = __commonJS({
           category: "public.app-category.utilities"
         },
         win: {
-          icon: "src/assets/icon/app_icon.png",
+          icon: "src/assets/icon/APP_ICON.png",
           target: [
             "nsis",
             "portable"
@@ -264,6 +265,7 @@ var require_package = __commonJS({
           artifactName: "lazydm-portable-${version}-${arch}.${ext}"
         },
         linux: {
+          icon: "src/assets/icon/APP_ICON.png",
           target: [
             "AppImage"
           ],
