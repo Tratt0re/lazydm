@@ -219,6 +219,7 @@ Planned Electron modules: `vault`, `cloud-readiness`, `campaign`, `document`, `i
 - At startup LazyDM detects the provider from the vault path, finds **not-yet-downloaded placeholders**
   (iCloud dataless files, Dropbox/OneDrive on-demand files), triggers their download and **waits** with a
   progress screen and a timeout before indexing.
+- The setup flow says exactly this (§8): the cloud app syncs the files, LazyDM never claims to sync by itself.
 - Be honest about the limit: no provider tells us that another device has an edit still in flight.
   The safety net is **conflict detection on save**: compare the on-disk mtime + hash with the version that was
   loaded; if different, offer *reload / keep mine / save as copy*.
@@ -481,7 +482,24 @@ Planned Electron modules: `vault`, `cloud-readiness`, `campaign`, `document`, `i
   the section page. A custom section opens the full edit sheet; a preset section can only be renamed. *Assets* and
   *Encounters* can be edited but never deleted. Sections of a compendium system are not editable.
 
-- **First start** → vault setup page (select or create the root folder). Until a vault exists, every route redirects there.
+- **First start** → the **setup flow** (`/setup`), two steps: *Welcome* then *Vault*. Until a vault exists, every
+  route redirects there. LazyDM is made by a DM for DMs and is lazy by design, so the flow is short and speaks to a
+  DM (preparing and running the session), with no feature tour and no *Skip* (two steps are shorter than a skip).
+  - **Welcome**: Franco (`franco` icon, `text-primary`), the name `LazyDM.` as a page title, what the app is for in
+    a few sentences (prepare once, run it at the table, the notes are plain Markdown files in a folder the user
+    owns), and the device's **language and theme** selects (applied live, per-device, changeable later in
+    *Settings → General*). The language starts from the system language. *Continue*.
+  - **Vault**: what a vault is, the two ways to keep it — **on this device** (the files stay on this computer; no
+    sharing, backups are the user's) or **in a cloud folder** (iCloud Drive, Dropbox, OneDrive, Box, Google Drive:
+    the cloud app syncs the files between devices; LazyDM waits for pending downloads at start-up and warns when two
+    devices changed the same note, see §5) — then *Choose folder* and the folder check (new / existing vault,
+    writable, and which cloud drive the folder is in, if any), then *Create vault* / *Open vault*.
+  - A vault that is missing or unreachable skips *Welcome* and goes to *Vault* with the usual alert. The
+    `onboardingCompleted` device preference is set when a vault is opened or created; with it set and no vault the
+    flow starts at *Vault*.
+  - Look: the usual bordered `bg-card` panel; the ornaments of the engraved geometry module (ornamental rule under
+    the title, bronze corner brackets on the panel, engraved divider between the two vault options); a step marker
+    made of the same bronze bar as the ornamental rule. Decoration only, no text.
 - **Title bar** (app header, every page): drag area, **Compendium** and **Settings**, window buttons (no app name).
 - The **toolbar's bottom edge** is the ornamental rule from *engraved geometry* (bronze bar, ◇ ✣ ◇, hairline) —
   `.arc-ornament-rule`, the one dominant marker of that module. It is inset 16px on both sides.
@@ -718,6 +736,7 @@ Component behaviour, variant keys and configuration stay as they are.
 | 14.9 | Battle rules: `_battle-rules/` JSON files (vault, system, campaign), built-in rule with *Customize*, per-campaign and per-encounter choice, dice-formula initiative and *Roll initiative* for selected entities, form editor in its own *Battle rules* sheet |
 | 14.10 | Embedding: `![[x.json]]` renders as an encounter row in notes, link suggestions list encounters, Linked files panel shows them |
 | 14.11 | Docs: §6d written, §2, §3, §8 and §12 updated with the final encounter design |
+| 15.1 | Setup flow: *Welcome* (Franco, name, what it is for, language and theme) and *Vault* (device or cloud folder explained, folder check with the cloud drive), step marker, ornaments, entry guard |
 
 ## 12. Open decisions
 
