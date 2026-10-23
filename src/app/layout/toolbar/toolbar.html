@@ -119,7 +119,7 @@
           [arcDisabled]="isActionDisabled(item)"
           [attr.aria-label]="item.iconOnly ? (item.label | translate) : null"
           arcPosition="bottom"
-          [arcTooltip]="item.iconOnly ? (item.label | translate) : ''"
+          [arcTooltip]="item.iconOnly ? withShortcut(item.label | translate, item.shortcut) : ''"
           (click)="onActionClick(item)"
         >
           @if (item.icon) {

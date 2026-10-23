@@ -218,6 +218,7 @@ export class DocumentPage {
           itemActions: [
             {
               id: 'save',
+              shortcut: 'save',
               label: this.translateService.instant('document.toolbar.save'),
               icon: 'save',
               iconOnly: true,

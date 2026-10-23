@@ -27,6 +27,7 @@ import {
 } from '@/components/document-preview/document-preview.markdown';
 import { AppDialogFormService } from '@/components/sheet-form/dialog-form.service';
 import type { AppSheetField } from '@/components/sheet-form/sheet-form.types';
+import { withShortcut } from '@/config/shortcuts.config';
 import {
   DEFAULT_NOTE_COLOR,
   DEFAULT_PATH_COLOR,
@@ -1421,6 +1422,8 @@ export class MapPage {
   }
 
   // --- Tools -------------------------------------------------------------------------------------------
+
+  protected readonly withShortcut = withShortcut;
 
   protected selectTool(tool: MapTool): void {
     this.tool.set(tool);

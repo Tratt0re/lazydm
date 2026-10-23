@@ -92,6 +92,8 @@ export interface ToolbarAction {
   readonly iconOnly?: boolean;
   /** Destructive operation (delete…): keeps its `buttonType` and takes the danger colour. */
   readonly destructive?: boolean;
+  /** Id in `shortcuts.config.ts`: its keys follow the label in the tooltip. */
+  readonly shortcut?: string;
   readonly disabled?: ToolbarActionDisabled;
   readonly action: ToolbarActionHandler;
 }

@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, input, ViewEncapsulation } from '@a
 import { TranslatePipe } from '@ngx-translate/core';
 import { RouterLink } from '@angular/router';
 
+import { withShortcut } from '@/config/shortcuts.config';
 import { ArcTechButtonComponent } from '@/shared/components/button';
 import { ArcTechIconComponent } from '@/shared/components/icon';
 import { ArcTechSegmentedComponent, ArcTechSegmentedItemComponent } from '@/shared/components/segmented';
@@ -35,6 +36,8 @@ import type {
   encapsulation: ViewEncapsulation.None,
 })
 export class Toolbar {
+  protected readonly withShortcut = withShortcut;
+
   readonly title = input<string | null>(null);
   readonly titleMode = input<ToolbarTitleMode>('default');
   readonly titleBreadcrumbs = input<readonly ToolbarTitleBreadcrumbItem[]>([]);

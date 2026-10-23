@@ -90,6 +90,12 @@ export function shortcutText(id: string): string {
   return keyCaps(combo).join(isMac ? '' : '+');
 }
 
+/** A tooltip text with its shortcut after it: `Save · ⌘S`. */
+export function withShortcut(label: string, id: string | undefined): string {
+  const text = id ? shortcutText(id) : '';
+  return text ? `${label} · ${text}` : label;
+}
+
 /** Whether a keyboard event is this combination (`mod` = Cmd on macOS, Ctrl elsewhere). */
 export function matchesShortcut(event: KeyboardEvent, id: string): boolean {
   const shortcut = SHORTCUTS.find((item) => item.id === id);

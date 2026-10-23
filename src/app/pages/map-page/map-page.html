@@ -38,7 +38,7 @@
                   arc-button
                   arcType="ghost"
                   [arcDisabled]="drawCount() < 2"
-                  [arcTooltip]="'maps.path.doneHint' | translate"
+                  [arcTooltip]="withShortcut('maps.path.doneHint' | translate, 'mapFinishPath')"
                   [attr.aria-label]="'maps.path.done' | translate"
                   (click)="finishPath()"
                 >
@@ -48,7 +48,7 @@
                   type="button"
                   arc-button
                   arcType="ghost"
-                  [arcTooltip]="'maps.path.cancelHint' | translate"
+                  [arcTooltip]="withShortcut('maps.path.cancelHint' | translate, 'mapCancel')"
                   [attr.aria-label]="'maps.path.cancel' | translate"
                   (click)="cancelPath()"
                 >
@@ -332,7 +332,7 @@
             class="border-destructive text-destructive hover:bg-destructive hover:text-destructive-foreground"
             [class.flex-1]="!selection()"
             [arcDisabled]="!isEditable()"
-            [arcTooltip]="'maps.item.delete' | translate"
+            [arcTooltip]="withShortcut('maps.item.delete' | translate, 'mapDelete')"
             [attr.aria-label]="'maps.item.delete' | translate"
             (click)="confirmDelete()"
           >

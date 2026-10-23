@@ -11,7 +11,7 @@
         [arcDisabled]="!workspace.canGoBack()"
         [attr.aria-label]="'tabs.back' | translate"
         arcPosition="bottom"
-        [arcTooltip]="'tabs.back' | translate"
+        [arcTooltip]="withShortcut('tabs.back' | translate, 'back')"
         (click)="workspace.goBack()"
       >
         <arc-icon arcType="chevron-left" />
@@ -25,7 +25,7 @@
         [arcDisabled]="!workspace.canGoForward()"
         [attr.aria-label]="'tabs.forward' | translate"
         arcPosition="bottom"
-        [arcTooltip]="'tabs.forward' | translate"
+        [arcTooltip]="withShortcut('tabs.forward' | translate, 'forward')"
         (click)="workspace.goForward()"
       >
         <arc-icon arcType="chevron-right" />
@@ -102,7 +102,7 @@
         [arcDisabled]="!workspace.canOpenTab()"
         [attr.aria-label]="'tabs.new' | translate"
         arcPosition="bottom"
-        [arcTooltip]="'tabs.new' | translate"
+        [arcTooltip]="withShortcut('tabs.new' | translate, 'newTab')"
         (click)="workspace.openTab()"
       >
         <arc-icon arcType="plus" />

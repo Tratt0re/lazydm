@@ -16,7 +16,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 
 import { SidebarToggleComponent } from '@/components/sidebar-toggle/sidebar-toggle.component';
 import type { WorkspaceTabDto } from '@/dtos';
-import { matchesShortcut } from '@/config/shortcuts.config';
+import { matchesShortcut, withShortcut } from '@/config/shortcuts.config';
 import { REVIEW_ROUTE_SEGMENT } from '@/pages/review-page/review-page';
 import { AppSheetService } from '@/services/app-sheet.service';
 import { SectionService } from '@/services/section.service';
@@ -63,6 +63,7 @@ export class TabBar {
   private readonly contextMenuTrigger = viewChild.required(CdkContextMenuTrigger);
 
   protected readonly menuTarget = signal<TabBarMenuTarget | null>(null);
+  protected readonly withShortcut = withShortcut;
   protected readonly modifierLabel = isMac ? '⌘' : 'Ctrl+';
 
   /** Cmd/Ctrl+W is caught by the main process (the default menu would close the window). */
