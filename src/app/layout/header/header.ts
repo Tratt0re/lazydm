@@ -48,7 +48,7 @@ export class Header {
     icon: ArcTechIcon;
   }[] = [
     { kind: 'compendium', label: 'nav.items.compendium', icon: 'square-library' },
-    { kind: 'templates', label: 'nav.items.templates', icon: 'layout-template' },
+    { kind: 'templates', label: 'nav.items.templates', icon: 'notepad-text-dashed' },
     { kind: 'battle-rules', label: 'nav.items.battleRules', icon: 'dices' },
     { kind: 'settings', label: 'nav.items.settings', icon: 'settings' },
   ];
