@@ -1,9 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 342 160" fill="currentColor">
-  <!-- D20 Icon -->
-  <path d="M60 20 L40 50 L40 110 L60 140 L80 110 L80 50 Z M60 20 L80 50 L60 60 L40 50 Z M40 110 L60 120 L80 110 L60 140 Z M60 60 L40 110 M60 60 L80 110 M60 60 L60 120" stroke="currentColor" stroke-width="2" fill="none"/>
-  
-  <!-- LazyDM Text -->
-  <text x="110" y="90" font-family="Arial, sans-serif" font-size="48" font-weight="bold" fill="currentColor">LazyDM</text>
-</svg>
-
-<!-- Made with Bob -->
