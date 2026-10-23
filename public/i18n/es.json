@@ -461,7 +461,7 @@
       "newFolder": {
         "button": "Nueva carpeta",
         "title": "Nueva carpeta",
-        "description": "Una subcarpeta de {{section}}: su nombre se convierte en el subtipo de las notas que contiene (subtype: en el frontmatter). Un solo nivel.",
+        "description": "Una subcarpeta de {{section}} para organizar sus notas. Un solo nivel.",
         "nameLabel": "Nombre",
         "namePlaceholder": "p. ej. Humanos",
         "submit": "Crear carpeta",
@@ -872,7 +872,7 @@
     "title": "Revisión",
     "loadError": "No se pudo cargar la revisión",
     "emptyTitle": "Nada que revisar",
-    "emptyDescription": "Cada nota está en la sección de su tipo y cada enlace funciona.",
+    "emptyDescription": "Cada nota está en una sección y cada enlace funciona.",
     "alertTitle": "{{count}} cosas que revisar",
     "alertDescription": "Algunas notas, carpetas o enlaces no coinciden con las secciones de esta campaña.",
     "open": "Revisar",
@@ -901,7 +901,7 @@
     },
     "move": {
       "title": "Mover {{title}}",
-      "description": "La nota conserva su nombre; su tipo sigue a la sección y se actualizan los enlaces que apuntan a ella.",
+      "description": "La nota conserva su nombre y se actualizan los enlaces que apuntan a ella.",
       "sectionLabel": "Sección",
       "submit": "Mover",
       "done": "{{title}} movida ({{links}} enlaces actualizados)",
@@ -952,7 +952,7 @@
     },
     "renameFolder": {
       "title": "Renombrar {{name}}",
-      "description": "La carpeta se renombra en el disco; sus {{count}} archivos conservan su nombre, las notas reciben el nuevo subtipo y se actualizan los enlaces que pasan por la carpeta.",
+      "description": "La carpeta se renombra en el disco; sus {{count}} archivos conservan su nombre y se actualizan los enlaces que pasan por la carpeta.",
       "done": "Carpeta renombrada a {{name}}",
       "error": "No se pudo renombrar la carpeta"
     },

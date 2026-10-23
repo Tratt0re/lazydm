@@ -461,7 +461,7 @@
       "newFolder": {
         "button": "Neuer Ordner",
         "title": "Neuer Ordner",
-        "description": "Ein Unterordner von {{section}}: Sein Name wird zum Untertyp der Notizen darin (subtype: im Frontmatter). Nur eine Ebene.",
+        "description": "Ein Unterordner von {{section}}, um die Notizen zu ordnen. Nur eine Ebene.",
         "nameLabel": "Name",
         "namePlaceholder": "z. B. Menschen",
         "submit": "Ordner erstellen",
@@ -872,7 +872,7 @@
     "title": "Prüfen",
     "loadError": "Die Prüfung konnte nicht geladen werden",
     "emptyTitle": "Nichts zu prüfen",
-    "emptyDescription": "Jede Notiz liegt im Bereich ihres Typs und jeder Link funktioniert.",
+    "emptyDescription": "Jede Notiz liegt in einem Bereich und jeder Link funktioniert.",
     "alertTitle": "{{count}} Punkte zu prüfen",
     "alertDescription": "Einige Notizen, Ordner oder Links passen nicht zu den Bereichen dieser Kampagne.",
     "open": "Prüfen",
@@ -901,7 +901,7 @@
     },
     "move": {
       "title": "{{title}} verschieben",
-      "description": "Die Notiz behält ihren Namen; ihr Typ folgt dem Bereich und die Links darauf werden aktualisiert.",
+      "description": "Die Notiz behält ihren Namen und die Links darauf werden aktualisiert.",
       "sectionLabel": "Bereich",
       "submit": "Verschieben",
       "done": "{{title}} verschoben ({{links}} Links aktualisiert)",
@@ -952,7 +952,7 @@
     },
     "renameFolder": {
       "title": "{{name}} umbenennen",
-      "description": "Der Ordner wird auf der Festplatte umbenannt; seine {{count}} Dateien behalten ihre Namen, die Notizen erhalten den neuen Untertyp, und Links durch den Ordner werden aktualisiert.",
+      "description": "Der Ordner wird auf der Festplatte umbenannt; seine {{count}} Dateien behalten ihre Namen, und Links durch den Ordner werden aktualisiert.",
       "done": "Ordner umbenannt in {{name}}",
       "error": "Der Ordner konnte nicht umbenannt werden"
     },

@@ -461,7 +461,7 @@
       "newFolder": {
         "button": "Nuova cartella",
         "title": "Nuova cartella",
-        "description": "Una sottocartella di {{section}}: il suo nome diventa il sottotipo delle note che contiene (subtype: nel frontmatter). Un solo livello.",
+        "description": "Una sottocartella di {{section}} per organizzare le sue note. Un solo livello.",
         "nameLabel": "Nome",
         "namePlaceholder": "es. Umani",
         "submit": "Crea cartella",
@@ -872,7 +872,7 @@
     "title": "Revisione",
     "loadError": "Impossibile caricare la revisione",
     "emptyTitle": "Niente da rivedere",
-    "emptyDescription": "Ogni nota è nella sezione del suo tipo e ogni link funziona.",
+    "emptyDescription": "Ogni nota è in una sezione e ogni link funziona.",
     "alertTitle": "{{count}} cose da rivedere",
     "alertDescription": "Alcune note, cartelle o link non corrispondono alle sezioni di questa campagna.",
     "open": "Rivedi",
@@ -901,7 +901,7 @@
     },
     "move": {
       "title": "Sposta {{title}}",
-      "description": "La nota mantiene il nome; il suo tipo segue la sezione e i link che la puntano vengono aggiornati.",
+      "description": "La nota mantiene il nome e i link che la puntano vengono aggiornati.",
       "sectionLabel": "Sezione",
       "submit": "Sposta",
       "done": "{{title}} spostata ({{links}} link aggiornati)",
@@ -952,7 +952,7 @@
     },
     "renameFolder": {
       "title": "Rinomina {{name}}",
-      "description": "La cartella viene rinominata sul disco; i suoi {{count}} file mantengono il nome, le note ricevono il nuovo sottotipo e i collegamenti che passano dalla cartella vengono aggiornati.",
+      "description": "La cartella viene rinominata sul disco; i suoi {{count}} file mantengono il nome e i collegamenti che passano dalla cartella vengono aggiornati.",
       "done": "Cartella rinominata in {{name}}",
       "error": "Impossibile rinominare la cartella"
     },

@@ -461,7 +461,7 @@
       "newFolder": {
         "button": "New folder",
         "title": "New folder",
-        "description": "A sub-folder of {{section}}: its name becomes the sub-type of the notes in it (subtype: in the frontmatter). One level only.",
+        "description": "A sub-folder of {{section}} to organise its notes. One level only.",
         "nameLabel": "Name",
         "namePlaceholder": "e.g. Humans",
         "submit": "Create folder",
@@ -872,7 +872,7 @@
     "title": "Review",
     "loadError": "Couldn't load the review",
     "emptyTitle": "Nothing to review",
-    "emptyDescription": "Every note is in the section of its type and every link resolves.",
+    "emptyDescription": "Every note is in a section and every link resolves.",
     "alertTitle": "{{count}} things to review",
     "alertDescription": "Some notes, folders or links do not match the sections of this campaign.",
     "open": "Review",
@@ -901,7 +901,7 @@
     },
     "move": {
       "title": "Move {{title}}",
-      "description": "The note keeps its name; its type follows the section and the links to it are updated.",
+      "description": "The note keeps its name and the links to it are updated.",
       "sectionLabel": "Section",
       "submit": "Move",
       "done": "{{title}} moved ({{links}} links updated)",
@@ -952,7 +952,7 @@
     },
     "renameFolder": {
       "title": "Rename {{name}}",
-      "description": "The folder is renamed on disk; its {{count}} files keep their names, the notes get the new sub-type, and links through the folder are updated.",
+      "description": "The folder is renamed on disk; its {{count}} files keep their names, and links through the folder are updated.",
       "done": "Folder renamed to {{name}}",
       "error": "Couldn't rename the folder"
     },

@@ -461,7 +461,7 @@
       "newFolder": {
         "button": "Nouveau dossier",
         "title": "Nouveau dossier",
-        "description": "Un sous-dossier de {{section}} : son nom devient le sous-type des notes qu’il contient (subtype: dans le frontmatter). Un seul niveau.",
+        "description": "Un sous-dossier de {{section}} pour organiser ses notes. Un seul niveau.",
         "nameLabel": "Nom",
         "namePlaceholder": "ex. Humains",
         "submit": "Créer le dossier",
@@ -872,7 +872,7 @@
     "title": "Vérification",
     "loadError": "Impossible de charger la vérification",
     "emptyTitle": "Rien à vérifier",
-    "emptyDescription": "Chaque note est dans la section de son type et chaque lien fonctionne.",
+    "emptyDescription": "Chaque note est dans une section et chaque lien fonctionne.",
     "alertTitle": "{{count}} points à vérifier",
     "alertDescription": "Certaines notes, dossiers ou liens ne correspondent pas aux sections de cette campagne.",
     "open": "Vérifier",
@@ -901,7 +901,7 @@
     },
     "move": {
       "title": "Déplacer {{title}}",
-      "description": "La note garde son nom ; son type suit la section et les liens vers elle sont mis à jour.",
+      "description": "La note garde son nom et les liens vers elle sont mis à jour.",
       "sectionLabel": "Section",
       "submit": "Déplacer",
       "done": "{{title}} déplacée ({{links}} liens mis à jour)",
@@ -952,7 +952,7 @@
     },
     "renameFolder": {
       "title": "Renommer {{name}}",
-      "description": "Le dossier est renommé sur le disque ; ses {{count}} fichiers gardent leur nom, les notes reçoivent le nouveau sous-type et les liens passant par le dossier sont mis à jour.",
+      "description": "Le dossier est renommé sur le disque ; ses {{count}} fichiers gardent leur nom et les liens passant par le dossier sont mis à jour.",
       "done": "Dossier renommé en {{name}}",
       "error": "Impossible de renommer le dossier"
     },

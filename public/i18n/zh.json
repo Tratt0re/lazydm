@@ -461,7 +461,7 @@
       "newFolder": {
         "button": "新建文件夹",
         "title": "新建文件夹",
-        "description": "{{section}} 的子文件夹：其名称会成为其中笔记的子类型（frontmatter 中的 subtype:）。仅限一层。",
+        "description": "{{section}} 的子文件夹，用于整理其中的笔记。仅限一层。",
         "nameLabel": "名称",
         "namePlaceholder": "例如：人类",
         "submit": "创建文件夹",
@@ -872,7 +872,7 @@
     "title": "检查",
     "loadError": "无法加载检查结果",
     "emptyTitle": "没有需要检查的内容",
-    "emptyDescription": "每条笔记都在其类型对应的分区中，所有链接均有效。",
+    "emptyDescription": "每条笔记都在某个分区中，所有链接均有效。",
     "alertTitle": "有 {{count}} 项需要检查",
     "alertDescription": "有些笔记、文件夹或链接与此战役的分区不一致。",
     "open": "检查",
@@ -901,7 +901,7 @@
     },
     "move": {
       "title": "移动 {{title}}",
-      "description": "笔记保留其名称；类型随分区变化，指向它的链接会被更新。",
+      "description": "笔记保留其名称，指向它的链接会被更新。",
       "sectionLabel": "分区",
       "submit": "移动",
       "done": "已移动 {{title}}（更新了 {{links}} 个链接）",
@@ -952,7 +952,7 @@
     },
     "renameFolder": {
       "title": "重命名 {{name}}",
-      "description": "文件夹将在磁盘上重命名；其中 {{count}} 个文件保留原名，笔记获得新的子类型，经过此文件夹的链接会被更新。",
+      "description": "文件夹将在磁盘上重命名；其中 {{count}} 个文件保留原名，经过此文件夹的链接会被更新。",
       "done": "文件夹已重命名为 {{name}}",
       "error": "无法重命名文件夹"
     },
