@@ -2,6 +2,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
+  DestroyRef,
   HostListener,
   inject,
   OnInit,
@@ -11,6 +12,7 @@ import {
 import { RouterOutlet } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 import { LayoutImports } from '@/shared/components/layout/layout.imports';
+import { AppMenuService } from '@/services/app-menu.service';
 import { VaultActivityBannerComponent } from '@/components/vault-activity-banner/vault-activity-banner.component';
 import { VaultSyncStatusComponent } from '@/components/vault-sync-status/vault-sync-status.component';
 import { Sidebar } from '../sidebar/sidebar';
@@ -44,6 +46,7 @@ import { UpdateService } from '@/shared/core/services/update.service';
 })
 export class RootLayout implements OnInit {
   private readonly toolbarContextService = inject(ToolbarContextService);
+  private readonly appMenu = inject(AppMenuService);
   protected readonly updateService = inject(UpdateService);
   private readonly handleFullscreenChangeEvent = (payload: unknown) => {
     this.isFullscreen.set(this.resolveFullscreenState(payload));
@@ -75,6 +78,10 @@ export class RootLayout implements OnInit {
     }
 
     listenToIpcEvent('window:fullscreenChanged', this.handleFullscreenChangeEvent);
+
+    // The menu's *Toggle the Sidebar* acts on this shell while it is shown.
+    this.appMenu.onToggleSidebar = () => this.toggleSidebar();
+    inject(DestroyRef).onDestroy(() => (this.appMenu.onToggleSidebar = null));
   }
 
   ngOnInit(): void {

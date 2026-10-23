@@ -1437,5 +1437,49 @@
       "mapDelete": "删除所选项目",
       "mapAddToSelection": "Shift/Cmd/Ctrl 点击：加入或移出选择"
     }
+  },
+  "menu": {
+    "titles": {
+      "file": "文件",
+      "closeWindow": "关闭窗口",
+      "edit": "编辑",
+      "view": "显示",
+      "go": "前往",
+      "window": "窗口",
+      "help": "帮助",
+      "about": "关于 LazyDM",
+      "services": "服务",
+      "hide": "隐藏 LazyDM",
+      "hideOthers": "隐藏其他",
+      "unhide": "全部显示",
+      "quit": "退出 LazyDM",
+      "undo": "撤销",
+      "redo": "重做",
+      "cut": "剪切",
+      "copy": "拷贝",
+      "paste": "粘贴",
+      "selectAll": "全选",
+      "resetZoom": "实际大小",
+      "zoomIn": "放大",
+      "zoomOut": "缩小",
+      "fullscreen": "进入全屏"
+    },
+    "items": {
+      "settings": "设置…",
+      "newTab": "新标签页",
+      "closeTab": "关闭标签页",
+      "save": "保存",
+      "revealVault": "在访达中显示库",
+      "search": "搜索战役…",
+      "toggleSidebar": "显示/隐藏侧边栏",
+      "compendium": "资料库",
+      "templates": "模板",
+      "battleRules": "战斗规则",
+      "back": "后退",
+      "forward": "前进",
+      "nextTab": "下一个标签页",
+      "previousTab": "上一个标签页",
+      "shortcuts": "键盘快捷键"
+    }
   }
 }

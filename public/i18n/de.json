@@ -1437,5 +1437,49 @@
       "mapDelete": "Ausgewählte Elemente löschen",
       "mapAddToSelection": "Umschalt/Cmd/Strg-Klick: zur Auswahl hinzufügen oder entfernen"
     }
+  },
+  "menu": {
+    "titles": {
+      "file": "Ablage",
+      "closeWindow": "Fenster schließen",
+      "edit": "Bearbeiten",
+      "view": "Darstellung",
+      "go": "Gehe zu",
+      "window": "Fenster",
+      "help": "Hilfe",
+      "about": "Über LazyDM",
+      "services": "Dienste",
+      "hide": "LazyDM ausblenden",
+      "hideOthers": "Andere ausblenden",
+      "unhide": "Alle einblenden",
+      "quit": "LazyDM beenden",
+      "undo": "Widerrufen",
+      "redo": "Wiederholen",
+      "cut": "Ausschneiden",
+      "copy": "Kopieren",
+      "paste": "Einfügen",
+      "selectAll": "Alles auswählen",
+      "resetZoom": "Originalgröße",
+      "zoomIn": "Vergrößern",
+      "zoomOut": "Verkleinern",
+      "fullscreen": "Vollbildmodus"
+    },
+    "items": {
+      "settings": "Einstellungen…",
+      "newTab": "Neuer Tab",
+      "closeTab": "Tab schließen",
+      "save": "Sichern",
+      "revealVault": "Vault im Finder zeigen",
+      "search": "Kampagne durchsuchen…",
+      "toggleSidebar": "Seitenleiste ein-/ausblenden",
+      "compendium": "Kompendium",
+      "templates": "Vorlagen",
+      "battleRules": "Kampfregeln",
+      "back": "Zurück",
+      "forward": "Vor",
+      "nextTab": "Nächster Tab",
+      "previousTab": "Vorheriger Tab",
+      "shortcuts": "Tastenkürzel"
+    }
   }
 }

@@ -8,6 +8,7 @@ const {
   documentController,
   encounterController,
   mapController,
+  menuController,
   indexerController,
   resetController,
   reviewController,
@@ -107,6 +108,8 @@ const IPC_HANDLERS = Object.freeze({
 
   [CHANNELS.index.getStatus]: indexerController.getStatus,
   [CHANNELS.index.rebuild]: indexerController.rebuild,
+
+  [CHANNELS.menu.update]: menuController.update,
 
   [CHANNELS.reset.factoryReset]: resetController.factoryReset,
 

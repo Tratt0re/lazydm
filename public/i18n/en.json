@@ -1437,5 +1437,49 @@
       "mapDelete": "Delete the selected items",
       "mapAddToSelection": "Shift/Cmd/Ctrl-click: add to or remove from the selection"
     }
+  },
+  "menu": {
+    "titles": {
+      "file": "File",
+      "closeWindow": "Close Window",
+      "edit": "Edit",
+      "view": "View",
+      "go": "Go",
+      "window": "Window",
+      "help": "Help",
+      "about": "About LazyDM",
+      "services": "Services",
+      "hide": "Hide LazyDM",
+      "hideOthers": "Hide Others",
+      "unhide": "Show All",
+      "quit": "Quit LazyDM",
+      "undo": "Undo",
+      "redo": "Redo",
+      "cut": "Cut",
+      "copy": "Copy",
+      "paste": "Paste",
+      "selectAll": "Select All",
+      "resetZoom": "Actual Size",
+      "zoomIn": "Zoom In",
+      "zoomOut": "Zoom Out",
+      "fullscreen": "Enter Full Screen"
+    },
+    "items": {
+      "settings": "Settings…",
+      "newTab": "New Tab",
+      "closeTab": "Close Tab",
+      "save": "Save",
+      "revealVault": "Show the Vault in Finder",
+      "search": "Search the Campaign…",
+      "toggleSidebar": "Toggle the Sidebar",
+      "compendium": "Compendium",
+      "templates": "Templates",
+      "battleRules": "Battle Rules",
+      "back": "Back",
+      "forward": "Forward",
+      "nextTab": "Next Tab",
+      "previousTab": "Previous Tab",
+      "shortcuts": "Keyboard Shortcuts"
+    }
   }
 }

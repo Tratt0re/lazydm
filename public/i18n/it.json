@@ -1437,5 +1437,49 @@
       "mapDelete": "Elimina gli elementi selezionati",
       "mapAddToSelection": "Shift/Cmd/Ctrl-clic: aggiungi o rimuovi dalla selezione"
     }
+  },
+  "menu": {
+    "titles": {
+      "file": "File",
+      "closeWindow": "Chiudi finestra",
+      "edit": "Modifica",
+      "view": "Vista",
+      "go": "Vai",
+      "window": "Finestra",
+      "help": "Aiuto",
+      "about": "Informazioni su LazyDM",
+      "services": "Servizi",
+      "hide": "Nascondi LazyDM",
+      "hideOthers": "Nascondi altre",
+      "unhide": "Mostra tutte",
+      "quit": "Esci da LazyDM",
+      "undo": "Annulla",
+      "redo": "Ripeti",
+      "cut": "Taglia",
+      "copy": "Copia",
+      "paste": "Incolla",
+      "selectAll": "Seleziona tutto",
+      "resetZoom": "Dimensione reale",
+      "zoomIn": "Ingrandisci",
+      "zoomOut": "Riduci",
+      "fullscreen": "Schermo intero"
+    },
+    "items": {
+      "settings": "Impostazioni…",
+      "newTab": "Nuova scheda",
+      "closeTab": "Chiudi scheda",
+      "save": "Salva",
+      "revealVault": "Mostra il vault nel Finder",
+      "search": "Cerca nella campagna…",
+      "toggleSidebar": "Mostra/nascondi barra laterale",
+      "compendium": "Compendio",
+      "templates": "Modelli",
+      "battleRules": "Regole di battaglia",
+      "back": "Indietro",
+      "forward": "Avanti",
+      "nextTab": "Scheda successiva",
+      "previousTab": "Scheda precedente",
+      "shortcuts": "Scorciatoie da tastiera"
+    }
   }
 }

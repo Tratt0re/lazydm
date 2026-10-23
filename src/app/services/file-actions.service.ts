@@ -159,6 +159,13 @@ export class FileActionsService {
     };
   }
 
+  /** *Save* of the application menu: every open note writes its unsaved edits (a clean note does nothing). */
+  async saveOpenNotes(): Promise<void> {
+    for (const save of this.openNoteSavers.values()) {
+      await save();
+    }
+  }
+
   /**
    * *New note* in a section folder or one of its sub-folders (`folder`, vault path), of the section's note
    * `type`; a sub-folder gives its sub-type (Electron side). Opens the new note, which is how both the section

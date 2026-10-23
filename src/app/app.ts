@@ -5,6 +5,7 @@ import { RouterOutlet } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { map, startWith } from 'rxjs';
 
+import { AppMenuService } from '@/services/app-menu.service';
 import { Header } from '@/layout/header/header';
 import { ArcTechToastComponent } from '@/shared/components/toast';
 
@@ -17,6 +18,8 @@ import { ArcTechToastComponent } from '@/shared/components/toast';
 })
 export class App {
   private readonly translateService = inject(TranslateService);
+  /** Starts the macOS application menu (it does nothing elsewhere). */
+  private readonly appMenu = inject(AppMenuService);
 
   private readonly lang = toSignal(
     this.translateService.onLangChange.pipe(

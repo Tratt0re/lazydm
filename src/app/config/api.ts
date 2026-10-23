@@ -22,6 +22,7 @@ export enum APIChannel {
   ENCOUNTERS = 'encounters',
   INDEX = 'index',
   MAPS = 'maps',
+  MENU = 'menu',
   REVIEW = 'review',
   SECTIONS = 'sections',
   TEMPLATES = 'templates',
@@ -163,6 +164,12 @@ export interface ElectronIpcClient {
     readonly inspect: IpcRequest<{ folderPath: string }, DTO.VaultInspectionDto>;
     readonly open: IpcRequest<{ folderPath: string }, DTO.VaultStateDto>;
     readonly close: OptionalIpcRequest<void, DTO.VaultStateDto>;
+  };
+  readonly menu: {
+    readonly update: IpcRequest<
+      { labels: Record<string, string>; enabled: Record<string, boolean> },
+      { applied: boolean }
+    >;
   };
   readonly index: {
     readonly getStatus: OptionalIpcRequest<void, DTO.IndexStatusDto>;

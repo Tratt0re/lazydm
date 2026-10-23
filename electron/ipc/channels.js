@@ -103,6 +103,9 @@ const CHANNELS = Object.freeze({
     getStatus: 'index:getStatus',
     rebuild: 'index:rebuild',
   }),
+  menu: Object.freeze({
+    update: 'menu:update',
+  }),
   reset: Object.freeze({
     factoryReset: 'db:reset:factory-reset',
   }),

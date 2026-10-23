@@ -1437,5 +1437,49 @@
       "mapDelete": "Supprimer les éléments sélectionnés",
       "mapAddToSelection": "Maj/Cmd/Ctrl-clic : ajouter à la sélection ou l'en retirer"
     }
+  },
+  "menu": {
+    "titles": {
+      "file": "Fichier",
+      "closeWindow": "Fermer la fenêtre",
+      "edit": "Édition",
+      "view": "Présentation",
+      "go": "Aller",
+      "window": "Fenêtre",
+      "help": "Aide",
+      "about": "À propos de LazyDM",
+      "services": "Services",
+      "hide": "Masquer LazyDM",
+      "hideOthers": "Masquer les autres",
+      "unhide": "Tout afficher",
+      "quit": "Quitter LazyDM",
+      "undo": "Annuler",
+      "redo": "Rétablir",
+      "cut": "Couper",
+      "copy": "Copier",
+      "paste": "Coller",
+      "selectAll": "Tout sélectionner",
+      "resetZoom": "Taille réelle",
+      "zoomIn": "Zoom avant",
+      "zoomOut": "Zoom arrière",
+      "fullscreen": "Plein écran"
+    },
+    "items": {
+      "settings": "Réglages…",
+      "newTab": "Nouvel onglet",
+      "closeTab": "Fermer l'onglet",
+      "save": "Enregistrer",
+      "revealVault": "Afficher le vault dans le Finder",
+      "search": "Rechercher dans la campagne…",
+      "toggleSidebar": "Afficher/masquer la barre latérale",
+      "compendium": "Compendium",
+      "templates": "Modèles",
+      "battleRules": "Règles de combat",
+      "back": "Retour",
+      "forward": "Suivant",
+      "nextTab": "Onglet suivant",
+      "previousTab": "Onglet précédent",
+      "shortcuts": "Raccourcis clavier"
+    }
   }
 }

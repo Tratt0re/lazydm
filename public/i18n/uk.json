@@ -1437,5 +1437,49 @@
       "mapDelete": "Видалити вибрані елементи",
       "mapAddToSelection": "Shift/Cmd/Ctrl-клік: додати до виділення або прибрати"
     }
+  },
+  "menu": {
+    "titles": {
+      "file": "Файл",
+      "closeWindow": "Закрити вікно",
+      "edit": "Редагування",
+      "view": "Вигляд",
+      "go": "Перехід",
+      "window": "Вікно",
+      "help": "Довідка",
+      "about": "Про LazyDM",
+      "services": "Служби",
+      "hide": "Сховати LazyDM",
+      "hideOthers": "Сховати інші",
+      "unhide": "Показати всі",
+      "quit": "Вийти з LazyDM",
+      "undo": "Скасувати",
+      "redo": "Повторити",
+      "cut": "Вирізати",
+      "copy": "Копіювати",
+      "paste": "Вставити",
+      "selectAll": "Вибрати все",
+      "resetZoom": "Фактичний розмір",
+      "zoomIn": "Збільшити",
+      "zoomOut": "Зменшити",
+      "fullscreen": "На весь екран"
+    },
+    "items": {
+      "settings": "Налаштування…",
+      "newTab": "Нова вкладка",
+      "closeTab": "Закрити вкладку",
+      "save": "Зберегти",
+      "revealVault": "Показати сховище у Finder",
+      "search": "Пошук у кампанії…",
+      "toggleSidebar": "Показати/сховати бічну панель",
+      "compendium": "Компендіум",
+      "templates": "Шаблони",
+      "battleRules": "Правила бою",
+      "back": "Назад",
+      "forward": "Вперед",
+      "nextTab": "Наступна вкладка",
+      "previousTab": "Попередня вкладка",
+      "shortcuts": "Клавіатурні скорочення"
+    }
   }
 }
