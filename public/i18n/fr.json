@@ -1402,5 +1402,40 @@
       "description": "Le titre donne le nom du fichier. Les repères et les chemins gardent leur place sur une nouvelle image.",
       "error": "Impossible d’enregistrer la carte"
     }
+  },
+  "shortcuts": {
+    "title": "Raccourcis clavier",
+    "description": "Tous les raccourcis de l'app, selon où ils fonctionnent.",
+    "or": "ou",
+    "scopes": {
+      "tabs": "Onglets et navigation",
+      "editor": "Éditeur de notes",
+      "map": "Éditeur de cartes",
+      "global": "Partout"
+    },
+    "items": {
+      "search": "Rechercher dans la campagne",
+      "shortcuts": "Afficher cette liste",
+      "closeSheet": "Fermer le panneau ou la boîte ouverte",
+      "newTab": "Nouvel onglet",
+      "closeTab": "Fermer l'onglet",
+      "back": "Retour",
+      "forward": "Suivant",
+      "nextTab": "Onglet suivant",
+      "previousTab": "Onglet précédent",
+      "cycleTabs": "Parcourir les onglets (Maj à l'envers)",
+      "save": "Enregistrer la note",
+      "bold": "Gras",
+      "italic": "Italique",
+      "linkSuggestions": "Suggérer des notes et fichiers à lier",
+      "acceptSuggestion": "Choisir la suggestion en surbrillance",
+      "openLinkInTab": "Cmd/Ctrl-clic sur un lien : l'ouvrir dans un nouvel onglet",
+      "mapFinishPath": "Terminer le tracé en cours",
+      "mapCancel": "Annuler le dessin, puis quitter l'outil ou vider la sélection",
+      "mapPan": "Maintenir avec l'outil Sélection : déplacer la carte",
+      "mapSelectAll": "Sélectionner tous les éléments (outil Sélection)",
+      "mapDelete": "Supprimer les éléments sélectionnés",
+      "mapAddToSelection": "Maj/Cmd/Ctrl-clic : ajouter à la sélection ou l'en retirer"
+    }
   }
 }

@@ -1402,5 +1402,40 @@
       "description": "El título da el nombre del archivo. Los marcadores y las rutas conservan su posición en una imagen nueva.",
       "error": "No se pudo guardar el mapa"
     }
+  },
+  "shortcuts": {
+    "title": "Atajos de teclado",
+    "description": "Todos los atajos de la app, según dónde funcionan.",
+    "or": "o",
+    "scopes": {
+      "tabs": "Pestañas y navegación",
+      "editor": "Editor de notas",
+      "map": "Editor de mapas",
+      "global": "En todas partes"
+    },
+    "items": {
+      "search": "Buscar en la campaña",
+      "shortcuts": "Mostrar esta lista",
+      "closeSheet": "Cerrar el panel o diálogo abierto",
+      "newTab": "Nueva pestaña",
+      "closeTab": "Cerrar la pestaña",
+      "back": "Atrás",
+      "forward": "Adelante",
+      "nextTab": "Pestaña siguiente",
+      "previousTab": "Pestaña anterior",
+      "cycleTabs": "Recorrer las pestañas (Mayús al revés)",
+      "save": "Guardar la nota",
+      "bold": "Negrita",
+      "italic": "Cursiva",
+      "linkSuggestions": "Sugerir notas y recursos para enlazar",
+      "acceptSuggestion": "Elegir la sugerencia resaltada",
+      "openLinkInTab": "Cmd/Ctrl-clic en un enlace: abrirlo en una pestaña nueva",
+      "mapFinishPath": "Terminar el camino que se dibuja",
+      "mapCancel": "Cancelar el dibujo, luego salir de la herramienta o vaciar la selección",
+      "mapPan": "Mantener con la herramienta Seleccionar: mover el mapa",
+      "mapSelectAll": "Seleccionar todos los elementos (herramienta Seleccionar)",
+      "mapDelete": "Eliminar los elementos seleccionados",
+      "mapAddToSelection": "Mayús/Cmd/Ctrl-clic: añadir o quitar de la selección"
+    }
   }
 }

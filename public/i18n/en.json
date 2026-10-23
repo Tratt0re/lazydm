@@ -1402,5 +1402,40 @@
       "description": "The title gives the file name. The pins and paths keep their place on a new image.",
       "error": "Couldn't save the map"
     }
+  },
+  "shortcuts": {
+    "title": "Keyboard shortcuts",
+    "description": "Every shortcut of the app, by where it works.",
+    "or": "or",
+    "scopes": {
+      "tabs": "Tabs and navigation",
+      "editor": "Note editor",
+      "map": "Map editor",
+      "global": "Everywhere"
+    },
+    "items": {
+      "search": "Search the campaign",
+      "shortcuts": "Show this list",
+      "closeSheet": "Close the open sheet or dialog",
+      "newTab": "New tab",
+      "closeTab": "Close the tab",
+      "back": "Back",
+      "forward": "Forward",
+      "nextTab": "Next tab",
+      "previousTab": "Previous tab",
+      "cycleTabs": "Cycle through the tabs (Shift reverses)",
+      "save": "Save the note",
+      "bold": "Bold",
+      "italic": "Italic",
+      "linkSuggestions": "Suggest notes and assets to link",
+      "acceptSuggestion": "Pick the highlighted suggestion",
+      "openLinkInTab": "Cmd/Ctrl-click a link: open it in a new tab",
+      "mapFinishPath": "Finish the path being drawn",
+      "mapCancel": "Cancel the drawing, then leave the tool or clear the selection",
+      "mapPan": "Hold with the Select tool: move the map",
+      "mapSelectAll": "Select every item (Select tool)",
+      "mapDelete": "Delete the selected items",
+      "mapAddToSelection": "Shift/Cmd/Ctrl-click: add to or remove from the selection"
+    }
   }
 }

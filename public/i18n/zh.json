@@ -1402,5 +1402,40 @@
       "description": "标题决定文件名。更换图片后，标记和路径会保持原位。",
       "error": "无法保存地图"
     }
+  },
+  "shortcuts": {
+    "title": "键盘快捷键",
+    "description": "应用的所有快捷键，按适用位置分组。",
+    "or": "或",
+    "scopes": {
+      "tabs": "标签页与导航",
+      "editor": "笔记编辑器",
+      "map": "地图编辑器",
+      "global": "全局"
+    },
+    "items": {
+      "search": "搜索战役",
+      "shortcuts": "显示此列表",
+      "closeSheet": "关闭打开的面板或对话框",
+      "newTab": "新标签页",
+      "closeTab": "关闭标签页",
+      "back": "后退",
+      "forward": "前进",
+      "nextTab": "下一个标签页",
+      "previousTab": "上一个标签页",
+      "cycleTabs": "循环切换标签页（Shift 反向）",
+      "save": "保存笔记",
+      "bold": "加粗",
+      "italic": "斜体",
+      "linkSuggestions": "建议可链接的笔记和资源",
+      "acceptSuggestion": "选择高亮的建议",
+      "openLinkInTab": "Cmd/Ctrl 点击链接：在新标签页打开",
+      "mapFinishPath": "完成正在绘制的路径",
+      "mapCancel": "取消绘制，然后退出工具或清除选择",
+      "mapPan": "使用选择工具时按住：移动地图",
+      "mapSelectAll": "选择所有项目（选择工具）",
+      "mapDelete": "删除所选项目",
+      "mapAddToSelection": "Shift/Cmd/Ctrl 点击：加入或移出选择"
+    }
   }
 }

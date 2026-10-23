@@ -16,6 +16,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 
 import { SidebarToggleComponent } from '@/components/sidebar-toggle/sidebar-toggle.component';
 import type { WorkspaceTabDto } from '@/dtos';
+import { matchesShortcut } from '@/config/shortcuts.config';
 import { REVIEW_ROUTE_SEGMENT } from '@/pages/review-page/review-page';
 import { AppSheetService } from '@/services/app-sheet.service';
 import { SectionService } from '@/services/section.service';
@@ -230,23 +231,29 @@ export class TabBar {
 
   @HostListener('document:keydown', ['$event'])
   protected onKeyDown(event: KeyboardEvent): void {
-    if (!this.workspace.isVisible() || this.sheets.isOpen() || event.altKey) {
+    if (!this.workspace.isVisible() || this.sheets.isOpen()) {
       return;
     }
 
-    const isModifierPressed = isMac ? event.metaKey : event.ctrlKey;
-    const key = event.key.toLowerCase();
-
-    if (event.ctrlKey && key === 'tab') {
+    if (event.ctrlKey && !event.altKey && event.key.toLowerCase() === 'tab') {
       event.preventDefault();
       void this.workspace.activateSibling(event.shiftKey ? -1 : 1);
-    } else if (isModifierPressed && !event.shiftKey && key === 't') {
+    } else if (matchesShortcut(event, 'nextTab')) {
+      event.preventDefault();
+      void this.workspace.activateSibling(1);
+    } else if (matchesShortcut(event, 'previousTab')) {
+      event.preventDefault();
+      void this.workspace.activateSibling(-1);
+    } else if (matchesShortcut(event, 'newTab')) {
       event.preventDefault();
       void this.workspace.openTab();
-    } else if (isModifierPressed && !event.shiftKey && key === '[') {
+    } else if (matchesShortcut(event, 'closeTab')) {
+      event.preventDefault();
+      void this.workspace.closeTab();
+    } else if (matchesShortcut(event, 'back')) {
       event.preventDefault();
       void this.workspace.goBack();
-    } else if (isModifierPressed && !event.shiftKey && key === ']') {
+    } else if (matchesShortcut(event, 'forward')) {
       event.preventDefault();
       void this.workspace.goForward();
     }

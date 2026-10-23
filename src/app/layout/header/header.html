@@ -91,6 +91,19 @@
             <arc-icon [arcType]="sheet.icon" />
           </button>
         }
+        <button
+          type="button"
+          arc-button
+          arcType="ghost"
+          arcSize="sm"
+          class="size-8"
+          [attr.aria-label]="'shortcuts.title' | translate"
+          arcPosition="bottom"
+          [arcTooltip]="'shortcuts.title' | translate"
+          (click)="shortcutsSheet.toggle()"
+        >
+          <arc-icon arcType="keyboard" />
+        </button>
       </nav>
     }
 </ng-template>

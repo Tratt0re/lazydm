@@ -1402,5 +1402,40 @@
       "description": "Der Titel bestimmt den Dateinamen. Markierungen und Pfade behalten ihre Position auf einem neuen Bild.",
       "error": "Die Karte konnte nicht gespeichert werden"
     }
+  },
+  "shortcuts": {
+    "title": "Tastenkürzel",
+    "description": "Alle Tastenkürzel der App, nach Einsatzort.",
+    "or": "oder",
+    "scopes": {
+      "tabs": "Tabs und Navigation",
+      "editor": "Notizeditor",
+      "map": "Karteneditor",
+      "global": "Überall"
+    },
+    "items": {
+      "search": "Kampagne durchsuchen",
+      "shortcuts": "Diese Liste anzeigen",
+      "closeSheet": "Offenes Fenster oder Dialog schließen",
+      "newTab": "Neuer Tab",
+      "closeTab": "Tab schließen",
+      "back": "Zurück",
+      "forward": "Vor",
+      "nextTab": "Nächster Tab",
+      "previousTab": "Vorheriger Tab",
+      "cycleTabs": "Durch die Tabs wechseln (Umschalt: rückwärts)",
+      "save": "Notiz speichern",
+      "bold": "Fett",
+      "italic": "Kursiv",
+      "linkSuggestions": "Notizen und Dateien zum Verlinken vorschlagen",
+      "acceptSuggestion": "Markierten Vorschlag übernehmen",
+      "openLinkInTab": "Cmd/Strg-Klick auf einen Link: in neuem Tab öffnen",
+      "mapFinishPath": "Gezeichneten Pfad beenden",
+      "mapCancel": "Zeichnung abbrechen, dann Werkzeug verlassen oder Auswahl aufheben",
+      "mapPan": "Mit dem Auswahlwerkzeug gedrückt halten: Karte verschieben",
+      "mapSelectAll": "Alle Elemente auswählen (Auswahlwerkzeug)",
+      "mapDelete": "Ausgewählte Elemente löschen",
+      "mapAddToSelection": "Umschalt/Cmd/Strg-Klick: zur Auswahl hinzufügen oder entfernen"
+    }
   }
 }
