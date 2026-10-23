@@ -1,55 +1,32 @@
-<div class="flex min-h-0 flex-1 flex-col overflow-y-auto p-6 sm:p-8">
-  <header class="flex items-center gap-5">
-    <arc-icon arcType="franco" class="size-24 shrink-0 text-primary" aria-hidden="true" />
-    <div class="min-w-0 flex-1">
-      <h1
-        #title
-        tabindex="-1"
-        class="font-display text-6xl leading-[0.9] font-black tracking-[0.015em] uppercase outline-none"
-      >
-        LazyDM<span class="text-primary" aria-hidden="true">.</span>
-      </h1>
-      <div class="arc-ornament-rule mt-4" aria-hidden="true"><span>◇</span><span>✣</span><span>◇</span></div>
-    </div>
-  </header>
+<div class="flex min-h-0 flex-1 flex-col gap-6 overflow-y-auto p-6 sm:p-8">
+  <header class="grid grid-cols-[auto_1fr_auto] items-start gap-x-6 gap-y-4">
+    <arc-icon arcType="franco" class="row-span-2 size-20 text-primary lg:size-36" aria-hidden="true" />
 
-  <p class="mt-5 text-sm text-muted-foreground">{{ 'onboarding.welcome.lead' | translate }}</p>
+    <h1
+      #title
+      tabindex="-1"
+      class="self-center font-display text-5xl leading-[0.9] font-black tracking-[0.015em] uppercase outline-none lg:text-8xl"
+    >
+      LazyDM<span class="text-primary" aria-hidden="true">.</span>
+    </h1>
 
-  <ul class="mt-5 flex flex-col gap-3">
-    @for (point of points; track point.key) {
-      <li class="flex items-start gap-3">
-        <span class="flex size-9 shrink-0 items-center justify-center border border-input bg-recessed text-primary">
-          <arc-icon [arcType]="point.icon" class="size-4" aria-hidden="true" />
-        </span>
-        <p class="min-w-0 text-sm">
-          <span class="font-semibold text-foreground-strong">
-            {{ 'onboarding.welcome.points.' + point.key + '.title' | translate }}
-          </span>
-          <span class="text-muted-foreground">
-            {{ 'onboarding.welcome.points.' + point.key + '.text' | translate }}
-          </span>
-        </p>
-      </li>
-    }
-  </ul>
-
-  <div class="mt-5 border border-input bg-background p-4">
-    <div class="grid gap-4 sm:grid-cols-2">
+    <div class="flex items-start gap-4">
       <div>
         <label class="mb-1 block text-sm font-medium" for="welcome-language">
           {{ 'settings.general.cards.language.fieldLabel' | translate }}
         </label>
-        <arc-select id="welcome-language" [arcValue]="selectedLanguage()" (arcSelectionChange)="onLanguageChange($event)">
+        <arc-select id="welcome-language" class="w-44" [arcValue]="selectedLanguage()" (arcSelectionChange)="onLanguageChange($event)">
           @for (language of languages; track language) {
-            <arc-select-item [arcValue]="language" [arcLabel]="getLanguageLabelKey(language) | translate" />
+            <arc-select-item [arcValue]="language" [arcLabel]="getLanguageLabelKey(language) | translate" arcIcon="globe" />
           }
         </arc-select>
       </div>
+      <span class="mt-2 h-12 w-px bg-border" aria-hidden="true"></span>
       <div>
         <label class="mb-1 block text-sm font-medium" for="welcome-theme">
           {{ 'settings.general.cards.theme.fieldLabel' | translate }}
         </label>
-        <arc-select id="welcome-theme" [arcValue]="selectedTheme()" (arcSelectionChange)="onThemeChange($event)">
+        <arc-select id="welcome-theme" class="w-44" [arcValue]="selectedTheme()" (arcSelectionChange)="onThemeChange($event)">
           @for (theme of themeOptions; track theme) {
             <arc-select-item
               [arcValue]="theme"
@@ -60,16 +37,61 @@
         </arc-select>
       </div>
     </div>
-    <p class="mt-3 text-xs text-muted-foreground">{{ 'onboarding.welcome.preferencesHint' | translate }}</p>
-  </div>
+
+    <div class="arc-ornament-rule col-span-2" aria-hidden="true"><span>◇</span><span>✣</span><span>◇</span></div>
+  </header>
+
+  <p class="max-w-3xl text-base text-foreground-secondary lg:text-lg">{{ 'onboarding.welcome.lead' | translate }}</p>
+
+  <ol class="grid gap-4 md:grid-cols-3">
+    @for (point of points; track point.key; let index = $index) {
+      <li
+        class="arc-setup-panel relative flex flex-col gap-4 border border-border-subtle p-5 pt-9 [--bracket-size:12px]"
+      >
+        <span class="arc-card-corner arc-card-corner-tl" aria-hidden="true"></span>
+        <span class="arc-card-corner arc-card-corner-tr" aria-hidden="true"></span>
+        <span class="arc-card-corner arc-card-corner-bl" aria-hidden="true"></span>
+        <span class="arc-card-corner arc-card-corner-br" aria-hidden="true"></span>
+
+        <span class="absolute top-3 left-5 font-mono text-[11px] text-muted-foreground" aria-hidden="true">
+          0{{ index + 1 }}
+        </span>
+
+        <span
+          class="flex size-14 shrink-0 items-center justify-center border border-input bg-recessed text-primary"
+          aria-hidden="true"
+        >
+          <arc-icon [arcType]="point.icon" class="size-7" />
+        </span>
+
+        <div class="flex items-center gap-2" aria-hidden="true">
+          <span class="h-px w-3 bg-border"></span>
+          <span class="size-1.5 shrink-0 rotate-45 border border-primary"></span>
+          <span class="h-px flex-1 bg-border"></span>
+        </div>
+
+        <div>
+          <h2 class="text-xl font-bold text-foreground-strong">
+            {{ 'onboarding.welcome.points.' + point.key + '.title' | translate }}
+          </h2>
+          <p class="mt-2 text-base text-muted-foreground">
+            {{ 'onboarding.welcome.points.' + point.key + '.text' | translate }}
+          </p>
+        </div>
+      </li>
+    }
+  </ol>
 </div>
 <footer class="flex shrink-0 items-center justify-between gap-4 border-t border-border p-4">
-  <div
-    class="arc-step-marker"
-    role="img"
-    [attr.aria-label]="'onboarding.step' | translate: { current: 1, total: 2 }"
-  >
-    <span class="is-reached"></span><span></span>
+  <div class="flex items-center gap-4">
+    <div
+      class="arc-step-marker"
+      role="img"
+      [attr.aria-label]="'onboarding.step' | translate: { current: 1, total: 2 }"
+    >
+      <span class="is-reached"></span><span></span>
+    </div>
+    <p class="hidden text-xs text-muted-foreground md:block">{{ 'onboarding.welcome.preferencesHint' | translate }}</p>
   </div>
   <button arc-button type="button" arcSize="lg" (click)="next()">
     {{ 'onboarding.welcome.continue' | translate }}

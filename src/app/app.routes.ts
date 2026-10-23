@@ -226,6 +226,7 @@ export const routes: Routes = [
       { path: '', pathMatch: 'full', canActivate: [setupEntryGuard], children: [] },
       {
         path: 'welcome',
+        data: { setupWide: true },
         loadComponent: () => import('./pages/welcome-page/welcome-page').then((m) => m.WelcomePage),
       },
       {

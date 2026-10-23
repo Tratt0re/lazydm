@@ -489,13 +489,14 @@
 
 /* Setup panel (first-run flow): the campaign card's bronze corner brackets, still. Decoration only. */
 .arc-setup-panel {
+  --bracket-size: 18px;
   position: relative;
 }
 
 .arc-setup-panel > .arc-card-corner {
   position: absolute;
-  width: 18px;
-  height: 18px;
+  width: var(--bracket-size);
+  height: var(--bracket-size);
   border: 0 solid var(--primary);
   pointer-events: none;
 }
