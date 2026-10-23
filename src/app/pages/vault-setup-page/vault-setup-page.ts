@@ -1,8 +1,19 @@
-import { ChangeDetectionStrategy, Component, computed, inject, OnInit, signal } from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  ElementRef,
+  inject,
+  OnInit,
+  signal,
+  viewChild,
+} from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 
 import type { VaultInspectionDto, VaultStateDto } from '@/dtos';
+import { LocalPreferencesService } from '@/services/local-preferences.service';
 import { VaultService } from '@/services/vault.service';
 import { ArcTechAlertComponent } from '@/shared/components/alert';
 import { ArcTechBadgeComponent } from '@/shared/components/badge';
@@ -16,10 +27,13 @@ type VaultFolderDetection = 'existing' | 'empty' | 'nonEmpty';
   selector: 'app-vault-setup-page',
   imports: [TranslatePipe, ArcTechAlertComponent, ArcTechBadgeComponent, ArcTechButtonComponent, ArcTechIconComponent],
   templateUrl: './vault-setup-page.html',
+  host: { class: 'flex min-h-0 flex-1 flex-col' },
 })
-export class VaultSetupPage implements OnInit {
+export class VaultSetupPage implements OnInit, AfterViewInit {
   private readonly vaultService = inject(VaultService);
   private readonly router = inject(Router);
+  private readonly preferences = inject(LocalPreferencesService);
+  private readonly title = viewChild.required<ElementRef<HTMLElement>>('title');
 
   protected readonly isDesktop = this.vaultService.isAvailable;
   protected readonly inspection = signal<VaultInspectionDto | null>(null);
@@ -45,6 +59,15 @@ export class VaultSetupPage implements OnInit {
 
     return inspection.isEmpty ? 'empty' : 'nonEmpty';
   });
+
+  /** Cloud drive of the chosen folder (`icloud`, `dropbox`…), null when it is only on this device. */
+  protected readonly cloudProvider = computed(() => this.inspection()?.cloudProvider ?? null);
+  /** Back to the welcome step, unless the vault is missing (the welcome has nothing to say then). */
+  protected readonly canGoBack = computed(() => this.missingVault() === null);
+
+  ngAfterViewInit(): void {
+    this.title().nativeElement.focus();
+  }
 
   ngOnInit(): void {
     if (this.isDesktop && !this.vaultService.state()) {
@@ -74,6 +97,10 @@ export class VaultSetupPage implements OnInit {
     });
   }
 
+  protected goBack(): void {
+    void this.router.navigate(['/setup', 'welcome']);
+  }
+
   protected retry(): void {
     void this.runTask(async () => {
       await this.navigateWhenReady(await this.vaultService.loadCurrent());
@@ -82,6 +109,7 @@ export class VaultSetupPage implements OnInit {
 
   private async navigateWhenReady(state: VaultStateDto): Promise<void> {
     if (state.status === 'ready') {
+      this.preferences.setOnboardingCompleted(true);
       await this.router.navigateByUrl('/');
     }
   }

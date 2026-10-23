@@ -315,9 +315,8 @@
   },
   "vault": {
     "setup": {
-      "title": "Set up your vault",
-      "description": "LazyDM keeps your campaigns as Markdown files in a folder you own. Choose an existing folder or create a new one.",
-      "cloudHint": "Pick a folder inside iCloud Drive, Dropbox, Box or OneDrive to use the same vault on all your devices.",
+      "title": "Pick your vault",
+      "description": "A vault is the folder that holds all your campaigns as Markdown files. LazyDM only adds a small configuration file to it. Choose a new or an existing folder.",
       "chooseFolder": "Choose folder",
       "chooseAnother": "Choose another folder",
       "open": "Open vault",
@@ -1472,6 +1471,27 @@
       },
       "preferencesHint": "Only for this device. You can change both later in Settings.",
       "continue": "Continue"
+    },
+    "vault": {
+      "back": "Back",
+      "local": {
+        "title": "On this device.",
+        "text": " The files stay on this computer. Nothing is shared, and backups are up to you.",
+        "badge": "Only on this device",
+        "found": "This folder is only on this device: it will not sync to your other devices."
+      },
+      "cloud": {
+        "title": "In a cloud folder.",
+        "text": " Pick a folder inside iCloud Drive, Dropbox, OneDrive, Box or Google Drive. Your cloud app syncs the files between your devices; LazyDM waits for pending downloads when it starts and warns you if two devices changed the same note.",
+        "found": "This folder is in {{provider}}: your cloud app syncs it between your devices. LazyDM waits for pending downloads when it starts and warns you if two devices changed the same note."
+      },
+      "providers": {
+        "icloud": "iCloud Drive",
+        "dropbox": "Dropbox",
+        "onedrive": "OneDrive",
+        "box": "Box",
+        "google-drive": "Google Drive"
+      }
     }
   }
 }

@@ -315,9 +315,8 @@
   },
   "vault": {
     "setup": {
-      "title": "设置你的资料库",
-      "description": "LazyDM 会将你的战役以 Markdown 文件形式保存在你自己的文件夹中。请选择现有文件夹或新建一个。",
-      "cloudHint": "选择 iCloud Drive、Dropbox、Box 或 OneDrive 中的文件夹，即可在所有设备上使用同一个资料库。",
+      "title": "选择你的资料库",
+      "description": "资料库是存放所有战役 Markdown 文件的文件夹。LazyDM 只会添加一个很小的配置文件。请选择新的或已有的文件夹。",
       "chooseFolder": "选择文件夹",
       "chooseAnother": "选择其他文件夹",
       "open": "打开资料库",
@@ -1450,6 +1449,49 @@
       "nextTab": "下一个标签页",
       "previousTab": "上一个标签页",
       "shortcuts": "键盘快捷键"
+    }
+  },
+  "onboarding": {
+    "step": "第 {{current}} 步，共 {{total}} 步",
+    "welcome": {
+      "lead": "由地下城主为地下城主打造，并且有意偷懒：你少准备一些，战役会自己顺畅地进行。",
+      "points": {
+        "prepare": {
+          "title": "准备一次。",
+          "text": "场景、敌人、地点和地图放在一起，并相互链接。"
+        },
+        "session": {
+          "title": "在桌边使用。",
+          "text": "先攻、生命值和地图就在笔记旁边，你无需离开游戏去查找东西。"
+        },
+        "files": {
+          "title": "普通文件，归你所有。",
+          "text": "一切都是你所选文件夹里的 Markdown。无需账号，不被绑定。"
+        }
+      },
+      "preferencesHint": "仅限此设备。之后可在“设置”中更改这两项。",
+      "continue": "继续"
+    },
+    "vault": {
+      "back": "返回",
+      "local": {
+        "title": "在此设备上。",
+        "text": "文件保留在这台电脑上。不会共享任何内容，备份由你自己负责。",
+        "badge": "仅在此设备",
+        "found": "此文件夹仅在此设备上：不会同步到你的其他设备。"
+      },
+      "cloud": {
+        "title": "在云端文件夹中。",
+        "text": "选择 iCloud Drive、Dropbox、OneDrive、Box 或 Google Drive 中的文件夹。你的云应用会在设备之间同步文件；LazyDM 在启动时等待尚未完成的下载，并在两台设备修改了同一条笔记时提醒你。",
+        "found": "此文件夹位于 {{provider}}：你的云应用会在设备之间同步它。LazyDM 在启动时等待尚未完成的下载，并在两台设备修改了同一条笔记时提醒你。"
+      },
+      "providers": {
+        "icloud": "iCloud Drive",
+        "dropbox": "Dropbox",
+        "onedrive": "OneDrive",
+        "box": "Box",
+        "google-drive": "Google Drive"
+      }
     }
   }
 }

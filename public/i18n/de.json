@@ -315,9 +315,8 @@
   },
   "vault": {
     "setup": {
-      "title": "Vault einrichten",
-      "description": "LazyDM speichert deine Kampagnen als Markdown-Dateien in einem Ordner, der dir gehört. Wähle einen vorhandenen Ordner oder erstelle einen neuen.",
-      "cloudHint": "Wähle einen Ordner in iCloud Drive, Dropbox, Box oder OneDrive, um denselben Vault auf all deinen Geräten zu nutzen.",
+      "title": "Wähle deinen Vault",
+      "description": "Ein Vault ist der Ordner, der alle deine Kampagnen als Markdown-Dateien enthält. LazyDM fügt nur eine kleine Konfigurationsdatei hinzu. Wähle einen neuen oder bestehenden Ordner.",
       "chooseFolder": "Ordner wählen",
       "chooseAnother": "Anderen Ordner wählen",
       "open": "Vault öffnen",
@@ -1450,6 +1449,49 @@
       "nextTab": "Nächster Tab",
       "previousTab": "Vorheriger Tab",
       "shortcuts": "Tastenkürzel"
+    }
+  },
+  "onboarding": {
+    "step": "Schritt {{current}} von {{total}}",
+    "welcome": {
+      "lead": "Von einem Spielleiter für Spielleiter gemacht, und mit Absicht faul: Du bereitest weniger vor, und die Sitzung läuft fast von allein.",
+      "points": {
+        "prepare": {
+          "title": "Einmal vorbereiten.",
+          "text": "Szenen, Gegner, Orte und Karten liegen zusammen und verweisen aufeinander."
+        },
+        "session": {
+          "title": "Am Tisch spielen.",
+          "text": "Initiative, TP und Karten liegen neben deinen Notizen, damit du das Spiel nie verlassen musst, um etwas nachzuschlagen."
+        },
+        "files": {
+          "title": "Einfache Dateien, deine.",
+          "text": "Alles ist Markdown in einem Ordner deiner Wahl. Kein Konto, keine Bindung."
+        }
+      },
+      "preferencesHint": "Nur für dieses Gerät. Du kannst beides später in den Einstellungen ändern.",
+      "continue": "Weiter"
+    },
+    "vault": {
+      "back": "Zurück",
+      "local": {
+        "title": "Auf diesem Gerät.",
+        "text": " Die Dateien bleiben auf diesem Computer. Nichts wird geteilt, und Backups liegen bei dir.",
+        "badge": "Nur auf diesem Gerät",
+        "found": "Dieser Ordner liegt nur auf diesem Gerät: Er wird nicht mit deinen anderen Geräten synchronisiert."
+      },
+      "cloud": {
+        "title": "In einem Cloud-Ordner.",
+        "text": " Wähle einen Ordner in iCloud Drive, Dropbox, OneDrive, Box oder Google Drive. Deine Cloud-App synchronisiert die Dateien zwischen deinen Geräten; LazyDM wartet beim Start auf ausstehende Downloads und warnt dich, wenn zwei Geräte dieselbe Notiz geändert haben.",
+        "found": "Dieser Ordner liegt in {{provider}}: Deine Cloud-App synchronisiert ihn zwischen deinen Geräten. LazyDM wartet beim Start auf ausstehende Downloads und warnt dich, wenn zwei Geräte dieselbe Notiz geändert haben."
+      },
+      "providers": {
+        "icloud": "iCloud Drive",
+        "dropbox": "Dropbox",
+        "onedrive": "OneDrive",
+        "box": "Box",
+        "google-drive": "Google Drive"
+      }
     }
   }
 }

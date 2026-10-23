@@ -315,9 +315,8 @@
   },
   "vault": {
     "setup": {
-      "title": "Configurer votre vault",
-      "description": "LazyDM conserve vos campagnes sous forme de fichiers Markdown dans un dossier qui vous appartient. Choisissez un dossier existant ou créez-en un nouveau.",
-      "cloudHint": "Choisissez un dossier dans iCloud Drive, Dropbox, Box ou OneDrive pour utiliser le même vault sur tous vos appareils.",
+      "title": "Choisis ton vault",
+      "description": "Un vault est le dossier qui contient toutes tes campagnes sous forme de fichiers Markdown. LazyDM n’y ajoute qu’un petit fichier de configuration. Choisis un dossier neuf ou existant.",
       "chooseFolder": "Choisir un dossier",
       "chooseAnother": "Choisir un autre dossier",
       "open": "Ouvrir le vault",
@@ -1450,6 +1449,49 @@
       "nextTab": "Onglet suivant",
       "previousTab": "Onglet précédent",
       "shortcuts": "Raccourcis clavier"
+    }
+  },
+  "onboarding": {
+    "step": "Étape {{current}} sur {{total}}",
+    "welcome": {
+      "lead": "Fait par un Maître du Donjon pour des Maîtres du Donjon, et paresseux par conception : tu prépares moins, et la séance se déroule presque toute seule.",
+      "points": {
+        "prepare": {
+          "title": "Prépare une fois.",
+          "text": "Scènes, ennemis, lieux et cartes vivent ensemble et se lient entre eux."
+        },
+        "session": {
+          "title": "Joue à la table.",
+          "text": "Initiative, PV et cartes sont à côté de tes notes, donc tu ne quittes jamais la partie pour chercher quelque chose."
+        },
+        "files": {
+          "title": "Des fichiers simples, à toi.",
+          "text": "Tout est en Markdown dans un dossier de ton choix. Pas de compte, pas d’enfermement."
+        }
+      },
+      "preferencesHint": "Uniquement pour cet appareil. Tu pourras changer les deux plus tard dans les Réglages.",
+      "continue": "Continuer"
+    },
+    "vault": {
+      "back": "Retour",
+      "local": {
+        "title": "Sur cet appareil.",
+        "text": " Les fichiers restent sur cet ordinateur. Rien n’est partagé et les sauvegardes sont à ta charge.",
+        "badge": "Uniquement sur cet appareil",
+        "found": "Ce dossier est uniquement sur cet appareil : il ne sera pas synchronisé avec les autres."
+      },
+      "cloud": {
+        "title": "Dans un dossier cloud.",
+        "text": " Choisis un dossier dans iCloud Drive, Dropbox, OneDrive, Box ou Google Drive. Ton application cloud synchronise les fichiers entre tes appareils ; LazyDM attend les téléchargements en attente au démarrage et te prévient si deux appareils ont modifié la même note.",
+        "found": "Ce dossier est dans {{provider}} : ton application cloud le synchronise entre tes appareils. LazyDM attend les téléchargements en attente au démarrage et te prévient si deux appareils ont modifié la même note."
+      },
+      "providers": {
+        "icloud": "iCloud Drive",
+        "dropbox": "Dropbox",
+        "onedrive": "OneDrive",
+        "box": "Box",
+        "google-drive": "Google Drive"
+      }
     }
   }
 }
