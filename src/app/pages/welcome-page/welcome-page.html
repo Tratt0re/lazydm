@@ -42,9 +42,14 @@
 
   <p class="max-w-3xl text-base text-foreground-secondary lg:text-lg">{{ 'onboarding.welcome.lead' | translate }}</p>
 
-  <ol class="grid gap-4 md:grid-cols-3">
+  <ol class="grid gap-4 md:grid-cols-[1fr_1.3fr_1fr]">
     @for (point of points; track point.key) {
-      <li class="flex flex-col gap-4 border border-border-subtle p-5">
+      <li
+        class="flex flex-col gap-4 border p-5"
+        [class.border-border-subtle]="!point.isMain"
+        [class.border-primary]="point.isMain"
+        [class.bg-raised]="point.isMain"
+      >
         <div class="flex items-center gap-3">
           <span
             class="flex size-10 shrink-0 items-center justify-center border border-input bg-recessed text-primary"

@@ -19,6 +19,8 @@ import { applyThemeTransition } from '@/shared/utils/theme-transition';
 interface WelcomePoint {
   readonly key: 'prepare' | 'session' | 'files';
   readonly icon: ArcTechIcon;
+  /** The promise a DM cares about most: the card is emphasised. */
+  readonly isMain: boolean;
 }
 
 /** First step of the setup flow: what LazyDM is for, and the language and theme of this device. */
@@ -36,9 +38,9 @@ export class WelcomePage implements AfterViewInit {
   private readonly title = viewChild.required<ElementRef<HTMLElement>>('title');
 
   protected readonly points: readonly WelcomePoint[] = [
-    { key: 'prepare', icon: 'clapperboard' },
-    { key: 'session', icon: 'swords' },
-    { key: 'files', icon: 'folder' },
+    { key: 'prepare', icon: 'clapperboard', isMain: false },
+    { key: 'session', icon: 'swords', isMain: true },
+    { key: 'files', icon: 'folder', isMain: false },
   ];
   protected readonly themeOptions = [EDarkModes.SYSTEM, EDarkModes.LIGHT, EDarkModes.DARK] as const;
   protected readonly languages = this.i18nService.supportedLanguages;
