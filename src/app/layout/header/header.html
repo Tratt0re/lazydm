@@ -4,8 +4,14 @@
   [class.pl-4]="!isMac || isFullscreen()"
   (dblclick)="onDoubleClick($event)"
 >
-  <!-- left column: drag area spacer -->
-  <span></span>
+  <!-- left column: the sheet buttons on Windows and Linux (settings first), a drag area spacer on macOS -->
+  @if (isMac) {
+    <span></span>
+  } @else {
+    <div class="flex items-center justify-start">
+      <ng-container *ngTemplateOutlet="sheetNav" />
+    </div>
+  }
 
   <!-- center column: search bar (it searches the open campaign, so only on a campaign page) -->
   @if (vault() && workspace.isVisible()) {
@@ -14,32 +20,10 @@
     <span></span>
   }
 
-  <!-- right column: sheet buttons + window controls -->
+  <!-- right column: sheet buttons (macOS) + window controls -->
   <div class="flex items-center justify-end">
-    @if (vault()) {
-      <nav
-        class="window-no-drag flex items-center gap-1 px-1"
-        [attr.aria-label]="'header.sheetsAriaLabel' | translate"
-      >
-        @for (sheet of sheetButtons; track sheet.kind) {
-          @let isOpen = sheets.activeKind() === sheet.kind;
-          <button
-            type="button"
-            arc-button
-            arcType="ghost"
-            arcSize="sm"
-            class="size-8"
-            [class.text-primary]="isOpen"
-            [attr.aria-pressed]="isOpen"
-            [attr.aria-label]="sheet.label | translate"
-            arcPosition="bottom"
-            [arcTooltip]="sheet.label | translate"
-            (click)="sheets.toggle(sheet.kind)"
-          >
-            <arc-icon [arcType]="sheet.icon" />
-          </button>
-        }
-      </nav>
+    @if (isMac) {
+      <ng-container *ngTemplateOutlet="sheetNav" />
     }
 
     @if (isDesktop && !isMac) {
@@ -82,3 +66,31 @@
     }
   </div>
 </header>
+
+<ng-template #sheetNav>
+    @if (vault()) {
+      <nav
+        class="window-no-drag flex items-center gap-1 px-1"
+        [attr.aria-label]="'header.sheetsAriaLabel' | translate"
+      >
+        @for (sheet of orderedSheetButtons; track sheet.kind) {
+          @let isOpen = sheets.activeKind() === sheet.kind;
+          <button
+            type="button"
+            arc-button
+            arcType="ghost"
+            arcSize="sm"
+            class="size-8"
+            [class.text-primary]="isOpen"
+            [attr.aria-pressed]="isOpen"
+            [attr.aria-label]="sheet.label | translate"
+            arcPosition="bottom"
+            [arcTooltip]="sheet.label | translate"
+            (click)="sheets.toggle(sheet.kind)"
+          >
+            <arc-icon [arcType]="sheet.icon" />
+          </button>
+        }
+      </nav>
+    }
+</ng-template>

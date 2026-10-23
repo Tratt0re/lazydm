@@ -1,3 +1,4 @@
+import { NgTemplateOutlet } from '@angular/common';
 import { ChangeDetectionStrategy, Component, DestroyRef, inject, signal, ViewEncapsulation } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 
@@ -21,6 +22,7 @@ const FULLSCREEN_CHANGED_EVENT = 'window:fullscreenChanged';
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-header',
   imports: [
+    NgTemplateOutlet,
     TranslatePipe,
     ArcTechButtonComponent,
     ArcTechIconComponent,
@@ -47,6 +49,10 @@ export class Header {
     { kind: 'battle-rules', label: 'nav.items.battleRules', icon: 'dices' },
     { kind: 'settings', label: 'nav.items.settings', icon: 'settings' },
   ];
+  /** On the left (Windows, Linux) the buttons read settings first; on the right (macOS) the order above. */
+  protected readonly orderedSheetButtons = window.electronAPI?.platform === 'darwin'
+    ? this.sheetButtons
+    : [...this.sheetButtons].reverse();
   protected readonly vault = inject(VaultService).currentVault;
   protected readonly isDesktop = Boolean(window.electronAPI);
   protected readonly isMac = window.electronAPI?.platform === 'darwin';
