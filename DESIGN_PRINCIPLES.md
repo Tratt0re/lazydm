@@ -29,29 +29,30 @@ LazyDM works like **Obsidian**, specialised for Dungeon Masters.
 │       └── <folders on demand>        sessions/, enemies/, assets/, notes/… appear with their first file
 └── <campaign-slug>/                   one folder per campaign (section folders appear with their first file)
     ├── campaign.md                    campaign card: display name, cover, description
-    ├── scenes/                        type: scene
-    ├── characters/                    type: character
-    ├── enemies/                       type: enemy
-    │   └── <sub-type>/                one level of sub-folders: subtype: <folder name> (e.g. monsters, humans)
-    ├── spells/                        type: spell
-    ├── items/                         type: item
-    ├── quests/                        type: quest
-    ├── locations/                     type: location
-    ├── world/                         type: world (lore, factions, history, deities)
+    ├── scenes/
+    ├── characters/
+    ├── enemies/
+    │   └── <sub-folder>/              one level of sub-folders to organise notes (e.g. monsters, humans)
+    ├── spells/
+    ├── items/
+    ├── quests/
+    ├── locations/
+    ├── world/                         lore, factions, history, deities
     ├── encounters/                    encounters: .json files, not notes (see §6d); _party.json = the party roster
     ├── maps/                          interactive maps: .json files, not notes (see §6e); the image stays in assets/
-    ├── handouts/                      type: handout (letters, clues; may embed images from assets/)
-    ├── sessions/                      type: session
+    ├── handouts/                      letters, clues; may embed images from assets/
+    ├── sessions/
     ├── assets/                        every non-.md file: images, maps, pdfs, sounds…
-    └── <custom sections>/             added per campaign (see §2a), e.g. factions/ → type: faction
+    └── <custom sections>/             added per campaign (see §2a), e.g. factions/
 ```
 
 - **Folder and file names are slugs**: lowercase kebab-case, `-` instead of spaces
   (`Lost Mine of Phandelver` → `lost-mine-of-phandelver`).
 - The **human-readable name** lives in the content (`campaign.md` frontmatter / `title`), never in the folder name.
-- A note's **`type` (and optional `subtype`) in its frontmatter decides what it is**, and its folder should agree
-  with it (§2a). When they disagree LazyDM **reports it and offers a fix; it never blocks the note and never moves
-  it on its own**. Links resolve by name, so a note in the wrong folder keeps working.
+- **A note's folder decides what it is**: a note in `enemies/` is an enemy, one in `enemies/humans/` an enemy of the
+  sub-group *humans* (§2a). LazyDM never reads or writes a `type` / `subtype` frontmatter key for this; they are
+  ordinary user fields (`type: beast`, `type: devil`…) that LazyDM leaves alone, like any other key. Links resolve by
+  name, so a note moved to another folder keeps working.
 - A plain map is an image in `assets/` plus a `.md` card that embeds it. An **interactive map** (pins, paths, notes)
   is a `.json` file of the *Maps* section that points at an image in `assets/` (see §6e).
 - **Media files** (images: png, jpg, gif, webp, svg, avif; pdf; audio: mp3, wav, ogg, m4a, flac) pasted into a
@@ -89,10 +90,9 @@ LazyDM works like **Obsidian**, specialised for Dungeon Masters.
   update the links to its files (*Turn links into plain text* / remove embeds, default on, like deleting a
   sub-folder). Special sections cannot be deleted. **Sub-folders** can be renamed and deleted (see *Renaming and
   deleting* below).
-- **Sub-folders**: one level inside a section, created from the section page (*New folder*). A sub-folder is a
-  **sub-type**: notes in `enemies/humans/` have `type: enemy` and `subtype: humans` (a separate frontmatter field,
-  the sub-folder slug). New notes created inside a sub-folder get both. Sub-folders share the section's template
-  (one template per section; per-sub-type templates may come later). Deeper folders are **ignored** (their files
+- **Sub-folders**: one level inside a section, created from the section page (*New folder*). They only organise
+  the section's notes: the note's kind is the section, the sub-folder is a grouping, and nothing is written in the
+  notes. Sub-folders share the section's template (one template per section; per-sub-folder templates may come later). Deeper folders are **ignored** (their files
   are not listed in sections) and reported (see *Review* below).
   The section page lists its sub-folders (with file counts) above its notes; a sub-folder opens on the same page
   (`/<section>?folder=<name>`, breadcrumb `CAMPAIGN / SECTION /`), where *New note* creates notes in it and *New
@@ -112,33 +112,33 @@ LazyDM works like **Obsidian**, specialised for Dungeon Masters.
 - **Renaming and deleting** (notes, assets, sub-folders) — every link change is conflict-checked like a save:
   - *Rename* a note: the note page's modal (§6), also from the section page. *Rename* an asset: the new name gives
     the slug, the extension stays; embeds and links to it are rewritten.
-  - *Rename* a sub-folder: the folder on disk, the `subtype` of its notes, and path links through it
+  - *Rename* a sub-folder: the folder on disk and path links through it
     (`[[enemies/humans/bandit]]`) — the same rewrite as the `monsters/` → `enemies/` migration. A taken name is
     refused.
   - *Delete…* a note or an asset, after a confirmation listing the notes that link to it. For a note, *Turn links
     into plain text* (default on); for an asset, *Remove the embeds* (default on). Unticked, the links stay and are
     reported as broken in Review. Deleted files go to the **system Trash** (recoverable), never deleted for good.
   - *Delete…* a sub-folder: the confirmation shows its file count and offers **Delete the files too** (each one as
-    above) or **Move them to the main folder** (links rewritten like *Move to…*, `subtype` removed). A file whose name
+    above) or **Move them to the main folder** (links rewritten like *Move to…*). A file whose name
     is taken in the main folder is listed and nothing is moved until it is renamed. The folder goes to the Trash.
   - Unsaved edits of a note are saved before it is renamed; on delete they are dropped (a deleted note is
     never written back, even when it was open while deleted from the explorer). Tabs and history entries
     showing a deleted file go to its section page (the last tab rule still holds). *Delete…* is in the note and
     asset toolbars and in the file right-click menus of the section page and the explorer.
   - **Folder right-click menus** (explorer and section page) offer what the folder takes: a section *New note*
-    (not the special sections) and *New folder*; a sub-folder *New note* (it gets the sub-folder's sub-type) but no
+    (not the special sections) and *New folder*; a sub-folder *New note* (created inside it) but no
     *New folder* (one level only). The same modals as the section toolbar; a new note opens right away.
 - **Special sections**: *Assets* (any non-`.md` file), *Encounters* (`.json` files, see §6d) and *Maps* (`.json`
   files, see §6e) hold no plain notes —
   they offer *New folder* and *Import* but no *New note* (*Encounters* offers *New encounter*, *Party roster* and a
-  *Battle rule* select instead; *Maps* offers *New map*); their sub-folders only organise files (no `subtype`), and the
+  *Battle rule* select instead; *Maps* offers *New map*); their sub-folders only organise files, and the
   Review page does not check them. *Assets* also offers **Import from disk** (toolbar): a sheet with *Select
   files* (the system file dialog) and a drop zone; media files can also be dropped straight on the section page
   (or on one of its sub-folders).
-- **Enemies** (formerly *Monsters*): folder `enemies/`, type `enemy`. `type: monster` is still read as `enemy`, so
-  old files coming back through sync are not misplaced. A one-time migration (vault format version in
-  `vault.json`) renames `monsters/` → `enemies/` in campaigns and systems and rewrites `type:`, the template rules,
-  `_templates/monster.md` and `[[monsters/…]]` path links.
+- **Enemies** (formerly *Monsters*): folder `enemies/`, section type `enemy`. A one-time migration (vault format
+  version in `vault.json`) renamed `monsters/` → `enemies/` in campaigns and systems and rewrote the template rules,
+  `_templates/monster.md` and `[[monsters/…]]` path links (it also rewrote the `type:` of the notes, as it did
+  back then; today nothing reads that key).
 - **Review** (per campaign, `/campaigns/<slug>/review`, replacing the *Broken links* page; also per system): every
   disagreement between files and sections, computed from the index so it follows changes made outside LazyDM
   (Finder, Obsidian, sync). The overview alert with its *Review* button shows when there is anything to review.
@@ -147,19 +147,15 @@ LazyDM works like **Obsidian**, specialised for Dungeon Masters.
   | Problem | Example | Fixes |
   | --- | --- | --- |
   | Broken link | see §6 | *Remove link, keep text* · *Create note…* |
-  | Misplaced: the type belongs to another section | `type: enemy` in `locations/` | *Set type to Location* · *Move to Enemies* |
-  | Wrong sub-type | `subtype: monsters` in `enemies/humans/` | *Set sub-type to humans* · *Move to enemies/monsters* |
-  | No type | a note written in Obsidian | *Assign type Enemy, sub-type humans* (from its folder) |
   | Outside any section | a note at the campaign root | *Move to…* (pick a section / sub-folder) |
   | Unknown folder | `lost-mine/factions/` | *Add as custom section* (type from the folder name, editable) |
-  | Unknown sub-folder | `enemies/undead/` with notes of another sub-type | listed as *Wrong sub-type*: *Fix all* sets `subtype` on its notes |
   | Too deep | `enemies/humans/bandits/` | none: a notice that deeper folders are not used by LazyDM |
 
-  *Fix all* per group previews every write first. Fixes are conflict-checked writes. Not checked: assets (no type),
+  *Fix all* per group previews every write first. Fixes are conflict-checked writes. Not checked: assets,
   `campaign.md`, `_templates/`.
 - **Moving a note** (from the Review fixes, later from the note toolbar) moves the file inside its own campaign or
   system and rewrites the links resolving to it like *Rename* does (path links, relative markdown links; bare names
-  stay) and its own relative links; the note keeps its name and its `type` / `subtype` follow the destination.
+  stay) and its own relative links; the note keeps its name.
 
 ## 3. Where data lives
 
@@ -167,7 +163,7 @@ LazyDM works like **Obsidian**, specialised for Dungeon Masters.
 
 | Location | Contents | Synced across devices |
 | --- | --- | --- |
-| `.md` frontmatter | `type`, `title`, `tags`, aliases, game fields (CR, HP…) | ✅ via the cloud folder |
+| `.md` frontmatter | `title`, `tags`, aliases, game fields (CR, HP…), any key the user adds (`type: beast`…) | ✅ via the cloud folder |
 | `.md` body | content and `[[links]]` | ✅ |
 | `.json` encounters, battle rules | encounters (`<scope>/encounters/*.json`), the party roster, battle rules (`_battle-rules/*.json`), see §6d | ✅ via the cloud folder |
 | `.lazydm/*.json` | template rules (`vault.json` → `templates`, see §6c), battle-rule choices (`vault.json` → `battleRules`, see §6d), per-campaign sections (`vault.json` → `sections`, see §2a), vault format version, vault settings | ✅ |
@@ -186,7 +182,7 @@ Two database files, both under the app's userData folder:
 
 | Table | Purpose |
 | --- | --- |
-| `files` | path (vault-relative), campaign, kind (md/asset), frontmatter `type`, title, size, mtime, content hash, frontmatter JSON |
+| `files` | path (vault-relative), campaign, kind (md/asset), section type (from the folder), title, size, mtime, content hash, frontmatter JSON |
 | `links` | source file, raw target, resolved target (nullable), kind (link/embed) → backlinks, broken links, rename refactoring |
 | `tags` | file ↔ tag |
 | `headings` | file, level, text, line → `[[file#heading]]` and outlines |
@@ -270,13 +266,12 @@ Planned Electron modules: `vault`, `cloud-readiness`, `campaign`, `document`, `i
   creates (*New system*: name → kebab-case folder + `system.md`). A system starts empty.
 - Notes, assets and templates get into a system by **copy** from a campaign (*Copy to compendium*) or by creating
   them there; they get out by **copy** to a campaign (*Copy to campaign*). **The original always stays**; there is
-  no move. The folder comes from the note `type` (the source campaign's section for it, sub-folder kept; unknown
-  types → `notes/`), other files go to `assets/`, templates to `_templates/` — created when missing. A taken name
+  no move. The folder is the one the note has in its source (section and sub-folder kept; a folder that is not
+  a section → `notes/`), other files go to `assets/`, templates to `_templates/` — created when missing. A taken name
   never overwrites: the user picks another file name.
-- **Copying into a campaign that has no section for the note's type** (custom sections are per campaign): the copy
-  goes to the folder the source keeps that type in, and the target's Review page reports it (*Unknown folder* →
-  *Add as custom section*). Planned (not built yet): the copy asks to *Add the <label> section* to that campaign, or to
-  pick one of its sections — then the copy's type (and sub-type) is set to match.
+- **Copying into a campaign that has no such section** (custom sections are per campaign): the copy goes to the
+  same folder name, and the target's Review page reports it (*Unknown folder* → *Add as custom section*). Planned
+  (not built yet): the copy asks to *Add the <label> section* to that campaign, or to pick one of its sections.
 - **Import** button in every folder, next to *New note*: *Import from compendium* in a campaign folder (the same
   folder of every system), *Import from campaign* in a system folder (the same folder of every campaign).
 - **Linked files come along on request**: before any copy or import LazyDM collects what the file links to,
