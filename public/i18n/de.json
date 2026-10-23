@@ -1371,8 +1371,7 @@
       "back": "Zurück zur Liste",
       "empty": "Noch nichts hier. Nutze die Werkzeuge auf der Karte, um eine Markierung, einen Pfad oder eine Notiz hinzuzufügen.",
       "selected": "{{count}} ausgewählt",
-      "exclude": "Aus der Auswahl entfernen",
-      "changeImage": "Bild ändern"
+      "exclude": "Aus der Auswahl entfernen"
     },
     "path": {
       "group": "Pfad zeichnen",
@@ -1390,6 +1389,12 @@
       "openLinkBackground": "In einem Hintergrund-Tab öffnen",
       "delete": "Löschen…",
       "deleteMany": "{{count}} Elemente löschen…"
+    },
+    "edit": {
+      "menu": "Bearbeiten",
+      "title": "Karte bearbeiten",
+      "description": "Der Titel bestimmt den Dateinamen. Markierungen und Pfade behalten ihre Position auf einem neuen Bild.",
+      "error": "Die Karte konnte nicht gespeichert werden"
     }
   }
 }

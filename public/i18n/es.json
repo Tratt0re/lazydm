@@ -1371,8 +1371,7 @@
       "back": "Volver a la lista",
       "empty": "Aún no hay nada. Usa las herramientas del mapa para añadir un marcador, una ruta o una nota.",
       "selected": "{{count}} seleccionados",
-      "exclude": "Quitar de la selección",
-      "changeImage": "Cambiar imagen"
+      "exclude": "Quitar de la selección"
     },
     "path": {
       "group": "Dibujo de la ruta",
@@ -1390,6 +1389,12 @@
       "openLinkBackground": "Abrir en una pestaña en segundo plano",
       "delete": "Eliminar…",
       "deleteMany": "Eliminar {{count}} elementos…"
+    },
+    "edit": {
+      "menu": "Editar",
+      "title": "Editar mapa",
+      "description": "El título da el nombre del archivo. Los marcadores y las rutas conservan su posición en una imagen nueva.",
+      "error": "No se pudo guardar el mapa"
     }
   }
 }

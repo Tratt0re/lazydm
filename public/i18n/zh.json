@@ -1371,8 +1371,7 @@
       "back": "返回列表",
       "empty": "这里还没有内容。使用地图上的工具添加标记、路径或笔记。",
       "selected": "已选择 {{count}} 项",
-      "exclude": "从选择中移除",
-      "changeImage": "更换图片"
+      "exclude": "从选择中移除"
     },
     "path": {
       "group": "路径绘制",
@@ -1390,6 +1389,12 @@
       "openLinkBackground": "在后台标签页中打开",
       "delete": "删除…",
       "deleteMany": "删除 {{count}} 个项目…"
+    },
+    "edit": {
+      "menu": "编辑",
+      "title": "编辑地图",
+      "description": "标题决定文件名。更换图片后，标记和路径会保持原位。",
+      "error": "无法保存地图"
     }
   }
 }

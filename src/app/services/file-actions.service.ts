@@ -13,7 +13,13 @@ import {
 import { IMPORT_IMAGE_CHOICE } from '@/config/map.config';
 import { AppDialogFormService } from '@/components/sheet-form/dialog-form.service';
 import type { AppSheetField } from '@/components/sheet-form/sheet-form.types';
-import type { BacklinkDto, DeleteFolderMode, DocumentFileListItemDto, SavedAssetDto } from '@/dtos';
+import type {
+  BacklinkDto,
+  DeleteFolderMode,
+  DocumentFileListItemDto,
+  MapFileDto,
+  SavedAssetDto,
+} from '@/dtos';
 import { AssetService } from '@/services/asset.service';
 import { DocumentService } from '@/services/document.service';
 import { EncounterService } from '@/services/encounter.service';
@@ -218,8 +224,7 @@ export class FileActionsService {
    * assets. The image stays in assets/ (it can be imported there first); opens the new map.
    */
   async openCreateMapSheet(folderPath: string, selectedImage?: string): Promise<void> {
-    const segments = folderPath.split('/');
-    const scope = segments.slice(0, segments[0] === 'compendium' ? 2 : 1).join('/');
+    const scope = this.getScopeOf(folderPath);
     const images = (await this.documentService.listFolder(`${scope}/assets`)).filter((file) =>
       MAP_IMAGE_PATTERN.test(file.name),
     );
@@ -254,7 +259,7 @@ export class FileActionsService {
       onFieldChange: (fieldId, value) => {
         if (fieldId === 'image' && value === IMPORT_IMAGE_CHOICE) {
           dialogRef.close();
-          void this.importMapImage(folderPath).then((saved) => {
+          void this.importMapImage(scope).then((saved) => {
             void this.openCreateMapSheet(folderPath, saved?.path);
           });
         }
@@ -280,11 +285,16 @@ export class FileActionsService {
     });
   }
 
+  /** The campaign or compendium system a vault path belongs to (`lost-mine`, `compendium/my-system`). */
+  private getScopeOf(path: string): string {
+    const segments = path.split('/');
+    return segments.slice(0, segments[0] === 'compendium' ? 2 : 1).join('/');
+  }
+
   /** Lets the user pick one image on disk; it is saved into the scope's assets/ (null when cancelled). */
-  private async importMapImage(folderPath: string): Promise<SavedAssetDto | null> {
-    const scope = folderPath.split('/').slice(0, folderPath.startsWith('compendium/') ? 2 : 1);
+  private async importMapImage(scope: string): Promise<SavedAssetDto | null> {
     try {
-      return await this.assetService.importImage(`${scope.join('/')}/assets`);
+      return await this.assetService.importImage(`${scope}/assets`);
     } catch (error) {
       toast.error(this.translateService.instant('maps.new.importError'), {
         description: error instanceof Error ? error.message : String(error),
@@ -802,23 +812,63 @@ export class FileActionsService {
    * linking to it and *Update links* (default on). `onRenamed` gets the new path.
    */
   /**
-   * *Rename* of a map: like a note, the title is what the user types. The file takes its slug (`Skullport Dock`
-   * → `skullport-dock.json`) and the title written in the file follows; links to the file are updated.
-   * `onRenamed` gets the new vault path, after the file and its title are saved.
+   * *Edit* a map: its title and its image in one modal. Like a note, the title is what the user types: the file
+   * takes its slug (`Skullport Dock` → `skullport-dock.json`), the title written in the file follows and links to
+   * the file are updated. The image is one of the scope's assets, or one imported from disk into them; pins and
+   * paths are fractions of the image, so they keep their place on a new one. Only what changed is saved.
+   * `onSaved` gets the map's vault path afterwards (a new one when the title changed).
    */
-  async openRenameMapSheet(
-    map: { readonly path: string; readonly title: string },
-    onRenamed?: (path: string) => void | Promise<void>,
+  async openEditMapSheet(
+    map: { readonly path: string },
+    onSaved?: (path: string) => void | Promise<void>,
+    draft?: { readonly title: string; readonly image: string },
   ): Promise<void> {
+    let current: MapFileDto;
+    try {
+      current = await this.mapService.read(map.path);
+    } catch (error) {
+      toast.error(this.translateService.instant('maps.page.loadError'), {
+        description: error instanceof Error ? error.message : String(error),
+      });
+      return;
+    }
+
+    if (current.parseError) {
+      toast.error(this.translateService.instant('maps.page.parseError'), {
+        description: current.parseError,
+      });
+      return;
+    }
+
+    const scope = this.getScopeOf(map.path);
+    const images = (await this.documentService.listFolder(`${scope}/assets`)).filter((file) =>
+      MAP_IMAGE_PATTERN.test(file.name),
+    );
     const { backlinks, sourceTitles, preview } = await this.loadLinkingNotes(map.path);
     const fields: AppSheetField[] = [
       {
         id: 'title',
         type: 'input',
         label: 'document.rename.titleLabel',
-        value: map.title,
+        value: draft?.title ?? current.map.name,
         required: true,
         translate: true,
+      },
+      {
+        id: 'image',
+        type: 'combobox',
+        label: 'maps.new.imageLabel',
+        placeholder: 'maps.new.imagePlaceholder',
+        searchPlaceholder: 'maps.new.imageSearch',
+        emptyText: 'maps.new.imageEmpty',
+        searchable: true,
+        required: true,
+        translate: true,
+        value: draft?.image ?? current.map.image,
+        options: [
+          { value: IMPORT_IMAGE_CHOICE, label: 'maps.new.importFromDisk', translate: true },
+          ...images.map((file) => ({ value: file.path, label: file.name })),
+        ],
       },
     ];
     if (sourceTitles.length > 0) {
@@ -835,26 +885,41 @@ export class FileActionsService {
 
     let isSubmitting = false;
     const dialogRef = this.dialogFormService.open({
-      arcTitle: this.translateService.instant('document.rename.title'),
+      arcTitle: this.translateService.instant('maps.edit.title'),
       arcDescription:
         sourceTitles.length > 0
           ? this.translateService.instant('document.rename.linkedFrom', { notes: preview })
-          : this.translateService.instant('document.rename.noBacklinks'),
-      arcOkText: this.translateService.instant('document.rename.submit'),
+          : this.translateService.instant('maps.edit.description'),
+      arcOkText: this.translateService.instant('maps.item.save'),
       arcCancelText: this.translateService.instant('document.rename.cancel'),
       fields,
+      // Choosing "Import an image from disk…" opens the file dialog. The list of images is fixed when a sheet
+      // opens, so the sheet is reopened with the saved image chosen and the title as typed so far.
+      onFieldChange: (fieldId, value, form) => {
+        if (fieldId === 'image' && value === IMPORT_IMAGE_CHOICE) {
+          const title = String(form.getValues()['title'] ?? '');
+          dialogRef.close();
+          void this.importMapImage(scope).then((saved) =>
+            this.openEditMapSheet(map, onSaved, {
+              title,
+              image: saved?.path ?? draft?.image ?? current.map.image ?? '',
+            }),
+          );
+        }
+      },
       onSubmit: (form) => {
         if (!isSubmitting) {
           isSubmitting = true;
           const values = form.getValues();
-          void this.renameMap(
-            map.path,
+          void this.saveMapEdit(
+            current,
             String(values['title'] ?? '').trim(),
+            String(values['image'] ?? ''),
             values['updateLinks'] !== false,
-            onRenamed,
-          ).then((isRenamed) => {
+            onSaved,
+          ).then((isSaved) => {
             isSubmitting = false;
-            if (isRenamed) {
+            if (isSaved) {
               dialogRef.close();
             }
           });
@@ -865,43 +930,64 @@ export class FileActionsService {
     });
   }
 
-  private async renameMap(
-    path: string,
+  /**
+   * Saves a map edit: the file is renamed first when the title changed (links follow), then the title and the
+   * image are written in the file at its final path.
+   */
+  private async saveMapEdit(
+    current: MapFileDto,
     title: string,
+    image: string,
     updateLinks: boolean,
-    onRenamed?: (path: string) => void | Promise<void>,
+    onSaved?: (path: string) => void | Promise<void>,
   ): Promise<boolean> {
+    if (!title || !image || image === IMPORT_IMAGE_CHOICE) {
+      return false;
+    }
+
     try {
-      const result = await this.documentService.renameAsset({
-        path,
-        name: title,
-        updateLinks,
-      });
-      // The title is the map's `name` in its file (the page and the lists show it, not the file name).
-      const file = await this.mapService.read(result.path);
-      if (!file.parseError && file.map.name !== title) {
-        await this.mapService.write({
-          path: result.path,
-          map: { ...file.map, name: title },
+      let path = current.path;
+      let linkCount = 0;
+      let updatedCount = 0;
+      if (title !== current.map.name) {
+        const result = await this.documentService.renameAsset({ path, name: title, updateLinks });
+        path = result.path;
+        linkCount = result.linkCount;
+        updatedCount = result.updatedPaths.length;
+        if (result.failedPaths.length > 0) {
+          toast.warning(this.translateService.instant('document.rename.failed'), {
+            description: result.failedPaths.join(', '),
+          });
+        }
+      }
+
+      // A rename moved the file: read it at its new place, with the hash to check the write against.
+      const file = path === current.path ? current : await this.mapService.read(path);
+      if (file.map.name !== title || file.map.image !== image) {
+        const result = await this.mapService.write({
+          path,
+          map: { ...file.map, name: title, image },
           expectedHash: file.contentHash,
         });
+        if (result.status === 'conflict') {
+          throw new Error(this.translateService.instant('maps.page.conflictTitle'));
+        }
       }
-      toast.success(
-        this.translateService.instant('document.rename.done', {
-          links: result.linkCount,
-          notes: result.updatedPaths.length,
-        }),
-      );
-      if (result.failedPaths.length > 0) {
-        toast.warning(this.translateService.instant('document.rename.failed'), {
-          description: result.failedPaths.join(', '),
-        });
+
+      if (path !== current.path) {
+        toast.success(
+          this.translateService.instant('document.rename.done', {
+            links: linkCount,
+            notes: updatedCount,
+          }),
+        );
+        await this.followInTabs(toInAppMapRoute(current.path), toInAppMapRoute(path));
       }
-      await this.followInTabs(toInAppMapRoute(path), toInAppMapRoute(result.path));
-      await onRenamed?.(result.path);
+
+      await onSaved?.(path);
       return true;
     } catch (error) {
-      toast.error(this.translateService.instant('campaigns.sections.renameAsset.error'), {
+      toast.error(this.translateService.instant('maps.edit.error'), {
         description: error instanceof Error ? error.message : String(error),
       });
       return false;

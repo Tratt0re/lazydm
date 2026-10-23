@@ -119,8 +119,10 @@ interface PreviewState {
             @if (preview.hasError) {
               <p class="text-sm text-destructive">
                 {{
-                  (preview.imageUrl ? 'campaigns.assets.loadError' : 'document.linkPreview.loadError')
-                    | translate
+                  (preview.imageUrl
+                    ? 'campaigns.assets.loadError'
+                    : 'document.linkPreview.loadError'
+                  ) | translate
                 }}
               </p>
             } @else if (preview.imageUrl) {

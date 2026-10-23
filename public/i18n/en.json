@@ -1371,8 +1371,7 @@
       "back": "Back to the list",
       "empty": "Nothing here yet. Use the tools on the map to add a pin, a path or a note.",
       "selected": "{{count}} selected",
-      "exclude": "Remove from selection",
-      "changeImage": "Change image"
+      "exclude": "Remove from selection"
     },
     "path": {
       "group": "Path drawing",
@@ -1390,6 +1389,12 @@
       "openLinkBackground": "Open in a background tab",
       "delete": "Delete…",
       "deleteMany": "Delete {{count}} items…"
+    },
+    "edit": {
+      "menu": "Edit",
+      "title": "Edit map",
+      "description": "The title gives the file name. The pins and paths keep their place on a new image.",
+      "error": "Couldn't save the map"
     }
   }
 }

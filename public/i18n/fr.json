@@ -1371,8 +1371,7 @@
       "back": "Retour à la liste",
       "empty": "Rien pour l’instant. Utilisez les outils de la carte pour ajouter un repère, un chemin ou une note.",
       "selected": "{{count}} sélectionnés",
-      "exclude": "Retirer de la sélection",
-      "changeImage": "Changer l'image"
+      "exclude": "Retirer de la sélection"
     },
     "path": {
       "group": "Tracé du chemin",
@@ -1390,6 +1389,12 @@
       "openLinkBackground": "Ouvrir dans un onglet en arrière-plan",
       "delete": "Supprimer…",
       "deleteMany": "Supprimer {{count}} éléments…"
+    },
+    "edit": {
+      "menu": "Modifier",
+      "title": "Modifier la carte",
+      "description": "Le titre donne le nom du fichier. Les repères et les chemins gardent leur place sur une nouvelle image.",
+      "error": "Impossible d’enregistrer la carte"
     }
   }
 }

@@ -28,7 +28,6 @@ import {
 import { AppDialogFormService } from '@/components/sheet-form/dialog-form.service';
 import type { AppSheetField } from '@/components/sheet-form/sheet-form.types';
 import {
-  IMPORT_IMAGE_CHOICE,
   DEFAULT_NOTE_COLOR,
   DEFAULT_PATH_COLOR,
   DEFAULT_PATH_WIDTH,
@@ -50,7 +49,6 @@ import {
 } from '@/dtos';
 import { ASSET_FILE_PARAM, ASSET_SUBFOLDER_PARAM } from '@/pages/asset-page/asset-page';
 import { CAMPAIGN_SECTION_PARAM } from '@/pages/campaign-section-page/campaign-section-page';
-import { AssetService } from '@/services/asset.service';
 import { DocumentService } from '@/services/document.service';
 import { FileActionsService } from '@/services/file-actions.service';
 import { LocalPreferencesService } from '@/services/local-preferences.service';
@@ -250,7 +248,6 @@ export class MapPage {
   private readonly fileActions = inject(FileActionsService);
   private readonly mapService = inject(MapService);
   private readonly documentService = inject(DocumentService);
-  private readonly assetService = inject(AssetService);
   private readonly workspace = inject(WorkspaceService);
   private readonly preferences = inject(LocalPreferencesService);
   private readonly dialogFormService = inject(AppDialogFormService);
@@ -511,14 +508,6 @@ export class MapPage {
       const subfolder = this.subfolder();
       const actions: ToolbarItemAction[] = [
         {
-          id: 'image',
-          label: this.translateService.instant('maps.panel.changeImage'),
-          icon: 'image',
-          buttonType: 'outline',
-          iconOnly: true,
-          action: () => this.openChangeImageSheet(),
-        },
-        {
           id: 'details',
           label: this.translateService.instant('maps.panel.toggle'),
           icon: 'panel-right',
@@ -527,12 +516,12 @@ export class MapPage {
           action: () => this.isPanelOpen.update((isOpen) => !isOpen),
         },
         {
-          id: 'rename',
-          label: this.translateService.instant('campaigns.sections.renameAsset.menu'),
-          icon: 'text-cursor-input',
+          id: 'edit',
+          label: this.translateService.instant('maps.edit.menu'),
+          icon: 'pencil',
           buttonType: 'outline',
           iconOnly: true,
-          action: () => this.openRenameSheet(),
+          action: () => this.openEditSheet(),
         },
         {
           id: 'delete',
@@ -2151,83 +2140,14 @@ export class MapPage {
   // --- File actions ------------------------------------------------------------------------------------
 
   /**
-   * *Change image*: the map's image is one of the scope's assets, or an image imported from disk into them. The
-   * pins and paths are fractions of the image, so they keep their place on the new one.
+   * *Edit*: the title and the image in one modal (the file takes the slug of the title, links follow). The page,
+   * and its tab in a campaign, move to the new file when the title changed.
    */
-  private async openChangeImageSheet(selected: string | null = this.data()?.image ?? null): Promise<void> {
-    const scope = this.scope()?.rootPath ?? '';
-    const images = (await this.documentService.listFolder(`${scope}/assets`)).filter((file) =>
-      /\.(png|jpe?g|gif|webp|svg|avif)$/i.test(file.name),
-    );
-    const importChoice = IMPORT_IMAGE_CHOICE;
-    this.dialogFormService.open({
-      arcTitle: this.translateService.instant('maps.panel.changeImage'),
-      arcDescription: this.translateService.instant('maps.new.description'),
-      arcOkText: this.translateService.instant('maps.item.save'),
-      arcCancelText: this.translateService.instant('campaigns.sections.newNote.cancel'),
-      fields: [
-        {
-          id: 'image',
-          type: 'combobox',
-          label: 'maps.new.imageLabel',
-          placeholder: 'maps.new.imagePlaceholder',
-          searchPlaceholder: 'maps.new.imageSearch',
-          emptyText: 'maps.new.imageEmpty',
-          searchable: true,
-          required: true,
-          translate: true,
-          value: selected,
-          options: [
-            { value: importChoice, label: 'maps.new.importFromDisk', translate: true },
-            ...images.map((file) => ({ value: file.path, label: file.name })),
-          ],
-        },
-      ],
-      onFieldChange: (fieldId, value, form) => {
-        if (fieldId === 'image' && value === importChoice) {
-          void this.importImageFromDisk(form, selected);
-        }
-      },
-      onSubmit: (form) => {
-        const image = String(form.getValues()['image'] ?? '');
-        if (image && image !== importChoice) {
-          this.update((data) => ({ ...data, image }));
-        }
-        return undefined;
-      },
-    });
-  }
-
-  /** Imports an image from disk into the scope's assets, then selects it in the open sheet. */
-  private async importImageFromDisk(
-    form: { setValue(fieldId: string, value: string): void },
-    previous: string | null,
-  ): Promise<void> {
-    const scope = this.scope()?.rootPath ?? '';
-    try {
-      const saved = await this.assetService.importImage(`${scope}/assets`);
-      if (saved) {
-        form.setValue('image', saved.path);
-      } else {
-        form.setValue('image', previous ?? '');
-      }
-    } catch (error) {
-      toast.error(this.translateService.instant('maps.new.importError'), {
-        description: error instanceof Error ? error.message : String(error),
-      });
-      form.setValue('image', previous ?? '');
-    }
-  }
-
-  /**
-   * *Rename*: the title is what the user types; the file takes its slug, and links follow. The page (and its
-   * tab, in a campaign) moves to the new file.
-   */
-  private openRenameSheet(): void {
+  private openEditSheet(): void {
     const oldPath = this.mapPath();
-    void this.fileActions.openRenameMapSheet(
-      { path: oldPath, title: this.title() },
-      (newPath) => void this.followRename(oldPath, newPath),
+    void this.fileActions.openEditMapSheet(
+      { path: oldPath },
+      (newPath) => void this.followEdit(oldPath, newPath),
     );
   }
 
@@ -2243,34 +2163,15 @@ export class MapPage {
     );
   }
 
-  /** The map's `name` (what the page, the tab and the lists show) follows the new file name. */
-  private async followRename(oldPath: string, newPath: string): Promise<void> {
-    const oldRoute = toInAppMapRoute(oldPath);
+  /**
+   * The map was edited: reload what the file now holds (title and image) and, when the title changed the file
+   * name, follow it. Campaign tabs move to the new route on their own; a system page navigates itself.
+   */
+  private async followEdit(oldPath: string, newPath: string): Promise<void> {
     const newRoute = toInAppMapRoute(newPath);
-    if (!oldRoute || !newRoute || oldRoute === newRoute) {
-      return;
-    }
-
-    const newName = newPath.split('/').pop()?.replace(ENCOUNTER_EXTENSION_PATTERN, '') ?? '';
-    try {
-      const file = await this.mapService.read(newPath);
-      if (!file.parseError && newName && file.map.name !== newName) {
-        await this.mapService.write({
-          path: newPath,
-          map: { ...file.map, name: newName },
-          expectedHash: file.contentHash,
-        });
-      }
-    } catch (error) {
-      console.warn('[app] Failed to rename the map inside its file:', newPath, error);
-    }
-
-    // A campaign tab already moved to the new route (and loaded the file as it was): show the new name.
     if (this.mapPath() === newPath) {
       await this.load(newPath);
-    }
-
-    if (this.scope()?.kind === 'system') {
+    } else if (newRoute && newPath !== oldPath && this.scope()?.kind === 'system') {
       await this.router.navigateByUrl(newRoute, { replaceUrl: true });
     }
   }

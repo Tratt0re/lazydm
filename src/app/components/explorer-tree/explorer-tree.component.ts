@@ -314,7 +314,9 @@ export class AppExplorerTreeComponent {
     this.fileActions.openCreateFolderSheet(
       { path, label: this.labelOf(node), isSpecial: section.isSpecial },
       (name) => {
-        this.expandedKeys.set(new Set(this.expandedKeys()).add(node.key).add(`${node.key}/${name}`));
+        this.expandedKeys.set(
+          new Set(this.expandedKeys()).add(node.key).add(`${node.key}/${name}`),
+        );
         void this.loadTree(path);
       },
     );
@@ -343,7 +345,7 @@ export class AppExplorerTreeComponent {
     if (file.kind === 'md') {
       void this.fileActions.openRenameNoteSheet({ path: file.path, title: file.title });
     } else if (toInAppMapRoute(file.path)) {
-      void this.fileActions.openRenameMapSheet({ path: file.path, title: file.title });
+      void this.fileActions.openEditMapSheet({ path: file.path });
     } else {
       void this.fileActions.openRenameAssetSheet(file);
     }

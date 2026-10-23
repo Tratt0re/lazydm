@@ -611,8 +611,8 @@ export class CampaignSectionPage {
   /** *Rename…* from the right-click menu: a note (its title, links updated) or an asset. */
   protected openRenameSheet(file: DocumentFileListItemDto): void {
     if (file.kind !== 'md' && toInAppMapRoute(file.path)) {
-      void this.fileActions.openRenameMapSheet(
-        { path: file.path, title: file.title },
+      void this.fileActions.openEditMapSheet(
+        { path: file.path },
         () => void this.loadTree(this.sectionPath()),
       );
       return;
