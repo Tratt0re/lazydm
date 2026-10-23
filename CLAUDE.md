@@ -37,7 +37,7 @@ A build with no errors is the minimum check after every change. The 3 `NG8113` w
 | `src/app/shared/components/` | **ArcTechUI** component library |
 | `src/app/components/`, `src/app/pages/` | app components and routed pages |
 | `src/styles.css`, `src/styles/fonts.css` | theme tokens (Nordic Relic dark + light), utilities, fonts |
-| `src/assetts/` | bundled fonts and icons (the folder name `assetts` is intentional — do not rename) |
+| `src/assets/` | bundled fonts and icons (the folder name `assets` is intentional — do not rename) |
 | `public/i18n/*.json` | translations (en, it, de, es, fr, uk, zh) |
 
 ## Conventions

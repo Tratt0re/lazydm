@@ -1,6 +1,6 @@
 @font-face {
   font-family: 'Barlow Condensed';
-  src: url('../assetts/fonts/barlow-condensed/barlow-condensed-latin-ext-500-normal.woff2') format('woff2');
+  src: url('../assets/fonts/barlow-condensed/barlow-condensed-latin-ext-500-normal.woff2') format('woff2');
   font-style: normal;
   font-weight: 500;
   font-display: swap;
@@ -9,7 +9,7 @@
 
 @font-face {
   font-family: 'Barlow Condensed';
-  src: url('../assetts/fonts/barlow-condensed/barlow-condensed-latin-500-normal.woff2') format('woff2');
+  src: url('../assets/fonts/barlow-condensed/barlow-condensed-latin-500-normal.woff2') format('woff2');
   font-style: normal;
   font-weight: 500;
   font-display: swap;
@@ -18,7 +18,7 @@
 
 @font-face {
   font-family: 'Barlow Condensed';
-  src: url('../assetts/fonts/barlow-condensed/barlow-condensed-latin-ext-600-normal.woff2') format('woff2');
+  src: url('../assets/fonts/barlow-condensed/barlow-condensed-latin-ext-600-normal.woff2') format('woff2');
   font-style: normal;
   font-weight: 600;
   font-display: swap;
@@ -27,7 +27,7 @@
 
 @font-face {
   font-family: 'Barlow Condensed';
-  src: url('../assetts/fonts/barlow-condensed/barlow-condensed-latin-600-normal.woff2') format('woff2');
+  src: url('../assets/fonts/barlow-condensed/barlow-condensed-latin-600-normal.woff2') format('woff2');
   font-style: normal;
   font-weight: 600;
   font-display: swap;
@@ -36,7 +36,7 @@
 
 @font-face {
   font-family: 'Barlow Condensed';
-  src: url('../assetts/fonts/barlow-condensed/barlow-condensed-latin-ext-700-normal.woff2') format('woff2');
+  src: url('../assets/fonts/barlow-condensed/barlow-condensed-latin-ext-700-normal.woff2') format('woff2');
   font-style: normal;
   font-weight: 700;
   font-display: swap;
@@ -45,7 +45,7 @@
 
 @font-face {
   font-family: 'Barlow Condensed';
-  src: url('../assetts/fonts/barlow-condensed/barlow-condensed-latin-700-normal.woff2') format('woff2');
+  src: url('../assets/fonts/barlow-condensed/barlow-condensed-latin-700-normal.woff2') format('woff2');
   font-style: normal;
   font-weight: 700;
   font-display: swap;
@@ -54,7 +54,7 @@
 
 @font-face {
   font-family: 'Barlow Condensed';
-  src: url('../assetts/fonts/barlow-condensed/barlow-condensed-latin-ext-800-normal.woff2') format('woff2');
+  src: url('../assets/fonts/barlow-condensed/barlow-condensed-latin-ext-800-normal.woff2') format('woff2');
   font-style: normal;
   font-weight: 800;
   font-display: swap;
@@ -63,7 +63,7 @@
 
 @font-face {
   font-family: 'Barlow Condensed';
-  src: url('../assetts/fonts/barlow-condensed/barlow-condensed-latin-800-normal.woff2') format('woff2');
+  src: url('../assets/fonts/barlow-condensed/barlow-condensed-latin-800-normal.woff2') format('woff2');
   font-style: normal;
   font-weight: 800;
   font-display: swap;
@@ -72,7 +72,7 @@
 
 @font-face {
   font-family: 'Barlow Condensed';
-  src: url('../assetts/fonts/barlow-condensed/barlow-condensed-latin-ext-900-normal.woff2') format('woff2');
+  src: url('../assets/fonts/barlow-condensed/barlow-condensed-latin-ext-900-normal.woff2') format('woff2');
   font-style: normal;
   font-weight: 900;
   font-display: swap;
@@ -81,7 +81,7 @@
 
 @font-face {
   font-family: 'Barlow Condensed';
-  src: url('../assetts/fonts/barlow-condensed/barlow-condensed-latin-900-normal.woff2') format('woff2');
+  src: url('../assets/fonts/barlow-condensed/barlow-condensed-latin-900-normal.woff2') format('woff2');
   font-style: normal;
   font-weight: 900;
   font-display: swap;
@@ -90,7 +90,7 @@
 
 @font-face {
   font-family: 'IBM Plex Mono';
-  src: url('../assetts/fonts/ibm-plex-mono/ibm-plex-mono-cyrillic-400-normal.woff2') format('woff2');
+  src: url('../assets/fonts/ibm-plex-mono/ibm-plex-mono-cyrillic-400-normal.woff2') format('woff2');
   font-style: normal;
   font-weight: 400;
   font-display: swap;
@@ -99,7 +99,7 @@
 
 @font-face {
   font-family: 'IBM Plex Mono';
-  src: url('../assetts/fonts/ibm-plex-mono/ibm-plex-mono-latin-ext-400-normal.woff2') format('woff2');
+  src: url('../assets/fonts/ibm-plex-mono/ibm-plex-mono-latin-ext-400-normal.woff2') format('woff2');
   font-style: normal;
   font-weight: 400;
   font-display: swap;
@@ -108,7 +108,7 @@
 
 @font-face {
   font-family: 'IBM Plex Mono';
-  src: url('../assetts/fonts/ibm-plex-mono/ibm-plex-mono-latin-400-normal.woff2') format('woff2');
+  src: url('../assets/fonts/ibm-plex-mono/ibm-plex-mono-latin-400-normal.woff2') format('woff2');
   font-style: normal;
   font-weight: 400;
   font-display: swap;
@@ -117,7 +117,7 @@
 
 @font-face {
   font-family: 'IBM Plex Mono';
-  src: url('../assetts/fonts/ibm-plex-mono/ibm-plex-mono-cyrillic-500-normal.woff2') format('woff2');
+  src: url('../assets/fonts/ibm-plex-mono/ibm-plex-mono-cyrillic-500-normal.woff2') format('woff2');
   font-style: normal;
   font-weight: 500;
   font-display: swap;
@@ -126,7 +126,7 @@
 
 @font-face {
   font-family: 'IBM Plex Mono';
-  src: url('../assetts/fonts/ibm-plex-mono/ibm-plex-mono-latin-ext-500-normal.woff2') format('woff2');
+  src: url('../assets/fonts/ibm-plex-mono/ibm-plex-mono-latin-ext-500-normal.woff2') format('woff2');
   font-style: normal;
   font-weight: 500;
   font-display: swap;
@@ -135,7 +135,7 @@
 
 @font-face {
   font-family: 'IBM Plex Mono';
-  src: url('../assetts/fonts/ibm-plex-mono/ibm-plex-mono-latin-500-normal.woff2') format('woff2');
+  src: url('../assets/fonts/ibm-plex-mono/ibm-plex-mono-latin-500-normal.woff2') format('woff2');
   font-style: normal;
   font-weight: 500;
   font-display: swap;
@@ -144,7 +144,7 @@
 
 @font-face {
   font-family: 'IBM Plex Mono';
-  src: url('../assetts/fonts/ibm-plex-mono/ibm-plex-mono-cyrillic-600-normal.woff2') format('woff2');
+  src: url('../assets/fonts/ibm-plex-mono/ibm-plex-mono-cyrillic-600-normal.woff2') format('woff2');
   font-style: normal;
   font-weight: 600;
   font-display: swap;
@@ -153,7 +153,7 @@
 
 @font-face {
   font-family: 'IBM Plex Mono';
-  src: url('../assetts/fonts/ibm-plex-mono/ibm-plex-mono-latin-ext-600-normal.woff2') format('woff2');
+  src: url('../assets/fonts/ibm-plex-mono/ibm-plex-mono-latin-ext-600-normal.woff2') format('woff2');
   font-style: normal;
   font-weight: 600;
   font-display: swap;
@@ -162,7 +162,7 @@
 
 @font-face {
   font-family: 'IBM Plex Mono';
-  src: url('../assetts/fonts/ibm-plex-mono/ibm-plex-mono-latin-600-normal.woff2') format('woff2');
+  src: url('../assets/fonts/ibm-plex-mono/ibm-plex-mono-latin-600-normal.woff2') format('woff2');
   font-style: normal;
   font-weight: 600;
   font-display: swap;
@@ -171,7 +171,7 @@
 
 @font-face {
   font-family: 'IBM Plex Mono';
-  src: url('../assetts/fonts/ibm-plex-mono/ibm-plex-mono-cyrillic-700-normal.woff2') format('woff2');
+  src: url('../assets/fonts/ibm-plex-mono/ibm-plex-mono-cyrillic-700-normal.woff2') format('woff2');
   font-style: normal;
   font-weight: 700;
   font-display: swap;
@@ -180,7 +180,7 @@
 
 @font-face {
   font-family: 'IBM Plex Mono';
-  src: url('../assetts/fonts/ibm-plex-mono/ibm-plex-mono-latin-ext-700-normal.woff2') format('woff2');
+  src: url('../assets/fonts/ibm-plex-mono/ibm-plex-mono-latin-ext-700-normal.woff2') format('woff2');
   font-style: normal;
   font-weight: 700;
   font-display: swap;
@@ -189,7 +189,7 @@
 
 @font-face {
   font-family: 'IBM Plex Mono';
-  src: url('../assetts/fonts/ibm-plex-mono/ibm-plex-mono-latin-700-normal.woff2') format('woff2');
+  src: url('../assets/fonts/ibm-plex-mono/ibm-plex-mono-latin-700-normal.woff2') format('woff2');
   font-style: normal;
   font-weight: 700;
   font-display: swap;
@@ -198,7 +198,7 @@
 
 @font-face {
   font-family: 'IBM Plex Sans';
-  src: url('../assetts/fonts/ibm-plex-sans/ibm-plex-sans-cyrillic-400-normal.woff2') format('woff2');
+  src: url('../assets/fonts/ibm-plex-sans/ibm-plex-sans-cyrillic-400-normal.woff2') format('woff2');
   font-style: normal;
   font-weight: 400;
   font-display: swap;
@@ -207,7 +207,7 @@
 
 @font-face {
   font-family: 'IBM Plex Sans';
-  src: url('../assetts/fonts/ibm-plex-sans/ibm-plex-sans-latin-ext-400-normal.woff2') format('woff2');
+  src: url('../assets/fonts/ibm-plex-sans/ibm-plex-sans-latin-ext-400-normal.woff2') format('woff2');
   font-style: normal;
   font-weight: 400;
   font-display: swap;
@@ -216,7 +216,7 @@
 
 @font-face {
   font-family: 'IBM Plex Sans';
-  src: url('../assetts/fonts/ibm-plex-sans/ibm-plex-sans-latin-400-normal.woff2') format('woff2');
+  src: url('../assets/fonts/ibm-plex-sans/ibm-plex-sans-latin-400-normal.woff2') format('woff2');
   font-style: normal;
   font-weight: 400;
   font-display: swap;
@@ -225,7 +225,7 @@
 
 @font-face {
   font-family: 'IBM Plex Sans';
-  src: url('../assetts/fonts/ibm-plex-sans/ibm-plex-sans-cyrillic-500-normal.woff2') format('woff2');
+  src: url('../assets/fonts/ibm-plex-sans/ibm-plex-sans-cyrillic-500-normal.woff2') format('woff2');
   font-style: normal;
   font-weight: 500;
   font-display: swap;
@@ -234,7 +234,7 @@
 
 @font-face {
   font-family: 'IBM Plex Sans';
-  src: url('../assetts/fonts/ibm-plex-sans/ibm-plex-sans-latin-ext-500-normal.woff2') format('woff2');
+  src: url('../assets/fonts/ibm-plex-sans/ibm-plex-sans-latin-ext-500-normal.woff2') format('woff2');
   font-style: normal;
   font-weight: 500;
   font-display: swap;
@@ -243,7 +243,7 @@
 
 @font-face {
   font-family: 'IBM Plex Sans';
-  src: url('../assetts/fonts/ibm-plex-sans/ibm-plex-sans-latin-500-normal.woff2') format('woff2');
+  src: url('../assets/fonts/ibm-plex-sans/ibm-plex-sans-latin-500-normal.woff2') format('woff2');
   font-style: normal;
   font-weight: 500;
   font-display: swap;
@@ -252,7 +252,7 @@
 
 @font-face {
   font-family: 'IBM Plex Sans';
-  src: url('../assetts/fonts/ibm-plex-sans/ibm-plex-sans-cyrillic-600-normal.woff2') format('woff2');
+  src: url('../assets/fonts/ibm-plex-sans/ibm-plex-sans-cyrillic-600-normal.woff2') format('woff2');
   font-style: normal;
   font-weight: 600;
   font-display: swap;
@@ -261,7 +261,7 @@
 
 @font-face {
   font-family: 'IBM Plex Sans';
-  src: url('../assetts/fonts/ibm-plex-sans/ibm-plex-sans-latin-ext-600-normal.woff2') format('woff2');
+  src: url('../assets/fonts/ibm-plex-sans/ibm-plex-sans-latin-ext-600-normal.woff2') format('woff2');
   font-style: normal;
   font-weight: 600;
   font-display: swap;
@@ -270,7 +270,7 @@
 
 @font-face {
   font-family: 'IBM Plex Sans';
-  src: url('../assetts/fonts/ibm-plex-sans/ibm-plex-sans-latin-600-normal.woff2') format('woff2');
+  src: url('../assets/fonts/ibm-plex-sans/ibm-plex-sans-latin-600-normal.woff2') format('woff2');
   font-style: normal;
   font-weight: 600;
   font-display: swap;
@@ -279,7 +279,7 @@
 
 @font-face {
   font-family: 'IBM Plex Sans';
-  src: url('../assetts/fonts/ibm-plex-sans/ibm-plex-sans-cyrillic-700-normal.woff2') format('woff2');
+  src: url('../assets/fonts/ibm-plex-sans/ibm-plex-sans-cyrillic-700-normal.woff2') format('woff2');
   font-style: normal;
   font-weight: 700;
   font-display: swap;
@@ -288,7 +288,7 @@
 
 @font-face {
   font-family: 'IBM Plex Sans';
-  src: url('../assetts/fonts/ibm-plex-sans/ibm-plex-sans-latin-ext-700-normal.woff2') format('woff2');
+  src: url('../assets/fonts/ibm-plex-sans/ibm-plex-sans-latin-ext-700-normal.woff2') format('woff2');
   font-style: normal;
   font-weight: 700;
   font-display: swap;
@@ -297,7 +297,7 @@
 
 @font-face {
   font-family: 'IBM Plex Sans';
-  src: url('../assetts/fonts/ibm-plex-sans/ibm-plex-sans-latin-700-normal.woff2') format('woff2');
+  src: url('../assets/fonts/ibm-plex-sans/ibm-plex-sans-latin-700-normal.woff2') format('woff2');
   font-style: normal;
   font-weight: 700;
   font-display: swap;

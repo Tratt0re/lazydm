@@ -34,10 +34,10 @@ function resolvePreloadPath() {
 function resolveAppIconPath(isDev) {
   const candidates = isDev
     ? [
-        resolveAppPath('src', 'assetts', 'icon', 'lazydm_ico_1024.png'),
-        resolveAppPath(...RENDERER_BUILD_SEGMENTS, 'assetts', 'icon', 'lazydm_ico_1024.png'),
+        resolveAppPath('src', 'assets', 'icon', 'lazydm_ico_1024.png'),
+        resolveAppPath(...RENDERER_BUILD_SEGMENTS, 'assets', 'icon', 'lazydm_ico_1024.png'),
       ]
-    : [resolveAppPath(...RENDERER_BUILD_SEGMENTS, 'assetts', 'icon', 'lazydm_ico_1024.png')];
+    : [resolveAppPath(...RENDERER_BUILD_SEGMENTS, 'assets', 'icon', 'lazydm_ico_1024.png')];
 
   for (const iconPath of candidates) {
     if (fs.existsSync(iconPath)) {

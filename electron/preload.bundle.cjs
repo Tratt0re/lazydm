@@ -229,7 +229,7 @@ var require_package = __commonJS({
       build: {
         appId: "com.lazydm.desktop",
         productName: "LazyDM",
-        icon: "src/assetts/icon/app_icon.png",
+        icon: "src/assets/icon/app_icon.png",
         directories: {
           output: "release",
           buildResources: "."
@@ -251,7 +251,7 @@ var require_package = __commonJS({
           category: "public.app-category.utilities"
         },
         win: {
-          icon: "src/assetts/icon/app_icon.png",
+          icon: "src/assets/icon/app_icon.png",
           target: [
             "nsis",
             "portable"
