@@ -247,9 +247,15 @@ async function importFiles(payload) {
   const body = ensurePlainObject(payload, 'payload');
   const target = resolveAssetTarget(body);
 
+  // A map picks one image: the dialog offers images only and takes a single file.
+  const isImageOnly = body.imageOnly === true;
   const result = await dialog.showOpenDialog({
-    properties: ['openFile', 'multiSelections'],
-    filters: [{ name: 'Media', extensions: Object.values(MEDIA_EXTENSIONS).flat() }],
+    properties: isImageOnly ? ['openFile'] : ['openFile', 'multiSelections'],
+    filters: [
+      isImageOnly
+        ? { name: 'Images', extensions: [...MEDIA_EXTENSIONS.image] }
+        : { name: 'Media', extensions: Object.values(MEDIA_EXTENSIONS).flat() },
+    ],
   });
   if (result.canceled) {
     return { files: [] };

@@ -23,6 +23,8 @@ export const setLinkCompletionContext = StateEffect.define<LinkCompletionContext
 
 const MAX_OPTIONS = 50;
 const MARKDOWN_EXTENSION = '.md';
+/** `.json` files of the encounter and map sections: their extension is hidden in the suggestions. */
+const SPECIAL_FILE_EXTENSION_PATTERN = /\.json$/i;
 const COMPENDIUM_DIR_NAME = 'compendium';
 /** `[[` or `![[` and the target typed so far (before any `]`, `|` or `#`). */
 const WIKILINK_BEFORE = /!?\[\[[^[\]|#\n]*$/;
@@ -125,11 +127,13 @@ function toOption(
   linkTarget: string,
   closing: string,
 ): Completion {
+  const detailPath = target.path.startsWith(scopePrefix)
+    ? target.path.slice(scopePrefix.length)
+    : target.path;
   return {
+    // Maps and encounters are shown by their name, not by `name.json` (the link keeps the full file name).
     label: target.title || target.name,
-    detail: target.path.startsWith(scopePrefix)
-      ? target.path.slice(scopePrefix.length)
-      : target.path,
+    detail: detailPath.replace(SPECIAL_FILE_EXTENSION_PATTERN, ''),
     apply: (view, completion, from, to) => {
       const hasClosing = view.state.sliceDoc(to, to + closing.length) === closing;
       const insert = hasClosing ? linkTarget : `${linkTarget}${closing}`;

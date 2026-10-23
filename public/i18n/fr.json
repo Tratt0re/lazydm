@@ -1266,7 +1266,9 @@
       "submit": "Créer la carte",
       "error": "Impossible de créer la carte",
       "noImages": "Aucune image dans les ressources pour l’instant",
-      "noImagesHint": "Ajoutez d’abord une image à la section Ressources, puis créez la carte."
+      "noImagesHint": "Ajoutez d’abord une image à la section Ressources, puis créez la carte.",
+      "importFromDisk": "Importer une image depuis le disque…",
+      "importError": "Impossible d’importer l’image"
     },
     "page": {
       "loadError": "Impossible de charger cette carte",
@@ -1369,7 +1371,8 @@
       "back": "Retour à la liste",
       "empty": "Rien pour l’instant. Utilisez les outils de la carte pour ajouter un repère, un chemin ou une note.",
       "selected": "{{count}} sélectionnés",
-      "exclude": "Retirer de la sélection"
+      "exclude": "Retirer de la sélection",
+      "changeImage": "Changer l'image"
     },
     "path": {
       "group": "Tracé du chemin",

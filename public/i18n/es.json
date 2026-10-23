@@ -1266,7 +1266,9 @@
       "submit": "Crear mapa",
       "error": "No se pudo crear el mapa",
       "noImages": "Aún no hay imágenes en los recursos",
-      "noImagesHint": "Añade primero una imagen a la sección Recursos y luego crea el mapa."
+      "noImagesHint": "Añade primero una imagen a la sección Recursos y luego crea el mapa.",
+      "importFromDisk": "Importar una imagen del disco…",
+      "importError": "No se pudo importar la imagen"
     },
     "page": {
       "loadError": "No se pudo cargar este mapa",
@@ -1369,7 +1371,8 @@
       "back": "Volver a la lista",
       "empty": "Aún no hay nada. Usa las herramientas del mapa para añadir un marcador, una ruta o una nota.",
       "selected": "{{count}} seleccionados",
-      "exclude": "Quitar de la selección"
+      "exclude": "Quitar de la selección",
+      "changeImage": "Cambiar imagen"
     },
     "path": {
       "group": "Dibujo de la ruta",

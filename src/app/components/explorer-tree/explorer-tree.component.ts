@@ -342,6 +342,8 @@ export class AppExplorerTreeComponent {
   protected openRenameSheet(file: DocumentFileListItemDto): void {
     if (file.kind === 'md') {
       void this.fileActions.openRenameNoteSheet({ path: file.path, title: file.title });
+    } else if (toInAppMapRoute(file.path)) {
+      void this.fileActions.openRenameMapSheet({ path: file.path, title: file.title });
     } else {
       void this.fileActions.openRenameAssetSheet(file);
     }

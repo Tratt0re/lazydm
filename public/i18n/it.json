@@ -1266,7 +1266,9 @@
       "submit": "Crea mappa",
       "error": "Impossibile creare la mappa",
       "noImages": "Ancora nessuna immagine negli asset",
-      "noImagesHint": "Aggiungi prima un'immagine alla sezione Asset, poi crea la mappa."
+      "noImagesHint": "Aggiungi prima un'immagine alla sezione Asset, poi crea la mappa.",
+      "importFromDisk": "Importa un’immagine dal disco…",
+      "importError": "Impossibile importare l’immagine"
     },
     "page": {
       "loadError": "Impossibile caricare questa mappa",
@@ -1369,7 +1371,8 @@
       "back": "Torna all'elenco",
       "empty": "Ancora niente. Usa gli strumenti sulla mappa per aggiungere un segnalino, un percorso o una nota.",
       "selected": "{{count}} selezionati",
-      "exclude": "Escludi dalla selezione"
+      "exclude": "Escludi dalla selezione",
+      "changeImage": "Cambia immagine"
     },
     "path": {
       "group": "Disegno del percorso",

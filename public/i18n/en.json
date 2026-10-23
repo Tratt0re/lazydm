@@ -1266,7 +1266,9 @@
       "submit": "Create map",
       "error": "Couldn't create the map",
       "noImages": "No image in the assets yet",
-      "noImagesHint": "Add an image to the Assets section first, then create the map."
+      "noImagesHint": "Add an image to the Assets section first, then create the map.",
+      "importFromDisk": "Import an image from disk…",
+      "importError": "Couldn't import the image"
     },
     "page": {
       "loadError": "Couldn't load this map",
@@ -1369,7 +1371,8 @@
       "back": "Back to the list",
       "empty": "Nothing here yet. Use the tools on the map to add a pin, a path or a note.",
       "selected": "{{count}} selected",
-      "exclude": "Remove from selection"
+      "exclude": "Remove from selection",
+      "changeImage": "Change image"
     },
     "path": {
       "group": "Path drawing",

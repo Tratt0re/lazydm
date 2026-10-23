@@ -18,6 +18,9 @@ export function mapColorVar(color: MapColor): string {
   return `var(--system-app-color-${MAP_COLOR_TOKENS[color]})`;
 }
 
+/** The first choice of every map image list: it imports an image from disk instead of choosing an asset. */
+export const IMPORT_IMAGE_CHOICE = '__import-from-disk__';
+
 export const DEFAULT_PIN_COLOR: MapColor = 'red';
 export const DEFAULT_PATH_COLOR: MapColor = 'blue';
 export const DEFAULT_NOTE_COLOR: MapColor = 'yellow';

@@ -10,6 +10,7 @@ import {
   toInAppMapRoute,
   toInAppNoteRoute,
 } from '@/components/document-preview/document-preview.markdown';
+import { IMPORT_IMAGE_CHOICE } from '@/config/map.config';
 import { AppDialogFormService } from '@/components/sheet-form/dialog-form.service';
 import type { AppSheetField } from '@/components/sheet-form/sheet-form.types';
 import type { BacklinkDto, DeleteFolderMode, DocumentFileListItemDto, SavedAssetDto } from '@/dtos';
@@ -216,18 +217,12 @@ export class FileActionsService {
    * *New map* in the Maps section or one of its sub-folders (`folderPath`): a name and one image of the scope's
    * assets. The image stays in assets/ (it can be imported there first); opens the new map.
    */
-  async openCreateMapSheet(folderPath: string): Promise<void> {
+  async openCreateMapSheet(folderPath: string, selectedImage?: string): Promise<void> {
     const segments = folderPath.split('/');
     const scope = segments.slice(0, segments[0] === 'compendium' ? 2 : 1).join('/');
     const images = (await this.documentService.listFolder(`${scope}/assets`)).filter((file) =>
       MAP_IMAGE_PATTERN.test(file.name),
     );
-    if (images.length === 0) {
-      toast.info(this.translateService.instant('maps.new.noImages'), {
-        description: this.translateService.instant('maps.new.noImagesHint'),
-      });
-      return;
-    }
 
     let isSubmitting = false;
     const dialogRef = this.dialogFormService.open({
@@ -247,9 +242,23 @@ export class FileActionsService {
           searchable: true,
           required: true,
           translate: true,
-          options: images.map((file) => ({ value: file.path, label: file.name })),
+          value: selectedImage ?? null,
+          options: [
+            { value: IMPORT_IMAGE_CHOICE, label: 'maps.new.importFromDisk', translate: true },
+            ...images.map((file) => ({ value: file.path, label: file.name })),
+          ],
         },
       ],
+      // The image can also come from the disk: it is imported into the assets first, then chosen here.
+      // The sheet is reopened with it selected, since the list of images is fixed when a sheet opens.
+      onFieldChange: (fieldId, value) => {
+        if (fieldId === 'image' && value === IMPORT_IMAGE_CHOICE) {
+          dialogRef.close();
+          void this.importMapImage(folderPath).then((saved) => {
+            void this.openCreateMapSheet(folderPath, saved?.path);
+          });
+        }
+      },
       onSubmit: (form) => {
         if (!isSubmitting) {
           isSubmitting = true;
@@ -269,6 +278,19 @@ export class FileActionsService {
         return false;
       },
     });
+  }
+
+  /** Lets the user pick one image on disk; it is saved into the scope's assets/ (null when cancelled). */
+  private async importMapImage(folderPath: string): Promise<SavedAssetDto | null> {
+    const scope = folderPath.split('/').slice(0, folderPath.startsWith('compendium/') ? 2 : 1);
+    try {
+      return await this.assetService.importImage(`${scope.join('/')}/assets`);
+    } catch (error) {
+      toast.error(this.translateService.instant('maps.new.importError'), {
+        description: error instanceof Error ? error.message : String(error),
+      });
+      return null;
+    }
   }
 
   /**
@@ -779,6 +801,113 @@ export class FileActionsService {
    * *Rename* an asset: the new name gives the file name (the extension stays), with a preview of the notes
    * linking to it and *Update links* (default on). `onRenamed` gets the new path.
    */
+  /**
+   * *Rename* of a map: like a note, the title is what the user types. The file takes its slug (`Skullport Dock`
+   * → `skullport-dock.json`) and the title written in the file follows; links to the file are updated.
+   * `onRenamed` gets the new vault path, after the file and its title are saved.
+   */
+  async openRenameMapSheet(
+    map: { readonly path: string; readonly title: string },
+    onRenamed?: (path: string) => void | Promise<void>,
+  ): Promise<void> {
+    const { backlinks, sourceTitles, preview } = await this.loadLinkingNotes(map.path);
+    const fields: AppSheetField[] = [
+      {
+        id: 'title',
+        type: 'input',
+        label: 'document.rename.titleLabel',
+        value: map.title,
+        required: true,
+        translate: true,
+      },
+    ];
+    if (sourceTitles.length > 0) {
+      fields.push({
+        id: 'updateLinks',
+        type: 'checkbox',
+        value: true,
+        checkboxLabel: this.translateService.instant('document.rename.updateLinks', {
+          links: backlinks.length,
+          notes: sourceTitles.length,
+        }),
+      });
+    }
+
+    let isSubmitting = false;
+    const dialogRef = this.dialogFormService.open({
+      arcTitle: this.translateService.instant('document.rename.title'),
+      arcDescription:
+        sourceTitles.length > 0
+          ? this.translateService.instant('document.rename.linkedFrom', { notes: preview })
+          : this.translateService.instant('document.rename.noBacklinks'),
+      arcOkText: this.translateService.instant('document.rename.submit'),
+      arcCancelText: this.translateService.instant('document.rename.cancel'),
+      fields,
+      onSubmit: (form) => {
+        if (!isSubmitting) {
+          isSubmitting = true;
+          const values = form.getValues();
+          void this.renameMap(
+            map.path,
+            String(values['title'] ?? '').trim(),
+            values['updateLinks'] !== false,
+            onRenamed,
+          ).then((isRenamed) => {
+            isSubmitting = false;
+            if (isRenamed) {
+              dialogRef.close();
+            }
+          });
+        }
+
+        return false;
+      },
+    });
+  }
+
+  private async renameMap(
+    path: string,
+    title: string,
+    updateLinks: boolean,
+    onRenamed?: (path: string) => void | Promise<void>,
+  ): Promise<boolean> {
+    try {
+      const result = await this.documentService.renameAsset({
+        path,
+        name: title,
+        updateLinks,
+      });
+      // The title is the map's `name` in its file (the page and the lists show it, not the file name).
+      const file = await this.mapService.read(result.path);
+      if (!file.parseError && file.map.name !== title) {
+        await this.mapService.write({
+          path: result.path,
+          map: { ...file.map, name: title },
+          expectedHash: file.contentHash,
+        });
+      }
+      toast.success(
+        this.translateService.instant('document.rename.done', {
+          links: result.linkCount,
+          notes: result.updatedPaths.length,
+        }),
+      );
+      if (result.failedPaths.length > 0) {
+        toast.warning(this.translateService.instant('document.rename.failed'), {
+          description: result.failedPaths.join(', '),
+        });
+      }
+      await this.followInTabs(toInAppMapRoute(path), toInAppMapRoute(result.path));
+      await onRenamed?.(result.path);
+      return true;
+    } catch (error) {
+      toast.error(this.translateService.instant('campaigns.sections.renameAsset.error'), {
+        description: error instanceof Error ? error.message : String(error),
+      });
+      return false;
+    }
+  }
+
   async openRenameAssetSheet(
     file: Pick<DocumentFileListItemDto, 'path' | 'name'> & { readonly label?: string },
     onRenamed?: (path: string) => void,

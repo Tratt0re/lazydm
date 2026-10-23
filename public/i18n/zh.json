@@ -1266,7 +1266,9 @@
       "submit": "创建地图",
       "error": "无法创建地图",
       "noImages": "资源中还没有图片",
-      "noImagesHint": "请先向“资源”部分添加一张图片，然后再创建地图。"
+      "noImagesHint": "请先向“资源”部分添加一张图片，然后再创建地图。",
+      "importFromDisk": "从磁盘导入图片…",
+      "importError": "无法导入图片"
     },
     "page": {
       "loadError": "无法加载此地图",
@@ -1369,7 +1371,8 @@
       "back": "返回列表",
       "empty": "这里还没有内容。使用地图上的工具添加标记、路径或笔记。",
       "selected": "已选择 {{count}} 项",
-      "exclude": "从选择中移除"
+      "exclude": "从选择中移除",
+      "changeImage": "更换图片"
     },
     "path": {
       "group": "路径绘制",

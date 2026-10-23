@@ -1266,7 +1266,9 @@
       "submit": "Karte erstellen",
       "error": "Die Karte konnte nicht erstellt werden",
       "noImages": "Noch kein Bild in den Assets",
-      "noImagesHint": "Füge zuerst ein Bild zum Bereich „Assets“ hinzu und erstelle dann die Karte."
+      "noImagesHint": "Füge zuerst ein Bild zum Bereich „Assets“ hinzu und erstelle dann die Karte.",
+      "importFromDisk": "Bild von der Festplatte importieren…",
+      "importError": "Das Bild konnte nicht importiert werden"
     },
     "page": {
       "loadError": "Diese Karte konnte nicht geladen werden",
@@ -1369,7 +1371,8 @@
       "back": "Zurück zur Liste",
       "empty": "Noch nichts hier. Nutze die Werkzeuge auf der Karte, um eine Markierung, einen Pfad oder eine Notiz hinzuzufügen.",
       "selected": "{{count}} ausgewählt",
-      "exclude": "Aus der Auswahl entfernen"
+      "exclude": "Aus der Auswahl entfernen",
+      "changeImage": "Bild ändern"
     },
     "path": {
       "group": "Pfad zeichnen",

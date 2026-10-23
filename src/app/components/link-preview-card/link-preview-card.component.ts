@@ -21,10 +21,15 @@ import {
   toInAppAssetRoute,
 } from '@/components/document-preview/document-preview.markdown';
 import { DocumentService } from '@/services/document.service';
+import { EncounterService } from '@/services/encounter.service';
+import { MapService } from '@/services/map.service';
 import { WorkspaceService } from '@/services/workspace.service';
 import { ArcTechButtonComponent } from '@/shared/components/button';
 import { ArcTechIconComponent } from '@/shared/components/icon';
 import { ArcTechTooltipImports } from '@/shared/components/tooltip';
+
+/** Map and encounter files: JSON, not notes (their card shows their name and image, not a body). */
+const JSON_FILE_PATTERN = /\.json$/i;
 
 const CARD_WIDTH = 420;
 const CARD_MAX_HEIGHT = 440;
@@ -145,6 +150,8 @@ export class AppLinkPreviewCardComponent {
   private readonly sanitizer = inject(DomSanitizer);
   private readonly router = inject(Router);
   private readonly documentService = inject(DocumentService);
+  private readonly mapService = inject(MapService);
+  private readonly encounterService = inject(EncounterService);
   private readonly workspace = inject(WorkspaceService);
   private readonly cardTemplate = viewChild.required<TemplateRef<unknown>>('card');
   private overlayRef: OverlayRef | null = null;
@@ -165,6 +172,11 @@ export class AppLinkPreviewCardComponent {
 
   /** Opens the card below (or above) `anchor` for the note at `path` (vault path), shown at `route`. */
   async show(anchor: Element, path: string, route: string): Promise<void> {
+    if (JSON_FILE_PATTERN.test(path)) {
+      await this.showSpecialFile(anchor, path, route);
+      return;
+    }
+
     this.close();
     const token = ++this.loadToken;
     const fallbackTitle = path.split('/').pop()?.replace(/\.md$/i, '') ?? path;
@@ -205,6 +217,57 @@ export class AppLinkPreviewCardComponent {
     }
 
     // The card grows once the note is in: keep it within the window.
+    requestAnimationFrame(() => overlayRef.updatePosition());
+  }
+
+  /**
+   * A map or an encounter (a `.json` file) has no body to render: its card shows its name and, for a map, the
+   * map's image. It is read with its own service; a file that cannot be read shows the error state.
+   */
+  private async showSpecialFile(anchor: Element, path: string, route: string): Promise<void> {
+    this.close();
+    const token = ++this.loadToken;
+    const fallbackTitle = path.split('/').pop()?.replace(JSON_FILE_PATTERN, '') ?? path;
+    this.state.set({
+      path,
+      route,
+      title: fallbackTitle,
+      html: null,
+      imageUrl: null,
+      hasError: false,
+    });
+    const overlayRef = this.attach(anchor);
+
+    try {
+      const isMap = path.includes('/maps/');
+      let name: string;
+      let image: string | null = null;
+      if (isMap) {
+        const file = await this.mapService.read(path);
+        name = file.map.name;
+        image = file.map.image;
+      } else {
+        const file = await this.encounterService.read(path);
+        name = file.encounter.name;
+      }
+      if (token !== this.loadToken) {
+        return;
+      }
+      this.state.set({
+        path,
+        route,
+        title: name || fallbackTitle,
+        html: null,
+        imageUrl: image ? toAssetUrl(image) : null,
+        hasError: false,
+      });
+    } catch (error) {
+      console.warn('[app] Failed to load the link preview:', path, error);
+      if (token === this.loadToken) {
+        this.state.update((state) => (state ? { ...state, hasError: true } : state));
+      }
+    }
+
     requestAnimationFrame(() => overlayRef.updatePosition());
   }
 

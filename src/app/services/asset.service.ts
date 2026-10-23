@@ -57,6 +57,12 @@ export class AssetService extends BaseIpcService<APIChannel.ASSETS> {
     return (await this.ipcClient.import(target)).files;
   }
 
+  /** Lets the user pick one image on disk and saves it as an asset (null when the dialog is cancelled). */
+  async importImage(folder: string): Promise<SavedAssetDto | null> {
+    const { files } = await this.ipcClient.import({ folder, imageOnly: true });
+    return files[0] ?? null;
+  }
+
   /** Length of a saved audio asset in seconds (null when it cannot be read). */
   readAudioDuration(path: string): Promise<number | null> {
     return new Promise((resolve) => {
