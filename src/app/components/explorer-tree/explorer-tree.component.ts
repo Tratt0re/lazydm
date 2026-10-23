@@ -361,6 +361,10 @@ export class AppExplorerTreeComponent {
     });
   }
 
+  protected isMap(file: DocumentFileListItemDto): boolean {
+    return toInAppMapRoute(file.path) !== null;
+  }
+
   /** An encounter is listed by its name (the index keeps it as the title), never by `x.json`. */
   protected isEncounter(file: DocumentFileListItemDto): boolean {
     return toInAppEncounterRoute(file.path) !== null || toInAppMapRoute(file.path) !== null;

@@ -37,6 +37,18 @@ export const toastOpenActionClass = mergeClasses(
 );
 
 /**
+ * Text button styling of a toast action. Open actions (`.toast-open-action`) are icon buttons with their own
+ * look: both sets use `!important` on the same properties, so the text style skips them.
+ */
+const toastTextActionClass = mergeClasses(
+  '[&:not(.toast-open-action)]:!h-7 [&:not(.toast-open-action)]:!rounded-none [&:not(.toast-open-action)]:!border',
+  '[&:not(.toast-open-action)]:!border-primary [&:not(.toast-open-action)]:!bg-transparent [&:not(.toast-open-action)]:!px-2.5',
+  '[&:not(.toast-open-action)]:!font-mono [&:not(.toast-open-action)]:!text-[11px] [&:not(.toast-open-action)]:!font-semibold',
+  '[&:not(.toast-open-action)]:!tracking-[0.06em] [&:not(.toast-open-action)]:!text-primary [&:not(.toast-open-action)]:!uppercase',
+  '[&:not(.toast-open-action)]:hover:!bg-primary [&:not(.toast-open-action)]:hover:!text-primary-foreground',
+);
+
+/**
  * Nordic Relic notification banner: card surface, 1px border in the state colour, strong uppercase
  * title, muted mono description and a square close button on the right.
  */
@@ -54,10 +66,7 @@ export const toastClasses = {
     '!size-7 !rounded-none !border !border-border !bg-transparent',
     '!text-muted-foreground hover:!bg-accent hover:!text-foreground focus-visible:!outline-2 focus-visible:!outline-ring',
   ),
-  actionButton: mergeClasses(
-    '!h-7 !rounded-none !border !border-primary !bg-transparent !px-2.5 !font-mono !text-[11px]',
-    '!font-semibold !tracking-[0.06em] !text-primary !uppercase hover:!bg-primary hover:!text-primary-foreground',
-  ),
+  actionButton: toastTextActionClass,
   success: '!border-success [&_[data-icon]]:text-success',
   error: '!border-destructive [&_[data-icon]]:text-destructive',
   warning: '!border-warning [&_[data-icon]]:text-warning',

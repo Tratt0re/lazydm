@@ -135,6 +135,8 @@ export class AppCodeEditorComponent implements OnDestroy {
   readonly linkPreviewLabel = input('');
   /** Accessible name of the eye button shown on hovered images. */
   readonly imagePreviewLabel = input('');
+  /** Accessible name of the button of map and encounter links (they open in a new tab). */
+  readonly fileOpenLabel = input('');
 
   readonly contentChange = output<string>();
   readonly saveRequested = output<void>();
@@ -266,6 +268,7 @@ export class AppCodeEditorComponent implements OnDestroy {
       () => this.linkPreviewLabel(),
       (request) => this.linkPreview.emit(request),
       () => this.imagePreviewLabel(),
+      () => this.fileOpenLabel(),
     );
   }
 

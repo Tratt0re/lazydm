@@ -317,7 +317,7 @@ export class CampaignSectionPage {
     actions.push({
       id: 'section-import',
       label: this.importLabel(),
-      icon: 'library-big',
+      icon: 'import',
       buttonType: 'outline',
       iconOnly: true,
       action: () => this.openImportSheet(),
@@ -682,6 +682,11 @@ export class CampaignSectionPage {
   /** Encounter page of a `.json` file of the Encounters section; null for any other file. */
   protected encounterRoute(file: DocumentFileListItemDto): string | null {
     return toInAppEncounterRoute(file.path);
+  }
+
+  /** The row action that renames a file; a map is edited (title and image), not just renamed. */
+  protected renameLabel(file: DocumentFileListItemDto): string {
+    return this.mapRoute(file) ? 'maps.edit.menu' : 'campaigns.sections.renameAsset.menu';
   }
 
   /** Map page of a `.json` file of the Maps section; null for any other file. */

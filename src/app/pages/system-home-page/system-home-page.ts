@@ -70,7 +70,7 @@ import { ArcTechIconComponent } from '@/shared/components/icon';
         @if (sections().length === 0) {
           <arc-empty
             class="border border-dashed border-border bg-card/60"
-            arcIcon="library-big"
+            arcIcon="book-marked"
             [arcTitle]="'compendium.system.emptyTitle' | translate"
             [arcDescription]="'compendium.system.emptyDescription' | translate"
             [arcActions]="[createAction]"

@@ -1367,7 +1367,7 @@
     "panel": {
       "title": "Auf dieser Karte",
       "label": "Kartendetails",
-      "toggle": "Details",
+      "toggle": "Auf dieser Karte",
       "back": "Zurück zur Liste",
       "empty": "Noch nichts hier. Nutze die Werkzeuge auf der Karte, um eine Markierung, einen Pfad oder eine Notiz hinzuzufügen.",
       "selected": "{{count}} ausgewählt",

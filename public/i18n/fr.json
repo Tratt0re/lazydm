@@ -1367,7 +1367,7 @@
     "panel": {
       "title": "Sur cette carte",
       "label": "Détails de la carte",
-      "toggle": "Détails",
+      "toggle": "Sur cette carte",
       "back": "Retour à la liste",
       "empty": "Rien pour l’instant. Utilisez les outils de la carte pour ajouter un repère, un chemin ou une note.",
       "selected": "{{count}} sélectionnés",

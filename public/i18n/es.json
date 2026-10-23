@@ -1367,7 +1367,7 @@
     "panel": {
       "title": "En este mapa",
       "label": "Detalles del mapa",
-      "toggle": "Detalles",
+      "toggle": "En este mapa",
       "back": "Volver a la lista",
       "empty": "Aún no hay nada. Usa las herramientas del mapa para añadir un marcador, una ruta o una nota.",
       "selected": "{{count}} seleccionados",

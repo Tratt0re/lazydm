@@ -246,8 +246,8 @@
         </button>
       }
       <button type="button" arc-menu-item (click)="openRenameSheet(file)">
-        <arc-icon arcType="text-cursor-input" />
-        {{ 'campaigns.sections.renameAsset.menu' | translate }}
+        <arc-icon [arcType]="isMap(file) ? 'pencil' : 'text-cursor-input'" />
+        {{ (isMap(file) ? 'maps.edit.menu' : 'campaigns.sections.renameAsset.menu') | translate }}
       </button>
       <button type="button" arc-menu-item (click)="openMoveSheet(node, file)">
         <arc-icon arcType="move-right" />

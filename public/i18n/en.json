@@ -1367,7 +1367,7 @@
     "panel": {
       "title": "On this map",
       "label": "Map details",
-      "toggle": "Details",
+      "toggle": "On this map",
       "back": "Back to the list",
       "empty": "Nothing here yet. Use the tools on the map to add a pin, a path or a note.",
       "selected": "{{count}} selected",

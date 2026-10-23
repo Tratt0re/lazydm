@@ -124,6 +124,7 @@ export class DocumentPage {
   private readonly brokenLinkMenu = viewChild(AppBrokenLinkMenuComponent);
   private readonly linkPreviewCard = viewChild(AppLinkPreviewCardComponent);
   protected readonly linkPreviewLabel = this.translateService.instant('document.linkPreview.show');
+  protected readonly fileOpenLabel = this.translateService.instant('tabs.menu.openInNewTab');
   protected readonly imagePreviewLabel = this.translateService.instant(
     'document.linkPreview.showImage',
   );
@@ -216,12 +217,31 @@ export class DocumentPage {
           ],
           itemActions: [
             {
+              id: 'save',
+              label: this.translateService.instant('document.toolbar.save'),
+              icon: 'save',
+              iconOnly: true,
+              disabled: () => !this.isDirty() || this.isSaving(),
+              action: async () => {
+                await this.save();
+              },
+            },
+            {
               id: 'links',
               label: this.translateService.instant('document.toolbar.links'),
               icon: 'link',
               buttonType: this.isLinksPanelOpen() ? 'default' : 'outline',
               iconOnly: true,
               action: () => this.toggleLinksPanel(),
+            },
+            {
+              id: 'rename',
+              label: this.translateService.instant('document.toolbar.rename'),
+              icon: 'text-cursor-input',
+              buttonType: 'outline',
+              iconOnly: true,
+              disabled: () => !this.document() || this.isSaving(),
+              action: () => this.openRenameSheet(),
             },
             {
               id: 'copy',
@@ -237,15 +257,6 @@ export class DocumentPage {
               action: () => this.copyToOtherScope(),
             },
             {
-              id: 'rename',
-              label: this.translateService.instant('document.toolbar.rename'),
-              icon: 'text-cursor-input',
-              buttonType: 'outline',
-              iconOnly: true,
-              disabled: () => !this.document() || this.isSaving(),
-              action: () => this.openRenameSheet(),
-            },
-            {
               id: 'delete',
               label: this.translateService.instant('files.delete.menu'),
               icon: 'trash',
@@ -254,16 +265,6 @@ export class DocumentPage {
               iconOnly: true,
               disabled: () => !this.document() || this.isSaving(),
               action: () => this.openDeleteSheet(),
-            },
-            {
-              id: 'save',
-              label: this.translateService.instant('document.toolbar.save'),
-              icon: 'save',
-              iconOnly: true,
-              disabled: () => !this.isDirty() || this.isSaving(),
-              action: async () => {
-                await this.save();
-              },
             },
           ],
         }),
@@ -477,7 +478,9 @@ export class DocumentPage {
   /** The eye button of a note link: its preview card (pressed again for the same note, it closes). */
   protected toggleLinkPreview({ kind, anchor, path, route }: LinkPreviewRequest): void {
     const card = this.linkPreviewCard();
-    if (card?.isShowing(path)) {
+    if (kind === 'file') {
+      card?.openInNewTab(route);
+    } else if (card?.isShowing(path)) {
       card.close();
     } else if (kind === 'image') {
       card?.showImage(anchor, path);

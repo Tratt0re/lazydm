@@ -510,7 +510,7 @@ export class MapPage {
         {
           id: 'details',
           label: this.translateService.instant('maps.panel.toggle'),
-          icon: 'panel-right',
+          icon: 'map-pinned',
           buttonType: this.isPanelOpen() ? 'default' : 'outline',
           iconOnly: true,
           action: () => this.isPanelOpen.update((isOpen) => !isOpen),

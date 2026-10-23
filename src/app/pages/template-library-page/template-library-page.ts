@@ -28,7 +28,7 @@ const PLACEHOLDERS = ['title', 'date', 'time', 'campaign', 'section', 'type'] as
 const EMPTY_START = 'empty';
 const SOURCE_ICONS: Record<TemplateDto['source'], ArcTechIcon> = {
   vault: 'vault',
-  system: 'library-big',
+  system: 'book-marked',
   campaign: 'scroll-text',
 };
 

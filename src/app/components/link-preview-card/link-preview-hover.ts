@@ -3,7 +3,7 @@
  * note, its in-app route (an image has none here).
  */
 export interface LinkPreviewRequest {
-  readonly kind: 'note' | 'image';
+  readonly kind: 'note' | 'image' | 'file';
   readonly anchor: Element;
   readonly path: string;
   readonly route: string;
@@ -11,6 +11,8 @@ export interface LinkPreviewRequest {
 
 /** Resolved note links of both views carry their path and route; embedded images carry their path. */
 const PREVIEWABLE_LINK_SELECTOR = '[data-route][data-path], img[data-path]';
+/** Maps and encounters (`.json` files) have no body to preview: their button opens them in a new tab. */
+const SPECIAL_FILE_PATTERN = /\.json$/i;
 /** Gap between the eye button and the corner of an image. */
 const IMAGE_CORNER_GAP = 6;
 const BUTTON_SIZE = 22;
@@ -19,16 +21,22 @@ const HIDE_DELAY_MS = 250;
 const EYE_ICON =
   '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0"/><circle cx="12" cy="12" r="3"/></svg>';
 
+/** Lucide `arrow-up-right`, inline: the button of a map or an encounter link. */
+const OPEN_ICON =
+  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg>';
+
 /**
  * The eye button of note links and images: hovering (or focusing) a resolved note link inside `host` shows a
  * small button right after it, hovering an embedded image shows it in the image's top-right corner;
- * pressing it asks for the preview card. Returns the cleanup.
+ * pressing it asks for the preview card. A map or encounter link has no card: its button (arrow) opens it in a
+ * new tab. Returns the cleanup.
  */
 export function attachLinkPreviewHover(
   host: HTMLElement,
   label: () => string,
   onPreview: (request: LinkPreviewRequest) => void,
   imageLabel: () => string = label,
+  openLabel: () => string = label,
 ): () => void {
   const button = document.createElement('button');
   button.type = 'button';
@@ -46,6 +54,8 @@ export function attachLinkPreviewHover(
   const show = (link: HTMLElement) => {
     window.clearTimeout(hideTimer);
     const isImage = link instanceof HTMLImageElement;
+    const isFile = !isImage && SPECIAL_FILE_PATTERN.test(link.dataset['path'] ?? '');
+    button.innerHTML = isFile ? OPEN_ICON : EYE_ICON;
     // The last line box of the link: a link wrapping onto two lines gets the button after its end.
     const rects = link.getClientRects();
     const rect = rects[rects.length - 1] ?? link.getBoundingClientRect();
@@ -64,7 +74,7 @@ export function attachLinkPreviewHover(
       button.style.top = `${rect.top + rect.height / 2}px`;
     }
     current = link;
-    const text = isImage ? imageLabel() : label();
+    const text = isImage ? imageLabel() : isFile ? openLabel() : label();
     button.setAttribute(
       'aria-label',
       `${text}: ${isImage ? (link.getAttribute('alt') ?? '') : (link.textContent ?? '')}`,
@@ -101,10 +111,16 @@ export function attachLinkPreviewHover(
     event.stopPropagation();
     const link = current;
     if (link?.isConnected) {
+      const path = link.dataset['path'] ?? '';
       onPreview({
-        kind: link instanceof HTMLImageElement ? 'image' : 'note',
+        kind:
+          link instanceof HTMLImageElement
+            ? 'image'
+            : SPECIAL_FILE_PATTERN.test(path)
+              ? 'file'
+              : 'note',
         anchor: link,
-        path: link.dataset['path'] ?? '',
+        path,
         route: link.dataset['route'] ?? '',
       });
     }

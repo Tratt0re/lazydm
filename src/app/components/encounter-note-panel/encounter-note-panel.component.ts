@@ -40,6 +40,7 @@ import type { LinkPreviewRequest } from '@/components/link-preview-card/link-pre
           [mediaLabels]="mediaLabels"
           [linkPreviewLabel]="linkPreviewLabel"
           [imagePreviewLabel]="imagePreviewLabel"
+          [fileOpenLabel]="fileOpenLabel"
           (assetAction)="onAssetAction($event)"
           (linkPreview)="toggleLinkPreview($event)"
           (click)="onLinkClick($event)"
@@ -72,6 +73,7 @@ export class AppEncounterNotePanelComponent {
     brokenNote: this.translateService.instant('document.brokenLinkTitle', { name: '{{name}}' }),
   };
   protected readonly linkPreviewLabel = this.translateService.instant('document.linkPreview.show');
+  protected readonly fileOpenLabel = this.translateService.instant('tabs.menu.openInNewTab');
   protected readonly imagePreviewLabel = this.translateService.instant('document.linkPreview.showImage');
 
   constructor() {
@@ -136,7 +138,9 @@ export class AppEncounterNotePanelComponent {
   /** The eye button of a note link: its preview card (pressed again for the same note, it closes). */
   protected toggleLinkPreview({ kind, anchor, path, route }: LinkPreviewRequest): void {
     const card = this.previewCard();
-    if (card?.isShowing(path)) {
+    if (kind === 'file') {
+      card?.openInNewTab(route);
+    } else if (card?.isShowing(path)) {
       card.close();
     } else if (kind === 'image') {
       card?.showImage(anchor, path);

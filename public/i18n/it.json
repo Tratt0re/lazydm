@@ -1367,7 +1367,7 @@
     "panel": {
       "title": "Su questa mappa",
       "label": "Dettagli della mappa",
-      "toggle": "Dettagli",
+      "toggle": "Su questa mappa",
       "back": "Torna all'elenco",
       "empty": "Ancora niente. Usa gli strumenti sulla mappa per aggiungere un segnalino, un percorso o una nota.",
       "selected": "{{count}} selezionati",

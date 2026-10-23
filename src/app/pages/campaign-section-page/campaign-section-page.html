@@ -47,7 +47,7 @@
         }
         <div class="-mx-1 my-1 h-px bg-border-subtle" role="separator"></div>
         <button type="button" arc-menu-item (click)="openImportSheet()">
-          <arc-icon arcType="library-big" />
+          <arc-icon arcType="import" />
           {{ importLabel() | translate }}
         </button>
       </div>
@@ -98,11 +98,11 @@
           arcType="ghost"
           arcSize="sm"
           class="size-8"
-          [attr.aria-label]="'campaigns.sections.renameAsset.menu' | translate"
-          [arcTooltip]="'campaigns.sections.renameAsset.menu' | translate"
+          [attr.aria-label]="renameLabel(file) | translate"
+          [arcTooltip]="renameLabel(file) | translate"
           (click)="openRenameSheet(file)"
         >
-          <arc-icon arcType="text-cursor-input" />
+          <arc-icon [arcType]="mapRoute(file) ? 'pencil' : 'text-cursor-input'" />
         </button>
         <button
           type="button"
@@ -236,8 +236,8 @@
               {{ copyLabel(file) | translate }}
             </button>
             <button type="button" arc-menu-item (click)="openRenameSheet(file)">
-              <arc-icon arcType="text-cursor-input" />
-              {{ 'campaigns.sections.renameAsset.menu' | translate }}
+              <arc-icon [arcType]="mapRoute(file) ? 'pencil' : 'text-cursor-input'" />
+              {{ renameLabel(file) | translate }}
             </button>
             <button type="button" arc-menu-item (click)="openMoveSheet(file)">
               <arc-icon arcType="move-right" />
