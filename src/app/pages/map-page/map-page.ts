@@ -1431,6 +1431,10 @@ export class MapPage {
     if (tool !== 'path') {
       this.cancelDraw();
     }
+    // Choosing another tool ends the selection: what was selected is released.
+    if (tool !== 'select') {
+      this.clearSelection();
+    }
   }
 
   private onMapClick(event: L.LeafletMouseEvent): void {
