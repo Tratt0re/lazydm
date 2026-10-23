@@ -208,6 +208,8 @@ import {
   CircleMinus,
 } from 'lucide-angular';
 
+import { Franco } from './franco.icon';
+
 export const ARCTECH_ICONS = {
   home: Home,
   house: House,
@@ -413,6 +415,7 @@ export const ARCTECH_ICONS = {
   'zoom-out': ZoomOut,
   'external-link': ExternalLink,
   hand: Hand,
+  franco: Franco,
   'circle-minus': CircleMinus,
   'square-dashed-mouse-pointer': SquareDashedMousePointer,
 } as const satisfies Record<string, LucideIconData>;

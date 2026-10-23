@@ -48,7 +48,6 @@
   "build": {
     "appId": "com.lazydm.desktop",
     "productName": "LazyDM",
-    "icon": "src/assets/icon/app_icon.png",
     "directories": {
       "output": "release",
       "buildResources": "."
@@ -63,6 +62,7 @@
       "package.json"
     ],
     "mac": {
+      "icon": "build/icon.icns",
       "target": [
         "dmg",
         "zip"
@@ -70,7 +70,7 @@
       "category": "public.app-category.utilities"
     },
     "win": {
-      "icon": "src/assets/icon/app_icon.png",
+      "icon": "build/icon.ico",
       "target": [
         "nsis",
         "portable"
@@ -83,6 +83,7 @@
       "artifactName": "lazydm-portable-${version}-${arch}.${ext}"
     },
     "linux": {
+      "icon": "build/icon.png",
       "target": [
         "AppImage"
       ],
