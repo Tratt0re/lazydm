@@ -1368,7 +1368,8 @@
       "toggle": "Dettagli",
       "back": "Torna all'elenco",
       "empty": "Ancora niente. Usa gli strumenti sulla mappa per aggiungere un segnalino, un percorso o una nota.",
-      "selected": "{{count}} selezionati"
+      "selected": "{{count}} selezionati",
+      "exclude": "Escludi dalla selezione"
     },
     "path": {
       "group": "Disegno del percorso",

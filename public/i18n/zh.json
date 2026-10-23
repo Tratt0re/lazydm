@@ -1368,7 +1368,8 @@
       "toggle": "详情",
       "back": "返回列表",
       "empty": "这里还没有内容。使用地图上的工具添加标记、路径或笔记。",
-      "selected": "已选择 {{count}} 项"
+      "selected": "已选择 {{count}} 项",
+      "exclude": "从选择中移除"
     },
     "path": {
       "group": "路径绘制",

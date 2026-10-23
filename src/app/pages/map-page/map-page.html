@@ -286,12 +286,24 @@
             <!-- Several items selected (Select tool): what is in the selection. -->
             <ul class="flex flex-col gap-1">
               @for (row of selectedRows(); track row.id) {
-                <li class="flex items-center gap-3 border border-border-subtle bg-recessed px-3 py-2">
+                <li class="flex items-center gap-3 border border-border-subtle bg-recessed py-1 pr-1 pl-3">
                   <arc-icon [arcType]="row.icon" class="size-4 shrink-0" [style.color]="colorVar(row.color)" />
                   <span class="min-w-0 flex-1 truncate text-sm">{{ row.label }}</span>
                   <span class="font-mono text-[11px] text-muted-foreground uppercase">{{
                     'maps.item.' + row.kind | translate
                   }}</span>
+                  <button
+                    type="button"
+                    arc-button
+                    arcType="ghost"
+                    arcSize="sm"
+                    class="size-8 shrink-0"
+                    [arcTooltip]="'maps.panel.exclude' | translate"
+                    [attr.aria-label]="('maps.panel.exclude' | translate) + ': ' + row.label"
+                    (click)="excludeFromSelection(row.id)"
+                  >
+                    <arc-icon arcType="circle-minus" />
+                  </button>
                 </li>
               }
             </ul>

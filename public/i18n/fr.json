@@ -1368,7 +1368,8 @@
       "toggle": "Détails",
       "back": "Retour à la liste",
       "empty": "Rien pour l’instant. Utilisez les outils de la carte pour ajouter un repère, un chemin ou une note.",
-      "selected": "{{count}} sélectionnés"
+      "selected": "{{count}} sélectionnés",
+      "exclude": "Retirer de la sélection"
     },
     "path": {
       "group": "Tracé du chemin",

@@ -1368,7 +1368,8 @@
       "toggle": "Details",
       "back": "Back to the list",
       "empty": "Nothing here yet. Use the tools on the map to add a pin, a path or a note.",
-      "selected": "{{count}} selected"
+      "selected": "{{count}} selected",
+      "exclude": "Remove from selection"
     },
     "path": {
       "group": "Path drawing",

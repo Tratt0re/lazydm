@@ -1059,6 +1059,13 @@ export class MapPage {
     this.selectOnly(null);
   }
 
+  /** *Exclude* in the selection's list: the item stays on the map and leaves the selection. */
+  protected excludeFromSelection(id: string): void {
+    const next = new Set(this.selectedIds());
+    next.delete(id);
+    this.selectedIds.set(next);
+  }
+
   private selectAll(): void {
     this.selectedIds.set(new Set(this.kindById().keys()));
   }

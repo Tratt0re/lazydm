@@ -198,6 +198,7 @@ import {
   ExternalLink,
   Hand,
   SquareDashedMousePointer,
+  CircleMinus,
 } from 'lucide-angular';
 
 export const ARCTECH_ICONS = {
@@ -398,6 +399,7 @@ export const ARCTECH_ICONS = {
   'zoom-out': ZoomOut,
   'external-link': ExternalLink,
   hand: Hand,
+  'circle-minus': CircleMinus,
   'square-dashed-mouse-pointer': SquareDashedMousePointer,
 } as const satisfies Record<string, LucideIconData>;
 

@@ -1368,7 +1368,8 @@
       "toggle": "Detalles",
       "back": "Volver a la lista",
       "empty": "Aún no hay nada. Usa las herramientas del mapa para añadir un marcador, una ruta o una nota.",
-      "selected": "{{count}} seleccionados"
+      "selected": "{{count}} seleccionados",
+      "exclude": "Quitar de la selección"
     },
     "path": {
       "group": "Dibujo de la ruta",
