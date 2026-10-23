@@ -143,11 +143,11 @@ function listScopeAssetsOfSize(scope, size) {
     .map((row) => row.path);
 }
 
-/** Notes of a scope (templates excluded) with their type and frontmatter sub-type, for the Review page. */
+/** Notes of a scope (templates excluded), for the Review page. */
 function listScopeNotes(scope) {
   return getVaultIndexDatabase()
     .prepare(
-      `SELECT path, type, title, json_extract(frontmatter_json, '$.subtype') AS subtype
+      `SELECT path, title
        FROM files
        WHERE campaign IS ? AND kind = 'md' AND path NOT LIKE '%/!_templates/%' ESCAPE '!'
        ORDER BY path`,

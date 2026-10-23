@@ -124,7 +124,7 @@ const GROUPS: readonly { readonly key: string; readonly items: readonly Referenc
   },
   {
     key: 'properties',
-    items: [{ key: 'frontmatter', syntax: '---\ntype: npc\nlevel: 3\n---' }],
+    items: [{ key: 'frontmatter', syntax: '---\nlevel: 3\n---' }],
   },
 ];
 

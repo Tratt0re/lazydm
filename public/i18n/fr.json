@@ -877,29 +877,9 @@
     "alertDescription": "Certaines notes, dossiers ou liens ne correspondent pas aux sections de cette campagne.",
     "open": "Vérifier",
     "cancel": "Annuler",
-    "fixed": "{{count}} notes mises à jour",
-    "fixFailed": "Impossible de mettre à jour {{count}} notes (modifiées entre-temps ?)",
     "groups": {
       "brokenLinks": {
         "title": "Liens cassés"
-      },
-      "misplaced": {
-        "title": "Notes mal rangées",
-        "description": "Leur type appartient à une autre section.",
-        "fixAll": "Définir le type des {{count}}",
-        "detail": "type : {{type}} · dans {{place}}"
-      },
-      "wrongSubtype": {
-        "title": "Sous-types incorrects",
-        "description": "Leur sous-type n’est pas le sous-dossier où elles se trouvent.",
-        "fixAll": "Définir le sous-type des {{count}}",
-        "detail": "sous-type : {{subtype}} · dans {{place}}"
-      },
-      "untyped": {
-        "title": "Notes sans type",
-        "description": "Écrites hors de LazyDM (Obsidian, Finder…) sans type: dans le frontmatter.",
-        "fixAll": "Attribuer le type aux {{count}}",
-        "detail": "aucun type · dans {{place}}"
       },
       "outside": {
         "title": "Hors de toute section",
@@ -915,19 +895,9 @@
       }
     },
     "fix": {
-      "setType": "Type : {{section}}",
-      "setSubtype": "Sous-type : {{subtype}}",
-      "removeSubtype": "Retirer le sous-type",
-      "assignType": "Attribuer {{place}}",
       "moveTo": "Déplacer vers {{place}}",
       "moveToEllipsis": "Déplacer vers…",
       "addSection": "Ajouter comme section"
-    },
-    "fixAll": {
-      "title": "Mettre à jour {{count}} notes ?",
-      "description": "Seul le frontmatter change (type et sous-type) ; chaque écriture est vérifiée contre les modifications faites entre-temps.",
-      "more": "…et {{count}} autres",
-      "confirm": "Mettre à jour"
     },
     "move": {
       "title": "Déplacer {{title}}",

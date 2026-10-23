@@ -58,7 +58,7 @@ import { ArcTechTooltipImports } from '@/shared/components/tooltip';
 import { onIndexUpdated } from '@/services/ipc-events';
 
 export const DOCUMENT_NOTE_PARAM = 'note';
-/** Sub-folder of the section the note is in (its sub-type), when it is in one. */
+/** Sub-folder of the section the note is in (the folder the note is in), when it is in one. */
 export const DOCUMENT_SUBFOLDER_PARAM = 'subfolder';
 
 const FRONTMATTER_FENCE_PATTERN = /^---\r?\n[\s\S]*?\r?\n(?:---|\.\.\.)\r?\n?/;

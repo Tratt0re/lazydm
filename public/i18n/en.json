@@ -877,29 +877,9 @@
     "alertDescription": "Some notes, folders or links do not match the sections of this campaign.",
     "open": "Review",
     "cancel": "Cancel",
-    "fixed": "{{count}} notes updated",
-    "fixFailed": "{{count}} notes couldn't be updated (changed meanwhile?)",
     "groups": {
       "brokenLinks": {
         "title": "Broken links"
-      },
-      "misplaced": {
-        "title": "Misplaced notes",
-        "description": "Their type belongs to another section.",
-        "fixAll": "Set type of all {{count}}",
-        "detail": "type: {{type}} · in {{place}}"
-      },
-      "wrongSubtype": {
-        "title": "Wrong sub-types",
-        "description": "Their sub-type is not the sub-folder they are in.",
-        "fixAll": "Set sub-type of all {{count}}",
-        "detail": "sub-type: {{subtype}} · in {{place}}"
-      },
-      "untyped": {
-        "title": "Notes without a type",
-        "description": "Written outside LazyDM (Obsidian, Finder…) without a type: in the frontmatter.",
-        "fixAll": "Assign type to all {{count}}",
-        "detail": "no type · in {{place}}"
       },
       "outside": {
         "title": "Outside any section",
@@ -915,19 +895,9 @@
       }
     },
     "fix": {
-      "setType": "Set type to {{section}}",
-      "setSubtype": "Set sub-type to {{subtype}}",
-      "removeSubtype": "Remove sub-type",
-      "assignType": "Assign {{place}}",
       "moveTo": "Move to {{place}}",
       "moveToEllipsis": "Move to…",
       "addSection": "Add as section"
-    },
-    "fixAll": {
-      "title": "Update {{count}} notes?",
-      "description": "Only the frontmatter changes (type and sub-type); every write is checked against changes made meanwhile.",
-      "more": "…and {{count}} more",
-      "confirm": "Update"
     },
     "move": {
       "title": "Move {{title}}",

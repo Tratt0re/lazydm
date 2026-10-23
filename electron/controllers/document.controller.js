@@ -15,12 +15,10 @@ const {
 const {
   getLinkPlainText,
   parseMarkdownDocument,
-  removeFrontmatterField,
   renameLinkFolder,
   renameLinkTarget,
   replaceDocumentTitle,
   rewriteLinks,
-  setFrontmatterField,
 } = require('../utils/markdown-parse');
 const { toSlug } = require('../utils/string-sanitize');
 const { isMediaFileName } = require('./asset.controller');
@@ -74,10 +72,7 @@ async function list(payload) {
 
 const FOLDER_NAME_MAX_LENGTH = 60;
 
-/**
- * New sub-folder of a section: one level deep, in a section that holds notes. The folder name is the
- * sub-type its notes get (`enemies/humans/` → `subtype: humans`).
- */
+/** New sub-folder of a section: one level deep, in a section that holds notes. */
 async function createFolder(payload) {
   const body = ensurePlainObject(payload, 'payload');
   const folder = requirePath(body, 'folder');
@@ -108,44 +103,6 @@ async function createFolder(payload) {
     path: await documentModel.createFolder(vaultPath, `${location.scope}/${section.key}/${slug}`),
     name: slug,
   };
-}
-
-/** `type` and `subtype` of a note's frontmatter (no sub-type removes it), the rest of the file kept. */
-function withTypeAndSubtype(content, type, subtype) {
-  const typed = setFrontmatterField(content, 'type', type);
-  return subtype
-    ? setFrontmatterField(typed, 'subtype', subtype)
-    : removeFrontmatterField(typed, 'subtype');
-}
-
-/** Review fix: sets a note's type and sub-type (frontmatter only; conflict-checked like a save). */
-async function setType(payload) {
-  const body = ensurePlainObject(payload, 'payload');
-  const relativePath = requirePath(body);
-  const type = requireString(body.type, 'payload.type', {
-    maxLength: DOCUMENT_TYPE_MAX_LENGTH,
-  }).toLocaleLowerCase();
-  const subtype =
-    normalizeOptionalString(body.subtype, 'payload.subtype', { allowNull: true }) || null;
-  const vaultPath = vaultController.getReadyVaultPath();
-  const current = await documentModel.readDocument(vaultPath, relativePath);
-  const content = withTypeAndSubtype(current.content, type, subtype);
-  if (content === current.content) {
-    return { path: relativePath };
-  }
-
-  const result = await documentModel.writeDocument(
-    vaultPath,
-    relativePath,
-    content,
-    current.contentHash,
-  );
-  if (result.status !== 'saved') {
-    throw new Error(`${relativePath} changed meanwhile, so it was not updated.`);
-  }
-
-  await indexerController.reindexPaths([relativePath]);
-  return { path: relativePath };
 }
 
 /** Relative markdown link from a folder to a vault file, `#heading` of the old link kept. */
@@ -184,11 +141,10 @@ function retargetMovedLink(link, sourcePath, newPath, scope) {
 }
 
 /**
- * Moves a note file and updates it: `type` / `subtype` follow a note section (special sections keep them),
- * relative links are recomputed from the new folder. The rewrite is conflict-checked like a save; returns
- * false when it was not saved (the file moved but kept its old type and links).
+ * Moves a note file and recomputes its own relative links from the new folder. The rewrite is
+ * conflict-checked like a save; returns false when it was not saved (the file moved but kept its old links).
  */
-async function moveNoteFile(vaultPath, relativePath, newPath, section, subfolder) {
+async function moveNoteFile(vaultPath, relativePath, newPath) {
   const current = await documentModel.readDocument(vaultPath, relativePath);
   const resolvedByRaw = new Map(
     vaultIndexModel
@@ -196,11 +152,8 @@ async function moveNoteFile(vaultPath, relativePath, newPath, section, subfolder
       .filter((link) => link.resolvedPath)
       .map((link) => [link.raw, link.resolvedPath === relativePath ? newPath : link.resolvedPath]),
   );
-  const typed = section.isSpecial
-    ? current.content
-    : withTypeAndSubtype(current.content, section.type, subfolder);
   const ownContent = rewriteLinks(
-    typed,
+    current.content,
     (link) =>
       link.syntax === 'markdown' && resolvedByRaw.has(link.raw)
         ? toMarkdownHref(path.posix.dirname(newPath), resolvedByRaw.get(link.raw), link.raw)
@@ -224,7 +177,7 @@ async function moveNoteFile(vaultPath, relativePath, newPath, section, subfolder
 
 /**
  * Moves a file (note or asset) into a section (or sub-folder) of its own campaign or system: it keeps its
- * name; a note's `type` / `subtype` follow the destination and its own relative links are recomputed; every
+ * name; a note's own relative links are recomputed; every
  * link the index resolved to it is rewritten like *Rename* does (each write conflict-checked; failures reported).
  */
 async function move(payload) {
@@ -260,13 +213,7 @@ async function move(payload) {
   let isMoved = false;
   try {
     if (isNote) {
-      const isOwnContentSaved = await moveNoteFile(
-        vaultPath,
-        relativePath,
-        newPath,
-        section,
-        location.subfolder,
-      );
+      const isOwnContentSaved = await moveNoteFile(vaultPath, relativePath, newPath);
       isMoved = true;
       if (!isOwnContentSaved) {
         failedPaths.push(newPath);
@@ -363,14 +310,6 @@ async function openFile(payload) {
   return { path: relativePath };
 }
 
-/** Sub-type of a note created in `folderPath`: the sub-folder of its section, if it is in one. */
-function getSubtypeOfFolder(folderPath) {
-  const location = sectionModel.parseSectionFolder(folderPath);
-  return location && !sectionModel.SPECIAL_SECTION_KEYS.includes(location.section)
-    ? location.subfolder
-    : null;
-}
-
 async function read(payload) {
   const body = ensurePlainObject(payload, 'payload');
   const relativePath = requirePath(body);
@@ -430,7 +369,6 @@ function create(payload) {
     title,
     type,
     section,
-    subtype: getSubtypeOfFolder(folderPath),
   });
 }
 
@@ -672,8 +610,7 @@ async function rewriteIncomingLinks(vaultPath, rawsBySource, skipPath, rewrite) 
 }
 
 /**
- * Renames a sub-folder of a section (a sub-type): the folder on disk, the `subtype` of its notes (not in the
- * special sections, whose sub-folders only organise files) and the path links through it
+ * Renames a sub-folder of a section: the folder on disk and the path links through it
  * (`[[enemies/humans/bandit]]`, `../enemies/humans/bandit.md`) — the rewrite the `monsters/` → `enemies/`
  * migration does for sections. A taken name is refused; every write is conflict-checked like a save.
  */
@@ -722,33 +659,8 @@ async function renameFolder(payload) {
   await documentModel.moveVaultFolder(vaultPath, folderPath, newFolderPath);
 
   const moved = files.map((file) => ({ from: file.path, to: toNewPath(file.path) }));
-  const failedPaths = [];
-  const subtypePaths = [];
   let links = { updatedPaths: [], failedPaths: [], linkCount: 0 };
   try {
-    if (!sectionModel.SPECIAL_SECTION_KEYS.includes(location.section)) {
-      for (const file of files.filter((item) => item.kind === 'md')) {
-        const newPath = toNewPath(file.path);
-        try {
-          const note = await documentModel.readDocument(vaultPath, newPath);
-          if (note.frontmatter?.subtype === slug) {
-            continue;
-          }
-
-          const result = await documentModel.writeDocument(
-            vaultPath,
-            newPath,
-            setFrontmatterField(note.content, 'subtype', slug),
-            note.contentHash,
-          );
-          (result.status === 'saved' ? subtypePaths : failedPaths).push(newPath);
-        } catch (error) {
-          console.warn('[electron] Failed to set the sub-type ->', newPath, error);
-          failedPaths.push(newPath);
-        }
-      }
-    }
-
     const parents = new Set(['', location.section, sectionPath]);
     links = await rewriteIncomingLinks(vaultPath, rawsBySource, null, (content, sourcePath, raws) =>
       rewriteLinks(
@@ -770,8 +682,8 @@ async function renameFolder(payload) {
     path: newFolderPath,
     name: slug,
     moved,
-    updatedPaths: [...new Set([...subtypePaths, ...links.updatedPaths])],
-    failedPaths: [...new Set([...failedPaths, ...links.failedPaths])],
+    updatedPaths: links.updatedPaths,
+    failedPaths: links.failedPaths,
     linkCount: links.linkCount,
   };
 }
@@ -849,8 +761,7 @@ function isStrayFolder(vaultPath, folderPath) {
  * Deletes a sub-folder of a section; the folder goes to the system Trash. `mode`:
  * - `delete`: its files go with it; with `rewriteLinks` the links from notes outside it are handled like a
  *   file delete (plain text, embeds removed);
- * - `moveToMain`: its files first move to the section's main folder like *Move to…* (links rewritten, `subtype`
- *   removed). A file whose name is taken there stops everything: `{ status: 'clashes', clashes }`.
+ * - `moveToMain`: its files first move to the section's main folder like *Move to…* (links rewritten). A file whose name is taken there stops everything: `{ status: 'clashes', clashes }`.
  */
 async function deleteFolder(payload) {
   const body = ensurePlainObject(payload, 'payload');
@@ -1277,7 +1188,6 @@ async function createFromLink(payload) {
     title,
     type,
     section,
-    subtype: getSubtypeOfFolder(folderPath),
   });
 
   if (link.targetName.toLocaleLowerCase() !== slug) {
@@ -1311,7 +1221,7 @@ async function createFromLink(payload) {
 
 const TEMPLATES_DIR_NAME = '_templates';
 const ASSETS_DIR_NAME = 'assets';
-const UNTYPED_NOTES_DIR_NAME = 'notes';
+const NOTES_DIR_NAME = 'notes';
 const ENCOUNTERS_DIR_NAME = 'encounters';
 
 /** A copy target: a campaign (`lost-mine`) or a compendium system (`compendium/my-system`). */
@@ -1339,10 +1249,10 @@ async function requireCopyTarget(vaultPath, target) {
 
 /**
  * Where a copy goes in the target. `section` is its folder: templates stay templates, encounters (`.json`
- * of an Encounters section) go to encounters, any other non-note file to assets, notes follow their type —
- * the target's section for it (a campaign's custom sections included), else the folder the source scope
- * keeps that type in (reported on the target's Review page), else `notes/`. `subfolder` is the sub-folder
- * (one level) the source keeps the file in; `canHaveSubfolder` is false for templates and untyped notes.
+ * of an Encounters section) go to encounters, any other non-note file to assets, notes keep the section
+ * they have in the source (a section the target lacks is reported on its Review page), else `notes/`.
+ * `subfolder` is the sub-folder (one level) the source keeps the file in; `canHaveSubfolder` is false for
+ * templates and notes outside a section.
  */
 async function getCopyLocation(vaultPath, relativePath, target) {
   const segments = relativePath.split('/');
@@ -1370,18 +1280,14 @@ async function getCopyLocation(vaultPath, relativePath, target) {
     };
   }
 
-  const document = await documentModel.readDocument(vaultPath, relativePath);
-  const sourceScope = vaultIndexModel.getCampaignSlug(relativePath);
-  const sectionFolder =
-    sectionModel.findSectionKeyForType(vaultPath, target, document.type) ??
-    sectionModel.findSectionKeyForType(vaultPath, sourceScope, document.type);
-  if (!sectionFolder) {
-    return { section: UNTYPED_NOTES_DIR_NAME, subfolder: null, canHaveSubfolder: false };
+  // A note keeps the folder it has in its source; one outside any section goes to `notes/`.
+  if (!sourceFolder) {
+    return { section: NOTES_DIR_NAME, subfolder: null, canHaveSubfolder: false };
   }
 
   return {
-    section: sectionFolder,
-    subfolder: sourceFolder?.subfolder ?? null,
+    section: sourceFolder.section,
+    subfolder: sourceFolder.subfolder,
     canHaveSubfolder: true,
   };
 }
@@ -1409,17 +1315,6 @@ async function describeCopySubfolder(vaultPath, relativePath, target, location) 
     exists: isExisting,
     fileExists: isExisting && fs.existsSync(resolveInsideVault(vaultPath, filePath)),
   };
-}
-
-/** A copied note's `subtype` follows the sub-folder it ended up in (none in the section itself). */
-async function syncCopiedSubtype(vaultPath, targetPath, subfolder) {
-  const copied = await documentModel.readDocument(vaultPath, targetPath);
-  const content = subfolder
-    ? setFrontmatterField(copied.content, 'subtype', subfolder)
-    : removeFrontmatterField(copied.content, 'subtype');
-  if (content !== copied.content) {
-    await documentModel.writeDocument(vaultPath, targetPath, content, copied.contentHash);
-  }
 }
 
 const LINKED_COPY_MAX_FILES = 200;
@@ -1566,10 +1461,6 @@ async function copy(payload) {
       }
     }
 
-    if (extension.toLocaleLowerCase() === MARKDOWN_EXTENSION && subfolder !== location.subfolder) {
-      await syncCopiedSubtype(vaultPath, targetPath, subfolder);
-    }
-
     for (const linkedFile of linkedFiles) {
       const linkedExtension = path.posix.extname(linkedFile.path);
       const linkedLocation = await getCopyLocation(vaultPath, linkedFile.path, target);
@@ -1621,7 +1512,6 @@ module.exports = {
   renameFolder,
   reveal,
   saveCopy,
-  setType,
   unlink,
   write,
 };

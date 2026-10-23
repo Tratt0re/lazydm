@@ -877,29 +877,9 @@
     "alertDescription": "Einige Notizen, Ordner oder Links passen nicht zu den Bereichen dieser Kampagne.",
     "open": "Prüfen",
     "cancel": "Abbrechen",
-    "fixed": "{{count}} Notizen aktualisiert",
-    "fixFailed": "{{count}} Notizen konnten nicht aktualisiert werden (zwischenzeitlich geändert?)",
     "groups": {
       "brokenLinks": {
         "title": "Defekte Links"
-      },
-      "misplaced": {
-        "title": "Falsch abgelegte Notizen",
-        "description": "Ihr Typ gehört zu einem anderen Bereich.",
-        "fixAll": "Typ aller {{count}} setzen",
-        "detail": "Typ: {{type}} · in {{place}}"
-      },
-      "wrongSubtype": {
-        "title": "Falsche Untertypen",
-        "description": "Ihr Untertyp ist nicht der Unterordner, in dem sie liegen.",
-        "fixAll": "Untertyp aller {{count}} setzen",
-        "detail": "Untertyp: {{subtype}} · in {{place}}"
-      },
-      "untyped": {
-        "title": "Notizen ohne Typ",
-        "description": "Außerhalb von LazyDM geschrieben (Obsidian, Finder…), ohne type: im Frontmatter.",
-        "fixAll": "Typ allen {{count}} zuweisen",
-        "detail": "kein Typ · in {{place}}"
       },
       "outside": {
         "title": "Außerhalb aller Bereiche",
@@ -915,19 +895,9 @@
       }
     },
     "fix": {
-      "setType": "Typ auf {{section}} setzen",
-      "setSubtype": "Untertyp auf {{subtype}} setzen",
-      "removeSubtype": "Untertyp entfernen",
-      "assignType": "{{place}} zuweisen",
       "moveTo": "Nach {{place}} verschieben",
       "moveToEllipsis": "Verschieben nach…",
       "addSection": "Als Bereich hinzufügen"
-    },
-    "fixAll": {
-      "title": "{{count}} Notizen aktualisieren?",
-      "description": "Nur das Frontmatter ändert sich (Typ und Untertyp); jeder Schreibvorgang wird gegen zwischenzeitliche Änderungen geprüft.",
-      "more": "…und {{count}} weitere",
-      "confirm": "Aktualisieren"
     },
     "move": {
       "title": "{{title}} verschieben",

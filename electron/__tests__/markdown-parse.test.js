@@ -24,6 +24,14 @@ const NOTE = [
 describe('parseMarkdownDocument', () => {
   const doc = parseMarkdownDocument(NOTE, { sourcePath: 'camp/monsters/goblin.md' });
 
+  it('reads type and subtype as ordinary frontmatter keys, not as the kind of the note', () => {
+    const typed = parseMarkdownDocument('---\ntype: beast\nsubtype: wolves\n---\n# Wolf\n', {
+      sourcePath: 'camp/enemies/wolf.md',
+    });
+    expect(typed.frontmatter).toMatchObject({ type: 'beast', subtype: 'wolves' });
+    expect(typed).not.toHaveProperty('type');
+  });
+
   it('reads frontmatter, title and tags', () => {
     expect(doc.title).toBe('Goblin');
     expect(doc.frontmatter).toMatchObject({ title: 'Goblin', tags: ['a', 'b'] });
@@ -81,14 +89,14 @@ describe('rewriteLinks', () => {
 
 describe('frontmatter helpers', () => {
   it('sets a new field and replaces an existing one', () => {
-    const added = setFrontmatterField(NOTE, 'subtype', 'goblins');
-    expect(added).toContain('subtype: goblins');
-    expect(setFrontmatterField(added, 'subtype', 'orcs')).not.toContain('goblins');
-    expect(removeFrontmatterField(added, 'subtype')).not.toContain('subtype');
+    const added = setFrontmatterField(NOTE, 'beast', 'owlbear');
+    expect(added).toContain('beast: owlbear');
+    expect(setFrontmatterField(added, 'beast', 'devil')).not.toContain('owlbear');
+    expect(removeFrontmatterField(added, 'beast')).not.toContain('beast');
   });
 
   it('creates frontmatter when the note has none', () => {
-    expect(setFrontmatterField('# Plain\n', 'type', 'npc')).toMatch(/^---\ntype: npc\n---\n/);
+    expect(setFrontmatterField('# Plain\n', 'beast', 'npc')).toMatch(/^---\nbeast: npc\n---\n/);
   });
 
   it('renames the title and the matching heading', () => {

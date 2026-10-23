@@ -1,7 +1,7 @@
 const fs = require('node:fs');
 const path = require('node:path');
 const { closeVaultIndexDatabase, openVaultIndexDatabase } = require('../database/vault-index-db');
-const { vaultIndexModel, vaultModel } = require('../models');
+const { sectionModel, vaultIndexModel, vaultModel } = require('../models');
 const { broadcastIpcEvent } = require('../ipc/broadcast');
 const { hashContent, resolveInsideVault } = require('../utils/file-utils');
 const { parseMarkdownDocument } = require('../utils/markdown-parse');
@@ -128,7 +128,14 @@ async function indexFile(rootPath, file, knownState) {
     console.warn('[electron] Invalid frontmatter ->', file.path, document.frontmatterError);
   }
 
-  vaultIndexModel.saveFile({ ...file, contentHash }, document);
+  // A note's kind is the section its folder is: the index keeps that section's type for search and copies.
+  const location = sectionModel.parseSectionFolder(path.posix.dirname(file.path));
+  const section = location
+    ? sectionModel.listScopeSections(rootPath, location.scope).find(
+        (item) => item.key === location.section,
+      )
+    : null;
+  vaultIndexModel.saveFile({ ...file, contentHash }, { ...document, type: section?.type ?? null });
 }
 
 /** Brings the index in line with the files on disk: indexes new or changed files and drops deleted ones. */

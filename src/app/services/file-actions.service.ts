@@ -168,7 +168,7 @@ export class FileActionsService {
 
   /**
    * *New note* in a section folder or one of its sub-folders (`folder`, vault path), of the section's note
-   * `type`; a sub-folder gives its sub-type (Electron side). Opens the new note, which is how both the section
+   * `type`. Opens the new note, which is how both the section
    * page and the explorer create one.
    */
   openCreateNoteSheet(folder: {
@@ -520,7 +520,7 @@ export class FileActionsService {
   }
 
   /**
-   * *Rename…* a sub-folder of a section: the new name gives the folder slug; its notes' sub-type and the path
+   * *Rename…* a sub-folder of a section: the new name gives the folder slug, and the path
    * links through it follow. Unsaved edits of its notes, where open, are saved first; campaign tabs on its
    * notes and on its page follow. `onRenamed` gets the new folder name.
    */
@@ -617,7 +617,7 @@ export class FileActionsService {
 
   /**
    * *Delete…* a sub-folder, after a confirmation with its file count: **move its files to the main folder**
-   * (default; links rewritten, sub-type removed; a name taken there stops it, listed, the sheet stays open)
+   * (default; links rewritten; a name taken there stops it, listed, the sheet stays open)
    * or **delete them too** (links to them turned into plain text / embeds removed, unless unticked). The
    * folder goes to the system Trash; tabs on its files follow them or go to the section page.
    */

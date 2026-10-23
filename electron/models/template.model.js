@@ -19,21 +19,21 @@ const TEMPLATE_NOTE_TYPES = Object.freeze(
   Object.keys(NOTE_TYPE_DIR_NAMES).filter((type) => !NON_TEMPLATE_NOTE_TYPES.includes(type)),
 );
 
-function frontmatter(type, fields = []) {
-  const lines = [`type: ${type}`, 'title: "{{title}}"', ...fields.map((field) => `${field}:`)];
+function frontmatter(fields = []) {
+  const lines = ['title: "{{title}}"', ...fields.map((field) => `${field}:`)];
   return `---\n${lines.join('\n')}\n---\n# {{title}}\n`;
 }
 
 /** Templates shipped with the app, used when the vault has none for a type. Read-only. */
 const BUILT_IN_TEMPLATES = Object.freeze({
-  scene: `${frontmatter('scene', ['session', 'location'])}
+  scene: `${frontmatter(['session', 'location'])}
 ## Setup
 
 ## What happens
 
 ## Outcomes
 `,
-  character: `${frontmatter('character', ['role', 'affiliation', 'status'])}
+  character: `${frontmatter(['role', 'affiliation', 'status'])}
 ## Appearance
 
 ## Personality
@@ -42,7 +42,7 @@ const BUILT_IN_TEMPLATES = Object.freeze({
 
 ## Secrets
 `,
-  enemy: `${frontmatter('enemy', ['cr', 'hp', 'ac'])}
+  enemy: `${frontmatter(['cr', 'hp', 'ac'])}
 ## Description
 
 ## Stats
@@ -51,19 +51,19 @@ const BUILT_IN_TEMPLATES = Object.freeze({
 
 ## Tactics
 `,
-  spell: `${frontmatter('spell', ['level', 'school', 'casting_time', 'range', 'duration'])}
+  spell: `${frontmatter(['level', 'school', 'casting_time', 'range', 'duration'])}
 ## Description
 
 ## At higher levels
 `,
-  item: `${frontmatter('item', ['rarity', 'attunement'])}
+  item: `${frontmatter(['rarity', 'attunement'])}
 ## Description
 
 ## Properties
 
 ## History
 `,
-  quest: `${frontmatter('quest', ['status', 'giver', 'reward'])}
+  quest: `${frontmatter(['status', 'giver', 'reward'])}
 ## Hook
 
 ## Objectives
@@ -72,7 +72,7 @@ const BUILT_IN_TEMPLATES = Object.freeze({
 
 ## Rewards
 `,
-  location: `${frontmatter('location', ['region'])}
+  location: `${frontmatter(['region'])}
 ## Overview
 
 ## Points of interest
@@ -81,16 +81,15 @@ const BUILT_IN_TEMPLATES = Object.freeze({
 
 ## Secrets
 `,
-  world: `${frontmatter('world', ['category'])}
+  world: `${frontmatter(['category'])}
 ## Overview
 
 ## Details
 `,
-  handout: `${frontmatter('handout')}
+  handout: `${frontmatter()}
 > What the players receive.
 `,
   session: `---
-type: session
 title: "{{title}}"
 date: {{date}}
 number:
@@ -109,7 +108,7 @@ number:
 
 /** Built-in text of a note type; types without one (custom sections) get the bare frontmatter. */
 function getBuiltInTemplate(type) {
-  return BUILT_IN_TEMPLATES[type] ?? frontmatter(type);
+  return BUILT_IN_TEMPLATES[type] ?? frontmatter();
 }
 
 /** Note types a campaign can pick a template for: its sections' types (custom ones included). */
@@ -334,7 +333,7 @@ async function readTemplateKeys(rootPath, template) {
   }
 
   const { frontmatter } = parseMarkdownDocument(content, { sourcePath: 'template.md' });
-  return Object.keys(frontmatter ?? {}).filter((key) => !['type', 'title', 'subtype', 'tags'].includes(key));
+  return Object.keys(frontmatter ?? {}).filter((key) => !['title', 'tags'].includes(key));
 }
 
 /** Display name of the campaign or system a folder belongs to, for `{{campaign}}`. */

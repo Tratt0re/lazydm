@@ -877,29 +877,9 @@
     "alertDescription": "Деякі нотатки, теки чи посилання не відповідають розділам цієї кампанії.",
     "open": "Перевірити",
     "cancel": "Скасувати",
-    "fixed": "Оновлено нотаток: {{count}}",
-    "fixFailed": "Не вдалося оновити нотаток: {{count}} (змінено тим часом?)",
     "groups": {
       "brokenLinks": {
         "title": "Зламані посилання"
-      },
-      "misplaced": {
-        "title": "Нотатки не на місці",
-        "description": "Їхній тип належить іншому розділу.",
-        "fixAll": "Задати тип усім ({{count}})",
-        "detail": "тип: {{type}} · у {{place}}"
-      },
-      "wrongSubtype": {
-        "title": "Хибні підтипи",
-        "description": "Їхній підтип — не та підтека, де вони лежать.",
-        "fixAll": "Задати підтип усім ({{count}})",
-        "detail": "підтип: {{subtype}} · у {{place}}"
-      },
-      "untyped": {
-        "title": "Нотатки без типу",
-        "description": "Написані поза LazyDM (Obsidian, Finder…) без type: у frontmatter.",
-        "fixAll": "Призначити тип усім ({{count}})",
-        "detail": "без типу · у {{place}}"
       },
       "outside": {
         "title": "Поза розділами",
@@ -915,19 +895,9 @@
       }
     },
     "fix": {
-      "setType": "Тип: {{section}}",
-      "setSubtype": "Підтип: {{subtype}}",
-      "removeSubtype": "Прибрати підтип",
-      "assignType": "Призначити {{place}}",
       "moveTo": "Перемістити до {{place}}",
       "moveToEllipsis": "Перемістити до…",
       "addSection": "Додати як розділ"
-    },
-    "fixAll": {
-      "title": "Оновити нотаток: {{count}}?",
-      "description": "Змінюється лише frontmatter (тип і підтип); кожен запис перевіряється на зміни, зроблені тим часом.",
-      "more": "…і ще {{count}}",
-      "confirm": "Оновити"
     },
     "move": {
       "title": "Перемістити {{title}}",

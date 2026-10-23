@@ -225,7 +225,7 @@ export interface VaultFileLocation {
   /** In-app route of the scope: `/campaigns/lost-mine` or `/compendium/my-system`. */
   readonly scopeRoute: string;
   readonly section: string;
-  /** Sub-folder of the section (the note's sub-type), null directly in the section. */
+  /** Sub-folder of the section (the folder the note is in), null directly in the section. */
   readonly subfolder: string | null;
   /** File name without `.md` for notes, with its extension for other files. */
   readonly name: string;

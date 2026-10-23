@@ -77,7 +77,6 @@ const IPC_HANDLERS = Object.freeze({
   [CHANNELS.documents.unlink]: documentController.unlink,
   [CHANNELS.documents.createFromLink]: documentController.createFromLink,
   [CHANNELS.documents.createFolder]: documentController.createFolder,
-  [CHANNELS.documents.setType]: documentController.setType,
   [CHANNELS.documents.move]: documentController.move,
   [CHANNELS.documents.reveal]: documentController.reveal,
   [CHANNELS.documents.open]: documentController.openFile,

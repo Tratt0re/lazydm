@@ -60,7 +60,6 @@ const CHANNELS = Object.freeze({
     unlink: 'documents:unlink',
     createFromLink: 'documents:createFromLink',
     createFolder: 'documents:createFolder',
-    setType: 'documents:setType',
     move: 'documents:move',
     reveal: 'documents:reveal',
     open: 'documents:open',

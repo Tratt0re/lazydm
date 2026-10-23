@@ -877,29 +877,9 @@
     "alertDescription": "Algunas notas, carpetas o enlaces no coinciden con las secciones de esta campaña.",
     "open": "Revisar",
     "cancel": "Cancelar",
-    "fixed": "{{count}} notas actualizadas",
-    "fixFailed": "No se pudieron actualizar {{count}} notas (¿cambiadas mientras tanto?)",
     "groups": {
       "brokenLinks": {
         "title": "Enlaces rotos"
-      },
-      "misplaced": {
-        "title": "Notas mal ubicadas",
-        "description": "Su tipo pertenece a otra sección.",
-        "fixAll": "Fijar el tipo de las {{count}}",
-        "detail": "tipo: {{type}} · en {{place}}"
-      },
-      "wrongSubtype": {
-        "title": "Subtipos incorrectos",
-        "description": "Su subtipo no es la subcarpeta en la que están.",
-        "fixAll": "Fijar el subtipo de las {{count}}",
-        "detail": "subtipo: {{subtype}} · en {{place}}"
-      },
-      "untyped": {
-        "title": "Notas sin tipo",
-        "description": "Escritas fuera de LazyDM (Obsidian, Finder…) sin type: en el frontmatter.",
-        "fixAll": "Asignar tipo a las {{count}}",
-        "detail": "sin tipo · en {{place}}"
       },
       "outside": {
         "title": "Fuera de toda sección",
@@ -915,19 +895,9 @@
       }
     },
     "fix": {
-      "setType": "Fijar tipo {{section}}",
-      "setSubtype": "Fijar subtipo {{subtype}}",
-      "removeSubtype": "Quitar subtipo",
-      "assignType": "Asignar {{place}}",
       "moveTo": "Mover a {{place}}",
       "moveToEllipsis": "Mover a…",
       "addSection": "Añadir como sección"
-    },
-    "fixAll": {
-      "title": "¿Actualizar {{count}} notas?",
-      "description": "Solo cambia el frontmatter (tipo y subtipo); cada escritura se comprueba frente a cambios hechos mientras tanto.",
-      "more": "…y {{count}} más",
-      "confirm": "Actualizar"
     },
     "move": {
       "title": "Mover {{title}}",

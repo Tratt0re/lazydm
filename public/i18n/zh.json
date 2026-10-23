@@ -877,29 +877,9 @@
     "alertDescription": "有些笔记、文件夹或链接与此战役的分区不一致。",
     "open": "检查",
     "cancel": "取消",
-    "fixed": "已更新 {{count}} 条笔记",
-    "fixFailed": "{{count}} 条笔记无法更新（期间被修改？）",
     "groups": {
       "brokenLinks": {
         "title": "失效链接"
-      },
-      "misplaced": {
-        "title": "位置不符的笔记",
-        "description": "它们的类型属于另一个分区。",
-        "fixAll": "为全部 {{count}} 条设置类型",
-        "detail": "类型：{{type}} · 位于 {{place}}"
-      },
-      "wrongSubtype": {
-        "title": "子类型不符",
-        "description": "它们的子类型不是所在的子文件夹。",
-        "fixAll": "为全部 {{count}} 条设置子类型",
-        "detail": "子类型：{{subtype}} · 位于 {{place}}"
-      },
-      "untyped": {
-        "title": "没有类型的笔记",
-        "description": "在 LazyDM 之外（Obsidian、访达等）编写，frontmatter 中没有 type:。",
-        "fixAll": "为全部 {{count}} 条分配类型",
-        "detail": "无类型 · 位于 {{place}}"
       },
       "outside": {
         "title": "不在任何分区中",
@@ -915,19 +895,9 @@
       }
     },
     "fix": {
-      "setType": "设为类型 {{section}}",
-      "setSubtype": "设为子类型 {{subtype}}",
-      "removeSubtype": "移除子类型",
-      "assignType": "分配 {{place}}",
       "moveTo": "移动到 {{place}}",
       "moveToEllipsis": "移动到…",
       "addSection": "添加为分区"
-    },
-    "fixAll": {
-      "title": "更新 {{count}} 条笔记？",
-      "description": "只更改 frontmatter（类型和子类型）；每次写入都会检查期间是否有改动。",
-      "more": "……以及另外 {{count}} 条",
-      "confirm": "更新"
     },
     "move": {
       "title": "移动 {{title}}",

@@ -15,7 +15,7 @@ import { toast } from 'ngx-sonner';
 import { toInAppNoteRoute } from '@/components/document-preview/document-preview.markdown';
 import { AppDialogFormService } from '@/components/sheet-form/dialog-form.service';
 import { buildIconPickerField } from '@/config/icon-picker.config';
-import type { ReviewDto, ReviewMisplacedNoteDto, ReviewNoteDto, ReviewPlacedNoteDto } from '@/dtos';
+import type { ReviewDto, ReviewNoteDto } from '@/dtos';
 import { BrokenLinksPage } from '@/pages/broken-links-page/broken-links-page';
 import { DocumentService } from '@/services/document.service';
 import { FileActionsService } from '@/services/file-actions.service';
@@ -34,22 +34,13 @@ import { onIndexUpdated } from '@/services/ipc-events';
 
 export const REVIEW_ROUTE_SEGMENT = 'review';
 
-/** Paths a *Fix all* confirmation lists before "and N more". */
-const FIX_ALL_PREVIEW_MAX = 8;
 /** Encounters are linkable special files, not a folder to move notes to. */
 const NON_NOTE_SECTION_KEYS: readonly string[] = ['encounters'];
 
-/** A planned frontmatter fix: the type and sub-type a note gets. */
-interface TypeFix {
-  readonly note: ReviewNoteDto;
-  readonly type: string;
-  readonly subtype: string | null;
-}
-
 /**
- * The Review page of a campaign or system: every disagreement between its files and its sections (broken
- * links, misplaced notes, wrong sub-types, notes without a type or outside any section, unknown and too
- * deep folders), each with the fixes the user can choose. Follows index updates.
+ * The Review page of a campaign or system: every disagreement between its files and its folders (broken
+ * links, notes outside any section, unknown and too deep folders), each with the fixes the user can choose.
+ * Follows index updates.
  */
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -91,7 +82,6 @@ export class ReviewPage {
     const review = this.review();
     return review !== null && countReviewItems(review) === 0;
   });
-  protected readonly toSubfolderLabel = toSubfolderLabel;
 
   private readonly handleIndexUpdated = () => this.reload();
 
@@ -117,23 +107,6 @@ export class ReviewPage {
 
   protected noteRoute(note: ReviewNoteDto): string | null {
     return toInAppNoteRoute(note.path);
-  }
-
-  /** Display name of a section of this scope by folder. */
-  protected sectionLabel(key: string): string {
-    return this.sectionService.labelOfKey(key, this.scope()?.kind ?? 'campaign');
-  }
-
-  /** Display name of the section a note type belongs to (its type as written when none has it). */
-  protected typeLabel(type: string | null): string {
-    const key = this.noteSections().find((section) => section.type === type)?.key;
-    return key ? this.sectionLabel(key) : (type ?? '');
-  }
-
-  /** `Enemies` or `Enemies / Humans`. */
-  protected placeLabel(note: ReviewPlacedNoteDto): string {
-    const section = this.sectionLabel(note.section);
-    return note.subfolder ? `${section} / ${toSubfolderLabel(note.subfolder)}` : section;
   }
 
   // --- Deleting what the review lists -------------------------------------------------------------
@@ -222,27 +195,6 @@ export class ReviewPage {
 
   // --- Single fixes --------------------------------------------------------------------------------
 
-  /** Frontmatter matches the folder: the folder's type and sub-type. */
-  protected matchFolder(note: ReviewPlacedNoteDto): void {
-    void this.applyTypeFixes([this.folderFix(note)]);
-  }
-
-  /** Misplaced: the note goes to the section of its type. */
-  protected moveToTypeSection(note: ReviewMisplacedNoteDto): void {
-    const scope = this.scope();
-    if (scope && note.typeSection) {
-      void this.moveNote(note, `${scope.rootPath}/${note.typeSection}`);
-    }
-  }
-
-  /** Wrong sub-type: the note goes to the sub-folder its sub-type names. */
-  protected moveToSubtypeFolder(note: ReviewPlacedNoteDto): void {
-    const scope = this.scope();
-    if (scope && note.subtype) {
-      void this.moveNote(note, `${scope.rootPath}/${note.section}/${note.subtype}`);
-    }
-  }
-
   /** Outside any section: the user picks the section. */
   protected openMoveSheet(note: ReviewNoteDto): void {
     const scope = this.scope();
@@ -251,7 +203,7 @@ export class ReviewPage {
       return;
     }
 
-    const preferred = sections.find((section) => section.type === note.type) ?? sections[0];
+    const preferred = sections[0];
     let isSubmitting = false;
     const dialogRef = this.dialogFormService.open({
       arcTitle: this.translateService.instant('review.move.title', { title: note.title }),
@@ -352,33 +304,6 @@ export class ReviewPage {
     });
   }
 
-  // --- Fix all -------------------------------------------------------------------------------------
-
-  /** Every note of a group gets the type and sub-type of its folder, after a preview of what is written. */
-  protected confirmFixAll(notes: readonly ReviewPlacedNoteDto[]): void {
-    const fixes = notes.map((note) => this.folderFix(note));
-    const preview = fixes
-      .slice(0, FIX_ALL_PREVIEW_MAX)
-      .map(
-        (fix) =>
-          `• ${fix.note.path} → type: ${fix.type}${fix.subtype ? `, subtype: ${fix.subtype}` : ''}`,
-      )
-      .join('\n');
-    const more = fixes.length - FIX_ALL_PREVIEW_MAX;
-
-    this.alertDialogService.confirm({
-      arcTitle: this.translateService.instant('review.fixAll.title', { count: fixes.length }),
-      arcDescription: `${this.translateService.instant('review.fixAll.description')}\n\n${preview}${
-        more > 0 ? `\n${this.translateService.instant('review.fixAll.more', { count: more })}` : ''
-      }`,
-      arcOkText: this.translateService.instant('review.fixAll.confirm'),
-      arcCancelText: this.translateService.instant('review.cancel'),
-      arcOnOk: () => {
-        void this.applyTypeFixes(fixes);
-      },
-    });
-  }
-
   // --- Internals -----------------------------------------------------------------------------------
 
   /** Sections of this scope notes can be moved to. */
@@ -391,27 +316,6 @@ export class ReviewPage {
     return sections.filter(
       (section) => section.type !== null && !NON_NOTE_SECTION_KEYS.includes(section.key),
     );
-  }
-
-  private folderFix(note: ReviewPlacedNoteDto): TypeFix {
-    return { note, type: note.sectionType, subtype: note.subfolder };
-  }
-
-  private async applyTypeFixes(fixes: readonly TypeFix[]): Promise<void> {
-    this.isFixing.set(true);
-    const failed: string[] = [];
-    for (const fix of fixes) {
-      try {
-        await this.documentService.setType(fix.note.path, fix.type, fix.subtype);
-      } catch (error) {
-        console.warn('[app] Review fix failed:', fix.note.path, error);
-        failed.push(fix.note.path);
-      }
-    }
-
-    this.isFixing.set(false);
-    this.reportFixes(fixes.length - failed.length, failed);
-    this.reload();
   }
 
   private async moveNote(note: ReviewNoteDto, folder: string): Promise<boolean> {
@@ -466,17 +370,6 @@ export class ReviewPage {
       });
       return false;
     }
-  }
-
-  private reportFixes(fixedCount: number, failedPaths: readonly string[]): void {
-    if (failedPaths.length === 0) {
-      toast.success(this.translateService.instant('review.fixed', { count: fixedCount }));
-      return;
-    }
-
-    toast.error(this.translateService.instant('review.fixFailed', { count: failedPaths.length }), {
-      description: failedPaths.join(', '),
-    });
   }
 
   private reload(): void {

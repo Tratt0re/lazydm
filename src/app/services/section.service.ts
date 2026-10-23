@@ -29,7 +29,7 @@ export interface AppSection {
   readonly customLabel: string | null;
   readonly isCustom: boolean;
   readonly isHidden: boolean;
-  /** Assets and encounters: *New folder* and *Import* but no *New note*; sub-folders are not sub-types. */
+  /** Assets and encounters: *New folder* and *Import* but no *New note*; sub-folders only organise files. */
   readonly isSpecial: boolean;
   readonly fileCount: number;
   /** Text of a custom section's overview tile, if the user wrote one. */
@@ -80,7 +80,7 @@ export function toSectionSettings(rows: readonly AppSection[]): SectionSettingsP
   };
 }
 
-/** Display name of a sub-folder (a sub-type): `humans` → `Humans`, `fire-giants` → `Fire giants`. */
+/** Display name of a sub-folder: `humans` → `Humans`, `fire-giants` → `Fire giants`. */
 export function toSubfolderLabel(name: string): string {
   const words = name.replace(/[-_]+/g, ' ').trim();
   return words.charAt(0).toLocaleUpperCase() + words.slice(1);

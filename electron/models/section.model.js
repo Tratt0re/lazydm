@@ -25,7 +25,7 @@ const DEFAULT_SECTIONS = Object.freeze([
 
 /**
  * Sections that do not hold plain notes (encounters are special files, assets are any other file): no
- * *New note*, and their sub-folders only organise files — they are not sub-types.
+ * *New note*, and their sub-folders only organise files.
  */
 const SPECIAL_SECTION_KEYS = Object.freeze(
   DEFAULT_SECTIONS.filter((section) => section.isSpecial).map((section) => section.key),
@@ -271,20 +271,6 @@ function listNoteTypes(rootPath) {
   return [...types];
 }
 
-/**
- * Folder a note of `type` goes to in a scope (`lost-mine` or `compendium/<system>`): the campaign's section
- * for it (custom ones included), else the default section for the type. Null when none has the type.
- */
-function findSectionKeyForType(rootPath, scope, type) {
-  if (!type) {
-    return null; // untyped notes have no section (assets has no type either)
-  }
-
-  const isCampaign = typeof scope === 'string' && scope.length > 0 && !scope.includes('/');
-  const sections = isCampaign ? listCampaignSections(rootPath, scope) : DEFAULT_SECTIONS;
-  return sections.find((section) => section.type === type)?.key ?? null;
-}
-
 /** A folder name that is neither `.`/`..` nor hidden/special (`.x`, `_x`): `..` would resolve to the parent folder. */
 function isPlainFolderSegment(segment) {
   return (
@@ -341,7 +327,6 @@ module.exports = {
   SECTION_PRESETS,
   SPECIAL_SECTION_KEYS,
   initCampaignSections,
-  findSectionKeyForType,
   listCampaignNoteTypes,
   listCampaignSections,
   listNoteTypes,

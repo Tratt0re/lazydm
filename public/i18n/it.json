@@ -877,29 +877,9 @@
     "alertDescription": "Alcune note, cartelle o link non corrispondono alle sezioni di questa campagna.",
     "open": "Rivedi",
     "cancel": "Annulla",
-    "fixed": "{{count}} note aggiornate",
-    "fixFailed": "Impossibile aggiornare {{count}} note (modificate nel frattempo?)",
     "groups": {
       "brokenLinks": {
         "title": "Link interrotti"
-      },
-      "misplaced": {
-        "title": "Note fuori posto",
-        "description": "Il loro tipo appartiene a un’altra sezione.",
-        "fixAll": "Imposta il tipo di tutte ({{count}})",
-        "detail": "tipo: {{type}} · in {{place}}"
-      },
-      "wrongSubtype": {
-        "title": "Sottotipi errati",
-        "description": "Il loro sottotipo non è la sottocartella in cui si trovano.",
-        "fixAll": "Imposta il sottotipo di tutte ({{count}})",
-        "detail": "sottotipo: {{subtype}} · in {{place}}"
-      },
-      "untyped": {
-        "title": "Note senza tipo",
-        "description": "Scritte fuori da LazyDM (Obsidian, Finder…) senza type: nel frontmatter.",
-        "fixAll": "Assegna il tipo a tutte ({{count}})",
-        "detail": "nessun tipo · in {{place}}"
       },
       "outside": {
         "title": "Fuori da ogni sezione",
@@ -915,19 +895,9 @@
       }
     },
     "fix": {
-      "setType": "Imposta tipo {{section}}",
-      "setSubtype": "Imposta sottotipo {{subtype}}",
-      "removeSubtype": "Rimuovi sottotipo",
-      "assignType": "Assegna {{place}}",
       "moveTo": "Sposta in {{place}}",
       "moveToEllipsis": "Sposta in…",
       "addSection": "Aggiungi come sezione"
-    },
-    "fixAll": {
-      "title": "Aggiornare {{count}} note?",
-      "description": "Cambia solo il frontmatter (tipo e sottotipo); ogni scrittura è verificata rispetto alle modifiche fatte nel frattempo.",
-      "more": "…e altre {{count}}",
-      "confirm": "Aggiorna"
     },
     "move": {
       "title": "Sposta {{title}}",

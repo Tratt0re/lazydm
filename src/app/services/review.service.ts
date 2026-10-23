@@ -8,9 +8,6 @@ import { BaseIpcService } from '@/services/base-ipc.service';
 export function countReviewItems(review: ReviewDto): number {
   return (
     review.brokenLinkCount +
-    review.misplaced.length +
-    review.wrongSubtype.length +
-    review.untyped.length +
     review.outside.length +
     review.unknownFolders.length +
     review.tooDeep.length

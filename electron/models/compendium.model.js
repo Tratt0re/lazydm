@@ -6,7 +6,6 @@ const { listVaultFiles } = require('./vault.model');
 
 const COMPENDIUM_DIR_NAME = 'compendium';
 const SYSTEM_FILE_NAME = 'system.md';
-const SYSTEM_NOTE_TYPE = 'system';
 
 function getSystemPath(slug) {
   return `${COMPENDIUM_DIR_NAME}/${slug}`;
@@ -90,7 +89,6 @@ function systemFolderExists(rootPath, slug) {
 async function createSystem(rootPath, { slug, name, description }) {
   await fs.promises.mkdir(resolveInsideVault(rootPath, getSystemPath(slug)), { recursive: true });
   const frontmatter = {
-    type: SYSTEM_NOTE_TYPE,
     title: name,
     ...(description ? { description } : {}),
     created: new Date().toISOString().slice(0, 10),

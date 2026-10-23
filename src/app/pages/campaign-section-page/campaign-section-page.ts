@@ -323,7 +323,7 @@ export class CampaignSectionPage {
       action: () => this.openImportSheet(),
     });
 
-    // One level of sub-folders: sub-types of a section's notes, plain folders in special sections.
+    // One level of sub-folders: plain folders of a section's notes (special sections: plain folders too).
     if ((noteType || section?.isSpecial) && !this.subfolder()) {
       actions.push({
         id: 'section-new-folder',
@@ -629,7 +629,7 @@ export class CampaignSectionPage {
     );
   }
 
-  /** *Rename…* a sub-folder (sub-type and links follow); it stays expanded under its new name. */
+  /** *Rename…* a sub-folder (links follow); it stays expanded under its new name. */
   protected openRenameFolderSheet(folder: DocumentFolderDto): void {
     void this.fileActions.openRenameFolderSheet(
       {

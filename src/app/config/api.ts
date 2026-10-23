@@ -113,10 +113,6 @@ export interface ElectronIpcClient {
       { folder: string; name: string },
       { path: string; name: string }
     >;
-    readonly setType: IpcRequest<
-      { path: string; type: string; subtype: string | null },
-      { path: string }
-    >;
     readonly move: IpcRequest<{ path: string; folder: string }, DTO.MoveDocumentResultDto>;
     readonly reveal: IpcRequest<{ path: string }, { path: string }>;
     readonly open: IpcRequest<{ path: string }, { path: string }>;

@@ -11,7 +11,6 @@ const { DEFAULT_SECTIONS } = require('./section.model');
 const { isCampaignDirName, readVaultConfig, writeVaultConfig } = require('./vault.model');
 
 const CAMPAIGN_FILE_NAME = 'campaign.md';
-const CAMPAIGN_NOTE_TYPE = 'campaign';
 const CAMPAIGN_SECTION_DIR_NAMES = Object.freeze(DEFAULT_SECTIONS.map((section) => section.key));
 
 /** Folder a note of a given `type` goes to by default (campaigns and compendium systems share these names). */
@@ -94,7 +93,6 @@ function campaignFolderExists(rootPath, slug) {
 
 function buildCampaignNote({ name, description, icon }) {
   const frontmatter = {
-    type: CAMPAIGN_NOTE_TYPE,
     title: name,
     ...(description ? { description } : {}),
     ...(icon ? { icon } : {}),

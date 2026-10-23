@@ -34,7 +34,6 @@ describe('updateCampaign', () => {
     const text = fs.readFileSync(path.join(vault, 'lost-mine', 'campaign.md'), 'utf8');
     expect(text).toContain('# Phandalin');
     expect(text).not.toContain('# Lost Mine');
-    expect(text).toContain('type: campaign');
     expect(text).toMatch(/created: \d{4}-\d{2}-\d{2}/);
   });
 

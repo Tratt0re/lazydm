@@ -43,7 +43,7 @@ export class DocumentService extends BaseIpcService<APIChannel.DOCUMENTS> {
     return rows;
   }
 
-  /** Files directly in a folder and its sub-folders (a section's sub-types), for the section page. */
+  /** Files directly in a folder and its sub-folders (a section's sub-folders), for the section page. */
   async listFolderEntries(folder: string): Promise<{
     files: readonly DocumentFileListItemDto[];
     folders: readonly DocumentFolderDto[];
@@ -91,11 +91,6 @@ export class DocumentService extends BaseIpcService<APIChannel.DOCUMENTS> {
     return (await this.ipcClient.createFolder({ folder, name })).name;
   }
 
-  /** Sets a note's `type` and `subtype` (null removes it) in its frontmatter. */
-  async setType(path: string, type: string, subtype: string | null): Promise<void> {
-    await this.ipcClient.setType({ path, type, subtype });
-  }
-
   /** Moves a note into a section folder of its scope; the links resolving to it follow. */
   move(path: string, folder: string): Promise<MoveDocumentResultDto> {
     return this.ipcClient.move({ path, folder });
@@ -131,7 +126,7 @@ export class DocumentService extends BaseIpcService<APIChannel.DOCUMENTS> {
     return this.ipcClient.delete(payload);
   }
 
-  /** Renames a sub-folder of a section: the folder, its notes' sub-type and the path links through it. */
+  /** Renames a sub-folder of a section: the folder and the path links through it. */
   renameFolder(folder: string, name: string): Promise<RenameFolderResultDto> {
     return this.ipcClient.renameFolder({ folder, name });
   }

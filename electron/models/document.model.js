@@ -9,7 +9,7 @@ const {
   resolveInsideVault,
   safeWriteFileAtomic,
 } = require('../utils/file-utils');
-const { parseMarkdownDocument, setFrontmatterField } = require('../utils/markdown-parse');
+const { parseMarkdownDocument } = require('../utils/markdown-parse');
 const templateModel = require('./template.model');
 
 const MARKDOWN_EXTENSION = '.md';
@@ -34,7 +34,6 @@ async function readDocument(rootPath, relativePath) {
     contentHash: hashContent(buffer),
     mtimeMs: Math.trunc(stats.mtimeMs),
     title: document.title ?? path.posix.basename(relativePath, MARKDOWN_EXTENSION),
-    type: document.type,
     frontmatter: document.frontmatter,
     frontmatterError: document.frontmatterError,
     body: document.body,
@@ -161,18 +160,15 @@ async function writeVaultFile(rootPath, relativePath, bytes) {
   return { status: 'written', path: relativePath };
 }
 
-function buildDefaultNote(type, title) {
-  return `---\n${YAML.stringify({ type, title })}---\n# ${title}\n`;
+function buildDefaultNote(title) {
+  return `---\n${YAML.stringify({ title })}---\n# ${title}\n`;
 }
 
 /**
  * Creates `<folder>/<slug>.md` from the template of its type (see `templateModel.resolveTemplate`), or with
  * a minimal frontmatter when the type has none. `section` is the folder's display name for `{{section}}`.
  */
-async function createDocument(
-  rootPath,
-  { folderPath, slug, title, type, section, subtype = null },
-) {
+async function createDocument(rootPath, { folderPath, slug, title, type, section }) {
   const relativePath = `${folderPath.replace(/\/+$/, '')}/${slug}${MARKDOWN_EXTENSION}`;
   const absolutePath = resolveInsideVault(rootPath, relativePath);
   if (fs.existsSync(absolutePath)) {
@@ -182,7 +178,7 @@ async function createDocument(
   const template = await templateModel.resolveTemplate(rootPath, { folderPath, type });
   const content =
     template === null
-      ? buildDefaultNote(type, title)
+      ? buildDefaultNote(title)
       : templateModel.applyPlaceholders(template, {
           title,
           type,
@@ -190,13 +186,8 @@ async function createDocument(
           section: section || path.posix.basename(folderPath),
         });
   await fs.promises.mkdir(path.dirname(absolutePath), { recursive: true });
-  // A note created in a sub-folder of its section gets the sub-folder as its sub-type.
   try {
-    safeWriteFileAtomic(
-      absolutePath,
-      subtype ? setFrontmatterField(content, 'subtype', subtype) : content,
-      { overwrite: false },
-    );
+    safeWriteFileAtomic(absolutePath, content, { overwrite: false });
   } catch (error) {
     if (isAlreadyExistsError(error)) {
       throw new Error(`A note named "${slug}${MARKDOWN_EXTENSION}" already exists in ${folderPath}.`);

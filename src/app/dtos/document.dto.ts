@@ -43,7 +43,6 @@ export interface DocumentDto {
   readonly contentHash: string;
   readonly mtimeMs: number;
   readonly title: string;
-  readonly type: string | null;
   readonly frontmatter: Readonly<Record<string, unknown>>;
   readonly frontmatterError: string | null;
   readonly body: string;
@@ -56,7 +55,7 @@ export interface ListDocumentsPayload {
   readonly direct?: boolean;
 }
 
-/** A sub-folder of a section (a sub-type of its notes), with the number of files it holds. */
+/** A sub-folder of a section, with the number of files it holds. */
 export interface DocumentFolderDto {
   readonly name: string;
   readonly fileCount: number;

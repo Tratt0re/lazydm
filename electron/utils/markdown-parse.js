@@ -11,8 +11,6 @@ const INLINE_TAG_PATTERN = /(^|[\s(])#([\p{L}\p{N}_\-/]*[\p{L}_\-/][\p{L}\p{N}_\
 const INLINE_CODE_PATTERN = /`[^`\n]*`/g;
 const URL_SCHEME_PATTERN = /^[a-z][a-z0-9+.-]*:/i;
 const MARKDOWN_EXTENSION = '.md';
-/** Note types that were renamed: old files (synced from another device, Obsidian…) are read as the new type. */
-const LEGACY_NOTE_TYPES = Object.freeze({ monster: 'enemy' });
 
 function isPlainObject(value) {
   return Boolean(value) && typeof value === 'object' && !Array.isArray(value);
@@ -188,16 +186,12 @@ function parseMarkdownDocument(text, options = {}) {
 
   const frontmatterTitle = typeof frontmatter.title === 'string' ? frontmatter.title.trim() : '';
   const firstTopHeading = headings.find((heading) => heading.level === 1);
-  const rawType =
-    typeof frontmatter.type === 'string' ? frontmatter.type.trim().toLocaleLowerCase() : '';
-  const type = LEGACY_NOTE_TYPES[rawType] ?? rawType;
 
   return {
     frontmatter,
     frontmatterError,
     body: bodyLines.join('\n'),
     title: frontmatterTitle || firstTopHeading?.text || null,
-    type: type || null,
     tags: [...tags],
     headings,
     links: links.filter((link) => link.targetName.length > 0 || link.heading !== null),
@@ -401,7 +395,7 @@ function renameLinkFolder(link, oldDir, newDir, parents) {
 
 /**
  * Sets `key: value` in the frontmatter, keeping every other line as written: an existing key gets the new
- * value, a new key goes right after `type:` (else at the end). A note without frontmatter gets one.
+ * value, a new key goes at the end. A note without frontmatter gets one.
  */
 function setFrontmatterField(text, key, value) {
   const newline = detectNewline(text);
@@ -420,8 +414,7 @@ function setFrontmatterField(text, key, value) {
   if (existingIndex >= 0) {
     lines[existingIndex] = entry;
   } else {
-    const typeIndex = findKey(/^type\s*:/);
-    lines.splice(typeIndex >= 0 ? typeIndex + 1 : closeIndex, 0, entry);
+    lines.splice(closeIndex, 0, entry);
   }
 
   return `${bom}${lines.join(newline)}`;

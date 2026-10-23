@@ -322,7 +322,7 @@ export class AppExplorerTreeComponent {
     );
   }
 
-  /** *Rename…* a sub-folder (sub-type and links follow); the tree follows the index update. */
+  /** *Rename…* a sub-folder (links follow); the tree follows the index update. */
   protected openRenameFolderSheet(folderPath: string, folder: DocumentFolderDto): void {
     void this.fileActions.openRenameFolderSheet({
       path: folderPath,
