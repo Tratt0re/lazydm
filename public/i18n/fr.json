@@ -251,6 +251,10 @@
           "rule": "Séparateurs"
         }
       },
+      "codeMapHideShort": {
+        "label": "Masquer la carte du code sur les notes courtes",
+        "description": "N’affiche pas la carte sur les notes de moins de 40 lignes. Il faut que la carte du code ci-dessus soit active."
+      },
       "lineNumbers": {
         "label": "Numéros de ligne",
         "description": "Afficher les numéros de ligne à côté du texte."
@@ -549,6 +553,9 @@
   "document": {
     "loadError": "Impossible de charger cette note",
     "unsavedChanges": "Modifications non enregistrées",
+    "properties": {
+      "toggle": "Afficher ou masquer les propriétés"
+    },
     "editorPlaceholder": "Commencez à écrire…",
     "toolbar": {
       "live": "Aperçu en direct",

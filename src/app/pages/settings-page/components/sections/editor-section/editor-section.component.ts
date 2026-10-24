@@ -68,6 +68,7 @@ export class EditorSectionComponent {
   }));
   protected readonly displayRows: readonly EditorFlagRow[] = [
     flagRow('codeMap'),
+    flagRow('codeMapHideShort'),
     flagRow('lineNumbers'),
     flagRow('readableWidth'),
   ];

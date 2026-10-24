@@ -32,6 +32,10 @@ import type { DocumentLinkDto } from '@/dtos';
 export interface LivePreviewContext {
   readonly links: readonly DocumentLinkDto[];
   readonly sourcePath: string;
+  /** Show the properties box; collapsed (nothing drawn) when false. Missing means shown. */
+  readonly showProperties?: boolean;
+  /** The note's title: a `title` property that says the same is left out of the box. */
+  readonly pageTitle?: string;
   /** The audio of the note playing now (its row shows *stop*). */
   readonly playingAudioPath?: string | null;
   readonly mediaLabels?: MediaEmbedLabels;
@@ -380,6 +384,13 @@ export function findFrontmatterEnd(state: EditorState): number {
   return 0;
 }
 
+/** A `title: …` property that repeats the note's title (quotes around the value ignored). */
+function isTitleOf(pageTitle: string | undefined, key: string, value: string): boolean {
+  return (
+    !!pageTitle && key.toLowerCase() === 'title' && value.replace(/^(["'])(.*)\1$/, '$2') === pageTitle
+  );
+}
+
 /** The YAML header at the top of the note, shown as a properties box. */
 function decorateFrontmatter(target: DecorationContext): number {
   const { state } = target;
@@ -396,15 +407,20 @@ function decorateFrontmatter(target: DecorationContext): number {
       .split('\n')
       .map((entry) => /^([^:#\s][^:]*):\s?(.*)$/.exec(entry))
       .filter((match): match is RegExpExecArray => match !== null)
-      .map((match) => [match[1].trim(), match[2].trim()] as const);
+      .map((match) => [match[1].trim(), match[2].trim()] as const)
+      .filter(([key, value]) => !isTitleOf(target.context.pageTitle, key, value));
+    // Collapsed (or nothing left to show): the header is replaced by nothing; the cursor reaching it shows the source.
+    const isShown = target.context.showProperties !== false && entries.length > 0;
     target.ranges.push(
       Decoration.replace({
         block: true,
-        widget: new BlockWidget(
-          `fm:${state.doc.sliceString(0, end)}`,
-          renderProperties(entries),
-          firstLine.to,
-        ),
+        widget: isShown
+          ? new BlockWidget(
+              `fm:${state.doc.sliceString(0, end)}:${target.context.pageTitle ?? ''}`,
+              renderProperties(entries),
+              firstLine.to,
+            )
+          : undefined,
       }).range(0, end),
     );
     target.blocks.push([0, end]);

@@ -122,6 +122,10 @@ export class AppCodeEditorComponent implements OnDestroy {
   /** Files of the note's scope, suggested while a link is typed (none: no suggestions). */
   readonly linkTargets = input<readonly LinkTargetDto[]>([]);
   readonly sourcePath = input('');
+  /** Whether the live preview draws the properties box (the frontmatter); notes collapse it, templates keep it. */
+  readonly showProperties = input(true);
+  /** The note's title, so a `title` property that repeats it is left out of the properties box. */
+  readonly pageTitle = input('');
   /** The note's audio playing now, shown as *stop* on its row. */
   readonly playingAudioPath = input<string | null>(null);
   /** 0–1 volume, the same for every sound; the row's slider is initialised to this. */
@@ -174,6 +178,8 @@ export class AppCodeEditorComponent implements OnDestroy {
       this.links();
       this.linkTargets();
       this.sourcePath();
+      this.showProperties();
+      this.pageTitle();
       this.playingAudioPath();
       this.mediaLabels();
       this.audioDurations();
@@ -332,6 +338,8 @@ export class AppCodeEditorComponent implements OnDestroy {
         setLivePreviewContext.of({
           links: this.links(),
           sourcePath: this.sourcePath(),
+          showProperties: this.showProperties(),
+          pageTitle: this.pageTitle(),
           playingAudioPath: this.playingAudioPath(),
           mediaLabels: this.mediaLabels(),
           // Read untracked: volume changes (slider drags) must not trigger decoration rebuilds.
@@ -463,7 +471,7 @@ function settingsExtensions(settings: EditorSettings): Extension {
     settings.highlightActiveLine ? highlightActiveLine() : [],
     settings.lineWrapping ? EditorView.lineWrapping : [],
     EditorView.contentAttributes.of({ spellcheck: settings.spellcheck ? 'true' : 'false' }),
-    settings.codeMap ? codeMap() : [],
+    settings.codeMap ? codeMap(settings.codeMapHideShort) : [],
     settings.autoClosePairs ? autoClosePairs() : [],
   ];
 }

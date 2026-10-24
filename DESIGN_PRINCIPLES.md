@@ -566,7 +566,7 @@ Planned Electron modules: `vault`, `cloud-readiness`, `campaign`, `document`, `i
   text size (also in Reading), readable line width, default view of notes never opened, line wrapping, current
   line highlight, spellcheck, auto-close pairs (off by default: typing `(` `[` `{` `"` `` ` `` also writes the
   closing one), Source view (off by default: notes offer Live preview and Reading only). Choices among options are
-  **dropdowns**, not segmented controls; each text size option is written at that size. The **code map** is our own (no dependency), in the editor and in Reading: the whole
+  **dropdowns**, not segmented controls; each text size option is written at that size. The **code map** is always on when its switch is on; *Hide the code map on short notes* (off by default, Settings → Editor) leaves it out of notes with fewer than 40 lines (below the frontmatter in the editor, the whole body in Reading), and the room it takes with it. The **code map** is our own (no dependency), in the editor and in Reading: the whole
   note at a small scale from what is shown, each markdown element in its colour (theme chart tokens; legend in
   Settings), H1–H3 as labels where they are, the visible part framed, placed right before the scrollbar;
   click/drag and the wheel scroll the note, a label jumps to its heading. The note page fits the window so the

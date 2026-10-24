@@ -10,7 +10,11 @@ import {
   type CodeMapHeading,
   type CodeMapKind,
 } from '@/components/code-map/code-map';
+import { CODE_MAP_SHORT_NOTE_LINES } from '@/config/local-preferences.config';
 import { findFrontmatterEnd } from './live-preview';
+
+/** Class of the editor while its map is left out of a short note (the scroll area then keeps no room for it). */
+const HIDDEN_CLASS = 'cm-codemap-hidden';
 
 /** Notes longer than this draw only their first lines (headings are always shown). */
 const CODE_MAP_MAX_LINES = 20000;
@@ -101,7 +105,10 @@ class CodeMapPlugin {
   private readonly map: CodeMap;
   private analysis: ReturnType<typeof analyse>;
 
-  constructor(private readonly view: EditorView) {
+  constructor(
+    private readonly view: EditorView,
+    private readonly hideShort: boolean,
+  ) {
     this.analysis = analyse(view.state);
     this.map = new CodeMap({
       host: view.dom,
@@ -113,6 +120,7 @@ class CodeMapPlugin {
           effects: EditorView.scrollIntoView(Number(id), { y: 'start', yMargin: 24 }),
         }),
     });
+    this.syncVisibility();
     this.schedule();
   }
 
@@ -122,13 +130,25 @@ class CodeMapPlugin {
       this.analysis = analyse(update.state);
     }
 
+    if (update.docChanged) {
+      this.syncVisibility();
+    }
+
     if (update.docChanged || isTreeChanged || update.geometryChanged || update.heightChanged) {
       this.schedule();
     }
   }
 
   destroy(): void {
+    this.view.dom.classList.remove(HIDDEN_CLASS);
     this.map.destroy();
+  }
+
+  /** With *Hide the code map on short notes* on, the map and the room it takes wait until the note is long enough. */
+  private syncVisibility(): void {
+    const isShort = this.hideShort && bodyLineCount(this.view.state) < CODE_MAP_SHORT_NOTE_LINES;
+    this.view.dom.classList.toggle(HIDDEN_CLASS, isShort);
+    this.map.setVisible(!isShort);
   }
 
   private schedule(): void {
@@ -190,14 +210,23 @@ class CodeMapPlugin {
   }
 }
 
+/** Lines of the note below its frontmatter (the properties are not part of what the map has to cover). */
+function bodyLineCount(state: EditorState): number {
+  const end = findFrontmatterEnd(state);
+  return state.doc.lines - (end > 0 ? state.doc.lineAt(end).number : 0);
+}
+
 /** The scroll area keeps room for the map on its right, so its scrollbar comes after the map. */
 const codeMapTheme = EditorView.theme({
-  '.cm-scroller': {
+  [`&:not(.${HIDDEN_CLASS}) .cm-scroller`]: {
     paddingRight: `${CODE_MAP_WIDTH}px`,
   },
 });
 
-/** The code map (Settings → Editor → Code map). */
-export function codeMap(): Extension {
-  return [ViewPlugin.fromClass(CodeMapPlugin), codeMapTheme];
+/** The code map (Settings → Editor → Code map); `hideShort` leaves it out of notes with few lines. */
+export function codeMap(hideShort = false): Extension {
+  return [
+    ViewPlugin.define((view) => new CodeMapPlugin(view, hideShort)),
+    codeMapTheme,
+  ];
 }

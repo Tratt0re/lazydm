@@ -4,6 +4,7 @@ export enum LocalPreferenceKey {
   LANGUAGE = 'language',
   ONBOARDING_COMPLETED = 'onboarding_completed',
   DOCUMENT_LINKS_PANEL_OPEN = 'document_links_panel_open',
+  DOCUMENT_PROPERTIES_OPEN = 'document_properties_open',
   DOCUMENT_VIEW_MODES = 'document_view_modes',
   EXPLORER_EXPANDED = 'explorer_expanded',
   MAP_VIEWS = 'map_views',
@@ -47,9 +48,14 @@ export const EDITOR_TEXT_SCALES: Readonly<Record<EditorTextSize, number>> = {
 /** Width of the text column with *Readable line width* on (about 75 characters of body text). */
 export const EDITOR_READABLE_WIDTH = '46rem';
 
+/** With *Hide the code map on short notes* on, a note body with fewer lines than this has no map. */
+export const CODE_MAP_SHORT_NOTE_LINES = 40;
+
 /** How the note editor looks and behaves on this device (Settings → Editor). */
 export interface EditorSettings {
   readonly codeMap: boolean;
+  /** Leave the code map out of notes shorter than `CODE_MAP_SHORT_NOTE_LINES` lines (it always shows otherwise). */
+  readonly codeMapHideShort: boolean;
   readonly lineNumbers: boolean;
   readonly textSize: EditorTextSize;
   readonly readableWidth: boolean;
@@ -66,6 +72,7 @@ export interface EditorSettings {
 
 export const EDITOR_SETTINGS_DEFAULTS: Readonly<EditorSettings> = Object.freeze({
   codeMap: false,
+  codeMapHideShort: false,
   lineNumbers: false,
   textSize: 'medium',
   readableWidth: true,
@@ -85,6 +92,8 @@ export interface LocalPreferences {
   readonly language: string;
   readonly onboardingCompleted: boolean;
   readonly documentLinksPanelOpen: boolean;
+  /** Whether the properties box (the frontmatter) of a note is shown in the live preview. */
+  readonly documentPropertiesOpen: boolean;
   /** Volume of the note audio channel (0–1), the same for every embedded sound on this device. */
   readonly noteAudioVolume: number;
   /** Whether the file rows of the section pages show the size of the file. */
@@ -99,6 +108,7 @@ export const LOCAL_PREFERENCE_DEFAULTS: Readonly<LocalPreferences> = Object.free
   language: 'en',
   onboardingCompleted: false,
   documentLinksPanelOpen: false,
+  documentPropertiesOpen: false,
   noteAudioVolume: 1,
   showFileSizes: false,
   trackerRowDensity: 'compact',

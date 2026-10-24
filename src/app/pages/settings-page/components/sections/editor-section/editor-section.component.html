@@ -78,6 +78,7 @@
     </div>
     <arc-switch
       [arcChecked]="isOn(row.key)"
+      [arcDisabled]="row.key === 'codeMapHideShort' && !isOn('codeMap')"
       [arcAriaLabel]="row.label | translate"
       (arcCheckedChange)="setFlag(row.key, $event)"
     />

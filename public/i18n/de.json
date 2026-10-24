@@ -251,6 +251,10 @@
           "rule": "Trennlinien"
         }
       },
+      "codeMapHideShort": {
+        "label": "Code-Map bei kurzen Notizen ausblenden",
+        "description": "Zeigt die Code-Map nicht bei Notizen mit weniger als 40 Zeilen. Die Code-Map oben muss dafür aktiv sein."
+      },
       "lineNumbers": {
         "label": "Zeilennummern",
         "description": "Zeilennummern neben dem Text anzeigen."
@@ -549,6 +553,9 @@
   "document": {
     "loadError": "Diese Notiz konnte nicht geladen werden",
     "unsavedChanges": "Nicht gespeicherte Änderungen",
+    "properties": {
+      "toggle": "Eigenschaften ein- oder ausblenden"
+    },
     "editorPlaceholder": "Beginne zu schreiben…",
     "toolbar": {
       "live": "Live-Vorschau",

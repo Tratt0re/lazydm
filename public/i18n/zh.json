@@ -251,6 +251,10 @@
           "rule": "分隔线"
         }
       },
+      "codeMapHideShort": {
+        "label": "在短笔记中隐藏代码地图",
+        "description": "少于 40 行的笔记不显示代码地图。需要先开启上方的代码地图。"
+      },
       "lineNumbers": {
         "label": "行号",
         "description": "在文本旁显示行号。"
@@ -549,6 +553,9 @@
   "document": {
     "loadError": "无法加载此笔记",
     "unsavedChanges": "有未保存的更改",
+    "properties": {
+      "toggle": "显示或隐藏属性"
+    },
     "editorPlaceholder": "开始编写……",
     "toolbar": {
       "live": "实时预览",

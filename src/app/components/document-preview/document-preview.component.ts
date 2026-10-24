@@ -25,6 +25,7 @@ import {
 } from '@/components/code-map/code-map';
 import type { BrokenLinkFixRequest } from '@/components/document-links-panel/document-links-panel.component';
 import type { DocumentLinkDto } from '@/dtos';
+import { CODE_MAP_SHORT_NOTE_LINES } from '@/config/local-preferences.config';
 import { LocalPreferencesService } from '@/services/local-preferences.service';
 import type { CodeEditorAssetAction } from '@/components/code-editor/code-editor.component';
 import {
@@ -107,7 +108,11 @@ export class AppDocumentPreviewComponent {
   private readonly scroller = viewChild.required<ElementRef<HTMLElement>>('scroller');
   private readonly bodyElement = viewChild.required<ElementRef<HTMLElement>>('body');
   private readonly editorSettings = inject(LocalPreferencesService).editorSettings;
-  protected readonly isCodeMapOn = computed(() => this.editorSettings().codeMap);
+  /** On with the setting, except on a short note when *Hide the code map on short notes* is on. */
+  protected readonly isCodeMapOn = computed(() => {
+    const { codeMap, codeMapHideShort } = this.editorSettings();
+    return codeMap && !(codeMapHideShort && this.body().split('\n').length < CODE_MAP_SHORT_NOTE_LINES);
+  });
   /** A narrow host (the note sheet) gets a slimmer map and less padding. */
   readonly isCompact = input(false);
   protected readonly codeMapPadding = computed(() =>

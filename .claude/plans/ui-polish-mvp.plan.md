@@ -24,7 +24,7 @@ rebuild the preload bundle only if `channels.js` changes (not expected).
 | 0 | Update DESIGN_PRINCIPLES.md (agree the wording first) | done | see git log |
 | 1 | Tracker rows: compact default + density setting | done | see git log |
 | 2 | Encounters section page | done | see git log |
-| 3 | Note page chrome and toolbar, collapsible properties | pending | |
+| 3 | Note page chrome and toolbar, collapsible properties | done | see git log |
 | 4 | Alignment, overview alert, Review page | pending | |
 | 5 | Ornament and typography | pending | |
 | 6 | Light theme | pending | |
@@ -123,6 +123,19 @@ row; delete is always visible next to harmless icons; the turn highlight is only
 
 ## Log
 
+- 2026-10-24, Phase 3: note toolbar is Save + Links + a "…" menu (Rename, Copy to compendium / campaign, Delete… last
+  after a separator). Properties box collapsed by default with a *Properties* toggle in the editor row (live view
+  only; open state per device in `document_properties_open`); a `title` property equal to the page title is left out of
+  the box, and a header with nothing else to show is replaced by nothing. Templates keep the box (the editor input
+  defaults to shown). Code map: new setting *Hide the code map on short notes* in Settings → Editor, off by default
+  (the map stays always-on, as the user asked); the threshold is 40 body lines (`CODE_MAP_SHORT_NOTE_LINES`, chosen
+  by me at the user's request), applied in the editor and in Reading. Checked in the mock: collapsed and opened box,
+  open state stored, the 2-line note loses the map and its 116px padding while a ~60-line note keeps both, Reading
+  follows the same rule, the "…" menu in dark, unsaved state (Save from 50% to full opacity plus the label).
+  Not done from the plan: the breadcrumb and the page title are untouched (the title still appears in the tab, the
+  sidebar, the toolbar and the H1). Not checked: the light theme of the "…" menu, Escape/arrow keys in that menu, a
+  live check that rename/copy/delete still run from the menu, notes whose frontmatter has no `title`, the 40-line
+  threshold counts raw lines (a wrapped paragraph is one line).
 - 2026-10-24, Phase 2: the background watermark is removed from every section page (user decision: it was common to
   all of them), with its `.arc-page-watermark` CSS. The *Party roster* link is now a labelled outline button in the
   Encounters toolbar instead of a row above the list. *New encounter*, *New map* and *New note* lost `iconOnly` and

@@ -42,6 +42,24 @@
               {{ 'document.unsavedChanges' | translate }}
             </p>
           }
+          @if (mode() === 'live') {
+            <!-- The properties box is collapsed by default; this opens it (remembered on this device). -->
+            <button
+              type="button"
+              arc-button
+              arcType="ghost"
+              arcSize="sm"
+              class="size-9 border"
+              [class]="isPropertiesOpen() ? 'border-primary bg-raised text-primary' : 'border-transparent text-muted-foreground'"
+              [attr.aria-pressed]="isPropertiesOpen()"
+              [attr.aria-label]="'document.properties.toggle' | translate"
+              arcPosition="bottom"
+              [arcTooltip]="'document.properties.toggle' | translate"
+              (click)="toggleProperties()"
+            >
+              <arc-icon arcType="table-properties" />
+            </button>
+          }
           <button
             type="button"
             arc-button
@@ -67,6 +85,8 @@
           [links]="liveLinks()"
           [linkTargets]="linkTargets()"
           [sourcePath]="document()?.path ?? ''"
+          [showProperties]="isPropertiesOpen()"
+          [pageTitle]="document()?.title ?? ''"
           [documentKey]="notePath()"
           [initialContent]="document()?.content ?? ''"
           [placeholderText]="'document.editorPlaceholder' | translate"

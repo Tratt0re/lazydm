@@ -158,6 +158,16 @@ export class LocalPreferencesService {
     this.setText(LocalPreferenceKey.DOCUMENT_LINKS_PANEL_OPEN, isOpen ? '1' : '0');
   }
 
+  /** Whether the properties box of notes is shown in the live preview (per device; closed by default). */
+  getDocumentPropertiesOpen(): boolean {
+    const value = this.getText(LocalPreferenceKey.DOCUMENT_PROPERTIES_OPEN);
+    return value === undefined ? LOCAL_PREFERENCE_DEFAULTS.documentPropertiesOpen : value === '1';
+  }
+
+  setDocumentPropertiesOpen(isOpen: boolean): void {
+    this.setText(LocalPreferenceKey.DOCUMENT_PROPERTIES_OPEN, isOpen ? '1' : '0');
+  }
+
   /**
    * View chosen for a note on this device (the editor's default view when never chosen). Source falls
    * back to Live while the Source view is hidden (Settings → Editor).
@@ -191,6 +201,7 @@ export class LocalPreferencesService {
       typeof value[key] === 'boolean' ? (value[key] as boolean) : (defaults[key] as boolean);
     return {
       codeMap: flag('codeMap'),
+      codeMapHideShort: flag('codeMapHideShort'),
       lineNumbers: flag('lineNumbers'),
       textSize: EDITOR_TEXT_SIZES.includes(value.textSize as EditorSettings['textSize'])
         ? (value.textSize as EditorSettings['textSize'])

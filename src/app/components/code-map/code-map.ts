@@ -103,6 +103,11 @@ export class CodeMap {
     this.paint();
   }
 
+  /** A hidden map takes no room and is not drawn (short notes, Settings → Editor → Code map). */
+  setVisible(isVisible: boolean): void {
+    this.dom.style.display = isVisible ? '' : 'none';
+  }
+
   destroy(): void {
     cancelAnimationFrame(this.frameRequest);
     this.dom.removeEventListener('pointerdown', this.handlePointerDown);

@@ -251,6 +251,10 @@
           "rule": "Separadores"
         }
       },
+      "codeMapHideShort": {
+        "label": "Ocultar el mapa del código en notas cortas",
+        "description": "No muestra el mapa en notas de menos de 40 líneas. Necesita que el mapa del código de arriba esté activo."
+      },
       "lineNumbers": {
         "label": "Números de línea",
         "description": "Muestra los números de línea junto al texto."
@@ -549,6 +553,9 @@
   "document": {
     "loadError": "No se pudo cargar esta nota",
     "unsavedChanges": "Cambios sin guardar",
+    "properties": {
+      "toggle": "Mostrar u ocultar las propiedades"
+    },
     "editorPlaceholder": "Empieza a escribir…",
     "toolbar": {
       "live": "Vista previa en vivo",

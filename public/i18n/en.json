@@ -251,6 +251,10 @@
           "rule": "Rules"
         }
       },
+      "codeMapHideShort": {
+        "label": "Hide the code map on short notes",
+        "description": "Leave the code map out of notes shorter than 40 lines. It needs the code map above to be on."
+      },
       "lineNumbers": {
         "label": "Line numbers",
         "description": "Show the line numbers next to the text."
@@ -549,6 +553,9 @@
   "document": {
     "loadError": "Couldn't load this note",
     "unsavedChanges": "Unsaved changes",
+    "properties": {
+      "toggle": "Show or hide the properties"
+    },
     "editorPlaceholder": "Start writing…",
     "toolbar": {
       "live": "Live preview",

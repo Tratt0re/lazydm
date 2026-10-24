@@ -170,6 +170,8 @@ export class DocumentPage {
   protected readonly isSaving = signal(false);
   protected readonly errorMessage = signal<string | null>(null);
   protected readonly isLinksPanelOpen = signal(this.localPreferences.getDocumentLinksPanelOpen());
+  /** The properties box (frontmatter) of the live preview: collapsed until the trigger opens it, remembered per device. */
+  protected readonly isPropertiesOpen = signal(this.localPreferences.getDocumentPropertiesOpen());
   /** Shown as a badge on the Links button, so a closed panel still tells whether the note has links. */
   protected readonly linkCount = signal(0);
 
@@ -244,36 +246,37 @@ export class DocumentPage {
               action: () => this.toggleLinksPanel(),
             },
             {
-              id: 'rename',
-              label: this.translateService.instant('document.toolbar.rename'),
-              icon: 'text-cursor-input',
-              buttonType: 'outline',
-              iconOnly: true,
-              disabled: () => !this.document() || this.isSaving(),
-              action: () => this.openRenameSheet(),
-            },
-            {
-              id: 'copy',
-              label: this.translateService.instant(
-                scope.kind === 'system'
-                  ? 'compendium.copy.toCampaign'
-                  : 'compendium.copy.toCompendium',
-              ),
-              icon: scope.kind === 'system' ? 'book-down' : 'book-up',
-              buttonType: 'outline',
-              iconOnly: true,
-              disabled: () => !this.document() || this.isSaving(),
-              action: () => this.copyToOtherScope(),
-            },
-            {
-              id: 'delete',
-              label: this.translateService.instant('files.delete.menu'),
-              icon: 'trash',
-              buttonType: 'secondary',
-              destructive: true,
-              iconOnly: true,
-              disabled: () => !this.document() || this.isSaving(),
-              action: () => this.openDeleteSheet(),
+              // Less used: behind the "…" so Save and Links are the only buttons; Delete last, after a separator.
+              id: 'more',
+              type: 'menu',
+              label: 'common.moreActions',
+              entries: [
+                {
+                  id: 'rename',
+                  label: 'document.toolbar.rename',
+                  icon: 'text-cursor-input',
+                  disabled: () => !this.document() || this.isSaving(),
+                  action: () => this.openRenameSheet(),
+                },
+                {
+                  id: 'copy',
+                  label:
+                    scope.kind === 'system'
+                      ? 'compendium.copy.toCampaign'
+                      : 'compendium.copy.toCompendium',
+                  icon: scope.kind === 'system' ? 'book-down' : 'book-up',
+                  disabled: () => !this.document() || this.isSaving(),
+                  action: () => this.copyToOtherScope(),
+                },
+                {
+                  id: 'delete',
+                  label: 'files.delete.menu',
+                  icon: 'trash',
+                  destructive: true,
+                  disabled: () => !this.document() || this.isSaving(),
+                  action: () => this.openDeleteSheet(),
+                },
+              ],
             },
           ],
         }),
@@ -547,6 +550,12 @@ export class DocumentPage {
     const isOpen = !this.isLinksPanelOpen();
     this.isLinksPanelOpen.set(isOpen);
     this.localPreferences.setDocumentLinksPanelOpen(isOpen);
+  }
+
+  protected toggleProperties(): void {
+    const isOpen = !this.isPropertiesOpen();
+    this.isPropertiesOpen.set(isOpen);
+    this.localPreferences.setDocumentPropertiesOpen(isOpen);
   }
 
   /** Fixing a link rewrites this note on disk: pending edits are saved first, the editor reloads after. */
