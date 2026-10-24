@@ -375,8 +375,13 @@ Planned Electron modules: `vault`, `cloud-readiness`, `campaign`, `document`, `i
     makes the tag *stunned · 3* (it counts down at the end of that entity's turn and goes at 0); a second space right
     after the name makes it without rounds. Enter or leaving the field also makes one, Backspace on an empty field
     removes the last tag. They are not notes and have no section.
-  - **Entity card**: a small header holds the system actions (drag handle, roll selection checkbox, edit, duplicate,
-    send to the cemetery, delete permanently without asking); the rule's grid is below it.
+  - **Entity row**: compact by default (about 80-90px). The drag handle and the roll selection checkbox are always
+    visible; edit, duplicate and *Send to cemetery* appear on hover or focus. *Delete* lives only in the row's "…" menu,
+    last, after a separator, and asks before it deletes. The current turn has a bronze left marker plus a *Turn* label
+    (never colour alone). The statuses help text is shown once for the whole list, not on every row. The rule's grid
+    is the row's body.
+  - **Density**: *Settings → General → Tracker rows* offers *Compact* (default) and *Roomy* (the fuller layout). The
+    choice is device-local and never stored in the Codex.
   - **Cemetery**: *Remove* sends an entity to a side panel (it leaves the order; if it had the turn, the turn
     passes on); *Recover* puts it back by initiative; *Delete forever* (confirmed) removes it from the file for
     good. An entity's **linked note** opens read-only, as in Reading, in a **right-hand sheet** like the editor
@@ -525,8 +530,10 @@ Planned Electron modules: `vault`, `cloud-readiness`, `campaign`, `document`, `i
 - **Actions on pages and rows**: a toolbar keeps the labelled or icon **primary** actions and puts the rest behind a
   **"…" menu** (*New folder*, *Edit*, *Delete…*; Delete is last, after a separator, never one click away). Every row
   of a list and every campaign card has a visible **"…"** button that opens the same menu as the right-click.
-- The **toolbar's bottom edge** is the ornamental rule from *engraved geometry* (bronze bar, ◇ ✣ ◇, hairline) —
-  `.arc-ornament-rule`, the one dominant marker of that module. It is inset 16px on both sides.
+- The **toolbar's bottom edge** on the top-level pages (Welcome, Setup, Campaigns, Settings) is the ornamental rule
+  from *engraved geometry* (bronze bar, ◇ ✣ ◇, hairline) — `.arc-ornament-rule`, the one dominant marker of that
+  module. It is inset 16px on both sides. Pages inside a campaign (overview, section, note, encounter, Review) use a
+  plain hairline: the tab bar and the breadcrumb already mark that edge.
 - Every page has the **toolbar** (campaign list included: vault name as the path, *New campaign* as its action).
   The vertical divider before the title only appears next to the sidebar toggle.
   macOS keeps the native traffic lights inset into it (`titleBarStyle: 'hiddenInset'`); Windows/Linux use a
@@ -597,8 +604,9 @@ Planned Electron modules: `vault`, `cloud-readiness`, `campaign`, `document`, `i
   error, the navigation is cancelled and the conflict modal / error toast is shown.
 - **Title bar**: the Compendium, Customize and Settings buttons are square icon buttons (tooltip and accessible name
   from the label).
-- **Note toolbar**: the note actions (*Links*, *Copy to compendium / campaign*, *Rename*, *Save*) are square icon
-  buttons (tooltip and accessible name from the label).
+- **Note toolbar**: *Save* (with a distinct unsaved state) and *Links* stay visible as square icon buttons (tooltip
+  and accessible name from the label). *Copy to compendium / campaign*, *Rename* and *Delete…* are in the "…" menu,
+  Delete last, after a separator.
 - **Editor**: CodeMirror 6 with three views, switched by three toggle buttons in a row above the editor (not a
   segmented control); the *Unsaved changes* label sits at the right end of that row. The view is remembered **per note on this device** (`document_view_modes` local preference, the most
   recent 500 notes; a new note opens in Live preview), so moving between notes always shows each one as left.
@@ -606,7 +614,8 @@ Planned Electron modules: `vault`, `cloud-readiness`, `campaign`, `document`, `i
     an element comes back only while the cursor is on it. Headings, emphasis, code, quotes, lists, task checkboxes
     (clickable), images, links, tables, callouts and frontmatter (as a properties box) are rendered. The note opens
     with the cursor below the frontmatter. An image being edited stays shown, with its `![[…]]` / `![](…)` source
-    on the line below it.
+    on the line below it. The properties box is **collapsed by default**, with a *Properties* trigger button; open or
+    closed is remembered per device. A `title` row that matches the page title is not repeated in it.
   - **Cursor and marks**: Up/Down always move one line, also through rendered tables and callouts; a click
     or an inserted list / task / quote / heading puts the cursor after its marks, so typing writes its text.
     Rendered blocks keep their spacing inside the widget, so clicks land on the line under the pointer.
@@ -678,6 +687,7 @@ Component behaviour, variant keys and configuration stay as they are.
 - **Square everything**: `--radius: 0`. Only popups and dialogs get a shadow.
 - **Fonts** (bundled locally): Barlow Condensed (`font-display`) for titles and big numbers, IBM Plex Sans
   (`font-sans`) for UI and body, IBM Plex Mono (`font-mono`) for labels, nav items, table headers, chips and metadata.
+  Note names, tab titles and file names in the sidebar are content, not labels: they use `font-sans`.
 - **Campaign cards** (the campaigns page) carry bronze **corner brackets** (`.arc-campaign-card`, four
   `.arc-card-corner` spans, decoration only, `aria-hidden`) that grow on hover and focus; the card shows the
   standard pointer cursor. No glyph on the border.
@@ -700,7 +710,7 @@ Component behaviour, variant keys and configuration stay as they are.
   - Tooltips: raised surface with a bronze border. Everything from the toolbar up (title bar, tab bar, toolbar)
     shows its tooltips **below** the element (`arcPosition="bottom"`), never over the window edge.
 - **Ornament is allowed, sparingly and with a job.** The ornamental symbols of *engraved geometry* (the ◇ ✣ ◇
-  rule under the toolbar, the ◇ of a note divider) stay: they mark an edge or a break. What is banned is
+  rule under the toolbar of the top-level pages, the ◇ of a note divider) stay: they mark an edge or a break. What is banned is
   decoration that carries fake meaning or fills space: fake codes ("CODE00//"), mottos, background grids, and runes
   or other symbols that stand for something in the real world. Before adding an ornament, say what it separates
   or marks; if the answer is "nothing", leave it out. Lucide icons stay.
