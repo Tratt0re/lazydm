@@ -376,8 +376,8 @@ Planned Electron modules: `vault`, `cloud-readiness`, `campaign`, `document`, `i
     after the name makes it without rounds. Enter or leaving the field also makes one, Backspace on an empty field
     removes the last tag. They are not notes and have no section.
   - **Entity row**: compact by default (about 80-90px). The drag handle and the roll selection checkbox are always
-    visible; edit, duplicate and *Send to cemetery* appear on hover or focus. *Delete* lives only in the row's "…" menu,
-    last, after a separator, and asks before it deletes. The current turn has a bronze left marker plus a *Turn* label
+    visible; every other action (*Edit*, *Duplicate*, *Send to the cemetery*, *Delete forever*) is in the row's "…" menu
+    and nowhere else, *Delete forever* last after a separator, asking before it deletes. The current turn has a bronze left marker plus a *Turn* label
     (never colour alone). The statuses help text is shown once for the whole list, not on every row. The rule's grid
     is the row's body.
   - **Density**: *Settings → General → Tracker rows* offers *Compact* (default) and *Roomy* (the fuller layout). The
@@ -713,8 +713,8 @@ Component behaviour, variant keys and configuration stay as they are.
   - **Page columns are left-aligned** to the title: the content area has one 16px side padding (the toolbar's), and
     a page's column starts at the title's left edge instead of being centred, and **fills the width** (no maximum, so
     nothing stops short of the right edge). Tile grids use `auto-fill` columns (18–24rem minimum) so tiles keep a
-    sensible size and the row is filled; only description paragraphs keep a readable width. The encounter page keeps
-    its `max-w-5xl` column for now.
+    sensible size and the row is filled; only description paragraphs keep a readable width. The encounter page fills
+    the width too.
   - Badges/status chips: outlined, mono.
   - Tables: raised mono headers; selected row is the raised surface.
   - Toasts follow the *notification banner*: card surface, 1px border in the state colour, uppercase title, mono

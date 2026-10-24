@@ -123,6 +123,13 @@ row; delete is always visible next to harmless icons; the turn highlight is only
 
 ## Log
 
+- 2026-10-24, user follow-up: the encounter page fills the width too (its `max-w-5xl` cap is gone), and the three
+  hover-revealed icons (edit, duplicate, cemetery) are removed from the combatant row: the "…" menu already held all
+  four actions and now is the only place. The row keeps its drag handle, roll checkbox, HP button and the "…".
+  Checked in the mock (dark): row buttons are `Manage HP` + `More actions` only, the menu lists Edit, Duplicate, Send
+  to the cemetery, Delete forever (last, after a separator), list right edge 1418 against 1424 for the area. Not
+  checked: light theme, the keyboard path of the menu, a running battle with 15 combatants at the new width, and the
+  roomy density.
 - 2026-10-24, Phase 4 follow-up (user: "very wide space on the right"): the gap was the `max-w-5xl`/`max-w-6xl` cap
   on the page columns, which phase 4 made visible by left-aligning them. The user chose to fill the width: caps
   removed on the overview, system overview, Review, broken links, Compendium, section and campaign list pages; tile

@@ -1,6 +1,6 @@
 <div class="flex min-h-0 flex-1">
 <div class="min-h-0 min-w-0 flex-1 overflow-y-auto">
-<div class="flex w-full max-w-5xl flex-col gap-4 py-6">
+<div class="flex w-full flex-col gap-4 py-6">
   @if (encounter()) {
     <!-- Round and bar stay pinned to the top while the list scrolls, so Next is always within reach. The negative
          margin and the padding give the page's own top padding back, so rows never show above the pinned bar. -->
@@ -180,7 +180,7 @@
         @for (entity of entities(); track entity.id) {
           <li
             cdkDrag
-            class="group relative flex scroll-mt-40 items-stretch border-b border-l-4 border-b-border bg-card last:border-b-0 [&.cdk-drag-placeholder]:opacity-40"
+            class="relative flex scroll-mt-40 items-stretch border-b border-l-4 border-b-border bg-card last:border-b-0 [&.cdk-drag-placeholder]:opacity-40"
             [class]="isRunning() && entity.id === turnId() ? 'z-1 border-l-primary bg-accent' : 'border-l-transparent'"
             [attr.aria-current]="isRunning() && entity.id === turnId() ? 'step' : null"
           >
@@ -343,54 +343,8 @@
               }
             </div>
 
-            <!-- Actions: the everyday ones show on hover or focus; the "…" is always there and holds all of them. -->
+            <!-- Actions: one "…" menu with all of them (Delete last). -->
             <div class="flex shrink-0 items-start gap-0.5 px-1 py-2">
-              <span
-                class="flex items-center opacity-0 transition-opacity group-focus-within:opacity-100 group-hover:opacity-100 motion-reduce:transition-none"
-              >
-                <button
-                  type="button"
-                  arc-button
-                  arcType="ghost"
-                  arcSize="sm"
-                  class="size-7! shrink-0 p-0!"
-                  [arcDisabled]="!isEditable()"
-                  [attr.aria-label]="'encounters.entity.edit' | translate"
-                  [arcTooltip]="'encounters.entity.edit' | translate"
-                  (click)="openEntitySheet(entity)"
-                >
-                  <arc-icon arcType="pencil" />
-                </button>
-                <button
-                  type="button"
-                  arc-button
-                  arcType="ghost"
-                  arcSize="sm"
-                  class="size-7! shrink-0 p-0!"
-                  [arcDisabled]="!isEditable()"
-                  [attr.aria-label]="'encounters.entity.duplicate' | translate"
-                  [arcTooltip]="'encounters.entity.duplicate' | translate"
-                  (click)="duplicateEntity(entity)"
-                >
-                  <arc-icon arcType="copy-plus" />
-                </button>
-                @if (!isParty()) {
-                  <!-- To the cemetery: the roster has none, so there Delete is the only way out. -->
-                  <button
-                    type="button"
-                    arc-button
-                    arcType="ghost"
-                    arcSize="sm"
-                    class="size-7! shrink-0 p-0!"
-                    [arcDisabled]="!isEditable()"
-                    [attr.aria-label]="'encounters.entity.remove' | translate"
-                    [arcTooltip]="'encounters.entity.remove' | translate"
-                    (click)="removeEntity(entity)"
-                  >
-                    <arc-icon arcType="skull" />
-                  </button>
-                }
-              </span>
               <button
                 type="button"
                 arc-button
