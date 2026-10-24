@@ -29,7 +29,7 @@ rebuild the preload bundle only if `channels.js` changes (not expected).
 | 5 | Ornament and typography | done | see git log |
 | 6 | Light theme | done | see git log |
 | 7 | Setup flow copy | done | see git log |
-| 8 | Narrow windows | pending | |
+| 8 | Narrow windows | questions | |
 | 9 | Closure | pending | |
 
 Status values: pending, questions, in-progress, done.
@@ -123,6 +123,17 @@ row; delete is always visible next to harmless icons; the turn highlight is only
 
 ## Log
 
+- 2026-10-25, Phase 8 (findings, nothing changed yet). Facts: the Electron window cannot go below 950x500
+  (`electron/window.js`); the sidebar collapses into an overlay below 1300px (`SMALL_SCREEN_BREAKPOINT_PX`); the
+  collapse is not silent: the toggle sits first in the tab bar and the overlay has a scrim and closes on Escape.
+  Measured at 1280, 1024 and 950px wide: no page overflows sideways, no toolbar button is cut (encounter, overview,
+  campaign list, settings, note, section lists), the note and the tracker rows fit. The only horizontal overflow
+  is 16px from the section page's drop-zone wrapper (`-mx-4`, intentional); nothing can scroll sideways because of
+  it. Real problem, vertical: the tracker's pinned header (round + turn line 56px, battle bar 66px, gaps = 174px)
+  plus toolbar 64px and tabs 40px leave 408px of list at 950x600 (2 rows of 86px visible) and about 308px at the
+  minimum height 500 (3 rows), so on a small laptop during a fight about half the screen is chrome. Options are in
+  the message to the user. Not measured: real laptop sizes in Electron, the cemetery panel open at 950px, the
+  tracker with the roomy density at small heights.
 - 2026-10-25, Phase 7 follow-ups (user, same turn): (1) the three intro lines of the Codex step are rows with a small
   icon box each (folder, hard drive, sync; new `refresh-cw` icon registered), like the Welcome points; (2) language
   and theme moved from the Welcome header into the footer, left of the buttons, on both setup steps (the Codex step
