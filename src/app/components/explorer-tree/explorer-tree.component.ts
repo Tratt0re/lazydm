@@ -304,6 +304,31 @@ export class AppExplorerTreeComponent {
     }
   }
 
+  /** Whether the row's "+" has something to create: a note, an encounter or a map (a campaign's sections only). */
+  protected canCreateHere(node: ExplorerNode, section: AppSection | null): boolean {
+    return (
+      !!section &&
+      !!node.path &&
+      !node.path.startsWith('compendium/') &&
+      (this.canCreateNote(section) || section.key === 'encounters' || section.key === 'maps')
+    );
+  }
+
+  /** The row's "+": the form of its section (a note, an encounter or a map), no section picker. */
+  protected createHere(node: ExplorerNode, section: AppSection): void {
+    const path = node.path;
+    if (!path) {
+      return;
+    }
+
+    this.fileActions.openCreateInSection(path.split('/')[0], {
+      key: section.key,
+      type: section.type,
+      isSpecial: section.isSpecial,
+      label: this.labelOf(node),
+    });
+  }
+
   /** *New folder* in a section (one level): the section opens on it once created. */
   protected openCreateFolderSheet(node: ExplorerNode, section: AppSection): void {
     const path = node.path;

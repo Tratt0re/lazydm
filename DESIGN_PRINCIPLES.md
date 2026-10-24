@@ -564,6 +564,15 @@ Planned Electron modules: `vault`, `cloud-readiness`, `campaign`, `document`, `i
   click/drag and the wheel scroll the note, a label jumps to its heading. The note page fits the window so the
   editor scrolls inside it.
 - **Campaign list** → grid of campaigns; when empty, a CTA message with a *Create campaign* button.
+- **Campaign overview** → the toolbar's primary is **New…** (a picker of every section that takes a new file —
+  note sections, Encounters, Maps — then that section's own form; *Add section*, *Edit* and *Delete* are in the "…"
+  menu). Only sections **with something in them** get a tile. A campaign with none shows one **Start** card (the same
+  *New…*), and the sections that are still empty wait behind a quiet *More sections* row. The Review alert says what
+  is wrong in plain words ("2 broken links, 1 note outside any section") with an *Open Review* button.
+- **Empty states** name the next step, never the folder on disk: an empty section shows its own description and its
+  create button (*New note*, *New encounter*, *New map*); an empty encounter offers *Add combatant* and *Add party*.
+- **Sidebar rows** of a campaign's creatable sections (notes, Encounters, Maps) have a **+** on hover or focus that
+  opens that section's form directly, with no picker.
 - **Campaign layout** → shell with the sidebar: the campaign's sections (its settings applied, §2a) and
   **Back to campaigns**. Section settings live in Settings (per campaign, like the template choices).
 - **Tab bar** above the header bar, browser-like, one set of tabs per campaign, restored per device

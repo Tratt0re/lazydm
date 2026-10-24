@@ -533,6 +533,16 @@
     "overview": {
       "edit": "Edit campaign",
       "delete": "Delete campaign"
+    },
+    "newAnything": {
+      "title": "New",
+      "description": "Pick where it goes. Any section works as a starting point.",
+      "sectionLabel": "Section",
+      "submit": "Next",
+      "button": "New…",
+      "startTitle": "Start anywhere",
+      "startDescription": "Create the first note, enemy, encounter or map. The other sections show up here as you use them.",
+      "moreSections": "More sections"
     }
   },
   "document": {
@@ -948,7 +958,8 @@
   "explorer": {
     "openPage": "Open page",
     "openPageOf": "Go to {{name}} home",
-    "empty": "Empty folder"
+    "empty": "Empty folder",
+    "newIn": "New in {{name}}"
   },
   "files": {
     "delete": {

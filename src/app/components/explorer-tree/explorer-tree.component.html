@@ -40,6 +40,21 @@
         <arc-icon [arcType]="node.icon" class="size-4 shrink-0 text-sidebar-primary" aria-hidden="true" />
         <span class="truncate" [attr.title]="label">{{ label }}</span>
       </button>
+      @let rowSection = sectionOf(node);
+      @if (canCreateHere(node, rowSection) && rowSection) {
+        <!-- New file in this section: shown on hover or focus, like the arrow next to it. -->
+        <button
+          type="button"
+          class="flex size-7 shrink-0 cursor-pointer items-center justify-center text-muted-foreground opacity-0 transition-[color,background-color,opacity] group-hover:opacity-100 focus-visible:opacity-100 hover:bg-sidebar-accent hover:text-sidebar-primary focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-ring"
+          [attr.aria-label]="'explorer.newIn' | translate: { name: label }"
+          arcPosition="right"
+          [arcShowDelay]="600"
+          [arcTooltip]="'explorer.newIn' | translate: { name: label }"
+          (click)="createHere(node, rowSection)"
+        >
+          <arc-icon arcType="plus" class="size-3.5" />
+        </button>
+      }
       <ng-container
         *ngTemplateOutlet="openPage; context: { route: node.route, query: null, name: label }"
       />

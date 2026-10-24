@@ -533,6 +533,16 @@
     "overview": {
       "edit": "编辑战役",
       "delete": "删除战役"
+    },
+    "newAnything": {
+      "title": "新建",
+      "description": "选择放在哪里。任何分区都可以作为起点。",
+      "sectionLabel": "分区",
+      "submit": "下一步",
+      "button": "新建…",
+      "startTitle": "从哪里开始都行",
+      "startDescription": "创建第一篇笔记、敌人、遭遇或地图。其他分区会在你使用后出现在这里。",
+      "moreSections": "更多分区"
     }
   },
   "document": {
@@ -948,7 +958,8 @@
   "explorer": {
     "openPage": "打开页面",
     "openPageOf": "前往 {{name}} 主页",
-    "empty": "空文件夹"
+    "empty": "空文件夹",
+    "newIn": "在{{name}}中新建"
   },
   "files": {
     "delete": {

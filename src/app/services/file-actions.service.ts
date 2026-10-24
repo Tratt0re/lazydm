@@ -24,9 +24,12 @@ import { AssetService } from '@/services/asset.service';
 import { DocumentService } from '@/services/document.service';
 import { EncounterService } from '@/services/encounter.service';
 import { MapService } from '@/services/map.service';
+import type { SectionIcon } from '@/services/section.service';
 import { WorkspaceService } from '@/services/workspace.service';
 
 const LINKING_PREVIEW_MAX_TITLES = 5;
+const ENCOUNTERS_SECTION_KEY = 'encounters';
+const MAPS_SECTION_KEY = 'maps';
 
 const NEW_NOTE_TITLE_FIELD: AppSheetField = {
   id: 'title',
@@ -198,6 +201,90 @@ export class FileActionsService {
         return false;
       },
     });
+  }
+
+  /**
+   * *New…* without knowing the section yet: a small modal with the sections that can take a new file, then the
+   * form of the one picked (a note's title, an encounter's name, a map's name and image). `campaignPath` is the
+   * campaign's folder.
+   */
+  openCreateAnythingSheet(
+    campaignPath: string,
+    sections: readonly {
+      readonly key: string;
+      readonly type: string | null;
+      readonly isSpecial: boolean;
+      readonly label: string;
+      readonly icon: SectionIcon;
+    }[],
+  ): void {
+    const choices = sections.filter(
+      (section) =>
+        section.key === ENCOUNTERS_SECTION_KEY ||
+        section.key === MAPS_SECTION_KEY ||
+        (!!section.type && !section.isSpecial),
+    );
+    if (choices.length === 0) {
+      return;
+    }
+
+    const dialogRef = this.dialogFormService.open({
+      arcTitle: this.translateService.instant('campaigns.newAnything.title'),
+      arcDescription: this.translateService.instant('campaigns.newAnything.description'),
+      arcOkText: this.translateService.instant('campaigns.newAnything.submit'),
+      arcCancelText: this.translateService.instant('campaigns.sections.newNote.cancel'),
+      fields: [
+        {
+          id: 'section',
+          type: 'select',
+          label: 'campaigns.newAnything.sectionLabel',
+          translate: true,
+          required: true,
+          value: choices[0].key,
+          options: choices.map((section) => ({
+            value: section.key,
+            label: section.label,
+            icon: section.icon,
+          })),
+        },
+      ],
+      onSubmit: (form) => {
+        const chosen = choices.find(
+          (section) => section.key === String(form.getValues()['section'] ?? ''),
+        );
+        if (!chosen) {
+          return false;
+        }
+
+        dialogRef.close();
+        this.openCreateInSection(campaignPath, chosen);
+        return false;
+      },
+    });
+  }
+
+  /** The form that creates the first (or next) file of a section: a note, an encounter or a map. */
+  openCreateInSection(
+    campaignPath: string,
+    section: {
+      readonly key: string;
+      readonly type: string | null;
+      readonly isSpecial: boolean;
+      readonly label: string;
+    },
+  ): void {
+    const folderPath = `${campaignPath}/${section.key}`;
+    if (section.key === ENCOUNTERS_SECTION_KEY) {
+      this.openCreateEncounterSheet(folderPath);
+    } else if (section.key === MAPS_SECTION_KEY) {
+      void this.openCreateMapSheet(folderPath);
+    } else if (section.type && !section.isSpecial) {
+      this.openCreateNoteSheet({
+        path: folderPath,
+        type: section.type,
+        sectionLabel: section.label,
+      });
+    }
   }
 
   /** *New encounter* in the Encounters section or one of its sub-folders (`folderPath`); opens the new encounter. */

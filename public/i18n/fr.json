@@ -533,6 +533,16 @@
     "overview": {
       "edit": "Modifier la campagne",
       "delete": "Supprimer la campagne"
+    },
+    "newAnything": {
+      "title": "Nouveau",
+      "description": "Choisissez où le ranger. N’importe quelle section convient pour commencer.",
+      "sectionLabel": "Section",
+      "submit": "Suivant",
+      "button": "Nouveau…",
+      "startTitle": "Commencez où vous voulez",
+      "startDescription": "Créez la première note, le premier ennemi, la première rencontre ou carte. Les autres sections apparaissent ici au fil de leur usage.",
+      "moreSections": "Autres sections"
     }
   },
   "document": {
@@ -948,7 +958,8 @@
   "explorer": {
     "openPage": "Ouvrir la page",
     "openPageOf": "Aller à l'accueil de {{name}}",
-    "empty": "Dossier vide"
+    "empty": "Dossier vide",
+    "newIn": "Nouveau dans {{name}}"
   },
   "files": {
     "delete": {
