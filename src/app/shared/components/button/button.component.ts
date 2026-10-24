@@ -78,7 +78,8 @@ export class ArcTechButtonComponent implements OnDestroy {
           }
           if (node.nodeType === 1) {
             const element = node as HTMLElement;
-            if (element.matches('arc-icon, [arc-icon]')) {
+            // Decorations (the toolbar's count badge) do not make a button labelled.
+            if (element.matches('arc-icon, [arc-icon], [aria-hidden="true"]')) {
               return false;
             }
             return element.textContent?.trim() !== '';

@@ -988,10 +988,11 @@
       "button": "Import from disk",
       "title": "Import from disk",
       "description": "Images, PDFs and audio files are copied into {{folder}}. Your originals stay where they are.",
-      "dropHint": "Drop files here, or copy an image and paste it here (Cmd/Ctrl+V). You can also drop files anywhere on the Assets page.",
+      "dropHint": "Drop files here, or copy an image and paste it (Cmd/Ctrl+V).",
       "types": "PNG · JPG · GIF · WEBP · SVG · AVIF · PDF · MP3 · WAV · OGG · M4A · FLAC",
       "select": "Select files…",
-      "skipped": "Not images, PDFs or audio — skipped"
+      "skipped": "Not images, PDFs or audio — skipped",
+      "pageHint": "Drop or paste files anywhere on this page. Images, PDFs and audio are copied into the Codex."
     }
   },
   "encounters": {

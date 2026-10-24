@@ -988,10 +988,11 @@
       "button": "Von Festplatte importieren",
       "title": "Von Festplatte importieren",
       "description": "Bilder, PDFs und Audiodateien werden nach {{folder}} kopiert. Deine Originale bleiben, wo sie sind.",
-      "dropHint": "Ziehe Dateien hierher oder kopiere ein Bild und füge es hier ein (Cmd/Strg+V). Du kannst Dateien auch irgendwo auf der Seite Dateien ablegen.",
+      "dropHint": "Ziehe Dateien hierher oder kopiere ein Bild und füge es ein (Cmd/Strg+V).",
       "types": "PNG · JPG · GIF · WEBP · SVG · AVIF · PDF · MP3 · WAV · OGG · M4A · FLAC",
       "select": "Dateien auswählen…",
-      "skipped": "Keine Bilder, PDFs oder Audiodateien — übersprungen"
+      "skipped": "Keine Bilder, PDFs oder Audiodateien — übersprungen",
+      "pageHint": "Ziehe Dateien irgendwo auf diese Seite oder füge sie ein. Bilder, PDFs und Audio werden in das Codex kopiert."
     }
   },
   "encounters": {

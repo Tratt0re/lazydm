@@ -235,6 +235,14 @@
       </li>
     </ng-template>
 
+    @if (isAssetsSection() && !isLoading() && !errorMessage()) {
+      <!-- Always here on the Assets page: files can be dropped or pasted anywhere on it. -->
+      <p class="flex items-center gap-2 font-mono text-[11px] tracking-[0.04em] text-muted-foreground uppercase">
+        <arc-icon arcType="file-up" class="size-4 shrink-0" />
+        {{ 'files.importFromDisk.pageHint' | translate }}
+      </p>
+    }
+
     @if (!isLoading() && !errorMessage()) {
       @if (draggedPath(); as dragged) {
         @if (subfolder() || dragged.split('/').length > folderPath().split('/').length + 1) {

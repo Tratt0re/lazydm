@@ -988,10 +988,11 @@
       "button": "Importa dal disco",
       "title": "Importa dal disco",
       "description": "Immagini, PDF e file audio vengono copiati in {{folder}}. Gli originali restano dove sono.",
-      "dropHint": "Trascina qui i file, oppure copia un’immagine e incollala qui (Cmd/Ctrl+V). Puoi anche rilasciarli ovunque nella pagina Risorse.",
+      "dropHint": "Trascina qui i file, oppure copia un’immagine e incollala (Cmd/Ctrl+V).",
       "types": "PNG · JPG · GIF · WEBP · SVG · AVIF · PDF · MP3 · WAV · OGG · M4A · FLAC",
       "select": "Seleziona file…",
-      "skipped": "Non sono immagini, PDF o audio: ignorati"
+      "skipped": "Non sono immagini, PDF o audio: ignorati",
+      "pageHint": "Trascina o incolla file ovunque in questa pagina. Immagini, PDF e audio vengono copiati nel Codex."
     }
   },
   "encounters": {

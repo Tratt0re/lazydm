@@ -988,10 +988,11 @@
       "button": "从磁盘导入",
       "title": "从磁盘导入",
       "description": "图片、PDF 和音频文件会被复制到 {{folder}}。原文件保留在原处。",
-      "dropHint": "把文件拖到这里，或复制图片后在此粘贴（Cmd/Ctrl+V）。也可以把文件拖到“素材”页面的任意位置。",
+      "dropHint": "把文件拖到这里，或复制图片后粘贴（Cmd/Ctrl+V）。",
       "types": "PNG · JPG · GIF · WEBP · SVG · AVIF · PDF · MP3 · WAV · OGG · M4A · FLAC",
       "select": "选择文件…",
-      "skipped": "不是图片、PDF 或音频，已跳过"
+      "skipped": "不是图片、PDF 或音频，已跳过",
+      "pageHint": "在本页任意位置拖入或粘贴文件。图片、PDF 和音频会复制到 Codex 中。"
     }
   },
   "encounters": {
