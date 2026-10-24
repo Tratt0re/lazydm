@@ -33,7 +33,7 @@
   --border-strong: #676E71;
   --input: #71777A;
   --ring: #8B724E;
-  --recessed: #D7D8D6;
+  --recessed: #ECECE8;
   --raised: #F8F7F2;
   --chart-1: #766043;
   --chart-2: #93473D;
@@ -93,8 +93,8 @@
   --muted-foreground: #9C988F;
   --accent: #30343A;
   --accent-foreground: #F0ECE3;
-  --destructive: #A85046;
-  --destructive-foreground: #F0ECE3;
+  --destructive: #C96E63;
+  --destructive-foreground: #101114;
   --border: #4F555B;
   --border-subtle: #34383D;
   --border-strong: #71777A;

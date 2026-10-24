@@ -27,7 +27,7 @@ rebuild the preload bundle only if `channels.js` changes (not expected).
 | 3 | Note page chrome and toolbar, collapsible properties | done | see git log |
 | 4 | Alignment, overview alert, Review page | done | see git log |
 | 5 | Ornament and typography | done | see git log |
-| 6 | Light theme | pending | |
+| 6 | Light theme | done | see git log |
 | 7 | Setup flow copy | pending | |
 | 8 | Narrow windows | pending | |
 | 9 | Closure | pending | |
@@ -123,6 +123,20 @@ row; delete is always visible next to harmless icons; the turn highlight is only
 
 ## Log
 
+- 2026-10-25, Phase 6: measured WCAG contrast of the token pairs first (script in /tmp, not kept). Text pairs all
+  pass in both themes, and control borders (`--input`) pass 3:1. Two real findings, two token changes in
+  `src/styles.css`: (1) light `--recessed` (field, select, switch-off, editor, track fill) was `#D7D8D6`, 1.08:1
+  against the `#DFE0DE` canvas, so fields looked filled-in and disabled; now `#ECECE8` (1.12 against the canvas, 1.04
+  against a card, muted text on it 6.22:1, input border on it 3.84:1). (2) dark `--destructive` `#A85046` gave only
+  3.17:1 as text on a card (Delete in menus, errors, red icons); now `#C96E63` (4.79 on a card, 5.30 on the canvas),
+  with `--destructive-foreground` flipped to `#101114` so filled red (close button hover, toast, bars) keeps 5.30:1.
+  Left alone on purpose: the light canvas `#DFE0DE` (the critique called it muddy; it is the theme's cold mineral
+  grey and the contrast of text on it is 9.25:1, so I did not change it without a design call), decorative borders
+  (`--border` 2.2–2.5:1; controls use `--input`, which passes). Checked in the browser: light Settings → Editor
+  (switch-off, select) and the light tracker; dark tracker with the "…" menu (Delete in the new red). Not checked:
+  every other screen in light after the change, the light toast and alert, disabled-state controls (they use
+  opacity, so they now sit on a lighter fill), the syntax colours of the editor, a real contrast tool beyond my
+  own calculation.
 - 2026-10-24, user follow-up: the encounter page fills the width too (its `max-w-5xl` cap is gone), and the three
   hover-revealed icons (edit, duplicate, cemetery) are removed from the combatant row: the "…" menu already held all
   four actions and now is the only place. The row keeps its drag handle, roll checkbox, HP button and the "…".
