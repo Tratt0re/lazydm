@@ -699,8 +699,11 @@ Component behaviour, variant keys and configuration stay as they are.
     description, square close button on the right.
   - Tooltips: raised surface with a bronze border. Everything from the toolbar up (title bar, tab bar, toolbar)
     shows its tooltips **below** the element (`arcPosition="bottom"`), never over the window edge.
-- **No decorative text or glyphs** (runes, mottos, fake archive codes, background grids…).
-  Lucide icons stay.
+- **Ornament is allowed, sparingly and with a job.** The ornamental symbols of *engraved geometry* (the ◇ ✣ ◇
+  rule under the toolbar, the ◇ of a note divider) stay: they mark an edge or a break. What is banned is
+  decoration that carries fake meaning or fills space: fake codes ("CODE00//"), mottos, background grids, and runes
+  or other symbols that stand for something in the real world. Before adding an ornament, say what it separates
+  or marks; if the answer is "nothing", leave it out. Lucide icons stay.
 - Changes to components are **look only**: variant keys, inputs, outputs and behaviour stay stable.
 
 ## 10. Code conventions
@@ -770,6 +773,7 @@ Component behaviour, variant keys and configuration stay as they are.
 | 14.10 | Embedding: `![[x.json]]` renders as an encounter row in notes, link suggestions list encounters, Linked files panel shows them |
 | 14.11 | Docs: §6d written, §2, §3, §8 and §12 updated with the final encounter design |
 | 15.1 | Setup flow: *Welcome* (Franco, name, what it is for, language and theme) and *Vault* (device or cloud folder explained, folder check with the cloud drive), step marker, ornaments, entry guard |
+| 16.1 | UI smoothing review (phases A–F): glossary (Codex, Combatant, Tracker layout), Customize menu, "…" menus on toolbars and rows, start card and *New note* picker, Assets import as a modal with paste, two-step wizard modal, plainer errors, ornament rule reworded |
 
 ## 12. Open decisions
 

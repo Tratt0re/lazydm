@@ -62,7 +62,7 @@ A build with no errors is the minimum check after every change. The 3 `NG8113` w
 - Square shapes; `font-display` (Barlow Condensed) for titles, `font-sans` (Plex Sans) for UI, `font-mono` (Plex Mono) for labels/metadata. Use the Nordic Relic surface tokens (`bg-recessed`, `bg-card`, `bg-raised`) — see DESIGN_PRINCIPLES.md §9.
 - **Page, route and card titles end with a primary-coloured dot**:
   `{{ title }}<span class="text-primary" aria-hidden="true">.</span>` — no whitespace before the span.
-- No decorative text/glyphs (runes, mottos, fake codes…).
+- No decorative text with fake meaning (runes, mottos, fake codes…). The ornamental symbols of the design (◇ ✣ ◇) stay, used sparingly and with a job (DESIGN_PRINCIPLES §9).
 
 ## Workflow
 

@@ -80,10 +80,10 @@ Display text only. Key names, folders, file formats and code identifiers stay.
 
 ## Phase F. Design rules
 
-- [ ] F1 DESIGN_PRINCIPLES §9: the ornament rule is shapes, not text; fix the contradiction with "no decorative glyphs"
-- [ ] F2 Reduce ornament density where it competes with content (Welcome panel)
+- [x] F1 DESIGN_PRINCIPLES §9: the ornament rule is shapes, not text; fix the contradiction with "no decorative glyphs"
+- [x] F2 Reduce ornament density where it competes with content (Welcome panel)
 - [ ] F3 Re-check every changed screen in both themes and in English and Italian
-- [ ] F4 Add this review to DESIGN_PRINCIPLES §11 roadmap
+- [x] F4 Add this review to DESIGN_PRINCIPLES §11 roadmap
 
 ## Phase A answers (2026-10-24)
 
@@ -153,3 +153,4 @@ Display text only. Key names, folders, file formats and code identifiers stay.
 - 2026-10-24: Phase E done, plus the two extras. E1: the intro boxes of Settings → General and Editor and the theme and language descriptions are gone (keys removed in 7 languages). E2: the messages for saving a note, renaming a note, renaming or deleting a file, renaming or deleting a folder, moving a note, and saving an encounter or a map now say what to check ("Check that the Codex folder is available, then try again."); the note save message also says the text is still in the editor (true: a failed save leaves the editor untouched). The other ~50 "Couldn't X" messages are unchanged on purpose: for most of them the cause is not known, and a made-up cause would be worse than none. E3: the status field has a short placeholder ("Add a status…") and a persistent hint under it explaining rounds ("stunned 3" wears off after 3 of its turns; without a number it stays). Extras: the Assets empty state has an *Import from disk* button; *New…* is now *New* in every language. Checked in the browser (Italian, light): Assets empty state and the status hint. Not checked: the error messages in context (they only show on a real failure).
 - Left over: other labels that end with "…" (Move to…, Rename…, Delete…, Create note…) follow the macOS convention for actions that open a dialog; only *New…* was changed, as asked.
 - 2026-10-24: Adjustments X1–X6 done. X1 badge moved inside the button. X2 tracker select removed from the encounter page. X3 button is *New note*. X4 Import from disk is a modal (drop, paste, select), opened from the section toolbar, the empty-state button and the sidebar + on Assets; a paste anywhere on an Assets page saves the media. X5 type input removed. X6 `openWizard` makes the picker and the forms one modal with Back. Build green. Not checked visually: X1 badge, the Assets modal and paste.
+- 2026-10-24: Phase F in progress. F1: the glyph rule now allows the ornamental symbols (◇ ✣ ◇) used sparingly and with a job, and bans fake codes, mottos, grids and runes with real-world meaning (DESIGN_PRINCIPLES §9, CLAUDE.md). F2: the three card dividers on the Welcome panel are removed (corner brackets, title rule and step marker stay); checked in the browser, light, Italian. F4: roadmap row 16.1 added. F3 (re-check every changed screen) is still open.
