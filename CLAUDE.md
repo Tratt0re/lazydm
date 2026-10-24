@@ -43,6 +43,8 @@ A build with no errors is the minimum check after every change. The 3 `NG8113` w
 ## Conventions
 
 - **Follow existing patterns.** Reuse existing functions and utilities; match the surrounding code's style.
+- **UI words follow the glossary** in `DESIGN_PRINCIPLES.md` §1b (Codex, Combatant, Tracker layout, Links, Review…).
+  Code, files and folders keep their technical names (`vault`, `entity`, `battleRules`).
 - **Ask first** before creating a new function/utility with no similar existing counterpart (say what and why),
   and before adding any npm dependency.
 - **When requirements are unclear, ask.** Analyze the involved files and present a plan before larger changes.
