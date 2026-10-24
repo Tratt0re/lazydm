@@ -62,10 +62,6 @@
         "title": "Sezioni",
         "description": "Quali sezioni mostra questa campagna, in che ordine e con quali nomi."
       },
-      "templates": {
-        "title": "Modelli",
-        "description": "Quale modello usa ogni tipo di nota in questa campagna."
-      },
       "editor": {
         "title": "Editor",
         "description": "Come appaiono e si comportano le note mentre scrivi, su questo dispositivo."

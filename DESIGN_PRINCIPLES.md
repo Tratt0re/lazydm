@@ -797,6 +797,7 @@ Component behaviour, variant keys and configuration stay as they are.
 | 14.11 | Docs: §6d written, §2, §3, §8 and §12 updated with the final encounter design |
 | 15.1 | Setup flow: *Welcome* (Franco, name, what it is for, language and theme) and *Vault* (device or cloud folder explained, folder check with the cloud drive), step marker, ornaments, entry guard |
 | 16.1 | UI smoothing review (phases A–F): glossary (Codex, Combatant, Tracker layout), Customize menu, "…" menus on toolbars and rows, start card and *New note* picker, Assets import as a modal with paste, two-step wizard modal, plainer errors, ornament rule reworded |
+| 17.1 | UI polish pass for the MVP (plan in `.claude/plans/ui-polish-mvp.plan.md`): compact tracker row (2-row Default layout, left rail, single "…" menu, Turn chip, statuses help once with an info icon) and a *Tracker rows* density setting, battle bar with the round and turn on one line, Encounters section page without watermark, note toolbar with Save and Links and the rest in the menu, collapsed properties box with a toggle (Live and Reading), code map hidden on short notes (option), icon-only open tab, ornament only on top-level pages, sans for note names, full-width left-aligned page columns, `warning` alert for Review, lighter light-theme fields and a readable destructive red, setup flow with icon rows and language and theme in the footer, side panels with a left margin |
 
 ## 12. Open decisions
 

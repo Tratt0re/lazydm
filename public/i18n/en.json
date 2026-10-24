@@ -62,10 +62,6 @@
         "title": "Sections",
         "description": "Which sections this campaign shows, in which order and with which names."
       },
-      "templates": {
-        "title": "Templates",
-        "description": "Which template each note type uses in this campaign."
-      },
       "editor": {
         "title": "Editor",
         "description": "How notes look and behave while you write, on this device."

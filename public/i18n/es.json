@@ -62,10 +62,6 @@
         "title": "Secciones",
         "description": "Qué secciones muestra esta campaña, en qué orden y con qué nombres."
       },
-      "templates": {
-        "title": "Plantillas",
-        "description": "Qué plantilla usa cada tipo de nota en esta campaña."
-      },
       "editor": {
         "title": "Editor",
         "description": "Cómo se ven y se comportan las notas mientras escribes, en este dispositivo."

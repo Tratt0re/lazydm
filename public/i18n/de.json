@@ -62,10 +62,6 @@
         "title": "Bereiche",
         "description": "Welche Bereiche diese Kampagne zeigt, in welcher Reihenfolge und mit welchen Namen."
       },
-      "templates": {
-        "title": "Vorlagen",
-        "description": "Welche Vorlage jeder Notiztyp in dieser Kampagne nutzt."
-      },
       "editor": {
         "title": "Editor",
         "description": "Wie Notizen beim Schreiben aussehen und sich verhalten, auf diesem Gerät."

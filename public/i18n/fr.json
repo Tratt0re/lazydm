@@ -62,10 +62,6 @@
         "title": "Sections",
         "description": "Les sections affichées par cette campagne, leur ordre et leurs noms."
       },
-      "templates": {
-        "title": "Modèles",
-        "description": "Le modèle utilisé par chaque type de note dans cette campagne."
-      },
       "editor": {
         "title": "Éditeur",
         "description": "L'apparence et le comportement des notes pendant l'écriture, sur cet appareil."

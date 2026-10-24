@@ -62,10 +62,6 @@
         "title": "分区",
         "description": "此战役显示哪些分区、它们的顺序和名称。"
       },
-      "templates": {
-        "title": "模板",
-        "description": "本战役中每种笔记类型使用的模板。"
-      },
       "editor": {
         "title": "编辑器",
         "description": "在此设备上，笔记在书写时的外观与行为。"

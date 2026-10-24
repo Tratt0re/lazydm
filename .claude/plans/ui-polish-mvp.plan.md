@@ -30,7 +30,7 @@ rebuild the preload bundle only if `channels.js` changes (not expected).
 | 6 | Light theme | done | see git log |
 | 7 | Setup flow copy | done | see git log |
 | 8 | Narrow windows | done | |
-| 9 | Closure | pending | |
+| 9 | Closure | done | |
 
 Status values: pending, questions, in-progress, done.
 
@@ -253,3 +253,5 @@ row; delete is always visible next to harmless icons; the turn highlight is only
 - 2026-10-24: plan written; decisions above agreed. The critique covered the welcome and vault steps, the campaign list,
   the overview, a note, the tracker (running state only), the Encounters section page, Review, Settings → General and
   the New note modal. Not yet seen: an empty or idle tracker, the maps page, the Import modal, the remaining Settings tabs.
+
+- 2026-10-25, Phase 9 (done). Roadmap row 17.1 added to DESIGN_PRINCIPLES §11. i18n: the 7 files have 1523 lines each and parse; unused keys searched (static grep plus dynamic prefixes): only `settings.sections.templates.{title,description}` was dead (no Templates item in the settings nav) and was removed from all 7. Final: `ng build` clean, 57 electron tests pass. Still not checked across the whole pass: keyboard paths of the new menus, a real Electron run, native-speaker review of the new translations, the light theme for some earlier pages.
