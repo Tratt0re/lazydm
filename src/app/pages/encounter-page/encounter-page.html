@@ -11,7 +11,8 @@
     >
       <!-- Battle state, on the bar's own line: the round and whose turn it is. -->
       @if (!isParty()) {
-      <div class="flex min-w-0 flex-col gap-1">
+      <!-- Fixed width: a long or short name never moves the buttons next to it (the name is cut with an ellipsis). -->
+      <div class="flex w-56 shrink-0 flex-col gap-1">
         @if (isRunning()) {
           <!-- "03 / ROUND": the number is the big one, the word is smaller and quieter. -->
           <span class="font-display leading-none font-extrabold tracking-[0.02em] uppercase">
