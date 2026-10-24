@@ -123,6 +123,14 @@ row; delete is always visible next to harmless icons; the turn highlight is only
 
 ## Log
 
+- 2026-10-24, Phase 3 follow-up (user request): the repeated name. The open tab now shows only its icon (the page
+  title names the page); the other tabs keep icon and name; the label's width animates on select/deselect (grid
+  `0fr`/`1fr`, 200ms, off with reduced motion; measured 175 → 66px over ~200ms, no jump). The `min-w-28` floor went
+  with it and the tab text moved from mono to the sans font (agreed typography). The *Properties* toggle now also
+  works in Reading (box with the same width as the text column), through one shared parser
+  (`frontmatterProperties`, also used by the live preview). Not checked: the tab animation with many tabs and an
+  overflowing bar, drag-to-sort of tabs after the width change, screen reader name of an icon-only active tab (the
+  `title` attribute and the DOM text stay, but a hidden-opacity label may be read twice), light theme beyond one screen.
 - 2026-10-24, Phase 3: note toolbar is Save + Links + a "…" menu (Rename, Copy to compendium / campaign, Delete… last
   after a separator). Properties box collapsed by default with a *Properties* toggle in the editor row (live view
   only; open state per device in `document_properties_open`); a `title` property equal to the page title is left out of

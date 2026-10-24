@@ -42,8 +42,8 @@
               {{ 'document.unsavedChanges' | translate }}
             </p>
           }
-          @if (mode() === 'live') {
-            <!-- The properties box is collapsed by default; this opens it (remembered on this device). -->
+          @if (mode() !== 'source') {
+            <!-- The properties box is collapsed by default; this opens it, in Live and in Reading (remembered on this device). -->
             <button
               type="button"
               arc-button
@@ -112,6 +112,8 @@
           <app-document-preview
             class="h-full"
             [body]="previewBody()"
+            [properties]="previewProperties()"
+            [showProperties]="isPropertiesOpen()"
             [links]="liveLinks()"
             [sourcePath]="document()?.path ?? ''"
             [playingAudioPath]="noteAudio.playingPath()"

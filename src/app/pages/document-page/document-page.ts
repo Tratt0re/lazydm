@@ -36,6 +36,7 @@ import {
 import { CAMPAIGN_SECTION_PARAM } from '@/pages/campaign-section-page/campaign-section-page';
 import type { DocumentDto, DocumentLinkDto, LinkTargetDto, SavedAssetDto } from '@/dtos';
 import { AssetService, NOTE_AUDIO_MAX_SECONDS } from '@/services/asset.service';
+import { frontmatterProperties } from '@/components/code-editor/live-preview';
 import { resolveDocumentLinks } from '@/components/code-editor/resolve-links';
 import { FileActionsService } from '@/services/file-actions.service';
 import { FileMoveService } from '@/services/file-move.service';
@@ -179,6 +180,14 @@ export class DocumentPage {
     () => this.document() !== null && this.editedContent() !== this.document()!.content,
   );
   protected readonly previewBody = computed(() => stripFrontmatterFence(this.editedContent()));
+  /** The header's properties for Reading's box (the live preview reads them from the editor itself). */
+  protected readonly previewProperties = computed(() => {
+    const header = FRONTMATTER_FENCE_PATTERN.exec(this.editedContent())?.[0] ?? '';
+    return frontmatterProperties(
+      header.replace(/^---\r?\n/, '').replace(/\r?\n(?:---|\.\.\.)\r?\n?$/, ''),
+      this.document()?.title,
+    );
+  });
   /**
    * The links of the text being edited, resolved against the files of the note's scope, so links typed or
    * pasted show up right away (Live and Reading); the index's links fill in what that list cannot answer.

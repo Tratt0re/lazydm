@@ -36,12 +36,7 @@ const flagRow = (key: EditorFlag): EditorFlagRow => ({
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-editor-section',
-  imports: [
-    NgTemplateOutlet,
-    TranslatePipe,
-    ...ArcTechSelectImports,
-    ArcTechSwitchComponent,
-  ],
+  imports: [NgTemplateOutlet, TranslatePipe, ...ArcTechSelectImports, ArcTechSwitchComponent],
   templateUrl: './editor-section.component.html',
 })
 export class EditorSectionComponent {
@@ -62,10 +57,12 @@ export class EditorSectionComponent {
     return defaultView === 'source' && !showSourceView ? 'live' : defaultView;
   });
   /** The code map's colours, shown under its switch. */
-  protected readonly codeMapLegend = (Object.keys(CODE_MAP_COLORS) as CodeMapKind[]).map((kind) => ({
-    kind,
-    color: `var(${CODE_MAP_COLORS[kind]})`,
-  }));
+  protected readonly codeMapLegend = (Object.keys(CODE_MAP_COLORS) as CodeMapKind[]).map(
+    (kind) => ({
+      kind,
+      color: `var(${CODE_MAP_COLORS[kind]})`,
+    }),
+  );
   protected readonly displayRows: readonly EditorFlagRow[] = [
     flagRow('codeMap'),
     flagRow('codeMapHideShort'),

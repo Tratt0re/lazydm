@@ -593,8 +593,10 @@ Planned Electron modules: `vault`, `cloud-readiness`, `campaign`, `document`, `i
   - **Drag to sort** tabs (CDK drag-drop, horizontal). Each tab shows its section icon.
   - **Context menu** (right-click, or the menu key / Shift+F10 on a focused tab): on a campaign link — open, open in
     new tab, open in background tab; on a tab — new tab, duplicate, close, close others, close tabs to the right.
-  - Active tab uses the Nordic Relic *page tabs* look: no fill, 3px bronze bottom border, strong bold text.
-    The tablist has roving focus (arrows / Home / End move the focus, Enter activates).
+  - Active tab uses the Nordic Relic *page tabs* look: no fill, 3px bronze bottom border. It shows **only its
+    icon** (the page title right below already names the page; the name stays in the tooltip and for screen readers);
+    the other tabs show icon and name. Selecting a tab animates the label's width (about 200ms, none with reduced
+    motion), so the bar does not jump. The tablist has roving focus (arrows / Home / End move the focus, Enter activates).
   - Shortcuts: Cmd/Ctrl+T new tab, Cmd/Ctrl+W close tab (forwarded by the main process, so it no longer closes the
     window), Ctrl+Tab / Ctrl+Shift+Tab next/previous, Cmd/Ctrl+[ / ] back/forward.
   - Entering a campaign from its root restores the last active tab. The bar is hidden outside campaign pages.
@@ -615,7 +617,8 @@ Planned Electron modules: `vault`, `cloud-readiness`, `campaign`, `document`, `i
     (clickable), images, links, tables, callouts and frontmatter (as a properties box) are rendered. The note opens
     with the cursor below the frontmatter. An image being edited stays shown, with its `![[…]]` / `![](…)` source
     on the line below it. The properties box is **collapsed by default**, with a *Properties* trigger button; open or
-    closed is remembered per device. A `title` row that matches the page title is not repeated in it.
+    closed is remembered per device. The button is there in Live preview and in Reading (not in Source, which shows the
+    header as text), and the box looks the same in both. A `title` row that matches the page title is not repeated in it.
   - **Cursor and marks**: Up/Down always move one line, also through rendered tables and callouts; a click
     or an inserted list / task / quote / heading puts the cursor after its marks, so typing writes its text.
     Rendered blocks keep their spacing inside the widget, so clicks land on the line under the pointer.

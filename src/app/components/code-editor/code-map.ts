@@ -225,8 +225,5 @@ const codeMapTheme = EditorView.theme({
 
 /** The code map (Settings → Editor → Code map); `hideShort` leaves it out of notes with few lines. */
 export function codeMap(hideShort = false): Extension {
-  return [
-    ViewPlugin.define((view) => new CodeMapPlugin(view, hideShort)),
-    codeMapTheme,
-  ];
+  return [ViewPlugin.define((view) => new CodeMapPlugin(view, hideShort)), codeMapTheme];
 }

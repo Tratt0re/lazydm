@@ -82,6 +82,22 @@ function readingKindOf(element: Element): CodeMapKind {
       class="h-full overflow-auto p-6"
       [style.padding-right.px]="isCodeMapOn() ? codeMapPadding() : null"
     >
+      @if (showProperties() && properties().length > 0) {
+        <!-- The note's properties (frontmatter), collapsed unless the page's toggle opened them. -->
+        <dl
+          class="mx-auto mb-4 grid grid-cols-[minmax(6rem,max-content)_1fr] border border-border bg-card text-[13px]"
+          style="max-width: var(--editor-max-width, none)"
+        >
+          @for (property of properties(); track property[0]) {
+            <dt
+              class="border-b border-border-subtle px-3 py-1.5 font-mono text-[11px] tracking-[0.06em] text-muted-foreground uppercase"
+            >
+              {{ property[0] }}
+            </dt>
+            <dd class="border-b border-border-subtle px-3 py-1.5">{{ property[1] }}</dd>
+          }
+        </dl>
+      }
       <div
         #body
         class="arc-markdown-body"
@@ -111,7 +127,9 @@ export class AppDocumentPreviewComponent {
   /** On with the setting, except on a short note when *Hide the code map on short notes* is on. */
   protected readonly isCodeMapOn = computed(() => {
     const { codeMap, codeMapHideShort } = this.editorSettings();
-    return codeMap && !(codeMapHideShort && this.body().split('\n').length < CODE_MAP_SHORT_NOTE_LINES);
+    return (
+      codeMap && !(codeMapHideShort && this.body().split('\n').length < CODE_MAP_SHORT_NOTE_LINES)
+    );
   });
   /** A narrow host (the note sheet) gets a slimmer map and less padding. */
   readonly isCompact = input(false);
@@ -127,6 +145,9 @@ export class AppDocumentPreviewComponent {
   /** A broken `[[link]]` of the preview should be fixed (create the note, or keep only its text). */
   readonly fixBrokenLink = output<BrokenLinkFixRequest>();
   readonly body = input.required<string>();
+  /** Key and value of each property of the note's header, shown as a box above the text when `showProperties`. */
+  readonly properties = input<readonly (readonly [string, string])[]>([]);
+  readonly showProperties = input(false);
   readonly links = input<readonly DocumentLinkDto[]>([]);
   readonly sourcePath = input.required<string>();
   /** The note's audio playing now, shown as *stop* on its row. */
@@ -162,6 +183,9 @@ export class AppDocumentPreviewComponent {
     afterRenderEffect(() => {
       const isOn = this.isCodeMapOn();
       this.renderedHtml();
+      // The properties box pushes the text down: the map measures again.
+      this.showProperties();
+      this.properties();
       this.syncCodeMap(isOn);
     });
     inject(DestroyRef).onDestroy(() => this.syncCodeMap(false));

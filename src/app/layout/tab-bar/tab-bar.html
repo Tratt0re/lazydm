@@ -49,7 +49,7 @@
           cdkDrag
           cdkDragLockAxis="x"
           cdkDragPreviewClass="arc-tab-drag-preview"
-          class="group flex max-w-56 min-w-28 shrink-0 items-center border-b-3 transition-colors duration-150 [&.cdk-drag-placeholder]:opacity-40 [.cdk-drop-list-dragging_&]:transition-transform"
+          class="group flex max-w-56 shrink-0 items-center border-b-3 transition-colors duration-150 [&.cdk-drag-placeholder]:opacity-40 [.cdk-drop-list-dragging_&]:transition-transform"
           [class]="
             isActive
               ? 'border-primary text-foreground-strong'
@@ -61,7 +61,7 @@
           <button
             type="button"
             role="tab"
-            class="flex h-full min-w-0 flex-1 cursor-pointer items-center gap-2 pr-3 pl-3 font-mono text-[11px] tracking-[0.04em] outline-none focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-ring"
+            class="flex h-full min-w-0 flex-1 cursor-pointer items-center pr-3 pl-3 text-xs tracking-[0.01em] outline-none focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-ring"
             [class.font-bold]="isActive"
             [class.font-medium]="!isActive"
             [attr.aria-selected]="isActive"
@@ -76,7 +76,14 @@
               [class.text-primary]="isActive"
               aria-hidden="true"
             />
-            <span class="truncate">{{ title }}</span>
+            <!-- The open tab shows only its icon (the page title right below says what it is); its name stays in the
+                 DOM and in the tooltip. The label grows and shrinks, so selecting a tab does not make the bar jump. -->
+            <span
+              class="grid min-w-0 transition-[grid-template-columns,margin] duration-200 ease-out motion-reduce:transition-none"
+              [class]="isActive ? 'ml-0 grid-cols-[0fr]' : 'ml-2 grid-cols-[1fr]'"
+            >
+              <span class="min-w-0 truncate" [class.opacity-0]="isActive">{{ title }}</span>
+            </span>
           </button>
           @if (workspace.canCloseTabs()) {
             <button

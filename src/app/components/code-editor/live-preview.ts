@@ -363,7 +363,11 @@ function linkAttributes(
   return route
     ? {
         className: 'cm-lp-link',
-        attributes: { 'data-route': route, 'data-path': link.resolvedPath, title: link.resolvedPath },
+        attributes: {
+          'data-route': route,
+          'data-path': link.resolvedPath,
+          title: link.resolvedPath,
+        },
       }
     : { className: 'cm-lp-link cm-lp-link-plain', attributes: { title: link.resolvedPath } };
 }
@@ -384,10 +388,28 @@ export function findFrontmatterEnd(state: EditorState): number {
   return 0;
 }
 
+/**
+ * The properties box lists: key and value of each top-level line of the YAML header (`header` is the text between
+ * the two fences). A `title` that repeats the page title is left out. Shared by the live preview and Reading.
+ */
+export function frontmatterProperties(
+  header: string,
+  pageTitle?: string,
+): readonly (readonly [string, string])[] {
+  return header
+    .split('\n')
+    .map((entry) => /^([^:#\s][^:]*):\s?(.*)$/.exec(entry))
+    .filter((match): match is RegExpExecArray => match !== null)
+    .map((match) => [match[1].trim(), match[2].trim()] as const)
+    .filter(([key, value]) => !isTitleOf(pageTitle, key, value));
+}
+
 /** A `title: …` property that repeats the note's title (quotes around the value ignored). */
 function isTitleOf(pageTitle: string | undefined, key: string, value: string): boolean {
   return (
-    !!pageTitle && key.toLowerCase() === 'title' && value.replace(/^(["'])(.*)\1$/, '$2') === pageTitle
+    !!pageTitle &&
+    key.toLowerCase() === 'title' &&
+    value.replace(/^(["'])(.*)\1$/, '$2') === pageTitle
   );
 }
 
@@ -402,13 +424,10 @@ function decorateFrontmatter(target: DecorationContext): number {
   const firstLine = state.doc.line(1);
   const closeLine = state.doc.lineAt(end);
   if (!isOnLines(state, 0, end)) {
-    const entries = state.doc
-      .sliceString(firstLine.to + 1, closeLine.from)
-      .split('\n')
-      .map((entry) => /^([^:#\s][^:]*):\s?(.*)$/.exec(entry))
-      .filter((match): match is RegExpExecArray => match !== null)
-      .map((match) => [match[1].trim(), match[2].trim()] as const)
-      .filter(([key, value]) => !isTitleOf(target.context.pageTitle, key, value));
+    const entries = frontmatterProperties(
+      state.doc.sliceString(firstLine.to + 1, closeLine.from),
+      target.context.pageTitle,
+    );
     // Collapsed (or nothing left to show): the header is replaced by nothing; the cursor reaching it shows the source.
     const isShown = target.context.showProperties !== false && entries.length > 0;
     target.ranges.push(
@@ -498,9 +517,10 @@ function decorateSyntax(target: DecorationContext, frontmatterEnd: number): void
           if (src && isEditing) {
             const alt = state.sliceDoc(marks[0].to, marks[1].from);
             ranges.push(
-              Decoration.widget({ widget: new ImageWidget(src, alt, true, link?.resolvedPath ?? null), side: -1 }).range(
-                node.from,
-              ),
+              Decoration.widget({
+                widget: new ImageWidget(src, alt, true, link?.resolvedPath ?? null),
+                side: -1,
+              }).range(node.from),
             );
           } else if (src) {
             ranges.push(
@@ -946,10 +966,12 @@ const clickAfterLineMarks = EditorState.transactionFilter.of((transaction) => {
 });
 
 // Above the default keymap, whose Up/Down would otherwise run first.
-const livePreviewKeymap = Prec.high(keymap.of([
-  { key: 'ArrowUp', run: stepIntoBlock(-1) },
-  { key: 'ArrowDown', run: stepIntoBlock(1) },
-]));
+const livePreviewKeymap = Prec.high(
+  keymap.of([
+    { key: 'ArrowUp', run: stepIntoBlock(-1) },
+    { key: 'ArrowDown', run: stepIntoBlock(1) },
+  ]),
+);
 
 /**
  * Obsidian-like live preview for the markdown editor: the text stays editable, its markdown is shown
