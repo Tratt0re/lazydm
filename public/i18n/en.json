@@ -378,6 +378,7 @@
   },
   "campaigns": {
     "list": {
+      "noteCount": "{{count}} notes",
       "title": "Campaigns",
       "create": "New campaign",
       "emptyTitle": "No campaigns yet",
@@ -823,6 +824,7 @@
     }
   },
   "common": {
+    "selectPlaceholder": "Select an option",
     "close": "Close",
     "skipToContent": "Skip to content",
     "selectAllRows": "Select all rows",
@@ -1123,6 +1125,7 @@
     }
   },
   "battleRules": {
+    "builtInName": "Default",
     "missing": "{{path}} (missing)",
     "createError": "Couldn't create the battle rule",
     "loadError": "Couldn't load the battle rule",

@@ -378,6 +378,7 @@
   },
   "campaigns": {
     "list": {
+      "noteCount": "{{count}} notas",
       "title": "Campañas",
       "create": "Nueva campaña",
       "emptyTitle": "Aún no hay campañas",
@@ -823,6 +824,7 @@
     }
   },
   "common": {
+    "selectPlaceholder": "Elige una opción",
     "close": "Cerrar",
     "skipToContent": "Saltar al contenido",
     "selectAllRows": "Seleccionar todas las filas",
@@ -1123,6 +1125,7 @@
     }
   },
   "battleRules": {
+    "builtInName": "Predeterminado",
     "missing": "{{path}} (falta)",
     "createError": "No se pudo crear la regla de combate",
     "loadError": "No se pudo cargar la regla de combate",

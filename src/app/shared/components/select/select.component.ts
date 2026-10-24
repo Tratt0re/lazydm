@@ -29,11 +29,12 @@ import {
   viewChild,
   ViewContainerRef,
 } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { type ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
+import { TranslateService } from '@ngx-translate/core';
 import type { ClassValue } from 'clsx';
-import { filter } from 'rxjs';
+import { filter, map, startWith } from 'rxjs';
 
 import { ArcTechBadgeComponent } from '@/shared/components/badge';
 import { ArcTechIconComponent } from '@/shared/components/icon';
@@ -104,7 +105,7 @@ let nextSelectInstanceId = 0;
               <span class="truncate">{{ label }}</span>
             }
           } @empty {
-            <span class="text-muted-foreground truncate">{{ arcPlaceholder() }}</span>
+            <span class="text-muted-foreground truncate">{{ placeholderText() }}</span>
           }
         }
       </span>
@@ -154,6 +155,13 @@ export class ArcTechSelectComponent implements ControlValueAccessor, AfterConten
   private readonly viewContainerRef = inject(ViewContainerRef);
   private readonly platformId = inject(PLATFORM_ID);
   private readonly instanceId = ++nextSelectInstanceId;
+  private readonly translateService = inject(TranslateService);
+  private readonly currentLang = toSignal(
+    this.translateService.onLangChange.pipe(
+      map((event) => event.lang),
+      startWith(this.translateService.currentLang),
+    ),
+  );
 
   readonly dropdownTemplate = viewChild.required<TemplateRef<void>>('dropdownTemplate');
   readonly triggerButton = viewChild.required<ElementRef<HTMLButtonElement>>('triggerButton');
@@ -171,7 +179,8 @@ export class ArcTechSelectComponent implements ControlValueAccessor, AfterConten
   readonly arcLabel = input<string>('');
   readonly arcMaxLabelCount = input<number>(1);
   readonly arcMultiple = input<boolean>(false);
-  readonly arcPlaceholder = input<string>('Select an option...');
+  /** Empty = the translated default (`common.selectPlaceholder`). */
+  readonly arcPlaceholder = input<string>('');
   readonly arcSize = input<ArcTechSelectSizeVariants>('default');
   readonly arcShowSelectedLabel = input(true, { transform });
   readonly arcChevronClass = input<ClassValue>('opacity-50');
@@ -185,6 +194,13 @@ export class ArcTechSelectComponent implements ControlValueAccessor, AfterConten
   protected readonly isCompact = signal(false);
   protected readonly triggerId = computed(() => this.triggerIdValue());
   protected readonly popupId = computed(() => this.popupIdValue());
+  protected readonly placeholderText = computed(() => {
+    this.currentLang();
+    const placeholder = this.arcPlaceholder().trim();
+    return placeholder.length > 0
+      ? placeholder
+      : this.translateService.instant('common.selectPlaceholder');
+  });
   protected readonly ariaLabelledBy = computed(() => this.externalLabelId());
   protected readonly ariaLabel = computed(() => {
     if (this.externalLabelId()) {
@@ -201,8 +217,7 @@ export class ArcTechSelectComponent implements ControlValueAccessor, AfterConten
       return manualLabel;
     }
 
-    const placeholder = this.arcPlaceholder().trim();
-    return placeholder.length > 0 ? placeholder : 'Select an option';
+    return this.placeholderText();
   });
 
   protected onFocus(): void {

@@ -378,6 +378,7 @@
   },
   "campaigns": {
     "list": {
+      "noteCount": "Нотаток: {{count}}",
       "title": "Кампанії",
       "create": "Нова кампанія",
       "emptyTitle": "Кампаній ще немає",
@@ -823,6 +824,7 @@
     }
   },
   "common": {
+    "selectPlaceholder": "Оберіть варіант",
     "close": "Закрити",
     "skipToContent": "Перейти до вмісту",
     "selectAllRows": "Вибрати всі рядки",
@@ -1123,6 +1125,7 @@
     }
   },
   "battleRules": {
+    "builtInName": "Типовий",
     "missing": "{{path}} (відсутнє)",
     "createError": "Не вдалося створити правило бою",
     "loadError": "Не вдалося завантажити правило бою",

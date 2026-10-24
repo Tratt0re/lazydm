@@ -7,6 +7,8 @@ export interface CampaignDto {
   readonly icon: string | null;
   readonly created: string | null;
   readonly cover: string | null;
+  /** Notes in the campaign (its card excluded); only in the list, null while the index is not open. */
+  readonly noteCount?: number | null;
 }
 
 export interface CreateCampaignPayload {

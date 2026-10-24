@@ -97,6 +97,7 @@
             [arcPlaceholder]="item.placeholder ?? ''"
             [arcDisabled]="isToolbarItemDisabled(item)"
             [attr.title]="item.ariaLabel ?? null"
+            [attr.aria-label]="item.ariaLabel ?? null"
             (arcSelectionChange)="onSelectItemChange(item, $event)"
           >
             @for (option of item.options; track option.value) {

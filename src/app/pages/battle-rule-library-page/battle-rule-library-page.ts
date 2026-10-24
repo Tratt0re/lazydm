@@ -127,7 +127,7 @@ export class BattleRuleLibraryPage implements OnInit {
       children: [
         {
           key: BUILT_IN_KEY,
-          label: this.builtIn()?.name ?? 'Generic',
+          label: this.translateService.instant('battleRules.builtInName'),
           translate: false,
         },
       ],
@@ -263,7 +263,7 @@ export class BattleRuleLibraryPage implements OnInit {
 
   /** Copies the built-in into `_battle-rules/` so it can be edited, and opens the copy. */
   protected async customize(): Promise<void> {
-    await this.create(`${this.builtIn()?.name ?? 'Generic'} copy`);
+    await this.create(`${this.translateService.instant('battleRules.builtInName')} copy`);
   }
 
   protected confirmDelete(): void {

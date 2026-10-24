@@ -9,7 +9,15 @@ const CAMPAIGN_NAME_MAX_LENGTH = 80;
 const CAMPAIGN_DESCRIPTION_MAX_LENGTH = 500;
 
 async function list() {
-  return { rows: await campaignModel.listCampaigns(vaultController.getReadyVaultPath()) };
+  const campaigns = await campaignModel.listCampaigns(vaultController.getReadyVaultPath());
+  // Notes of each campaign (its own `campaign.md` card excluded); null while the index is not open yet.
+  const rows = campaigns.map((campaign) => ({
+    ...campaign,
+    noteCount: indexerController.isOpen()
+      ? Math.max(0, vaultIndexModel.listScopeNotes(campaign.slug).length - 1)
+      : null,
+  }));
+  return { rows };
 }
 
 async function get(payload) {

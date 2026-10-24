@@ -166,10 +166,7 @@
     [class.text-[13px]]="isGroupRow"
     [attr.title]="isGroupRow && description ? description : label"
   >
-    {{ label }}
-    @if (!isChild) {
-      <span class="text-primary" aria-hidden="true">.</span>
-    }
+    {{ label }}@if (!isChild) {<span class="text-primary" aria-hidden="true">.</span>}
   </span>
   @if (description && !isGroupRow) {
     <span class="mt-1 line-clamp-2 block text-xs leading-5 text-muted-foreground">

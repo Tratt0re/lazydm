@@ -57,9 +57,11 @@
                 @if (campaign.description) {
                   <p class="line-clamp-3 text-sm text-muted-foreground">{{ campaign.description }}</p>
                 }
-                <p class="mt-auto truncate text-[11px] font-semibold tracking-[0.12em] text-muted-foreground uppercase">
-                  {{ campaign.slug }}
-                </p>
+                @if (campaign.noteCount != null) {
+                  <p class="mt-auto truncate text-[11px] font-semibold tracking-[0.12em] text-muted-foreground uppercase">
+                    {{ 'campaigns.list.noteCount' | translate: { count: campaign.noteCount } }}
+                  </p>
+                }
               </a>
 
               <ng-template #campaignMenu>

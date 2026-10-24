@@ -378,6 +378,7 @@
   },
   "campaigns": {
     "list": {
+      "noteCount": "{{count}} 篇笔记",
       "title": "战役",
       "create": "新建战役",
       "emptyTitle": "还没有战役",
@@ -823,6 +824,7 @@
     }
   },
   "common": {
+    "selectPlaceholder": "请选择",
     "close": "关闭",
     "skipToContent": "跳到内容",
     "selectAllRows": "选择所有行",
@@ -1123,6 +1125,7 @@
     }
   },
   "battleRules": {
+    "builtInName": "默认",
     "missing": "{{path}}（缺失）",
     "createError": "无法创建战斗规则",
     "loadError": "无法加载战斗规则",

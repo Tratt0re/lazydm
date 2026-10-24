@@ -378,6 +378,7 @@
   },
   "campaigns": {
     "list": {
+      "noteCount": "{{count}} Notizen",
       "title": "Kampagnen",
       "create": "Neue Kampagne",
       "emptyTitle": "Noch keine Kampagnen",
@@ -823,6 +824,7 @@
     }
   },
   "common": {
+    "selectPlaceholder": "Option wählen",
     "close": "Schließen",
     "skipToContent": "Zum Inhalt springen",
     "selectAllRows": "Alle Zeilen auswählen",
@@ -1123,6 +1125,7 @@
     }
   },
   "battleRules": {
+    "builtInName": "Standard",
     "missing": "{{path}} (fehlt)",
     "createError": "Die Kampfregel konnte nicht erstellt werden",
     "loadError": "Die Kampfregel konnte nicht geladen werden",
