@@ -211,11 +211,14 @@ export class EncounterPage {
     ];
   });
   /** Settings → General → Tracker rows: the compact row (default) or the roomy one. */
-  protected readonly isCompact = computed(() => this.localPreferences.trackerRowDensity() === 'compact');
+  protected readonly isCompact = computed(
+    () => this.localPreferences.trackerRowDensity() === 'compact',
+  );
   /** Whether the rule shows a statuses field in the row (the how-to line is written once above the list). */
   protected readonly hasStatuses = computed(
     () =>
-      this.rule()?.fields.some((field) => field.component === 'statuses' && field.showInRow) ?? false,
+      this.rule()?.fields.some((field) => field.component === 'statuses' && field.showInRow) ??
+      false,
   );
   /** Key of the rule's initiative field (null when the rule has none). */
   private readonly initiativeKey = computed(

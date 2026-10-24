@@ -313,6 +313,18 @@ export class CampaignSectionPage {
       });
     }
 
+    // The roster of player characters is part of the Encounters page: a labelled toolbar button, not a row of its own.
+    const party = this.partyRoute();
+    if (party) {
+      actions.push({
+        id: 'section-party-roster',
+        label: 'encounters.party.open',
+        icon: 'users',
+        buttonType: 'outline',
+        action: () => void this.router.navigateByUrl(party),
+      });
+    }
+
     actions.push({
       id: 'section-import',
       label: this.importLabel(),
@@ -340,7 +352,6 @@ export class CampaignSectionPage {
         id: 'section-new-encounter',
         label: 'encounters.new.button',
         icon: 'swords',
-        iconOnly: true,
         action: () => this.fileActions.openCreateEncounterSheet(this.folderPath()),
       });
     }
@@ -350,7 +361,6 @@ export class CampaignSectionPage {
         id: 'section-new-map',
         label: 'maps.new.button',
         icon: 'map',
-        iconOnly: true,
         action: () => void this.fileActions.openCreateMapSheet(this.folderPath()),
       });
     }
@@ -360,7 +370,6 @@ export class CampaignSectionPage {
         id: 'section-new-note',
         label: 'campaigns.sections.newNote.create',
         icon: 'file-plus',
-        iconOnly: true,
         action: () => this.openCreateSheet(),
       });
     }

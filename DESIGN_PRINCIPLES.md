@@ -388,7 +388,7 @@ Planned Electron modules: `vault`, `cloud-readiness`, `campaign`, `document`, `i
     reference, rendered by the Reading view (links open their note, embeds and previews work). An encounter is
     always shown by its **name**, never by the `.json` file name (the index stores it as the title).
 - **Party roster**: a hidden `encounters/_party.json` per campaign (the same file format and page, without the
-  battle), reached from the full *Party roster* button at the top right of the Encounters page (a section of its own) — it is not listed or offered as a link. It has the *Battle rule* select too (default: the campaign's), so what its rows show is never implicit.
+  battle), reached from the labelled *Party roster* button in the toolbar of the Encounters page (a section of its own) — it is not listed or offered as a link. It has the *Battle rule* select too (default: the campaign's), so what its rows show is never implicit.
   *Add party* copies its entities into an encounter (also a running one), skipping a member whose name is already
   there.
 - **In notes**: `![[ambush.json]]` is a row with the battle (swords) icon and the file name, in Live preview and

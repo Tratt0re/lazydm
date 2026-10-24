@@ -23,7 +23,7 @@ rebuild the preload bundle only if `channels.js` changes (not expected).
 | --- | --- | --- | --- |
 | 0 | Update DESIGN_PRINCIPLES.md (agree the wording first) | done | see git log |
 | 1 | Tracker rows: compact default + density setting | done | see git log |
-| 2 | Encounters section page | pending | |
+| 2 | Encounters section page | done | see git log |
 | 3 | Note page chrome and toolbar, collapsible properties | pending | |
 | 4 | Alignment, overview alert, Review page | pending | |
 | 5 | Ornament and typography | pending | |
@@ -123,6 +123,12 @@ row; delete is always visible next to harmless icons; the turn highlight is only
 
 ## Log
 
+- 2026-10-24, Phase 2: the background watermark is removed from every section page (user decision: it was common to
+  all of them), with its `.arc-page-watermark` CSS. The *Party roster* link is now a labelled outline button in the
+  Encounters toolbar instead of a row above the list. *New encounter*, *New map* and *New note* lost `iconOnly` and
+  show their label (they were unlabelled icons). The import icons stay icon-only with a tooltip. Checked in the mock:
+  Encounters, Enemies, Assets, Maps toolbars in both themes, no watermark left in the DOM. Not checked: the toolbar at
+  narrow widths (more labelled buttons now), the real Assets drop zone.
 - 2026-10-24, Phase 1: the built-in Default tracker layout is now 2 rows (initiative, AC, name, HP / statuses, note;
   agreed with the user). Row header strip replaced by a left rail (drag, roll checkbox) and an actions column (edit,
   duplicate, cemetery on hover/focus; "…" always visible, Delete last). Turn chip next to the name. Statuses hint written

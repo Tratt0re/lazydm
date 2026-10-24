@@ -1,9 +1,4 @@
 @if (section(); as section) {
-  <!-- The folder's icon, huge and fixed to the bottom right corner of the window: it stays put while the list scrolls. -->
-  <span class="arc-page-watermark" aria-hidden="true">
-    <arc-icon [arcType]="section.icon" [arcStrokeWidth]="1" />
-  </span>
-
   <!-- On the Assets section, files from the file manager can be dropped anywhere on the page. -->
   <!-- The wrapper covers the whole content area (it cancels the content's own padding and gives it back), so a
        right-click or a drop anywhere under the toolbar reaches it; rows and other elements keep their own menus. -->
@@ -52,16 +47,6 @@
         </button>
       </div>
     </ng-template>
-
-    @if (partyRoute(); as party) {
-      <!-- A different part of the Encounters page: the roster of player characters. -->
-      <div class="flex justify-end">
-        <a arc-button arcType="outline" [routerLink]="party">
-          <arc-icon arcType="users" />
-          {{ 'encounters.party.open' | translate }}
-        </a>
-      </div>
-    }
 
     @if (errorMessage(); as message) {
       <arc-alert

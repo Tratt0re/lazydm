@@ -340,7 +340,9 @@ async function listRuleFiles(rootPath, folderPath) {
 
 async function readRuleName(rootPath, rulePath) {
   try {
-    const parsed = JSON.parse(await fs.promises.readFile(resolveInsideVault(rootPath, rulePath), 'utf8'));
+    const parsed = JSON.parse(
+      await fs.promises.readFile(resolveInsideVault(rootPath, rulePath), 'utf8'),
+    );
     return normalizeBattleRule(parsed).name;
   } catch {
     return path.posix.basename(rulePath, BATTLE_RULE_EXTENSION);
@@ -355,21 +357,37 @@ async function toRuleRow(rootPath, rulePath, source) {
 async function listBattleRules(rootPath) {
   const rows = [];
   for (const rulePath of await listRuleFiles(rootPath, BATTLE_RULES_DIR_NAME)) {
-    rows.push(await toRuleRow(rootPath, rulePath, { source: 'vault', scope: null, scopeName: null }));
+    rows.push(
+      await toRuleRow(rootPath, rulePath, { source: 'vault', scope: null, scopeName: null }),
+    );
   }
 
   for (const system of await listSystems(rootPath)) {
-    for (const rulePath of await listRuleFiles(rootPath, `${system.path}/${BATTLE_RULES_DIR_NAME}`)) {
+    for (const rulePath of await listRuleFiles(
+      rootPath,
+      `${system.path}/${BATTLE_RULES_DIR_NAME}`,
+    )) {
       rows.push(
-        await toRuleRow(rootPath, rulePath, { source: 'system', scope: system.path, scopeName: system.name }),
+        await toRuleRow(rootPath, rulePath, {
+          source: 'system',
+          scope: system.path,
+          scopeName: system.name,
+        }),
       );
     }
   }
 
   for (const campaign of await listCampaigns(rootPath)) {
-    for (const rulePath of await listRuleFiles(rootPath, `${campaign.slug}/${BATTLE_RULES_DIR_NAME}`)) {
+    for (const rulePath of await listRuleFiles(
+      rootPath,
+      `${campaign.slug}/${BATTLE_RULES_DIR_NAME}`,
+    )) {
       rows.push(
-        await toRuleRow(rootPath, rulePath, { source: 'campaign', scope: campaign.slug, scopeName: campaign.name }),
+        await toRuleRow(rootPath, rulePath, {
+          source: 'campaign',
+          scope: campaign.slug,
+          scopeName: campaign.name,
+        }),
       );
     }
   }
@@ -455,7 +473,8 @@ function readCampaignChoice(rootPath, campaignSlug) {
 
 function updateCampaignChoices(rootPath, update) {
   const config = readVaultConfig(rootPath) ?? {};
-  const battleRules = config.battleRules && typeof config.battleRules === 'object' ? config.battleRules : {};
+  const battleRules =
+    config.battleRules && typeof config.battleRules === 'object' ? config.battleRules : {};
   const campaigns = { ...(battleRules.campaigns ?? {}) };
   update(campaigns);
   writeVaultConfig(rootPath, { ...config, battleRules: { ...battleRules, campaigns } });
