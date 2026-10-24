@@ -318,12 +318,12 @@ export class EncounterPage {
                     entries: [
                       {
                         id: 'copy',
-                        label: scope.kind === 'system'
-                          ? 'compendium.copy.toCampaign'
-                          : 'compendium.copy.toCompendium',
+                        label:
+                          scope.kind === 'system'
+                            ? 'compendium.copy.toCampaign'
+                            : 'compendium.copy.toCompendium',
                         icon: (scope.kind === 'system' ? 'book-down' : 'book-up') as
-                          | 'book-down'
-                          | 'book-up',
+                          'book-down' | 'book-up',
                         action: () => void this.copyTo.openCopySheet(this.encounterPath()),
                       },
                       {

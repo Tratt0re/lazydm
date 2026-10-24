@@ -6,7 +6,10 @@ import { withShortcut } from '@/config/shortcuts.config';
 import { ArcTechButtonComponent } from '@/shared/components/button';
 import { ArcTechIconComponent } from '@/shared/components/icon';
 import { ArcTechMenuImports } from '@/shared/components/menu';
-import { ArcTechSegmentedComponent, ArcTechSegmentedItemComponent } from '@/shared/components/segmented';
+import {
+  ArcTechSegmentedComponent,
+  ArcTechSegmentedItemComponent,
+} from '@/shared/components/segmented';
 import { ArcTechSelectImports } from '@/shared/components/select';
 import { ArcTechTooltipImports } from '@/shared/components/tooltip';
 import { HeaderComponent } from '@/shared/components/layout/header.component';

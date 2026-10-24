@@ -407,7 +407,6 @@
     },
     "sections": {
       "emptyTitle": "Aucun élément dans {{section}}",
-      "emptyDescription": "Les notes que vous ajoutez au dossier {{folder}} de votre Codex apparaissent ici.",
       "newNote": {
         "create": "Nouvelle note",
         "title": "Nouvelle note",
@@ -878,9 +877,8 @@
     "loadError": "Impossible de charger la vérification",
     "emptyTitle": "Rien à vérifier",
     "emptyDescription": "Chaque note est dans une section et chaque lien fonctionne.",
-    "alertTitle": "{{count}} points à vérifier",
-    "alertDescription": "Certaines notes, dossiers ou liens ne correspondent pas aux sections de cette campagne.",
-    "open": "Vérifier",
+    "alertTitle": "À regarder : {{count}}",
+    "open": "Ouvrir la vérification",
     "cancel": "Annuler",
     "groups": {
       "brokenLinks": {
@@ -922,6 +920,16 @@
     "delete": {
       "folderTitle": "Supprimer {{name}} ?",
       "folderDescription": "Le dossier {{folder}} et les {{count}} fichiers qu’il contient vont dans la corbeille, où vous pouvez les restaurer."
+    },
+    "summary": {
+      "broken_one": "1 lien cassé",
+      "broken_other": "{{count}} liens cassés",
+      "outside_one": "1 note hors de toute section",
+      "outside_other": "{{count}} notes hors de toute section",
+      "unknown_one": "1 dossier inconnu",
+      "unknown_other": "{{count}} dossiers inconnus",
+      "deep_one": "1 dossier trop profond",
+      "deep_other": "{{count}} dossiers trop profonds"
     }
   },
   "sidebar": {

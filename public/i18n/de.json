@@ -407,7 +407,6 @@
     },
     "sections": {
       "emptyTitle": "Noch keine Einträge in {{section}}",
-      "emptyDescription": "Notizen im Ordner {{folder}} deines Codex erscheinen hier.",
       "newNote": {
         "create": "Neue Notiz",
         "title": "Neue Notiz",
@@ -878,9 +877,8 @@
     "loadError": "Die Prüfung konnte nicht geladen werden",
     "emptyTitle": "Nichts zu prüfen",
     "emptyDescription": "Jede Notiz liegt in einem Bereich und jeder Link funktioniert.",
-    "alertTitle": "{{count}} Punkte zu prüfen",
-    "alertDescription": "Einige Notizen, Ordner oder Links passen nicht zu den Bereichen dieser Kampagne.",
-    "open": "Prüfen",
+    "alertTitle": "Einen Blick wert: {{count}}",
+    "open": "Prüfen öffnen",
     "cancel": "Abbrechen",
     "groups": {
       "brokenLinks": {
@@ -922,6 +920,16 @@
     "delete": {
       "folderTitle": "{{name}} löschen?",
       "folderDescription": "Der Ordner {{folder}} und die {{count}} Dateien darin kommen in den Papierkorb, wo du sie wiederherstellen kannst."
+    },
+    "summary": {
+      "broken_one": "1 defekter Link",
+      "broken_other": "{{count}} defekte Links",
+      "outside_one": "1 Notiz außerhalb jedes Bereichs",
+      "outside_other": "{{count}} Notizen außerhalb jedes Bereichs",
+      "unknown_one": "1 unbekannter Ordner",
+      "unknown_other": "{{count}} unbekannte Ordner",
+      "deep_one": "1 Ordner zu tief",
+      "deep_other": "{{count}} Ordner zu tief"
     }
   },
   "sidebar": {

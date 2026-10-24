@@ -151,7 +151,20 @@
         arcIcon="swords"
         [arcTitle]="(isParty() ? 'encounters.party.empty.title' : 'encounters.empty.title') | translate"
         [arcDescription]="(isParty() ? 'encounters.party.empty.description' : 'encounters.empty.description') | translate"
+        [arcActions]="isEditable() ? (isParty() ? [addEntityAction] : [addEntityAction, addPartyAction]) : []"
       />
+      <ng-template #addEntityAction>
+        <button arc-button type="button" (click)="openEntitySheet(null)">
+          <arc-icon arcType="plus" />
+          {{ 'encounters.entity.add' | translate }}
+        </button>
+      </ng-template>
+      <ng-template #addPartyAction>
+        <button arc-button arcType="outline" type="button" (click)="addParty()">
+          <arc-icon arcType="users" />
+          {{ 'encounters.party.add' | translate }}
+        </button>
+      </ng-template>
     } @else {
       <ul
         class="flex flex-col border border-border bg-card"

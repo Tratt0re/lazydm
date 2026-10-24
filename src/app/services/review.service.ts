@@ -1,4 +1,5 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
 
 import { APIChannel } from '@/config/api';
 import type { ReviewDto } from '@/dtos';
@@ -19,8 +20,28 @@ export function countReviewItems(review: ReviewDto): number {
   providedIn: 'root',
 })
 export class ReviewService extends BaseIpcService<APIChannel.REVIEW> {
+  private readonly translateService = inject(TranslateService);
+
   constructor() {
     super(APIChannel.REVIEW);
+  }
+
+  /** What is wrong, in plain words: "2 broken links, 1 note outside any section". */
+  describe(review: ReviewDto): string {
+    const parts: [string, number][] = [
+      ['broken', review.brokenLinkCount],
+      ['outside', review.outside.length],
+      ['unknown', review.unknownFolders.length],
+      ['deep', review.tooDeep.length],
+    ];
+    return parts
+      .filter(([, count]) => count > 0)
+      .map(([key, count]) =>
+        this.translateService.instant(`review.summary.${key}_${count === 1 ? 'one' : 'other'}`, {
+          count,
+        }),
+      )
+      .join(', ');
   }
 
   /** `scope`: a campaign slug or `compendium/<system>`. */

@@ -407,7 +407,6 @@
     },
     "sections": {
       "emptyTitle": "Aún no hay {{section}}",
-      "emptyDescription": "Las notas que añadas a la carpeta {{folder}} de tu Codex aparecerán aquí.",
       "newNote": {
         "create": "Nueva nota",
         "title": "Nueva nota",
@@ -878,9 +877,8 @@
     "loadError": "No se pudo cargar la revisión",
     "emptyTitle": "Nada que revisar",
     "emptyDescription": "Cada nota está en una sección y cada enlace funciona.",
-    "alertTitle": "{{count}} cosas que revisar",
-    "alertDescription": "Algunas notas, carpetas o enlaces no coinciden con las secciones de esta campaña.",
-    "open": "Revisar",
+    "alertTitle": "Conviene mirarlo: {{count}}",
+    "open": "Abrir revisión",
     "cancel": "Cancelar",
     "groups": {
       "brokenLinks": {
@@ -922,6 +920,16 @@
     "delete": {
       "folderTitle": "¿Eliminar {{name}}?",
       "folderDescription": "La carpeta {{folder}} y los {{count}} archivos que contiene van a la papelera, donde puedes restaurarlos."
+    },
+    "summary": {
+      "broken_one": "1 enlace roto",
+      "broken_other": "{{count}} enlaces rotos",
+      "outside_one": "1 nota fuera de toda sección",
+      "outside_other": "{{count}} notas fuera de toda sección",
+      "unknown_one": "1 carpeta desconocida",
+      "unknown_other": "{{count}} carpetas desconocidas",
+      "deep_one": "1 carpeta demasiado profunda",
+      "deep_other": "{{count}} carpetas demasiado profundas"
     }
   },
   "sidebar": {

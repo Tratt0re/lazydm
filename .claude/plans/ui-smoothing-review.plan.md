@@ -25,7 +25,7 @@ Before each phase, ask the user the open questions of that phase and record the 
 | A | Bug fixes | done | see git log |
 | B | Glossary | done | see git log |
 | C | Visible actions | done | see git log |
-| D | Empty states and first run | pending | |
+| D | Empty states and first run | in-progress | |
 | E | Voice | pending | |
 | F | Design rules | pending | |
 
@@ -66,10 +66,10 @@ Display text only. Key names, folders, file formats and code identifiers stay.
 
 ## Phase D. Empty states and first run
 
-- [ ] D1 Section empty state: DM voice and a *New note* button, no folder path (`campaign-section-page.html:281`)
-- [ ] D2 Empty encounter points to *Add party* / *Add combattant*
+- [x] D1 Section empty state: DM voice and a *New note* button, no folder path (`campaign-section-page.html:281`)
+- [x] D2 Empty encounter points to *Add party* / *Add combattant*
 - [ ] D3 New campaign overview: hide empty sections (apply impeccable onboarding suggestions); decide how to reach hidden ones
-- [ ] D4 Review alert: plain wording instead of "cose da rivedere"
+- [x] D4 Review alert: plain wording instead of "cose da rivedere"
 
 ## Phase E. Voice
 
@@ -111,6 +111,17 @@ Display text only. Key names, folders, file formats and code identifiers stay.
 - C6: battle bar hides the roll controls (Roll initiative, Select all) while a battle runs; encounter toolbar keeps the Cemetery and the tracker layout select visible, Rename and Delete go into a "..." menu
 - C7: the Links panel is closed by default and the Links button shows the link count; the open/closed choice is still remembered per device
 
+## Phase D answers (2026-10-24)
+
+- D1: an empty section shows its own description and a primary **New note** button; the folder path is gone
+- D2: an empty encounter shows **Add combatant** and **Add party** buttons inside the empty state (Add party left out when the campaign has no party roster yet)
+- D4: the Review alert says what is wrong in plain words, built from the real problems ("2 broken links, 1 note outside any section"), with an "Open Review" button
+- D3: a new campaign's overview shows one **Start** card plus only the sections that have content; a quiet **More sections** row reaches the rest
+- D3 start card: no fixed starting points. One generic **New…** button opens a form with a **section picker** listing every section that can take a new file (all note sections incl. custom ones, plus Encounters and Maps); picking Maps or Encounters switches to that section's own fields. No separate "import a map" link
+- D3 reuse: the same generic **New…** becomes the primary button of the overview toolbar (the start card is its first-run version); *Add section* moves into the "…" menu
+- D3 sidebar: stays complete (nothing hides). Each creatable section row gets a **'+' shown on hover or focus** that opens the same New form for that section
+- Open: delete `src/app/pages/settings-page/components/sections/templates-section/` (approved, but `git rm` was blocked by the permission classifier)
+
 ## Log
 
 - 2026-10-24: plan written, decisions recorded. No code touched yet.
@@ -119,3 +130,4 @@ Display text only. Key names, folders, file formats and code identifiers stay.
 - Left for later phases: the empty-state and alert wording ("cose da rivedere", Phase D), error wording (Phase E). The French `Coffre` and Spanish `Bóveda` for the old word are gone.
 - 2026-10-24: Phase C in progress. Done: C1, C2, C3. The toolbar has a new item type `menu` (the "..." button, `ToolbarMenuItem` in `toolbar-context.service.ts`); section pages and the campaign overview use it for New folder / Edit / Delete (Delete after a separator, in red). Title bar: Compendium, **Customize** (wrench icon; menu with Templates and Tracker layouts) and Settings; the shortcuts button moved to Settings → General (Cmd+/ still works). Checked in the browser (Italian, light): title bar, Customize menu, section toolbar and its "..." menu. Next: C4, C5, C6, C7.
 - 2026-10-24: Phase C done. C4: every row of a section list has one "..." button (same menu as right-click: copy, rename, move, reveal, delete), sub-folder rows and campaign cards have one too. C5: *Settings → Templates* is removed from the Settings navigation and page; the component files `templates-section.component.*` are still on disk, **unused, waiting for your OK to delete** (CLAUDE.md asks to list files before deleting). The keys `settings.sections.templates.*` and `settings.templates.rules.*` are still used or left for that cleanup. C6: roll controls (Roll initiative, Select all, row checkboxes) are hidden while a battle runs; encounter toolbar shows the layout select, a labelled *Cemetery* button and a "..." menu (Copy to, Rename, Delete forever-style delete last); the select now says "Default" like the library. C7: the Links panel starts closed (`documentLinksPanelOpen` default is `false`; devices that already chose keep their choice) and the toolbar button has a count badge (new `badge` field on toolbar actions). DESIGN_PRINCIPLES updated (§6c, §6d, §8). Checked in the browser (Italian, light): title bar and Customize menu, section toolbar and row menus, campaign cards, Links badge and closed panel, encounter battle bar idle and running. Not checked: dark theme and other languages for the new controls; dragging a row still works but I did not re-test it after adding the "..." button.
+- 2026-10-24: Phase D part 1 done (D1, D2, D4). D1: an empty section shows its own description and a primary button (New note / New encounter / New map; none for Assets or a system); key `campaigns.sections.emptyDescription` removed. D2: an empty encounter shows *Add combatant* and *Add party* (the roster page only the first). D4: the Review alert reads "Needs a look: 3" with "2 broken links, 1 note outside any section" and an *Open Review* button (new `ReviewService.describe()`, keys `review.summary.*`, `review.alertDescription` removed); the same on the compendium system page. Checked in the browser (Italian, light): D1 and D4. Not checked: D2 (empty encounter) visually. Next: D3.

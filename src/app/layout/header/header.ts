@@ -1,5 +1,14 @@
 import { NgTemplateOutlet } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, DestroyRef, HostListener, inject, signal, ViewEncapsulation } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  DestroyRef,
+  HostListener,
+  inject,
+  signal,
+  ViewEncapsulation,
+} from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 
 import { matchesShortcut } from '@/config/shortcuts.config';
@@ -15,7 +24,12 @@ import { ArcTechTooltipImports } from '@/shared/components/tooltip';
 import { listenToIpcEvent } from '@/services/ipc-events';
 
 type HeaderNavEntry =
-  | { readonly type: 'sheet'; readonly kind: AppSheetKind; readonly label: string; readonly icon: ArcTechIcon }
+  | {
+      readonly type: 'sheet';
+      readonly kind: AppSheetKind;
+      readonly label: string;
+      readonly icon: ArcTechIcon;
+    }
   | { readonly type: 'customize' };
 
 const MAXIMIZED_CHANGED_EVENT = 'window:maximizedChanged';
@@ -66,9 +80,8 @@ export class Header {
     { kind: 'battle-rules', label: 'nav.items.battleRules', icon: 'dices' },
   ];
   /** On the left (Windows, Linux) the buttons read settings first; on the right (macOS) the order above. */
-  protected readonly orderedNavEntries = window.electronAPI?.platform === 'darwin'
-    ? this.navEntries
-    : [...this.navEntries].reverse();
+  protected readonly orderedNavEntries =
+    window.electronAPI?.platform === 'darwin' ? this.navEntries : [...this.navEntries].reverse();
   protected readonly isCustomizeOpen = computed(() =>
     this.customizeSheets.some((sheet) => this.sheets.activeKind() === sheet.kind),
   );

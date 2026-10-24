@@ -407,7 +407,6 @@
     },
     "sections": {
       "emptyTitle": "No {{section}} yet",
-      "emptyDescription": "Notes you add to the {{folder}} folder of your Codex appear here.",
       "newNote": {
         "create": "New note",
         "title": "New note",
@@ -878,9 +877,8 @@
     "loadError": "Couldn't load the review",
     "emptyTitle": "Nothing to review",
     "emptyDescription": "Every note is in a section and every link resolves.",
-    "alertTitle": "{{count}} things to review",
-    "alertDescription": "Some notes, folders or links do not match the sections of this campaign.",
-    "open": "Review",
+    "alertTitle": "Needs a look: {{count}}",
+    "open": "Open Review",
     "cancel": "Cancel",
     "groups": {
       "brokenLinks": {
@@ -922,6 +920,16 @@
     "delete": {
       "folderTitle": "Delete {{name}}?",
       "folderDescription": "The {{folder}} folder and the {{count}} files in it go to the Trash, where you can restore them."
+    },
+    "summary": {
+      "broken_one": "1 broken link",
+      "broken_other": "{{count}} broken links",
+      "outside_one": "1 note outside any section",
+      "outside_other": "{{count}} notes outside any section",
+      "unknown_one": "1 unknown folder",
+      "unknown_other": "{{count}} unknown folders",
+      "deep_one": "1 folder too deep",
+      "deep_other": "{{count}} folders too deep"
     }
   },
   "sidebar": {

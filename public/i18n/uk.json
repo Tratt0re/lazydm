@@ -407,7 +407,6 @@
     },
     "sections": {
       "emptyTitle": "У розділі «{{section}}» поки порожньо",
-      "emptyDescription": "Нотатки, які ви додасте в теку {{folder}} свого Codex, з'являться тут.",
       "newNote": {
         "create": "Нова нотатка",
         "title": "Нова нотатка",
@@ -878,9 +877,8 @@
     "loadError": "Не вдалося завантажити перевірку",
     "emptyTitle": "Нічого перевіряти",
     "emptyDescription": "Кожна нотатка в розділі, і кожне посилання працює.",
-    "alertTitle": "Пунктів для перевірки: {{count}}",
-    "alertDescription": "Деякі нотатки, теки чи посилання не відповідають розділам цієї кампанії.",
-    "open": "Перевірити",
+    "alertTitle": "Варто глянути: {{count}}",
+    "open": "Відкрити перевірку",
     "cancel": "Скасувати",
     "groups": {
       "brokenLinks": {
@@ -922,6 +920,16 @@
     "delete": {
       "folderTitle": "Видалити {{name}}?",
       "folderDescription": "Тека {{folder}} і {{count}} файлів у ній потраплять у Кошик, звідки їх можна відновити."
+    },
+    "summary": {
+      "broken_one": "1 биття посилання",
+      "broken_other": "Биті посилання: {{count}}",
+      "outside_one": "1 нотатка поза розділами",
+      "outside_other": "Нотаток поза розділами: {{count}}",
+      "unknown_one": "1 невідома тека",
+      "unknown_other": "Невідомих тек: {{count}}",
+      "deep_one": "1 тека надто глибоко",
+      "deep_other": "Тек надто глибоко: {{count}}"
     }
   },
   "sidebar": {

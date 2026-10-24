@@ -36,7 +36,7 @@ import { ArcTechMenuImports } from '@/shared/components/menu';
             arcType="destructive"
             arcIcon="unlink"
             [arcTitle]="'review.alertTitle' | translate: { count: reviewCount() }"
-            [arcDescription]="'review.alertDescription' | translate"
+            [arcDescription]="reviewSummary()"
           >
             <a
               arc-button
@@ -132,6 +132,8 @@ export class CampaignHomePage {
   protected readonly sections = this.sectionService.visibleCampaignSections;
   /** Things the Review page lists (broken links, misplaced notes, unknown folders…). */
   protected readonly reviewCount = signal(0);
+  /** The same things in words ("2 broken links, 1 note outside any section"), the alert's description. */
+  protected readonly reviewSummary = signal('');
 
   constructor() {
     effect((onCleanup) => {
@@ -173,7 +175,10 @@ export class CampaignHomePage {
         );
         this.reviewService
           .list(campaign.slug)
-          .then((review) => this.reviewCount.set(countReviewItems(review)))
+          .then((review) => {
+            this.reviewCount.set(countReviewItems(review));
+            this.reviewSummary.set(this.reviewService.describe(review));
+          })
           .catch((error: unknown) => console.warn('[app] Failed to load the review:', error));
       }
     });

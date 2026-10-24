@@ -53,7 +53,7 @@ import { ArcTechIconComponent } from '@/shared/components/icon';
             arcType="destructive"
             arcIcon="unlink"
             [arcTitle]="'review.alertTitle' | translate: { count: reviewCount() }"
-            [arcDescription]="'review.alertDescription' | translate"
+            [arcDescription]="reviewSummary()"
           >
             <a
               arc-button
@@ -125,6 +125,8 @@ export class SystemHomePage {
   protected readonly system = this.compendiumService.activeSystem;
   /** Things the Review page lists (broken links, misplaced notes, unknown folders…). */
   protected readonly reviewCount = signal(0);
+  /** The same things in words ("2 broken links, 1 note outside any section"), the alert's description. */
+  protected readonly reviewSummary = signal('');
   /** Folders the system has, in campaign section order. */
   protected readonly sections = computed(() => {
     const folders = this.system()?.folders ?? [];
@@ -137,7 +139,10 @@ export class SystemHomePage {
       if (system) {
         this.reviewService
           .list(system.path)
-          .then((review) => this.reviewCount.set(countReviewItems(review)))
+          .then((review) => {
+            this.reviewCount.set(countReviewItems(review));
+            this.reviewSummary.set(this.reviewService.describe(review));
+          })
           .catch((error: unknown) => console.warn('[app] Failed to load the review:', error));
         onCleanup(
           this.toolbarContext.activate({

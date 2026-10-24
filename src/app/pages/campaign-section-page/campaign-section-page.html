@@ -256,8 +256,15 @@
           class="border border-dashed border-border bg-card/60"
           [arcIcon]="subfolder() ? 'folder' : section.icon"
           [arcTitle]="'campaigns.sections.emptyTitle' | translate: { section: pageLabel() }"
-          [arcDescription]="'campaigns.sections.emptyDescription' | translate: { folder: folderPath() }"
+          [arcDescription]="emptyDescription()"
+          [arcActions]="emptyCreateLabel() ? [emptyAction] : []"
         />
+        <ng-template #emptyAction>
+          <button arc-button type="button" (click)="createFromEmpty()">
+            <arc-icon arcType="plus" />
+            {{ emptyCreateLabel() | translate }}
+          </button>
+        </ng-template>
       } @else {
         <ul class="flex flex-col border border-border bg-card">
           @for (folder of folders(); track folder.name) {

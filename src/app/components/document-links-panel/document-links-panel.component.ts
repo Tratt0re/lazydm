@@ -119,8 +119,12 @@ export class AppDocumentLinksPanelComponent {
 
     return [...files.values()].sort((left, right) => left.title.localeCompare(right.title));
   });
-  protected readonly linkedNotes = computed(() => this.linkedFiles().filter((file) => !file.isAsset));
-  protected readonly linkedAssets = computed(() => this.linkedFiles().filter((file) => file.isAsset));
+  protected readonly linkedNotes = computed(() =>
+    this.linkedFiles().filter((file) => !file.isAsset),
+  );
+  protected readonly linkedAssets = computed(() =>
+    this.linkedFiles().filter((file) => file.isAsset),
+  );
   /** Broken links page of the note's campaign or compendium system. */
   protected readonly brokenLinksRoute = computed(() => {
     const location = parseVaultFilePath(this.path());

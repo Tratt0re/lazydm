@@ -392,7 +392,12 @@ export class CampaignSectionPage {
     }
 
     if (moreEntries.length > 0) {
-      actions.push({ id: 'section-more', type: 'menu', label: 'common.moreActions', entries: moreEntries });
+      actions.push({
+        id: 'section-more',
+        type: 'menu',
+        label: 'common.moreActions',
+        entries: moreEntries,
+      });
     }
 
     return actions;
@@ -782,6 +787,54 @@ export class CampaignSectionPage {
     this.fileActions.openCreateEncounterSheet(
       subfolder ? this.folderPathOf(subfolder) : this.sectionPath(),
     );
+  }
+
+  /**
+   * What an empty section says: its own description (the same line as its overview tile), then the button below
+   * creates the first file. The folder on disk is not mentioned.
+   */
+  protected readonly emptyDescription = computed(() => {
+    const section = this.section();
+    if (!section) {
+      return '';
+    }
+
+    if (section.description) {
+      return section.description;
+    }
+
+    return this.translateService.instant(
+      section.isCustom
+        ? 'campaigns.sections.customDescription'
+        : `campaigns.sections.${section.key}.description`,
+    );
+  });
+
+  /** Label of the button in an empty section; null when the section takes no new file (Assets, a system). */
+  protected readonly emptyCreateLabel = computed(() => {
+    if (this.scope()?.kind !== 'campaign') {
+      return null;
+    }
+
+    if (this.isEncountersSection()) {
+      return 'encounters.new.button';
+    }
+
+    if (this.section()?.key === MAPS_SECTION_KEY) {
+      return 'maps.new.button';
+    }
+
+    return this.canCreateNote() ? 'campaigns.sections.newNote.create' : null;
+  });
+
+  protected createFromEmpty(): void {
+    if (this.isEncountersSection()) {
+      this.openCreateEncounterSheet();
+    } else if (this.section()?.key === MAPS_SECTION_KEY) {
+      void this.fileActions.openCreateMapSheet(this.folderPath());
+    } else {
+      this.openCreateSheet();
+    }
   }
 
   /** Whether the section's folders take new notes (not the special sections: assets, encounters). */
