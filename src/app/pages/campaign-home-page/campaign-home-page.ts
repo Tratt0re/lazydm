@@ -36,16 +36,16 @@ import { ArcTechMenuImports } from '@/shared/components/menu';
   ],
   template: `
     @if (campaign(); as campaign) {
-      <div class="mx-auto flex w-full max-w-5xl flex-col gap-6 p-6">
+      <div class="flex w-full max-w-5xl flex-col gap-6 py-6">
         @if (campaign.description) {
           <p class="max-w-3xl text-sm text-muted-foreground">{{ campaign.description }}</p>
         }
 
         @if (reviewCount() > 0) {
           <arc-alert
-            arcType="destructive"
+            arcType="warning"
             arcIcon="unlink"
-            [arcTitle]="'review.alertTitle' | translate: { count: reviewCount() }"
+            [arcTitle]="'review.alertTitle' | translate"
             [arcDescription]="reviewSummary()"
           >
             <a

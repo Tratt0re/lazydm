@@ -896,7 +896,7 @@
     "loadError": "No se pudo cargar la revisión",
     "emptyTitle": "Nada que revisar",
     "emptyDescription": "Cada nota está en una sección y cada enlace funciona.",
-    "alertTitle": "Conviene mirarlo: {{count}}",
+    "alertTitle": "Conviene mirarlo",
     "open": "Abrir revisión",
     "cancel": "Cancelar",
     "groups": {

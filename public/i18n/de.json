@@ -896,7 +896,7 @@
     "loadError": "Die Prüfung konnte nicht geladen werden",
     "emptyTitle": "Nichts zu prüfen",
     "emptyDescription": "Jede Notiz liegt in einem Bereich und jeder Link funktioniert.",
-    "alertTitle": "Einen Blick wert: {{count}}",
+    "alertTitle": "Einen Blick wert",
     "open": "Prüfen öffnen",
     "cancel": "Abbrechen",
     "groups": {

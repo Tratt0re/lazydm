@@ -896,7 +896,7 @@
     "loadError": "Impossibile caricare la revisione",
     "emptyTitle": "Niente da rivedere",
     "emptyDescription": "Ogni nota è in una sezione e ogni link funziona.",
-    "alertTitle": "Da dare un’occhiata: {{count}}",
+    "alertTitle": "Da dare un’occhiata",
     "open": "Apri Revisione",
     "cancel": "Annulla",
     "groups": {

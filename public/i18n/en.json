@@ -896,7 +896,7 @@
     "loadError": "Couldn't load the review",
     "emptyTitle": "Nothing to review",
     "emptyDescription": "Every note is in a section and every link resolves.",
-    "alertTitle": "Needs a look: {{count}}",
+    "alertTitle": "Needs a look",
     "open": "Open Review",
     "cancel": "Cancel",
     "groups": {

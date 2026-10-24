@@ -35,7 +35,7 @@ import { ArcTechIconComponent } from '@/shared/components/icon';
   ],
   template: `
     @if (system(); as system) {
-      <div class="mx-auto flex w-full max-w-5xl flex-col gap-6 p-6">
+      <div class="flex w-full max-w-5xl flex-col gap-6 py-6">
         <div class="flex flex-wrap items-start justify-between gap-4">
           <p class="max-w-3xl text-sm text-muted-foreground">
             {{ system.description || ('compendium.system.description' | translate) }}
@@ -50,9 +50,9 @@ import { ArcTechIconComponent } from '@/shared/components/icon';
 
         @if (reviewCount() > 0) {
           <arc-alert
-            arcType="destructive"
+            arcType="warning"
             arcIcon="unlink"
-            [arcTitle]="'review.alertTitle' | translate: { count: reviewCount() }"
+            [arcTitle]="'review.alertTitle' | translate"
             [arcDescription]="reviewSummary()"
           >
             <a

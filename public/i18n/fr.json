@@ -896,7 +896,7 @@
     "loadError": "Impossible de charger la vérification",
     "emptyTitle": "Rien à vérifier",
     "emptyDescription": "Chaque note est dans une section et chaque lien fonctionne.",
-    "alertTitle": "À regarder : {{count}}",
+    "alertTitle": "À regarder",
     "open": "Ouvrir la vérification",
     "cancel": "Annuler",
     "groups": {

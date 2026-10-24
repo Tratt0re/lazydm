@@ -575,8 +575,9 @@ Planned Electron modules: `vault`, `cloud-readiness`, `campaign`, `document`, `i
 - **Campaign overview** → the toolbar's primary is **New…** (a picker of every section that takes a new file —
   note sections, Encounters, Maps — then that section's own form; *Add section*, *Edit* and *Delete* are in the "…"
   menu). Only sections **with something in them** get a tile. A campaign with none shows one **Start** card (the same
-  *New…*), and the sections that are still empty wait behind a quiet *More sections* row. The Review alert says what
-  is wrong in plain words ("2 broken links, 1 note outside any section") with an *Open Review* button.
+  *New…*), and the sections that are still empty wait behind a quiet *More sections* row. The Review alert is a `warning`
+  that says what is wrong in plain words ("2 broken links, 1 note outside any section", with no summed number in its
+  title) and has an *Open Review* button.
 - **Empty states** name the next step, never the folder on disk: an empty section shows its own description and its
   create button (*New note*, *New encounter*, *New map*); an empty encounter offers *Add combatant* and *Add party*.
 - **Sidebar rows** of a campaign's creatable sections (notes, Encounters, Maps) have a **+** on hover or focus that
@@ -705,7 +706,12 @@ Component behaviour, variant keys and configuration stay as they are.
     `border-strong` frame; dialogs add the engraved divider
     `<div class="arc-engraved-divider" aria-hidden="true"><span></span></div>` under the title. Backdrop is
     `rgb(3 5 7 / 82%)`.
-  - Alerts: full 1px border plus a 3px left bar in the state colour.
+  - Alerts: full 1px border plus a 3px left bar in the state colour. `destructive` is for things that failed or
+    cannot continue; `warning` (the `--warning` bronze-gold bar and icon, normal text) is for things worth a look
+    that block nothing, such as the Review alert.
+  - **Page columns are left-aligned** to the title: the content area has one 16px side padding (the toolbar's), and
+    a page's column (`max-w-5xl`, `max-w-6xl`) starts at the title's left edge instead of being centred. Pages that
+    fill the area (note, map) use the full width.
   - Badges/status chips: outlined, mono.
   - Tables: raised mono headers; selected row is the raised surface.
   - Toasts follow the *notification banner*: card surface, 1px border in the state colour, uppercase title, mono

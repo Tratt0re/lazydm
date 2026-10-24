@@ -3,7 +3,7 @@
   <!-- The wrapper covers the whole content area (it cancels the content's own padding and gives it back), so a
        right-click or a drop anywhere under the toolbar reaches it; rows and other elements keep their own menus. -->
   <div
-    class="relative -m-6 flex flex-1 flex-col p-6 outline-2 -outline-offset-2 transition-[outline-color]"
+    class="relative -mx-4 -my-6 flex flex-1 flex-col px-4 py-6 outline-2 -outline-offset-2 transition-[outline-color]"
     [class]="isFileDragOverPage() ? 'outline-dashed outline-primary' : 'outline-transparent'"
     arc-context-menu
     [arcContextMenuTriggerFor]="pageMenu"
@@ -12,7 +12,7 @@
     (dragleave)="onPageDragLeave($event)"
     (drop)="onPageDrop($event)"
   >
-  <div class="mx-auto flex w-full max-w-5xl flex-col gap-4 p-6">
+  <div class="flex w-full max-w-5xl flex-col gap-4 py-6">
     <!-- Right-click on the folder home: new folder, new note / encounter / asset, import from the other side. -->
     <ng-template #pageMenu>
       <div arc-menu-content class="w-56">

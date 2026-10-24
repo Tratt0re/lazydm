@@ -25,7 +25,7 @@ rebuild the preload bundle only if `channels.js` changes (not expected).
 | 1 | Tracker rows: compact default + density setting | done | see git log |
 | 2 | Encounters section page | done | see git log |
 | 3 | Note page chrome and toolbar, collapsible properties | done | see git log |
-| 4 | Alignment, overview alert, Review page | pending | |
+| 4 | Alignment, overview alert, Review page | done | see git log |
 | 5 | Ornament and typography | pending | |
 | 6 | Light theme | pending | |
 | 7 | Setup flow copy | pending | |
@@ -123,6 +123,17 @@ row; delete is always visible next to harmless icons; the turn highlight is only
 
 ## Log
 
+- 2026-10-24, Phase 4: the cause of the misalignment was the pages centring a `max-w` column (`mx-auto`) inside a
+  content area that was already wider than it, so the column started 68px (overview) or 128px (campaign list) after
+  the title. Now `arc-content` has a 16px side padding (the toolbar's), the column is left-aligned (`py-6` only) on
+  the overview, system overview, Review, Compendium, broken links, section and encounter pages, and the campaign list
+  grid starts at the title edge (measured: title 264 = column 264 on all of them; list 16 = 16). The section page's
+  drop-zone wrapper negative margins follow the new padding. New `warning` alert variant; the Review alert on both
+  overviews uses it, and its title lost the summed count (all 7 languages; the sentence below still counts each
+  kind). The "empty Broken links heading" from the critique did not reproduce: the group renders only when the
+  count is above 0, and the page shows the group and its rows together; I could not test the case where the index
+  count and the list differ (my mock returns both). Not checked: the note, map and asset pages (they fill the area;
+  the note was measured at 264 but not looked at), `tooDeep` group, narrow window beyond one screenshot of the list.
 - 2026-10-24, Phase 3 follow-up (user request): the repeated name. The open tab now shows only its icon (the page
   title names the page); the other tabs keep icon and name; the label's width animates on select/deselect (grid
   `0fr`/`1fr`, 200ms, off with reduced motion; measured 175 → 66px over ~200ms, no jump). The `min-w-28` floor went

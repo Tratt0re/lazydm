@@ -896,7 +896,7 @@
     "loadError": "无法加载检查结果",
     "emptyTitle": "没有需要检查的内容",
     "emptyDescription": "每条笔记都在某个分区中，所有链接均有效。",
-    "alertTitle": "需要看一眼：{{count}}",
+    "alertTitle": "需要看一眼",
     "open": "打开检查",
     "cancel": "取消",
     "groups": {

@@ -7,6 +7,7 @@ export const alertVariants = cva(
       arcType: {
         default: 'border-l-primary bg-raised text-card-foreground [&>[data-slot=alert-icon]]:text-primary',
         destructive: 'border-l-destructive bg-card text-destructive',
+        warning: 'border-l-warning bg-card text-card-foreground [&>[data-slot=alert-icon]]:text-warning',
       },
     },
     defaultVariants: {
@@ -24,6 +25,7 @@ export const alertDescriptionVariants = cva('text-sm leading-relaxed mt-1', {
     arcType: {
       default: 'text-muted-foreground',
       destructive: 'text-destructive/90',
+      warning: 'text-muted-foreground',
     },
   },
   defaultVariants: {
