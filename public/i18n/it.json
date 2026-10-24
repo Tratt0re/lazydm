@@ -1490,7 +1490,7 @@
   "onboarding": {
     "step": "Passo {{current}} di {{total}}",
     "welcome": {
-      "lead": "Fatto da un Dungeon Master per i Dungeon Master, e pigro per scelta: meno preparazione, e tutto a portata di mano quando inizia la sessione.",
+      "lead": "Fatto da un Dungeon Master per i Dungeon Master, pigro per scelta: meno preparazione, e tutto a portata di mano quando inizia la sessione.",
       "points": {
         "prepare": {
           "title": "Prepara una volta",

@@ -1490,7 +1490,7 @@
   "onboarding": {
     "step": "Étape {{current}} sur {{total}}",
     "welcome": {
-      "lead": "Fait par un Maître du Donjon pour des Maîtres du Donjon, et paresseux par conception : moins de préparation, et tout sous la main quand la séance commence.",
+      "lead": "Fait par un Maître du Donjon pour des Maîtres du Donjon, paresseux par conception : moins de préparation, et tout sous la main quand la séance commence.",
       "points": {
         "prepare": {
           "title": "Prépare une fois",

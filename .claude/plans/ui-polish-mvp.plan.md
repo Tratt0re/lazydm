@@ -123,6 +123,16 @@ row; delete is always visible next to harmless icons; the turn highlight is only
 
 ## Log
 
+- 2026-10-25, Phase 7 follow-ups (user, same turn): (1) the three intro lines of the Codex step are rows with a small
+  icon box each (folder, hard drive, sync; new `refresh-cw` icon registered), like the Welcome points; (2) language
+  and theme moved from the Welcome header into the footer, left of the buttons, on both setup steps (the Codex step
+  got the same two selects and handlers; they are labelled through `aria-label` since the visible labels are gone);
+  (3) the intro texts and the Welcome lead/points use the full card width (`max-w-3xl`/`max-w-prose` removed);
+  (4) the Welcome ornament rule stays in the title column only, under "LazyDM" (Franco is outside it), and the Codex
+  step has the same rule under its title; (5) the Welcome lead lost the "and" before "lazy by design" in all 7
+  languages. Checked in the mock (dark): Welcome and the Codex step, rule left edge = title left edge = 225px, Franco
+  at 57–201. Not checked: light theme for these changes, narrow widths (the footer wraps), the select labels read by
+  a screen reader, the existing-Codex and error states of the Codex step with the new footer.
 - 2026-10-25, decisions closed by the user before Phase 7: (1) the light canvas stays as it is (`#DFE0DE`); (2) no
   cap on list rows for very wide windows: the app is used on standard laptop screens during live sessions, so big
   monitors are not a target. The earlier measurements at 2200px are therefore informational only.

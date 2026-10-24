@@ -1,46 +1,19 @@
 <div class="flex min-h-0 flex-1 flex-col gap-6 overflow-y-auto p-6 sm:p-8">
-  <header class="grid grid-cols-[auto_1fr_auto] items-start gap-x-6 gap-y-4">
+  <header class="grid grid-cols-[auto_1fr] items-center gap-x-6 gap-y-3">
     <arc-icon arcType="franco" class="row-span-2 size-20 text-primary lg:size-36" aria-hidden="true" />
 
     <h1
       #title
       tabindex="-1"
-      class="self-center font-display text-5xl leading-[0.9] font-black tracking-[0.015em] uppercase outline-none lg:text-8xl"
+      class="self-end font-display text-5xl leading-[0.9] font-black tracking-[0.015em] uppercase outline-none lg:text-8xl"
     >
       LazyDM<span class="text-primary" aria-hidden="true">.</span>
     </h1>
 
-    <div class="flex items-start gap-4">
-      <div>
-        <label class="mb-1 block text-sm font-medium" for="welcome-language">
-          {{ 'settings.general.cards.language.fieldLabel' | translate }}
-        </label>
-        <arc-select id="welcome-language" class="w-44" [arcValue]="selectedLanguage()" (arcSelectionChange)="onLanguageChange($event)">
-          @for (language of languages; track language) {
-            <arc-select-item [arcValue]="language" [arcLabel]="getLanguageLabelKey(language) | translate" />
-          }
-        </arc-select>
-      </div>
-      <div>
-        <label class="mb-1 block text-sm font-medium" for="welcome-theme">
-          {{ 'settings.general.cards.theme.fieldLabel' | translate }}
-        </label>
-        <arc-select id="welcome-theme" class="w-44" [arcValue]="selectedTheme()" (arcSelectionChange)="onThemeChange($event)">
-          @for (theme of themeOptions; track theme) {
-            <arc-select-item
-              [arcValue]="theme"
-              [arcLabel]="themeOptionLabelKey(theme) | translate"
-              [arcIcon]="themeOptionIcon(theme)"
-            />
-          }
-        </arc-select>
-      </div>
-    </div>
-
-    <div class="arc-ornament-rule col-span-2" aria-hidden="true"><span>◇</span><span>✣</span><span>◇</span></div>
+    <div class="arc-ornament-rule self-start" aria-hidden="true"><span>◇</span><span>✣</span><span>◇</span></div>
   </header>
 
-  <p class="max-w-3xl text-base text-foreground-secondary lg:text-lg">{{ 'onboarding.welcome.lead' | translate }}</p>
+  <p class="text-base text-foreground-secondary lg:text-lg">{{ 'onboarding.welcome.lead' | translate }}</p>
 
   <!-- One lead statement and two supporting lines, not three equal cards. -->
   <ol class="grid gap-x-8 gap-y-5 md:grid-cols-[1.35fr_1fr] md:grid-rows-2">
@@ -65,7 +38,7 @@
           </h2>
         </div>
 
-        <p class="text-muted-foreground" [class]="point.isMain ? 'max-w-prose text-lg' : 'text-base'">
+        <p class="text-muted-foreground" [class]="point.isMain ? 'text-lg' : 'text-base'">
           {{ 'onboarding.welcome.points.' + point.key + '.text' | translate }}
         </p>
       </li>
@@ -80,8 +53,36 @@
   >
     <span class="is-reached"></span><span></span>
   </div>
-  <button arc-button type="button" arcSize="lg" (click)="next()">
-    {{ 'onboarding.welcome.continue' | translate }}
-    <arc-icon arcType="arrow-right" />
-  </button>
+  <div class="flex flex-wrap items-center justify-end gap-3">
+    <div class="flex items-center gap-2">
+        <arc-select
+          class="w-40"
+          [attr.aria-label]="'settings.general.cards.language.fieldLabel' | translate"
+          [arcValue]="selectedLanguage()"
+          (arcSelectionChange)="onLanguageChange($event)"
+        >
+          @for (language of languages; track language) {
+            <arc-select-item [arcValue]="language" [arcLabel]="getLanguageLabelKey(language) | translate" />
+          }
+        </arc-select>
+        <arc-select
+          class="w-40"
+          [attr.aria-label]="'settings.general.cards.theme.fieldLabel' | translate"
+          [arcValue]="selectedTheme()"
+          (arcSelectionChange)="onThemeChange($event)"
+        >
+          @for (theme of themeOptions; track theme) {
+            <arc-select-item
+              [arcValue]="theme"
+              [arcLabel]="themeOptionLabelKey(theme) | translate"
+              [arcIcon]="themeOptionIcon(theme)"
+            />
+          }
+        </arc-select>
+      </div>
+    <button arc-button type="button" arcSize="lg" (click)="next()">
+      {{ 'onboarding.welcome.continue' | translate }}
+      <arc-icon arcType="arrow-right" />
+    </button>
+  </div>
 </footer>

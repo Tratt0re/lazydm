@@ -1490,7 +1490,7 @@
   "onboarding": {
     "step": "Paso {{current}} de {{total}}",
     "welcome": {
-      "lead": "Hecho por un Dungeon Master para Dungeon Masters, y perezoso a propósito: menos preparación y todo a mano cuando empieza la sesión.",
+      "lead": "Hecho por un Dungeon Master para Dungeon Masters, perezoso a propósito: menos preparación y todo a mano cuando empieza la sesión.",
       "points": {
         "prepare": {
           "title": "Prepara una vez",

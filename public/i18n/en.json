@@ -1490,7 +1490,7 @@
   "onboarding": {
     "step": "Step {{current}} of {{total}}",
     "welcome": {
-      "lead": "Made by a Dungeon Master for Dungeon Masters, and lazy by design: less prep, and everything at hand when the session starts.",
+      "lead": "Made by a Dungeon Master for Dungeon Masters, lazy by design: less prep, and everything at hand when the session starts.",
       "points": {
         "prepare": {
           "title": "Prepare once",

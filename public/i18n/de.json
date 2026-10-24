@@ -1490,7 +1490,7 @@
   "onboarding": {
     "step": "Schritt {{current}} von {{total}}",
     "welcome": {
-      "lead": "Von einem Spielleiter für Spielleiter gemacht, und mit Absicht faul: weniger Vorbereitung, und alles griffbereit, wenn die Sitzung beginnt.",
+      "lead": "Von einem Spielleiter für Spielleiter gemacht, mit Absicht faul: weniger Vorbereitung, und alles griffbereit, wenn die Sitzung beginnt.",
       "points": {
         "prepare": {
           "title": "Einmal vorbereiten",

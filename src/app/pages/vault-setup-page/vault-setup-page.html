@@ -7,9 +7,37 @@
     >
       {{ 'vault.setup.title' | translate }}<span class="text-primary" aria-hidden="true">.</span>
     </h1>
-    <p class="mt-3 max-w-3xl text-base text-foreground-secondary">{{ 'vault.setup.description' | translate }}</p>
-    <p class="mt-2 max-w-3xl text-base text-foreground-secondary">{{ 'onboarding.vault.where' | translate }}</p>
-    <p class="mt-2 max-w-3xl text-sm text-muted-foreground">{{ 'onboarding.vault.cloudNote' | translate }}</p>
+    <!-- The same ornament rule as the Welcome step: it closes the title and opens the text. -->
+    <div class="arc-ornament-rule mt-4" aria-hidden="true"><span>◇</span><span>✣</span><span>◇</span></div>
+    <ul class="mt-6 flex flex-col gap-4">
+      <li class="flex items-start gap-3">
+        <span
+          class="flex size-9 shrink-0 items-center justify-center border border-input bg-recessed text-primary"
+          aria-hidden="true"
+        >
+          <arc-icon arcType="folder" class="size-4" />
+        </span>
+        <p class="min-w-0 pt-1.5 text-base text-foreground-secondary">{{ 'vault.setup.description' | translate }}</p>
+      </li>
+      <li class="flex items-start gap-3">
+        <span
+          class="flex size-9 shrink-0 items-center justify-center border border-input bg-recessed text-primary"
+          aria-hidden="true"
+        >
+          <arc-icon arcType="hard-drive" class="size-4" />
+        </span>
+        <p class="min-w-0 pt-1.5 text-base text-foreground-secondary">{{ 'onboarding.vault.where' | translate }}</p>
+      </li>
+      <li class="flex items-start gap-3">
+        <span
+          class="flex size-9 shrink-0 items-center justify-center border border-input bg-recessed text-primary"
+          aria-hidden="true"
+        >
+          <arc-icon arcType="refresh-cw" class="size-4" />
+        </span>
+        <p class="min-w-0 pt-1.5 text-sm text-muted-foreground">{{ 'onboarding.vault.cloudNote' | translate }}</p>
+      </li>
+    </ul>
   </header>
 
   @if (!isDesktop) {
@@ -92,7 +120,33 @@
     </div>
   </div>
 
-  <div class="flex flex-wrap justify-end gap-2">
+  <div class="flex flex-wrap items-center justify-end gap-2">
+    <div class="flex items-center gap-2">
+      <arc-select
+        class="w-40"
+        [attr.aria-label]="'settings.general.cards.language.fieldLabel' | translate"
+        [arcValue]="selectedLanguage()"
+        (arcSelectionChange)="onLanguageChange($event)"
+      >
+        @for (language of languages; track language) {
+          <arc-select-item [arcValue]="language" [arcLabel]="getLanguageLabelKey(language) | translate" />
+        }
+      </arc-select>
+      <arc-select
+        class="w-40"
+        [attr.aria-label]="'settings.general.cards.theme.fieldLabel' | translate"
+        [arcValue]="selectedTheme()"
+        (arcSelectionChange)="onThemeChange($event)"
+      >
+        @for (theme of themeOptions; track theme) {
+          <arc-select-item
+            [arcValue]="theme"
+            [arcLabel]="themeOptionLabelKey(theme) | translate"
+            [arcIcon]="themeOptionIcon(theme)"
+          />
+        }
+      </arc-select>
+    </div>
     @if (inspection(); as info) {
       <button arc-button type="button" arcType="outline" [arcDisabled]="isBusy()" (click)="chooseFolder()">
         {{ 'vault.setup.chooseAnother' | translate }}
