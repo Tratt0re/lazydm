@@ -291,7 +291,7 @@ Planned Electron modules: `vault`, `cloud-readiness`, `campaign`, `document`, `i
 - A **template** is a plain `.md` file in a `_templates/` folder: at the vault root (`_templates/`), in a compendium
   system (`compendium/<system>/_templates/`) or in a campaign (`<campaign>/_templates/`, where *Copy to campaign*
   puts copied templates). Obsidian can use them as they are.
-- **Built-in templates** ship with the app, one per preset section's note type (encounters excluded, they are `.json` files); sections the user creates have none. They are read-only and never
+- **Built-in templates** ship with the app, one per preset section's note type (encounters and maps excluded, they are not `.md` notes); sections the user creates have none. They are read-only and never
   written to the vault unasked; *Customize* copies one into `_templates/` to edit it.
 - **Per-campaign choice per note type**, saved in `.lazydm/vault.json` → `templates.campaigns.<slug>.<type>` (a
   template path or `builtin`; no entry = automatic). Deleting a template removes the choices pointing at it.

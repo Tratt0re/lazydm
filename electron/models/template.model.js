@@ -11,10 +11,10 @@ const TEMPLATES_DIR_NAME = '_templates';
 const MARKDOWN_EXTENSION = '.md';
 /** Rule value of a campaign that picked the built-in template of a type. */
 const BUILT_IN_RULE = 'builtin';
-/** Types whose section is not a note folder (encounters are special files): no template. */
-const NON_TEMPLATE_NOTE_TYPES = Object.freeze(['encounter']);
+/** Types whose section is not a note folder (encounters and maps are special files): no template. */
+const NON_TEMPLATE_NOTE_TYPES = Object.freeze(['encounter', 'map']);
 
-/** Note types that have a template (encounters are special files, not notes). */
+/** Note types that have a template (encounters and maps are special files, not notes). */
 const TEMPLATE_NOTE_TYPES = Object.freeze(
   Object.keys(NOTE_TYPE_DIR_NAMES).filter((type) => !NON_TEMPLATE_NOTE_TYPES.includes(type)),
 );
