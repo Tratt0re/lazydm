@@ -1,4 +1,11 @@
-import { ChangeDetectionStrategy, Component, computed, effect, inject, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  effect,
+  inject,
+  signal,
+} from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 
@@ -154,8 +161,14 @@ import { ArcTechMenuImports } from '@/shared/components/menu';
                       [routerLink]="['/campaigns', campaign.slug, section.key]"
                       class="flex items-center gap-3 border border-border bg-card/60 px-3 py-2 text-sm text-muted-foreground hover:border-primary hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
                     >
-                      <arc-icon [arcType]="section.icon" class="size-4 shrink-0 text-primary" aria-hidden="true" />
-                      <span class="truncate font-semibold">{{ sectionService.labelOf(section) }}</span>
+                      <arc-icon
+                        [arcType]="section.icon"
+                        class="size-4 shrink-0 text-primary"
+                        aria-hidden="true"
+                      />
+                      <span class="truncate font-semibold">{{
+                        sectionService.labelOf(section)
+                      }}</span>
                     </a>
                   </li>
                 }

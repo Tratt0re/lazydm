@@ -360,6 +360,11 @@
                               (blur)="commitStatusInput($any($event.target), entity, field)"
                             />
                           </div>
+                          @if (isEditable()) {
+                            <p class="text-[11px] leading-4 text-muted-foreground">
+                              {{ 'encounters.status.hint' | translate }}
+                            </p>
+                          }
                         </div>
                       }
                       @case ('text') {

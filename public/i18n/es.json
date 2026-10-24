@@ -76,11 +76,9 @@
       }
     },
     "general": {
-      "intro": "Estas preferencias se aplican al instante para que la app se adapte a cómo diriges tus sesiones.",
       "appearanceGroupTitle": "Apariencia",
       "cards": {
         "theme": {
-          "description": "Elige la apariencia más cómoda para usar la app todos los días.",
           "fieldLabel": "Modo de tema",
           "options": {
             "system": "Sistema",
@@ -89,7 +87,6 @@
           }
         },
         "language": {
-          "description": "Elige el idioma de la navegación, las etiquetas y los mensajes de toda la app.",
           "fieldLabel": "Idioma de la app"
         }
       },
@@ -230,7 +227,6 @@
       }
     },
     "editor": {
-      "intro": "Estas opciones se aplican al instante a todas las notas, solo en este dispositivo.",
       "groups": {
         "display": "Visualización",
         "behaviour": "Comportamiento"
@@ -500,7 +496,7 @@
         "nameLabel": "Nombre",
         "noBacklinks": "Ninguna nota enlaza este archivo.",
         "done": "Renombrado a {{name}} — {{links}} enlaces actualizados en {{notes}} notas",
-        "error": "No se pudo renombrar el archivo"
+        "error": "No se pudo renombrar el archivo. Comprueba que la carpeta del Codex esté disponible y vuelve a intentarlo."
       },
       "maps": {
         "description": "Mapas interactivos con marcadores, rutas y notas."
@@ -539,7 +535,7 @@
       "description": "Elige dónde va. Cualquier sección vale como punto de partida.",
       "sectionLabel": "Sección",
       "submit": "Siguiente",
-      "button": "Nuevo…",
+      "button": "Nuevo",
       "startTitle": "Empieza por donde quieras",
       "startDescription": "Crea la primera nota, enemigo, encuentro o mapa. Las demás secciones aparecen aquí a medida que las uses.",
       "moreSections": "Más secciones"
@@ -561,7 +557,7 @@
     },
     "toast": {
       "saved": "Nota guardada",
-      "saveError": "No se pudo guardar la nota",
+      "saveError": "No se pudo guardar la nota. Tu texto sigue en el editor. Comprueba que la carpeta del Codex esté disponible y vuelve a intentarlo.",
       "savedCopy": "Guardada como copia: {{path}}"
     },
     "conflict": {
@@ -592,7 +588,7 @@
       "updateLinks": "Actualizar {{links}} enlaces en {{notes}} notas",
       "done": "Nota renombrada — {{links}} enlaces actualizados en {{notes}} notas",
       "failed": "Algunas notas cambiaron mientras tanto y siguen usando el nombre anterior",
-      "error": "No se pudo renombrar la nota"
+      "error": "No se pudo renombrar la nota. Comprueba que la carpeta del Codex esté disponible y vuelve a intentarlo."
     },
     "insertMenu": {
       "cut": "Cortar",
@@ -919,7 +915,7 @@
       "submit": "Mover",
       "done": "{{title}} movida ({{links}} enlaces actualizados)",
       "failedLinks": "Sin actualizar (cambiadas mientras tanto): {{paths}}",
-      "error": "No se pudo mover la nota"
+      "error": "No se pudo mover la nota. Comprueba que la carpeta del Codex esté disponible y vuelve a intentarlo."
     },
     "addSection": {
       "title": "Añadir {{folder}} como sección",
@@ -972,13 +968,13 @@
       "submit": "Mover a la Papelera",
       "done": "{{name}} movido a la Papelera",
       "linksUpdated": "{{links}} enlaces actualizados en {{notes}} notas",
-      "error": "No se pudo eliminar el archivo"
+      "error": "No se pudo eliminar el archivo. Comprueba que la carpeta del Codex esté disponible y vuelve a intentarlo."
     },
     "renameFolder": {
       "title": "Renombrar {{name}}",
       "description": "La carpeta se renombra en el disco; sus {{count}} archivos conservan su nombre y se actualizan los enlaces que pasan por la carpeta.",
       "done": "Carpeta renombrada a {{name}}",
-      "error": "No se pudo renombrar la carpeta"
+      "error": "No se pudo renombrar la carpeta. Comprueba que la carpeta del Codex esté disponible y vuelve a intentarlo."
     },
     "deleteFolder": {
       "title": "¿Eliminar {{name}}?",
@@ -989,7 +985,7 @@
       "rewriteLinks": "Al eliminarlos: convertir sus enlaces en texto plano y quitar sus incrustaciones",
       "clashes": "Algunos nombres ya existen en la carpeta principal: renombra antes esos archivos",
       "done": "Carpeta {{name}} movida a la Papelera",
-      "error": "No se pudo eliminar la carpeta"
+      "error": "No se pudo eliminar la carpeta. Comprueba que la carpeta del Codex esté disponible y vuelve a intentarlo."
     },
     "importFromDisk": {
       "button": "Importar del disco",
@@ -1043,7 +1039,7 @@
       "statuses": "Estados",
       "note": "Nota"
     },
-    "saveError": "No se pudo guardar el encuentro",
+    "saveError": "No se pudo guardar el encuentro. Comprueba que la carpeta del Codex esté disponible y vuelve a intentarlo.",
     "conflict": {
       "title": "Este encuentro cambió en otro sitio",
       "description": "Se guardó una versión más reciente de este encuentro mientras lo editabas. Conserva tus cambios o carga la otra versión.",
@@ -1091,7 +1087,8 @@
     "status": {
       "add": "Añadir estado",
       "remove": "Quitar {{name}}",
-      "placeholder": "Añadir estado… (aturdido 3 = 3 rondas)"
+      "placeholder": "Añadir un estado…",
+      "hint": "Escribe un nombre y pulsa Intro. Añade un número para las rondas: «aturdido 3» termina tras 3 turnos suyos. Sin número, se queda hasta que lo quites."
     },
     "note": {
       "show": "Mostrar la nota",
@@ -1277,7 +1274,7 @@
       "missingImage": "Falta la imagen de este mapa",
       "missingImageHint": "Se movió o se eliminó de los recursos: {{image}}",
       "noImage": "Este mapa no tiene imagen",
-      "saveError": "No se pudo guardar el mapa",
+      "saveError": "No se pudo guardar el mapa. Comprueba que la carpeta del Codex esté disponible y vuelve a intentarlo.",
       "conflictTitle": "Este mapa cambió en otro lugar",
       "conflictDescription": "El archivo se modificó fuera de esta página. Conserva tu versión o carga la otra.",
       "keepMine": "Conservar mi versión",

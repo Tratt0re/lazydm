@@ -26,7 +26,7 @@ Before each phase, ask the user the open questions of that phase and record the 
 | B | Glossary | done | see git log |
 | C | Visible actions | done | see git log |
 | D | Empty states and first run | done | see git log |
-| E | Voice | pending | |
+| E | Voice | done | see git log |
 | F | Design rules | pending | |
 
 Status values: pending, questions, in-progress, done.
@@ -73,10 +73,10 @@ Display text only. Key names, folders, file formats and code identifiers stay.
 
 ## Phase E. Voice
 
-- [ ] E1 Cut filler from Settings descriptions
-- [ ] E2 Errors say the likely cause and what to do (save, rename, delete, move first)
-- [ ] E3 Status syntax moves from the input placeholder to a persistent hint
-- [ ] E4 English first, then the 6 other languages in one batch
+- [x] E1 Cut filler from Settings descriptions
+- [x] E2 Errors say the likely cause and what to do (save, rename, delete, move first)
+- [x] E3 Status syntax moves from the input placeholder to a persistent hint
+- [x] E4 English first, then the 6 other languages in one batch
 
 ## Phase F. Design rules
 
@@ -123,6 +123,13 @@ Display text only. Key names, folders, file formats and code identifiers stay.
 - D3 sidebar: stays complete (nothing hides). Each creatable section row gets a **'+' shown on hover or focus** that opens the same New form for that section
 - Open: delete `src/app/pages/settings-page/components/sections/templates-section/` (approved, but `git rm` was blocked by the permission classifier)
 
+## Phase E answers (2026-10-24)
+
+- E2: errors say the likely cause and what to do ("Couldn't save the note. The folder may be offline. Your text is still here."); save, rename, delete and move first
+- E1: cut the filler lines of Settings entirely instead of rewriting them
+- E3: the status syntax leaves the placeholder for a small persistent hint under the field, and it should also explain the idea, not only the syntax
+- Extra (user): the Assets section's empty state needs a CTA button; the label *New…* loses its "…" (the user does not like them)
+
 ## Log
 
 - 2026-10-24: plan written, decisions recorded. No code touched yet.
@@ -134,3 +141,5 @@ Display text only. Key names, folders, file formats and code identifiers stay.
 - 2026-10-24: Phase D part 1 done (D1, D2, D4). D1: an empty section shows its own description and a primary button (New note / New encounter / New map; none for Assets or a system); key `campaigns.sections.emptyDescription` removed. D2: an empty encounter shows *Add combatant* and *Add party* (the roster page only the first). D4: the Review alert reads "Needs a look: 3" with "2 broken links, 1 note outside any section" and an *Open Review* button (new `ReviewService.describe()`, keys `review.summary.*`, `review.alertDescription` removed); the same on the compendium system page. Checked in the browser (Italian, light): D1 and D4. Not checked: D2 (empty encounter) visually. Next: D3.
 - 2026-10-24: Phase D done. D3: the overview toolbar's primary is **New…** (`FileActionsService.openCreateAnythingSheet`: a picker of every section that takes a new file, then `openCreateInSection` opens that section's own form); *Add section* is in the "…" menu. Tiles only for sections with files; a campaign with none shows the **Start** card (`campaigns.newAnything.*`) and a *More sections (N)* row that unfolds the empty ones. Sidebar rows of creatable sections (campaign scope only) show a **+** on hover or focus (`explorer.newIn`) that calls `openCreateInSection` directly. Checked in the browser (Italian, dark): Start card, More sections row, sidebar + (not on Assets), the picker, the note form and the map form. Not checked: the encounter form from the picker, a campaign with content on the overview, and the sidebar + in the light theme. DESIGN_PRINCIPLES §8 updated.
 - Still open: deleting `src/app/pages/settings-page/components/sections/templates-section/` (approved by the user, but the permission classifier blocked `git rm`). Phase E (voice) comes next.
+- 2026-10-24: Phase E done, plus the two extras. E1: the intro boxes of Settings → General and Editor and the theme and language descriptions are gone (keys removed in 7 languages). E2: the messages for saving a note, renaming a note, renaming or deleting a file, renaming or deleting a folder, moving a note, and saving an encounter or a map now say what to check ("Check that the Codex folder is available, then try again."); the note save message also says the text is still in the editor (true: a failed save leaves the editor untouched). The other ~50 "Couldn't X" messages are unchanged on purpose: for most of them the cause is not known, and a made-up cause would be worse than none. E3: the status field has a short placeholder ("Add a status…") and a persistent hint under it explaining rounds ("stunned 3" wears off after 3 of its turns; without a number it stays). Extras: the Assets empty state has an *Import from disk* button; *New…* is now *New* in every language. Checked in the browser (Italian, light): Assets empty state and the status hint. Not checked: the error messages in context (they only show on a real failure).
+- Left over: other labels that end with "…" (Move to…, Rename…, Delete…, Create note…) follow the macOS convention for actions that open a dialog; only *New…* was changed, as asked.

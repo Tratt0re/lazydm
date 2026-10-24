@@ -76,11 +76,9 @@
       }
     },
     "general": {
-      "intro": "这些偏好设置立即生效，使应用与你主持游戏的方式保持一致。",
       "appearanceGroupTitle": "外观",
       "cards": {
         "theme": {
-          "description": "选择最适合日常使用的外观。",
           "fieldLabel": "显示模式",
           "options": {
             "system": "跟随系统",
@@ -89,7 +87,6 @@
           }
         },
         "language": {
-          "description": "选择应用导航、标签和消息所用的语言。",
           "fieldLabel": "应用语言"
         }
       },
@@ -230,7 +227,6 @@
       }
     },
     "editor": {
-      "intro": "这些选项立即应用于所有笔记，仅限此设备。",
       "groups": {
         "display": "显示",
         "behaviour": "行为"
@@ -500,7 +496,7 @@
         "nameLabel": "名称",
         "noBacklinks": "没有笔记链接到此文件。",
         "done": "已重命名为 {{name}} — 已更新 {{notes}} 篇笔记中的 {{links}} 个链接",
-        "error": "无法重命名文件"
+        "error": "无法重命名文件。请确认 Codex 文件夹可用，然后重试。"
       },
       "maps": {
         "description": "带有标记、路径和笔记的交互式地图。"
@@ -539,7 +535,7 @@
       "description": "选择放在哪里。任何分区都可以作为起点。",
       "sectionLabel": "分区",
       "submit": "下一步",
-      "button": "新建…",
+      "button": "新建",
       "startTitle": "从哪里开始都行",
       "startDescription": "创建第一篇笔记、敌人、遭遇或地图。其他分区会在你使用后出现在这里。",
       "moreSections": "更多分区"
@@ -561,7 +557,7 @@
     },
     "toast": {
       "saved": "笔记已保存",
-      "saveError": "无法保存笔记",
+      "saveError": "无法保存笔记。你的文字仍保留在编辑器中。请确认 Codex 文件夹可用，然后重试。",
       "savedCopy": "已保存为副本：{{path}}"
     },
     "conflict": {
@@ -592,7 +588,7 @@
       "updateLinks": "更新 {{notes}} 篇笔记中的 {{links}} 个链接",
       "done": "笔记已重命名 — 已更新 {{notes}} 篇笔记中的 {{links}} 个链接",
       "failed": "部分笔记在此期间已被修改，仍在使用旧名称",
-      "error": "无法重命名笔记"
+      "error": "无法重命名笔记。请确认 Codex 文件夹可用，然后重试。"
     },
     "insertMenu": {
       "cut": "剪切",
@@ -919,7 +915,7 @@
       "submit": "移动",
       "done": "已移动 {{title}}（更新了 {{links}} 个链接）",
       "failedLinks": "未更新（期间被修改）：{{paths}}",
-      "error": "无法移动笔记"
+      "error": "无法移动笔记。请确认 Codex 文件夹可用，然后重试。"
     },
     "addSection": {
       "title": "将 {{folder}} 添加为分区",
@@ -972,13 +968,13 @@
       "submit": "移到废纸篓",
       "done": "{{name}} 已移到废纸篓",
       "linksUpdated": "已更新 {{notes}} 篇笔记中的 {{links}} 个链接",
-      "error": "无法删除文件"
+      "error": "无法删除文件。请确认 Codex 文件夹可用，然后重试。"
     },
     "renameFolder": {
       "title": "重命名 {{name}}",
       "description": "文件夹将在磁盘上重命名；其中 {{count}} 个文件保留原名，经过此文件夹的链接会被更新。",
       "done": "文件夹已重命名为 {{name}}",
-      "error": "无法重命名文件夹"
+      "error": "无法重命名文件夹。请确认 Codex 文件夹可用，然后重试。"
     },
     "deleteFolder": {
       "title": "删除 {{name}}？",
@@ -989,7 +985,7 @@
       "rewriteLinks": "删除时：将指向它们的链接转为纯文本并移除嵌入",
       "clashes": "主文件夹中已有同名文件——请先重命名这些文件",
       "done": "文件夹 {{name}} 已移到废纸篓",
-      "error": "无法删除文件夹"
+      "error": "无法删除文件夹。请确认 Codex 文件夹可用，然后重试。"
     },
     "importFromDisk": {
       "button": "从磁盘导入",
@@ -1043,7 +1039,7 @@
       "statuses": "状态",
       "note": "笔记"
     },
-    "saveError": "无法保存遭遇",
+    "saveError": "无法保存遭遇。请确认 Codex 文件夹可用，然后重试。",
     "conflict": {
       "title": "此遭遇已在别处更改",
       "description": "你编辑期间保存了此遭遇的较新版本。保留你的更改，或加载另一个版本。",
@@ -1091,7 +1087,8 @@
     "status": {
       "add": "添加状态",
       "remove": "移除 {{name}}",
-      "placeholder": "添加状态…（眩晕 3 = 3 回合）"
+      "placeholder": "添加状态…",
+      "hint": "输入名称后按回车。加上数字表示回合数：“眩晕 3”会在其 3 个回合后消失。不加数字则一直保留，直到你移除。"
     },
     "note": {
       "show": "显示笔记",
@@ -1277,7 +1274,7 @@
       "missingImage": "此地图的图片缺失",
       "missingImageHint": "它已从资源中移动或删除：{{image}}",
       "noImage": "此地图没有图片",
-      "saveError": "无法保存地图",
+      "saveError": "无法保存地图。请确认 Codex 文件夹可用，然后重试。",
       "conflictTitle": "此地图已在别处更改",
       "conflictDescription": "该文件在此页面之外被修改。请保留你的版本，或加载另一个版本。",
       "keepMine": "保留我的版本",

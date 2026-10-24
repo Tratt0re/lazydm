@@ -1,11 +1,7 @@
 <div class="space-y-5">
   <section class="rounded-lg border border-border/60 bg-card p-4 md:p-5">
     <h3 class="sr-only">{{ 'settings.general.appearanceGroupTitle' | translate }}</h3>
-    <div class="rounded-md bg-muted/40 p-3 text-sm text-muted-foreground">
-      {{ 'settings.general.intro' | translate }}
-    </div>
-
-    <div class="mt-4 grid gap-4 lg:grid-cols-2">
+    <div class="grid gap-4 lg:grid-cols-2">
       <div>
         <label class="mb-1 block text-sm font-medium" for="settings-theme">
           {{ 'settings.general.cards.theme.fieldLabel' | translate }}
@@ -23,9 +19,6 @@
             />
           }
         </arc-select>
-        <p class="mt-2 text-xs text-muted-foreground">
-          {{ 'settings.general.cards.theme.description' | translate }}
-        </p>
       </div>
 
       <div>
@@ -41,9 +34,6 @@
             <arc-select-item [arcValue]="language" [arcLabel]="getLanguageLabelKey(language) | translate" />
           }
         </arc-select>
-        <p class="mt-2 text-xs text-muted-foreground">
-          {{ 'settings.general.cards.language.description' | translate }}
-        </p>
       </div>
     </div>
   </section>

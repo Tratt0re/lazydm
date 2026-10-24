@@ -76,11 +76,9 @@
       }
     },
     "general": {
-      "intro": "Queste preferenze si applicano subito, così l'app si adatta al modo in cui gestisci le tue sessioni.",
       "appearanceGroupTitle": "Aspetto",
       "cards": {
         "theme": {
-          "description": "Scegli l'aspetto più comodo per usare l'app tutti i giorni.",
           "fieldLabel": "Modalità tema",
           "options": {
             "system": "Sistema",
@@ -89,7 +87,6 @@
           }
         },
         "language": {
-          "description": "Scegli la lingua usata in navigazione, etichette e messaggi in tutta l'app.",
           "fieldLabel": "Lingua app"
         }
       },
@@ -230,7 +227,6 @@
       }
     },
     "editor": {
-      "intro": "Queste scelte valgono subito per tutte le note, e solo su questo dispositivo.",
       "groups": {
         "display": "Visualizzazione",
         "behaviour": "Comportamento"
@@ -500,7 +496,7 @@
         "nameLabel": "Nome",
         "noBacklinks": "Nessuna nota collega questo file.",
         "done": "Rinominato in {{name}} — {{links}} collegamenti aggiornati in {{notes}} note",
-        "error": "Impossibile rinominare il file"
+        "error": "Impossibile rinominare il file. Controlla che la cartella del Codex sia disponibile, poi riprova."
       },
       "maps": {
         "description": "Mappe interattive con segnalini, percorsi e note."
@@ -539,7 +535,7 @@
       "description": "Scegli dove va. Qualsiasi sezione va bene come punto di partenza.",
       "sectionLabel": "Sezione",
       "submit": "Avanti",
-      "button": "Nuovo…",
+      "button": "Nuovo",
       "startTitle": "Parti da dove vuoi",
       "startDescription": "Crea la prima nota, il primo nemico, incontro o mappa. Le altre sezioni compaiono qui man mano che le usi.",
       "moreSections": "Altre sezioni"
@@ -561,7 +557,7 @@
     },
     "toast": {
       "saved": "Nota salvata",
-      "saveError": "Impossibile salvare la nota",
+      "saveError": "Impossibile salvare la nota. Il testo è ancora nell’editor. Controlla che la cartella del Codex sia disponibile, poi riprova.",
       "savedCopy": "Salvata come copia: {{path}}"
     },
     "conflict": {
@@ -592,7 +588,7 @@
       "updateLinks": "Aggiorna {{links}} collegamenti in {{notes}} note",
       "done": "Nota rinominata — {{links}} collegamenti aggiornati in {{notes}} note",
       "failed": "Alcune note sono cambiate nel frattempo e usano ancora il vecchio nome",
-      "error": "Impossibile rinominare la nota"
+      "error": "Impossibile rinominare la nota. Controlla che la cartella del Codex sia disponibile, poi riprova."
     },
     "insertMenu": {
       "cut": "Taglia",
@@ -919,7 +915,7 @@
       "submit": "Sposta",
       "done": "{{title}} spostata ({{links}} link aggiornati)",
       "failedLinks": "Non aggiornate (modificate nel frattempo): {{paths}}",
-      "error": "Impossibile spostare la nota"
+      "error": "Impossibile spostare la nota. Controlla che la cartella del Codex sia disponibile, poi riprova."
     },
     "addSection": {
       "title": "Aggiungi {{folder}} come sezione",
@@ -972,13 +968,13 @@
       "submit": "Sposta nel Cestino",
       "done": "{{name}} spostato nel Cestino",
       "linksUpdated": "{{links}} collegamenti aggiornati in {{notes}} note",
-      "error": "Impossibile eliminare il file"
+      "error": "Impossibile eliminare il file. Controlla che la cartella del Codex sia disponibile, poi riprova."
     },
     "renameFolder": {
       "title": "Rinomina {{name}}",
       "description": "La cartella viene rinominata sul disco; i suoi {{count}} file mantengono il nome e i collegamenti che passano dalla cartella vengono aggiornati.",
       "done": "Cartella rinominata in {{name}}",
-      "error": "Impossibile rinominare la cartella"
+      "error": "Impossibile rinominare la cartella. Controlla che la cartella del Codex sia disponibile, poi riprova."
     },
     "deleteFolder": {
       "title": "Eliminare {{name}}?",
@@ -989,7 +985,7 @@
       "rewriteLinks": "Se li elimini: trasforma i collegamenti in testo semplice e rimuovi gli incorporamenti",
       "clashes": "Alcuni nomi sono già presenti nella cartella principale — rinomina prima quei file",
       "done": "Cartella {{name}} spostata nel Cestino",
-      "error": "Impossibile eliminare la cartella"
+      "error": "Impossibile eliminare la cartella. Controlla che la cartella del Codex sia disponibile, poi riprova."
     },
     "importFromDisk": {
       "button": "Importa dal disco",
@@ -1043,7 +1039,7 @@
       "statuses": "Stati",
       "note": "Nota"
     },
-    "saveError": "Impossibile salvare l'incontro",
+    "saveError": "Impossibile salvare l'incontro. Controlla che la cartella del Codex sia disponibile, poi riprova.",
     "conflict": {
       "title": "Questo incontro è cambiato altrove",
       "description": "È stata salvata una versione più recente di questo incontro mentre lo modificavi. Mantieni le tue modifiche o carica l'altra versione.",
@@ -1091,7 +1087,8 @@
     "status": {
       "add": "Aggiungi stato",
       "remove": "Rimuovi {{name}}",
-      "placeholder": "Aggiungi uno stato… (stordito 3 = 3 round)"
+      "placeholder": "Aggiungi uno stato…",
+      "hint": "Scrivi un nome e premi Invio. Aggiungi un numero per i round: “stordito 3” finisce dopo 3 suoi turni. Senza numero resta finché non lo togli."
     },
     "note": {
       "show": "Mostra la nota",
@@ -1277,7 +1274,7 @@
       "missingImage": "L'immagine di questa mappa manca",
       "missingImageHint": "È stata spostata o eliminata dagli asset: {{image}}",
       "noImage": "Questa mappa non ha un'immagine",
-      "saveError": "Impossibile salvare la mappa",
+      "saveError": "Impossibile salvare la mappa. Controlla che la cartella del Codex sia disponibile, poi riprova.",
       "conflictTitle": "Questa mappa è cambiata altrove",
       "conflictDescription": "Il file è stato modificato fuori da questa pagina. Mantieni la tua versione o carica l'altra.",
       "keepMine": "Mantieni la mia versione",

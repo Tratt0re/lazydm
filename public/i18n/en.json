@@ -76,11 +76,9 @@
       }
     },
     "general": {
-      "intro": "These preferences update right away so the app matches how you play and run your sessions.",
       "appearanceGroupTitle": "Appearance",
       "cards": {
         "theme": {
-          "description": "Pick the appearance that feels best for everyday use across the whole app.",
           "fieldLabel": "Theme mode",
           "options": {
             "system": "System",
@@ -89,7 +87,6 @@
           }
         },
         "language": {
-          "description": "Choose the language used in navigation, labels, and messages throughout the app.",
           "fieldLabel": "App language"
         }
       },
@@ -230,7 +227,6 @@
       }
     },
     "editor": {
-      "intro": "These choices apply to every note right away, and only on this device.",
       "groups": {
         "display": "Display",
         "behaviour": "Behaviour"
@@ -500,7 +496,7 @@
         "nameLabel": "Name",
         "noBacklinks": "No note links to this file.",
         "done": "Renamed to {{name}} — {{links}} links updated in {{notes}} notes",
-        "error": "Couldn't rename the file"
+        "error": "Couldn't rename the file. Check that the Codex folder is available, then try again."
       },
       "maps": {
         "description": "Interactive maps with pins, paths and notes."
@@ -539,7 +535,7 @@
       "description": "Pick where it goes. Any section works as a starting point.",
       "sectionLabel": "Section",
       "submit": "Next",
-      "button": "New…",
+      "button": "New",
       "startTitle": "Start anywhere",
       "startDescription": "Create the first note, enemy, encounter or map. The other sections show up here as you use them.",
       "moreSections": "More sections"
@@ -561,7 +557,7 @@
     },
     "toast": {
       "saved": "Note saved",
-      "saveError": "Couldn't save the note",
+      "saveError": "Couldn't save the note. Your text is still in the editor. Check that the Codex folder is available, then try again.",
       "savedCopy": "Saved as a copy: {{path}}"
     },
     "conflict": {
@@ -592,7 +588,7 @@
       "updateLinks": "Update {{links}} links in {{notes}} notes",
       "done": "Note renamed — {{links}} links updated in {{notes}} notes",
       "failed": "Some notes changed meanwhile and still use the old name",
-      "error": "Couldn't rename the note"
+      "error": "Couldn't rename the note. Check that the Codex folder is available, then try again."
     },
     "insertMenu": {
       "cut": "Cut",
@@ -919,7 +915,7 @@
       "submit": "Move",
       "done": "{{title}} moved ({{links}} links updated)",
       "failedLinks": "Not updated (changed meanwhile): {{paths}}",
-      "error": "Couldn't move the note"
+      "error": "Couldn't move the note. Check that the Codex folder is available, then try again."
     },
     "addSection": {
       "title": "Add {{folder}} as a section",
@@ -972,13 +968,13 @@
       "submit": "Move to Trash",
       "done": "{{name}} moved to the Trash",
       "linksUpdated": "{{links}} links updated in {{notes}} notes",
-      "error": "Couldn't delete the file"
+      "error": "Couldn't delete the file. Check that the Codex folder is available, then try again."
     },
     "renameFolder": {
       "title": "Rename {{name}}",
       "description": "The folder is renamed on disk; its {{count}} files keep their names, and links through the folder are updated.",
       "done": "Folder renamed to {{name}}",
-      "error": "Couldn't rename the folder"
+      "error": "Couldn't rename the folder. Check that the Codex folder is available, then try again."
     },
     "deleteFolder": {
       "title": "Delete {{name}}?",
@@ -989,7 +985,7 @@
       "rewriteLinks": "When deleting them: turn links to them into plain text and remove their embeds",
       "clashes": "Some names are already taken in the main folder — rename those files first",
       "done": "Folder {{name}} moved to the Trash",
-      "error": "Couldn't delete the folder"
+      "error": "Couldn't delete the folder. Check that the Codex folder is available, then try again."
     },
     "importFromDisk": {
       "button": "Import from disk",
@@ -1043,7 +1039,7 @@
       "statuses": "Statuses",
       "note": "Note"
     },
-    "saveError": "Couldn't save the encounter",
+    "saveError": "Couldn't save the encounter. Check that the Codex folder is available, then try again.",
     "conflict": {
       "title": "This encounter changed elsewhere",
       "description": "A newer version of this encounter was saved while you were editing. Keep your changes, or load the other version.",
@@ -1091,7 +1087,8 @@
     "status": {
       "add": "Add status",
       "remove": "Remove {{name}}",
-      "placeholder": "Add a status… (stunned 3 = 3 rounds)"
+      "placeholder": "Add a status…",
+      "hint": "Type a name and press Enter. Add a number for rounds: “stunned 3” wears off after 3 of its turns. Without a number it stays until you remove it."
     },
     "note": {
       "show": "Show the note",
@@ -1277,7 +1274,7 @@
       "missingImage": "The image of this map is missing",
       "missingImageHint": "It was moved or deleted from the assets: {{image}}",
       "noImage": "This map has no image",
-      "saveError": "Couldn't save the map",
+      "saveError": "Couldn't save the map. Check that the Codex folder is available, then try again.",
       "conflictTitle": "This map changed elsewhere",
       "conflictDescription": "The file was modified outside this page. Keep your version or load the other one.",
       "keepMine": "Keep my version",

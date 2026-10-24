@@ -76,11 +76,9 @@
       }
     },
     "general": {
-      "intro": "Ces préférences prennent effet immédiatement pour que l'application corresponde à votre façon de mener vos sessions.",
       "appearanceGroupTitle": "Apparence",
       "cards": {
         "theme": {
-          "description": "Choisir l'apparence la plus adaptée à une utilisation quotidienne dans toute l'application.",
           "fieldLabel": "Mode d'affichage",
           "options": {
             "system": "Système",
@@ -89,7 +87,6 @@
           }
         },
         "language": {
-          "description": "Choisir la langue utilisée dans la navigation, les libellés et les messages de l'application.",
           "fieldLabel": "Langue de l'application"
         }
       },
@@ -230,7 +227,6 @@
       }
     },
     "editor": {
-      "intro": "Ces choix s'appliquent immédiatement à toutes les notes, sur cet appareil uniquement.",
       "groups": {
         "display": "Affichage",
         "behaviour": "Comportement"
@@ -500,7 +496,7 @@
         "nameLabel": "Nom",
         "noBacklinks": "Aucune note ne renvoie à ce fichier.",
         "done": "Renommé en {{name}} — {{links}} liens mis à jour dans {{notes}} notes",
-        "error": "Impossible de renommer le fichier"
+        "error": "Impossible de renommer le fichier. Vérifiez que le dossier du Codex est disponible, puis réessayez."
       },
       "maps": {
         "description": "Cartes interactives avec repères, chemins et notes."
@@ -539,7 +535,7 @@
       "description": "Choisissez où le ranger. N’importe quelle section convient pour commencer.",
       "sectionLabel": "Section",
       "submit": "Suivant",
-      "button": "Nouveau…",
+      "button": "Nouveau",
       "startTitle": "Commencez où vous voulez",
       "startDescription": "Créez la première note, le premier ennemi, la première rencontre ou carte. Les autres sections apparaissent ici au fil de leur usage.",
       "moreSections": "Autres sections"
@@ -561,7 +557,7 @@
     },
     "toast": {
       "saved": "Note enregistrée",
-      "saveError": "Impossible d'enregistrer la note",
+      "saveError": "Impossible d'enregistrer la note. Votre texte est toujours dans l’éditeur. Vérifiez que le dossier du Codex est disponible, puis réessayez.",
       "savedCopy": "Enregistrée comme copie : {{path}}"
     },
     "conflict": {
@@ -592,7 +588,7 @@
       "updateLinks": "Mettre à jour {{links}} liens dans {{notes}} notes",
       "done": "Note renommée — {{links}} liens mis à jour dans {{notes}} notes",
       "failed": "Certaines notes ont changé entre-temps et utilisent encore l’ancien nom",
-      "error": "Impossible de renommer la note"
+      "error": "Impossible de renommer la note. Vérifiez que le dossier du Codex est disponible, puis réessayez."
     },
     "insertMenu": {
       "cut": "Couper",
@@ -919,7 +915,7 @@
       "submit": "Déplacer",
       "done": "{{title}} déplacée ({{links}} liens mis à jour)",
       "failedLinks": "Non mises à jour (modifiées entre-temps) : {{paths}}",
-      "error": "Impossible de déplacer la note"
+      "error": "Impossible de déplacer la note. Vérifiez que le dossier du Codex est disponible, puis réessayez."
     },
     "addSection": {
       "title": "Ajouter {{folder}} comme section",
@@ -972,13 +968,13 @@
       "submit": "Mettre à la Corbeille",
       "done": "{{name}} mis à la Corbeille",
       "linksUpdated": "{{links}} liens mis à jour dans {{notes}} notes",
-      "error": "Impossible de supprimer le fichier"
+      "error": "Impossible de supprimer le fichier. Vérifiez que le dossier du Codex est disponible, puis réessayez."
     },
     "renameFolder": {
       "title": "Renommer {{name}}",
       "description": "Le dossier est renommé sur le disque ; ses {{count}} fichiers gardent leur nom et les liens passant par le dossier sont mis à jour.",
       "done": "Dossier renommé en {{name}}",
-      "error": "Impossible de renommer le dossier"
+      "error": "Impossible de renommer le dossier. Vérifiez que le dossier du Codex est disponible, puis réessayez."
     },
     "deleteFolder": {
       "title": "Supprimer {{name}} ?",
@@ -989,7 +985,7 @@
       "rewriteLinks": "En les supprimant : transformer leurs liens en texte brut et retirer leurs intégrations",
       "clashes": "Certains noms existent déjà dans le dossier principal — renommez d’abord ces fichiers",
       "done": "Dossier {{name}} mis à la Corbeille",
-      "error": "Impossible de supprimer le dossier"
+      "error": "Impossible de supprimer le dossier. Vérifiez que le dossier du Codex est disponible, puis réessayez."
     },
     "importFromDisk": {
       "button": "Importer depuis le disque",
@@ -1043,7 +1039,7 @@
       "statuses": "États",
       "note": "Note"
     },
-    "saveError": "Impossible d'enregistrer la rencontre",
+    "saveError": "Impossible d'enregistrer la rencontre. Vérifiez que le dossier du Codex est disponible, puis réessayez.",
     "conflict": {
       "title": "Cette rencontre a changé ailleurs",
       "description": "Une version plus récente de cette rencontre a été enregistrée pendant votre édition. Gardez vos modifications ou chargez l'autre version.",
@@ -1091,7 +1087,8 @@
     "status": {
       "add": "Ajouter un état",
       "remove": "Retirer {{name}}",
-      "placeholder": "Ajouter un statut… (étourdi 3 = 3 tours)"
+      "placeholder": "Ajouter un état…",
+      "hint": "Tapez un nom puis Entrée. Ajoutez un nombre pour les rounds : « étourdi 3 » disparaît après 3 de ses tours. Sans nombre, l’état reste jusqu’à ce que vous le retiriez."
     },
     "note": {
       "show": "Afficher la note",
@@ -1277,7 +1274,7 @@
       "missingImage": "L’image de cette carte est introuvable",
       "missingImageHint": "Elle a été déplacée ou supprimée des ressources : {{image}}",
       "noImage": "Cette carte n’a pas d’image",
-      "saveError": "Impossible d’enregistrer la carte",
+      "saveError": "Impossible d’enregistrer la carte. Vérifiez que le dossier du Codex est disponible, puis réessayez.",
       "conflictTitle": "Cette carte a changé ailleurs",
       "conflictDescription": "Le fichier a été modifié en dehors de cette page. Gardez votre version ou chargez l’autre.",
       "keepMine": "Garder ma version",

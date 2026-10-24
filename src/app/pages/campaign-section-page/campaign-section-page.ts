@@ -810,7 +810,7 @@ export class CampaignSectionPage {
     );
   });
 
-  /** Label of the button in an empty section; null when the section takes no new file (Assets, a system). */
+  /** Label of the button in an empty section; null when the section takes no new file (a system's). */
   protected readonly emptyCreateLabel = computed(() => {
     if (this.scope()?.kind !== 'campaign') {
       return null;
@@ -824,11 +824,18 @@ export class CampaignSectionPage {
       return 'maps.new.button';
     }
 
+    // Assets have no "new": the first file comes from the disk.
+    if (this.isAssetsSection()) {
+      return 'files.importFromDisk.button';
+    }
+
     return this.canCreateNote() ? 'campaigns.sections.newNote.create' : null;
   });
 
   protected createFromEmpty(): void {
-    if (this.isEncountersSection()) {
+    if (this.isAssetsSection()) {
+      this.openImportFromDiskSheet();
+    } else if (this.isEncountersSection()) {
       this.openCreateEncounterSheet();
     } else if (this.section()?.key === MAPS_SECTION_KEY) {
       void this.fileActions.openCreateMapSheet(this.folderPath());

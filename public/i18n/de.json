@@ -76,11 +76,9 @@
       }
     },
     "general": {
-      "intro": "Diese Einstellungen werden sofort übernommen, damit die App zu deinem Spielstil passt.",
       "appearanceGroupTitle": "Darstellung",
       "cards": {
         "theme": {
-          "description": "Das Erscheinungsbild auswählen, das sich für den täglichen Einsatz am besten eignet.",
           "fieldLabel": "Designmodus",
           "options": {
             "system": "System",
@@ -89,7 +87,6 @@
           }
         },
         "language": {
-          "description": "Sprache für Navigation, Beschriftungen und Meldungen in der gesamten App auswählen.",
           "fieldLabel": "App-Sprache"
         }
       },
@@ -230,7 +227,6 @@
       }
     },
     "editor": {
-      "intro": "Diese Einstellungen gelten sofort für alle Notizen, nur auf diesem Gerät.",
       "groups": {
         "display": "Anzeige",
         "behaviour": "Verhalten"
@@ -500,7 +496,7 @@
         "nameLabel": "Name",
         "noBacklinks": "Keine Notiz verlinkt diese Datei.",
         "done": "Umbenannt in {{name}} — {{links}} Links in {{notes}} Notizen aktualisiert",
-        "error": "Die Datei konnte nicht umbenannt werden"
+        "error": "Die Datei konnte nicht umbenannt werden. Prüfe, ob der Codex-Ordner verfügbar ist, und versuche es erneut."
       },
       "maps": {
         "description": "Interaktive Karten mit Markierungen, Pfaden und Notizen."
@@ -539,7 +535,7 @@
       "description": "Wähle, wohin es kommt. Jeder Bereich eignet sich als Anfang.",
       "sectionLabel": "Bereich",
       "submit": "Weiter",
-      "button": "Neu…",
+      "button": "Neu",
       "startTitle": "Fang an, wo du willst",
       "startDescription": "Lege die erste Notiz, den ersten Gegner, die erste Begegnung oder Karte an. Die übrigen Bereiche erscheinen hier, sobald du sie nutzt.",
       "moreSections": "Weitere Bereiche"
@@ -561,7 +557,7 @@
     },
     "toast": {
       "saved": "Notiz gespeichert",
-      "saveError": "Notiz konnte nicht gespeichert werden",
+      "saveError": "Notiz konnte nicht gespeichert werden. Dein Text steht noch im Editor. Prüfe, ob der Codex-Ordner verfügbar ist, und versuche es erneut.",
       "savedCopy": "Als Kopie gespeichert: {{path}}"
     },
     "conflict": {
@@ -592,7 +588,7 @@
       "updateLinks": "{{links}} Links in {{notes}} Notizen aktualisieren",
       "done": "Notiz umbenannt — {{links}} Links in {{notes}} Notizen aktualisiert",
       "failed": "Einige Notizen wurden inzwischen geändert und verwenden noch den alten Namen",
-      "error": "Die Notiz konnte nicht umbenannt werden"
+      "error": "Die Notiz konnte nicht umbenannt werden. Prüfe, ob der Codex-Ordner verfügbar ist, und versuche es erneut."
     },
     "insertMenu": {
       "cut": "Ausschneiden",
@@ -919,7 +915,7 @@
       "submit": "Verschieben",
       "done": "{{title}} verschoben ({{links}} Links aktualisiert)",
       "failedLinks": "Nicht aktualisiert (zwischenzeitlich geändert): {{paths}}",
-      "error": "Die Notiz konnte nicht verschoben werden"
+      "error": "Die Notiz konnte nicht verschoben werden. Prüfe, ob der Codex-Ordner verfügbar ist, und versuche es erneut."
     },
     "addSection": {
       "title": "{{folder}} als Bereich hinzufügen",
@@ -972,13 +968,13 @@
       "submit": "In den Papierkorb",
       "done": "{{name}} in den Papierkorb verschoben",
       "linksUpdated": "{{links}} Links in {{notes}} Notizen aktualisiert",
-      "error": "Die Datei konnte nicht gelöscht werden"
+      "error": "Die Datei konnte nicht gelöscht werden. Prüfe, ob der Codex-Ordner verfügbar ist, und versuche es erneut."
     },
     "renameFolder": {
       "title": "{{name}} umbenennen",
       "description": "Der Ordner wird auf der Festplatte umbenannt; seine {{count}} Dateien behalten ihre Namen, und Links durch den Ordner werden aktualisiert.",
       "done": "Ordner umbenannt in {{name}}",
-      "error": "Der Ordner konnte nicht umbenannt werden"
+      "error": "Der Ordner konnte nicht umbenannt werden. Prüfe, ob der Codex-Ordner verfügbar ist, und versuche es erneut."
     },
     "deleteFolder": {
       "title": "{{name}} löschen?",
@@ -989,7 +985,7 @@
       "rewriteLinks": "Beim Löschen: Links darauf in reinen Text umwandeln und Einbettungen entfernen",
       "clashes": "Einige Namen gibt es im Hauptordner schon — benenne diese Dateien zuerst um",
       "done": "Ordner {{name}} in den Papierkorb verschoben",
-      "error": "Der Ordner konnte nicht gelöscht werden"
+      "error": "Der Ordner konnte nicht gelöscht werden. Prüfe, ob der Codex-Ordner verfügbar ist, und versuche es erneut."
     },
     "importFromDisk": {
       "button": "Von Festplatte importieren",
@@ -1043,7 +1039,7 @@
       "statuses": "Zustände",
       "note": "Notiz"
     },
-    "saveError": "Die Begegnung konnte nicht gespeichert werden",
+    "saveError": "Die Begegnung konnte nicht gespeichert werden. Prüfe, ob der Codex-Ordner verfügbar ist, und versuche es erneut.",
     "conflict": {
       "title": "Diese Begegnung wurde anderswo geändert",
       "description": "Während der Bearbeitung wurde eine neuere Version dieser Begegnung gespeichert. Eigene Änderungen behalten oder die andere Version laden.",
@@ -1091,7 +1087,8 @@
     "status": {
       "add": "Zustand hinzufügen",
       "remove": "{{name}} entfernen",
-      "placeholder": "Status hinzufügen… (betäubt 3 = 3 Runden)"
+      "placeholder": "Zustand hinzufügen…",
+      "hint": "Gib einen Namen ein und drücke Enter. Mit einer Zahl zählst du Runden: „betäubt 3“ endet nach 3 seiner Züge. Ohne Zahl bleibt er, bis du ihn entfernst."
     },
     "note": {
       "show": "Notiz anzeigen",
@@ -1277,7 +1274,7 @@
       "missingImage": "Das Bild dieser Karte fehlt",
       "missingImageHint": "Es wurde aus den Assets verschoben oder gelöscht: {{image}}",
       "noImage": "Diese Karte hat kein Bild",
-      "saveError": "Die Karte konnte nicht gespeichert werden",
+      "saveError": "Die Karte konnte nicht gespeichert werden. Prüfe, ob der Codex-Ordner verfügbar ist, und versuche es erneut.",
       "conflictTitle": "Diese Karte wurde anderswo geändert",
       "conflictDescription": "Die Datei wurde außerhalb dieser Seite geändert. Behalte deine Version oder lade die andere.",
       "keepMine": "Meine Version behalten",
