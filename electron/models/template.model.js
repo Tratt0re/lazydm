@@ -42,7 +42,7 @@ const BUILT_IN_TEMPLATES = Object.freeze({
 
 ## Secrets
 `,
-  enemy: `${frontmatter(['cr', 'hp', 'ac'])}
+  enemy: `${frontmatter(['cr', 'hp', 'ac', 'initiative_mod'])}
 ## Description
 
 ## Stats

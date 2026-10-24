@@ -74,30 +74,29 @@ function entityField(key, component, extra = {}) {
 }
 
 /**
- * Rule shipped with the app: system-neutral (initiative, side, AC, HP bar, statuses, linked note). It has no
- * roll formula, so *Roll initiative* is not offered. Read-only; *Customize* copies it out.
+ * Rule shipped with the app: system-neutral layout (initiative, linked note, name, AC, HP bar, statuses) that
+ * rolls `1d20 + {initiative_mod}` (the enemy template's key). Read-only; *Customize* copies it out.
  */
 const DEFAULT_BATTLE_RULE = Object.freeze({
   version: BATTLE_RULE_VERSION,
   name: 'Generic',
   // Where the frontmatter keys a field can read (and a formula can use) come from: a template.
   template: 'builtin:enemy',
-  initiative: Object.freeze({ roll: null }),
+  initiative: Object.freeze({ roll: '1d20 + {initiative_mod}' }),
   // Where the name sits in the row grid (it is in every rule).
-  nameArea: area(1, 2, 3),
+  nameArea: area(1, 2, 10),
   fields: Object.freeze([
     entityField('initiative', 'initiative', { area: area(1, 1, 1) }),
-    entityField('side', 'side', { options: DEFAULT_SIDES, area: area(1, 5, 1) }),
     entityField('ac', 'number', {
       source: `${FRONTMATTER_SOURCE_PREFIX}ac`,
-      area: area(1, 6, 1),
+      area: area(2, 1, 1),
     }),
     entityField('hp', 'healthbar', {
       source: `${FRONTMATTER_SOURCE_PREFIX}hp`,
-      area: area(1, 7, 3),
+      area: area(2, 2, 11),
     }),
-    entityField('statuses', 'statuses', { area: area(2, 2, 6) }),
-    entityField('note', 'note-link', { area: area(1, 10, 1) }),
+    entityField('statuses', 'statuses', { area: area(3, 1, 12) }),
+    entityField('note', 'note-link', { area: area(1, 12, 1) }),
   ]),
 });
 

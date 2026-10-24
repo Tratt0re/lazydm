@@ -373,7 +373,7 @@ Planned Electron modules: `vault`, `cloud-readiness`, `campaign`, `document`, `i
   other assets.
 - **Battle rules** configure the entity row; they are the encounter's equivalent of note templates:
   - A rule is a **JSON file** `_battle-rules/<name>.json` at the vault root, in a compendium system or in a
-    campaign. The **built-in rule** (*Generic*: initiative, side, AC, HP bar, statuses, linked note) is read-only and
+    campaign. The **built-in rule** (*Generic*: initiative, AC, HP bar, statuses, linked note; it rolls `1d20 + {initiative_mod}`, a key of the built-in enemy template) is read-only and
     *Customize* copies it out. Unknown or duplicate fields are dropped on read, and a rule always has an initiative.
   - A rule has a `name`, a `template` (a template path or `builtin:<type>`) whose **frontmatter keys** are the
     attributes it may read from an entity's note, an `initiative` (`roll`: null when typed by hand, or a dice
