@@ -136,11 +136,11 @@
     <!-- Kept mounted so opening and closing can slide instead of re-rendering. -->
     <div
       class="shrink-0 overflow-hidden transition-[width,opacity] duration-200 ease-out motion-reduce:transition-none"
-      [class]="isLinksPanelOpen() ? 'w-84 opacity-100' : 'w-0 opacity-0'"
+      [class]="isLinksPanelOpen() ? 'w-88 opacity-100' : 'w-0 opacity-0'"
       [attr.inert]="isLinksPanelOpen() ? null : ''"
       [attr.aria-hidden]="isLinksPanelOpen() ? null : 'true'"
     >
-      <div class="h-full py-4 pr-4">
+      <div class="h-full py-4 pr-4 pl-4">
         <app-document-links-panel
           [path]="notePath()"
           (fixBrokenLink)="onFixBrokenLink($event)"
