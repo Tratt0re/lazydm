@@ -547,7 +547,8 @@
       "save": "Speichern",
       "modeAriaLabel": "Zwischen Schreiben und Lesen dieser Notiz wechseln",
       "links": "Links",
-      "rename": "Umbenennen"
+      "rename": "Umbenennen",
+      "linksCount": "Links ({{count}})"
     },
     "toast": {
       "saved": "Notiz gespeichert",
@@ -1097,7 +1098,7 @@
       "label": "Tracker-Layout",
       "ariaLabel": "Tracker-Layout dieser Begegnung",
       "campaignDefault": "Layout der Kampagne",
-      "builtInDefault": "Integriert",
+      "builtInDefault": "Standard",
       "saved": "Tracker-Layout gespeichert",
       "saveError": "Das Tracker-Layout konnte nicht geändert werden",
       "campaignAriaLabel": "Tracker-Layout dieser Kampagne"

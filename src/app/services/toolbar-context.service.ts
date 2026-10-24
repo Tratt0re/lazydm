@@ -114,6 +114,8 @@ export interface ToolbarAction {
   readonly destructive?: boolean;
   /** Id in `shortcuts.config.ts`: its keys follow the label in the tooltip. */
   readonly shortcut?: string;
+  /** A small count on the button (links of a note…); nothing is shown for 0. */
+  readonly badge?: number;
   readonly disabled?: ToolbarActionDisabled;
   readonly action: ToolbarActionHandler;
 }

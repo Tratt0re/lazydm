@@ -547,7 +547,8 @@
       "save": "Enregistrer",
       "modeAriaLabel": "Basculer entre écriture et lecture de cette note",
       "links": "Liens",
-      "rename": "Renommer"
+      "rename": "Renommer",
+      "linksCount": "Liens ({{count}})"
     },
     "toast": {
       "saved": "Note enregistrée",
@@ -1097,7 +1098,7 @@
       "label": "Disposition du suivi",
       "ariaLabel": "Disposition du suivi de cette rencontre",
       "campaignDefault": "Disposition de la campagne",
-      "builtInDefault": "Intégrée",
+      "builtInDefault": "Par défaut",
       "saved": "Disposition du suivi enregistrée",
       "saveError": "Impossible de changer la disposition du suivi",
       "campaignAriaLabel": "Disposition du suivi de cette campagne"

@@ -309,41 +309,37 @@ export class EncounterPage {
                     label: this.translateService.instant('encounters.cemetery.title'),
                     icon: 'ghost' as const,
                     buttonType: this.isCemeteryOpen() ? ('default' as const) : ('outline' as const),
-                    iconOnly: true,
                     action: () => this.isCemeteryOpen.update((isOpen) => !isOpen),
                   },
-                ]),
-            ...(isParty
-              ? []
-              : [
                   {
-                    id: 'copy',
-                    label: this.translateService.instant(
-                      scope.kind === 'system'
-                        ? 'compendium.copy.toCampaign'
-                        : 'compendium.copy.toCompendium',
-                    ),
-                    icon: (scope.kind === 'system' ? 'book-down' : 'book-up') as 'book-down' | 'book-up',
-                    buttonType: 'outline' as const,
-                    iconOnly: true,
-                    action: () => void this.copyTo.openCopySheet(this.encounterPath()),
-                  },
-                  {
-                    id: 'rename',
-                    label: this.translateService.instant('campaigns.sections.renameAsset.menu'),
-                    icon: 'text-cursor-input' as const,
-                    buttonType: 'outline' as const,
-                    iconOnly: true,
-                    action: () => this.openRenameSheet(),
-                  },
-                  {
-                    id: 'delete',
-                    label: this.translateService.instant('files.delete.menu'),
-                    icon: 'trash' as const,
-                    buttonType: 'secondary' as const,
-                    destructive: true,
-                    iconOnly: true,
-                    action: () => this.openDeleteSheet(),
+                    id: 'encounter-more',
+                    type: 'menu' as const,
+                    label: 'common.moreActions',
+                    entries: [
+                      {
+                        id: 'copy',
+                        label: scope.kind === 'system'
+                          ? 'compendium.copy.toCampaign'
+                          : 'compendium.copy.toCompendium',
+                        icon: (scope.kind === 'system' ? 'book-down' : 'book-up') as
+                          | 'book-down'
+                          | 'book-up',
+                        action: () => void this.copyTo.openCopySheet(this.encounterPath()),
+                      },
+                      {
+                        id: 'rename',
+                        label: 'campaigns.sections.renameAsset.menu',
+                        icon: 'text-cursor-input' as const,
+                        action: () => this.openRenameSheet(),
+                      },
+                      {
+                        id: 'delete',
+                        label: 'files.delete.menu',
+                        icon: 'trash' as const,
+                        destructive: true,
+                        action: () => this.openDeleteSheet(),
+                      },
+                    ],
                   },
                 ]),
           ],
@@ -1571,9 +1567,13 @@ export class EncounterPage {
 
   // --- Roll initiative ---------------------------------------------------------------------------------
 
-  /** The rule rolls its initiative (a dice formula); without one it is typed by hand. */
+  /**
+   * The rule rolls its initiative (a dice formula); without one it is typed by hand. The roll controls (bar buttons
+   * and row checkboxes) are for setting up the order, so they go away while the battle runs.
+   */
   protected readonly canRoll = computed(
-    () => !this.isParty() && this.isEditable() && !!this.rule()?.initiative.roll,
+    () =>
+      !this.isParty() && this.isEditable() && !this.isRunning() && !!this.rule()?.initiative.roll,
   );
   protected readonly selectedCount = computed(
     () => this.entities().filter((entity) => this.selectedIds().has(entity.id)).length,

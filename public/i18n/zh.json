@@ -547,7 +547,8 @@
       "save": "保存",
       "modeAriaLabel": "在编写和阅读此笔记之间切换",
       "links": "链接",
-      "rename": "重命名"
+      "rename": "重命名",
+      "linksCount": "链接（{{count}}）"
     },
     "toast": {
       "saved": "笔记已保存",
@@ -1097,7 +1098,7 @@
       "label": "追踪器布局",
       "ariaLabel": "此遭遇的追踪器布局",
       "campaignDefault": "战役的布局",
-      "builtInDefault": "内置",
+      "builtInDefault": "默认",
       "saved": "追踪器布局已保存",
       "saveError": "无法更改追踪器布局",
       "campaignAriaLabel": "此战役的追踪器布局"

@@ -150,7 +150,7 @@
         <button
           arc-button
           type="button"
-          [class]="item.destructive ? 'shrink-0 border-destructive text-destructive hover:bg-destructive hover:text-destructive-foreground' : 'shrink-0'"
+          [class]="item.destructive ? 'relative shrink-0 border-destructive text-destructive hover:bg-destructive hover:text-destructive-foreground' : 'relative shrink-0'"
           [arcType]="item.buttonType ?? 'default'"
           [arcSize]="item.buttonSize ?? 'sm'"
           [arcShape]="item.buttonShape ?? 'default'"
@@ -165,6 +165,12 @@
           }
           @if (!item.iconOnly) {
             <span>{{ item.label | translate }}</span>
+          }
+          @if (item.badge) {
+            <span
+              class="pointer-events-none absolute -top-1.5 -right-1.5 flex h-4 min-w-4 items-center justify-center border border-border bg-raised px-1 font-mono text-[10px] leading-none font-semibold text-foreground"
+              aria-hidden="true"
+            >{{ item.badge }}</span>
           }
         </button>
       }

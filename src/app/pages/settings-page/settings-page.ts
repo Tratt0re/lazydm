@@ -21,7 +21,6 @@ import { SettingsSectionHeaderComponent } from './components/settings-section-he
 import { EditorSectionComponent } from './components/sections/editor-section/editor-section.component';
 import { GeneralSectionComponent } from './components/sections/general-section/general-section.component';
 import { SectionsSectionComponent } from './components/sections/sections-section/sections-section.component';
-import { TemplatesSectionComponent } from './components/sections/templates-section/templates-section.component';
 import { VaultSectionComponent } from './components/sections/vault-section/vault-section.component';
 import {
   DEFAULT_SETTINGS_SECTION,
@@ -39,7 +38,6 @@ import {
     GeneralSectionComponent,
     EditorSectionComponent,
     SectionsSectionComponent,
-    TemplatesSectionComponent,
     VaultSectionComponent,
   ],
   template: `
@@ -71,9 +69,6 @@ import {
           }
           @case ('sections') {
             <app-sections-section />
-          }
-          @case ('templates') {
-            <app-templates-section />
           }
           @case ('vault') {
             <app-vault-section />

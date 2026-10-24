@@ -78,6 +78,8 @@ export class AppDocumentLinksPanelComponent {
   readonly path = input.required<string>();
   /** A broken link of this note should be fixed; the page saves pending edits first. */
   readonly fixBrokenLink = output<BrokenLinkFixRequest>();
+  /** How many files this note links to or is linked from, plus its broken links (for the toolbar button). */
+  readonly linkCount = output<number>();
 
   protected readonly links = signal<DocumentLinksDto | null>(null);
   protected readonly brokenLinks = computed(() => this.links()?.brokenLinks ?? []);
@@ -139,6 +141,7 @@ export class AppDocumentLinksPanelComponent {
       const links = await this.documentService.links(path);
       if (token === this.loadToken) {
         this.links.set(links);
+        this.linkCount.emit(this.linkedFiles().length + this.brokenLinks().length);
       }
     } catch (error) {
       console.warn('[app] Failed to load note links:', path, error);

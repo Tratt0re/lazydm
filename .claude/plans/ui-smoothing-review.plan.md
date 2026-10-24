@@ -24,7 +24,7 @@ Before each phase, ask the user the open questions of that phase and record the 
 | --- | --- | --- | --- |
 | A | Bug fixes | done | see git log |
 | B | Glossary | done | see git log |
-| C | Visible actions | in-progress | |
+| C | Visible actions | done | see git log |
 | D | Empty states and first run | pending | |
 | E | Voice | pending | |
 | F | Design rules | pending | |
@@ -59,10 +59,10 @@ Display text only. Key names, folders, file formats and code identifiers stay.
 - [x] C1 Section toolbar: *New note* stays the labelled primary; import, new folder, edit, delete go into a "More" menu; delete never sits beside the primary
 - [x] C2 Campaign overview toolbar: same treatment (delete campaign always visible next to edit)
 - [x] C3 Title bar: Compendium and Settings stay; Templates and Tracker layouts go under **Customize**; decide where Shortcuts goes
-- [ ] C4 Right-click-only actions get a visible `…` button on rows and campaign cards
-- [ ] C5 Template choice: one home (section toolbar); decide what Settings → Templates becomes (touches DESIGN_PRINCIPLES §6c)
-- [ ] C6 Encounter page: consistent battle bar labels; no disabled *Roll initiative* mid-battle without a reason; label the toolbar icons
-- [ ] C7 Links panel: collapsed or thin when empty
+- [x] C4 Right-click-only actions get a visible `…` button on rows and campaign cards
+- [x] C5 Template choice: one home (section toolbar); decide what Settings → Templates becomes (touches DESIGN_PRINCIPLES §6c)
+- [x] C6 Encounter page: consistent battle bar labels; no disabled *Roll initiative* mid-battle without a reason; label the toolbar icons
+- [x] C7 Links panel: collapsed or thin when empty
 
 ## Phase D. Empty states and first run
 
@@ -118,3 +118,4 @@ Display text only. Key names, folders, file formats and code identifiers stay.
 - 2026-10-24: Phase B done. Text-only change in the 7 locale files (same keys, 1494 lines each), plus the glossary in DESIGN_PRINCIPLES §1b and a pointer in CLAUDE.md. Details: Codex is a fixed word in every language; the combatant, tracker layout, info box and delete-forever wording follow the answers above. Links panel: toolbar button and panel heading say *Links*, groups inside are *Notes* and *Assets*. Review: the page keeps its title, 4 unused keys were removed (`nav.items.broken-links`, `links.broken.alertTitle`, `links.broken.review`, `links.broken.cardDescription`), and the panel link now reads "See all in Review". Delete forever: the Ukrainian and Chinese already meant "forever", so they were left as they were. Checked in the browser: Settings → Codex in Italian. Not checked visually: the other languages (JSON valid, keys identical to English).
 - Left for later phases: the empty-state and alert wording ("cose da rivedere", Phase D), error wording (Phase E). The French `Coffre` and Spanish `Bóveda` for the old word are gone.
 - 2026-10-24: Phase C in progress. Done: C1, C2, C3. The toolbar has a new item type `menu` (the "..." button, `ToolbarMenuItem` in `toolbar-context.service.ts`); section pages and the campaign overview use it for New folder / Edit / Delete (Delete after a separator, in red). Title bar: Compendium, **Customize** (wrench icon; menu with Templates and Tracker layouts) and Settings; the shortcuts button moved to Settings → General (Cmd+/ still works). Checked in the browser (Italian, light): title bar, Customize menu, section toolbar and its "..." menu. Next: C4, C5, C6, C7.
+- 2026-10-24: Phase C done. C4: every row of a section list has one "..." button (same menu as right-click: copy, rename, move, reveal, delete), sub-folder rows and campaign cards have one too. C5: *Settings → Templates* is removed from the Settings navigation and page; the component files `templates-section.component.*` are still on disk, **unused, waiting for your OK to delete** (CLAUDE.md asks to list files before deleting). The keys `settings.sections.templates.*` and `settings.templates.rules.*` are still used or left for that cleanup. C6: roll controls (Roll initiative, Select all, row checkboxes) are hidden while a battle runs; encounter toolbar shows the layout select, a labelled *Cemetery* button and a "..." menu (Copy to, Rename, Delete forever-style delete last); the select now says "Default" like the library. C7: the Links panel starts closed (`documentLinksPanelOpen` default is `false`; devices that already chose keep their choice) and the toolbar button has a count badge (new `badge` field on toolbar actions). DESIGN_PRINCIPLES updated (§6c, §6d, §8). Checked in the browser (Italian, light): title bar and Customize menu, section toolbar and row menus, campaign cards, Links badge and closed panel, encounter battle bar idle and running. Not checked: dark theme and other languages for the new controls; dragging a row still works but I did not re-test it after adding the "..." button.

@@ -119,7 +119,11 @@
       [attr.aria-hidden]="isLinksPanelOpen() ? null : 'true'"
     >
       <div class="h-full py-4 pr-4">
-        <app-document-links-panel [path]="notePath()" (fixBrokenLink)="onFixBrokenLink($event)" />
+        <app-document-links-panel
+          [path]="notePath()"
+          (fixBrokenLink)="onFixBrokenLink($event)"
+          (linkCount)="linkCount.set($event)"
+        />
       </div>
     </div>
   </div>

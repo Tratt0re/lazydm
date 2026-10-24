@@ -547,7 +547,8 @@
       "save": "Salva",
       "modeAriaLabel": "Passa tra scrittura e lettura di questa nota",
       "links": "Collegamenti",
-      "rename": "Rinomina"
+      "rename": "Rinomina",
+      "linksCount": "Collegamenti ({{count}})"
     },
     "toast": {
       "saved": "Nota salvata",
@@ -1097,7 +1098,7 @@
       "label": "Layout del tracker",
       "ariaLabel": "Layout del tracker di questo incontro",
       "campaignDefault": "Layout della campagna",
-      "builtInDefault": "Integrata",
+      "builtInDefault": "Predefinito",
       "saved": "Layout del tracker salvato",
       "saveError": "Impossibile cambiare il layout del tracker",
       "campaignAriaLabel": "Layout del tracker di questa campagna"

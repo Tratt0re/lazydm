@@ -547,7 +547,8 @@
       "save": "Guardar",
       "modeAriaLabel": "Alternar entre escribir y leer esta nota",
       "links": "Enlaces",
-      "rename": "Renombrar"
+      "rename": "Renombrar",
+      "linksCount": "Enlaces ({{count}})"
     },
     "toast": {
       "saved": "Nota guardada",
@@ -1097,7 +1098,7 @@
       "label": "Diseño del tracker",
       "ariaLabel": "Diseño del tracker de este encuentro",
       "campaignDefault": "Diseño de la campaña",
-      "builtInDefault": "Integrada",
+      "builtInDefault": "Predeterminado",
       "saved": "Diseño del tracker guardado",
       "saveError": "No se pudo cambiar el diseño del tracker",
       "campaignAriaLabel": "Diseño del tracker de esta campaña"

@@ -90,7 +90,7 @@ export const LOCAL_PREFERENCE_DEFAULTS: Readonly<LocalPreferences> = Object.free
   themeColor: 'default',
   language: 'en',
   onboardingCompleted: false,
-  documentLinksPanelOpen: true,
+  documentLinksPanelOpen: false,
   noteAudioVolume: 1,
   showFileSizes: false,
 });

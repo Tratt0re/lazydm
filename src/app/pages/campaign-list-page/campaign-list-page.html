@@ -64,6 +64,20 @@
                 }
               </a>
 
+              <button
+                type="button"
+                arc-button
+                arc-menu
+                [arcMenuTriggerFor]="campaignMenu"
+                arcPlacement="bottomRight"
+                arcType="ghost"
+                arcSize="sm"
+                class="absolute top-2 right-2 z-10 size-8"
+                [attr.aria-label]="'common.moreActions' | translate"
+              >
+                <arc-icon arcType="ellipsis" />
+              </button>
+
               <ng-template #campaignMenu>
                 <div arc-menu-content class="w-56">
                   <a arc-menu-item [routerLink]="['/campaigns', campaign.slug]">

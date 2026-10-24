@@ -72,8 +72,8 @@
       />
     }
 
-    <!-- Row buttons of a note, asset or encounter: copy to the compendium (or a campaign), rename, delete. -->
-    <ng-template #fileActions let-file>
+    <!-- Row button of a note, asset or encounter: the "…" opens the same menu as a right-click (#fileMenu of the row). -->
+    <ng-template #fileActions let-file let-menu="menu">
       <span class="flex shrink-0 items-center gap-1">
         @if (showFileSizes()) {
           <span class="mr-2 font-mono text-[11px] font-semibold tracking-[0.1em] text-muted-foreground uppercase">
@@ -83,38 +83,16 @@
         <button
           type="button"
           arc-button
+          arc-menu
+          [arcMenuTriggerFor]="menu"
+          arcPlacement="bottomRight"
           arcType="ghost"
           arcSize="sm"
           class="size-8"
-          [attr.aria-label]="copyLabel(file) | translate"
-          [arcTooltip]="copyLabel(file) | translate"
-          (click)="copyTo.openCopySheet(file.path)"
+          [attr.aria-label]="'common.moreActions' | translate"
+          [arcTooltip]="'common.moreActions' | translate"
         >
-          <arc-icon [arcType]="copyTo.copyIcon(file.path)" />
-        </button>
-        <button
-          type="button"
-          arc-button
-          arcType="ghost"
-          arcSize="sm"
-          class="size-8"
-          [attr.aria-label]="renameLabel(file) | translate"
-          [arcTooltip]="renameLabel(file) | translate"
-          (click)="openRenameSheet(file)"
-        >
-          <arc-icon [arcType]="mapRoute(file) ? 'pencil' : 'text-cursor-input'" />
-        </button>
-        <button
-          type="button"
-          arc-button
-          arcType="ghost"
-          arcSize="sm"
-          class="size-8 text-destructive hover:text-destructive"
-          [attr.aria-label]="'files.delete.menu' | translate"
-          [arcTooltip]="'files.delete.menu' | translate"
-          (click)="openDeleteSheet(file)"
-        >
-          <arc-icon arcType="trash" />
+          <arc-icon arcType="ellipsis" />
         </button>
       </span>
     </ng-template>
@@ -148,7 +126,7 @@
                 </span>
               }
             </a>
-            <ng-container *ngTemplateOutlet="fileActions; context: { $implicit: file }" />
+            <ng-container *ngTemplateOutlet="fileActions; context: { $implicit: file, menu: fileMenu }" />
           </div>
         } @else {
           <div class="flex items-center justify-between gap-4 px-4 py-2 text-muted-foreground" [class.pl-14]="isNested">
@@ -225,7 +203,7 @@
                 <span class="truncate text-sm text-foreground">{{ file.name }}</span>
               </span>
             }
-            <ng-container *ngTemplateOutlet="fileActions; context: { $implicit: file }" />
+            <ng-container *ngTemplateOutlet="fileActions; context: { $implicit: file, menu: fileMenu }" />
           </div>
         }
 
@@ -324,6 +302,20 @@
                 >
                   <arc-icon arcType="arrow-up-right" class="size-4" />
                 </a>
+                <button
+                  type="button"
+                  arc-button
+                  arc-menu
+                  [arcMenuTriggerFor]="folderMenu"
+                  arcPlacement="bottomRight"
+                  arcType="ghost"
+                  arcSize="sm"
+                  class="mr-2 size-8"
+                  [attr.aria-label]="'common.moreActions' | translate"
+                  [arcTooltip]="'common.moreActions' | translate"
+                >
+                  <arc-icon arcType="ellipsis" />
+                </button>
               </div>
 
               @if (isOpen) {

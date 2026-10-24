@@ -170,6 +170,8 @@ export class DocumentPage {
   protected readonly isSaving = signal(false);
   protected readonly errorMessage = signal<string | null>(null);
   protected readonly isLinksPanelOpen = signal(this.localPreferences.getDocumentLinksPanelOpen());
+  /** Shown as a badge on the Links button, so a closed panel still tells whether the note has links. */
+  protected readonly linkCount = signal(0);
 
   protected readonly isDirty = computed(
     () => this.document() !== null && this.editedContent() !== this.document()!.content,
@@ -229,7 +231,13 @@ export class DocumentPage {
             },
             {
               id: 'links',
-              label: this.translateService.instant('document.toolbar.links'),
+              label:
+                this.linkCount() > 0
+                  ? this.translateService.instant('document.toolbar.linksCount', {
+                      count: this.linkCount(),
+                    })
+                  : this.translateService.instant('document.toolbar.links'),
+              badge: this.linkCount(),
               icon: 'link',
               buttonType: this.isLinksPanelOpen() ? 'default' : 'outline',
               iconOnly: true,

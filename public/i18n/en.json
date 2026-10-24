@@ -547,7 +547,8 @@
       "save": "Save",
       "modeAriaLabel": "Switch between writing and reading this note",
       "links": "Links",
-      "rename": "Rename"
+      "rename": "Rename",
+      "linksCount": "Links ({{count}})"
     },
     "toast": {
       "saved": "Note saved",
@@ -1097,7 +1098,7 @@
       "label": "Tracker layout",
       "ariaLabel": "Tracker layout of this encounter",
       "campaignDefault": "Campaign's layout",
-      "builtInDefault": "Built-in",
+      "builtInDefault": "Default",
       "saved": "Tracker layout saved",
       "saveError": "Couldn't change the tracker layout",
       "campaignAriaLabel": "Tracker layout of this campaign"

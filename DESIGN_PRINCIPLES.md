@@ -261,7 +261,8 @@ Planned Electron modules: `vault`, `cloud-readiness`, `campaign`, `document`, `i
   Open tabs and their history follow the new URL. Unsaved edits are saved before renaming.
 - Renames made outside LazyDM (Finder, Obsidian on another device) are **not** refactored: the other tool already
   rewrote the links, and LazyDM only sees a delete plus a new file.
-- **Linked files** live in a right side panel of the note (*Links* toggles it with a slide, open state per device),
+- **Linked files** live in a right side panel of the note (*Links* toggles it with a slide; it starts **closed** and
+  the button carries a badge with the number of links; open state per device),
   styled like the settings sidebar: every file linked with the note, tagged **FROM** (it links here) and/or **TO**
   (this note links to it), with a tooltip and the linking lines. The note's own broken links appear below only
   when there are some. It follows index updates.
@@ -322,12 +323,11 @@ Planned Electron modules: `vault`, `cloud-readiness`, `campaign`, `document`, `i
   inside the frontmatter values are escaped for YAML strings, so a title with quotes keeps it valid.
 - Template files are excluded from broken links (their links are placeholders).
 - **UI**, where templates are made and where they are linked (the same `vault.json` choices):
-  - **Templates sheet** (header button, next to Compendium and Settings): the library — built-ins and every
+  - **Templates sheet** (title bar → *Customize* menu): the library — built-ins and every
     `_templates/` folder in the shared secondary sidebar — with the note editor (Live / Source), Save, New template
     (empty or from a built-in), Delete (confirmed) and Customize. It only creates and edits templates; it does not
     link them. Unsaved edits are saved when another template is selected or the sheet is left, like notes.
-  - **Settings → Templates**: the per-type choices of the campaign under the sheet (a hint when opened from the
-    campaign list); the Templates sheet itself opens from the title bar.
+  - There is no *Settings → Templates*: choosing a template happens in one place only, the section page.
   - **Campaign section pages**: a *Template* select in the toolbar for the section's note type (Automatic, Built-in,
     the vault's, the systems' and the campaign's own templates). This is how a template is linked to a section;
     the *New section* modal offers the same select.
@@ -352,7 +352,8 @@ Planned Electron modules: `vault`, `cloud-readiness`, `campaign`, `document`, `i
 - **Page** (`/<scope>/encounters/<file>`, own tab title and breadcrumb): the round (`03 / ROUND`: a big two-digit number and a smaller, quieter word) and whose turn it is
   on top, then the **battle bar** (*Start battle* or *Stop battle* / *Next turn* on the left; *Roll initiative* and
   the *Add party* and *Add entity* icon buttons on the right), then the initiative list. The **toolbar keeps the
-  main and utility actions**: *Battle rule*, *Cemetery* (opens the side panel), *Rename…* and *Delete…*. Every edit
+  main and utility actions**: *Battle rule*, *Cemetery* (opens the side panel) and a **"…" menu** with *Copy to…*,
+  *Rename…* and *Delete…* (Delete last, after a separator). Every edit
   is saved right away. The open encounter follows a rename (its name is the file name) and any change of its
   battle rule or of the rule library.
   - **Battle**: *Start* sorts by initiative (highest first, entities without one last), sets round 1 and gives the
@@ -406,8 +407,9 @@ Planned Electron modules: `vault`, `cloud-readiness`, `campaign`, `document`, `i
   - **Dice formula**: `1d20`, `1d100`, `2d6 + 3`, `1d20 + {dex_mod}`. Terms are dice, whole numbers and `{key}`
     (the **integer** of that frontmatter key of the entity's note: a positive one is added, a negative one
     subtracts), joined by `+` and `-`. Never evaluated as code. The formula is checked while it is edited.
-  - **Roll initiative** appears only when the rule has a formula. It rolls for the **selected** entities (a checkbox
-    per row, *Select all*, *Clear*) and sorts the list. An entity the formula cannot be rolled for (no note, no such
+  - **Roll initiative** appears only when the rule has a formula **and no battle is running** (it sets up the order,
+    so the button, *Select all* and the row checkboxes leave while it runs). It rolls for the **selected** entities (a
+    checkbox per row, *Select all*, *Clear*) and sorts the list. An entity the formula cannot be rolled for (no note, no such
     key, not a whole number) has its initiative **erased**, and the failures are reported.
   - **Editor**: the *Battle rules* sheet (title-bar button next to Templates) has the same library layout: built-in,
     vault, systems and campaigns in the secondary sidebar, with a form for the name, the template, the initiative
@@ -516,7 +518,12 @@ Planned Electron modules: `vault`, `cloud-readiness`, `campaign`, `document`, `i
   - Look: the usual bordered `bg-card` panel; the ornaments of the engraved geometry module (ornamental rule under
     the title, bronze corner brackets on the panel, engraved divider between the two vault options); a step marker
     made of the same bronze bar as the ornamental rule. Decoration only, no text.
-- **Title bar** (app header, every page): drag area, **Compendium** and **Settings**, window buttons (no app name).
+- **Title bar** (app header, every page): drag area, **Compendium**, **Customize** (a menu with *Templates* and
+  *Tracker layouts*) and **Settings**, window buttons (no app name). The keyboard shortcuts list is in
+  *Settings → General* (and Cmd/Ctrl+/).
+- **Actions on pages and rows**: a toolbar keeps the labelled or icon **primary** actions and puts the rest behind a
+  **"…" menu** (*New folder*, *Edit*, *Delete…*; Delete is last, after a separator, never one click away). Every row
+  of a list and every campaign card has a visible **"…"** button that opens the same menu as the right-click.
 - The **toolbar's bottom edge** is the ornamental rule from *engraved geometry* (bronze bar, ◇ ✣ ◇, hairline) —
   `.arc-ornament-rule`, the one dominant marker of that module. It is inset 16px on both sides.
 - Every page has the **toolbar** (campaign list included: vault name as the path, *New campaign* as its action).
@@ -578,8 +585,8 @@ Planned Electron modules: `vault`, `cloud-readiness`, `campaign`, `document`, `i
   in the toolbar, so a restored tab always tells where it points.
 - **Leaving a note with unsaved edits autosaves it** (tab switch, link, sidebar). If the save hits a conflict or an
   error, the navigation is cancelled and the conflict modal / error toast is shown.
-- **Title bar**: the Compendium, Templates, Battle rules and Settings sheet buttons are square icon buttons (tooltip and
-  accessible name from the label).
+- **Title bar**: the Compendium, Customize and Settings buttons are square icon buttons (tooltip and accessible name
+  from the label).
 - **Note toolbar**: the note actions (*Links*, *Copy to compendium / campaign*, *Rename*, *Save*) are square icon
   buttons (tooltip and accessible name from the label).
 - **Editor**: CodeMirror 6 with three views, switched by three toggle buttons in a row above the editor (not a
