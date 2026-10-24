@@ -35,7 +35,7 @@ import { ArcTechIconComponent } from '@/shared/components/icon';
   ],
   template: `
     @if (system(); as system) {
-      <div class="flex w-full max-w-5xl flex-col gap-6 py-6">
+      <div class="flex w-full flex-col gap-6 py-6">
         <div class="flex flex-wrap items-start justify-between gap-4">
           <p class="max-w-3xl text-sm text-muted-foreground">
             {{ system.description || ('compendium.system.description' | translate) }}
@@ -82,7 +82,7 @@ import { ArcTechIconComponent } from '@/shared/components/icon';
             </button>
           </ng-template>
         } @else {
-          <ul class="grid gap-2.5 sm:grid-cols-2 lg:grid-cols-3">
+          <ul class="grid grid-cols-[repeat(auto-fill,minmax(18rem,1fr))] gap-2.5">
             @for (section of sections(); track section.key) {
               <li>
                 <a

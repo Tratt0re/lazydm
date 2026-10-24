@@ -123,6 +123,13 @@ row; delete is always visible next to harmless icons; the turn highlight is only
 
 ## Log
 
+- 2026-10-24, Phase 4 follow-up (user: "very wide space on the right"): the gap was the `max-w-5xl`/`max-w-6xl` cap
+  on the page columns, which phase 4 made visible by left-aligning them. The user chose to fill the width: caps
+  removed on the overview, system overview, Review, broken links, Compendium, section and campaign list pages; tile
+  grids are `auto-fill` (18–24rem minimum) instead of 2/3 fixed columns; description paragraphs keep `max-w-3xl`/
+  `max-w-2xl`. Measured at 1440: column and widest row end at the same x on all of them. At 2200px wide the tiles are
+  fine (312px each) but list rows are 1918px wide (name at the far left, "…" at the far right): a decision for the user
+  (a generous cap such as 90rem on list pages). The encounter page was not part of this change and keeps its cap.
 - 2026-10-24, Phase 5: the toolbar takes a `hasOrnament` input (default false): the ◇✣◇ rule is drawn only on the
   Campaigns page; every other toolbar gets a plain hairline (Welcome keeps its own rule in its page header; Settings
   already had its own ◇ divider, untouched). The ghost icons of the section tiles (campaign and system overviews)

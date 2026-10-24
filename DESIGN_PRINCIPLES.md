@@ -711,8 +711,10 @@ Component behaviour, variant keys and configuration stay as they are.
     cannot continue; `warning` (the `--warning` bronze-gold bar and icon, normal text) is for things worth a look
     that block nothing, such as the Review alert.
   - **Page columns are left-aligned** to the title: the content area has one 16px side padding (the toolbar's), and
-    a page's column (`max-w-5xl`, `max-w-6xl`) starts at the title's left edge instead of being centred. Pages that
-    fill the area (note, map) use the full width.
+    a page's column starts at the title's left edge instead of being centred, and **fills the width** (no maximum, so
+    nothing stops short of the right edge). Tile grids use `auto-fill` columns (18–24rem minimum) so tiles keep a
+    sensible size and the row is filled; only description paragraphs keep a readable width. The encounter page keeps
+    its `max-w-5xl` column for now.
   - Badges/status chips: outlined, mono.
   - Tables: raised mono headers; selected row is the raised surface.
   - Toasts follow the *notification banner*: card surface, 1px border in the state colour, uppercase title, mono

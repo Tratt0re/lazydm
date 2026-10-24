@@ -36,7 +36,7 @@ import { ArcTechMenuImports } from '@/shared/components/menu';
   ],
   template: `
     @if (campaign(); as campaign) {
-      <div class="flex w-full max-w-5xl flex-col gap-6 py-6">
+      <div class="flex w-full flex-col gap-6 py-6">
         @if (campaign.description) {
           <p class="max-w-3xl text-sm text-muted-foreground">{{ campaign.description }}</p>
         }
@@ -77,7 +77,7 @@ import { ArcTechMenuImports } from '@/shared/components/menu';
           </ng-template>
         }
 
-        <ul class="grid gap-2.5 sm:grid-cols-2 lg:grid-cols-3">
+        <ul class="grid grid-cols-[repeat(auto-fill,minmax(18rem,1fr))] gap-2.5">
           @for (section of usedSections(); track section.key) {
             <li>
               <a
@@ -151,7 +151,7 @@ import { ArcTechMenuImports } from '@/shared/components/menu';
               {{ 'campaigns.newAnything.moreSections' | translate }} ({{ unusedSections().length }})
             </button>
             @if (showUnused()) {
-              <ul class="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+              <ul class="grid grid-cols-[repeat(auto-fill,minmax(18rem,1fr))] gap-2">
                 @for (section of unusedSections(); track section.key) {
                   <li>
                     <a

@@ -7,7 +7,7 @@
 ></app-toolbar>
 
 <main class="min-h-0">
-  <div class="flex w-full max-w-6xl flex-col gap-6 px-4 py-6">
+  <div class="flex w-full flex-col gap-6 px-4 py-6">
 
     @if (errorMessage(); as message) {
       <arc-alert
@@ -34,7 +34,7 @@
           </button>
         </ng-template>
       } @else {
-        <ul class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <ul class="grid grid-cols-[repeat(auto-fill,minmax(24rem,1fr))] gap-6">
           @for (campaign of campaigns(); track campaign.slug) {
             <li class="arc-campaign-card arc-section-card h-full border border-border bg-card hover:border-primary">
               <span class="arc-card-corner arc-card-corner-tl" aria-hidden="true"></span>
