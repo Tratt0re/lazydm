@@ -350,9 +350,9 @@ Planned Electron modules: `vault`, `cloud-readiness`, `campaign`, `document`, `i
 - **Values** are stored by the key of the battle-rule field that shows them (`initiative`, `ac`, `hp` =
   `{ current, max, temp }`, `statuses` = `[{ name, rounds? }]`, `note` = vault path of the linked note, …). A value
   the rule no longer lists survives a change of rule; empty values are not stored.
-- **Page** (`/<scope>/encounters/<file>`, own tab title and breadcrumb): the **battle bar**, pinned while the list scrolls, on one line: the round (`03 / ROUND`: a big
-  two-digit number and a smaller, quieter word) with whose turn it is under it, then *Start battle* or *Stop battle* /
-  *Next turn*, and on the right *Roll initiative* and the *Add party* and *Add entity* icon buttons; then the initiative list. The **toolbar keeps the
+- **Page** (`/<scope>/encounters/<file>`, own tab title and breadcrumb): the **battle bar**, pinned while the list scrolls, on one line: *Start battle* or *Stop battle* /
+  *Next turn* on the left (they never move), then the round (`03 / ROUND`: a big two-digit number and a smaller, quieter
+  word) with whose turn it is under it, and on the right *Roll initiative* and the *Add party* and *Add entity* icon buttons; then the initiative list. The **toolbar keeps the
   main and utility actions**: *Battle rule*, *Cemetery* (opens the side panel) and a **"…" menu** with *Copy to…*,
   *Rename…* and *Delete…* (Delete last, after a separator). Every edit
   is saved right away. The open encounter follows a rename (its name is the file name) and any change of its
