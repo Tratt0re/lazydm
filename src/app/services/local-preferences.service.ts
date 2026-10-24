@@ -13,6 +13,8 @@ import {
   LocalPreferenceKey,
   type MapViewPreference,
   type ThemePreference,
+  TRACKER_ROW_DENSITIES,
+  type TrackerRowDensity,
 } from '@/config/local-preferences.config';
 
 const DOCUMENT_VIEW_MODES_MAX_ENTRIES = 500;
@@ -32,6 +34,11 @@ export class LocalPreferencesService {
   private readonly showFileSizesSignal = signal<boolean>(LOCAL_PREFERENCE_DEFAULTS.showFileSizes);
   /** Settings → General → file sizes in the section lists, on this device. */
   readonly showFileSizes = this.showFileSizesSignal.asReadonly();
+  private readonly trackerRowDensitySignal = signal<TrackerRowDensity>(
+    LOCAL_PREFERENCE_DEFAULTS.trackerRowDensity,
+  );
+  /** Settings → General → Tracker rows: how tall a combatant row is, on this device. */
+  readonly trackerRowDensity = this.trackerRowDensitySignal.asReadonly();
   private readonly editorSettingsSignal = signal<EditorSettings>(EDITOR_SETTINGS_DEFAULTS);
   /** Settings → Editor, on this device. */
   readonly editorSettings = this.editorSettingsSignal.asReadonly();
@@ -47,6 +54,7 @@ export class LocalPreferencesService {
     this.setOnboardingCompleted(this.getOnboardingCompleted());
     this.applyEditorSettings(this.readEditorSettings());
     this.showFileSizesSignal.set(this.getShowFileSizes());
+    this.trackerRowDensitySignal.set(this.getTrackerRowDensity());
   }
 
   getTheme(): ThemePreference {
@@ -123,6 +131,21 @@ export class LocalPreferencesService {
   setShowFileSizes(show: boolean): void {
     this.showFileSizesSignal.set(show);
     this.setText(LocalPreferenceKey.SHOW_FILE_SIZES, show ? '1' : '0');
+  }
+
+  getTrackerRowDensity(): TrackerRowDensity {
+    const value = this.getText(LocalPreferenceKey.TRACKER_ROW_DENSITY);
+    return TRACKER_ROW_DENSITIES.includes(value as TrackerRowDensity)
+      ? (value as TrackerRowDensity)
+      : LOCAL_PREFERENCE_DEFAULTS.trackerRowDensity;
+  }
+
+  setTrackerRowDensity(density: TrackerRowDensity): void {
+    const normalized = TRACKER_ROW_DENSITIES.includes(density)
+      ? density
+      : LOCAL_PREFERENCE_DEFAULTS.trackerRowDensity;
+    this.trackerRowDensitySignal.set(normalized);
+    this.setText(LocalPreferenceKey.TRACKER_ROW_DENSITY, normalized);
   }
 
   /** Whether the backlinks panel of notes is open (per device). */

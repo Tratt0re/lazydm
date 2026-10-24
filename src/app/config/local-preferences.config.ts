@@ -10,7 +10,13 @@ export enum LocalPreferenceKey {
   EDITOR_SETTINGS = 'editor_settings',
   NOTE_AUDIO_VOLUME = 'note_audio_volume',
   SHOW_FILE_SIZES = 'show_file_sizes',
+  TRACKER_ROW_DENSITY = 'tracker_row_density',
 }
+
+/** How tall a combatant row of the encounter page is (Settings → General → Tracker rows). */
+export type TrackerRowDensity = 'compact' | 'roomy';
+
+export const TRACKER_ROW_DENSITIES: readonly TrackerRowDensity[] = ['compact', 'roomy'];
 
 /**
  * Where a map was left: the centre as fractions of its image and the zoom relative to the zoom that fits the
@@ -83,6 +89,8 @@ export interface LocalPreferences {
   readonly noteAudioVolume: number;
   /** Whether the file rows of the section pages show the size of the file. */
   readonly showFileSizes: boolean;
+  /** Height of a combatant row in the encounter page. */
+  readonly trackerRowDensity: TrackerRowDensity;
 }
 
 export const LOCAL_PREFERENCE_DEFAULTS: Readonly<LocalPreferences> = Object.freeze({
@@ -93,4 +101,5 @@ export const LOCAL_PREFERENCE_DEFAULTS: Readonly<LocalPreferences> = Object.free
   documentLinksPanelOpen: false,
   noteAudioVolume: 1,
   showFileSizes: false,
+  trackerRowDensity: 'compact',
 });

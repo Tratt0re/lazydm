@@ -97,6 +97,15 @@
           "description": "Muestra el tamaño de cada nota, encuentro y recurso en las listas de archivos de las páginas de sección, en este dispositivo."
         }
       },
+      "trackerRows": {
+        "title": "Filas del tracker",
+        "label": "Tamaño de las filas",
+        "description": "Compacta muestra más combatientes en pantalla; Amplia da más espacio a cada fila. En este dispositivo.",
+        "options": {
+          "compact": "Compacta",
+          "roomy": "Amplia"
+        }
+      },
       "shortcuts": {
         "title": "Atajos de teclado",
         "description": "Todos los atajos de la app, según dónde funcionan.",
@@ -1074,7 +1083,8 @@
       "stopDescription": "Las iniciativas y los estados se borran y los puntos de golpe vuelven al máximo donde lo hay. Los nombres y otros valores se conservan.",
       "stopConfirm": "Terminar combate",
       "idle": "Listo",
-      "roundWord": "Ronda"
+      "roundWord": "Ronda",
+      "turnChip": "Turno"
     },
     "cemetery": {
       "title": "Cementerio",

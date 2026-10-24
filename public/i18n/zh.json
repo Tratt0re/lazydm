@@ -97,6 +97,15 @@
           "description": "在此设备上，于各分区页面的文件列表中显示每条笔记、遭遇和资源的大小。"
         }
       },
+      "trackerRows": {
+        "title": "追踪器行",
+        "label": "行大小",
+        "description": "紧凑可在屏幕上显示更多战斗者;宽松为每行留出更多空间。仅限此设备。",
+        "options": {
+          "compact": "紧凑",
+          "roomy": "宽松"
+        }
+      },
       "shortcuts": {
         "title": "键盘快捷键",
         "description": "应用的所有快捷键，按适用位置分组。",
@@ -1074,7 +1083,8 @@
       "stopDescription": "先攻和状态将被清除，生命值恢复到最大值（如有）。名称和其他数值保留。",
       "stopConfirm": "结束战斗",
       "idle": "就绪",
-      "roundWord": "回合"
+      "roundWord": "回合",
+      "turnChip": "行动"
     },
     "cemetery": {
       "title": "墓地",

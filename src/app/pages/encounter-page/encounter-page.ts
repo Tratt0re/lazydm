@@ -49,6 +49,7 @@ import { BattleRuleService } from '@/services/battle-rule.service';
 import { EncounterService, PARTY_FILE_NAME } from '@/services/encounter.service';
 import { CopyToService } from '@/services/copy-to.service';
 import { FileActionsService } from '@/services/file-actions.service';
+import { LocalPreferencesService } from '@/services/local-preferences.service';
 import { getNoteScopeKind, NoteScopeService } from '@/services/note-scope.service';
 import { SectionService, toSubfolderLabel } from '@/services/section.service';
 import { ToolbarContextService } from '@/services/toolbar-context.service';
@@ -61,6 +62,7 @@ import { ArcTechAlertDialogService } from '@/shared/components/alert-dialog';
 import { ArcTechDialogService } from '@/shared/components/dialog';
 import { ArcTechSheetService } from '@/shared/components/sheet';
 import { ArcTechCheckboxComponent } from '@/shared/components/checkbox';
+import { ArcTechMenuImports } from '@/shared/components/menu';
 import { ArcTechTooltipImports } from '@/shared/components/tooltip';
 import { rollDice } from '@/shared/utils/dice';
 
@@ -124,6 +126,7 @@ function parseNumber(value: unknown): number | null {
     ArcTechCheckboxComponent,
     ArcTechEmptyComponent,
     ArcTechIconComponent,
+    ArcTechMenuImports,
     ArcTechTooltipImports,
   ],
   templateUrl: './encounter-page.html',
@@ -149,6 +152,7 @@ export class EncounterPage {
   private readonly sheetService = inject(ArcTechSheetService);
   private readonly dialogService = inject(ArcTechDialogService);
   private readonly alertDialogService = inject(ArcTechAlertDialogService);
+  private readonly localPreferences = inject(LocalPreferencesService);
   private loadToken = 0;
   private isSaving = false;
   private needsSave = false;
@@ -206,6 +210,13 @@ export class EncounterPage {
         })),
     ];
   });
+  /** Settings → General → Tracker rows: the compact row (default) or the roomy one. */
+  protected readonly isCompact = computed(() => this.localPreferences.trackerRowDensity() === 'compact');
+  /** Whether the rule shows a statuses field in the row (the how-to line is written once above the list). */
+  protected readonly hasStatuses = computed(
+    () =>
+      this.rule()?.fields.some((field) => field.component === 'statuses' && field.showInRow) ?? false,
+  );
   /** Key of the rule's initiative field (null when the rule has none). */
   private readonly initiativeKey = computed(
     () => this.rule()?.fields.find((field) => field.component === 'initiative')?.key ?? null,

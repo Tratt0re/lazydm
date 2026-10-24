@@ -97,6 +97,15 @@
           "description": "Mostra la dimensione di ogni nota, incontro e risorsa negli elenchi delle pagine delle sezioni, su questo dispositivo."
         }
       },
+      "trackerRows": {
+        "title": "Righe del tracker",
+        "label": "Dimensione delle righe",
+        "description": "Compatta mostra più combattenti sullo schermo; Ampia dà più spazio a ogni riga. Su questo dispositivo.",
+        "options": {
+          "compact": "Compatta",
+          "roomy": "Ampia"
+        }
+      },
       "shortcuts": {
         "title": "Scorciatoie da tastiera",
         "description": "Tutte le scorciatoie dell'app, per dove funzionano.",
@@ -1074,7 +1083,8 @@
       "stopDescription": "Iniziative e stati vengono azzerati e i punti ferita tornano al massimo dove c'è. Nomi e altri valori restano.",
       "stopConfirm": "Termina battaglia",
       "idle": "Pronto",
-      "roundWord": "Round"
+      "roundWord": "Round",
+      "turnChip": "Turno"
     },
     "cemetery": {
       "title": "Cimitero",

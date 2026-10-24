@@ -22,7 +22,7 @@ rebuild the preload bundle only if `channels.js` changes (not expected).
 | Phase | Scope | Status | Commit |
 | --- | --- | --- | --- |
 | 0 | Update DESIGN_PRINCIPLES.md (agree the wording first) | done | see git log |
-| 1 | Tracker rows: compact default + density setting | pending | |
+| 1 | Tracker rows: compact default + density setting | done | see git log |
 | 2 | Encounters section page | pending | |
 | 3 | Note page chrome and toolbar, collapsible properties | pending | |
 | 4 | Alignment, overview alert, Review page | pending | |
@@ -123,6 +123,15 @@ row; delete is always visible next to harmless icons; the turn highlight is only
 
 ## Log
 
+- 2026-10-24, Phase 1: the built-in Default tracker layout is now 2 rows (initiative, AC, name, HP / statuses, note;
+  agreed with the user). Row header strip replaced by a left rail (drag, roll checkbox) and an actions column (edit,
+  duplicate, cemetery on hover/focus; "…" always visible, Delete last). Turn chip next to the name. Statuses hint written
+  once above the list. Density setting in Settings → General (`tracker_row_density`, compact default). Measured at
+  1440x900 with the built-in layout: compact 86px (was ~180px+), roomy 122px; custom 1-row layout 50px, 4-row 142px.
+  Deviations: compact lands at 86px (inside the 80-90 target); Roomy keeps the same structure as compact with the old
+  spacing, as agreed. Custom layouts made earlier with *Customize* keep their own areas. Not covered: drag-to-reorder
+  was not exercised (no drag in the mock), the touch size of the row buttons is 28px, and no Angular specs exist for
+  this page (`npm test` finds none; `test:electron` passes, 57 tests).
 - 2026-10-24: plan written; decisions above agreed. The critique covered the welcome and vault steps, the campaign list,
   the overview, a note, the tracker (running state only), the Encounters section page, Review, Settings → General and
   the New note modal. Not yet seen: an empty or idle tracker, the maps page, the Import modal, the remaining Settings tabs.

@@ -97,6 +97,15 @@
           "description": "Affiche la taille de chaque note, rencontre et ressource dans les listes de fichiers des pages de section, sur cet appareil."
         }
       },
+      "trackerRows": {
+        "title": "Lignes du tracker",
+        "label": "Taille des lignes",
+        "description": "Compact affiche plus de combattants à l’écran ; Aéré donne plus de place à chaque ligne. Sur cet appareil.",
+        "options": {
+          "compact": "Compact",
+          "roomy": "Aéré"
+        }
+      },
       "shortcuts": {
         "title": "Raccourcis clavier",
         "description": "Tous les raccourcis de l'app, selon où ils fonctionnent.",
@@ -1074,7 +1083,8 @@
       "stopDescription": "Les initiatives et les états sont effacés et les points de vie reviennent au maximum là où il y en a un. Les noms et autres valeurs restent.",
       "stopConfirm": "Arrêter le combat",
       "idle": "Prêt",
-      "roundWord": "Tour"
+      "roundWord": "Tour",
+      "turnChip": "Tour"
     },
     "cemetery": {
       "title": "Cimetière",

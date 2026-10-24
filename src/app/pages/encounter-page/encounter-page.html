@@ -166,6 +166,10 @@
         </button>
       </ng-template>
     } @else {
+      @if (hasStatuses() && isEditable()) {
+        <!-- Written once for the whole list instead of under every row. -->
+        <p class="-mb-2 text-xs text-muted-foreground">{{ 'encounters.status.hint' | translate }}</p>
+      }
       <ul
         class="flex flex-col border border-border bg-card"
         cdkDropList
@@ -176,16 +180,12 @@
         @for (entity of entities(); track entity.id) {
           <li
             cdkDrag
-            class="relative flex scroll-mt-40 flex-col border-b border-l-4 border-b-border bg-card last:border-b-0 [&.cdk-drag-placeholder]:opacity-40"
-            [class]="
-              isRunning() && entity.id === turnId()
-                ? 'z-1 border-l-primary bg-accent outline-2 -outline-offset-2 outline-primary'
-                : 'border-l-transparent'
-            "
+            class="group relative flex scroll-mt-40 items-stretch border-b border-l-4 border-b-border bg-card last:border-b-0 [&.cdk-drag-placeholder]:opacity-40"
+            [class]="isRunning() && entity.id === turnId() ? 'z-1 border-l-primary bg-accent' : 'border-l-transparent'"
             [attr.aria-current]="isRunning() && entity.id === turnId() ? 'step' : null"
           >
-            <!-- Card header: the system actions of the entity. -->
-            <div class="flex items-center gap-1 border-b border-border-subtle bg-recessed px-2 py-0">
+            <!-- Left rail: the two things you do to many rows at once (drag to reorder, pick for the roll). -->
+            <div class="flex shrink-0 flex-col items-center gap-1 border-r border-border-subtle px-1 py-2">
               <span
                 cdkDragHandle
                 class="flex size-6 shrink-0 cursor-grab items-center justify-center text-muted-foreground"
@@ -201,67 +201,13 @@
                   (checkChange)="toggleSelected(entity)"
                 />
               }
-              <span class="ml-auto flex shrink-0 items-center">
-                <button
-                  type="button"
-                  arc-button
-                  arcType="ghost"
-                  arcSize="sm"
-                  class="size-6! shrink-0 p-0!"
-                  [arcDisabled]="!isEditable()"
-                  [attr.aria-label]="'encounters.entity.edit' | translate"
-                  [arcTooltip]="'encounters.entity.edit' | translate"
-                  (click)="openEntitySheet(entity)"
-                >
-                  <arc-icon arcType="pencil" />
-                </button>
-                <button
-                  type="button"
-                  arc-button
-                  arcType="ghost"
-                  arcSize="sm"
-                  class="size-6! shrink-0 p-0!"
-                  [arcDisabled]="!isEditable()"
-                  [attr.aria-label]="'encounters.entity.duplicate' | translate"
-                  [arcTooltip]="'encounters.entity.duplicate' | translate"
-                  (click)="duplicateEntity(entity)"
-                >
-                  <arc-icon arcType="copy-plus" />
-                </button>
-                @if (!isParty()) {
-                  <!-- To the cemetery: the roster has none, so there it is only delete. -->
-                  <button
-                    type="button"
-                    arc-button
-                    arcType="ghost"
-                    arcSize="sm"
-                    class="size-6! shrink-0 p-0!"
-                    [arcDisabled]="!isEditable()"
-                    [attr.aria-label]="'encounters.entity.remove' | translate"
-                    [arcTooltip]="'encounters.entity.remove' | translate"
-                    (click)="removeEntity(entity)"
-                  >
-                    <arc-icon arcType="skull" />
-                  </button>
-                }
-                <button
-                  type="button"
-                  arc-button
-                  arcType="ghost"
-                  arcSize="sm"
-                  class="size-6! shrink-0 p-0! text-destructive hover:text-destructive"
-                  [arcDisabled]="!isEditable()"
-                  [attr.aria-label]="'encounters.entity.deleteNow' | translate"
-                  [arcTooltip]="'encounters.entity.deleteNow' | translate"
-                  (click)="confirmDeleteEntity(entity)"
-                >
-                  <arc-icon arcType="trash" />
-                </button>
-              </span>
             </div>
 
             <!-- The row is the rule's grid: each element sits where the rule put it. -->
-            <div class="grid min-w-0 grid-cols-12 items-center gap-x-3 gap-y-2 p-3">
+            <div
+              class="grid min-w-0 flex-1 grid-cols-12 items-center gap-x-3"
+              [class]="isCompact() ? 'gap-y-1 p-2' : 'gap-y-2 p-3'"
+            >
               @for (cell of rowCells(); track cell.id) {
                 <div
                   class="flex min-w-0 items-center gap-1"
@@ -275,13 +221,20 @@
                     >
                       {{ entityName(entity.name) }}
                     </span>
+                    @if (isRunning() && entity.id === turnId()) {
+                      <!-- The bar and the tint say it too; the word makes it not rely on colour. -->
+                      <arc-badge arcType="outline" class="shrink-0 border-primary text-primary">
+                        {{ 'encounters.battle.turnChip' | translate }}
+                      </arc-badge>
+                    }
                   } @else {
                     @let field = cell.field;
                     @switch (field.component) {
                       @case ('initiative') {
                         @let initiative = numberOf(entity, field);
                         <span
-                          class="flex size-10 shrink-0 items-center justify-center border border-border bg-recessed font-display text-xl font-extrabold"
+                          class="flex shrink-0 items-center justify-center border border-border bg-recessed font-display font-extrabold"
+                          [class]="isCompact() ? 'size-8 text-lg' : 'size-10 text-xl'"
                           [class.text-muted-foreground]="initiative === null"
                           [attr.title]="fieldLabel(field)"
                         >
@@ -331,6 +284,7 @@
                         <div class="flex min-w-0 flex-1 flex-col gap-0.5">
                           <label
                             class="font-mono text-[10px] tracking-[0.1em] text-muted-foreground uppercase"
+                            [class.sr-only]="isCompact()"
                             [attr.for]="'status-' + entity.id"
                           >{{ fieldLabel(field) }}</label>
                           <div
@@ -360,11 +314,6 @@
                               (blur)="commitStatusInput($any($event.target), entity, field)"
                             />
                           </div>
-                          @if (isEditable()) {
-                            <p class="text-[11px] leading-4 text-muted-foreground">
-                              {{ 'encounters.status.hint' | translate }}
-                            </p>
-                          }
                         </div>
                       }
                       @case ('text') {
@@ -392,6 +341,94 @@
                   }
                 </div>
               }
+            </div>
+
+            <!-- Actions: the everyday ones show on hover or focus; the "…" is always there and holds all of them. -->
+            <div class="flex shrink-0 items-start gap-0.5 px-1 py-2">
+              <span
+                class="flex items-center opacity-0 transition-opacity group-focus-within:opacity-100 group-hover:opacity-100 motion-reduce:transition-none"
+              >
+                <button
+                  type="button"
+                  arc-button
+                  arcType="ghost"
+                  arcSize="sm"
+                  class="size-7! shrink-0 p-0!"
+                  [arcDisabled]="!isEditable()"
+                  [attr.aria-label]="'encounters.entity.edit' | translate"
+                  [arcTooltip]="'encounters.entity.edit' | translate"
+                  (click)="openEntitySheet(entity)"
+                >
+                  <arc-icon arcType="pencil" />
+                </button>
+                <button
+                  type="button"
+                  arc-button
+                  arcType="ghost"
+                  arcSize="sm"
+                  class="size-7! shrink-0 p-0!"
+                  [arcDisabled]="!isEditable()"
+                  [attr.aria-label]="'encounters.entity.duplicate' | translate"
+                  [arcTooltip]="'encounters.entity.duplicate' | translate"
+                  (click)="duplicateEntity(entity)"
+                >
+                  <arc-icon arcType="copy-plus" />
+                </button>
+                @if (!isParty()) {
+                  <!-- To the cemetery: the roster has none, so there Delete is the only way out. -->
+                  <button
+                    type="button"
+                    arc-button
+                    arcType="ghost"
+                    arcSize="sm"
+                    class="size-7! shrink-0 p-0!"
+                    [arcDisabled]="!isEditable()"
+                    [attr.aria-label]="'encounters.entity.remove' | translate"
+                    [arcTooltip]="'encounters.entity.remove' | translate"
+                    (click)="removeEntity(entity)"
+                  >
+                    <arc-icon arcType="skull" />
+                  </button>
+                }
+              </span>
+              <button
+                type="button"
+                arc-button
+                arc-menu
+                [arcMenuTriggerFor]="entityMenu"
+                arcPlacement="bottomRight"
+                arcType="ghost"
+                arcSize="sm"
+                class="size-7! shrink-0 p-0!"
+                [arcDisabled]="!isEditable()"
+                [attr.aria-label]="'common.moreActions' | translate"
+              >
+                <arc-icon arcType="ellipsis" />
+              </button>
+
+              <ng-template #entityMenu>
+                <div arc-menu-content class="w-56">
+                  <button type="button" arc-menu-item (click)="openEntitySheet(entity)">
+                    <arc-icon arcType="pencil" />
+                    {{ 'encounters.entity.edit' | translate }}
+                  </button>
+                  <button type="button" arc-menu-item (click)="duplicateEntity(entity)">
+                    <arc-icon arcType="copy-plus" />
+                    {{ 'encounters.entity.duplicate' | translate }}
+                  </button>
+                  @if (!isParty()) {
+                    <button type="button" arc-menu-item (click)="removeEntity(entity)">
+                      <arc-icon arcType="skull" />
+                      {{ 'encounters.entity.remove' | translate }}
+                    </button>
+                  }
+                  <div class="-mx-1 my-1 h-px bg-border-subtle" role="separator"></div>
+                  <button type="button" arc-menu-item arcType="destructive" (click)="confirmDeleteEntity(entity)">
+                    <arc-icon arcType="trash" />
+                    {{ 'encounters.entity.deleteNow' | translate }}
+                  </button>
+                </div>
+              </ng-template>
             </div>
           </li>
         }

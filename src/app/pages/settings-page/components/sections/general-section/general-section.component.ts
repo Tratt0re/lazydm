@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 
+import { TRACKER_ROW_DENSITIES, type TrackerRowDensity } from '@/config/local-preferences.config';
 import { I18nService } from '@/services/i18n.service';
 import { LocalPreferencesService } from '@/services/local-preferences.service';
 import { ShortcutsSheetService } from '@/services/shortcuts-sheet.service';
@@ -33,9 +34,18 @@ export class GeneralSectionComponent {
   protected readonly selectedLanguage = this.i18nService.language;
   private readonly localPreferences = inject(LocalPreferencesService);
   protected readonly showFileSizes = this.localPreferences.showFileSizes;
+  protected readonly trackerRowDensity = this.localPreferences.trackerRowDensity;
+  protected readonly trackerRowDensities = TRACKER_ROW_DENSITIES;
 
   protected setShowFileSizes(show: boolean): void {
     this.localPreferences.setShowFileSizes(show);
+  }
+
+  protected onTrackerRowDensityChange(value: string | string[]): void {
+    const selectedValue = this.asSingleValue(value);
+    if (TRACKER_ROW_DENSITIES.includes(selectedValue as TrackerRowDensity)) {
+      this.localPreferences.setTrackerRowDensity(selectedValue as TrackerRowDensity);
+    }
   }
 
   protected getLanguageLabelKey(language: string): string {

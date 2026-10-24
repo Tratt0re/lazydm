@@ -61,6 +61,35 @@
 
   <section class="rounded-lg border border-border/60 bg-card p-4 md:p-5">
     <h3 class="mb-3 font-display text-lg font-semibold tracking-wide uppercase">
+      {{ 'settings.general.trackerRows.title' | translate }}<span class="text-primary" aria-hidden="true">.</span>
+    </h3>
+    <div class="flex items-start justify-between gap-4">
+      <div class="min-w-0">
+        <label class="text-sm font-medium" for="settings-tracker-rows">
+          {{ 'settings.general.trackerRows.label' | translate }}
+        </label>
+        <p class="mt-1 text-xs text-muted-foreground">
+          {{ 'settings.general.trackerRows.description' | translate }}
+        </p>
+      </div>
+      <arc-select
+        id="settings-tracker-rows"
+        class="w-44 shrink-0"
+        [arcValue]="trackerRowDensity()"
+        (arcSelectionChange)="onTrackerRowDensityChange($event)"
+      >
+        @for (density of trackerRowDensities; track density) {
+          <arc-select-item
+            [arcValue]="density"
+            [arcLabel]="'settings.general.trackerRows.options.' + density | translate"
+          />
+        }
+      </arc-select>
+    </div>
+  </section>
+
+  <section class="rounded-lg border border-border/60 bg-card p-4 md:p-5">
+    <h3 class="mb-3 font-display text-lg font-semibold tracking-wide uppercase">
       {{ 'settings.general.shortcuts.title' | translate }}<span class="text-primary" aria-hidden="true">.</span>
     </h3>
     <div class="flex items-start justify-between gap-4">
