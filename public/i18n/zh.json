@@ -17,7 +17,6 @@
       "sessions": "团次",
       "assets": "素材",
       "backToCampaigns": "返回战役列表",
-      "broken-links": "失效链接",
       "spells": "法术",
       "items": "物品",
       "quests": "任务",
@@ -28,7 +27,7 @@
       "backToCompendium": "返回纲要",
       "notes": "笔记",
       "templates": "模板",
-      "battleRules": "战斗规则",
+      "battleRules": "追踪器布局",
       "maps": "地图"
     }
   },
@@ -71,7 +70,7 @@
         "description": "在此设备上，笔记在书写时的外观与行为。"
       },
       "vault": {
-        "title": "资料库",
+        "title": "Codex",
         "description": "存放笔记的文件夹，以及应用重置。"
       }
     },
@@ -108,7 +107,7 @@
       "customized": "已复制到 {{path}}",
       "sources": {
         "builtin": "内置",
-        "vault": "库"
+        "vault": "Codex"
       },
       "rules": {
         "title": "本战役的模板",
@@ -135,7 +134,7 @@
       "create": {
         "button": "新建模板",
         "title": "新建模板",
-        "description": "在库根目录的 _templates/ 中创建模板。",
+        "description": "在 Codex 根目录的 _templates/ 中创建模板。",
         "nameLabel": "名称",
         "namePlaceholder": "例如：首领敌人",
         "startFromLabel": "起始内容",
@@ -238,7 +237,7 @@
           "text": "文本",
           "list": "列表",
           "code": "代码",
-          "quote": "引用与标注",
+          "quote": "引用与信息框",
           "table": "表格",
           "embed": "图片与嵌入",
           "frontmatter": "属性",
@@ -289,25 +288,25 @@
     },
     "vault": {
       "current": {
-        "title": "已打开的资料库",
+        "title": "已打开的 Codex",
         "name": "名称",
         "path": "文件夹",
-        "hint": "笔记是此文件夹中的 .md 文件。关闭资料库不会删除它们。",
-        "none": "没有打开的资料库。"
+        "hint": "笔记是此文件夹中的 .md 文件。关闭 Codex 不会删除它们。",
+        "none": "没有打开的 Codex。"
       },
       "close": {
-        "action": "关闭资料库",
-        "title": "关闭此资料库？",
-        "description": "将返回资料库选择页。笔记保留在文件夹中，不会删除任何内容。",
-        "confirm": "关闭资料库",
-        "error": "无法关闭资料库"
+        "action": "关闭 Codex",
+        "title": "关闭此 Codex？",
+        "description": "将返回 Codex 选择页。笔记保留在文件夹中，不会删除任何内容。",
+        "confirm": "关闭 Codex",
+        "error": "无法关闭 Codex"
       },
       "reset": {
         "heading": "重置应用",
-        "explanation": "忘记已打开的资料库和此设备的设置（主题、语言、编辑器、已保存的布局），并从头开始。资料库文件夹和笔记不会被改动。",
+        "explanation": "忘记已打开的 Codex 和此设备的设置（主题、语言、编辑器、已保存的布局），并从头开始。Codex 文件夹和笔记不会被改动。",
         "action": "重置应用",
         "title": "重置应用？",
-        "description": "将忘记已打开的资料库和此设备的所有设置。笔记保留在其文件夹中，不会删除任何内容。",
+        "description": "将忘记已打开的 Codex 和此设备的所有设置。笔记保留在其文件夹中，不会删除任何内容。",
         "confirm": "重置应用",
         "error": "无法重置应用"
       }
@@ -315,41 +314,41 @@
   },
   "vault": {
     "setup": {
-      "title": "选择你的资料库",
-      "description": "资料库是存放所有战役 Markdown 文件的文件夹。LazyDM 只会添加一个很小的配置文件。请选择新的或已有的文件夹。",
+      "title": "选择你的 Codex",
+      "description": "Codex 是存放所有战役 Markdown 文件的文件夹。LazyDM 只会添加一个很小的配置文件。请选择新的或已有的文件夹。",
       "chooseFolder": "选择文件夹",
       "chooseAnother": "选择其他文件夹",
-      "open": "打开资料库",
-      "create": "创建资料库",
+      "open": "打开 Codex",
+      "create": "创建 Codex",
       "retry": "重试",
       "folderLabel": "文件夹",
       "detected": {
         "existing": {
-          "label": "现有资料库",
-          "description": "此文件夹已包含 LazyDM 资料库，将按原样打开。"
+          "label": "现有 Codex",
+          "description": "此文件夹已包含 LazyDM Codex，将按原样打开。"
         },
         "empty": {
-          "label": "新资料库",
-          "description": "该文件夹为空，将在此处创建新的资料库。"
+          "label": "新 Codex",
+          "description": "该文件夹为空，将在此处创建新的 Codex。"
         },
         "nonEmpty": {
-          "label": "新资料库",
+          "label": "新 Codex",
           "description": "此文件夹中已有文件。LazyDM 会添加其配置，不会改动你的文件。"
         }
       },
       "errors": {
         "desktopOnlyTitle": "需要桌面应用",
-        "desktopOnly": "资料库只能在 LazyDM 桌面应用中打开。",
-        "missingTitle": "无法访问资料库",
-        "missing": "无法访问位于 {{path}} 的资料库。它可能已被移动或删除，或其云盘尚不可用。",
+        "desktopOnly": "Codex 只能在 LazyDM 桌面应用中打开。",
+        "missingTitle": "无法访问 Codex",
+        "missing": "无法访问位于 {{path}} 的 Codex。它可能已被移动或删除，或其云盘尚不可用。",
         "readOnlyTitle": "只读文件夹",
         "readOnly": "LazyDM 无法写入此文件夹。请选择一个可编辑的文件夹。",
         "genericTitle": "出现问题"
       }
     },
     "sync": {
-      "overlayTitle": "正在同步资料库",
-      "overlayDescription": "{{provider}} 正在下载你在其他设备上修改过的笔记。笔记下载到本设备后，LazyDM 就会打开资料库。",
+      "overlayTitle": "正在同步 Codex",
+      "overlayDescription": "{{provider}} 正在下载你在其他设备上修改过的笔记。笔记下载到本设备后，LazyDM 就会打开 Codex。",
       "progress": "已下载 {{done}} / {{total}} 条笔记",
       "skip": "不等待，继续",
       "pendingTitle": "部分笔记仍在同步",
@@ -359,7 +358,7 @@
       "conflictsDescription": "你的云服务为同时在两台设备上编辑的笔记创建了副本。请检查并删除不需要的副本：",
       "conflictsMore": "……另有 {{count}} 个",
       "dismiss": "忽略",
-      "errorTitle": "无法检查资料库同步状态",
+      "errorTitle": "无法检查 Codex 同步状态",
       "providers": {
         "icloud": "iCloud Drive",
         "box": "Box",
@@ -372,8 +371,8 @@
     "activity": {
       "checking": "正在检查云端更改",
       "downloading": "正在从云端下载笔记",
-      "indexing": "正在为库建立索引",
-      "indexError": "无法为库建立索引"
+      "indexing": "正在为 Codex 建立索引",
+      "indexError": "无法为 Codex 建立索引"
     }
   },
   "campaigns": {
@@ -382,12 +381,12 @@
       "title": "战役",
       "create": "新建战役",
       "emptyTitle": "还没有战役",
-      "emptyDescription": "战役是资料库中的一个文件夹，包含场景、角色、敌人、遭遇和团次。创建第一个战役即可开始准备。",
+      "emptyDescription": "战役是 Codex 中的一个文件夹，包含场景、角色、敌人、遭遇和团次。创建第一个战役即可开始准备。",
       "loadError": "无法加载战役"
     },
     "create": {
       "title": "新建战役",
-      "description": "LazyDM 会在你的库中为战役创建一个文件夹。选择它起始的分区。",
+      "description": "LazyDM 会在你的 Codex 中为战役创建一个文件夹。选择它起始的分区。",
       "nameLabel": "名称",
       "namePlaceholder": "凡达林的失落矿坑",
       "nameDescription": "文件夹将以此命名，空格会替换为连字符。",
@@ -402,7 +401,7 @@
     },
     "sections": {
       "emptyTitle": "{{section}}中还没有内容",
-      "emptyDescription": "你添加到资料库 {{folder}} 文件夹中的笔记会显示在这里。",
+      "emptyDescription": "你添加到 Codex {{folder}} 文件夹中的笔记会显示在这里。",
       "newNote": {
         "create": "新建笔记",
         "title": "新建笔记",
@@ -557,15 +556,15 @@
       "reload": "重新加载另一版本"
     },
     "links": {
-      "linkedNotes": "链接的笔记",
-      "linkedAssets": "链接的资源",
+      "linkedNotes": "笔记",
+      "linkedAssets": "资源",
       "noLinkedFiles": "还没有与其他文件之间的链接。",
       "from": "来自",
       "to": "指向",
       "fromTooltip": "{{title}} 链接到此笔记",
       "toTooltip": "此笔记链接到 {{title}}",
       "broken": "失效链接",
-      "allBroken": "战役中的所有失效链接"
+      "allBroken": "在“检查”中查看全部"
     },
     "rename": {
       "title": "重命名笔记",
@@ -709,14 +708,11 @@
   "links": {
     "broken": {
       "title": "失效链接",
-      "cardDescription": "指向不存在的笔记或文件的链接。",
       "summary": "失效链接：{{links}} · 笔记：{{notes}}",
       "line": "第 {{line}} 行",
       "emptyTitle": "没有失效链接",
       "emptyDescription": "此战役中的每个链接都指向现有的笔记或文件。",
-      "loadError": "无法加载失效链接",
-      "alertTitle": "失效链接：{{count}}",
-      "review": "查看"
+      "loadError": "无法加载失效链接"
     },
     "actions": {
       "create": "创建笔记…",
@@ -748,7 +744,7 @@
     },
     "create": {
       "title": "新建系统",
-      "description": "LazyDM 会在你的库的纲要中创建一个文件夹。添加笔记和文件时，其子文件夹会自动出现。",
+      "description": "LazyDM 会在你的 Codex 的纲要中创建一个文件夹。添加笔记和文件时，其子文件夹会自动出现。",
       "nameLabel": "名称",
       "namePlaceholder": "我的 D&D 规则",
       "nameDescription": "文件夹以此命名，空格替换为连字符。",
@@ -991,15 +987,15 @@
     "parseError": "此文件不是有效的 JSON",
     "empty": {
       "title": "此遭遇中还没有人",
-      "description": "添加的单位会按先攻顺序显示在这里。"
+      "description": "添加的战斗者会按先攻顺序显示在这里。"
     },
     "entity": {
       "unnamed": "未命名",
-      "add": "添加单位",
-      "addTitle": "添加单位",
+      "add": "添加战斗者",
+      "addTitle": "添加战斗者",
       "addSubmit": "添加",
       "edit": "编辑",
-      "editTitle": "编辑单位",
+      "editTitle": "编辑战斗者",
       "save": "保存",
       "name": "名称",
       "namePlaceholder": "地精 1",
@@ -1091,13 +1087,13 @@
       }
     },
     "rule": {
-      "label": "战斗规则",
-      "ariaLabel": "此遭遇的战斗规则",
-      "campaignDefault": "战役的规则",
+      "label": "追踪器布局",
+      "ariaLabel": "此遭遇的追踪器布局",
+      "campaignDefault": "战役的布局",
       "builtInDefault": "内置",
-      "saved": "战斗规则已保存",
-      "saveError": "无法更改战斗规则",
-      "campaignAriaLabel": "此战役的战斗规则"
+      "saved": "追踪器布局已保存",
+      "saveError": "无法更改追踪器布局",
+      "campaignAriaLabel": "此战役的追踪器布局"
     },
     "roll": {
       "button": "掷先攻",
@@ -1110,13 +1106,13 @@
       "cleared": "已清除 {{count}} 个的先攻",
       "failed": "{{count}} 个无法掷出：{{reason}}",
       "error": "无法掷先攻",
-      "hint": "为所选单位掷骰。无法掷的（缺少数值）会失去先攻。",
+      "hint": "为所选战斗者掷骰。无法掷的（缺少数值）会失去先攻。",
       "one": "掷先攻",
       "oneFailed": "无法掷先攻"
     },
     "delete": {
       "title": "永久删除 {{name}}？",
-      "description": "该单位将离开此遭遇，且无法恢复。",
+      "description": "该战斗者将离开此遭遇，且无法恢复。",
       "confirm": "永久删除"
     },
     "header": {
@@ -1127,25 +1123,25 @@
   "battleRules": {
     "builtInName": "默认",
     "missing": "{{path}}（缺失）",
-    "createError": "无法创建战斗规则",
-    "loadError": "无法加载战斗规则",
+    "createError": "无法创建追踪器布局",
+    "loadError": "无法加载追踪器布局",
     "library": {
-      "title": "战斗规则",
-      "empty": "在左侧选择一条战斗规则，或新建一条。"
+      "title": "追踪器布局",
+      "empty": "在左侧选择一个追踪器布局，或新建一个。"
     },
     "create": {
-      "button": "新建战斗规则",
-      "title": "新建战斗规则",
-      "description": "在库根目录的 _battle-rules/ 中以内置规则为基础创建规则。",
+      "button": "新建追踪器布局",
+      "title": "新建追踪器布局",
+      "description": "在 Codex 根目录的 _battle-rules/ 中以内置布局为基础创建布局。",
       "nameLabel": "名称",
       "namePlaceholder": "Fantasy 5e",
       "submit": "创建"
     },
     "delete": {
       "title": "删除 {{name}}？",
-      "description": "{{path}} 将被移到废纸篓。使用它的战役和遭遇将恢复为内置规则。",
+      "description": "{{path}} 将被移到废纸篓。使用它的战役和遭遇将恢复为内置布局。",
       "done": "已删除 {{name}}",
-      "error": "无法删除战斗规则"
+      "error": "无法删除追踪器布局"
     },
     "components": {
       "initiative": "先攻",
@@ -1158,28 +1154,28 @@
     },
     "editor": {
       "builtInHint": "内置，只读。“自定义”会复制一份供编辑。",
-      "saved": "战斗规则已保存",
-      "saveError": "无法保存战斗规则",
-      "conflict": "战斗规则已在磁盘上更改。",
+      "saved": "追踪器布局已保存",
+      "saveError": "无法保存追踪器布局",
+      "conflict": "追踪器布局已在磁盘上更改。",
       "formulaInvalid": "请先修正先攻公式",
       "name": "名称",
       "template": "属性来自",
       "noTemplate": "无模板",
       "builtInTemplate": "内置 · {{type}}",
-      "templateHint": "此模板的 frontmatter 键就是规则可从单位笔记中读取的内容。",
+      "templateHint": "此模板的 frontmatter 键就是布局可从战斗者笔记中读取的内容。",
       "initiative": "先攻",
       "rolled": "用公式掷先攻",
       "formula": "公式",
       "formulaHint": "如 1d20、1d100 或 2d6 的骰子、整数，以及用于笔记 frontmatter 数字的 {键}。负数会相减。",
       "variables": "添加",
       "unknownVariable": "{{key}} 不是该模板的属性。",
-      "fields": "单位行",
-      "fieldsHint": "每个单位显示的内容，按顺序。每条规则都有名称和先攻。",
+      "fields": "战斗者行",
+      "fieldsHint": "每个战斗者显示的内容，按顺序。每个布局都有名称和先攻。",
       "alwaysThere": "始终存在",
       "label": "标签",
       "key": "键",
       "source": "值来自",
-      "sourceEntity": "单位本身",
+      "sourceEntity": "战斗者本身",
       "sourceNote": "笔记 · {{key}}",
       "sides": "阵营（用逗号分隔）",
       "showInRow": "在行中显示",
@@ -1191,7 +1187,7 @@
     },
     "row": {
       "hint": "拖动元素可移动它（拖到另一个元素上会互换位置），拖动右边缘可调整宽度，点击齿轮打开设置，拖到下方框中可隐藏。名称和先攻始终保留。",
-      "label": "单位行示意",
+      "label": "战斗者行示意",
       "settings": "{{name}} 的设置",
       "settingsTip": "设置",
       "overlap": "该位置已被占用或超出行范围。",
@@ -1441,12 +1437,12 @@
       "newTab": "新标签页",
       "closeTab": "关闭标签页",
       "save": "保存",
-      "revealVault": "在访达中显示库",
+      "revealVault": "在访达中显示 Codex",
       "search": "搜索战役…",
       "toggleSidebar": "显示/隐藏侧边栏",
       "compendium": "资料库",
       "templates": "模板",
-      "battleRules": "战斗规则",
+      "battleRules": "追踪器布局",
       "back": "后退",
       "forward": "前进",
       "nextTab": "下一个标签页",

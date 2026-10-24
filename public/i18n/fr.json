@@ -17,7 +17,6 @@
       "sessions": "Sessions",
       "assets": "Ressources",
       "backToCampaigns": "Retour aux campagnes",
-      "broken-links": "Liens cassés",
       "spells": "Sorts",
       "items": "Objets",
       "quests": "Quêtes",
@@ -28,7 +27,7 @@
       "backToCompendium": "Retour au compendium",
       "notes": "Notes",
       "templates": "Modèles",
-      "battleRules": "Règles de combat",
+      "battleRules": "Dispositions du suivi",
       "maps": "Cartes"
     }
   },
@@ -71,7 +70,7 @@
         "description": "L'apparence et le comportement des notes pendant l'écriture, sur cet appareil."
       },
       "vault": {
-        "title": "Coffre",
+        "title": "Codex",
         "description": "Le dossier de vos notes et la réinitialisation de l'application."
       }
     },
@@ -108,7 +107,7 @@
       "customized": "Copié dans {{path}}",
       "sources": {
         "builtin": "Intégré",
-        "vault": "Vault"
+        "vault": "Codex"
       },
       "rules": {
         "title": "Modèles de cette campagne",
@@ -135,7 +134,7 @@
       "create": {
         "button": "Nouveau modèle",
         "title": "Nouveau modèle",
-        "description": "Crée un modèle dans _templates/ à la racine du vault.",
+        "description": "Crée un modèle dans _templates/ à la racine du Codex.",
         "nameLabel": "Nom",
         "namePlaceholder": "ex. Ennemi boss",
         "startFromLabel": "Partir de",
@@ -238,7 +237,7 @@
           "text": "Texte",
           "list": "Listes",
           "code": "Code",
-          "quote": "Citations et callouts",
+          "quote": "Citations et encadrés",
           "table": "Tableaux",
           "embed": "Images et intégrations",
           "frontmatter": "Propriétés",
@@ -289,25 +288,25 @@
     },
     "vault": {
       "current": {
-        "title": "Coffre ouvert",
+        "title": "Codex ouvert",
         "name": "Nom",
         "path": "Dossier",
-        "hint": "Vos notes sont des fichiers .md dans ce dossier. Fermer le coffre ne les supprime pas.",
-        "none": "Aucun coffre ouvert."
+        "hint": "Vos notes sont des fichiers .md dans ce dossier. Fermer le Codex ne les supprime pas.",
+        "none": "Aucun Codex ouvert."
       },
       "close": {
-        "action": "Fermer le coffre",
-        "title": "Fermer ce coffre ?",
-        "description": "Vous revenez au choix du coffre. Vos notes restent dans le dossier et rien n’est supprimé.",
-        "confirm": "Fermer le coffre",
-        "error": "Impossible de fermer le coffre"
+        "action": "Fermer le Codex",
+        "title": "Fermer ce Codex ?",
+        "description": "Vous revenez au choix du Codex. Vos notes restent dans le dossier et rien n’est supprimé.",
+        "confirm": "Fermer le Codex",
+        "error": "Impossible de fermer le Codex"
       },
       "reset": {
         "heading": "Réinitialiser l'application",
-        "explanation": "Oublie le coffre ouvert et les réglages de cet appareil (thème, langue, éditeur, dispositions enregistrées) et repart de zéro. Le dossier du coffre et vos notes ne sont pas touchés.",
+        "explanation": "Oublie le Codex ouvert et les réglages de cet appareil (thème, langue, éditeur, dispositions enregistrées) et repart de zéro. Le dossier du Codex et vos notes ne sont pas touchés.",
         "action": "Réinitialiser l'application",
         "title": "Réinitialiser l'application ?",
-        "description": "Le coffre ouvert et tous les réglages de cet appareil sont oubliés. Vos notes restent dans leur dossier et rien n’est supprimé.",
+        "description": "Le Codex ouvert et tous les réglages de cet appareil sont oubliés. Vos notes restent dans leur dossier et rien n’est supprimé.",
         "confirm": "Réinitialiser l'application",
         "error": "Impossible de réinitialiser l'application"
       }
@@ -315,41 +314,41 @@
   },
   "vault": {
     "setup": {
-      "title": "Choisis ton vault",
-      "description": "Un vault est le dossier qui contient toutes tes campagnes sous forme de fichiers Markdown. LazyDM n’y ajoute qu’un petit fichier de configuration. Choisis un dossier neuf ou existant.",
+      "title": "Choisis ton Codex",
+      "description": "Un Codex est le dossier qui contient toutes tes campagnes sous forme de fichiers Markdown. LazyDM n’y ajoute qu’un petit fichier de configuration. Choisis un dossier neuf ou existant.",
       "chooseFolder": "Choisir un dossier",
       "chooseAnother": "Choisir un autre dossier",
-      "open": "Ouvrir le vault",
-      "create": "Créer le vault",
+      "open": "Ouvrir le Codex",
+      "create": "Créer le Codex",
       "retry": "Réessayer",
       "folderLabel": "Dossier",
       "detected": {
         "existing": {
-          "label": "Vault existant",
-          "description": "Ce dossier contient déjà un vault LazyDM. Il sera ouvert tel quel."
+          "label": "Codex existant",
+          "description": "Ce dossier contient déjà un Codex LazyDM. Il sera ouvert tel quel."
         },
         "empty": {
-          "label": "Nouveau vault",
-          "description": "Le dossier est vide. Un nouveau vault sera créé ici."
+          "label": "Nouveau Codex",
+          "description": "Le dossier est vide. Un nouveau Codex sera créé ici."
         },
         "nonEmpty": {
-          "label": "Nouveau vault",
+          "label": "Nouveau Codex",
           "description": "Ce dossier contient déjà des fichiers. LazyDM ajoutera sa configuration sans toucher à vos fichiers."
         }
       },
       "errors": {
         "desktopOnlyTitle": "Application de bureau requise",
-        "desktopOnly": "Les vaults ne peuvent être ouverts que dans l'application de bureau LazyDM.",
-        "missingTitle": "Vault inaccessible",
-        "missing": "Le vault situé à {{path}} est inaccessible. Il a peut-être été déplacé ou supprimé, ou son lecteur cloud n'est pas encore disponible.",
+        "desktopOnly": "Un Codex ne peut être ouvert que dans l'application de bureau LazyDM.",
+        "missingTitle": "Codex inaccessible",
+        "missing": "Le Codex situé à {{path}} est inaccessible. Il a peut-être été déplacé ou supprimé, ou son lecteur cloud n'est pas encore disponible.",
         "readOnlyTitle": "Dossier en lecture seule",
         "readOnly": "LazyDM ne peut pas écrire dans ce dossier. Choisissez un dossier modifiable.",
         "genericTitle": "Un problème est survenu"
       }
     },
     "sync": {
-      "overlayTitle": "Synchronisation du vault",
-      "overlayDescription": "{{provider}} télécharge les notes modifiées sur vos autres appareils. LazyDM ouvrira le vault dès qu'elles seront sur cet appareil.",
+      "overlayTitle": "Synchronisation du Codex",
+      "overlayDescription": "{{provider}} télécharge les notes modifiées sur vos autres appareils. LazyDM ouvrira le Codex dès qu'elles seront sur cet appareil.",
       "progress": "{{done}} sur {{total}} notes téléchargées",
       "skip": "Continuer sans attendre",
       "pendingTitle": "Certaines notes sont encore en cours de synchronisation",
@@ -359,7 +358,7 @@
       "conflictsDescription": "Votre service cloud a créé des copies de notes modifiées en même temps sur deux appareils. Vérifiez-les et supprimez la copie inutile :",
       "conflictsMore": "…et {{count}} de plus",
       "dismiss": "Ignorer",
-      "errorTitle": "Impossible de vérifier la synchronisation du vault",
+      "errorTitle": "Impossible de vérifier la synchronisation du Codex",
       "providers": {
         "icloud": "iCloud Drive",
         "box": "Box",
@@ -372,8 +371,8 @@
     "activity": {
       "checking": "Recherche de modifications dans le cloud",
       "downloading": "Téléchargement des notes depuis le cloud",
-      "indexing": "Indexation du vault",
-      "indexError": "Impossible d'indexer le vault"
+      "indexing": "Indexation du Codex",
+      "indexError": "Impossible d'indexer le Codex"
     }
   },
   "campaigns": {
@@ -382,12 +381,12 @@
       "title": "Campagnes",
       "create": "Nouvelle campagne",
       "emptyTitle": "Aucune campagne pour l'instant",
-      "emptyDescription": "Une campagne est un dossier de votre vault avec des scènes, des personnages, des ennemis, des rencontres et des sessions. Créez la première pour commencer à préparer.",
+      "emptyDescription": "Une campagne est un dossier de votre Codex avec des scènes, des personnages, des ennemis, des rencontres et des sessions. Créez la première pour commencer à préparer.",
       "loadError": "Impossible de charger les campagnes"
     },
     "create": {
       "title": "Nouvelle campagne",
-      "description": "LazyDM crée un dossier pour la campagne dans votre vault. Choisissez les sections de départ.",
+      "description": "LazyDM crée un dossier pour la campagne dans votre Codex. Choisissez les sections de départ.",
       "nameLabel": "Nom",
       "namePlaceholder": "La Mine perdue de Phandelver",
       "nameDescription": "Le dossier porte ce nom, avec des tirets à la place des espaces.",
@@ -402,7 +401,7 @@
     },
     "sections": {
       "emptyTitle": "Aucun élément dans {{section}}",
-      "emptyDescription": "Les notes que vous ajoutez au dossier {{folder}} de votre vault apparaissent ici.",
+      "emptyDescription": "Les notes que vous ajoutez au dossier {{folder}} de votre Codex apparaissent ici.",
       "newNote": {
         "create": "Nouvelle note",
         "title": "Nouvelle note",
@@ -557,15 +556,15 @@
       "reload": "Recharger l'autre version"
     },
     "links": {
-      "linkedNotes": "Notes liées",
-      "linkedAssets": "Ressources liées",
+      "linkedNotes": "Notes",
+      "linkedAssets": "Ressources",
       "noLinkedFiles": "Aucun lien vers ou depuis d’autres fichiers pour l’instant.",
       "from": "De",
       "to": "Vers",
       "fromTooltip": "{{title}} pointe vers cette note",
       "toTooltip": "Cette note pointe vers {{title}}",
       "broken": "Liens cassés",
-      "allBroken": "Tous les liens cassés de la campagne"
+      "allBroken": "Tout voir dans Vérification"
     },
     "rename": {
       "title": "Renommer la note",
@@ -709,14 +708,11 @@
   "links": {
     "broken": {
       "title": "Liens cassés",
-      "cardDescription": "Liens vers des notes ou fichiers qui n’existent pas.",
       "summary": "Liens cassés : {{links}} · notes : {{notes}}",
       "line": "Ligne {{line}}",
       "emptyTitle": "Aucun lien cassé",
       "emptyDescription": "Chaque lien de cette campagne pointe vers une note ou un fichier existant.",
-      "loadError": "Impossible de charger les liens cassés",
-      "alertTitle": "Liens cassés : {{count}}",
-      "review": "Vérifier"
+      "loadError": "Impossible de charger les liens cassés"
     },
     "actions": {
       "create": "Créer la note…",
@@ -748,7 +744,7 @@
     },
     "create": {
       "title": "Nouveau système",
-      "description": "LazyDM crée un dossier dans le compendium de votre coffre. Ses dossiers apparaissent au fil des notes et fichiers ajoutés.",
+      "description": "LazyDM crée un dossier dans le compendium de votre Codex. Ses dossiers apparaissent au fil des notes et fichiers ajoutés.",
       "nameLabel": "Nom",
       "namePlaceholder": "Mes règles D&D",
       "nameDescription": "Le dossier porte ce nom, avec des tirets à la place des espaces.",
@@ -991,15 +987,15 @@
     "parseError": "Ce fichier n'est pas un JSON valide",
     "empty": {
       "title": "Personne dans cette rencontre pour l'instant",
-      "description": "Les entités ajoutées apparaissent ici par ordre d'initiative."
+      "description": "Les combattants ajoutés apparaissent ici par ordre d'initiative."
     },
     "entity": {
       "unnamed": "Sans nom",
-      "add": "Ajouter une entité",
-      "addTitle": "Ajouter une entité",
+      "add": "Ajouter un combattant",
+      "addTitle": "Ajouter un combattant",
       "addSubmit": "Ajouter",
       "edit": "Modifier",
-      "editTitle": "Modifier l'entité",
+      "editTitle": "Modifier le combattant",
       "save": "Enregistrer",
       "name": "Nom",
       "namePlaceholder": "Gobelin 1",
@@ -1010,7 +1006,7 @@
       "quantityHint": "Combien en insérer : de 1 à 15. Au-delà de 1, ils sont numérotés.",
       "quantityError": "Saisissez une quantité de 1 à {{max}}.",
       "insertCount": "Insérer {{count}}",
-      "deleteNow": "Supprimer définitivement"
+      "deleteNow": "Supprimer pour toujours"
     },
     "fields": {
       "initiative": "Initiative",
@@ -1063,7 +1059,7 @@
       "title": "Cimetière",
       "empty": "Personne n'est encore tombé.",
       "recover": "Récupérer",
-      "deleteForever": "Supprimer définitivement"
+      "deleteForever": "Supprimer pour toujours"
     },
     "status": {
       "add": "Ajouter un état",
@@ -1091,13 +1087,13 @@
       }
     },
     "rule": {
-      "label": "Règle de combat",
-      "ariaLabel": "Règle de combat de cette rencontre",
-      "campaignDefault": "Règle de la campagne",
+      "label": "Disposition du suivi",
+      "ariaLabel": "Disposition du suivi de cette rencontre",
+      "campaignDefault": "Disposition de la campagne",
       "builtInDefault": "Intégrée",
-      "saved": "Règle de combat enregistrée",
-      "saveError": "Impossible de changer la règle de combat",
-      "campaignAriaLabel": "Règle de combat de cette campagne"
+      "saved": "Disposition du suivi enregistrée",
+      "saveError": "Impossible de changer la disposition du suivi",
+      "campaignAriaLabel": "Disposition du suivi de cette campagne"
     },
     "roll": {
       "button": "Lancer l'initiative",
@@ -1110,14 +1106,14 @@
       "cleared": "Initiative effacée pour {{count}}",
       "failed": "{{count}} n'ont pas pu lancer : {{reason}}",
       "error": "Impossible de lancer l'initiative",
-      "hint": "Lance pour les entités sélectionnées. Celle qui ne peut pas lancer (valeur manquante) perd son initiative.",
+      "hint": "Lance pour les combattants sélectionnés. Celui qui ne peut pas lancer (valeur manquante) perd son initiative.",
       "one": "Lancer l'initiative",
       "oneFailed": "Impossible de lancer l'initiative"
     },
     "delete": {
-      "title": "Supprimer {{name}} pour de bon ?",
-      "description": "L'entité quitte cette rencontre et ne peut pas être récupérée.",
-      "confirm": "Supprimer définitivement"
+      "title": "Supprimer {{name}} pour toujours ?",
+      "description": "Le combattant quitte cette rencontre et ne peut pas être récupéré.",
+      "confirm": "Supprimer pour toujours"
     },
     "header": {
       "label": "Actions de la rencontre",
@@ -1127,25 +1123,25 @@
   "battleRules": {
     "builtInName": "Par défaut",
     "missing": "{{path}} (manquante)",
-    "createError": "Impossible de créer la règle de combat",
-    "loadError": "Impossible de charger la règle de combat",
+    "createError": "Impossible de créer la disposition du suivi",
+    "loadError": "Impossible de charger la disposition du suivi",
     "library": {
-      "title": "Règles de combat",
-      "empty": "Choisissez une règle de combat à gauche, ou créez-en une."
+      "title": "Dispositions du suivi",
+      "empty": "Choisissez une disposition du suivi à gauche, ou créez-en une."
     },
     "create": {
-      "button": "Nouvelle règle de combat",
-      "title": "Nouvelle règle de combat",
-      "description": "Crée une règle dans _battle-rules/ à la racine du vault, à partir de celle intégrée.",
+      "button": "Nouvelle disposition du suivi",
+      "title": "Nouvelle disposition du suivi",
+      "description": "Crée une disposition dans _battle-rules/ à la racine du Codex, à partir de celle intégrée.",
       "nameLabel": "Nom",
       "namePlaceholder": "Fantasy 5e",
       "submit": "Créer"
     },
     "delete": {
       "title": "Supprimer {{name}} ?",
-      "description": "{{path}} sera placé dans la corbeille. Les campagnes et rencontres qui l’utilisaient repassent à la règle intégrée.",
+      "description": "{{path}} sera placé dans la corbeille. Les campagnes et rencontres qui l’utilisaient repassent à la disposition intégrée.",
       "done": "{{name}} supprimée",
-      "error": "Impossible de supprimer la règle de combat"
+      "error": "Impossible de supprimer la disposition du suivi"
     },
     "components": {
       "initiative": "Initiative",
@@ -1158,28 +1154,28 @@
     },
     "editor": {
       "builtInHint": "Intégrée, en lecture seule. Personnaliser en crée une copie modifiable.",
-      "saved": "Règle de combat enregistrée",
-      "saveError": "Impossible d'enregistrer la règle de combat",
-      "conflict": "La règle de combat a changé sur le disque.",
+      "saved": "Disposition du suivi enregistrée",
+      "saveError": "Impossible d'enregistrer la disposition du suivi",
+      "conflict": "La disposition du suivi a changé sur le disque.",
       "formulaInvalid": "Corrigez d'abord la formule d'initiative",
       "name": "Nom",
       "template": "Attributs de",
       "noTemplate": "Aucun modèle",
       "builtInTemplate": "Intégré · {{type}}",
-      "templateHint": "Les clés du frontmatter de ce modèle sont ce que la règle peut lire dans la note d'une entité.",
+      "templateHint": "Les clés du frontmatter de ce modèle sont ce que la disposition peut lire dans la note d'un combattant.",
       "initiative": "Initiative",
       "rolled": "Lancer l'initiative depuis une formule",
       "formula": "Formule",
       "formulaHint": "Des dés comme 1d20, 1d100 ou 2d6, des nombres entiers et {clé} pour un nombre du frontmatter de la note. Un nombre négatif soustrait.",
       "variables": "Ajouter",
       "unknownVariable": "{{key}} n'est pas un attribut du modèle.",
-      "fields": "Ligne de l'entité",
-      "fieldsHint": "Ce que montre chaque entité, dans l'ordre. Le nom et l'initiative sont dans toute règle.",
+      "fields": "Ligne du combattant",
+      "fieldsHint": "Ce que montre chaque combattant, dans l'ordre. Le nom et l'initiative sont dans toute disposition.",
       "alwaysThere": "Toujours présent",
       "label": "Libellé",
       "key": "Clé",
       "source": "Valeur de",
-      "sourceEntity": "L'entité elle-même",
+      "sourceEntity": "Le combattant lui-même",
       "sourceNote": "Note · {{key}}",
       "sides": "Camps (séparés par des virgules)",
       "showInRow": "Afficher dans la ligne",
@@ -1191,7 +1187,7 @@
     },
     "row": {
       "hint": "Faites glisser un élément pour le déplacer (sur un autre pour les échanger), faites glisser son bord droit pour le redimensionner, appuyez sur son engrenage pour ses réglages et déposez-le dans la zone du dessous pour le masquer. Le nom et l'initiative restent.",
-      "label": "Ligne d'exemple de l'entité",
+      "label": "Ligne d'exemple du combattant",
       "settings": "Réglages de {{name}}",
       "settingsTip": "Réglages",
       "overlap": "Cet emplacement est pris ou hors de la ligne.",
@@ -1441,12 +1437,12 @@
       "newTab": "Nouvel onglet",
       "closeTab": "Fermer l'onglet",
       "save": "Enregistrer",
-      "revealVault": "Afficher le vault dans le Finder",
+      "revealVault": "Afficher le Codex dans le Finder",
       "search": "Rechercher dans la campagne…",
       "toggleSidebar": "Afficher/masquer la barre latérale",
       "compendium": "Compendium",
       "templates": "Modèles",
-      "battleRules": "Règles de combat",
+      "battleRules": "Dispositions du suivi",
       "back": "Retour",
       "forward": "Suivant",
       "nextTab": "Onglet suivant",

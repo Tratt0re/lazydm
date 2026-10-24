@@ -17,7 +17,6 @@
       "sessions": "Sesiones",
       "assets": "Recursos",
       "backToCampaigns": "Volver a las campañas",
-      "broken-links": "Enlaces rotos",
       "spells": "Conjuros",
       "items": "Objetos",
       "quests": "Misiones",
@@ -28,7 +27,7 @@
       "backToCompendium": "Volver al compendio",
       "notes": "Notas",
       "templates": "Plantillas",
-      "battleRules": "Reglas de combate",
+      "battleRules": "Diseños del tracker",
       "maps": "Mapas"
     }
   },
@@ -71,7 +70,7 @@
         "description": "Cómo se ven y se comportan las notas mientras escribes, en este dispositivo."
       },
       "vault": {
-        "title": "Bóveda",
+        "title": "Codex",
         "description": "La carpeta donde viven tus notas y el restablecimiento de la app."
       }
     },
@@ -108,7 +107,7 @@
       "customized": "Copiada en {{path}}",
       "sources": {
         "builtin": "Integrada",
-        "vault": "Vault"
+        "vault": "Codex"
       },
       "rules": {
         "title": "Plantillas de esta campaña",
@@ -135,7 +134,7 @@
       "create": {
         "button": "Nueva plantilla",
         "title": "Nueva plantilla",
-        "description": "Crea una plantilla en _templates/ en la raíz del vault.",
+        "description": "Crea una plantilla en _templates/ en la raíz del Codex.",
         "nameLabel": "Nombre",
         "namePlaceholder": "p. ej. Enemigo jefe",
         "startFromLabel": "Partir de",
@@ -238,7 +237,7 @@
           "text": "Texto",
           "list": "Listas",
           "code": "Código",
-          "quote": "Citas y callouts",
+          "quote": "Citas y cuadros informativos",
           "table": "Tablas",
           "embed": "Imágenes e incrustaciones",
           "frontmatter": "Propiedades",
@@ -289,25 +288,25 @@
     },
     "vault": {
       "current": {
-        "title": "Bóveda abierta",
+        "title": "Codex abierto",
         "name": "Nombre",
         "path": "Carpeta",
-        "hint": "Tus notas son archivos .md en esta carpeta. Cerrar la bóveda no las elimina.",
-        "none": "Ninguna bóveda abierta."
+        "hint": "Tus notas son archivos .md en esta carpeta. Cerrar el Codex no las elimina.",
+        "none": "Ningún Codex abierto."
       },
       "close": {
-        "action": "Cerrar bóveda",
-        "title": "¿Cerrar esta bóveda?",
-        "description": "Vuelves al selector de bóvedas. Tus notas siguen en la carpeta y no se elimina nada.",
-        "confirm": "Cerrar bóveda",
-        "error": "No se pudo cerrar la bóveda"
+        "action": "Cerrar Codex",
+        "title": "¿Cerrar este Codex?",
+        "description": "Vuelves al selector de Codex. Tus notas siguen en la carpeta y no se elimina nada.",
+        "confirm": "Cerrar Codex",
+        "error": "No se pudo cerrar el Codex"
       },
       "reset": {
         "heading": "Restablecer la app",
-        "explanation": "Olvida la bóveda abierta y los ajustes de este dispositivo (tema, idioma, editor, diseños guardados) y reinicia la app desde cero. La carpeta de la bóveda y tus notas no se tocan.",
+        "explanation": "Olvida el Codex abierto y los ajustes de este dispositivo (tema, idioma, editor, diseños guardados) y reinicia la app desde cero. La carpeta de la Codex y tus notas no se tocan.",
         "action": "Restablecer la app",
         "title": "¿Restablecer la app?",
-        "description": "Se olvidan la bóveda abierta y todos los ajustes de este dispositivo. Tus notas siguen en su carpeta y no se elimina nada.",
+        "description": "Se olvidan el Codex abierto y todos los ajustes de este dispositivo. Tus notas siguen en su carpeta y no se elimina nada.",
         "confirm": "Restablecer la app",
         "error": "No se pudo restablecer la app"
       }
@@ -315,41 +314,41 @@
   },
   "vault": {
     "setup": {
-      "title": "Elige tu vault",
-      "description": "Un vault es la carpeta que guarda todas tus campañas como archivos Markdown. LazyDM solo añade un pequeño archivo de configuración. Elige una carpeta nueva o existente.",
+      "title": "Elige tu Codex",
+      "description": "Un Codex es la carpeta que guarda todas tus campañas como archivos Markdown. LazyDM solo añade un pequeño archivo de configuración. Elige una carpeta nueva o existente.",
       "chooseFolder": "Elegir carpeta",
       "chooseAnother": "Elegir otra carpeta",
-      "open": "Abrir vault",
-      "create": "Crear vault",
+      "open": "Abrir Codex",
+      "create": "Crear Codex",
       "retry": "Reintentar",
       "folderLabel": "Carpeta",
       "detected": {
         "existing": {
-          "label": "Vault existente",
-          "description": "Esta carpeta ya contiene un vault de LazyDM. Se abrirá tal como está."
+          "label": "Codex existente",
+          "description": "Esta carpeta ya contiene un Codex de LazyDM. Se abrirá tal como está."
         },
         "empty": {
-          "label": "Nuevo vault",
-          "description": "La carpeta está vacía. Aquí se creará un nuevo vault."
+          "label": "Nuevo Codex",
+          "description": "La carpeta está vacía. Aquí se creará un nuevo Codex."
         },
         "nonEmpty": {
-          "label": "Nuevo vault",
+          "label": "Nuevo Codex",
           "description": "Esta carpeta ya tiene archivos. LazyDM añadirá su configuración sin tocar tus archivos."
         }
       },
       "errors": {
         "desktopOnlyTitle": "Se necesita la app de escritorio",
-        "desktopOnly": "Los vaults solo se pueden abrir en la app de escritorio de LazyDM.",
-        "missingTitle": "Vault no accesible",
-        "missing": "No se puede acceder al vault en {{path}}. Puede que se haya movido o eliminado, o que su unidad en la nube aún no esté disponible.",
+        "desktopOnly": "Un Codex solo se puede abrir en la app de escritorio de LazyDM.",
+        "missingTitle": "Codex no accesible",
+        "missing": "No se puede acceder al Codex en {{path}}. Puede que se haya movido o eliminado, o que su unidad en la nube aún no esté disponible.",
         "readOnlyTitle": "Carpeta de solo lectura",
         "readOnly": "LazyDM no puede escribir en esta carpeta. Elige una carpeta que puedas editar.",
         "genericTitle": "Algo salió mal"
       }
     },
     "sync": {
-      "overlayTitle": "Sincronizando tu vault",
-      "overlayDescription": "{{provider}} está descargando notas que cambiaron en tus otros dispositivos. LazyDM abrirá el vault en cuanto estén en este dispositivo.",
+      "overlayTitle": "Sincronizando tu Codex",
+      "overlayDescription": "{{provider}} está descargando notas que cambiaron en tus otros dispositivos. LazyDM abrirá el Codex en cuanto estén en este dispositivo.",
       "progress": "{{done}} de {{total}} notas descargadas",
       "skip": "Continuar sin esperar",
       "pendingTitle": "Algunas notas aún se están sincronizando",
@@ -359,7 +358,7 @@
       "conflictsDescription": "Tu servicio en la nube creó copias de notas editadas a la vez en dos dispositivos. Revísalas y elimina la copia que no necesites:",
       "conflictsMore": "…y {{count}} más",
       "dismiss": "Descartar",
-      "errorTitle": "No se pudo comprobar la sincronización del vault",
+      "errorTitle": "No se pudo comprobar la sincronización del Codex",
       "providers": {
         "icloud": "iCloud Drive",
         "box": "Box",
@@ -372,8 +371,8 @@
     "activity": {
       "checking": "Buscando cambios en la nube",
       "downloading": "Descargando notas de la nube",
-      "indexing": "Indexando el vault",
-      "indexError": "No se pudo indexar el vault"
+      "indexing": "Indexando el Codex",
+      "indexError": "No se pudo indexar el Codex"
     }
   },
   "campaigns": {
@@ -382,12 +381,12 @@
       "title": "Campañas",
       "create": "Nueva campaña",
       "emptyTitle": "Aún no hay campañas",
-      "emptyDescription": "Una campaña es una carpeta de tu vault con escenas, personajes, enemigos, encuentros y sesiones. Crea la primera para empezar a preparar.",
+      "emptyDescription": "Una campaña es una carpeta de tu Codex con escenas, personajes, enemigos, encuentros y sesiones. Crea la primera para empezar a preparar.",
       "loadError": "No se pudieron cargar las campañas"
     },
     "create": {
       "title": "Nueva campaña",
-      "description": "LazyDM crea una carpeta para la campaña en tu vault. Elige las secciones con las que empieza.",
+      "description": "LazyDM crea una carpeta para la campaña en tu Codex. Elige las secciones con las que empieza.",
       "nameLabel": "Nombre",
       "namePlaceholder": "La mina perdida de Phandelver",
       "nameDescription": "La carpeta se llama así, con guiones en lugar de espacios.",
@@ -402,7 +401,7 @@
     },
     "sections": {
       "emptyTitle": "Aún no hay {{section}}",
-      "emptyDescription": "Las notas que añadas a la carpeta {{folder}} de tu vault aparecerán aquí.",
+      "emptyDescription": "Las notas que añadas a la carpeta {{folder}} de tu Codex aparecerán aquí.",
       "newNote": {
         "create": "Nueva nota",
         "title": "Nueva nota",
@@ -557,15 +556,15 @@
       "reload": "Recargar la otra versión"
     },
     "links": {
-      "linkedNotes": "Notas enlazadas",
-      "linkedAssets": "Recursos enlazados",
+      "linkedNotes": "Notas",
+      "linkedAssets": "Recursos",
       "noLinkedFiles": "Aún no hay enlaces desde o hacia otros archivos.",
       "from": "Desde",
       "to": "Hacia",
       "fromTooltip": "{{title}} enlaza a esta nota",
       "toTooltip": "Esta nota enlaza a {{title}}",
       "broken": "Enlaces rotos",
-      "allBroken": "Todos los enlaces rotos de la campaña"
+      "allBroken": "Ver todo en Revisión"
     },
     "rename": {
       "title": "Renombrar nota",
@@ -709,14 +708,11 @@
   "links": {
     "broken": {
       "title": "Enlaces rotos",
-      "cardDescription": "Enlaces a notas o archivos que no existen.",
       "summary": "Enlaces rotos: {{links}} · notas: {{notes}}",
       "line": "Línea {{line}}",
       "emptyTitle": "No hay enlaces rotos",
       "emptyDescription": "Todos los enlaces de esta campaña apuntan a una nota o archivo existente.",
-      "loadError": "No se pudieron cargar los enlaces rotos",
-      "alertTitle": "Enlaces rotos: {{count}}",
-      "review": "Revisar"
+      "loadError": "No se pudieron cargar los enlaces rotos"
     },
     "actions": {
       "create": "Crear nota…",
@@ -748,7 +744,7 @@
     },
     "create": {
       "title": "Nuevo sistema",
-      "description": "LazyDM crea una carpeta en el compendio de tu bóveda. Sus carpetas aparecen a medida que añades notas y archivos.",
+      "description": "LazyDM crea una carpeta en el compendio de tu Codex. Sus carpetas aparecen a medida que añades notas y archivos.",
       "nameLabel": "Nombre",
       "namePlaceholder": "Mis reglas de D&D",
       "nameDescription": "La carpeta se llama así, con guiones en lugar de espacios.",
@@ -991,15 +987,15 @@
     "parseError": "Este archivo no es un JSON válido",
     "empty": {
       "title": "Nadie en este encuentro todavía",
-      "description": "Las entidades que añadas aparecen aquí por orden de iniciativa."
+      "description": "Los combatientes que añadas aparecen aquí por orden de iniciativa."
     },
     "entity": {
       "unnamed": "Sin nombre",
-      "add": "Añadir entidad",
-      "addTitle": "Añadir entidad",
+      "add": "Añadir combatiente",
+      "addTitle": "Añadir combatiente",
       "addSubmit": "Añadir",
       "edit": "Editar",
-      "editTitle": "Editar entidad",
+      "editTitle": "Editar combatiente",
       "save": "Guardar",
       "name": "Nombre",
       "namePlaceholder": "Goblin 1",
@@ -1010,7 +1006,7 @@
       "quantityHint": "Cuántos insertar: de 1 a 15. Con más de 1 se numeran.",
       "quantityError": "Introduce una cantidad de 1 a {{max}}.",
       "insertCount": "Insertar {{count}}",
-      "deleteNow": "Eliminar definitivamente"
+      "deleteNow": "Eliminar para siempre"
     },
     "fields": {
       "initiative": "Iniciativa",
@@ -1063,7 +1059,7 @@
       "title": "Cementerio",
       "empty": "Nadie ha caído todavía.",
       "recover": "Recuperar",
-      "deleteForever": "Eliminar definitivamente"
+      "deleteForever": "Eliminar para siempre"
     },
     "status": {
       "add": "Añadir estado",
@@ -1091,13 +1087,13 @@
       }
     },
     "rule": {
-      "label": "Regla de combate",
-      "ariaLabel": "Regla de combate de este encuentro",
-      "campaignDefault": "Regla de la campaña",
+      "label": "Diseño del tracker",
+      "ariaLabel": "Diseño del tracker de este encuentro",
+      "campaignDefault": "Diseño de la campaña",
       "builtInDefault": "Integrada",
-      "saved": "Regla de combate guardada",
-      "saveError": "No se pudo cambiar la regla de combate",
-      "campaignAriaLabel": "Regla de batalla de esta campaña"
+      "saved": "Diseño del tracker guardado",
+      "saveError": "No se pudo cambiar el diseño del tracker",
+      "campaignAriaLabel": "Diseño del tracker de esta campaña"
     },
     "roll": {
       "button": "Tirar iniciativa",
@@ -1110,14 +1106,14 @@
       "cleared": "Iniciativa borrada para {{count}}",
       "failed": "{{count}} no pudieron tirar: {{reason}}",
       "error": "No se pudo tirar la iniciativa",
-      "hint": "Tira por las entidades seleccionadas. La que no puede tirar (falta un valor) pierde su iniciativa.",
+      "hint": "Tira por los combatientes seleccionados. El que no puede tirar (falta un valor) pierde su iniciativa.",
       "one": "Tirar la iniciativa",
       "oneFailed": "No se pudo tirar la iniciativa"
     },
     "delete": {
       "title": "¿Eliminar {{name}} para siempre?",
-      "description": "La entidad sale de este encuentro y no se puede recuperar.",
-      "confirm": "Eliminar definitivamente"
+      "description": "El combatiente sale de este encuentro y no se puede recuperar.",
+      "confirm": "Eliminar para siempre"
     },
     "header": {
       "label": "Acciones del encuentro",
@@ -1127,25 +1123,25 @@
   "battleRules": {
     "builtInName": "Predeterminado",
     "missing": "{{path}} (falta)",
-    "createError": "No se pudo crear la regla de combate",
-    "loadError": "No se pudo cargar la regla de combate",
+    "createError": "No se pudo crear el diseño del tracker",
+    "loadError": "No se pudo cargar el diseño del tracker",
     "library": {
-      "title": "Reglas de combate",
-      "empty": "Elige una regla de combate a la izquierda, o crea una."
+      "title": "Diseños del tracker",
+      "empty": "Elige un diseño del tracker a la izquierda, o crea uno."
     },
     "create": {
-      "button": "Nueva regla de combate",
-      "title": "Nueva regla de combate",
-      "description": "Crea una regla en _battle-rules/ en la raíz del vault, a partir de la integrada.",
+      "button": "Nuevo diseño del tracker",
+      "title": "Nuevo diseño del tracker",
+      "description": "Crea un diseño en _battle-rules/ en la raíz del Codex, a partir del integrado.",
       "nameLabel": "Nombre",
       "namePlaceholder": "Fantasy 5e",
       "submit": "Crear"
     },
     "delete": {
       "title": "¿Eliminar {{name}}?",
-      "description": "{{path}} se moverá a la papelera. Las campañas y encuentros que la usaban vuelven a la regla integrada.",
+      "description": "{{path}} se moverá a la papelera. Las campañas y encuentros que lo usaban vuelven al diseño integrado.",
       "done": "{{name}} eliminada",
-      "error": "No se pudo eliminar la regla de combate"
+      "error": "No se pudo eliminar el diseño del tracker"
     },
     "components": {
       "initiative": "Iniciativa",
@@ -1158,28 +1154,28 @@
     },
     "editor": {
       "builtInHint": "Integrada, solo lectura. Personalizar crea una copia editable.",
-      "saved": "Regla de combate guardada",
-      "saveError": "No se pudo guardar la regla de combate",
-      "conflict": "La regla de combate cambió en el disco.",
+      "saved": "Diseño del tracker guardado",
+      "saveError": "No se pudo guardar el diseño del tracker",
+      "conflict": "El diseño del tracker cambió en el disco.",
       "formulaInvalid": "Corrige primero la fórmula de iniciativa",
       "name": "Nombre",
       "template": "Atributos de",
       "noTemplate": "Sin plantilla",
       "builtInTemplate": "Integrada · {{type}}",
-      "templateHint": "Las claves del frontmatter de esta plantilla son lo que la regla puede leer de la nota de una entidad.",
+      "templateHint": "Las claves del frontmatter de esta plantilla son lo que el diseño puede leer de la nota de un combatiente.",
       "initiative": "Iniciativa",
       "rolled": "Tirar la iniciativa con una fórmula",
       "formula": "Fórmula",
       "formulaHint": "Dados como 1d20, 1d100 o 2d6, números enteros y {clave} para un número del frontmatter de la nota. Un número negativo resta.",
       "variables": "Añadir",
       "unknownVariable": "{{key}} no es un atributo de la plantilla.",
-      "fields": "Fila de la entidad",
-      "fieldsHint": "Lo que muestra cada entidad, en orden. El nombre y la iniciativa están en toda regla.",
+      "fields": "Fila del combatiente",
+      "fieldsHint": "Lo que muestra cada combatiente, en orden. El nombre y la iniciativa están en todo diseño.",
       "alwaysThere": "Siempre presente",
       "label": "Etiqueta",
       "key": "Clave",
       "source": "Valor de",
-      "sourceEntity": "La propia entidad",
+      "sourceEntity": "El propio combatiente",
       "sourceNote": "Nota · {{key}}",
       "sides": "Bandos (separados por comas)",
       "showInRow": "Mostrar en la fila",
@@ -1191,7 +1187,7 @@
     },
     "row": {
       "hint": "Arrastra un elemento para moverlo (sobre otro para intercambiarlos), arrastra su borde derecho para cambiar su tamaño, pulsa su engranaje para los ajustes y suéltalo en el cuadro de abajo para ocultarlo. El nombre y la iniciativa se quedan.",
-      "label": "Fila de ejemplo de la entidad",
+      "label": "Fila de ejemplo del combatiente",
       "settings": "Ajustes de {{name}}",
       "settingsTip": "Ajustes",
       "overlap": "Ese lugar está ocupado o fuera de la fila.",
@@ -1441,12 +1437,12 @@
       "newTab": "Nueva pestaña",
       "closeTab": "Cerrar pestaña",
       "save": "Guardar",
-      "revealVault": "Mostrar el vault en el Finder",
+      "revealVault": "Mostrar el Codex en el Finder",
       "search": "Buscar en la campaña…",
       "toggleSidebar": "Mostrar/ocultar la barra lateral",
       "compendium": "Compendio",
       "templates": "Plantillas",
-      "battleRules": "Reglas de combate",
+      "battleRules": "Diseños del tracker",
       "back": "Atrás",
       "forward": "Adelante",
       "nextTab": "Pestaña siguiente",

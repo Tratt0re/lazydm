@@ -17,7 +17,6 @@
       "sessions": "Sessions",
       "assets": "Assets",
       "backToCampaigns": "Back to campaigns",
-      "broken-links": "Broken links",
       "spells": "Spells",
       "items": "Items",
       "quests": "Quests",
@@ -28,7 +27,7 @@
       "backToCompendium": "Back to compendium",
       "notes": "Notes",
       "templates": "Templates",
-      "battleRules": "Battle rules",
+      "battleRules": "Tracker layouts",
       "maps": "Maps"
     }
   },
@@ -71,7 +70,7 @@
         "description": "How notes look and behave while you write, on this device."
       },
       "vault": {
-        "title": "Vault",
+        "title": "Codex",
         "description": "The folder your notes live in, and a reset of this app."
       }
     },
@@ -108,7 +107,7 @@
       "customized": "Copied to {{path}}",
       "sources": {
         "builtin": "Built-in",
-        "vault": "Vault"
+        "vault": "Codex"
       },
       "rules": {
         "title": "Templates for this campaign",
@@ -135,7 +134,7 @@
       "create": {
         "button": "New template",
         "title": "New template",
-        "description": "Creates a template in _templates/ at the vault root.",
+        "description": "Creates a template in _templates/ at the Codex root.",
         "nameLabel": "Name",
         "namePlaceholder": "e.g. Boss enemy",
         "startFromLabel": "Start from",
@@ -238,7 +237,7 @@
           "text": "Text",
           "list": "Lists",
           "code": "Code",
-          "quote": "Quotes & callouts",
+          "quote": "Quotes & info boxes",
           "table": "Tables",
           "embed": "Images & embeds",
           "frontmatter": "Properties",
@@ -289,25 +288,25 @@
     },
     "vault": {
       "current": {
-        "title": "Open vault",
+        "title": "Open Codex",
         "name": "Name",
         "path": "Folder",
-        "hint": "Your notes are plain .md files in this folder. Closing the vault does not delete them.",
-        "none": "No vault is open."
+        "hint": "Your notes are plain .md files in this folder. Closing the Codex does not delete them.",
+        "none": "No Codex is open."
       },
       "close": {
-        "action": "Close vault",
-        "title": "Close this vault?",
-        "description": "You go back to the vault chooser. Your notes stay in the folder and nothing is deleted.",
-        "confirm": "Close vault",
-        "error": "Couldn't close the vault"
+        "action": "Close Codex",
+        "title": "Close this Codex?",
+        "description": "You go back to the Codex chooser. Your notes stay in the folder and nothing is deleted.",
+        "confirm": "Close Codex",
+        "error": "Couldn't close the Codex"
       },
       "reset": {
         "heading": "Reset the app",
-        "explanation": "Forgets the open vault and this device’s settings (theme, language, editor, saved layouts) and starts the app again from scratch. The vault folder and your notes are not touched.",
+        "explanation": "Forgets the open Codex and this device’s settings (theme, language, editor, saved layouts) and starts the app again from scratch. The Codex folder and your notes are not touched.",
         "action": "Reset the app",
         "title": "Reset the app?",
-        "description": "The open vault and all settings of this device are forgotten. Your notes stay in their folder and nothing is deleted.",
+        "description": "The open Codex and all settings of this device are forgotten. Your notes stay in their folder and nothing is deleted.",
         "confirm": "Reset the app",
         "error": "Couldn't reset the app"
       }
@@ -315,41 +314,41 @@
   },
   "vault": {
     "setup": {
-      "title": "Pick your vault",
-      "description": "A vault is the folder that holds all your campaigns as Markdown files. LazyDM only adds a small configuration file to it. Choose a new or an existing folder.",
+      "title": "Pick your Codex",
+      "description": "A Codex is the folder that holds all your campaigns as Markdown files. LazyDM only adds a small configuration file to it. Choose a new or an existing folder.",
       "chooseFolder": "Choose folder",
       "chooseAnother": "Choose another folder",
-      "open": "Open vault",
-      "create": "Create vault",
+      "open": "Open Codex",
+      "create": "Create Codex",
       "retry": "Try again",
       "folderLabel": "Folder",
       "detected": {
         "existing": {
-          "label": "Existing vault",
-          "description": "This folder already contains a LazyDM vault. It will be opened as it is."
+          "label": "Existing Codex",
+          "description": "This folder already contains a LazyDM Codex. It will be opened as it is."
         },
         "empty": {
-          "label": "New vault",
-          "description": "The folder is empty. A new vault will be created here."
+          "label": "New Codex",
+          "description": "The folder is empty. A new Codex will be created here."
         },
         "nonEmpty": {
-          "label": "New vault",
+          "label": "New Codex",
           "description": "This folder already has files. LazyDM will add its configuration and leave your files untouched."
         }
       },
       "errors": {
         "desktopOnlyTitle": "Desktop app required",
-        "desktopOnly": "Vaults can only be opened in the LazyDM desktop app.",
-        "missingTitle": "Vault not reachable",
-        "missing": "The vault at {{path}} can't be reached. It may have been moved or deleted, or its cloud drive isn't available yet.",
+        "desktopOnly": "A Codex can only be opened in the LazyDM desktop app.",
+        "missingTitle": "Codex not reachable",
+        "missing": "The Codex at {{path}} can't be reached. It may have been moved or deleted, or its cloud drive isn't available yet.",
         "readOnlyTitle": "Read-only folder",
         "readOnly": "LazyDM can't write to this folder. Choose a folder you can edit.",
         "genericTitle": "Something went wrong"
       }
     },
     "sync": {
-      "overlayTitle": "Syncing your vault",
-      "overlayDescription": "{{provider}} is downloading notes that changed on your other devices. LazyDM opens the vault as soon as they are on this device.",
+      "overlayTitle": "Syncing your Codex",
+      "overlayDescription": "{{provider}} is downloading notes that changed on your other devices. LazyDM opens the Codex as soon as they are on this device.",
       "progress": "{{done}} of {{total}} notes downloaded",
       "skip": "Continue without waiting",
       "pendingTitle": "Some notes are still syncing",
@@ -359,7 +358,7 @@
       "conflictsDescription": "Your cloud service created copies of notes edited on two devices at the same time. Review them and delete the copy you don't need:",
       "conflictsMore": "…and {{count}} more",
       "dismiss": "Dismiss",
-      "errorTitle": "Couldn't check the vault sync",
+      "errorTitle": "Couldn't check the Codex sync",
       "providers": {
         "icloud": "iCloud Drive",
         "box": "Box",
@@ -372,8 +371,8 @@
     "activity": {
       "checking": "Checking the cloud for changes",
       "downloading": "Downloading notes from the cloud",
-      "indexing": "Indexing the vault",
-      "indexError": "Couldn't index the vault"
+      "indexing": "Indexing the Codex",
+      "indexError": "Couldn't index the Codex"
     }
   },
   "campaigns": {
@@ -382,12 +381,12 @@
       "title": "Campaigns",
       "create": "New campaign",
       "emptyTitle": "No campaigns yet",
-      "emptyDescription": "A campaign is a folder in your vault with scenes, characters, enemies, encounters and sessions. Create your first one to start preparing.",
+      "emptyDescription": "A campaign is a folder in your Codex with scenes, characters, enemies, encounters and sessions. Create your first one to start preparing.",
       "loadError": "Couldn't load the campaigns"
     },
     "create": {
       "title": "New campaign",
-      "description": "LazyDM creates a folder for the campaign in your vault. Choose the sections it starts with.",
+      "description": "LazyDM creates a folder for the campaign in your Codex. Choose the sections it starts with.",
       "nameLabel": "Name",
       "namePlaceholder": "Lost Mine of Phandelver",
       "nameDescription": "The folder is named after it, with dashes instead of spaces.",
@@ -402,7 +401,7 @@
     },
     "sections": {
       "emptyTitle": "No {{section}} yet",
-      "emptyDescription": "Notes you add to the {{folder}} folder of your vault appear here.",
+      "emptyDescription": "Notes you add to the {{folder}} folder of your Codex appear here.",
       "newNote": {
         "create": "New note",
         "title": "New note",
@@ -557,15 +556,15 @@
       "reload": "Reload the other version"
     },
     "links": {
-      "linkedNotes": "Linked notes",
-      "linkedAssets": "Linked assets",
+      "linkedNotes": "Notes",
+      "linkedAssets": "Assets",
       "noLinkedFiles": "No links to or from other files yet.",
       "from": "From",
       "to": "To",
       "fromTooltip": "{{title}} links to this note",
       "toTooltip": "This note links to {{title}}",
       "broken": "Broken links",
-      "allBroken": "All broken links in the campaign"
+      "allBroken": "See all in Review"
     },
     "rename": {
       "title": "Rename note",
@@ -709,14 +708,11 @@
   "links": {
     "broken": {
       "title": "Broken links",
-      "cardDescription": "Links pointing to notes or files that don't exist.",
       "summary": "Broken links: {{links}} · notes: {{notes}}",
       "line": "Line {{line}}",
       "emptyTitle": "No broken links",
       "emptyDescription": "Every link in this campaign points to an existing note or file.",
-      "loadError": "Couldn't load the broken links",
-      "alertTitle": "Broken links: {{count}}",
-      "review": "Review"
+      "loadError": "Couldn't load the broken links"
     },
     "actions": {
       "create": "Create note…",
@@ -748,7 +744,7 @@
     },
     "create": {
       "title": "New system",
-      "description": "LazyDM creates a folder in the compendium of your vault. Its folders appear as you add notes and files.",
+      "description": "LazyDM creates a folder in the compendium of your Codex. Its folders appear as you add notes and files.",
       "nameLabel": "Name",
       "namePlaceholder": "My D&D rules",
       "nameDescription": "The folder is named after it, with dashes instead of spaces.",
@@ -991,15 +987,15 @@
     "parseError": "This file is not valid JSON",
     "empty": {
       "title": "No one in this encounter yet",
-      "description": "Entities you add appear here in initiative order."
+      "description": "Combatants you add appear here in initiative order."
     },
     "entity": {
       "unnamed": "Unnamed",
-      "add": "Add entity",
-      "addTitle": "Add entity",
+      "add": "Add combatant",
+      "addTitle": "Add combatant",
       "addSubmit": "Add",
       "edit": "Edit",
-      "editTitle": "Edit entity",
+      "editTitle": "Edit combatant",
       "save": "Save",
       "name": "Name",
       "namePlaceholder": "Goblin 1",
@@ -1010,7 +1006,7 @@
       "quantityHint": "How many to insert: 1 to 15. Above 1 they are numbered.",
       "quantityError": "Enter a quantity from 1 to {{max}}.",
       "insertCount": "Insert {{count}}",
-      "deleteNow": "Delete permanently"
+      "deleteNow": "Delete forever"
     },
     "fields": {
       "initiative": "Initiative",
@@ -1063,7 +1059,7 @@
       "title": "Cemetery",
       "empty": "No one has fallen yet.",
       "recover": "Recover",
-      "deleteForever": "Delete permanently"
+      "deleteForever": "Delete forever"
     },
     "status": {
       "add": "Add status",
@@ -1091,13 +1087,13 @@
       }
     },
     "rule": {
-      "label": "Battle rule",
-      "ariaLabel": "Battle rule of this encounter",
-      "campaignDefault": "Campaign's rule",
+      "label": "Tracker layout",
+      "ariaLabel": "Tracker layout of this encounter",
+      "campaignDefault": "Campaign's layout",
       "builtInDefault": "Built-in",
-      "saved": "Battle rule saved",
-      "saveError": "Couldn't change the battle rule",
-      "campaignAriaLabel": "Battle rule of this campaign"
+      "saved": "Tracker layout saved",
+      "saveError": "Couldn't change the tracker layout",
+      "campaignAriaLabel": "Tracker layout of this campaign"
     },
     "roll": {
       "button": "Roll initiative",
@@ -1110,14 +1106,14 @@
       "cleared": "Initiative cleared for {{count}}",
       "failed": "{{count}} could not roll: {{reason}}",
       "error": "Couldn't roll the initiative",
-      "hint": "Rolls for the selected entities. One that can't roll (a missing value) loses its initiative.",
+      "hint": "Rolls for the selected combatants. One that can't roll (a missing value) loses its initiative.",
       "one": "Roll the initiative",
       "oneFailed": "Couldn't roll the initiative"
     },
     "delete": {
-      "title": "Delete {{name}} for good?",
-      "description": "The entity leaves this encounter and cannot be recovered.",
-      "confirm": "Delete permanently"
+      "title": "Delete {{name}} forever?",
+      "description": "The combatant leaves this encounter and cannot be recovered.",
+      "confirm": "Delete forever"
     },
     "header": {
       "label": "Encounter actions",
@@ -1127,25 +1123,25 @@
   "battleRules": {
     "builtInName": "Default",
     "missing": "{{path}} (missing)",
-    "createError": "Couldn't create the battle rule",
-    "loadError": "Couldn't load the battle rule",
+    "createError": "Couldn't create the tracker layout",
+    "loadError": "Couldn't load the tracker layout",
     "library": {
-      "title": "Battle rules",
-      "empty": "Pick a battle rule on the left, or create one."
+      "title": "Tracker layouts",
+      "empty": "Pick a tracker layout on the left, or create one."
     },
     "create": {
-      "button": "New battle rule",
-      "title": "New battle rule",
-      "description": "Creates a rule in _battle-rules/ at the vault root, starting from the built-in one.",
+      "button": "New tracker layout",
+      "title": "New tracker layout",
+      "description": "Creates a layout in _battle-rules/ at the Codex root, starting from the built-in one.",
       "nameLabel": "Name",
       "namePlaceholder": "Fantasy 5e",
       "submit": "Create"
     },
     "delete": {
       "title": "Delete {{name}}?",
-      "description": "{{path}} will be moved to the Trash. Campaigns and encounters that used it go back to the built-in rule.",
+      "description": "{{path}} will be moved to the Trash. Campaigns and encounters that used it go back to the built-in layout.",
       "done": "{{name}} deleted",
-      "error": "Couldn't delete the battle rule"
+      "error": "Couldn't delete the tracker layout"
     },
     "components": {
       "initiative": "Initiative",
@@ -1158,28 +1154,28 @@
     },
     "editor": {
       "builtInHint": "Built-in, read-only. Customize copies it so you can edit it.",
-      "saved": "Battle rule saved",
-      "saveError": "Couldn't save the battle rule",
-      "conflict": "The battle rule changed on disk.",
+      "saved": "Tracker layout saved",
+      "saveError": "Couldn't save the tracker layout",
+      "conflict": "The tracker layout changed on disk.",
       "formulaInvalid": "Fix the initiative formula first",
       "name": "Name",
       "template": "Attributes from",
       "noTemplate": "No template",
       "builtInTemplate": "Built-in · {{type}}",
-      "templateHint": "The frontmatter keys of this template are what the rule can read from an entity's note.",
+      "templateHint": "The frontmatter keys of this template are what the layout can read from a combatant's note.",
       "initiative": "Initiative",
       "rolled": "Roll the initiative from a formula",
       "formula": "Formula",
       "formulaHint": "Dice like 1d20, 1d100 or 2d6, whole numbers, and {key} for a number from the note's frontmatter. A negative number subtracts.",
       "variables": "Add",
       "unknownVariable": "{{key}} is not an attribute of the template.",
-      "fields": "Entity row",
-      "fieldsHint": "What each entity shows, in order. The name and the initiative are in every rule.",
+      "fields": "Combatant row",
+      "fieldsHint": "What each combatant shows, in order. The name and the initiative are in every layout.",
       "alwaysThere": "Always there",
       "label": "Label",
       "key": "Key",
       "source": "Value from",
-      "sourceEntity": "The entity itself",
+      "sourceEntity": "The combatant itself",
       "sourceNote": "Note · {{key}}",
       "sides": "Sides (comma separated)",
       "showInRow": "Show in the row",
@@ -1191,7 +1187,7 @@
     },
     "row": {
       "hint": "Drag an element to move it (onto another one to swap them), drag its right edge to resize it, press its gear for its settings, and drop it on the box below to hide it. The name and the initiative stay.",
-      "label": "Mock entity row",
+      "label": "Mock combatant row",
       "settings": "Settings of {{name}}",
       "settingsTip": "Settings",
       "overlap": "That place is taken or out of the row.",
@@ -1441,12 +1437,12 @@
       "newTab": "New Tab",
       "closeTab": "Close Tab",
       "save": "Save",
-      "revealVault": "Show the Vault in Finder",
+      "revealVault": "Show the Codex in Finder",
       "search": "Search the Campaign…",
       "toggleSidebar": "Toggle the Sidebar",
       "compendium": "Compendium",
       "templates": "Templates",
-      "battleRules": "Battle Rules",
+      "battleRules": "Tracker Layouts",
       "back": "Back",
       "forward": "Forward",
       "nextTab": "Next Tab",

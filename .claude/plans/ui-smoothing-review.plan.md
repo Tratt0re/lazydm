@@ -23,7 +23,7 @@ Before each phase, ask the user the open questions of that phase and record the 
 | Phase | Scope | Status | Commit |
 | --- | --- | --- | --- |
 | A | Bug fixes | done | see git log |
-| B | Glossary | pending | |
+| B | Glossary | done | see git log |
 | C | Visible actions | pending | |
 | D | Empty states and first run | pending | |
 | E | Voice | pending | |
@@ -45,14 +45,14 @@ Status values: pending, questions, in-progress, done.
 
 Display text only. Key names, folders, file formats and code identifiers stay.
 
-- [ ] B1 Entity → Combattant (check each language)
-- [ ] B2 Battle rule → Tracker layout
-- [ ] B3 Vault → Codex (copy in all languages, setup flow, settings, DESIGN_PRINCIPLES.md and CLAUDE.md wording)
-- [ ] B4 One term for Links / Linked files / Linked notes
-- [ ] B5 One term for Broken links / Review (nav key is still `broken-links`)
-- [ ] B6 One phrase for Delete permanently / Delete forever
-- [ ] B7 One term for Info box / callout
-- [ ] B8 Update DESIGN_PRINCIPLES.md vocabulary and add a short glossary section
+- [x] B1 Entity → Combattant (check each language)
+- [x] B2 Battle rule → Tracker layout
+- [x] B3 Vault → Codex (copy in all languages, setup flow, settings, DESIGN_PRINCIPLES.md and CLAUDE.md wording)
+- [x] B4 One term for Links / Linked files / Linked notes
+- [x] B5 One term for Broken links / Review (nav key is still `broken-links`)
+- [x] B6 One phrase for Delete permanently / Delete forever
+- [x] B7 One term for Info box / callout
+- [x] B8 Update DESIGN_PRINCIPLES.md vocabulary and add a short glossary section
 
 ## Phase C. Visible actions
 
@@ -92,7 +92,19 @@ Display text only. Key names, folders, file formats and code identifiers stay.
 - A4: campaign card footer shows the **note count**
 - A5 + A6: tooltip moves to the side of the arrow button, and long section names get the full name in a tooltip
 
+## Phase B answers (2026-10-24)
+
+- B1: natural word per language (Combatant, Combattente, Combattant, Kämpfer, Combatiente, Боєць, 战斗者)
+- B3: **Codex** as one fixed word in every language
+- B4: **Links** is the one term for the panel
+- B5: **Review** everywhere; "Broken links" stays only as a group title inside the Review page
+- B6: **Delete forever** (card, cemetery and confirmation)
+- B7: **Info box**; "callout" survives only in the markdown syntax example (`> [!note]`)
+- B2: Tracker layout is translated per language (exact words listed in the log before the files change)
+
 ## Log
 
 - 2026-10-24: plan written, decisions recorded. No code touched yet.
 - 2026-10-24: Phase A done. Build green, 57 electron tests pass (`npm test` finds no Angular specs, pre-existing). Checked in the browser with a mocked `electronAPI`: A1, A2, A3, A4. A5 and A6 are not checked visually. A5 changed the delay instead of the position because the tooltip was already on the right.
+- 2026-10-24: Phase B done. Text-only change in the 7 locale files (same keys, 1494 lines each), plus the glossary in DESIGN_PRINCIPLES §1b and a pointer in CLAUDE.md. Details: Codex is a fixed word in every language; the combatant, tracker layout, info box and delete-forever wording follow the answers above. Links panel: toolbar button and panel heading say *Links*, groups inside are *Notes* and *Assets*. Review: the page keeps its title, 4 unused keys were removed (`nav.items.broken-links`, `links.broken.alertTitle`, `links.broken.review`, `links.broken.cardDescription`), and the panel link now reads "See all in Review". Delete forever: the Ukrainian and Chinese already meant "forever", so they were left as they were. Checked in the browser: Settings → Codex in Italian. Not checked visually: the other languages (JSON valid, keys identical to English).
+- Left for later phases: the empty-state and alert wording ("cose da rivedere", Phase D), error wording (Phase E). The French `Coffre` and Spanish `Bóveda` for the old word are gone.

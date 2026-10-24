@@ -17,7 +17,6 @@
       "sessions": "Sitzungen",
       "assets": "Dateien",
       "backToCampaigns": "Zurück zu den Kampagnen",
-      "broken-links": "Defekte Links",
       "spells": "Zauber",
       "items": "Gegenstände",
       "quests": "Quests",
@@ -28,7 +27,7 @@
       "backToCompendium": "Zurück zum Kompendium",
       "notes": "Notizen",
       "templates": "Vorlagen",
-      "battleRules": "Kampfregeln",
+      "battleRules": "Tracker-Layouts",
       "maps": "Karten"
     }
   },
@@ -71,7 +70,7 @@
         "description": "Wie Notizen beim Schreiben aussehen und sich verhalten, auf diesem Gerät."
       },
       "vault": {
-        "title": "Vault",
+        "title": "Codex",
         "description": "Der Ordner mit deinen Notizen und das Zurücksetzen der App."
       }
     },
@@ -108,7 +107,7 @@
       "customized": "Kopiert nach {{path}}",
       "sources": {
         "builtin": "Integriert",
-        "vault": "Vault"
+        "vault": "Codex"
       },
       "rules": {
         "title": "Vorlagen dieser Kampagne",
@@ -135,7 +134,7 @@
       "create": {
         "button": "Neue Vorlage",
         "title": "Neue Vorlage",
-        "description": "Erstellt eine Vorlage in _templates/ im Vault-Stammordner.",
+        "description": "Erstellt eine Vorlage in _templates/ im Codex-Stammordner.",
         "nameLabel": "Name",
         "namePlaceholder": "z. B. Boss-Gegner",
         "startFromLabel": "Beginnen mit",
@@ -238,7 +237,7 @@
           "text": "Text",
           "list": "Listen",
           "code": "Code",
-          "quote": "Zitate & Callouts",
+          "quote": "Zitate & Infoboxen",
           "table": "Tabellen",
           "embed": "Bilder & Einbettungen",
           "frontmatter": "Eigenschaften",
@@ -289,25 +288,25 @@
     },
     "vault": {
       "current": {
-        "title": "Geöffneter Vault",
+        "title": "Geöffneter Codex",
         "name": "Name",
         "path": "Ordner",
         "hint": "Deine Notizen sind einfache .md-Dateien in diesem Ordner. Das Schließen löscht sie nicht.",
-        "none": "Kein Vault geöffnet."
+        "none": "Kein Codex geöffnet."
       },
       "close": {
-        "action": "Vault schließen",
-        "title": "Diesen Vault schließen?",
-        "description": "Du kehrst zur Vault-Auswahl zurück. Die Notizen bleiben im Ordner, nichts wird gelöscht.",
-        "confirm": "Vault schließen",
-        "error": "Der Vault konnte nicht geschlossen werden"
+        "action": "Codex schließen",
+        "title": "Diesen Codex schließen?",
+        "description": "Du kehrst zur Codex-Auswahl zurück. Die Notizen bleiben im Ordner, nichts wird gelöscht.",
+        "confirm": "Codex schließen",
+        "error": "Der Codex konnte nicht geschlossen werden"
       },
       "reset": {
         "heading": "App zurücksetzen",
-        "explanation": "Vergisst den geöffneten Vault und die Einstellungen dieses Geräts (Design, Sprache, Editor, gespeicherte Layouts) und startet die App neu. Der Vault-Ordner und deine Notizen bleiben unberührt.",
+        "explanation": "Vergisst den geöffneten Codex und die Einstellungen dieses Geräts (Design, Sprache, Editor, gespeicherte Layouts) und startet die App neu. Der Codex-Ordner und deine Notizen bleiben unberührt.",
         "action": "App zurücksetzen",
         "title": "App zurücksetzen?",
-        "description": "Der geöffnete Vault und alle Einstellungen dieses Geräts werden vergessen. Die Notizen bleiben im Ordner, nichts wird gelöscht.",
+        "description": "Der geöffnete Codex und alle Einstellungen dieses Geräts werden vergessen. Die Notizen bleiben im Ordner, nichts wird gelöscht.",
         "confirm": "App zurücksetzen",
         "error": "Die App konnte nicht zurückgesetzt werden"
       }
@@ -315,41 +314,41 @@
   },
   "vault": {
     "setup": {
-      "title": "Wähle deinen Vault",
-      "description": "Ein Vault ist der Ordner, der alle deine Kampagnen als Markdown-Dateien enthält. LazyDM fügt nur eine kleine Konfigurationsdatei hinzu. Wähle einen neuen oder bestehenden Ordner.",
+      "title": "Wähle deinen Codex",
+      "description": "Ein Codex ist der Ordner, der alle deine Kampagnen als Markdown-Dateien enthält. LazyDM fügt nur eine kleine Konfigurationsdatei hinzu. Wähle einen neuen oder bestehenden Ordner.",
       "chooseFolder": "Ordner wählen",
       "chooseAnother": "Anderen Ordner wählen",
-      "open": "Vault öffnen",
-      "create": "Vault erstellen",
+      "open": "Codex öffnen",
+      "create": "Codex erstellen",
       "retry": "Erneut versuchen",
       "folderLabel": "Ordner",
       "detected": {
         "existing": {
-          "label": "Vorhandener Vault",
-          "description": "Dieser Ordner enthält bereits einen LazyDM-Vault. Er wird unverändert geöffnet."
+          "label": "Vorhandener Codex",
+          "description": "Dieser Ordner enthält bereits einen LazyDM-Codex. Er wird unverändert geöffnet."
         },
         "empty": {
-          "label": "Neuer Vault",
-          "description": "Der Ordner ist leer. Hier wird ein neuer Vault erstellt."
+          "label": "Neuer Codex",
+          "description": "Der Ordner ist leer. Hier wird ein neuer Codex erstellt."
         },
         "nonEmpty": {
-          "label": "Neuer Vault",
+          "label": "Neuer Codex",
           "description": "Dieser Ordner enthält bereits Dateien. LazyDM fügt seine Konfiguration hinzu und lässt deine Dateien unverändert."
         }
       },
       "errors": {
         "desktopOnlyTitle": "Desktop-App erforderlich",
-        "desktopOnly": "Vaults können nur in der LazyDM-Desktop-App geöffnet werden.",
-        "missingTitle": "Vault nicht erreichbar",
-        "missing": "Der Vault unter {{path}} ist nicht erreichbar. Er wurde möglicherweise verschoben oder gelöscht, oder sein Cloud-Laufwerk ist noch nicht verfügbar.",
+        "desktopOnly": "Ein Codex kann nur in der LazyDM-Desktop-App geöffnet werden.",
+        "missingTitle": "Codex nicht erreichbar",
+        "missing": "Der Codex unter {{path}} ist nicht erreichbar. Er wurde möglicherweise verschoben oder gelöscht, oder sein Cloud-Laufwerk ist noch nicht verfügbar.",
         "readOnlyTitle": "Schreibgeschützter Ordner",
         "readOnly": "LazyDM kann in diesen Ordner nicht schreiben. Wähle einen Ordner, den du bearbeiten kannst.",
         "genericTitle": "Etwas ist schiefgelaufen"
       }
     },
     "sync": {
-      "overlayTitle": "Vault wird synchronisiert",
-      "overlayDescription": "{{provider}} lädt Notizen herunter, die auf deinen anderen Geräten geändert wurden. LazyDM öffnet den Vault, sobald sie auf diesem Gerät sind.",
+      "overlayTitle": "Codex wird synchronisiert",
+      "overlayDescription": "{{provider}} lädt Notizen herunter, die auf deinen anderen Geräten geändert wurden. LazyDM öffnet den Codex, sobald sie auf diesem Gerät sind.",
       "progress": "{{done}} von {{total}} Notizen heruntergeladen",
       "skip": "Ohne Warten fortfahren",
       "pendingTitle": "Einige Notizen werden noch synchronisiert",
@@ -359,7 +358,7 @@
       "conflictsDescription": "Dein Cloud-Dienst hat Kopien von Notizen erstellt, die gleichzeitig auf zwei Geräten bearbeitet wurden. Prüfe sie und lösche die Kopie, die du nicht brauchst:",
       "conflictsMore": "…und {{count}} weitere",
       "dismiss": "Ausblenden",
-      "errorTitle": "Vault-Synchronisierung konnte nicht geprüft werden",
+      "errorTitle": "Codex-Synchronisierung konnte nicht geprüft werden",
       "providers": {
         "icloud": "iCloud Drive",
         "box": "Box",
@@ -372,8 +371,8 @@
     "activity": {
       "checking": "Cloud wird auf Änderungen geprüft",
       "downloading": "Notizen werden aus der Cloud geladen",
-      "indexing": "Vault wird indiziert",
-      "indexError": "Vault konnte nicht indiziert werden"
+      "indexing": "Codex wird indiziert",
+      "indexError": "Codex konnte nicht indiziert werden"
     }
   },
   "campaigns": {
@@ -382,12 +381,12 @@
       "title": "Kampagnen",
       "create": "Neue Kampagne",
       "emptyTitle": "Noch keine Kampagnen",
-      "emptyDescription": "Eine Kampagne ist ein Ordner in deinem Vault mit Szenen, Charakteren, Gegnern, Begegnungen und Sitzungen. Erstelle die erste, um mit der Vorbereitung zu beginnen.",
+      "emptyDescription": "Eine Kampagne ist ein Ordner in deinem Codex mit Szenen, Charakteren, Gegnern, Begegnungen und Sitzungen. Erstelle die erste, um mit der Vorbereitung zu beginnen.",
       "loadError": "Kampagnen konnten nicht geladen werden"
     },
     "create": {
       "title": "Neue Kampagne",
-      "description": "LazyDM legt für die Kampagne einen Ordner in deinem Vault an. Wähle die Abschnitte, mit denen sie startet.",
+      "description": "LazyDM legt für die Kampagne einen Ordner in deinem Codex an. Wähle die Abschnitte, mit denen sie startet.",
       "nameLabel": "Name",
       "namePlaceholder": "Die verlorene Mine von Phandelver",
       "nameDescription": "Der Ordner wird danach benannt, mit Bindestrichen statt Leerzeichen.",
@@ -402,7 +401,7 @@
     },
     "sections": {
       "emptyTitle": "Noch keine Einträge in {{section}}",
-      "emptyDescription": "Notizen im Ordner {{folder}} deines Vaults erscheinen hier.",
+      "emptyDescription": "Notizen im Ordner {{folder}} deines Codex erscheinen hier.",
       "newNote": {
         "create": "Neue Notiz",
         "title": "Neue Notiz",
@@ -557,15 +556,15 @@
       "reload": "Andere Version neu laden"
     },
     "links": {
-      "linkedNotes": "Verknüpfte Notizen",
-      "linkedAssets": "Verknüpfte Dateien",
+      "linkedNotes": "Notizen",
+      "linkedAssets": "Dateien",
       "noLinkedFiles": "Noch keine Links von oder zu anderen Dateien.",
       "from": "Von",
       "to": "Zu",
       "fromTooltip": "{{title}} verlinkt auf diese Notiz",
       "toTooltip": "Diese Notiz verlinkt auf {{title}}",
       "broken": "Defekte Links",
-      "allBroken": "Alle defekten Links der Kampagne"
+      "allBroken": "Alle unter Prüfen ansehen"
     },
     "rename": {
       "title": "Notiz umbenennen",
@@ -709,14 +708,11 @@
   "links": {
     "broken": {
       "title": "Defekte Links",
-      "cardDescription": "Links auf Notizen oder Dateien, die es nicht gibt.",
       "summary": "Defekte Links: {{links}} · Notizen: {{notes}}",
       "line": "Zeile {{line}}",
       "emptyTitle": "Keine defekten Links",
       "emptyDescription": "Jeder Link dieser Kampagne verweist auf eine vorhandene Notiz oder Datei.",
-      "loadError": "Die defekten Links konnten nicht geladen werden",
-      "alertTitle": "Defekte Links: {{count}}",
-      "review": "Prüfen"
+      "loadError": "Die defekten Links konnten nicht geladen werden"
     },
     "actions": {
       "create": "Notiz erstellen…",
@@ -748,7 +744,7 @@
     },
     "create": {
       "title": "Neues System",
-      "description": "LazyDM erstellt einen Ordner im Kompendium deines Vaults. Seine Ordner entstehen, sobald du Notizen und Dateien hinzufügst.",
+      "description": "LazyDM erstellt einen Ordner im Kompendium deines Codex. Seine Ordner entstehen, sobald du Notizen und Dateien hinzufügst.",
       "nameLabel": "Name",
       "namePlaceholder": "Meine D&D-Regeln",
       "nameDescription": "Der Ordner wird danach benannt, mit Bindestrichen statt Leerzeichen.",
@@ -991,15 +987,15 @@
     "parseError": "Diese Datei ist kein gültiges JSON",
     "empty": {
       "title": "Noch niemand in dieser Begegnung",
-      "description": "Hinzugefügte Einheiten erscheinen hier in Initiative-Reihenfolge."
+      "description": "Hinzugefügte Kämpfer erscheinen hier in Initiative-Reihenfolge."
     },
     "entity": {
       "unnamed": "Unbenannt",
-      "add": "Einheit hinzufügen",
-      "addTitle": "Einheit hinzufügen",
+      "add": "Kämpfer hinzufügen",
+      "addTitle": "Kämpfer hinzufügen",
       "addSubmit": "Hinzufügen",
       "edit": "Bearbeiten",
-      "editTitle": "Einheit bearbeiten",
+      "editTitle": "Kämpfer bearbeiten",
       "save": "Speichern",
       "name": "Name",
       "namePlaceholder": "Goblin 1",
@@ -1010,7 +1006,7 @@
       "quantityHint": "Wie viele eingefügt werden: 1 bis 15. Ab 2 werden sie nummeriert.",
       "quantityError": "Gib eine Anzahl von 1 bis {{max}} ein.",
       "insertCount": "{{count}} einfügen",
-      "deleteNow": "Endgültig löschen"
+      "deleteNow": "Für immer löschen"
     },
     "fields": {
       "initiative": "Initiative",
@@ -1063,7 +1059,7 @@
       "title": "Friedhof",
       "empty": "Noch ist niemand gefallen.",
       "recover": "Wiederbeleben",
-      "deleteForever": "Endgültig löschen"
+      "deleteForever": "Für immer löschen"
     },
     "status": {
       "add": "Zustand hinzufügen",
@@ -1091,13 +1087,13 @@
       }
     },
     "rule": {
-      "label": "Kampfregel",
-      "ariaLabel": "Kampfregel dieser Begegnung",
-      "campaignDefault": "Regel der Kampagne",
+      "label": "Tracker-Layout",
+      "ariaLabel": "Tracker-Layout dieser Begegnung",
+      "campaignDefault": "Layout der Kampagne",
       "builtInDefault": "Integriert",
-      "saved": "Kampfregel gespeichert",
-      "saveError": "Die Kampfregel konnte nicht geändert werden",
-      "campaignAriaLabel": "Kampfregel dieser Kampagne"
+      "saved": "Tracker-Layout gespeichert",
+      "saveError": "Das Tracker-Layout konnte nicht geändert werden",
+      "campaignAriaLabel": "Tracker-Layout dieser Kampagne"
     },
     "roll": {
       "button": "Initiative würfeln",
@@ -1110,14 +1106,14 @@
       "cleared": "Initiative für {{count}} gelöscht",
       "failed": "{{count}} konnten nicht würfeln: {{reason}}",
       "error": "Die Initiative konnte nicht gewürfelt werden",
-      "hint": "Würfelt für die ausgewählten Einheiten. Wer nicht würfeln kann (fehlender Wert), verliert die Initiative.",
+      "hint": "Würfelt für die ausgewählten Kämpfer. Wer nicht würfeln kann (fehlender Wert), verliert die Initiative.",
       "one": "Initiative würfeln",
       "oneFailed": "Initiative konnte nicht gewürfelt werden"
     },
     "delete": {
-      "title": "{{name}} endgültig löschen?",
-      "description": "Die Einheit verlässt diese Begegnung und kann nicht wiederhergestellt werden.",
-      "confirm": "Endgültig löschen"
+      "title": "{{name}} für immer löschen?",
+      "description": "Der Kämpfer verlässt diese Begegnung und kann nicht wiederhergestellt werden.",
+      "confirm": "Für immer löschen"
     },
     "header": {
       "label": "Aktionen der Begegnung",
@@ -1127,25 +1123,25 @@
   "battleRules": {
     "builtInName": "Standard",
     "missing": "{{path}} (fehlt)",
-    "createError": "Die Kampfregel konnte nicht erstellt werden",
-    "loadError": "Die Kampfregel konnte nicht geladen werden",
+    "createError": "Das Tracker-Layout konnte nicht erstellt werden",
+    "loadError": "Das Tracker-Layout konnte nicht geladen werden",
     "library": {
-      "title": "Kampfregeln",
-      "empty": "Wähle links eine Kampfregel oder erstelle eine."
+      "title": "Tracker-Layouts",
+      "empty": "Wähle links ein Tracker-Layout oder erstelle eins."
     },
     "create": {
-      "button": "Neue Kampfregel",
-      "title": "Neue Kampfregel",
-      "description": "Erstellt eine Regel in _battle-rules/ im Vault-Stamm, ausgehend von der integrierten.",
+      "button": "Neues Tracker-Layout",
+      "title": "Neues Tracker-Layout",
+      "description": "Erstellt ein Layout in _battle-rules/ im Codex-Stamm, ausgehend vom integrierten.",
       "nameLabel": "Name",
       "namePlaceholder": "Fantasy 5e",
       "submit": "Erstellen"
     },
     "delete": {
       "title": "{{name}} löschen?",
-      "description": "{{path}} wird in den Papierkorb verschoben. Kampagnen und Begegnungen, die sie nutzten, wechseln zurück zur integrierten Regel.",
+      "description": "{{path}} wird in den Papierkorb verschoben. Kampagnen und Begegnungen, die es nutzten, wechseln zurück zum integrierten Layout.",
       "done": "{{name}} gelöscht",
-      "error": "Die Kampfregel konnte nicht gelöscht werden"
+      "error": "Das Tracker-Layout konnte nicht gelöscht werden"
     },
     "components": {
       "initiative": "Initiative",
@@ -1158,28 +1154,28 @@
     },
     "editor": {
       "builtInHint": "Integriert, schreibgeschützt. „Anpassen“ kopiert sie zum Bearbeiten.",
-      "saved": "Kampfregel gespeichert",
-      "saveError": "Die Kampfregel konnte nicht gespeichert werden",
-      "conflict": "Die Kampfregel wurde auf dem Datenträger geändert.",
+      "saved": "Tracker-Layout gespeichert",
+      "saveError": "Das Tracker-Layout konnte nicht gespeichert werden",
+      "conflict": "Das Tracker-Layout wurde auf dem Datenträger geändert.",
       "formulaInvalid": "Korrigiere zuerst die Initiative-Formel",
       "name": "Name",
       "template": "Attribute aus",
       "noTemplate": "Keine Vorlage",
       "builtInTemplate": "Integriert · {{type}}",
-      "templateHint": "Die Frontmatter-Schlüssel dieser Vorlage kann die Regel aus der Notiz einer Einheit lesen.",
+      "templateHint": "Die Frontmatter-Schlüssel dieser Vorlage kann das Layout aus der Notiz eines Kämpfers lesen.",
       "initiative": "Initiative",
       "rolled": "Initiative aus einer Formel würfeln",
       "formula": "Formel",
       "formulaHint": "Würfel wie 1d20, 1d100 oder 2d6, ganze Zahlen und {Schlüssel} für eine Zahl aus dem Frontmatter der Notiz. Eine negative Zahl wird abgezogen.",
       "variables": "Hinzufügen",
       "unknownVariable": "{{key}} ist kein Attribut der Vorlage.",
-      "fields": "Einheitenzeile",
-      "fieldsHint": "Was jede Einheit zeigt, in Reihenfolge. Name und Initiative sind in jeder Regel.",
+      "fields": "Kämpferzeile",
+      "fieldsHint": "Was jeder Kämpfer zeigt, in Reihenfolge. Name und Initiative sind in jedem Layout.",
       "alwaysThere": "Immer dabei",
       "label": "Beschriftung",
       "key": "Schlüssel",
       "source": "Wert aus",
-      "sourceEntity": "Die Einheit selbst",
+      "sourceEntity": "Der Kämpfer selbst",
       "sourceNote": "Notiz · {{key}}",
       "sides": "Seiten (kommagetrennt)",
       "showInRow": "In der Zeile zeigen",
@@ -1191,7 +1187,7 @@
     },
     "row": {
       "hint": "Ziehe ein Element, um es zu verschieben (auf ein anderes, um sie zu tauschen), ziehe den rechten Rand, um die Größe zu ändern, öffne mit dem Zahnrad die Einstellungen und lege es im Feld darunter ab, um es auszublenden. Name und Initiative bleiben.",
-      "label": "Beispiel-Einheitenzeile",
+      "label": "Beispiel-Kämpferzeile",
       "settings": "Einstellungen von {{name}}",
       "settingsTip": "Einstellungen",
       "overlap": "Dieser Platz ist belegt oder außerhalb der Zeile.",
@@ -1441,12 +1437,12 @@
       "newTab": "Neuer Tab",
       "closeTab": "Tab schließen",
       "save": "Sichern",
-      "revealVault": "Vault im Finder zeigen",
+      "revealVault": "Codex im Finder zeigen",
       "search": "Kampagne durchsuchen…",
       "toggleSidebar": "Seitenleiste ein-/ausblenden",
       "compendium": "Kompendium",
       "templates": "Vorlagen",
-      "battleRules": "Kampfregeln",
+      "battleRules": "Tracker-Layouts",
       "back": "Zurück",
       "forward": "Vor",
       "nextTab": "Nächster Tab",

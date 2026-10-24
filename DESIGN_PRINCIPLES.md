@@ -14,6 +14,22 @@ LazyDM works like **Obsidian**, specialised for Dungeon Masters.
 - A vault must stay **Obsidian-compatible**: opening it in Obsidian must work.
 - Single vault for now; every design choice must keep **multi-vault** possible later.
 
+## 1b. Glossary (what the user reads)
+
+One word per idea in every UI string, in all 7 languages. The code, the file formats, the folders and this document keep
+their technical names; only the text the user sees changes. Add to this table before inventing a new word.
+
+| Say (UI) | Technical name (code, files, this document) | Notes |
+| --- | --- | --- |
+| **Codex** | vault, `.lazydm/`, `vault.json` | One fixed word in every language, never translated |
+| **Combatant** | entity | Natural word per language (Combattente, Combattant, Kämpfer, Combatiente, Боєць, 战斗者) |
+| **Tracker layout** | battle rule, `_battle-rules/` | The layout of a combatant row; translated per language |
+| **Links** | backlinks panel, linked files / notes | The note panel and its toolbar button; groups inside it are *Notes* and *Assets* |
+| **Review** | broken links page, `/review` | The page and its alert; *Broken links* is only a group title inside it |
+| **Delete forever** | permanent delete | Combatant card, cemetery and its confirmation |
+| **Info box** | callout | `> [!note]` stays as the markdown syntax example |
+| **Default** | built-in tracker layout (`Generic` in the file) | Display name only; the stored name never changes |
+
 ## 2. Vault layout
 
 ```text
