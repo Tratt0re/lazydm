@@ -28,7 +28,8 @@
       "notes": "Notizen",
       "templates": "Vorlagen",
       "battleRules": "Tracker-Layouts",
-      "maps": "Karten"
+      "maps": "Karten",
+      "customize": "Anpassen"
     }
   },
   "header": {
@@ -98,6 +99,11 @@
           "label": "Dateigrößen anzeigen",
           "description": "Zeigt die Größe jeder Notiz, Begegnung und Ressource in den Dateilisten der Abschnittsseiten, auf diesem Gerät."
         }
+      },
+      "shortcuts": {
+        "title": "Tastenkürzel",
+        "description": "Alle Tastenkürzel der App, nach Einsatzort.",
+        "button": "Liste anzeigen"
       }
     },
     "sidebarAriaLabel": "Einstellungsbereiche",
@@ -858,7 +864,8 @@
         "outsideMonth": "außerhalb des aktuellen Monats",
         "disabled": "nicht verfügbar"
       }
-    }
+    },
+    "moreActions": "Weitere Aktionen"
   },
   "templates": {
     "library": {

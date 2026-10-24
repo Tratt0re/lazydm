@@ -109,6 +109,43 @@
             }
           </arc-select>
         </div>
+      } @else if (isMenuAction(item)) {
+        <button
+          arc-button
+          arc-menu
+          type="button"
+          class="shrink-0"
+          [arcMenuTriggerFor]="overflowMenu"
+          arcPlacement="bottomRight"
+          arcType="outline"
+          arcSize="sm"
+          [attr.aria-label]="item.label | translate"
+          arcPosition="bottom"
+          [arcTooltip]="item.label | translate"
+        >
+          <arc-icon arcType="ellipsis" class="size-4" />
+        </button>
+        <ng-template #overflowMenu>
+          <div arc-menu-content class="w-56">
+            @for (entry of item.entries; track entry.id) {
+              @if (entry.destructive) {
+                <div class="-mx-1 my-1 h-px bg-border-subtle" role="separator"></div>
+              }
+              <button
+                type="button"
+                arc-menu-item
+                [class.text-destructive]="entry.destructive"
+                [disabled]="isToolbarItemDisabled(entry)"
+                (click)="onMenuEntryClick(entry)"
+              >
+                @if (entry.icon) {
+                  <arc-icon [arcType]="entry.icon" />
+                }
+                {{ entry.label | translate }}
+              </button>
+            }
+          </div>
+        </ng-template>
       } @else if (isToolbarAction(item)) {
         <button
           arc-button

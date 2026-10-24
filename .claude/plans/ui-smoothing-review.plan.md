@@ -24,7 +24,7 @@ Before each phase, ask the user the open questions of that phase and record the 
 | --- | --- | --- | --- |
 | A | Bug fixes | done | see git log |
 | B | Glossary | done | see git log |
-| C | Visible actions | pending | |
+| C | Visible actions | in-progress | |
 | D | Empty states and first run | pending | |
 | E | Voice | pending | |
 | F | Design rules | pending | |
@@ -56,9 +56,9 @@ Display text only. Key names, folders, file formats and code identifiers stay.
 
 ## Phase C. Visible actions
 
-- [ ] C1 Section toolbar: *New note* stays the labelled primary; import, new folder, edit, delete go into a "More" menu; delete never sits beside the primary
-- [ ] C2 Campaign overview toolbar: same treatment (delete campaign always visible next to edit)
-- [ ] C3 Title bar: Compendium and Settings stay; Templates and Tracker layouts go under **Customize**; decide where Shortcuts goes
+- [x] C1 Section toolbar: *New note* stays the labelled primary; import, new folder, edit, delete go into a "More" menu; delete never sits beside the primary
+- [x] C2 Campaign overview toolbar: same treatment (delete campaign always visible next to edit)
+- [x] C3 Title bar: Compendium and Settings stay; Templates and Tracker layouts go under **Customize**; decide where Shortcuts goes
 - [ ] C4 Right-click-only actions get a visible `…` button on rows and campaign cards
 - [ ] C5 Template choice: one home (section toolbar); decide what Settings → Templates becomes (touches DESIGN_PRINCIPLES §6c)
 - [ ] C6 Encounter page: consistent battle bar labels; no disabled *Roll initiative* mid-battle without a reason; label the toolbar icons
@@ -102,9 +102,19 @@ Display text only. Key names, folders, file formats and code identifiers stay.
 - B7: **Info box**; "callout" survives only in the markdown syntax example (`> [!note]`)
 - B2: Tracker layout is translated per language (exact words listed in the log before the files change)
 
+## Phase C answers (2026-10-24)
+
+- C1/C2: section pages and the campaign overview show the labelled primary, a visible Import, and a "..." menu with New folder, Edit and Delete (Delete is no longer one click away)
+- C3: title bar keeps Compendium, **Customize** (menu: Templates, Tracker layouts) and Settings; Keyboard shortcuts move into Settings (the shortcut key keeps working)
+- C4: a visible "..." button on each list row and campaign card, opening the same menu as right-click (replaces the three always-visible row icons)
+- C5: Settings → Templates is removed; the template is chosen on the section page (DESIGN_PRINCIPLES §6c to update)
+- C6: battle bar hides the roll controls (Roll initiative, Select all) while a battle runs; encounter toolbar keeps the Cemetery and the tracker layout select visible, Rename and Delete go into a "..." menu
+- C7: the Links panel is closed by default and the Links button shows the link count; the open/closed choice is still remembered per device
+
 ## Log
 
 - 2026-10-24: plan written, decisions recorded. No code touched yet.
 - 2026-10-24: Phase A done. Build green, 57 electron tests pass (`npm test` finds no Angular specs, pre-existing). Checked in the browser with a mocked `electronAPI`: A1, A2, A3, A4. A5 and A6 are not checked visually. A5 changed the delay instead of the position because the tooltip was already on the right.
 - 2026-10-24: Phase B done. Text-only change in the 7 locale files (same keys, 1494 lines each), plus the glossary in DESIGN_PRINCIPLES §1b and a pointer in CLAUDE.md. Details: Codex is a fixed word in every language; the combatant, tracker layout, info box and delete-forever wording follow the answers above. Links panel: toolbar button and panel heading say *Links*, groups inside are *Notes* and *Assets*. Review: the page keeps its title, 4 unused keys were removed (`nav.items.broken-links`, `links.broken.alertTitle`, `links.broken.review`, `links.broken.cardDescription`), and the panel link now reads "See all in Review". Delete forever: the Ukrainian and Chinese already meant "forever", so they were left as they were. Checked in the browser: Settings → Codex in Italian. Not checked visually: the other languages (JSON valid, keys identical to English).
 - Left for later phases: the empty-state and alert wording ("cose da rivedere", Phase D), error wording (Phase E). The French `Coffre` and Spanish `Bóveda` for the old word are gone.
+- 2026-10-24: Phase C in progress. Done: C1, C2, C3. The toolbar has a new item type `menu` (the "..." button, `ToolbarMenuItem` in `toolbar-context.service.ts`); section pages and the campaign overview use it for New folder / Edit / Delete (Delete after a separator, in red). Title bar: Compendium, **Customize** (wrench icon; menu with Templates and Tracker layouts) and Settings; the shortcuts button moved to Settings → General (Cmd+/ still works). Checked in the browser (Italian, light): title bar, Customize menu, section toolbar and its "..." menu. Next: C4, C5, C6, C7.

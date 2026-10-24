@@ -73,37 +73,54 @@
         class="window-no-drag flex items-center gap-1 px-1"
         [attr.aria-label]="'header.sheetsAriaLabel' | translate"
       >
-        @for (sheet of orderedSheetButtons; track sheet.kind) {
-          @let isOpen = sheets.activeKind() === sheet.kind;
-          <button
-            type="button"
-            arc-button
-            arcType="ghost"
-            arcSize="sm"
-            class="size-8"
-            [class.text-primary]="isOpen"
-            [attr.aria-pressed]="isOpen"
-            [attr.aria-label]="sheet.label | translate"
-            arcPosition="bottom"
-            [arcTooltip]="sheet.label | translate"
-            (click)="sheets.toggle(sheet.kind)"
-          >
-            <arc-icon [arcType]="sheet.icon" />
-          </button>
+        @for (entry of orderedNavEntries; track $index) {
+          @if (entry.type === 'customize') {
+            <button
+              type="button"
+              arc-button
+              arc-menu
+              [arcMenuTriggerFor]="customizeMenu"
+              arcPlacement="bottomRight"
+              arcType="ghost"
+              arcSize="sm"
+              class="size-8"
+              [class.text-primary]="isCustomizeOpen()"
+              [attr.aria-label]="'nav.items.customize' | translate"
+              arcPosition="bottom"
+              [arcTooltip]="'nav.items.customize' | translate"
+            >
+              <arc-icon arcType="wrench" />
+            </button>
+          } @else {
+            @let isOpen = sheets.activeKind() === entry.kind;
+            <button
+              type="button"
+              arc-button
+              arcType="ghost"
+              arcSize="sm"
+              class="size-8"
+              [class.text-primary]="isOpen"
+              [attr.aria-pressed]="isOpen"
+              [attr.aria-label]="entry.label | translate"
+              arcPosition="bottom"
+              [arcTooltip]="entry.label | translate"
+              (click)="sheets.toggle(entry.kind)"
+            >
+              <arc-icon [arcType]="entry.icon" />
+            </button>
+          }
         }
-        <button
-          type="button"
-          arc-button
-          arcType="ghost"
-          arcSize="sm"
-          class="size-8"
-          [attr.aria-label]="'shortcuts.title' | translate"
-          arcPosition="bottom"
-          [arcTooltip]="'shortcuts.title' | translate"
-          (click)="shortcutsSheet.toggle()"
-        >
-          <arc-icon arcType="keyboard" />
-        </button>
       </nav>
+
+      <ng-template #customizeMenu>
+        <div arc-menu-content class="w-56">
+          @for (sheet of customizeSheets; track sheet.kind) {
+            <button type="button" arc-menu-item (click)="sheets.toggle(sheet.kind)">
+              <arc-icon [arcType]="sheet.icon" />
+              {{ sheet.label | translate }}
+            </button>
+          }
+        </div>
+      </ng-template>
     }
 </ng-template>

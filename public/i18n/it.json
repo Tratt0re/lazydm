@@ -28,7 +28,8 @@
       "notes": "Note",
       "templates": "Modelli",
       "battleRules": "Layout del tracker",
-      "maps": "Mappe"
+      "maps": "Mappe",
+      "customize": "Personalizza"
     }
   },
   "header": {
@@ -98,6 +99,11 @@
           "label": "Mostra le dimensioni dei file",
           "description": "Mostra la dimensione di ogni nota, incontro e risorsa negli elenchi delle pagine delle sezioni, su questo dispositivo."
         }
+      },
+      "shortcuts": {
+        "title": "Scorciatoie da tastiera",
+        "description": "Tutte le scorciatoie dell'app, per dove funzionano.",
+        "button": "Mostra l’elenco"
       }
     },
     "sidebarAriaLabel": "Sezioni delle impostazioni",
@@ -858,7 +864,8 @@
         "outsideMonth": "fuori dal mese corrente",
         "disabled": "non disponibile"
       }
-    }
+    },
+    "moreActions": "Altre azioni"
   },
   "templates": {
     "library": {

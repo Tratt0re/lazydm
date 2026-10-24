@@ -1,5 +1,5 @@
 import { NgTemplateOutlet } from '@angular/common';
-import { ChangeDetectionStrategy, Component, DestroyRef, HostListener, inject, signal, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, DestroyRef, HostListener, inject, signal, ViewEncapsulation } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 
 import { matchesShortcut } from '@/config/shortcuts.config';
@@ -10,8 +10,13 @@ import { VaultService } from '@/services/vault.service';
 import { WorkspaceService } from '@/services/workspace.service';
 import { ArcTechButtonComponent } from '@/shared/components/button';
 import { ArcTechIconComponent, type ArcTechIcon } from '@/shared/components/icon';
+import { ArcTechMenuImports } from '@/shared/components/menu';
 import { ArcTechTooltipImports } from '@/shared/components/tooltip';
 import { listenToIpcEvent } from '@/services/ipc-events';
+
+type HeaderNavEntry =
+  | { readonly type: 'sheet'; readonly kind: AppSheetKind; readonly label: string; readonly icon: ArcTechIcon }
+  | { readonly type: 'customize' };
 
 const MAXIMIZED_CHANGED_EVENT = 'window:maximizedChanged';
 const FULLSCREEN_CHANGED_EVENT = 'window:fullscreenChanged';
@@ -28,6 +33,7 @@ const FULLSCREEN_CHANGED_EVENT = 'window:fullscreenChanged';
     TranslatePipe,
     ArcTechButtonComponent,
     ArcTechIconComponent,
+    ...ArcTechMenuImports,
     ArcTechTooltipImports,
     HeaderSearchComponent,
   ],
@@ -41,21 +47,31 @@ export class Header {
   protected readonly sheets = inject(AppSheetService);
   protected readonly workspace = inject(WorkspaceService);
   protected readonly shortcutsSheet = inject(ShortcutsSheetService);
-  /** Title-bar buttons of the full-page sheets: icon only, the name is the tooltip. */
-  protected readonly sheetButtons: readonly {
+  /**
+   * Title-bar buttons, icon only (the name is the tooltip): the Compendium and Settings sheets, with the
+   * *Customize* menu between them.
+   */
+  protected readonly navEntries: readonly HeaderNavEntry[] = [
+    { type: 'sheet', kind: 'compendium', label: 'nav.items.compendium', icon: 'square-library' },
+    { type: 'customize' },
+    { type: 'sheet', kind: 'settings', label: 'nav.items.settings', icon: 'settings' },
+  ];
+  /** Library sheets set up once and rarely touched again: one *Customize* menu instead of a button each. */
+  protected readonly customizeSheets: readonly {
     kind: AppSheetKind;
     label: string;
     icon: ArcTechIcon;
   }[] = [
-    { kind: 'compendium', label: 'nav.items.compendium', icon: 'square-library' },
     { kind: 'templates', label: 'nav.items.templates', icon: 'notepad-text-dashed' },
     { kind: 'battle-rules', label: 'nav.items.battleRules', icon: 'dices' },
-    { kind: 'settings', label: 'nav.items.settings', icon: 'settings' },
   ];
   /** On the left (Windows, Linux) the buttons read settings first; on the right (macOS) the order above. */
-  protected readonly orderedSheetButtons = window.electronAPI?.platform === 'darwin'
-    ? this.sheetButtons
-    : [...this.sheetButtons].reverse();
+  protected readonly orderedNavEntries = window.electronAPI?.platform === 'darwin'
+    ? this.navEntries
+    : [...this.navEntries].reverse();
+  protected readonly isCustomizeOpen = computed(() =>
+    this.customizeSheets.some((sheet) => this.sheets.activeKind() === sheet.kind),
+  );
   protected readonly vault = inject(VaultService).currentVault;
   protected readonly isDesktop = Boolean(window.electronAPI);
   protected readonly isMac = window.electronAPI?.platform === 'darwin';

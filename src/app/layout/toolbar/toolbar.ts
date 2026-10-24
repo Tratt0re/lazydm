@@ -5,6 +5,7 @@ import { RouterLink } from '@angular/router';
 import { withShortcut } from '@/config/shortcuts.config';
 import { ArcTechButtonComponent } from '@/shared/components/button';
 import { ArcTechIconComponent } from '@/shared/components/icon';
+import { ArcTechMenuImports } from '@/shared/components/menu';
 import { ArcTechSegmentedComponent, ArcTechSegmentedItemComponent } from '@/shared/components/segmented';
 import { ArcTechSelectImports } from '@/shared/components/select';
 import { ArcTechTooltipImports } from '@/shared/components/tooltip';
@@ -13,6 +14,8 @@ import type {
   ToolbarAction,
   ToolbarItemAction,
   ToolbarItemNavigation,
+  ToolbarMenuEntry,
+  ToolbarMenuItem,
   ToolbarTitleBreadcrumbItem,
   ToolbarTitleMode,
   ToolbarSelectItem,
@@ -27,6 +30,7 @@ import type {
     RouterLink,
     ArcTechButtonComponent,
     ArcTechIconComponent,
+    ...ArcTechMenuImports,
     ArcTechSegmentedComponent,
     ArcTechSegmentedItemComponent,
     ...ArcTechSelectImports,
@@ -74,6 +78,27 @@ export class Toolbar {
 
   protected isSelectAction(item: ToolbarItemAction): item is ToolbarSelectItem {
     return 'type' in item && item.type === 'select';
+  }
+
+  protected isMenuAction(item: ToolbarItemAction): item is ToolbarMenuItem {
+    return 'type' in item && item.type === 'menu';
+  }
+
+  protected onMenuEntryClick(entry: ToolbarMenuEntry): void {
+    if (this.isToolbarItemDisabled(entry)) {
+      return;
+    }
+
+    try {
+      const result = entry.action();
+      if (result && typeof result.then === 'function') {
+        void result.catch((error) => {
+          console.error('[toolbar] Toolbar menu action failed:', error);
+        });
+      }
+    } catch (error) {
+      console.error('[toolbar] Toolbar menu action failed:', error);
+    }
   }
 
   protected hasTitleBreadcrumbs(): boolean {

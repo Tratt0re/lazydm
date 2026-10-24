@@ -28,7 +28,8 @@
       "notes": "Notes",
       "templates": "Templates",
       "battleRules": "Tracker layouts",
-      "maps": "Maps"
+      "maps": "Maps",
+      "customize": "Customize"
     }
   },
   "header": {
@@ -98,6 +99,11 @@
           "label": "Show file sizes",
           "description": "Show the size of each note, encounter and asset in the file lists of the section pages, on this device."
         }
+      },
+      "shortcuts": {
+        "title": "Keyboard shortcuts",
+        "description": "Every shortcut of the app, by where it works.",
+        "button": "Show the list"
       }
     },
     "sidebarAriaLabel": "Settings sections",
@@ -858,7 +864,8 @@
         "outsideMonth": "outside current month",
         "disabled": "unavailable"
       }
-    }
+    },
+    "moreActions": "More actions"
   },
   "templates": {
     "library": {

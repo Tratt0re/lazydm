@@ -60,8 +60,28 @@ export interface ToolbarSelectItem {
   readonly change: ToolbarSelectChangeHandler;
 }
 
+/** One entry of a toolbar overflow menu. */
+export interface ToolbarMenuEntry {
+  readonly id: string;
+  readonly label: string;
+  readonly icon?: ArcTechIcon;
+  /** Destructive operation (delete…): takes the danger colour and sits after a separator. */
+  readonly destructive?: boolean;
+  readonly disabled?: ToolbarItemDisabled;
+  readonly action: ToolbarActionHandler;
+}
+
+/** The "…" button of the toolbar: the actions that are not worth a button of their own. */
+export interface ToolbarMenuItem {
+  readonly id: string;
+  readonly type: 'menu';
+  /** Accessible name and tooltip of the button. */
+  readonly label: string;
+  readonly entries: readonly ToolbarMenuEntry[];
+}
+
 export type ToolbarItem = ToolbarSegmentedItem | ToolbarToggleGroupItem | ToolbarSelectItem;
-export type ToolbarItemAction = ToolbarAction | ToolbarSelectItem;
+export type ToolbarItemAction = ToolbarAction | ToolbarSelectItem | ToolbarMenuItem;
 /** One button of a toggle group: icon with its label as tooltip. */
 export interface ToolbarToggleOption {
   readonly value: string;

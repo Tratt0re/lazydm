@@ -28,7 +28,8 @@
       "notes": "Notes",
       "templates": "Modèles",
       "battleRules": "Dispositions du suivi",
-      "maps": "Cartes"
+      "maps": "Cartes",
+      "customize": "Personnaliser"
     }
   },
   "header": {
@@ -98,6 +99,11 @@
           "label": "Afficher la taille des fichiers",
           "description": "Affiche la taille de chaque note, rencontre et ressource dans les listes de fichiers des pages de section, sur cet appareil."
         }
+      },
+      "shortcuts": {
+        "title": "Raccourcis clavier",
+        "description": "Tous les raccourcis de l'app, selon où ils fonctionnent.",
+        "button": "Afficher la liste"
       }
     },
     "sidebarAriaLabel": "Sections des paramètres",
@@ -858,7 +864,8 @@
         "outsideMonth": "hors du mois en cours",
         "disabled": "indisponible"
       }
-    }
+    },
+    "moreActions": "Plus d’actions"
   },
   "templates": {
     "library": {

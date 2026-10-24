@@ -43,7 +43,11 @@ import { FileMoveService, type MoveSection } from '@/services/file-move.service'
 import { LocalPreferencesService } from '@/services/local-preferences.service';
 import { SectionService, toSubfolderLabel } from '@/services/section.service';
 import { AUTOMATIC_TEMPLATE_RULE, TemplateService } from '@/services/template.service';
-import { ToolbarContextService, type ToolbarItemAction } from '@/services/toolbar-context.service';
+import {
+  ToolbarContextService,
+  type ToolbarItemAction,
+  type ToolbarMenuEntry,
+} from '@/services/toolbar-context.service';
 import { ArcTechAlertComponent } from '@/shared/components/alert';
 import { ArcTechButtonComponent } from '@/shared/components/button';
 import { ArcTechEmptyComponent } from '@/shared/components/empty';
@@ -323,14 +327,15 @@ export class CampaignSectionPage {
       action: () => this.openImportSheet(),
     });
 
+    // Less used actions go behind the "…" button at the end: New folder, Edit and Delete.
+    const moreEntries: ToolbarMenuEntry[] = [];
+
     // One level of sub-folders: plain folders of a section's notes (special sections: plain folders too).
     if ((noteType || section?.isSpecial) && !this.subfolder()) {
-      actions.push({
+      moreEntries.push({
         id: 'section-new-folder',
         label: 'campaigns.sections.newFolder.button',
         icon: 'folder-plus',
-        buttonType: 'outline',
-        iconOnly: true,
         action: () => this.openCreateFolderSheet(),
       });
     }
@@ -369,25 +374,25 @@ export class CampaignSectionPage {
     // can be edited but never deleted.
     if (scope?.kind === 'campaign' && section && !this.subfolder()) {
       const campaign = scope.rootPath;
-      actions.push({
+      moreEntries.push({
         id: 'section-edit',
         label: 'settings.campaignSections.edit.title',
         icon: 'pencil',
-        buttonType: 'outline',
-        iconOnly: true,
         action: () => void this.sectionActions.openEditSectionSheet(campaign, section),
       });
       if (!section.isSpecial) {
-        actions.push({
+        moreEntries.push({
           id: 'section-delete',
           label: 'settings.campaignSections.remove.button',
           icon: 'trash',
-          buttonType: 'secondary',
           destructive: true,
-          iconOnly: true,
           action: () => this.sectionActions.openDeleteSectionSheet(campaign, section),
         });
       }
+    }
+
+    if (moreEntries.length > 0) {
+      actions.push({ id: 'section-more', type: 'menu', label: 'common.moreActions', entries: moreEntries });
     }
 
     return actions;

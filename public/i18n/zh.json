@@ -28,7 +28,8 @@
       "notes": "笔记",
       "templates": "模板",
       "battleRules": "追踪器布局",
-      "maps": "地图"
+      "maps": "地图",
+      "customize": "自定义"
     }
   },
   "header": {
@@ -98,6 +99,11 @@
           "label": "显示文件大小",
           "description": "在此设备上，于各分区页面的文件列表中显示每条笔记、遭遇和资源的大小。"
         }
+      },
+      "shortcuts": {
+        "title": "键盘快捷键",
+        "description": "应用的所有快捷键，按适用位置分组。",
+        "button": "显示列表"
       }
     },
     "sidebarAriaLabel": "设置分区",
@@ -858,7 +864,8 @@
         "outsideMonth": "不在当前月份",
         "disabled": "不可用"
       }
-    }
+    },
+    "moreActions": "更多操作"
   },
   "templates": {
     "library": {

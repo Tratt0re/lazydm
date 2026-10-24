@@ -3,6 +3,9 @@ import { TranslatePipe } from '@ngx-translate/core';
 
 import { I18nService } from '@/services/i18n.service';
 import { LocalPreferencesService } from '@/services/local-preferences.service';
+import { ShortcutsSheetService } from '@/services/shortcuts-sheet.service';
+import { ArcTechButtonComponent } from '@/shared/components/button';
+import { ArcTechIconComponent } from '@/shared/components/icon';
 import { ArcTechSelectImports } from '@/shared/components/select';
 import { ArcTechSwitchComponent } from '@/shared/components/switch';
 import { EDarkModes, ArcTechDarkMode } from '@/shared/services/dark-mode';
@@ -11,12 +14,19 @@ import { applyThemeTransition } from '@/shared/utils/theme-transition';
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-general-section',
-  imports: [TranslatePipe, ArcTechSwitchComponent, ...ArcTechSelectImports],
+  imports: [
+    TranslatePipe,
+    ArcTechButtonComponent,
+    ArcTechIconComponent,
+    ArcTechSwitchComponent,
+    ...ArcTechSelectImports,
+  ],
   templateUrl: './general-section.component.html',
 })
 export class GeneralSectionComponent {
   protected readonly darkMode = inject(ArcTechDarkMode);
   protected readonly i18nService = inject(I18nService);
+  protected readonly shortcutsSheet = inject(ShortcutsSheetService);
   protected readonly themeOptions = [EDarkModes.SYSTEM, EDarkModes.LIGHT, EDarkModes.DARK] as const;
   protected readonly languages = this.i18nService.supportedLanguages;
   protected readonly selectedTheme = this.darkMode.currentTheme;

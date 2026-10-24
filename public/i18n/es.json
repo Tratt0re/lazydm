@@ -28,7 +28,8 @@
       "notes": "Notas",
       "templates": "Plantillas",
       "battleRules": "Diseños del tracker",
-      "maps": "Mapas"
+      "maps": "Mapas",
+      "customize": "Personalizar"
     }
   },
   "header": {
@@ -98,6 +99,11 @@
           "label": "Mostrar el tamaño de los archivos",
           "description": "Muestra el tamaño de cada nota, encuentro y recurso en las listas de archivos de las páginas de sección, en este dispositivo."
         }
+      },
+      "shortcuts": {
+        "title": "Atajos de teclado",
+        "description": "Todos los atajos de la app, según dónde funcionan.",
+        "button": "Mostrar la lista"
       }
     },
     "sidebarAriaLabel": "Secciones de ajustes",
@@ -858,7 +864,8 @@
         "outsideMonth": "fuera del mes actual",
         "disabled": "no disponible"
       }
-    }
+    },
+    "moreActions": "Más acciones"
   },
   "templates": {
     "library": {
