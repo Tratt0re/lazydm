@@ -1509,14 +1509,10 @@
     },
     "vault": {
       "back": "Back",
+      "where": "It can live on this device, or in a cloud folder (iCloud Drive, Dropbox, OneDrive, Box or Google Drive) to use it on more devices.",
+      "cloudNote": "In a cloud folder your cloud app does the syncing. LazyDM waits for pending downloads at start and warns you if two devices changed the same note.",
       "local": {
-        "title": "On this device",
-        "text": "The files stay on this computer. Nothing is shared, and backups are up to you.",
         "badge": "Only on this device"
-      },
-      "cloud": {
-        "title": "In a cloud folder",
-        "text": "Pick a folder inside iCloud Drive, Dropbox, OneDrive, Box or Google Drive. Your cloud app syncs the files between your devices; LazyDM waits for pending downloads when it starts and warns you if two devices changed the same note."
       },
       "providers": {
         "icloud": "iCloud Drive",
@@ -1524,8 +1520,7 @@
         "onedrive": "OneDrive",
         "box": "Box",
         "google-drive": "Google Drive"
-      },
-      "yours": "Your folder"
+      }
     }
   }
 }

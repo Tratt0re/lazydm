@@ -18,7 +18,7 @@ import { VaultService } from '@/services/vault.service';
 import { ArcTechAlertComponent } from '@/shared/components/alert';
 import { ArcTechBadgeComponent } from '@/shared/components/badge';
 import { ArcTechButtonComponent } from '@/shared/components/button';
-import { ArcTechIconComponent, type ArcTechIcon } from '@/shared/components/icon';
+import { ArcTechIconComponent } from '@/shared/components/icon';
 
 type VaultFolderDetection = 'existing' | 'empty' | 'nonEmpty';
 
@@ -35,10 +35,6 @@ export class VaultSetupPage implements OnInit, AfterViewInit {
   private readonly preferences = inject(LocalPreferencesService);
   private readonly title = viewChild.required<ElementRef<HTMLElement>>('title');
 
-  protected readonly options: readonly { readonly key: 'local' | 'cloud'; readonly icon: ArcTechIcon }[] = [
-    { key: 'local', icon: 'hard-drive' },
-    { key: 'cloud', icon: 'cloud' },
-  ];
   protected readonly isDesktop = this.vaultService.isAvailable;
   protected readonly inspection = signal<VaultInspectionDto | null>(null);
   protected readonly isBusy = signal(false);
@@ -66,15 +62,6 @@ export class VaultSetupPage implements OnInit, AfterViewInit {
 
   /** Cloud drive of the chosen folder (`icloud`, `dropbox`…), null when it is only on this device. */
   protected readonly cloudProvider = computed(() => this.inspection()?.cloudProvider ?? null);
-  /** The option card the chosen folder falls under; null before a folder is chosen. */
-  protected readonly selectedOption = computed<'local' | 'cloud' | null>(() => {
-    const inspection = this.inspection();
-    if (!inspection) {
-      return null;
-    }
-
-    return inspection.cloudProvider ? 'cloud' : 'local';
-  });
   /** Back to the welcome step, unless the vault is missing (the welcome has nothing to say then). */
   protected readonly canGoBack = computed(() => this.missingVault() === null);
 

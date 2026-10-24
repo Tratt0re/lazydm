@@ -1509,14 +1509,10 @@
     },
     "vault": {
       "back": "Retour",
+      "where": "Il peut rester sur cet appareil, ou dans un dossier cloud (iCloud Drive, Dropbox, OneDrive, Box ou Google Drive) pour l’utiliser sur plusieurs appareils.",
+      "cloudNote": "Dans un dossier cloud, c’est ton application cloud qui synchronise. LazyDM attend les téléchargements en attente au démarrage et te prévient si deux appareils ont modifié la même note.",
       "local": {
-        "title": "Sur cet appareil",
-        "text": "Les fichiers restent sur cet ordinateur. Rien n’est partagé et les sauvegardes sont à ta charge.",
         "badge": "Uniquement sur cet appareil"
-      },
-      "cloud": {
-        "title": "Dans un dossier cloud",
-        "text": "Choisis un dossier dans iCloud Drive, Dropbox, OneDrive, Box ou Google Drive. Ton application cloud synchronise les fichiers entre tes appareils ; LazyDM attend les téléchargements en attente au démarrage et te prévient si deux appareils ont modifié la même note."
       },
       "providers": {
         "icloud": "iCloud Drive",
@@ -1524,8 +1520,7 @@
         "onedrive": "OneDrive",
         "box": "Box",
         "google-drive": "Google Drive"
-      },
-      "yours": "Ton dossier"
+      }
     }
   }
 }

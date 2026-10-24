@@ -1509,14 +1509,10 @@
     },
     "vault": {
       "back": "返回",
+      "where": "可以放在这台设备上，也可以放在云端文件夹（iCloud Drive、Dropbox、OneDrive、Box 或 Google Drive）中，以便在更多设备上使用。",
+      "cloudNote": "在云端文件夹中，由你的云应用负责同步。LazyDM 在启动时等待尚未完成的下载，并在两台设备修改了同一条笔记时提醒你。",
       "local": {
-        "title": "在此设备上",
-        "text": "文件保留在这台电脑上。不会共享任何内容，备份由你自己负责。",
         "badge": "仅在此设备"
-      },
-      "cloud": {
-        "title": "在云端文件夹中",
-        "text": "选择 iCloud Drive、Dropbox、OneDrive、Box 或 Google Drive 中的文件夹。你的云应用会在设备之间同步文件；LazyDM 在启动时等待尚未完成的下载，并在两台设备修改了同一条笔记时提醒你。"
       },
       "providers": {
         "icloud": "iCloud Drive",
@@ -1524,8 +1520,7 @@
         "onedrive": "OneDrive",
         "box": "Box",
         "google-drive": "Google Drive"
-      },
-      "yours": "你的文件夹"
+      }
     }
   }
 }

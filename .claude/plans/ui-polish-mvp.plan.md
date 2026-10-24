@@ -28,7 +28,7 @@ rebuild the preload bundle only if `channels.js` changes (not expected).
 | 4 | Alignment, overview alert, Review page | done | see git log |
 | 5 | Ornament and typography | done | see git log |
 | 6 | Light theme | done | see git log |
-| 7 | Setup flow copy | pending | |
+| 7 | Setup flow copy | done | see git log |
 | 8 | Narrow windows | pending | |
 | 9 | Closure | pending | |
 
@@ -123,6 +123,20 @@ row; delete is always visible next to harmless icons; the turn highlight is only
 
 ## Log
 
+- 2026-10-25, decisions closed by the user before Phase 7: (1) the light canvas stays as it is (`#DFE0DE`); (2) no
+  cap on list rows for very wide windows: the app is used on standard laptop screens during live sessions, so big
+  monitors are not a target. The earlier measurements at 2200px are therefore informational only.
+- 2026-10-25, Phase 7: the vault step lost its two informational cards ("On this device" / "In a cloud folder"). The
+  header now holds three lines: what a Codex is (unchanged), where it can live (one sentence naming the five cloud
+  drives), and a short note on how syncing works (the cloud app syncs; LazyDM waits for pending downloads and warns on
+  two-device edits). New keys `onboarding.vault.where` and `onboarding.vault.cloudNote` in all 7 languages; removed
+  `onboarding.vault.local.{title,text}`, `cloud.{title,text}` and `yours` (the "Your folder" badge belonged to the
+  cards); `local.badge` and `providers.*` stay (the chosen-folder box uses them). The component lost `options`,
+  `selectedOption` and the icon import. The 7 files still have the same line count (1526). The cloud note went from
+  a 4-line card paragraph to 2 lines of small text. Checked in the mock (dark, then light): before and after a
+  folder is chosen, with an iCloud folder (badge "iCloud Drive" and "New Codex"). Not checked: the existing-Codex
+  and read-only cases, the missing-vault retry view, the page at narrow widths, a local (non-cloud) folder, the
+  translations by a native speaker (I wrote them from the existing wording).
 - 2026-10-25, Phase 6: measured WCAG contrast of the token pairs first (script in /tmp, not kept). Text pairs all
   pass in both themes, and control borders (`--input`) pass 3:1. Two real findings, two token changes in
   `src/styles.css`: (1) light `--recessed` (field, select, switch-off, editor, track fill) was `#D7D8D6`, 1.08:1

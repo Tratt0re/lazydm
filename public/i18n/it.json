@@ -1509,14 +1509,10 @@
     },
     "vault": {
       "back": "Indietro",
+      "where": "Può stare su questo dispositivo, oppure in una cartella cloud (iCloud Drive, Dropbox, OneDrive, Box o Google Drive) per usarlo su più dispositivi.",
+      "cloudNote": "In una cartella cloud la sincronizzazione la fa la tua app cloud. LazyDM aspetta i download in sospeso all’avvio e ti avvisa se due dispositivi hanno modificato la stessa nota.",
       "local": {
-        "title": "Su questo dispositivo",
-        "text": "I file restano su questo computer. Nulla viene condiviso e i backup sono a tuo carico.",
         "badge": "Solo su questo dispositivo"
-      },
-      "cloud": {
-        "title": "In una cartella cloud",
-        "text": "Scegli una cartella dentro iCloud Drive, Dropbox, OneDrive, Box o Google Drive. La tua app cloud sincronizza i file tra i dispositivi; LazyDM aspetta i download in sospeso all’avvio e ti avvisa se due dispositivi hanno modificato la stessa nota."
       },
       "providers": {
         "icloud": "iCloud Drive",
@@ -1524,8 +1520,7 @@
         "onedrive": "OneDrive",
         "box": "Box",
         "google-drive": "Google Drive"
-      },
-      "yours": "La tua cartella"
+      }
     }
   }
 }
