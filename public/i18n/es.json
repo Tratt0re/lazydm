@@ -1103,7 +1103,8 @@
       "add": "Añadir estado",
       "remove": "Quitar {{name}}",
       "placeholder": "Añadir un estado…",
-      "hint": "Escribe un nombre y pulsa Intro. Añade un número para las rondas: «aturdido 3» termina tras 3 turnos suyos. Sin número, se queda hasta que lo quites."
+      "hint": "Escribe un nombre y pulsa Intro. Añade un número para las rondas: «aturdido 3» termina tras 3 turnos suyos. Sin número, se queda hasta que lo quites.",
+      "hintLabel": "Estados:"
     },
     "note": {
       "show": "Mostrar la nota",

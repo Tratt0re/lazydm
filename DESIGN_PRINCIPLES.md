@@ -350,9 +350,9 @@ Planned Electron modules: `vault`, `cloud-readiness`, `campaign`, `document`, `i
 - **Values** are stored by the key of the battle-rule field that shows them (`initiative`, `ac`, `hp` =
   `{ current, max, temp }`, `statuses` = `[{ name, rounds? }]`, `note` = vault path of the linked note, …). A value
   the rule no longer lists survives a change of rule; empty values are not stored.
-- **Page** (`/<scope>/encounters/<file>`, own tab title and breadcrumb): the round (`03 / ROUND`: a big two-digit number and a smaller, quieter word) and whose turn it is
-  on top, then the **battle bar** (*Start battle* or *Stop battle* / *Next turn* on the left; *Roll initiative* and
-  the *Add party* and *Add entity* icon buttons on the right), then the initiative list. The **toolbar keeps the
+- **Page** (`/<scope>/encounters/<file>`, own tab title and breadcrumb): the **battle bar**, pinned while the list scrolls, on one line: the round (`03 / ROUND`: a big
+  two-digit number and a smaller, quieter word) with whose turn it is under it, then *Start battle* or *Stop battle* /
+  *Next turn*, and on the right *Roll initiative* and the *Add party* and *Add entity* icon buttons; then the initiative list. The **toolbar keeps the
   main and utility actions**: *Battle rule*, *Cemetery* (opens the side panel) and a **"…" menu** with *Copy to…*,
   *Rename…* and *Delete…* (Delete last, after a separator). Every edit
   is saved right away. The open encounter follows a rename (its name is the file name) and any change of its
@@ -374,7 +374,8 @@ Planned Electron modules: `vault`, `cloud-readiness`, `campaign`, `document`, `i
   - **Statuses** are **free tags** typed in place on an entity (one line, no dialog): `stunned`, space, `3`, space
     makes the tag *stunned · 3* (it counts down at the end of that entity's turn and goes at 0); a second space right
     after the name makes it without rounds. Enter or leaving the field also makes one, Backspace on an empty field
-    removes the last tag. They are not notes and have no section.
+    removes the last tag. They are not notes and have no section. The help sentence ("Status: …", with an info
+    icon) is written once above the list, and only when the battle rule shows a statuses component and the encounter is editable.
   - **Entity row**: compact by default (about 80-90px). The drag handle and the roll selection checkbox are always
     visible; every other action (*Edit*, *Duplicate*, *Send to the cemetery*, *Delete forever*) is in the row's "…" menu
     and nowhere else, *Delete forever* last after a separator, asking before it deletes. The current turn has a bronze left marker plus a *Turn* label

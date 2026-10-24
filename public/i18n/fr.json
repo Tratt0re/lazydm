@@ -1103,7 +1103,8 @@
       "add": "Ajouter un état",
       "remove": "Retirer {{name}}",
       "placeholder": "Ajouter un état…",
-      "hint": "Tapez un nom puis Entrée. Ajoutez un nombre pour les rounds : « étourdi 3 » disparaît après 3 de ses tours. Sans nombre, l’état reste jusqu’à ce que vous le retiriez."
+      "hint": "Tapez un nom puis Entrée. Ajoutez un nombre pour les rounds : « étourdi 3 » disparaît après 3 de ses tours. Sans nombre, l’état reste jusqu’à ce que vous le retiriez.",
+      "hintLabel": "États :"
     },
     "note": {
       "show": "Afficher la note",

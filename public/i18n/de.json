@@ -1103,7 +1103,8 @@
       "add": "Zustand hinzufügen",
       "remove": "{{name}} entfernen",
       "placeholder": "Zustand hinzufügen…",
-      "hint": "Gib einen Namen ein und drücke Enter. Mit einer Zahl zählst du Runden: „betäubt 3“ endet nach 3 seiner Züge. Ohne Zahl bleibt er, bis du ihn entfernst."
+      "hint": "Gib einen Namen ein und drücke Enter. Mit einer Zahl zählst du Runden: „betäubt 3“ endet nach 3 seiner Züge. Ohne Zahl bleibt er, bis du ihn entfernst.",
+      "hintLabel": "Status:"
     },
     "note": {
       "show": "Notiz anzeigen",

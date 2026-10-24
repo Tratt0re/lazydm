@@ -1103,7 +1103,8 @@
       "add": "Add status",
       "remove": "Remove {{name}}",
       "placeholder": "Add a status…",
-      "hint": "Type a name and press Enter. Add a number for rounds: “stunned 3” wears off after 3 of its turns. Without a number it stays until you remove it."
+      "hint": "Type a name and press Enter. Add a number for rounds: “stunned 3” wears off after 3 of its turns. Without a number it stays until you remove it.",
+      "hintLabel": "Status:"
     },
     "note": {
       "show": "Show the note",

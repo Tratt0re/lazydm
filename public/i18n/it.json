@@ -1103,7 +1103,8 @@
       "add": "Aggiungi stato",
       "remove": "Rimuovi {{name}}",
       "placeholder": "Aggiungi uno stato…",
-      "hint": "Scrivi un nome e premi Invio. Aggiungi un numero per i round: “stordito 3” finisce dopo 3 suoi turni. Senza numero resta finché non lo togli."
+      "hint": "Scrivi un nome e premi Invio. Aggiungi un numero per i round: “stordito 3” finisce dopo 3 suoi turni. Senza numero resta finché non lo togli.",
+      "hintLabel": "Stati:"
     },
     "note": {
       "show": "Mostra la nota",

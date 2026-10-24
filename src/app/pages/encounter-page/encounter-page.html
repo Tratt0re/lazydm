@@ -5,13 +5,17 @@
     <!-- Round and bar stay pinned to the top while the list scrolls, so Next is always within reach. The negative
          margin and the padding give the page's own top padding back, so rows never show above the pinned bar. -->
     <div class="sticky top-0 z-10 -mt-6 flex flex-col gap-4 bg-background pt-6 pb-3">
-    <!-- Battle state, above the bar: the round and whose turn it is. -->
-    @if (!isParty()) {
-      <div class="flex flex-col">
+    <header
+      class="flex flex-wrap items-center gap-x-6 gap-y-3 border border-border bg-raised px-4 py-3"
+      [attr.aria-label]="'encounters.header.label' | translate"
+    >
+      <!-- Battle state, on the bar's own line: the round and whose turn it is. -->
+      @if (!isParty()) {
+      <div class="flex min-w-0 flex-col gap-1">
         @if (isRunning()) {
           <!-- "03 / ROUND": the number is the big one, the word is smaller and quieter. -->
           <span class="font-display leading-none font-extrabold tracking-[0.02em] uppercase">
-            <span class="text-4xl text-foreground-strong">{{ round() < 10 ? '0' + round() : round() }}</span>
+            <span class="text-3xl text-foreground-strong">{{ round() < 10 ? '0' + round() : round() }}</span>
             <span class="text-base text-muted-foreground"> / {{ 'encounters.battle.roundWord' | translate }}</span>
           </span>
         } @else {
@@ -29,12 +33,8 @@
           }
         </span>
       </div>
-    }
+      }
 
-    <header
-      class="flex flex-wrap items-center gap-x-6 gap-y-3 border border-border bg-raised px-4 py-3"
-      [attr.aria-label]="'encounters.header.label' | translate"
-    >
       @if (!isParty()) {
         <div class="flex items-center gap-2">
           @if (isRunning()) {
@@ -168,7 +168,13 @@
     } @else {
       @if (hasStatuses() && isEditable()) {
         <!-- Written once for the whole list instead of under every row. -->
-        <p class="-mb-2 text-xs text-muted-foreground">{{ 'encounters.status.hint' | translate }}</p>
+        <p class="-mb-2 flex items-start gap-2 text-xs text-muted-foreground">
+          <arc-icon arcType="info" class="mt-px size-3.5 shrink-0 text-primary" />
+          <span>
+            <strong class="font-semibold text-foreground">{{ 'encounters.status.hintLabel' | translate }}</strong>
+            {{ 'encounters.status.hint' | translate }}
+          </span>
+        </p>
       }
       <ul
         class="flex flex-col border border-border bg-card"

@@ -29,7 +29,7 @@ rebuild the preload bundle only if `channels.js` changes (not expected).
 | 5 | Ornament and typography | done | see git log |
 | 6 | Light theme | done | see git log |
 | 7 | Setup flow copy | done | see git log |
-| 8 | Narrow windows | questions | |
+| 8 | Narrow windows | done | |
 | 9 | Closure | pending | |
 
 Status values: pending, questions, in-progress, done.
@@ -123,7 +123,13 @@ row; delete is always visible next to harmless icons; the turn highlight is only
 
 ## Log
 
-- 2026-10-25, Phase 8 (findings, nothing changed yet). Facts: the Electron window cannot go below 950x500
+- 2026-10-25, Phase 8 (done, user decision: recover vertical space). The round and the turn line moved into the battle
+  bar's own line (number 4xl -> 3xl): the pinned header went from 174px to 118px (bar 82px), so at 950x600 the list
+  starts 56px higher. The statuses help is now "(i) Status: <sentence>" (new key `encounters.status.hintLabel`, 7
+  languages, files 1527 lines each); it was already gated by `hasStatuses() && isEditable()` (a statuses field with
+  `showInRow`). Checked dark and light at 950x600; build and 57 electron tests pass. Not checked: 1440x900 again,
+  the roomy density, a rule without statuses (gate is the same computed), translations by a native speaker.
+- 2026-10-25, Phase 8 findings (before the change). Facts: the Electron window cannot go below 950x500
   (`electron/window.js`); the sidebar collapses into an overlay below 1300px (`SMALL_SCREEN_BREAKPOINT_PX`); the
   collapse is not silent: the toggle sits first in the tab bar and the overlay has a scrim and closes on Escape.
   Measured at 1280, 1024 and 950px wide: no page overflows sideways, no toolbar button is cut (encounter, overview,
