@@ -50,6 +50,8 @@ export class Toolbar {
   readonly titleBreadcrumbs = input<readonly ToolbarTitleBreadcrumbItem[]>([]);
   readonly itemActions = input<readonly ToolbarItemAction[]>([]);
   readonly itemNavigation = input<ToolbarItemNavigation | null>(null);
+  /** The ornamental rule (◇ ✣ ◇) under the title: top-level pages only; inside a campaign it is a plain hairline. */
+  readonly hasOrnament = input(false);
   protected isActionDisabled(action: ToolbarAction): boolean {
     if (typeof action.disabled === 'function') {
       return action.disabled();

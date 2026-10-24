@@ -26,7 +26,7 @@ rebuild the preload bundle only if `channels.js` changes (not expected).
 | 2 | Encounters section page | done | see git log |
 | 3 | Note page chrome and toolbar, collapsible properties | done | see git log |
 | 4 | Alignment, overview alert, Review page | done | see git log |
-| 5 | Ornament and typography | pending | |
+| 5 | Ornament and typography | done | see git log |
 | 6 | Light theme | pending | |
 | 7 | Setup flow copy | pending | |
 | 8 | Narrow windows | pending | |
@@ -123,6 +123,17 @@ row; delete is always visible next to harmless icons; the turn highlight is only
 
 ## Log
 
+- 2026-10-24, Phase 5: the toolbar takes a `hasOrnament` input (default false): the ◇✣◇ rule is drawn only on the
+  Campaigns page; every other toolbar gets a plain hairline (Welcome keeps its own rule in its page header; Settings
+  already had its own ◇ divider, untouched). The ghost icons of the section tiles (campaign and system overviews)
+  are gone, replaced by a small icon beside the title; the Campaigns card keeps its large icon (the card has corner
+  brackets and is the page's identity). Note and file names in the sidebar explorer are `font-sans` 13px; sections
+  and sub-folders keep mono. Welcome: the trio is now one lead card (the table session, bigger) with two lighter
+  supporting lines. Copy unchanged. Checked in the mock: ornament counts per page (overview 0, section 0, Review 0,
+  Campaigns 1), the overview and section pages in both themes, Welcome in dark. Not done: the Campaigns card icon,
+  the compendium/system list pages (not looked at), `link-preview-card` keeps its own ornament (design doc says so),
+  the mono tab titles were already changed in phase 3, the breadcrumb stays mono (a label). Not checked: Welcome
+  in light, Welcome at narrow widths (the grid has one column below `md`), Setup's vault step, the Compendium pages.
 - 2026-10-24, Phase 4: the cause of the misalignment was the pages centring a `max-w` column (`mx-auto`) inside a
   content area that was already wider than it, so the column started 68px (overview) or 128px (campaign list) after
   the title. Now `arc-content` has a 16px side padding (the toolbar's), the column is left-aligned (`py-6` only) on

@@ -85,14 +85,11 @@ import { ArcTechMenuImports } from '@/shared/components/menu';
                 arc-context-menu
                 [arcContextMenuTriggerFor]="sectionMenu"
                 [style.cursor]="'pointer'"
-                class="arc-section-card flex h-full flex-col gap-3 border border-border bg-card p-4 pr-32 hover:border-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+                class="flex h-full flex-col gap-3 border border-border bg-card p-4 hover:border-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
               >
-                <span class="arc-section-card-icon" aria-hidden="true">
-                  <arc-icon [arcType]="section.icon" [arcStrokeWidth]="1.25" />
-                </span>
-                <h2 class="relative text-xs font-bold tracking-[0.08em] uppercase">
-                  {{ sectionService.labelOf(section)
-                  }}<span class="text-primary" aria-hidden="true">.</span>
+                <h2 class="flex items-center gap-2 text-xs font-bold tracking-[0.08em] uppercase">
+                  <arc-icon [arcType]="section.icon" class="size-4 shrink-0 text-primary" aria-hidden="true" />
+                  <span>{{ sectionService.labelOf(section) }}<span class="text-primary" aria-hidden="true">.</span></span>
                 </h2>
                 <p class="relative text-sm text-muted-foreground">
                   @if (section.description) {

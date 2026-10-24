@@ -574,7 +574,8 @@ Planned Electron modules: `vault`, `cloud-readiness`, `campaign`, `document`, `i
 - **Campaign list** → grid of campaigns; when empty, a CTA message with a *Create campaign* button.
 - **Campaign overview** → the toolbar's primary is **New…** (a picker of every section that takes a new file —
   note sections, Encounters, Maps — then that section's own form; *Add section*, *Edit* and *Delete* are in the "…"
-  menu). Only sections **with something in them** get a tile. A campaign with none shows one **Start** card (the same
+  menu). Only sections **with something in them** get a tile (its icon sits small beside the title; there is no
+  large faded icon behind it). A campaign with none shows one **Start** card (the same
   *New…*), and the sections that are still empty wait behind a quiet *More sections* row. The Review alert is a `warning`
   that says what is wrong in plain words ("2 broken links, 1 note outside any section", with no summed number in its
   title) and has an *Open Review* button.

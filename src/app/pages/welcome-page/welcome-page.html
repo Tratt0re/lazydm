@@ -42,27 +42,30 @@
 
   <p class="max-w-3xl text-base text-foreground-secondary lg:text-lg">{{ 'onboarding.welcome.lead' | translate }}</p>
 
-  <ol class="grid gap-4 md:grid-cols-[1fr_1.3fr_1fr]">
+  <!-- One lead statement and two supporting lines, not three equal cards. -->
+  <ol class="grid gap-x-8 gap-y-5 md:grid-cols-[1.35fr_1fr] md:grid-rows-2">
     @for (point of points; track point.key) {
       <li
-        class="flex flex-col gap-4 border p-5"
-        [class.border-border-subtle]="!point.isMain"
-        [class.border-primary]="point.isMain"
-        [class.bg-raised]="point.isMain"
+        class="flex flex-col gap-3"
+        [class]="point.isMain ? 'border border-primary bg-raised p-6 md:col-start-1 md:row-span-2 md:row-start-1 md:justify-center' : 'md:col-start-2 md:justify-center'"
       >
         <div class="flex items-center gap-3">
           <span
-            class="flex size-10 shrink-0 items-center justify-center border border-input bg-recessed text-primary"
+            class="flex shrink-0 items-center justify-center border border-input bg-recessed text-primary"
+            [class]="point.isMain ? 'size-12' : 'size-9'"
             aria-hidden="true"
           >
-            <arc-icon [arcType]="point.icon" class="size-5" />
+            <arc-icon [arcType]="point.icon" [class]="point.isMain ? 'size-6' : 'size-4'" />
           </span>
-          <h2 class="min-w-0 font-display text-2xl leading-none font-black tracking-[0.015em] text-foreground-strong uppercase">
+          <h2
+            class="min-w-0 font-display leading-none font-black tracking-[0.015em] text-foreground-strong uppercase"
+            [class]="point.isMain ? 'text-4xl' : 'text-xl'"
+          >
             {{ 'onboarding.welcome.points.' + point.key + '.title' | translate }}<span class="text-primary" aria-hidden="true">.</span>
           </h2>
         </div>
 
-        <p class="text-base text-muted-foreground">
+        <p class="text-muted-foreground" [class]="point.isMain ? 'max-w-prose text-lg' : 'text-base'">
           {{ 'onboarding.welcome.points.' + point.key + '.text' | translate }}
         </p>
       </li>

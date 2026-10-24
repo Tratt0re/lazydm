@@ -227,7 +227,7 @@
     [routerLink]="ownRoute ?? node.route"
     [queryParams]="ownRoute ? null : folderQueryOf(node, file)"
     (click)="navigated.emit()"
-    [class]="rowClass(!!ownRoute && isActive(ownRoute), false) + ' gap-2 pl-[26px] pr-3 font-normal'"
+    [class]="rowClass(!!ownRoute && isActive(ownRoute), false) + ' gap-2 pl-[26px] pr-3 font-sans text-[13px] font-normal tracking-normal'"
     [attr.aria-current]="ownRoute && isActive(ownRoute) ? 'page' : null"
     [attr.title]="isNote || isEncounter(file) ? file.title : file.name"
     arc-context-menu
