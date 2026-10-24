@@ -18,6 +18,7 @@ import {
   type EmbeddedViewRef,
   type EventEmitter,
   inject,
+  Injector,
   NgModule,
   output,
   signal,
@@ -247,6 +248,7 @@ export class ArcTechDialogOptions<T, U> {
 })
 export class ArcTechDialogComponent<T, U> extends BasePortalOutlet {
   private readonly host = inject(ElementRef<HTMLElement>);
+  private readonly injector = inject(Injector);
   protected readonly config = inject(ArcTechDialogOptions<T, U>);
   private readonly instanceId = ++nextDialogInstanceId;
   private readonly previouslyFocusedElement = this.getActiveElement();
@@ -328,6 +330,9 @@ export class ArcTechDialogComponent<T, U> extends BasePortalOutlet {
     okText?: string;
     backText?: string | null;
   }): void {
+    const element = this.host.nativeElement as HTMLElement;
+    const from = element.offsetHeight;
+
     if (step.title !== undefined) {
       this.title.set(step.title);
     }
@@ -343,6 +348,26 @@ export class ArcTechDialogComponent<T, U> extends BasePortalOutlet {
     if (step.backText !== undefined) {
       this.backText.set(step.backText);
     }
+
+    // The steps differ in height: once the new one is rendered (before it paints), grow or shrink from the old height.
+    afterNextRender(
+      () => {
+        const to = element.offsetHeight;
+        if (
+          from === to ||
+          typeof element.animate !== 'function' ||
+          window.matchMedia('(prefers-reduced-motion: reduce)').matches
+        ) {
+          return;
+        }
+
+        element.animate([{ height: `${from}px` }, { height: `${to}px` }], {
+          duration: 200,
+          easing: 'cubic-bezier(0.25, 1, 0.5, 1)',
+        });
+      },
+      { injector: this.injector },
+    );
   }
 
   onCloseClick() {
