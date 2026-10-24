@@ -174,14 +174,11 @@
       "cancel": "Annulla",
       "create": {
         "title": "Nuova sezione",
-        "description": "Una sezione solo di questa campagna, con la propria cartella e il proprio tipo di nota.",
+        "description": "Una sezione solo di questa campagna, con la sua cartella.",
         "submit": "Aggiungi sezione",
         "nameLabel": "Nome",
         "namePlaceholder": "es. Fazioni",
         "iconLabel": "Icona",
-        "typeLabel": "Tipo di nota",
-        "typePlaceholder": "Dal nome",
-        "typeDescription": "Scritto come type: nel frontmatter delle sue note. Lascia vuoto per usare il nome.",
         "descriptionLabel": "Descrizione",
         "descriptionPlaceholder": "Una breve riga mostrata nella panoramica",
         "templateLabel": "Template",
@@ -189,9 +186,8 @@
       },
       "edit": {
         "title": "Modifica sezione",
-        "description": "Cambia il nome o l’icona. La cartella e il tipo di nota restano invariati, così le note continuano a funzionare.",
-        "submit": "Salva",
-        "typeDescription": "Il tipo di nota di una sezione esistente non può cambiare."
+        "description": "Cambia il nome o l’icona. La cartella resta com’è, così le note continuano a funzionare.",
+        "submit": "Salva"
       },
       "remove": {
         "button": "Elimina sezione",
@@ -531,11 +527,11 @@
       "delete": "Elimina campagna"
     },
     "newAnything": {
-      "title": "Nuovo",
-      "description": "Scegli dove va. Qualsiasi sezione va bene come punto di partenza.",
+      "title": "Nuova nota",
+      "description": "Scegli la sezione a cui appartiene. Qualsiasi sezione va bene come punto di partenza.",
       "sectionLabel": "Sezione",
       "submit": "Avanti",
-      "button": "Nuovo",
+      "button": "Nuova nota",
       "startTitle": "Parti da dove vuoi",
       "startDescription": "Crea la prima nota, il primo nemico, incontro o mappa. Le altre sezioni compaiono qui man mano che le usi.",
       "moreSections": "Altre sezioni"
@@ -871,7 +867,8 @@
         "disabled": "non disponibile"
       }
     },
-    "moreActions": "Altre azioni"
+    "moreActions": "Altre azioni",
+    "back": "Indietro"
   },
   "templates": {
     "library": {
@@ -991,7 +988,7 @@
       "button": "Importa dal disco",
       "title": "Importa dal disco",
       "description": "Immagini, PDF e file audio vengono copiati in {{folder}}. Gli originali restano dove sono.",
-      "dropHint": "Trascina qui i file dal Finder o dal gestore file, oppure rilasciali ovunque nella pagina Risorse.",
+      "dropHint": "Trascina qui i file, oppure copia un’immagine e incollala qui (Cmd/Ctrl+V). Puoi anche rilasciarli ovunque nella pagina Risorse.",
       "types": "PNG · JPG · GIF · WEBP · SVG · AVIF · PDF · MP3 · WAV · OGG · M4A · FLAC",
       "select": "Seleziona file…",
       "skipped": "Non sono immagini, PDF o audio: ignorati"
@@ -1112,8 +1109,6 @@
     },
     "rule": {
       "label": "Layout del tracker",
-      "ariaLabel": "Layout del tracker di questo incontro",
-      "campaignDefault": "Layout della campagna",
       "builtInDefault": "Predefinito",
       "saved": "Layout del tracker salvato",
       "saveError": "Impossibile cambiare il layout del tracker",

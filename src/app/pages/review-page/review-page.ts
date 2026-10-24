@@ -272,15 +272,6 @@ export class ReviewPage {
           curated: CUSTOM_SECTION_ICONS,
           labelPrefix: 'settings.campaignSections.icons',
         }),
-        {
-          id: 'type',
-          type: 'input',
-          label: 'settings.campaignSections.create.typeLabel',
-          placeholder: 'settings.campaignSections.create.typePlaceholder',
-          description: 'settings.campaignSections.create.typeDescription',
-          value: folder,
-          translate: true,
-        },
       ],
       onSubmit: (form) => {
         if (!isSubmitting) {
@@ -289,7 +280,6 @@ export class ReviewPage {
           void this.addSection(scope.rootPath, {
             key: folder,
             label: String(values['label'] ?? '').trim(),
-            type: String(values['type'] ?? '').trim() || undefined,
             icon: String(values['icon'] ?? CUSTOM_SECTION_ICONS[0]),
           }).then((isAdded) => {
             isSubmitting = false;

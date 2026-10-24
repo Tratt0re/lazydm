@@ -37,7 +37,6 @@ import type {
   BattleRuleAreaDto,
   BattleRuleDto,
   BattleRuleFieldDto,
-  BattleRuleRowDto,
   EncounterDto,
   EncounterEntityDto,
   EncounterFileDto,
@@ -46,17 +45,13 @@ import type {
 import { ASSET_FILE_PARAM, ASSET_SUBFOLDER_PARAM } from '@/pages/asset-page/asset-page';
 import { CAMPAIGN_SECTION_PARAM } from '@/pages/campaign-section-page/campaign-section-page';
 import { DocumentService } from '@/services/document.service';
-import {
-  BattleRuleService,
-  BUILT_IN_BATTLE_RULE,
-  DEFAULT_BATTLE_RULE_CHOICE,
-} from '@/services/battle-rule.service';
+import { BattleRuleService } from '@/services/battle-rule.service';
 import { EncounterService, PARTY_FILE_NAME } from '@/services/encounter.service';
 import { CopyToService } from '@/services/copy-to.service';
 import { FileActionsService } from '@/services/file-actions.service';
 import { getNoteScopeKind, NoteScopeService } from '@/services/note-scope.service';
 import { SectionService, toSubfolderLabel } from '@/services/section.service';
-import { ToolbarContextService, type ToolbarItemAction } from '@/services/toolbar-context.service';
+import { ToolbarContextService } from '@/services/toolbar-context.service';
 import { ArcTechAlertComponent } from '@/shared/components/alert';
 import { ArcTechBadgeComponent } from '@/shared/components/badge';
 import { ArcTechButtonComponent } from '@/shared/components/button';
@@ -228,8 +223,6 @@ export class EncounterPage {
   );
   protected readonly isCemeteryOpen = signal(false);
   /** Rules the encounter can pick (the toolbar's select), and the campaign's own choice for the label. */
-  private readonly ruleRows = signal<readonly BattleRuleRowDto[]>([]);
-  private readonly campaignRule = signal<string | null>(null);
   /** Entities picked for *Roll initiative* (by id). */
   protected readonly selectedIds = signal<ReadonlySet<string>>(new Set());
   /** Notes of the scope an entity can be linked to (the picker's options), by path. */
@@ -274,8 +267,6 @@ export class EncounterPage {
       const sectionPath = `${scope.routeBase}/${this.sectionKey()}`;
       const subfolder = this.subfolder();
       const isParty = this.isParty();
-      // The roster has a rule of its own too (default: the campaign's), so what the rows show is never a guess.
-      const ruleActions: readonly ToolbarItemAction[] = this.ruleToolbarActions(scope.rootPath);
       onCleanup(
         this.toolbarContext.activate({
           title: this.title(),
@@ -300,7 +291,6 @@ export class EncounterPage {
           ],
           // Only the main and utility actions live here; the battle itself is in the page's own header.
           itemActions: [
-            ...ruleActions,
             ...(isParty
               ? []
               : [
@@ -1428,7 +1418,6 @@ export class EncounterPage {
         this.rule.set(rule);
         this.selectedIds.set(new Set());
         void this.loadNotes(path, file.encounter);
-        void this.loadRuleChoices();
       }
     } catch (error) {
       if (token === this.loadToken) {
@@ -1499,69 +1488,6 @@ export class EncounterPage {
       }
     } catch (error) {
       console.warn('[app] Failed to refresh the battle rule:', error);
-    }
-
-    await this.loadRuleChoices();
-  }
-
-  private async loadRuleChoices(): Promise<void> {
-    const scope = this.scope();
-    try {
-      const library = await this.battleRuleService.list();
-      this.ruleRows.set(library.rows);
-      this.campaignRule.set(
-        scope?.kind === 'campaign' ? await this.battleRuleService.getChoice(scope.rootPath) : null,
-      );
-    } catch (error) {
-      console.warn('[app] Failed to list the battle rules:', error);
-    }
-  }
-
-  /** The toolbar's *Battle rule* select: this encounter's own rule, or the campaign's. */
-  private ruleToolbarActions(campaign: string): readonly ToolbarItemAction[] {
-    const current = this.encounter()?.rule ?? null;
-    const campaignRule = this.campaignRule();
-    const campaignLabel =
-      campaignRule === null || campaignRule === BUILT_IN_BATTLE_RULE
-        ? this.translateService.instant('encounters.rule.builtInDefault')
-        : (this.ruleRows().find((row) => row.path === campaignRule)?.name ??
-          this.translateService.instant('encounters.rule.campaignDefault'));
-    return [
-      {
-        id: 'encounter-rule',
-        type: 'select',
-        label: 'encounters.rule.label',
-        ariaLabel: this.translateService.instant('encounters.rule.ariaLabel'),
-        class: 'w-56',
-        disabled: !this.isEditable(),
-        value: () => current ?? DEFAULT_BATTLE_RULE_CHOICE,
-        options: this.battleRuleService.getOptions(
-          this.ruleRows(),
-          campaign,
-          current,
-          campaignLabel,
-        ),
-        change: (value) => this.setRuleChoice(value),
-      },
-    ];
-  }
-
-  /** Picks the rule of this encounter (`default`: the campaign's); the rows follow the new rule right away. */
-  private async setRuleChoice(value: string): Promise<void> {
-    const encounter = this.encounter();
-    const choice = value === DEFAULT_BATTLE_RULE_CHOICE ? null : value;
-    if (!encounter || choice === encounter.rule) {
-      return;
-    }
-
-    try {
-      this.rule.set(await this.encounterService.rule(this.encounterPath(), choice));
-      this.updateEncounter((current) => ({ ...current, rule: choice }));
-      this.selectedIds.set(new Set());
-    } catch (error) {
-      toast.error(this.translateService.instant('encounters.rule.saveError'), {
-        description: error instanceof Error ? error.message : String(error),
-      });
     }
   }
 

@@ -4,6 +4,7 @@ import {
   Component,
   computed,
   effect,
+  HostListener,
   inject,
   signal,
 } from '@angular/core';
@@ -13,10 +14,6 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { toast } from 'ngx-sonner';
 import { map } from 'rxjs';
 
-import {
-  AppAssetImportSheetComponent,
-  type AssetImportSheetData,
-} from '@/components/asset-import-sheet/asset-import-sheet.component';
 import {
   toAssetUrl,
   toInAppAssetRoute,
@@ -53,7 +50,6 @@ import { ArcTechButtonComponent } from '@/shared/components/button';
 import { ArcTechEmptyComponent } from '@/shared/components/empty';
 import { ArcTechIconComponent, type ArcTechIcon } from '@/shared/components/icon';
 import { ArcTechMenuImports } from '@/shared/components/menu';
-import { ArcTechSheetService } from '@/shared/components/sheet';
 import { ArcTechTooltipImports } from '@/shared/components/tooltip';
 import { SectionActionsService } from '@/services/section-actions.service';
 
@@ -196,7 +192,6 @@ export class CampaignSectionPage {
   });
   private readonly fileMove = inject(FileMoveService);
   private readonly fileActions = inject(FileActionsService);
-  private readonly sheetService = inject(ArcTechSheetService);
   private readonly assetService = inject(AssetService);
   protected readonly revealLabel = this.fileMove.revealLabel;
   protected readonly toSubfolderLabel = toSubfolderLabel;
@@ -552,6 +547,34 @@ export class CampaignSectionPage {
     }
   }
 
+  /**
+   * A copied image or file pasted while the Assets page is open is saved in the folder it shows. Text and pastes
+   * into a field (a rename, the search box) are left alone.
+   */
+  @HostListener('document:paste', ['$event'])
+  protected onDocumentPaste(event: ClipboardEvent): void {
+    if (!this.isAssetsSection() || this.scope()?.kind !== 'campaign') {
+      return;
+    }
+
+    const target = event.target as HTMLElement | null;
+    if (target?.closest('input, textarea, [contenteditable="true"], .cm-editor')) {
+      return;
+    }
+
+    if (document.querySelector('[role="dialog"]')) {
+      return; // a modal is open: it has its own paste target
+    }
+
+    const files = [...(event.clipboardData?.files ?? [])];
+    if (files.length > 0) {
+      event.preventDefault();
+      void this.fileActions
+        .saveMediaToFolder(this.folderPath(), files)
+        .then((saved) => (saved ? this.loadTree(this.sectionPath()) : undefined));
+    }
+  }
+
   protected onPageDragLeave(event: DragEvent): void {
     // Leaving for a child of the page is not leaving the page.
     if (!(event.currentTarget as HTMLElement).contains(event.relatedTarget as Node | null)) {
@@ -573,17 +596,7 @@ export class CampaignSectionPage {
    */
   protected openImportFromDiskSheet(subfolder: string | null = this.subfolder()): void {
     const folder = subfolder ? this.folderPathOf(subfolder) : this.sectionPath();
-    this.sheetService.create<AppAssetImportSheetComponent, AssetImportSheetData>({
-      arcTitle: this.translateService.instant('files.importFromDisk.title'),
-      arcDescription: this.translateService.instant('files.importFromDisk.description', { folder }),
-      arcContent: AppAssetImportSheetComponent,
-      arcData: {
-        folder,
-        onImported: () => void this.loadTree(this.sectionPath()),
-      },
-      arcOkText: null,
-      arcCancelText: this.translateService.instant('document.rename.cancel'),
-    });
+    this.fileActions.openImportFromDiskDialog(folder, () => void this.loadTree(this.sectionPath()));
   }
 
   /** Files from the file manager on the Assets section (a row being moved is not one of those). */

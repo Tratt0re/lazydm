@@ -148,9 +148,10 @@ their technical names; only the text the user sees changes. Add to this table be
   files, see §6e) hold no plain notes —
   they offer *New folder* and *Import* but no *New note* (*Encounters* offers *New encounter*, *Party roster* and a
   *Battle rule* select instead; *Maps* offers *New map*); their sub-folders only organise files, and the
-  Review page does not check them. *Assets* also offers **Import from disk** (toolbar): a sheet with *Select
-  files* (the system file dialog) and a drop zone; media files can also be dropped straight on the section page
-  (or on one of its sub-folders).
+  Review page does not check them. *Assets* also offers **Import from disk** (toolbar, empty-state button and the
+  sidebar **+**): a modal with *Select files* (the system file dialog), a drop zone and a paste target
+  (Cmd/Ctrl+V); media files can also be dropped or pasted straight on the section page (or on one of its
+  sub-folders).
 - **Enemies** (formerly *Monsters*): folder `enemies/`, section type `enemy`. A one-time migration (vault format
   version in `vault.json`) renamed `monsters/` → `enemies/` in campaigns and systems and rewrote the template rules,
   `_templates/monster.md` and `[[monsters/…]]` path links (it also rewrote the `type:` of the notes, as it did
@@ -536,8 +537,8 @@ Planned Electron modules: `vault`, `cloud-readiness`, `campaign`, `document`, `i
   `/compendium/...` or `/settings/...` open in the sheet. Inside, a system has its own toolbar and appears in the sheet's cascading sidebar; sheet
   pages have their own toolbar context, so they never touch the campaign toolbar or tab titles.
 - **Sheet or modal**: a **side sheet shows information** (the entity's linked note, the editor reference) and the
-  **full-page sheets** (Compendium, Templates, Battle rules, Settings, Import from disk) are libraries and big
-  editors. Anything that **creates, edits or deletes** — a form, a confirmation, a conflict — is a **modal**
+  **full-page sheets** (Compendium, Templates, Battle rules, Settings) are libraries and big
+  editors. Anything that **creates, edits or deletes** — a form, a confirmation, a conflict, an import — is a **modal**. A flow of several steps (the *New note* picker and its form) is **one** modal with a *Back* button (`AppDialogFormService.openWizard`), never a modal closed and reopened
   (`AppDialogFormService` for forms, `ArcTechAlertDialogService` for confirmations). A form never opens in a side sheet.
 - Sheets and modals share one header: big condensed title, engraved divider, square close button.
 - Sheets open like a **gate**: they slide down from under the title bar and slide back up when closed
@@ -746,7 +747,7 @@ Component behaviour, variant keys and configuration stay as they are.
 | 11.5 | *Rename…* notes and sub-folders from the section page (sub-folder: folder, `subtype`, path links) |
 | 11.6 | *Delete…* sub-folders: delete the files too, or move them to the main folder (links rewritten) |
 | 12 | Editor media and preview (12.1–12.4) |
-| 12.1 | Assets section: *Import from disk* sheet (select files or drop zone), drop on the page and its sub-folders |
+| 12.1 | Assets section: *Import from disk* modal (select files or drop zone), drop on the page and its sub-folders |
 | 12.2 | Media embeds in Live and Reading: audio row with play/stop, PDF row opening the system viewer |
 | 12.3 | Editor fixes: links resolve before saving (Live and Reading), Reading view follows the edits, drag images to move them; audio rows with time and a remembered volume |
 | 12.4 | Linked-note preview card (eye button on hover) and the editor reference sheet |

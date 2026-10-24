@@ -59,6 +59,8 @@ export class ArcTechDialogOptions<T, U> {
   arcOkDisabled?: boolean;
   arcOkIcon?: ArcTechIcon;
   arcOkText?: string | null;
+  /** Runs when the *Back* button of a multi-step dialog is pressed (it shows while the step has a back label). */
+  arcOnBack?: () => void;
   arcOnCancel?: EventEmitter<T> | OnClickCallback<T> = noopFn;
   arcOnMiddle?: EventEmitter<T> | OnClickCallback<T> = noopFn;
   arcOnOk?: EventEmitter<T> | OnClickCallback<T> = noopFn;
@@ -78,7 +80,13 @@ export class ArcTechDialogOptions<T, U> {
     TranslatePipe,
   ],
   template: `
-    <div #dialogSurface cdkTrapFocus [cdkTrapFocusAutoCapture]="true" tabindex="-1" class="flex h-full min-h-0 flex-col">
+    <div
+      #dialogSurface
+      cdkTrapFocus
+      [cdkTrapFocusAutoCapture]="true"
+      tabindex="-1"
+      class="flex h-full min-h-0 flex-col"
+    >
       @if (config.arcClosable || config.arcClosable === undefined) {
         <button
           type="button"
@@ -95,25 +103,25 @@ export class ArcTechDialogOptions<T, U> {
         </button>
       }
 
-      @if (config.arcTitle || config.arcDescription) {
+      @if (title() || description()) {
         <header class="flex shrink-0 flex-col space-y-1.5 text-center sm:text-left pb-2">
-          @if (config.arcTitle) {
+          @if (title()) {
             <h4
               data-testid="arc-title"
               class="pr-12 text-left font-display text-[35px] leading-none font-extrabold tracking-[0.025em] text-foreground-strong uppercase"
               [attr.id]="titleId()"
             >
-              {{ config.arcTitle }}
+              {{ title() }}
             </h4>
             <div class="arc-engraved-divider mt-2" aria-hidden="true"><span></span></div>
 
-            @if (config.arcDescription) {
+            @if (description()) {
               <p
                 data-testid="arc-description"
                 class="text-muted-foreground text-sm"
                 [attr.id]="descriptionId()"
               >
-                {{ config.arcDescription }}
+                {{ description() }}
               </p>
             }
           }
@@ -129,9 +137,32 @@ export class ArcTechDialogOptions<T, U> {
       </main>
 
       @if (!config.arcHideFooter) {
-        <footer class="flex flex-col-reverse gap-2 sm:flex-row sm:justify-end sm:gap-0 sm:space-x-2 pt-2">
+        <footer
+          class="flex flex-col-reverse gap-2 sm:flex-row sm:justify-end sm:gap-0 sm:space-x-2 pt-2"
+        >
+          @if (backText(); as back) {
+            <!-- A later step of a multi-step dialog: back to the one before, on the left of the footer. -->
+            <button
+              type="button"
+              data-testid="arc-back-button"
+              arc-button
+              arcType="ghost"
+              class="sm:mr-auto"
+              (click)="onBackClick()"
+            >
+              <arc-icon arcType="arrow-left" />
+              {{ back }}
+            </button>
+          }
+
           @if (config.arcCancelText !== null) {
-            <button type="button" data-testid="arc-cancel-button" arc-button arcType="outline" (click)="onCloseClick()">
+            <button
+              type="button"
+              data-testid="arc-cancel-button"
+              arc-button
+              arcType="outline"
+              (click)="onCloseClick()"
+            >
               @if (config.arcCancelIcon) {
                 <arc-icon [arcType]="config.arcCancelIcon" />
               }
@@ -204,7 +235,7 @@ export class ArcTechDialogOptions<T, U> {
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     '[class]': 'classes()',
-    'role': 'dialog',
+    role: 'dialog',
     'aria-modal': 'true',
     '[attr.aria-labelledby]': 'titleId()',
     '[attr.aria-describedby]': 'descriptionId()',
@@ -220,13 +251,21 @@ export class ArcTechDialogComponent<T, U> extends BasePortalOutlet {
   private readonly instanceId = ++nextDialogInstanceId;
   private readonly previouslyFocusedElement = this.getActiveElement();
 
-  protected readonly classes = computed(() => mergeClasses(dialogVariants(), this.config.arcCustomClasses));
+  protected readonly classes = computed(() =>
+    mergeClasses(dialogVariants(), this.config.arcCustomClasses),
+  );
   dialogRef?: ArcTechDialogRef<T>;
 
   protected readonly isStringContent = typeof this.config.arcContent === 'string';
-  protected readonly titleId = computed(() => (this.config.arcTitle ? `arc-dialog-title-${this.instanceId}` : null));
+  /** What a multi-step dialog shows now; each is the option it was opened with until a step changes it. */
+  protected readonly title = signal<string | TemplateRef<T> | undefined>(this.config.arcTitle);
+  protected readonly description = signal<string | undefined>(this.config.arcDescription);
+  protected readonly backText = signal<string | null>(null);
+  protected readonly titleId = computed(() =>
+    this.title() ? `arc-dialog-title-${this.instanceId}` : null,
+  );
   protected readonly descriptionId = computed(() =>
-    this.config.arcTitle && this.config.arcDescription ? `arc-dialog-description-${this.instanceId}` : null,
+    this.title() && this.description() ? `arc-dialog-description-${this.instanceId}` : null,
   );
 
   readonly dialogSurface = viewChild.required<ElementRef<HTMLElement>>('dialogSurface');
@@ -235,6 +274,7 @@ export class ArcTechDialogComponent<T, U> extends BasePortalOutlet {
   okTriggered = output<void>();
   cancelTriggered = output<void>();
   middleTriggered = output<void>();
+  backTriggered = output<void>();
   /** Text of the confirm button set while the dialog is open (it follows the form's values). */
   readonly okText = signal<string | null>(null);
 
@@ -277,6 +317,34 @@ export class ArcTechDialogComponent<T, U> extends BasePortalOutlet {
     this.middleTriggered.emit();
   }
 
+  onBackClick() {
+    this.backTriggered.emit();
+  }
+
+  /** Changes what the dialog shows while it is open (a step of a wizard): the header, the confirm and back buttons. */
+  setStep(step: {
+    title?: string;
+    description?: string | null;
+    okText?: string;
+    backText?: string | null;
+  }): void {
+    if (step.title !== undefined) {
+      this.title.set(step.title);
+    }
+
+    if (step.description !== undefined) {
+      this.description.set(step.description ?? undefined);
+    }
+
+    if (step.okText !== undefined) {
+      this.okText.set(step.okText);
+    }
+
+    if (step.backText !== undefined) {
+      this.backText.set(step.backText);
+    }
+  }
+
   onCloseClick() {
     this.cancelTriggered.emit();
   }
@@ -291,7 +359,13 @@ export class ArcTechDialogComponent<T, U> extends BasePortalOutlet {
 }
 
 @NgModule({
-  imports: [A11yModule, ArcTechButtonComponent, ArcTechDialogComponent, OverlayModule, PortalModule],
+  imports: [
+    A11yModule,
+    ArcTechButtonComponent,
+    ArcTechDialogComponent,
+    OverlayModule,
+    PortalModule,
+  ],
   providers: [ArcTechDialogService],
 })
 export class ArcTechDialogModule {}

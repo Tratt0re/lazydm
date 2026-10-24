@@ -27,6 +27,7 @@ export class ArcTechDialogRef<T = any, R = any, U = any> {
     this.containerInstance.cancelTriggered.subscribe(() => this.trigger(eTriggerAction.CANCEL));
     this.containerInstance.middleTriggered.subscribe(() => this.trigger(eTriggerAction.MIDDLE));
     this.containerInstance.okTriggered.subscribe(() => this.trigger(eTriggerAction.OK));
+    this.containerInstance.backTriggered.subscribe(() => this.config.arcOnBack?.());
 
     if ((this.config.arcMaskClosable ?? true) && isPlatformBrowser(this.platformId)) {
       this.overlayRef
@@ -38,7 +39,7 @@ export class ArcTechDialogRef<T = any, R = any, U = any> {
     if (isPlatformBrowser(this.platformId)) {
       fromEvent<KeyboardEvent>(document, 'keydown')
         .pipe(
-          filter(event => event.key === 'Escape'),
+          filter((event) => event.key === 'Escape'),
           takeUntil(this.destroy$),
         )
         .subscribe(() => this.close());
@@ -53,6 +54,19 @@ export class ArcTechDialogRef<T = any, R = any, U = any> {
   /** Changes the text of the confirm button while the dialog is open. */
   setOkText(text: string): void {
     this.containerInstance.okText.set(text);
+  }
+
+  /**
+   * Moves a multi-step dialog to another step without closing it: a new header, confirm text and, when `backText`
+   * is given, a *Back* button (null removes it). The content component swaps its own fields.
+   */
+  setStep(step: {
+    title?: string;
+    description?: string | null;
+    okText?: string;
+    backText?: string | null;
+  }): void {
+    this.containerInstance.setStep(step);
   }
 
   close(result?: R) {

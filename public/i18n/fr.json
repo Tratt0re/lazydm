@@ -174,14 +174,11 @@
       "cancel": "Annuler",
       "create": {
         "title": "Nouvelle section",
-        "description": "Une section propre à cette campagne, avec son propre dossier et son propre type de note.",
+        "description": "Une section propre à cette campagne, avec son propre dossier.",
         "submit": "Ajouter la section",
         "nameLabel": "Nom",
         "namePlaceholder": "ex. Factions",
         "iconLabel": "Icône",
-        "typeLabel": "Type de note",
-        "typePlaceholder": "D’après le nom",
-        "typeDescription": "Écrit comme type: dans le frontmatter de ses notes. Laissez vide pour utiliser le nom.",
         "descriptionLabel": "Description",
         "descriptionPlaceholder": "Une courte ligne affichée dans l'aperçu",
         "templateLabel": "Modèle",
@@ -189,9 +186,8 @@
       },
       "edit": {
         "title": "Modifier la section",
-        "description": "Changez le nom ou l’icône. Le dossier et le type de note restent les mêmes, pour que les notes continuent de fonctionner.",
-        "submit": "Enregistrer",
-        "typeDescription": "Le type de note d’une section existante ne peut pas changer."
+        "description": "Changez le nom ou l’icône. Le dossier reste tel quel, donc les notes continuent de fonctionner.",
+        "submit": "Enregistrer"
       },
       "remove": {
         "button": "Supprimer la section",
@@ -531,11 +527,11 @@
       "delete": "Supprimer la campagne"
     },
     "newAnything": {
-      "title": "Nouveau",
-      "description": "Choisissez où le ranger. N’importe quelle section convient pour commencer.",
+      "title": "Nouvelle note",
+      "description": "Choisissez la section à laquelle elle appartient. N’importe quelle section convient pour commencer.",
       "sectionLabel": "Section",
       "submit": "Suivant",
-      "button": "Nouveau",
+      "button": "Nouvelle note",
       "startTitle": "Commencez où vous voulez",
       "startDescription": "Créez la première note, le premier ennemi, la première rencontre ou carte. Les autres sections apparaissent ici au fil de leur usage.",
       "moreSections": "Autres sections"
@@ -871,7 +867,8 @@
         "disabled": "indisponible"
       }
     },
-    "moreActions": "Plus d’actions"
+    "moreActions": "Plus d’actions",
+    "back": "Retour"
   },
   "templates": {
     "library": {
@@ -991,7 +988,7 @@
       "button": "Importer depuis le disque",
       "title": "Importer depuis le disque",
       "description": "Les images, PDF et fichiers audio sont copiés dans {{folder}}. Vos originaux restent où ils sont.",
-      "dropHint": "Déposez ici des fichiers du Finder ou de votre gestionnaire de fichiers — ou n’importe où sur la page Ressources.",
+      "dropHint": "Déposez des fichiers ici, ou copiez une image et collez-la ici (Cmd/Ctrl+V). Vous pouvez aussi les déposer n’importe où sur la page Ressources.",
       "types": "PNG · JPG · GIF · WEBP · SVG · AVIF · PDF · MP3 · WAV · OGG · M4A · FLAC",
       "select": "Choisir des fichiers…",
       "skipped": "Ni images, ni PDF, ni audio — ignorés"
@@ -1112,8 +1109,6 @@
     },
     "rule": {
       "label": "Disposition du suivi",
-      "ariaLabel": "Disposition du suivi de cette rencontre",
-      "campaignDefault": "Disposition de la campagne",
       "builtInDefault": "Par défaut",
       "saved": "Disposition du suivi enregistrée",
       "saveError": "Impossible de changer la disposition du suivi",

@@ -11,7 +11,15 @@ import {
   toInAppNoteRoute,
 } from '@/components/document-preview/document-preview.markdown';
 import { IMPORT_IMAGE_CHOICE } from '@/config/map.config';
-import { AppDialogFormService } from '@/components/sheet-form/dialog-form.service';
+import {
+  AppAssetImportSheetComponent,
+  type AssetImportSheetData,
+} from '@/components/asset-import-sheet/asset-import-sheet.component';
+import {
+  AppDialogFormService,
+  type AppDialogWizardStep,
+} from '@/components/sheet-form/dialog-form.service';
+import { ArcTechDialogService } from '@/shared/components/dialog';
 import type { AppSheetField } from '@/components/sheet-form/sheet-form.types';
 import type {
   BacklinkDto,
@@ -79,6 +87,7 @@ export class FileActionsService {
   private readonly encounterService = inject(EncounterService);
   private readonly mapService = inject(MapService);
   private readonly dialogFormService = inject(AppDialogFormService);
+  private readonly dialogService = inject(ArcTechDialogService);
   private readonly translateService = inject(TranslateService);
   private readonly workspace = inject(WorkspaceService);
   private readonly assetService = inject(AssetService);
@@ -179,27 +188,36 @@ export class FileActionsService {
     readonly type: string;
     readonly sectionLabel: string;
   }): void {
-    let isSubmitting = false;
-    const dialogRef = this.dialogFormService.open({
-      arcTitle: this.translateService.instant('campaigns.sections.newNote.title'),
-      arcOkText: this.translateService.instant('campaigns.sections.newNote.submit'),
-      arcCancelText: this.translateService.instant('campaigns.sections.newNote.cancel'),
-      fields: [NEW_NOTE_TITLE_FIELD],
-      onSubmit: (form) => {
-        if (!isSubmitting) {
-          isSubmitting = true;
-          void this.createNote(folder, String(form.getValues()['title'] ?? '')).then(
-            (isCreated) => {
-              isSubmitting = false;
-              if (isCreated) {
-                dialogRef.close();
-              }
-            },
-          );
-        }
+    this.dialogFormService.openWizard(this.noteStep(folder));
+  }
 
-        return false;
-      },
+  /** The *New note* form as a wizard step: a title; confirming creates the note and opens it. */
+  private noteStep(folder: {
+    readonly path: string;
+    readonly type: string;
+    readonly sectionLabel: string;
+  }): AppDialogWizardStep {
+    return {
+      title: this.translateService.instant('campaigns.sections.newNote.title'),
+      okText: this.translateService.instant('campaigns.sections.newNote.submit'),
+      fields: [NEW_NOTE_TITLE_FIELD],
+      onSubmit: (form) => this.createNote(folder, String(form.getValues()['title'] ?? '')),
+    };
+  }
+
+  /**
+   * *Import from disk* into an Assets folder (`folder`, vault path), in a modal: a drop zone, paste, and the system
+   * file dialog. `onImported` runs once files are saved (the page reloads its list).
+   */
+  openImportFromDiskDialog(folder: string, onImported?: () => void): void {
+    this.dialogService.create<AppAssetImportSheetComponent, AssetImportSheetData>({
+      arcTitle: this.translateService.instant('files.importFromDisk.title'),
+      arcDescription: this.translateService.instant('files.importFromDisk.description', { folder }),
+      arcContent: AppAssetImportSheetComponent,
+      arcData: { folder, onImported },
+      arcOkText: null,
+      arcCancelText: this.translateService.instant('common.cancel'),
+      arcCustomClasses: 'sm:max-w-lg',
     });
   }
 
@@ -228,11 +246,11 @@ export class FileActionsService {
       return;
     }
 
-    const dialogRef = this.dialogFormService.open({
-      arcTitle: this.translateService.instant('campaigns.newAnything.title'),
-      arcDescription: this.translateService.instant('campaigns.newAnything.description'),
-      arcOkText: this.translateService.instant('campaigns.newAnything.submit'),
-      arcCancelText: this.translateService.instant('campaigns.sections.newNote.cancel'),
+    // Step 1 picks the section; confirming it shows that section's own form in the same modal.
+    this.dialogFormService.openWizard({
+      title: this.translateService.instant('campaigns.newAnything.title'),
+      description: this.translateService.instant('campaigns.newAnything.description'),
+      okText: this.translateService.instant('campaigns.newAnything.submit'),
       fields: [
         {
           id: 'section',
@@ -248,17 +266,11 @@ export class FileActionsService {
           })),
         },
       ],
-      onSubmit: (form) => {
+      onSubmit: async (form) => {
         const chosen = choices.find(
           (section) => section.key === String(form.getValues()['section'] ?? ''),
         );
-        if (!chosen) {
-          return false;
-        }
-
-        dialogRef.close();
-        this.openCreateInSection(campaignPath, chosen);
-        return false;
+        return chosen ? ((await this.stepForSection(campaignPath, chosen)) ?? false) : false;
       },
     });
   }
@@ -273,44 +285,52 @@ export class FileActionsService {
       readonly label: string;
     },
   ): void {
+    void this.stepForSection(campaignPath, section).then((step) => {
+      if (step) {
+        this.dialogFormService.openWizard(step);
+      }
+    });
+  }
+
+  /** The create form of a section as a wizard step; null for a section that takes no new file. */
+  private async stepForSection(
+    campaignPath: string,
+    section: {
+      readonly key: string;
+      readonly type: string | null;
+      readonly isSpecial: boolean;
+      readonly label: string;
+    },
+  ): Promise<AppDialogWizardStep | null> {
     const folderPath = `${campaignPath}/${section.key}`;
     if (section.key === ENCOUNTERS_SECTION_KEY) {
-      this.openCreateEncounterSheet(folderPath);
-    } else if (section.key === MAPS_SECTION_KEY) {
-      void this.openCreateMapSheet(folderPath);
-    } else if (section.type && !section.isSpecial) {
-      this.openCreateNoteSheet({
-        path: folderPath,
-        type: section.type,
-        sectionLabel: section.label,
-      });
+      return this.encounterStep(folderPath);
     }
+
+    if (section.key === MAPS_SECTION_KEY) {
+      return this.mapStep(folderPath);
+    }
+
+    if (section.type && !section.isSpecial) {
+      return this.noteStep({ path: folderPath, type: section.type, sectionLabel: section.label });
+    }
+
+    return null;
   }
 
   /** *New encounter* in the Encounters section or one of its sub-folders (`folderPath`); opens the new encounter. */
   openCreateEncounterSheet(folderPath: string): void {
-    let isSubmitting = false;
-    const dialogRef = this.dialogFormService.open({
-      arcTitle: this.translateService.instant('encounters.new.title'),
-      arcOkText: this.translateService.instant('encounters.new.submit'),
-      arcCancelText: this.translateService.instant('campaigns.sections.newNote.cancel'),
-      fields: [NEW_ENCOUNTER_NAME_FIELD],
-      onSubmit: (form) => {
-        if (!isSubmitting) {
-          isSubmitting = true;
-          void this.createEncounter(folderPath, String(form.getValues()['name'] ?? '')).then(
-            (isCreated) => {
-              isSubmitting = false;
-              if (isCreated) {
-                dialogRef.close();
-              }
-            },
-          );
-        }
+    this.dialogFormService.openWizard(this.encounterStep(folderPath));
+  }
 
-        return false;
-      },
-    });
+  /** The *New encounter* form as a wizard step: a name; confirming creates the encounter and opens it. */
+  private encounterStep(folderPath: string): AppDialogWizardStep {
+    return {
+      title: this.translateService.instant('encounters.new.title'),
+      okText: this.translateService.instant('encounters.new.submit'),
+      fields: [NEW_ENCOUNTER_NAME_FIELD],
+      onSubmit: (form) => this.createEncounter(folderPath, String(form.getValues()['name'] ?? '')),
+    };
   }
 
   /**
@@ -318,65 +338,72 @@ export class FileActionsService {
    * assets. The image stays in assets/ (it can be imported there first); opens the new map.
    */
   async openCreateMapSheet(folderPath: string, selectedImage?: string): Promise<void> {
+    this.dialogFormService.openWizard(await this.mapStep(folderPath, selectedImage));
+  }
+
+  /**
+   * The *New map* form as a wizard step: a name and an image. Choosing "import from disk" in the image list
+   * imports the file into the assets and refills this step with it chosen, without closing the modal.
+   */
+  private async mapStep(folderPath: string, selectedImage?: string): Promise<AppDialogWizardStep> {
     const scope = this.getScopeOf(folderPath);
     const images = (await this.documentService.listFolder(`${scope}/assets`)).filter((file) =>
       MAP_IMAGE_PATTERN.test(file.name),
     );
 
-    let isSubmitting = false;
-    const dialogRef = this.dialogFormService.open({
-      arcTitle: this.translateService.instant('maps.new.title'),
-      arcDescription: this.translateService.instant('maps.new.description'),
-      arcOkText: this.translateService.instant('maps.new.submit'),
-      arcCancelText: this.translateService.instant('campaigns.sections.newNote.cancel'),
-      fields: [
-        NEW_MAP_NAME_FIELD,
-        {
-          id: 'image',
-          type: 'combobox',
-          label: 'maps.new.imageLabel',
-          placeholder: 'maps.new.imagePlaceholder',
-          searchPlaceholder: 'maps.new.imageSearch',
-          emptyText: 'maps.new.imageEmpty',
-          searchable: true,
-          required: true,
-          translate: true,
-          value: selectedImage ?? null,
-          options: [
-            { value: IMPORT_IMAGE_CHOICE, label: 'maps.new.importFromDisk', translate: true },
-            ...images.map((file) => ({ value: file.path, label: file.name })),
-          ],
-        },
-      ],
-      // The image can also come from the disk: it is imported into the assets first, then chosen here.
-      // The sheet is reopened with it selected, since the list of images is fixed when a sheet opens.
-      onFieldChange: (fieldId, value) => {
-        if (fieldId === 'image' && value === IMPORT_IMAGE_CHOICE) {
-          dialogRef.close();
-          void this.importMapImage(scope).then((saved) => {
-            void this.openCreateMapSheet(folderPath, saved?.path);
-          });
-        }
+    const buildFields = (
+      imageList: readonly { path: string; name: string }[],
+    ): readonly AppSheetField[] => [
+      NEW_MAP_NAME_FIELD,
+      {
+        id: 'image',
+        type: 'combobox',
+        label: 'maps.new.imageLabel',
+        placeholder: 'maps.new.imagePlaceholder',
+        searchPlaceholder: 'maps.new.imageSearch',
+        emptyText: 'maps.new.imageEmpty',
+        searchable: true,
+        required: true,
+        translate: true,
+        options: [
+          { value: IMPORT_IMAGE_CHOICE, label: 'maps.new.importFromDisk', translate: true },
+          ...imageList.map((file) => ({ value: file.path, label: file.name })),
+        ],
       },
-      onSubmit: (form) => {
-        if (!isSubmitting) {
-          isSubmitting = true;
-          const values = form.getValues();
-          void this.createMap(
-            folderPath,
-            String(values['name'] ?? ''),
-            String(values['image'] ?? ''),
-          ).then((isCreated) => {
-            isSubmitting = false;
-            if (isCreated) {
-              dialogRef.close();
-            }
-          });
+    ];
+
+    const step: AppDialogWizardStep = {
+      title: this.translateService.instant('maps.new.title'),
+      description: this.translateService.instant('maps.new.description'),
+      okText: this.translateService.instant('maps.new.submit'),
+      fields: buildFields(images),
+      values: selectedImage ? { image: selectedImage } : undefined,
+      onFieldChange: (fieldId, value, form) => {
+        if (fieldId !== 'image' || value !== IMPORT_IMAGE_CHOICE) {
+          return;
         }
 
-        return false;
+        const name = form.getValue('name');
+        void this.importMapImage(scope).then((saved) => {
+          const imageList = saved
+            ? [...images, { path: saved.path, name: saved.path.split('/').pop() ?? saved.path }]
+            : images;
+          form.setFields(buildFields(imageList), {
+            name: typeof name === 'string' ? name : '',
+            image: saved?.path ?? null,
+          });
+        });
       },
-    });
+      onSubmit: (form) => {
+        const values = form.getValues();
+        return this.createMap(
+          folderPath,
+          String(values['name'] ?? ''),
+          String(values['image'] ?? ''),
+        );
+      },
+    };
+    return step;
   }
 
   /** The campaign or compendium system a vault path belongs to (`lost-mine`, `compendium/my-system`). */

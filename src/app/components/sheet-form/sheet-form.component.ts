@@ -93,15 +93,19 @@ export class AppSheetFormComponent {
   /** Set once the user tried to confirm with fields missing: required fields then show their message. */
   private readonly showRequiredErrors = signal(false);
 
+  /** Fields and values a later step of a wizard put in place of the ones the form was opened with. */
+  private readonly stepFields = signal<readonly AppSheetField[] | null>(null);
+  private readonly stepValues = signal<AppSheetFieldValueMap | null>(null);
+
   protected readonly resolvedFields = computed<readonly AppSheetField[]>(
-    () => this.fields() ?? this.sheetData?.fields ?? [],
+    () => this.stepFields() ?? this.fields() ?? this.sheetData?.fields ?? [],
   );
   protected readonly resolvedClass = computed(() => this.class().trim());
   protected readonly containerClasses = computed(() =>
     mergeClasses('grid grid-cols-12 gap-4 p-4', this.resolvedClass()),
   );
   private readonly resolvedInitialValues = computed<AppSheetFieldValueMap>(
-    () => this.values() ?? this.sheetData?.values ?? {},
+    () => this.stepValues() ?? this.values() ?? this.sheetData?.values ?? {},
   );
 
   constructor() {
@@ -122,6 +126,20 @@ export class AppSheetFormComponent {
 
   public getValues(): AppSheetFieldValueMap {
     return { ...this.fieldValueState() };
+  }
+
+  /**
+   * Puts other fields in the form (the next step of a wizard, or the one before): the values start again from
+   * `values` or the fields' own, the missing-field messages are hidden and the first field gets the focus.
+   */
+  public setFields(fields: readonly AppSheetField[], values?: AppSheetFieldValueMap): void {
+    this.showRequiredErrors.set(false);
+    this.stepValues.set(values ?? null);
+    this.stepFields.set(fields);
+    const first = fields.find((field) => !field.disabled);
+    if (first) {
+      setTimeout(() => this.focusField(first.id), 0);
+    }
   }
 
   public getValue(fieldId: string): AppSheetFieldValue | undefined {

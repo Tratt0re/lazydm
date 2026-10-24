@@ -174,14 +174,11 @@
       "cancel": "Cancel",
       "create": {
         "title": "New section",
-        "description": "A section of this campaign only, with its own folder and note type.",
+        "description": "A section of this campaign only, with its own folder.",
         "submit": "Add section",
         "nameLabel": "Name",
         "namePlaceholder": "e.g. Factions",
         "iconLabel": "Icon",
-        "typeLabel": "Note type",
-        "typePlaceholder": "From the name",
-        "typeDescription": "Written as type: in the frontmatter of its notes. Leave empty to use the name.",
         "descriptionLabel": "Description",
         "descriptionPlaceholder": "A short line shown on the overview",
         "templateLabel": "Template",
@@ -189,9 +186,8 @@
       },
       "edit": {
         "title": "Edit section",
-        "description": "Change the name or the icon. The folder and the note type stay as they are, so the notes keep working.",
-        "submit": "Save",
-        "typeDescription": "The note type of an existing section cannot change."
+        "description": "Change the name or the icon. The folder stays as it is, so the notes keep working.",
+        "submit": "Save"
       },
       "remove": {
         "button": "Delete section",
@@ -531,11 +527,11 @@
       "delete": "Delete campaign"
     },
     "newAnything": {
-      "title": "New",
-      "description": "Pick where it goes. Any section works as a starting point.",
+      "title": "New note",
+      "description": "Pick the section it belongs to. Any section works as a starting point.",
       "sectionLabel": "Section",
       "submit": "Next",
-      "button": "New",
+      "button": "New note",
       "startTitle": "Start anywhere",
       "startDescription": "Create the first note, enemy, encounter or map. The other sections show up here as you use them.",
       "moreSections": "More sections"
@@ -871,7 +867,8 @@
         "disabled": "unavailable"
       }
     },
-    "moreActions": "More actions"
+    "moreActions": "More actions",
+    "back": "Back"
   },
   "templates": {
     "library": {
@@ -991,7 +988,7 @@
       "button": "Import from disk",
       "title": "Import from disk",
       "description": "Images, PDFs and audio files are copied into {{folder}}. Your originals stay where they are.",
-      "dropHint": "Drop files here from Finder or your file manager — or drop them anywhere on the Assets page.",
+      "dropHint": "Drop files here, or copy an image and paste it here (Cmd/Ctrl+V). You can also drop files anywhere on the Assets page.",
       "types": "PNG · JPG · GIF · WEBP · SVG · AVIF · PDF · MP3 · WAV · OGG · M4A · FLAC",
       "select": "Select files…",
       "skipped": "Not images, PDFs or audio — skipped"
@@ -1112,8 +1109,6 @@
     },
     "rule": {
       "label": "Tracker layout",
-      "ariaLabel": "Tracker layout of this encounter",
-      "campaignDefault": "Campaign's layout",
       "builtInDefault": "Default",
       "saved": "Tracker layout saved",
       "saveError": "Couldn't change the tracker layout",

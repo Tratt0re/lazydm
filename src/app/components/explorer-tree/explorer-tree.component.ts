@@ -310,7 +310,10 @@ export class AppExplorerTreeComponent {
       !!section &&
       !!node.path &&
       !node.path.startsWith('compendium/') &&
-      (this.canCreateNote(section) || section.key === 'encounters' || section.key === 'maps')
+      (this.canCreateNote(section) ||
+        section.key === 'encounters' ||
+        section.key === 'maps' ||
+        section.key === 'assets')
     );
   }
 
@@ -318,6 +321,12 @@ export class AppExplorerTreeComponent {
   protected createHere(node: ExplorerNode, section: AppSection): void {
     const path = node.path;
     if (!path) {
+      return;
+    }
+
+    // Assets have no "new": the row's + imports files from the disk (the same modal as the Assets page).
+    if (section.key === 'assets') {
+      this.fileActions.openImportFromDiskDialog(path, () => void this.loadTree(path));
       return;
     }
 

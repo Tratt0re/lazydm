@@ -1,12 +1,20 @@
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  afterNextRender,
+  inject,
+  signal,
+  viewChild,
+} from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 
 import { FileActionsService } from '@/services/file-actions.service';
 import { ArcTechButtonComponent } from '@/shared/components/button';
+import { ARC_MODAL_DATA, ArcTechDialogRef } from '@/shared/components/dialog';
 import { ArcTechIconComponent } from '@/shared/components/icon';
-import { ARC_SHEET_DATA, ArcTechSheetRef } from '@/shared/components/sheet';
 
-/** What the *Import from disk* sheet saves into, and what to do once files are saved. */
+/** What the *Import from disk* modal saves into, and what to do once files are saved. */
 export interface AssetImportSheetData {
   /** A folder of the Assets section (vault-relative). */
   readonly folder: string;
@@ -14,15 +22,18 @@ export interface AssetImportSheetData {
 }
 
 /**
- * Content of the *Import from disk* sheet (Assets section): a drop zone for files from the file manager and
- * *Select files* for the system dialog. The sheet closes once files are saved.
+ * Content of the *Import from disk* modal (Assets section): a drop zone for files from the file manager, a paste
+ * target (Cmd/Ctrl+V with a copied image or file) and *Select files* for the system dialog. The modal closes once
+ * files are saved.
  */
 @Component({
   selector: 'app-asset-import-sheet',
   imports: [TranslatePipe, ArcTechButtonComponent, ArcTechIconComponent],
   template: `
     <div
-      class="flex min-h-64 flex-col items-center justify-center gap-4 border border-dashed p-6 text-center transition-colors"
+      #zone
+      tabindex="0"
+      class="flex min-h-56 flex-col items-center justify-center gap-4 border border-dashed p-6 text-center transition-colors outline-none focus-visible:border-primary"
       [class]="
         isDragOver()
           ? 'border-primary bg-accent text-primary'
@@ -31,6 +42,7 @@ export interface AssetImportSheetData {
       (dragover)="onDragOver($event)"
       (dragleave)="isDragOver.set(false)"
       (drop)="onDrop($event)"
+      (paste)="onPaste($event)"
     >
       <arc-icon arcType="file-up" class="size-8" />
       <p class="max-w-xs text-sm">{{ 'files.importFromDisk.dropHint' | translate }}</p>
@@ -50,16 +62,21 @@ export interface AssetImportSheetData {
     </div>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  // The same inset as the sheet form's fields.
-  host: { class: 'block p-4' },
+  host: { class: 'block px-1 pb-1' },
 })
 export class AppAssetImportSheetComponent {
-  private readonly data = inject<AssetImportSheetData>(ARC_SHEET_DATA);
-  private readonly sheetRef = inject(ArcTechSheetRef);
+  private readonly data = inject<AssetImportSheetData>(ARC_MODAL_DATA);
+  private readonly dialogRef = inject(ArcTechDialogRef);
   private readonly fileActions = inject(FileActionsService);
+  private readonly zone = viewChild.required<ElementRef<HTMLElement>>('zone');
 
   protected readonly isDragOver = signal(false);
   protected readonly isSaving = signal(false);
+
+  constructor() {
+    // The zone has the focus when the modal opens, so Cmd/Ctrl+V works right away.
+    afterNextRender(() => this.zone().nativeElement.focus());
+  }
 
   protected onDragOver(event: DragEvent): void {
     if (event.dataTransfer?.types.includes('Files')) {
@@ -78,6 +95,15 @@ export class AppAssetImportSheetComponent {
     }
   }
 
+  /** A copied image or file pasted on the zone is saved like a dropped one. */
+  protected onPaste(event: ClipboardEvent): void {
+    const files = [...(event.clipboardData?.files ?? [])];
+    if (files.length > 0) {
+      event.preventDefault();
+      void this.save(files);
+    }
+  }
+
   protected selectFiles(): void {
     void this.save();
   }
@@ -87,7 +113,7 @@ export class AppAssetImportSheetComponent {
     try {
       if (await this.fileActions.saveMediaToFolder(this.data.folder, files)) {
         this.data.onImported?.();
-        this.sheetRef.close();
+        this.dialogRef.close();
       }
     } finally {
       this.isSaving.set(false);

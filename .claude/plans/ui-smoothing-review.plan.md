@@ -130,6 +130,15 @@ Display text only. Key names, folders, file formats and code identifiers stay.
 - E3: the status syntax leaves the placeholder for a small persistent hint under the field, and it should also explain the idea, not only the syntax
 - Extra (user): the Assets section's empty state needs a CTA button; the label *New…* loses its "…" (the user does not like them)
 
+## Adjustments before Phase F (2026-10-24, from the user)
+
+- [x] X1 Links badge is clipped at the top by the toolbar frame
+- [x] X2 Remove the Tracker layout select from the encounter page (the one on the Encounters home stays), like notes have none
+- [x] X3 Rename the generic *New* button to **New note**
+- [x] X4 Assets: import in a modal (not the side sheet); sidebar **+** on Assets opens it; paste into the drop area; drop and paste also on the empty-state button
+- [x] X5 New section modal: remove the *Note type* input (sections no longer carry a type)
+- [x] X6 The *New note* picker and its form become one two-step modal (wizard) with a Back button, no close-and-reopen flash
+
 ## Log
 
 - 2026-10-24: plan written, decisions recorded. No code touched yet.
@@ -143,3 +152,4 @@ Display text only. Key names, folders, file formats and code identifiers stay.
 - Still open: deleting `src/app/pages/settings-page/components/sections/templates-section/` (approved by the user, but the permission classifier blocked `git rm`). Phase E (voice) comes next.
 - 2026-10-24: Phase E done, plus the two extras. E1: the intro boxes of Settings → General and Editor and the theme and language descriptions are gone (keys removed in 7 languages). E2: the messages for saving a note, renaming a note, renaming or deleting a file, renaming or deleting a folder, moving a note, and saving an encounter or a map now say what to check ("Check that the Codex folder is available, then try again."); the note save message also says the text is still in the editor (true: a failed save leaves the editor untouched). The other ~50 "Couldn't X" messages are unchanged on purpose: for most of them the cause is not known, and a made-up cause would be worse than none. E3: the status field has a short placeholder ("Add a status…") and a persistent hint under it explaining rounds ("stunned 3" wears off after 3 of its turns; without a number it stays). Extras: the Assets empty state has an *Import from disk* button; *New…* is now *New* in every language. Checked in the browser (Italian, light): Assets empty state and the status hint. Not checked: the error messages in context (they only show on a real failure).
 - Left over: other labels that end with "…" (Move to…, Rename…, Delete…, Create note…) follow the macOS convention for actions that open a dialog; only *New…* was changed, as asked.
+- 2026-10-24: Adjustments X1–X6 done. X1 badge moved inside the button. X2 tracker select removed from the encounter page. X3 button is *New note*. X4 Import from disk is a modal (drop, paste, select), opened from the section toolbar, the empty-state button and the sidebar + on Assets; a paste anywhere on an Assets page saves the media. X5 type input removed. X6 `openWizard` makes the picker and the forms one modal with Back. Build green. Not checked visually: X1 badge, the Assets modal and paste.

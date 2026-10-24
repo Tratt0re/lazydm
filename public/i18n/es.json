@@ -174,14 +174,11 @@
       "cancel": "Cancelar",
       "create": {
         "title": "Nueva sección",
-        "description": "Una sección solo de esta campaña, con su propia carpeta y su propio tipo de nota.",
+        "description": "Una sección solo de esta campaña, con su propia carpeta.",
         "submit": "Añadir sección",
         "nameLabel": "Nombre",
         "namePlaceholder": "p. ej. Facciones",
         "iconLabel": "Icono",
-        "typeLabel": "Tipo de nota",
-        "typePlaceholder": "A partir del nombre",
-        "typeDescription": "Se escribe como type: en el frontmatter de sus notas. Déjalo vacío para usar el nombre.",
         "descriptionLabel": "Descripción",
         "descriptionPlaceholder": "Una línea breve que se muestra en el resumen",
         "templateLabel": "Plantilla",
@@ -189,9 +186,8 @@
       },
       "edit": {
         "title": "Editar sección",
-        "description": "Cambia el nombre o el icono. La carpeta y el tipo de nota no cambian, así las notas siguen funcionando.",
-        "submit": "Guardar",
-        "typeDescription": "El tipo de nota de una sección existente no puede cambiar."
+        "description": "Cambia el nombre o el icono. La carpeta se queda como está, así las notas siguen funcionando.",
+        "submit": "Guardar"
       },
       "remove": {
         "button": "Eliminar sección",
@@ -531,11 +527,11 @@
       "delete": "Eliminar campaña"
     },
     "newAnything": {
-      "title": "Nuevo",
-      "description": "Elige dónde va. Cualquier sección vale como punto de partida.",
+      "title": "Nueva nota",
+      "description": "Elige la sección a la que pertenece. Cualquier sección vale como punto de partida.",
       "sectionLabel": "Sección",
       "submit": "Siguiente",
-      "button": "Nuevo",
+      "button": "Nueva nota",
       "startTitle": "Empieza por donde quieras",
       "startDescription": "Crea la primera nota, enemigo, encuentro o mapa. Las demás secciones aparecen aquí a medida que las uses.",
       "moreSections": "Más secciones"
@@ -871,7 +867,8 @@
         "disabled": "no disponible"
       }
     },
-    "moreActions": "Más acciones"
+    "moreActions": "Más acciones",
+    "back": "Atrás"
   },
   "templates": {
     "library": {
@@ -991,7 +988,7 @@
       "button": "Importar del disco",
       "title": "Importar del disco",
       "description": "Las imágenes, los PDF y los archivos de audio se copian en {{folder}}. Los originales se quedan donde están.",
-      "dropHint": "Suelta aquí archivos del Finder o del explorador, o suéltalos en cualquier parte de la página Recursos.",
+      "dropHint": "Suelta archivos aquí, o copia una imagen y pégala aquí (Cmd/Ctrl+V). También puedes soltarlos en cualquier parte de la página Recursos.",
       "types": "PNG · JPG · GIF · WEBP · SVG · AVIF · PDF · MP3 · WAV · OGG · M4A · FLAC",
       "select": "Seleccionar archivos…",
       "skipped": "No son imágenes, PDF ni audio: omitidos"
@@ -1112,8 +1109,6 @@
     },
     "rule": {
       "label": "Diseño del tracker",
-      "ariaLabel": "Diseño del tracker de este encuentro",
-      "campaignDefault": "Diseño de la campaña",
       "builtInDefault": "Predeterminado",
       "saved": "Diseño del tracker guardado",
       "saveError": "No se pudo cambiar el diseño del tracker",

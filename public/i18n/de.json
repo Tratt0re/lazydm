@@ -174,14 +174,11 @@
       "cancel": "Abbrechen",
       "create": {
         "title": "Neuer Bereich",
-        "description": "Ein Bereich nur dieser Kampagne, mit eigenem Ordner und eigenem Notiztyp.",
+        "description": "Ein Bereich nur dieser Kampagne, mit eigenem Ordner.",
         "submit": "Bereich hinzufügen",
         "nameLabel": "Name",
         "namePlaceholder": "z. B. Fraktionen",
         "iconLabel": "Symbol",
-        "typeLabel": "Notiztyp",
-        "typePlaceholder": "Aus dem Namen",
-        "typeDescription": "Wird als type: in das Frontmatter seiner Notizen geschrieben. Leer lassen, um den Namen zu verwenden.",
         "descriptionLabel": "Beschreibung",
         "descriptionPlaceholder": "Eine kurze Zeile für die Übersicht",
         "templateLabel": "Vorlage",
@@ -189,9 +186,8 @@
       },
       "edit": {
         "title": "Bereich bearbeiten",
-        "description": "Ändere den Namen oder das Symbol. Ordner und Notiztyp bleiben gleich, damit die Notizen weiter funktionieren.",
-        "submit": "Speichern",
-        "typeDescription": "Der Notiztyp eines bestehenden Bereichs kann sich nicht ändern."
+        "description": "Ändere den Namen oder das Symbol. Der Ordner bleibt wie er ist, damit die Notizen weiter funktionieren.",
+        "submit": "Speichern"
       },
       "remove": {
         "button": "Abschnitt löschen",
@@ -531,11 +527,11 @@
       "delete": "Kampagne löschen"
     },
     "newAnything": {
-      "title": "Neu",
-      "description": "Wähle, wohin es kommt. Jeder Bereich eignet sich als Anfang.",
+      "title": "Neue Notiz",
+      "description": "Wähle den Bereich, zu dem sie gehört. Jeder Bereich eignet sich als Anfang.",
       "sectionLabel": "Bereich",
       "submit": "Weiter",
-      "button": "Neu",
+      "button": "Neue Notiz",
       "startTitle": "Fang an, wo du willst",
       "startDescription": "Lege die erste Notiz, den ersten Gegner, die erste Begegnung oder Karte an. Die übrigen Bereiche erscheinen hier, sobald du sie nutzt.",
       "moreSections": "Weitere Bereiche"
@@ -871,7 +867,8 @@
         "disabled": "nicht verfügbar"
       }
     },
-    "moreActions": "Weitere Aktionen"
+    "moreActions": "Weitere Aktionen",
+    "back": "Zurück"
   },
   "templates": {
     "library": {
@@ -991,7 +988,7 @@
       "button": "Von Festplatte importieren",
       "title": "Von Festplatte importieren",
       "description": "Bilder, PDFs und Audiodateien werden nach {{folder}} kopiert. Deine Originale bleiben, wo sie sind.",
-      "dropHint": "Ziehe Dateien aus dem Finder oder Dateimanager hierher — oder lege sie irgendwo auf der Assets-Seite ab.",
+      "dropHint": "Ziehe Dateien hierher oder kopiere ein Bild und füge es hier ein (Cmd/Strg+V). Du kannst Dateien auch irgendwo auf der Seite Dateien ablegen.",
       "types": "PNG · JPG · GIF · WEBP · SVG · AVIF · PDF · MP3 · WAV · OGG · M4A · FLAC",
       "select": "Dateien auswählen…",
       "skipped": "Keine Bilder, PDFs oder Audiodateien — übersprungen"
@@ -1112,8 +1109,6 @@
     },
     "rule": {
       "label": "Tracker-Layout",
-      "ariaLabel": "Tracker-Layout dieser Begegnung",
-      "campaignDefault": "Layout der Kampagne",
       "builtInDefault": "Standard",
       "saved": "Tracker-Layout gespeichert",
       "saveError": "Das Tracker-Layout konnte nicht geändert werden",

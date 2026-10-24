@@ -92,18 +92,6 @@ export class SectionActionsService {
             )
             .map((option) => ({ ...option, translate: false })),
         },
-        {
-          id: 'type',
-          type: 'input',
-          label: 'settings.campaignSections.create.typeLabel',
-          placeholder: 'settings.campaignSections.create.typePlaceholder',
-          description: section
-            ? 'settings.campaignSections.edit.typeDescription'
-            : 'settings.campaignSections.create.typeDescription',
-          value: section?.type ?? '',
-          disabled: section !== null,
-          translate: true,
-        },
       ],
       onSubmit: (form) => {
         if (!isSubmitting) {
@@ -113,7 +101,6 @@ export class SectionActionsService {
             key: section?.key,
             label: String(values['label'] ?? '').trim(),
             description: String(values['description'] ?? '').trim() || undefined,
-            type: section ? undefined : String(values['type'] ?? '').trim() || undefined,
             icon: String(values['icon'] ?? CUSTOM_SECTION_ICONS[0]),
           };
           const rule = String(values['template'] ?? AUTOMATIC_TEMPLATE_RULE);
