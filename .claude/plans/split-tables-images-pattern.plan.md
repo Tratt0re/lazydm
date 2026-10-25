@@ -32,8 +32,31 @@ on the app canvas only, opt-in in Settings → General. A grid may still make se
       column. Column alignment skipped by the user (model function `setColumnAlign` exists, no UI).
 - [x] C2c Arrow keys: Up/Down/Left/Right enter a table from the neighbouring line and move between cells
 - [x] C3 Editable cells (click = markdown source of the cell), Enter / Tab / Shift+Tab / Esc, Tab out of the
-      last cell adds a row, one change per edit. NOT yet tried in the running app.
-- [ ] C4 Docs, i18n
+      last cell adds a row, one change per edit. Tried by the user in the app and working.
+- [x] C4 i18n (seven languages)
+- [ ] C5 DESIGN_PRINCIPLES §8 (Editor): describe in-place table editing, the cell menu, the arrow keys, and
+      the image width "…" menu with its `![[img|half|wide|full]]` syntax (this is also task B5); add tables
+      and image width to the editor reference sheet if a table entry is wanted
+
+## Handoff (written before /compact, 2026-10-25)
+- Commits so far: `903a006` image width, `2775f61` tables. Working tree clean. Nothing for A (noise) yet.
+- The user tests in the real app with `npm run dev` (Electron); the chrome-devtools tool cannot drive
+  Electron and plain `npm start` has no vault, so UI claims need the user's eyes. Say what was not tried.
+- Project hooks: the Fact-Forcing Gate blocks the FIRST edit/write of each file in a session (just retry);
+  the auto-mode classifier blocks `git checkout --`, `pkill`, and scripts that rewrite many files.
+- Do not run prettier on existing files. No git push. Commit per finished phase with the Co-Authored-By line.
+- i18n: every new key goes in all seven files (en, it, de, es, fr, uk, zh); en is the fallback.
+- `toSpliced` is not available in this TS lib target; `git checkout` for reverts is blocked, use edits.
+- The user asked to compact context before starting D. Start D by re-reading `workspace.service.ts`,
+  `layout/tab-bar/tab-bar.ts`, `layout/root-layout/root-layout.html` (one `<router-outlet />` inside
+  `arc-content#main-content`), `toolbar-context.service.ts`, `pages/document-page/document-page.ts`
+  (autosave on leave) and `app.routes.ts` (named outlet `APP_SHEET_OUTLET` already used by sheets).
+  Propose the D1 refactor and get the user's OK before touching code.
+- Decisions for D: two panes only; the same note in both panes shares ONE live document (edit on one side
+  shows on the other, cursor/scroll per pane, one autosave, one conflict modal); tabs move between sides;
+  "Open in split" in the explorer, the note "…" menu and the tab context menu.
+- Open for later: A (very fine noise 2-3% on the app canvas only, opt-in in Settings → General; §9 of
+  DESIGN_PRINCIPLES bans background grids so a grid was reverted), and the DESIGN_PRINCIPLES update (C5).
 
 ## D. Split screen
 - [ ] D1 Per-pane `ToolbarContextService` and `WorkspaceService` (no visible change)
