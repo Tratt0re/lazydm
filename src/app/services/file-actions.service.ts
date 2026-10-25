@@ -160,13 +160,28 @@ export class FileActionsService {
 
   /** The note page showing a note saves its unsaved edits before the note is renamed from anywhere. */
   private readonly openNoteSavers = new Map<string, () => Promise<boolean>>();
+  /** Every page showing a note, by path: the registry above keeps one of them. */
+  private readonly openNotePages = new Map<string, (() => Promise<boolean>)[]>();
 
-  /** Registers the save of the note a page shows; returns the unregister function. */
+  /**
+   * Registers the save of the note a page shows; returns the unregister function. The same note can be shown by
+   * both panes (one shared document, so any page's save writes the same text): the note stays registered while any
+   * of its pages does, and a page leaving never drops the entry of the one that stays.
+   */
   registerOpenNote(path: string, save: () => Promise<boolean>): () => void {
-    this.openNoteSavers.set(path, save);
+    const savers = this.openNotePages.get(path) ?? [];
+    savers.push(save);
+    this.openNotePages.set(path, savers);
+    this.openNoteSavers.set(path, savers[0]);
+
     return () => {
-      if (this.openNoteSavers.get(path) === save) {
+      const remaining = (this.openNotePages.get(path) ?? []).filter((item) => item !== save);
+      if (remaining.length === 0) {
+        this.openNotePages.delete(path);
         this.openNoteSavers.delete(path);
+      } else {
+        this.openNotePages.set(path, remaining);
+        this.openNoteSavers.set(path, remaining[0]);
       }
     };
   }

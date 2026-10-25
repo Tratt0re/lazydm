@@ -1,5 +1,6 @@
 import { ApplicationConfig, provideBrowserGlobalErrorListeners } from '@angular/core';
-import { provideRouter, withRouterConfig } from '@angular/router';
+import { provideRouter, UrlHandlingStrategy, withRouterConfig } from '@angular/router';
+import { KeepSplitUrlHandlingStrategy } from '@/layout/pane/keep-split-strategy';
 import { provideEchartsCore } from 'ngx-echarts';
 
 import { echarts } from '@/config/echarts.config';
@@ -12,6 +13,7 @@ export const appConfig: ApplicationConfig = {
     provideBrowserGlobalErrorListeners(),
     // Compendium system pages read their scope from route data set above them (inside the sheet).
     provideRouter(routes, withRouterConfig({ paramsInheritanceStrategy: 'always' })),
+    { provide: UrlHandlingStrategy, useClass: KeepSplitUrlHandlingStrategy },
     provideI18n(),
     provideArcTech(),
     provideEchartsCore({ echarts }),

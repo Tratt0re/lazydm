@@ -178,6 +178,21 @@ export class WorkspaceService extends BaseIpcService<APIChannel.WORKSPACE> {
     return segments.length ? '/' + segments.map(encodeURIComponent).join('/') : toPath(link);
   }
 
+  /**
+   * A navigation that names only the first pane (a service's `navigateByUrl('/a/b')`) keeps the second pane's
+   * page in that same navigation, so it is not rebuilt by a put-back after it. Null when nothing needs adding:
+   * no split, the URL already names the second pane, or the workspace itself is driving the navigation.
+   */
+  urlKeepingSplit(url: string): string | null {
+    const right = this.activeUrlOf('right');
+    if (!this.hasSplit() || this.isTabNavigation || !right || this.outletPath(url, SPLIT_PANE_OUTLET)) {
+      return null;
+    }
+
+    const query = url.includes('?') ? url.slice(url.indexOf('?')) : '';
+    return composeUrl(toPath(url), right) + query;
+  }
+
   /** Whether a URL belongs to the open campaign (tabs never leave it). */
   isCampaignUrl(url: string): boolean {
     const slug = this.campaignSlugSignal();
