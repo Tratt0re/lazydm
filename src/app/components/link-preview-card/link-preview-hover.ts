@@ -21,6 +21,20 @@ const HIDE_DELAY_MS = 250;
 const EYE_ICON =
   '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0"/><circle cx="12" cy="12" r="3"/></svg>';
 
+/** Lucide `ellipsis`, inline: the frame button under the eye of an image embed. */
+const ELLIPSIS_ICON =
+  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg>';
+
+/** The "…" button of an image embed was pressed: the image and the button's corner, to open the frame menu. */
+export interface ImageFrameMenuRequest {
+  readonly anchor: HTMLImageElement;
+  readonly x: number;
+  readonly y: number;
+}
+
+/** Gap between the eye button and the "…" button under it. */
+const FRAME_BUTTON_GAP = 4;
+
 /** Lucide `arrow-up-right`, inline: the button of a map or an encounter link. */
 const OPEN_ICON =
   '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg>';
@@ -37,6 +51,13 @@ export function attachLinkPreviewHover(
   onPreview: (request: LinkPreviewRequest) => void,
   imageLabel: () => string = label,
   openLabel: () => string = label,
+  /** Live preview only: images that carry `data-frame-embed` get a "…" button under the eye. */
+  frameMenu?: {
+    readonly label: () => string;
+    /** False in a read-only editor: no button. */
+    readonly enabled: () => boolean;
+    readonly onOpen: (request: ImageFrameMenuRequest) => void;
+  },
 ): () => void {
   const button = document.createElement('button');
   button.type = 'button';
@@ -46,7 +67,18 @@ export function attachLinkPreviewHover(
   button.hidden = true;
   // A host inside a sheet or a modal lives in the browser's top layer (the CDK overlay container is a popover):
   // only something inside that same layer paints above it, so the button goes in the host's own top-layer root.
-  (host.closest<HTMLElement>('[popover]') ?? document.body).append(button);
+  const buttonRoot = host.closest<HTMLElement>('[popover]') ?? document.body;
+  buttonRoot.append(button);
+
+  const frameButton = document.createElement('button');
+  frameButton.type = 'button';
+  frameButton.className = 'arc-link-preview-eye';
+  frameButton.dataset['imageFrame'] = '';
+  frameButton.innerHTML = ELLIPSIS_ICON;
+  frameButton.hidden = true;
+  if (frameMenu) {
+    buttonRoot.append(frameButton);
+  }
 
   let current: HTMLElement | null = null;
   let hideTimer = 0;
@@ -69,6 +101,8 @@ export function attachLinkPreviewHover(
       const right = Math.min(rect.right, hostRect.right);
       button.style.left = `${right - IMAGE_CORNER_GAP - BUTTON_SIZE}px`;
       button.style.top = `${top + IMAGE_CORNER_GAP + BUTTON_SIZE / 2}px`;
+      frameButton.style.left = button.style.left;
+      frameButton.style.top = `${top + IMAGE_CORNER_GAP + BUTTON_SIZE * 1.5 + FRAME_BUTTON_GAP}px`;
     } else {
       button.style.left = `${rect.right + 4}px`;
       button.style.top = `${rect.top + rect.height / 2}px`;
@@ -81,10 +115,19 @@ export function attachLinkPreviewHover(
     );
     button.title = text;
     button.hidden = false;
+    if (frameMenu?.enabled() && isImage && 'frameEmbed' in link.dataset) {
+      const frameText = frameMenu.label();
+      frameButton.setAttribute('aria-label', frameText);
+      frameButton.title = frameText;
+      frameButton.hidden = false;
+    } else {
+      frameButton.hidden = true;
+    }
   };
   const hide = () => {
     window.clearTimeout(hideTimer);
     button.hidden = true;
+    frameButton.hidden = true;
     current = null;
   };
   const scheduleHide = () => {
@@ -102,8 +145,17 @@ export function attachLinkPreviewHover(
   };
   const onOut = (event: Event) => {
     const next = (event as MouseEvent).relatedTarget as Node | null;
-    if (findLink(event.target) && !button.contains(next)) {
+    if (findLink(event.target) && !button.contains(next) && !frameButton.contains(next)) {
       scheduleHide();
+    }
+  };
+  const onFrameClick = (event: MouseEvent) => {
+    event.preventDefault();
+    event.stopPropagation();
+    const image = current;
+    if (frameMenu && image instanceof HTMLImageElement && image.isConnected) {
+      const rect = frameButton.getBoundingClientRect();
+      frameMenu.onOpen({ anchor: image, x: rect.left, y: rect.bottom + 2 });
     }
   };
   const onClick = (event: MouseEvent) => {
@@ -136,6 +188,10 @@ export function attachLinkPreviewHover(
   button.addEventListener('mouseleave', scheduleHide);
   button.addEventListener('blur', scheduleHide);
   button.addEventListener('click', onClick);
+  frameButton.addEventListener('mouseenter', () => window.clearTimeout(hideTimer));
+  frameButton.addEventListener('mouseleave', scheduleHide);
+  frameButton.addEventListener('blur', scheduleHide);
+  frameButton.addEventListener('click', onFrameClick);
 
   return () => {
     window.clearTimeout(hideTimer);
@@ -145,5 +201,6 @@ export function attachLinkPreviewHover(
     host.removeEventListener('focusout', onOut);
     host.removeEventListener('scroll', hide, true);
     button.remove();
+    frameButton.remove();
   };
 }

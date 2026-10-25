@@ -118,6 +118,7 @@ const GROUPS: readonly { readonly key: string; readonly items: readonly Referenc
     key: 'media',
     items: [
       { key: 'image', syntax: '![[map.png]]' },
+      { key: 'imageLayout', syntax: '![[map.png|half]]' },
       { key: 'audio', syntax: '![[roar.mp3]]', render: true },
       { key: 'pdf', syntax: '![[handout.pdf]]', render: true },
     ],

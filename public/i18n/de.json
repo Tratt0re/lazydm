@@ -598,6 +598,12 @@
       "failed": "Einige Notizen wurden inzwischen geändert und verwenden noch den alten Namen",
       "error": "Die Notiz konnte nicht umbenannt werden. Prüfe, ob der Codex-Ordner verfügbar ist, und versuche es erneut."
     },
+    "imageFrame": {
+      "button": "Bildlayout",
+      "width": "Breite",
+      "reset": "Breite zurücksetzen",
+      "widths": { "half": "Halb", "wide": "Breit", "full": "Volle Breite" }
+    },
     "insertMenu": {
       "cut": "Ausschneiden",
       "copy": "Kopieren",
@@ -688,12 +694,14 @@
         "table": "Tabelle",
         "divider": "Trennlinie",
         "image": "Bild",
+        "imageLayout": "Bildbreite",
         "audio": "Audio",
         "pdf": "PDF",
         "frontmatter": "Notiz-Eigenschaften"
       },
       "notes": {
         "image": "Zeigt das Bild aus den Assets der Kampagne. Ziehe es, um es in der Notiz zu verschieben.",
+        "imageLayout": "Füge nach einem | half, wide oder full an, um die Breite des Bildes festzulegen. In der Live-Vorschau fährst du über das Bild und nutzt die …-Schaltfläche unter dem Auge.",
         "frontmatter": "Ganz oben in der Notiz: als Eigenschaften-Box angezeigt."
       },
       "shortcuts": {

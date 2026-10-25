@@ -31,11 +31,19 @@ import {
   type ViewUpdate,
 } from '@codemirror/view';
 import { tags } from '@lezer/highlight';
+import { TranslateService } from '@ngx-translate/core';
 
 import type { EditorSettings } from '@/config/local-preferences.config';
 import { AppEditorInsertMenuComponent } from '@/components/editor-insert-menu/editor-insert-menu.component';
 import {
+  type ImageFrame,
+  parseImageEmbed,
+  withImageFrame,
+} from '@/components/code-editor/image-frame';
+import { AppImageFrameMenuComponent } from '@/components/image-frame-menu/image-frame-menu.component';
+import {
   attachLinkPreviewHover,
+  type ImageFrameMenuRequest,
   type LinkPreviewRequest,
 } from '@/components/link-preview-card/link-preview-hover';
 import {
@@ -87,7 +95,7 @@ export interface CodeEditorAssetAction {
  */
 @Component({
   selector: 'app-code-editor',
-  imports: [AppEditorInsertMenuComponent],
+  imports: [AppEditorInsertMenuComponent, AppImageFrameMenuComponent],
   template: `
     <div #host class="h-full min-h-0 w-full"></div>
     <app-editor-insert-menu
@@ -95,6 +103,7 @@ export interface CodeEditorAssetAction {
       (action)="runInsertAction($event)"
       (menuClosed)="focusEditor()"
     />
+    <app-image-frame-menu (frameChange)="applyImageFrame($event)" (menuClosed)="focusEditor()" />
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
@@ -104,6 +113,11 @@ export interface CodeEditorAssetAction {
 export class AppCodeEditorComponent implements OnDestroy {
   private readonly host = viewChild.required<ElementRef<HTMLDivElement>>('host');
   private readonly insertMenu = viewChild.required(AppEditorInsertMenuComponent);
+  private readonly imageFrameMenu = viewChild.required(AppImageFrameMenuComponent);
+  private readonly translate = inject(TranslateService);
+  /** The `![[…]]` embed the open "…" menu edits: its range in the note and its text, to check it did not move. */
+  private frameTarget: { readonly from: number; readonly to: number; readonly raw: string } | null =
+    null;
   private view: EditorView | null = null;
   private previousDocumentKey: string | null = null;
   private readonly modeCompartment = new Compartment();
@@ -275,7 +289,54 @@ export class AppCodeEditorComponent implements OnDestroy {
       (request) => this.linkPreview.emit(request),
       () => this.imagePreviewLabel(),
       () => this.fileOpenLabel(),
+      {
+        label: () => this.translate.instant('document.imageFrame.button'),
+        enabled: () => !this.readOnly(),
+        onOpen: (request) => this.openImageFrameMenu(request),
+      },
     );
+  }
+
+  /** Opens the "…" menu of an image embed, showing the frame it has now. */
+  private openImageFrameMenu(request: ImageFrameMenuRequest): void {
+    const view = this.view;
+    if (!view || this.readOnly()) {
+      return;
+    }
+
+    // The widget replaces (or, while edited, precedes) its `![[…]]` text, so its DOM position is where that starts.
+    const from = view.posAtDOM(request.anchor);
+    const line = view.state.doc.lineAt(from);
+    const match = /^!\[\[([^[\]\n]+?)\]\]/.exec(view.state.sliceDoc(from, line.to));
+    if (!match) {
+      return;
+    }
+
+    this.frameTarget = { from, to: from + match[0].length, raw: match[1] };
+    this.imageFrameMenu().open(request.x, request.y, parseImageEmbed(match[1]).frame);
+  }
+
+  /** Rewrites the embed with the chosen frame, as one change (one undo step). */
+  protected applyImageFrame(frame: ImageFrame): void {
+    const view = this.view;
+    const target = this.frameTarget;
+    this.frameTarget = null;
+    if (!view || !target || this.readOnly()) {
+      return;
+    }
+
+    const current = view.state.sliceDoc(target.from, target.to);
+    if (current !== `![[${target.raw}]]`) {
+      return;
+    }
+
+    view.dispatch({
+      changes: {
+        from: target.from,
+        to: target.to,
+        insert: `![[${withImageFrame(target.raw, frame)}]]`,
+      },
+    });
   }
 
   protected runInsertAction(action: EditorInsertAction): void {

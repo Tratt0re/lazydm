@@ -598,6 +598,12 @@
       "failed": "Certaines notes ont changé entre-temps et utilisent encore l’ancien nom",
       "error": "Impossible de renommer la note. Vérifiez que le dossier du Codex est disponible, puis réessayez."
     },
+    "imageFrame": {
+      "button": "Mise en page de l’image",
+      "width": "Largeur",
+      "reset": "Réinitialiser la largeur",
+      "widths": { "half": "Moitié", "wide": "Large", "full": "Pleine largeur" }
+    },
     "insertMenu": {
       "cut": "Couper",
       "copy": "Copier",
@@ -688,12 +694,14 @@
         "table": "Tableau",
         "divider": "Séparateur",
         "image": "Image",
+        "imageLayout": "Largeur de l’image",
         "audio": "Audio",
         "pdf": "PDF",
         "frontmatter": "Propriétés de la note"
       },
       "notes": {
         "image": "Affiche l’image des ressources de la campagne. Faites-la glisser pour la déplacer dans la note.",
+        "imageLayout": "Ajoutez half, wide ou full après un | pour fixer la largeur de l’image. Dans l’aperçu en direct, survolez l’image et utilisez le bouton … sous l’œil.",
         "frontmatter": "Tout en haut de la note : affichées dans un encadré de propriétés."
       },
       "shortcuts": {

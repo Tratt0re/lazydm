@@ -26,6 +26,7 @@ import {
   toAssetUrl,
   toInAppNoteRoute,
 } from '@/components/document-preview/document-preview.markdown';
+import { type ImageFrame, parseImageEmbed } from '@/components/code-editor/image-frame';
 import type { DocumentLinkDto } from '@/dtos';
 
 /** What the live preview needs besides the text: the note's resolved links (from the vault index). */
@@ -149,6 +150,8 @@ class ImageWidget extends WidgetType {
     private readonly isEditing = false,
     /** Vault path of the image (none for a web image): lets the eye button preview it. */
     private readonly path: string | null = null,
+    /** Frame of a `![[…]]` embed (width); null for a markdown image, which has no "…" menu. */
+    private readonly frame: ImageFrame | null = null,
   ) {
     super();
   }
@@ -158,7 +161,9 @@ class ImageWidget extends WidgetType {
       other.src === this.src &&
       other.alt === this.alt &&
       other.isEditing === this.isEditing &&
-      other.path === this.path
+      other.path === this.path &&
+      other.frame?.width === this.frame?.width &&
+      (other.frame === null) === (this.frame === null)
     );
   }
 
@@ -170,6 +175,13 @@ class ImageWidget extends WidgetType {
     image.loading = 'lazy';
     if (this.path) {
       image.dataset['path'] = this.path;
+    }
+    if (this.frame) {
+      // The "…" button of the hover toolbar only appears on embeds that can carry a frame.
+      image.dataset['frameEmbed'] = '';
+      if (this.frame.width) {
+        image.classList.add(`arc-image-width-${this.frame.width}`);
+      }
     }
     // Collapsed (not being edited), the widget replaces its whole `![[…]]` / `![](…)` text: CodeMirror's
     // own drag handling (dragstart) picks up that full range from a draggable element, so dragging the
@@ -705,7 +717,13 @@ function decorateWikilinks(target: DecorationContext, frontmatterEnd: number): v
       if (isEmbed && link?.resolvedPath && IMAGE_PATTERN.test(link.resolvedPath)) {
         ranges.push(
           Decoration.widget({
-            widget: new ImageWidget(toAssetUrl(link.resolvedPath), raw, true, link.resolvedPath),
+            widget: new ImageWidget(
+              toAssetUrl(link.resolvedPath),
+              raw,
+              true,
+              link.resolvedPath,
+              parseImageEmbed(raw).frame,
+            ),
             side: -1,
           }).range(from),
         );
@@ -717,7 +735,13 @@ function decorateWikilinks(target: DecorationContext, frontmatterEnd: number): v
     if (isEmbed && link?.resolvedPath && IMAGE_PATTERN.test(link.resolvedPath)) {
       ranges.push(
         Decoration.replace({
-          widget: new ImageWidget(toAssetUrl(link.resolvedPath), raw, false, link.resolvedPath),
+          widget: new ImageWidget(
+            toAssetUrl(link.resolvedPath),
+            raw,
+            false,
+            link.resolvedPath,
+            parseImageEmbed(raw).frame,
+          ),
         }).range(from, to),
       );
       continue;

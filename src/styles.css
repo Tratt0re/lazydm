@@ -939,6 +939,19 @@ arc-content > main:has(> app-encounter-page) {
   object-fit: contain;
 }
 
+/* Image width (`![[img.png|wide]]`), in Reading and Live preview. */
+.arc-image-width-half {
+  width: 50%;
+}
+
+.arc-image-width-wide {
+  width: 75%;
+}
+
+.arc-image-width-full {
+  width: 100%;
+}
+
 /* Embedded audio / PDF (reading view and live preview): a compact row with the file name. */
 .arc-embed-file {
   display: inline-flex;

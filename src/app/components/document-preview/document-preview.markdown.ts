@@ -8,6 +8,7 @@ import MarkdownIt, {
   type Token,
 } from 'markdown-it';
 
+import { parseImageEmbed } from '@/components/code-editor/image-frame';
 import type { DocumentLinkDto } from '@/dtos';
 
 const WIKILINK_PATTERN = /^(!?)\[\[([^[\]\n]+?)\]\]/;
@@ -346,7 +347,10 @@ function renderWikilinkToken(token: Token): string {
 
   if (isEmbed && resolvedPath && IMAGE_EXTENSION_PATTERN.test(resolvedPath)) {
     const src = toAssetUrl(resolvedPath);
-    return `<img class="arc-embed-image" src="${src}" alt="${displayText}" loading="lazy" data-path="${escapeHtml(resolvedPath)}" />`;
+    const { frame, label: imageLabel } = parseImageEmbed(raw);
+    const imageAlt = escapeHtml(imageLabel ?? targetName);
+    const frameClasses = frame.width ? ` arc-image-width-${frame.width}` : '';
+    return `<img class="arc-embed-image${frameClasses}" src="${src}" alt="${imageAlt}" loading="lazy" data-path="${escapeHtml(resolvedPath)}" />`;
   }
 
   const mediaKind = isEmbed && resolvedPath ? getMediaEmbedKind(resolvedPath) : null;
@@ -354,7 +358,10 @@ function renderWikilinkToken(token: Token): string {
     return renderMediaEmbedHtml(
       mediaKind,
       resolvedPath,
-      label ?? (mediaKind === 'encounter' || mediaKind === 'map' ? (resolvedTitle ?? targetName) : targetName),
+      label ??
+        (mediaKind === 'encounter' || mediaKind === 'map'
+          ? (resolvedTitle ?? targetName)
+          : targetName),
       mediaLabels,
     );
   }

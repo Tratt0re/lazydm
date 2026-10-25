@@ -598,6 +598,12 @@
       "failed": "Algunas notas cambiaron mientras tanto y siguen usando el nombre anterior",
       "error": "No se pudo renombrar la nota. Comprueba que la carpeta del Codex esté disponible y vuelve a intentarlo."
     },
+    "imageFrame": {
+      "button": "Diseño de la imagen",
+      "width": "Ancho",
+      "reset": "Restablecer ancho",
+      "widths": { "half": "Mitad", "wide": "Ancha", "full": "Ancho completo" }
+    },
     "insertMenu": {
       "cut": "Cortar",
       "copy": "Copiar",
@@ -688,12 +694,14 @@
         "table": "Tabla",
         "divider": "Separador",
         "image": "Imagen",
+        "imageLayout": "Ancho de la imagen",
         "audio": "Audio",
         "pdf": "PDF",
         "frontmatter": "Propiedades de la nota"
       },
       "notes": {
         "image": "Muestra la imagen de los recursos de la campaña. Arrástrala para moverla en la nota.",
+        "imageLayout": "Añade half, wide o full después de un | para fijar el ancho de la imagen. En la vista previa en vivo, pasa el ratón sobre la imagen y usa el botón … bajo el ojo.",
         "frontmatter": "Al principio de la nota: se muestran como un recuadro de propiedades."
       },
       "shortcuts": {

@@ -598,6 +598,12 @@
       "failed": "Some notes changed meanwhile and still use the old name",
       "error": "Couldn't rename the note. Check that the Codex folder is available, then try again."
     },
+    "imageFrame": {
+      "button": "Image layout",
+      "width": "Width",
+      "reset": "Reset width",
+      "widths": { "half": "Half", "wide": "Wide", "full": "Full width" }
+    },
     "insertMenu": {
       "cut": "Cut",
       "copy": "Copy",
@@ -688,12 +694,14 @@
         "table": "Table",
         "divider": "Divider",
         "image": "Image",
+        "imageLayout": "Image width",
         "audio": "Audio",
         "pdf": "PDF",
         "frontmatter": "Note properties"
       },
       "notes": {
         "image": "Shows the image from the campaign's assets. Drag it to move it in the note.",
+        "imageLayout": "Add half, wide or full after a | to set how wide the image is. In Live preview, hover the image and use the … button under the eye.",
         "frontmatter": "At the very top of the note: shown as a properties box."
       },
       "shortcuts": {

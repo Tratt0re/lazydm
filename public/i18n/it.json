@@ -598,6 +598,12 @@
       "failed": "Alcune note sono cambiate nel frattempo e usano ancora il vecchio nome",
       "error": "Impossibile rinominare la nota. Controlla che la cartella del Codex sia disponibile, poi riprova."
     },
+    "imageFrame": {
+      "button": "Layout dell’immagine",
+      "width": "Larghezza",
+      "reset": "Ripristina larghezza",
+      "widths": { "half": "Metà", "wide": "Larga", "full": "Tutta la larghezza" }
+    },
     "insertMenu": {
       "cut": "Taglia",
       "copy": "Copia",
@@ -688,12 +694,14 @@
         "table": "Tabella",
         "divider": "Divisore",
         "image": "Immagine",
+        "imageLayout": "Larghezza dell’immagine",
         "audio": "Audio",
         "pdf": "PDF",
         "frontmatter": "Proprietà della nota"
       },
       "notes": {
         "image": "Mostra l'immagine dalle risorse della campagna. Trascinala per spostarla nella nota.",
+        "imageLayout": "Aggiungi half, wide o full dopo un | per scegliere la larghezza dell’immagine. Nell’anteprima live passa sull’immagine e usa il pulsante … sotto l’occhio.",
         "frontmatter": "In cima alla nota: mostrate come riquadro delle proprietà."
       },
       "shortcuts": {
