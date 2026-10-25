@@ -148,6 +148,16 @@ export class LocalPreferencesService {
     this.setText(LocalPreferenceKey.TRACKER_ROW_DENSITY, normalized);
   }
 
+  /** Share of the width the first pane takes in the split screen (0–1, per device; half by default). */
+  getSplitRatio(): number {
+    const value = Number(this.getText(LocalPreferenceKey.SPLIT_RATIO));
+    return Number.isFinite(value) && value > 0 && value < 1 ? value : 0.5;
+  }
+
+  setSplitRatio(ratio: number): void {
+    this.setText(LocalPreferenceKey.SPLIT_RATIO, String(ratio));
+  }
+
   /** Whether the backlinks panel of notes is open (per device). */
   getDocumentLinksPanelOpen(): boolean {
     const value = this.getText(LocalPreferenceKey.DOCUMENT_LINKS_PANEL_OPEN);

@@ -728,6 +728,9 @@
     "brokenLinkTitle": "Nota no encontrada: {{name}}"
   },
   "tabs": {
+    "split": {
+      "resize": "Cambiar el tamaño de los dos lados"
+    },
     "ariaLabel": "Pestañas abiertas",
     "back": "Atrás",
     "forward": "Adelante",

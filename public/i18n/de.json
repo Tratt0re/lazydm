@@ -728,6 +728,9 @@
     "brokenLinkTitle": "Notiz nicht gefunden: {{name}}"
   },
   "tabs": {
+    "split": {
+      "resize": "Größe der beiden Seiten ändern"
+    },
     "ariaLabel": "Geöffnete Tabs",
     "back": "Zurück",
     "forward": "Vorwärts",

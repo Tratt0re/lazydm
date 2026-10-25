@@ -728,6 +728,9 @@
     "brokenLinkTitle": "Note introuvable : {{name}}"
   },
   "tabs": {
+    "split": {
+      "resize": "Redimensionner les deux côtés"
+    },
     "ariaLabel": "Onglets ouverts",
     "back": "Précédent",
     "forward": "Suivant",

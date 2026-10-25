@@ -728,6 +728,9 @@
     "brokenLinkTitle": "未找到笔记：{{name}}"
   },
   "tabs": {
+    "split": {
+      "resize": "调整两侧的大小"
+    },
     "ariaLabel": "已打开的标签页",
     "back": "后退",
     "forward": "前进",

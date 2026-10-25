@@ -11,6 +11,7 @@ export enum LocalPreferenceKey {
   EDITOR_SETTINGS = 'editor_settings',
   NOTE_AUDIO_VOLUME = 'note_audio_volume',
   SHOW_FILE_SIZES = 'show_file_sizes',
+  SPLIT_RATIO = 'split_ratio',
   TRACKER_ROW_DENSITY = 'tracker_row_density',
 }
 

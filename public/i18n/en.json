@@ -729,6 +729,9 @@
   },
   "tabs": {
     "ariaLabel": "Open tabs",
+    "split": {
+      "resize": "Resize the two sides"
+    },
     "back": "Back",
     "forward": "Forward",
     "new": "New tab",
