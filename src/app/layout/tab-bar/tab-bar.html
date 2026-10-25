@@ -155,6 +155,15 @@
         <arc-icon arcType="copy-plus" />
         {{ 'tabs.menu.openInBackground' | translate }}
       </button>
+      <button
+        type="button"
+        arc-menu-item
+        [arcDisabled]="!workspace.canOpenTab()"
+        (click)="workspace.openToSide(url)"
+      >
+        <arc-icon arcType="panel-right" />
+        {{ 'tabs.menu.openToSide' | translate }}
+      </button>
     } @else if (menuTab(); as tab) {
       <button
         type="button"
@@ -174,6 +183,15 @@
       >
         <arc-icon arcType="copy-plus" />
         {{ 'tabs.menu.duplicate' | translate }}
+      </button>
+      <button
+        type="button"
+        arc-menu-item
+        [arcDisabled]="pane() === 'left' && workspace.tabsOf('left').length < 2"
+        (click)="workspace.moveTabToOtherPane(tab.id)"
+      >
+        <arc-icon [arcType]="pane() === 'left' ? 'panel-right' : 'panel-left'" />
+        {{ (pane() === 'left' ? 'tabs.menu.moveToRight' : 'tabs.menu.moveToLeft') | translate }}
       </button>
       <div class="-mx-1 my-1 h-px bg-border-subtle" role="separator"></div>
       <button

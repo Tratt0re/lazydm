@@ -738,6 +738,9 @@
       "open": "Apri",
       "openInNewTab": "Apri in una nuova scheda",
       "openInBackground": "Apri in una scheda in background",
+      "openToSide": "Apri di lato",
+      "moveToRight": "Sposta a destra",
+      "moveToLeft": "Sposta a sinistra",
       "duplicate": "Duplica scheda",
       "closeOthers": "Chiudi le altre schede",
       "closeToRight": "Chiudi le schede a destra"

@@ -738,6 +738,9 @@
       "open": "打开",
       "openInNewTab": "在新标签页中打开",
       "openInBackground": "在后台标签页中打开",
+      "openToSide": "在侧边打开",
+      "moveToRight": "移到右侧",
+      "moveToLeft": "移到左侧",
       "duplicate": "复制标签页",
       "closeOthers": "关闭其他标签页",
       "closeToRight": "关闭右侧标签页"

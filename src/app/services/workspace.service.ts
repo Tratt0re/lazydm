@@ -246,7 +246,10 @@ export class WorkspaceService extends BaseIpcService<APIChannel.WORKSPACE> {
   }
 
   /** A plain navigation of the focused pane's active tab (recorded in its history). */
-  async openInActiveTab(url: string, pane: WorkspacePane = this.focusedPaneSignal()): Promise<void> {
+  async openInActiveTab(
+    url: string,
+    pane: WorkspacePane = this.focusedPaneSignal(),
+  ): Promise<void> {
     if (this.isCampaignUrl(url)) {
       await this.router.navigateByUrl(
         composeUrl(
@@ -285,7 +288,8 @@ export class WorkspaceService extends BaseIpcService<APIChannel.WORKSPACE> {
     }
 
     const rest = this.tabsSignal().filter((tab) => tab.id !== moved.id);
-    const at = rest.findIndex((tab) => tab.id === anchor.id) + (currentIndex > previousIndex ? 1 : 0);
+    const at =
+      rest.findIndex((tab) => tab.id === anchor.id) + (currentIndex > previousIndex ? 1 : 0);
     this.tabsSignal.set([...rest.slice(0, at), moved, ...rest.slice(at)]);
     this.scheduleSave();
   }
@@ -303,6 +307,62 @@ export class WorkspaceService extends BaseIpcService<APIChannel.WORKSPACE> {
       { ...tabs[index], id: crypto.randomUUID() },
       ...tabs.slice(index + 1),
     ]);
+    this.scheduleSave();
+  }
+
+  /** The side that is not focused: *Open to the side* puts a page there, the second pane appearing if needed. */
+  get otherPane(): WorkspacePane {
+    return this.focusedPaneSignal() === 'left' ? 'right' : 'left';
+  }
+
+  /** Opens a page in a new tab of the other pane (the second pane appears if it is not shown). */
+  async openToSide(url: string): Promise<void> {
+    await this.openTab(url, { pane: this.otherPane });
+  }
+
+  /**
+   * Moves a tab to the other pane, where it becomes the active tab. The first pane keeps at least one tab; moving
+   * the only tab of the second pane back closes the split.
+   */
+  async moveTabToOtherPane(tabId: string): Promise<void> {
+    const tab = this.tabsSignal().find((item) => item.id === tabId);
+    if (!tab) {
+      return;
+    }
+
+    const from = paneOf(tab);
+    const to: WorkspacePane = from === 'left' ? 'right' : 'left';
+    const fromTabs = this.tabsOf(from);
+    if (from === 'left' && fromTabs.length === 1) {
+      return;
+    }
+
+    // The pane the tab leaves shows its neighbour when the tab was the active one.
+    let fromActive = this.activeTabIdOf(from);
+    if (fromActive === tabId) {
+      const index = fromTabs.indexOf(tab);
+      fromActive = (fromTabs[index + 1] ?? fromTabs[index - 1])?.id ?? null;
+    }
+
+    const rest = this.tabsSignal().filter((item) => item.id !== tabId);
+    const afterActive = rest.findIndex((item) => item.id === this.activeTabIdOf(to));
+    const at = afterActive < 0 ? rest.length : afterActive + 1;
+    const tabs = [...rest.slice(0, at), { ...tab, pane: to }, ...rest.slice(at)];
+    const activeTabIds = { ...this.activeTabIdsSignal(), [from]: fromActive, [to]: tabId };
+    const urlOf = (id: string | null) => {
+      const found = tabs.find((item) => item.id === id);
+      return found ? getTabUrl(found) : null;
+    };
+
+    const left = urlOf(activeTabIds.left);
+    const right = urlOf(activeTabIds.right);
+    if (!left || !(await this.go(left, right))) {
+      return;
+    }
+
+    this.tabsSignal.set(tabs);
+    this.activeTabIdsSignal.set(activeTabIds);
+    this.focusedPaneSignal.set(to);
     this.scheduleSave();
   }
 
@@ -343,13 +403,21 @@ export class WorkspaceService extends BaseIpcService<APIChannel.WORKSPACE> {
     this.tabsSignal.update((tabs) =>
       tabs.filter(
         (tab) =>
-          paneOf(tab) !== pane || keep(tab, paneTabs.findIndex((item) => item.id === tab.id), keptIndex),
+          paneOf(tab) !== pane ||
+          keep(
+            tab,
+            paneTabs.findIndex((item) => item.id === tab.id),
+            keptIndex,
+          ),
       ),
     );
     this.scheduleSave();
   }
 
-  async activateSibling(offset: 1 | -1, pane: WorkspacePane = this.focusedPaneSignal()): Promise<void> {
+  async activateSibling(
+    offset: 1 | -1,
+    pane: WorkspacePane = this.focusedPaneSignal(),
+  ): Promise<void> {
     const tabs = this.tabsOf(pane);
     const index = tabs.findIndex((tab) => tab.id === this.activeTabIdOf(pane));
     if (tabs.length < 2 || index < 0) {

@@ -261,6 +261,13 @@ export class DocumentPage {
               label: 'common.moreActions',
               entries: [
                 {
+                  id: 'open-to-side',
+                  label: 'tabs.menu.openToSide',
+                  icon: 'panel-right',
+                  disabled: () => !this.document() || !this.workspace.canOpenTab(),
+                  action: () => this.openToSide(),
+                },
+                {
                   id: 'rename',
                   label: 'document.toolbar.rename',
                   icon: 'text-cursor-input',
@@ -449,6 +456,14 @@ export class DocumentPage {
     const document = this.document();
     if (document && (!this.isDirty() || (await this.save()))) {
       await this.copyTo.openCopySheet(document.path);
+    }
+  }
+
+  /** *Open to the side*: this note in the other pane (the page here is a campaign note, never a compendium one). */
+  protected openToSide(): void {
+    const route = this.router.url.split(/[?#(]/)[0];
+    if (this.workspace.isCampaignUrl(route)) {
+      void this.workspace.openToSide(route);
     }
   }
 

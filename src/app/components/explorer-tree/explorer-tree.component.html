@@ -259,6 +259,15 @@
           <arc-icon arcType="copy-plus" />
           {{ 'tabs.menu.openInBackground' | translate }}
         </button>
+        <button
+          type="button"
+          arc-menu-item
+          [arcDisabled]="!workspace.canOpenTab()"
+          (click)="workspace.openToSide(route)"
+        >
+          <arc-icon arcType="panel-right" />
+          {{ 'tabs.menu.openToSide' | translate }}
+        </button>
       }
       <button type="button" arc-menu-item (click)="openRenameSheet(file)">
         <arc-icon [arcType]="isMap(file) ? 'pencil' : 'text-cursor-input'" />

@@ -738,6 +738,9 @@
       "open": "Abrir",
       "openInNewTab": "Abrir en una pestaña nueva",
       "openInBackground": "Abrir en segundo plano",
+      "openToSide": "Abrir al lado",
+      "moveToRight": "Mover a la derecha",
+      "moveToLeft": "Mover a la izquierda",
       "duplicate": "Duplicar pestaña",
       "closeOthers": "Cerrar las demás pestañas",
       "closeToRight": "Cerrar pestañas a la derecha"

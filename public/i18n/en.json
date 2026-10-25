@@ -738,6 +738,9 @@
       "open": "Open",
       "openInNewTab": "Open in new tab",
       "openInBackground": "Open in background tab",
+      "openToSide": "Open to the side",
+      "moveToRight": "Move to the right side",
+      "moveToLeft": "Move to the left side",
       "duplicate": "Duplicate tab",
       "closeOthers": "Close other tabs",
       "closeToRight": "Close tabs to the right"
