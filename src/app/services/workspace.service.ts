@@ -84,7 +84,6 @@ export class WorkspaceService extends BaseIpcService<APIChannel.WORKSPACE> {
     this.router.events
       .pipe(filter((event): event is NavigationEnd => event instanceof NavigationEnd))
       .subscribe((event) => void this.onNavigationEnd(toPath(event.urlAfterRedirects)));
-
   }
 
   /** The page shown in a pane names its tab (the pane passes the title its toolbar shows). */

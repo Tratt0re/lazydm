@@ -27,7 +27,12 @@
       [attr.inert]="showSidebarOverlay() ? '' : null"
       [attr.aria-hidden]="showSidebarOverlay() ? 'true' : null"
     >
-      <app-pane [sidebarCollapsed]="sidebarCollapsed()" (sidebarToggle)="toggleSidebar()" />
+      <div class="flex min-h-0 flex-1">
+        <app-pane [sidebarCollapsed]="sidebarCollapsed()" (sidebarToggle)="toggleSidebar()" />
+        @if (hasSplit()) {
+          <app-pane outlet="split" class="border-l border-border" />
+        }
+      </div>
     </arc-layout>
   </arc-layout>
 </arc-layout>

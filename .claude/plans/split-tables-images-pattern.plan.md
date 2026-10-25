@@ -58,8 +58,23 @@ on the app canvas only, opt-in in Settings → General. A grid may still make se
 - Open for later: A (very fine noise 2-3% on the app canvas only, opt-in in Settings → General; §9 of
   DESIGN_PRINCIPLES bans background grids so a grid was reverted), and the DESIGN_PRINCIPLES update (C5).
 
-## D. Split screen
-- [ ] D1 Per-pane `ToolbarContextService` and `WorkspaceService` (no visible change)
+## D. Split screen (branch `feature/split-screen`; fall back to `main` if it goes wrong)
+Decisions: each pane has its own tab bar and toolbar; the right pane is a named router outlet `split`; any tab
+can be in a pane. Navigation inside a pane stays in that pane (option 1): every link and `navigateByUrl`
+(39 + 36 call sites) targets the primary outlet today, so the right pane provides its own `Router` stand-in
+(wrapper: `navigateByUrl`/`navigate`/`createUrlTree` write to `split`, `url` is the pane's path, the rest passes
+through) and no call site changes. Spike it first (campaign routes duplicated under `outlet: 'split'`, one page
+on the right); fall back to an explicit `PaneNavigator` plus call-site edits if the spike fails.
+- [x] D1a `Pane` component (tab bar + toolbar + page) with its own `ToolbarContextService` (`b0612f6`)
+- [x] D1b Router stand-in spike: works (checked in Chrome with `.claude/plans/mock-electron.js`, which must be
+      pasted as `initScript` on every `navigate_page`). Second pane shows `/…(split:campaigns/x/npcs/bob)`;
+      toolbar breadcrumbs and `router.navigateByUrl` in the right pane change only `split`; leaving an edited
+      note in the right pane autosaves through `documentLeaveGuard`. `routerLink` passes `relativeTo` even for
+      absolute links, so the stand-in only defers to the real router for relative commands. Not yet checked:
+      editor `[[links]]` (needs resolved links in the mock), `ActivatedRoute` params in the right pane.
+      The spike shows the right pane whenever the URL has a `split` outlet (`RootLayout.hasSplit`).
+- [ ] D1c `WorkspaceService` with tabs per pane (needs `pane` in the DTO and in `normalizeTab` of
+      `electron/controllers/workspace.controller.js`); right pane's tab bar and titles
 - [ ] D2 `pane` on tabs, `splitRatio`, second outlet, divider, narrow-window fallback
 - [ ] D3 Tab drag between panes, "Open in split" (explorer, note "…", tab menu)
 - [ ] D4 Shortcuts follow the active pane, persistence, docs

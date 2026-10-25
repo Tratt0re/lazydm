@@ -6,6 +6,7 @@ import { documentLeaveGuard } from '@/guards/document-leave.guard';
 import { setupEntryGuard } from '@/guards/setup.guard';
 import { SYSTEM_SLUG_PARAM, systemGuard } from '@/guards/system.guard';
 import { vaultGuard } from '@/guards/vault.guard';
+import { SPLIT_PANE_OUTLET } from '@/layout/pane/pane-router';
 import { RootLayout } from '@/layout/root-layout/root-layout';
 import { APP_SHEET_OUTLET, APP_SHEET_TITLE_ROUTE_DATA } from '@/services/app-sheet.service';
 import { NOTE_SCOPE_ROUTE_DATA } from '@/services/note-scope.service';
@@ -137,6 +138,48 @@ const SYSTEM_SHEET_ROUTES: Routes = [
   },
 ];
 
+/**
+ * The pages of a campaign. The first pane shows them in the main outlet, the second one in `split`; there the
+ * campaign root has no entry redirect (that one jumps to the last active tab of the first pane).
+ */
+function campaignRoute(outlet?: string): Route {
+  return {
+    path: `campaigns/:${CAMPAIGN_SLUG_PARAM}`,
+    ...(outlet ? { outlet } : {}),
+    canActivate: [campaignGuard],
+    children: [
+      {
+        path: '',
+        pathMatch: 'full',
+        canActivate: outlet ? [] : [campaignEntryGuard],
+        loadComponent: () =>
+          import('./pages/campaign-home-page/campaign-home-page').then((m) => m.CampaignHomePage),
+      },
+      {
+        path: 'review',
+        loadComponent: () => import('./pages/review-page/review-page').then((m) => m.ReviewPage),
+      },
+      { path: 'broken-links', pathMatch: 'full', redirectTo: 'review' },
+      ...RENAMED_SECTION_ROUTES,
+      MAP_ROUTE,
+      {
+        path: ':section',
+        children: [
+          {
+            path: '',
+            pathMatch: 'full',
+            loadComponent: () =>
+              import('./pages/campaign-section-page/campaign-section-page').then(
+                (m) => m.CampaignSectionPage,
+              ),
+          },
+          ...NOTE_ROUTES,
+        ],
+      },
+    ],
+  };
+}
+
 export const routes: Routes = [
   {
     path: 'compendium',
@@ -253,45 +296,8 @@ export const routes: Routes = [
       {
         path: '',
         component: RootLayout,
-        children: [
-          {
-            path: `campaigns/:${CAMPAIGN_SLUG_PARAM}`,
-            canActivate: [campaignGuard],
-            children: [
-              {
-                path: '',
-                pathMatch: 'full',
-                canActivate: [campaignEntryGuard],
-                loadComponent: () =>
-                  import('./pages/campaign-home-page/campaign-home-page').then(
-                    (m) => m.CampaignHomePage,
-                  ),
-              },
-              {
-                path: 'review',
-                loadComponent: () =>
-                  import('./pages/review-page/review-page').then((m) => m.ReviewPage),
-              },
-              { path: 'broken-links', pathMatch: 'full', redirectTo: 'review' },
-              ...RENAMED_SECTION_ROUTES,
-              MAP_ROUTE,
-              {
-                path: ':section',
-                children: [
-                  {
-                    path: '',
-                    pathMatch: 'full',
-                    loadComponent: () =>
-                      import('./pages/campaign-section-page/campaign-section-page').then(
-                        (m) => m.CampaignSectionPage,
-                      ),
-                  },
-                  ...NOTE_ROUTES,
-                ],
-              },
-            ],
-          },
-        ],
+        // The same pages again for the second pane, which shows them in the `split` outlet.
+        children: [campaignRoute(), campaignRoute(SPLIT_PANE_OUTLET)],
       },
       { path: '**', redirectTo: 'campaigns' },
     ],

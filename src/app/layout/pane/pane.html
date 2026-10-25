@@ -10,7 +10,7 @@
 
 <app-vault-activity-banner />
 
-<arc-content id="main-content" class="min-h-0 px-4">
+<arc-content [attr.id]="isFirstPane() ? 'main-content' : null" class="min-h-0 px-4">
   <app-vault-sync-status />
-  <router-outlet />
+  <router-outlet [name]="outlet()" />
 </arc-content>
