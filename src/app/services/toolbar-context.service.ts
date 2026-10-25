@@ -144,7 +144,8 @@ interface NormalizedToolbarContextConfig {
   readonly itemNavigation: ToolbarItemNavigation | null;
 }
 
-@Injectable({ providedIn: 'root' })
+/** One per pane or sheet (each provides its own), so a page only ever fills the toolbar it is shown under. */
+@Injectable()
 export class ToolbarContextService {
   private readonly titleState = signal<string | null>(null);
   private readonly titleModeState = signal<ToolbarTitleMode>('default');

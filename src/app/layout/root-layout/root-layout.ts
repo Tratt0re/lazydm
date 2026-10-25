@@ -9,19 +9,14 @@ import {
   signal,
   ViewEncapsulation,
 } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 import { LayoutImports } from '@/shared/components/layout/layout.imports';
 import { AppMenuService } from '@/services/app-menu.service';
-import { VaultActivityBannerComponent } from '@/components/vault-activity-banner/vault-activity-banner.component';
-import { VaultSyncStatusComponent } from '@/components/vault-sync-status/vault-sync-status.component';
+import { Pane } from '../pane/pane';
 import { Sidebar } from '../sidebar/sidebar';
-import { TabBar } from '../tab-bar/tab-bar';
-import { Toolbar } from '../toolbar/toolbar';
 import { MenuConfiguration, type MenuSectionConfig } from '@/config/menu.config';
 import { CampaignService } from '@/services/campaign.service';
 import { SectionService } from '@/services/section.service';
-import { ToolbarContextService } from '@/services/toolbar-context.service';
 import { detectSmallScreenViewport } from '@/shared/utils';
 import { listenToIpcEvent } from '@/services/ipc-events';
 import { UpdateModalComponent } from '@/shared/components/update-modal/update-modal.component';
@@ -32,20 +27,15 @@ import { UpdateService } from '@/shared/core/services/update.service';
   selector: 'app-root-layout',
   imports: [
     ...LayoutImports,
-    RouterOutlet,
     TranslatePipe,
-    Toolbar,
     Sidebar,
-    TabBar,
-    VaultActivityBannerComponent,
-    VaultSyncStatusComponent,
+    Pane,
     UpdateModalComponent,
   ],
   templateUrl: './root-layout.html',
   encapsulation: ViewEncapsulation.None,
 })
 export class RootLayout implements OnInit {
-  private readonly toolbarContextService = inject(ToolbarContextService);
   private readonly appMenu = inject(AppMenuService);
   protected readonly updateService = inject(UpdateService);
   private readonly handleFullscreenChangeEvent = (payload: unknown) => {
@@ -66,12 +56,6 @@ export class RootLayout implements OnInit {
   protected readonly showSidebarOverlay = computed(
     () => this.isSmallScreen() && !this.sidebarCollapsed(),
   );
-  protected readonly toolbarTitle = this.toolbarContextService.title;
-  protected readonly toolbarTitleMode = this.toolbarContextService.titleMode;
-  protected readonly toolbarTitleBreadcrumbs = this.toolbarContextService.titleBreadcrumbs;
-  protected readonly toolbarItemActions = this.toolbarContextService.itemActions;
-  protected readonly toolbarItemNavigation = this.toolbarContextService.itemNavigation;
-
   constructor() {
     if (this.isSmallScreen()) {
       this.sidebarCollapsed.set(true);

@@ -1,4 +1,4 @@
-import { computed, effect, inject, Injectable, signal } from '@angular/core';
+import { computed, inject, Injectable, signal } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { filter } from 'rxjs';
@@ -7,7 +7,6 @@ import { APIChannel } from '@/config/api';
 import type { WorkspaceTabDto } from '@/dtos';
 import { BaseIpcService } from '@/services/base-ipc.service';
 import { SectionService, toSubfolderLabel } from '@/services/section.service';
-import { ToolbarContextService } from '@/services/toolbar-context.service';
 
 const CAMPAIGN_URL_PATTERN = /^\/campaigns\/([^/?#]+)/;
 const WORKSPACE_MAX_TABS = 30;
@@ -47,7 +46,6 @@ function createTab(url: string, title = ''): WorkspaceTabDto {
 export class WorkspaceService extends BaseIpcService<APIChannel.WORKSPACE> {
   private readonly router = inject(Router);
   private readonly translateService = inject(TranslateService);
-  private readonly toolbarContext = inject(ToolbarContextService);
   private readonly sectionService = inject(SectionService);
 
   private readonly campaignSlugSignal = signal<string | null>(null);
@@ -87,12 +85,11 @@ export class WorkspaceService extends BaseIpcService<APIChannel.WORKSPACE> {
       .pipe(filter((event): event is NavigationEnd => event instanceof NavigationEnd))
       .subscribe((event) => void this.onNavigationEnd(toPath(event.urlAfterRedirects)));
 
-    effect(() => {
-      const title = this.toolbarContext.title();
-      if (title) {
-        this.setTitleForUrl(toPath(this.router.url), this.translateService.instant(title));
-      }
-    });
+  }
+
+  /** The page shown in a pane names its tab (the pane passes the title its toolbar shows). */
+  reportTitle(title: string): void {
+    this.setTitleForUrl(toPath(this.router.url), this.translateService.instant(title));
   }
 
   /** Whether a URL belongs to the open campaign (tabs never leave it). */

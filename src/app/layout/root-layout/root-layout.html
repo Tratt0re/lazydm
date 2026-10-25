@@ -27,23 +27,7 @@
       [attr.inert]="showSidebarOverlay() ? '' : null"
       [attr.aria-hidden]="showSidebarOverlay() ? 'true' : null"
     >
-      <app-tab-bar [sidebarCollapsed]="sidebarCollapsed()" (sidebarToggle)="toggleSidebar()" />
-
-      <app-toolbar
-        [title]="toolbarTitle()"
-        [titleMode]="toolbarTitleMode()"
-        [titleBreadcrumbs]="toolbarTitleBreadcrumbs()"
-        [itemActions]="toolbarItemActions()"
-        [itemNavigation]="toolbarItemNavigation()"
-      ></app-toolbar>
-
-      <app-vault-activity-banner />
-
-      <arc-content id="main-content" class="min-h-0 px-4">
-        <app-vault-sync-status />
-        <router-outlet />
-      </arc-content>
-
+      <app-pane [sidebarCollapsed]="sidebarCollapsed()" (sidebarToggle)="toggleSidebar()" />
     </arc-layout>
   </arc-layout>
 </arc-layout>
