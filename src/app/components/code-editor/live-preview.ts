@@ -27,6 +27,7 @@ import {
   toInAppNoteRoute,
 } from '@/components/document-preview/document-preview.markdown';
 import { type ImageFrame, parseImageEmbed } from '@/components/code-editor/image-frame';
+import { enterTable, type TableLabels, TableWidget } from '@/components/code-editor/table-widget';
 import type { DocumentLinkDto } from '@/dtos';
 
 /** What the live preview needs besides the text: the note's resolved links (from the vault index). */
@@ -40,6 +41,8 @@ export interface LivePreviewContext {
   /** The audio of the note playing now (its row shows *stop*). */
   readonly playingAudioPath?: string | null;
   readonly mediaLabels?: MediaEmbedLabels;
+  /** Names of the add row / add column buttons; without them tables stay plain rendered blocks. */
+  readonly tableLabels?: TableLabels;
   /** 0–1 volume for the audio row's slider initial value. */
   readonly volume?: number;
   /** Lengths of the note's audio files (seconds, by path), shown on their rows. */
@@ -626,16 +629,16 @@ function decorateSyntax(target: DecorationContext, frontmatterEnd: number): void
             links: linksForSnippet(context, text),
             sourcePath: context.sourcePath,
           });
-          ranges.push(
-            Decoration.replace({
-              block: true,
-              widget: new BlockWidget(
-                `table:${text}`,
-                renderHtmlBlock(html, 'cm-lp-table'),
-                state.doc.lineAt(from).to,
-              ),
-            }).range(from, to),
-          );
+          // Editable in place when the note can be edited; a read-only editor keeps the plain rendered block.
+          const widget =
+            context.tableLabels && !state.readOnly && state.facet(EditorView.editable)
+              ? new TableWidget(text, html, context.tableLabels)
+              : new BlockWidget(
+                  `table:${text}`,
+                  renderHtmlBlock(html, 'cm-lp-table'),
+                  state.doc.lineAt(from).to,
+                );
+          ranges.push(Decoration.replace({ block: true, widget }).range(from, to));
           blocks.push([from, to]);
         }
         return false;
@@ -901,6 +904,41 @@ const livePreviewTheme = EditorView.theme({
   },
   // Rendered HTML must not inherit the editor's `break-spaces` (it would show its newlines as blank lines).
   '.cm-lp-block-wrap': { display: 'flow-root', padding: '6px 0' },
+  // The add row / add column buttons of an editable table sit outside it, shown while the pointer is over the table.
+  '.cm-lp-table-wrap': { position: 'relative', paddingRight: '26px', paddingBottom: '26px' },
+  '.cm-lp-table td, .cm-lp-table th': { cursor: 'text' },
+  '.cm-lp-cell-editing': {
+    outline: '2px solid var(--ring)',
+    outlineOffset: '-2px',
+    fontFamily: 'var(--font-mono)',
+    textTransform: 'none',
+    letterSpacing: 'normal',
+    whiteSpace: 'pre-wrap',
+  },
+  '.cm-lp-table-add': {
+    position: 'absolute',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: '22px',
+    height: '22px',
+    padding: '0',
+    border: '1px solid var(--border-strong)',
+    backgroundColor: 'var(--popover)',
+    color: 'var(--primary)',
+    cursor: 'pointer',
+    opacity: '0',
+    lineHeight: '1',
+  },
+  '.cm-lp-table-wrap:hover .cm-lp-table-add, .cm-lp-table-wrap:focus-within .cm-lp-table-add': {
+    opacity: '1',
+  },
+  '.cm-lp-table-add:hover, .cm-lp-table-add:focus-visible': {
+    borderColor: 'var(--primary)',
+    backgroundColor: 'var(--raised)',
+  },
+  '.cm-lp-table-add-row': { left: '0', bottom: '2px' },
+  '.cm-lp-table-add-column': { right: '2px', top: '6px' },
   '.cm-lp-block': { margin: '0', cursor: 'text', whiteSpace: 'normal' },
   '.cm-lp-block > :first-child': { marginTop: '0' },
   '.cm-lp-block > :last-child': { marginBottom: '0' },
@@ -926,17 +964,26 @@ const livePreviewTheme = EditorView.theme({
   },
 });
 
-/** Whether a line is inside a block the live preview shows rendered (table, callout, properties). */
-function isInRenderedBlock(state: EditorState, lineFrom: number, lineTo: number): boolean {
-  let found = false;
+/** The rendered block (table, callout, properties) a line is inside, or null. */
+function renderedBlockAt(
+  state: EditorState,
+  lineFrom: number,
+  lineTo: number,
+): { readonly from: number; readonly widget: unknown } | null {
+  let found: { from: number; widget: unknown } | null = null;
   state.field(livePreviewField).between(lineFrom, lineTo, (from, to, decoration) => {
     if (decoration.spec.block && from <= lineFrom && to >= lineTo) {
-      found = true;
+      found = { from, widget: decoration.spec.widget };
       return false;
     }
     return undefined;
   });
   return found;
+}
+
+/** Whether a line is inside a block the live preview shows rendered (table, callout, properties). */
+function isInRenderedBlock(state: EditorState, lineFrom: number, lineTo: number): boolean {
+  return renderedBlockAt(state, lineFrom, lineTo) !== null;
 }
 
 /**
@@ -957,8 +1004,21 @@ function stepIntoBlock(direction: -1 | 1): Command {
     }
 
     const target = view.state.doc.line(targetNumber);
-    if (!isInRenderedBlock(view.state, target.from, target.to)) {
+    const block = renderedBlockAt(view.state, target.from, target.to);
+    if (!block) {
       return false;
+    }
+
+    // An editable table is entered at its nearest cell (first row going down, last row going up).
+    if (
+      block.widget instanceof TableWidget &&
+      enterTable(view, block.from, {
+        row: direction === 1 ? 'first' : 'last',
+        column: 'first',
+        caret: 'end',
+      })
+    ) {
+      return true;
     }
 
     const column = Math.min(range.head - line.from, target.length);
@@ -989,11 +1049,48 @@ const clickAfterLineMarks = EditorState.transactionFilter.of((transaction) => {
   return [transaction, { selection: { anchor: line.from + marks[0].length }, sequential: true }];
 });
 
-// Above the default keymap, whose Up/Down would otherwise run first.
+/**
+ * Left at the start of the line under an editable table, or Right at the end of the line above it, goes into the
+ * table's last or first cell instead of moving the cursor onto the table's source.
+ */
+function stepIntoTable(direction: -1 | 1): Command {
+  return (view) => {
+    const range = view.state.selection.main;
+    if (!range.empty) {
+      return false;
+    }
+
+    const line = view.state.doc.lineAt(range.head);
+    if (range.head !== (direction === -1 ? line.from : line.to)) {
+      return false;
+    }
+
+    const targetNumber = line.number + direction;
+    if (targetNumber < 1 || targetNumber > view.state.doc.lines) {
+      return false;
+    }
+
+    const target = view.state.doc.line(targetNumber);
+    const block = renderedBlockAt(view.state, target.from, target.to);
+    if (!(block?.widget instanceof TableWidget)) {
+      return false;
+    }
+
+    return enterTable(view, block.from, {
+      row: direction === 1 ? 'first' : 'last',
+      column: direction === 1 ? 'first' : 'last',
+      caret: direction === 1 ? 'start' : 'end',
+    });
+  };
+}
+
+// Above the default keymap, whose arrows would otherwise run first.
 const livePreviewKeymap = Prec.high(
   keymap.of([
     { key: 'ArrowUp', run: stepIntoBlock(-1) },
     { key: 'ArrowDown', run: stepIntoBlock(1) },
+    { key: 'ArrowLeft', run: stepIntoTable(-1) },
+    { key: 'ArrowRight', run: stepIntoTable(1) },
   ]),
 );
 

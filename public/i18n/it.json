@@ -598,6 +598,16 @@
       "failed": "Alcune note sono cambiate nel frattempo e usano ancora il vecchio nome",
       "error": "Impossibile rinominare la nota. Controlla che la cartella del Codex sia disponibile, poi riprova."
     },
+    "table": {
+      "addRow": "Aggiungi riga",
+      "addColumn": "Aggiungi colonna",
+      "rowAbove": "Inserisci riga sopra",
+      "rowBelow": "Inserisci riga sotto",
+      "columnLeft": "Inserisci colonna a sinistra",
+      "columnRight": "Inserisci colonna a destra",
+      "deleteRow": "Elimina riga",
+      "deleteColumn": "Elimina colonna"
+    },
     "imageFrame": {
       "button": "Layout dell’immagine",
       "width": "Larghezza",

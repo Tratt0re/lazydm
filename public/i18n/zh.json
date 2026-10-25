@@ -598,6 +598,16 @@
       "failed": "部分笔记在此期间已被修改，仍在使用旧名称",
       "error": "无法重命名笔记。请确认 Codex 文件夹可用，然后重试。"
     },
+    "table": {
+      "addRow": "添加行",
+      "addColumn": "添加列",
+      "rowAbove": "在上方插入行",
+      "rowBelow": "在下方插入行",
+      "columnLeft": "在左侧插入列",
+      "columnRight": "在右侧插入列",
+      "deleteRow": "删除行",
+      "deleteColumn": "删除列"
+    },
     "imageFrame": {
       "button": "图片布局",
       "width": "宽度",

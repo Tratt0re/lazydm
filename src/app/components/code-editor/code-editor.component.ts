@@ -41,6 +41,12 @@ import {
   withImageFrame,
 } from '@/components/code-editor/image-frame';
 import { AppImageFrameMenuComponent } from '@/components/image-frame-menu/image-frame-menu.component';
+import { AppTableMenuComponent } from '@/components/table-menu/table-menu.component';
+import {
+  TABLE_MENU_EVENT,
+  type TableMenuAction,
+  type TableMenuRequest,
+} from '@/components/code-editor/table-widget';
 import {
   attachLinkPreviewHover,
   type ImageFrameMenuRequest,
@@ -95,7 +101,7 @@ export interface CodeEditorAssetAction {
  */
 @Component({
   selector: 'app-code-editor',
-  imports: [AppEditorInsertMenuComponent, AppImageFrameMenuComponent],
+  imports: [AppEditorInsertMenuComponent, AppImageFrameMenuComponent, AppTableMenuComponent],
   template: `
     <div #host class="h-full min-h-0 w-full"></div>
     <app-editor-insert-menu
@@ -104,6 +110,7 @@ export interface CodeEditorAssetAction {
       (menuClosed)="focusEditor()"
     />
     <app-image-frame-menu (frameChange)="applyImageFrame($event)" (menuClosed)="focusEditor()" />
+    <app-table-menu (action)="runTableMenuAction($event)" (menuClosed)="onTableMenuClosed()" />
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
@@ -114,6 +121,9 @@ export class AppCodeEditorComponent implements OnDestroy {
   private readonly host = viewChild.required<ElementRef<HTMLDivElement>>('host');
   private readonly insertMenu = viewChild.required(AppEditorInsertMenuComponent);
   private readonly imageFrameMenu = viewChild.required(AppImageFrameMenuComponent);
+  private readonly tableMenu = viewChild.required(AppTableMenuComponent);
+  /** The cell menu that is open: what its entries do. */
+  private tableMenuRequest: TableMenuRequest | null = null;
   private readonly translate = inject(TranslateService);
   /** The `![[…]]` embed the open "…" menu edits: its range in the note and its text, to check it did not move. */
   private frameTarget: { readonly from: number; readonly to: number; readonly raw: string } | null =
@@ -231,6 +241,7 @@ export class AppCodeEditorComponent implements OnDestroy {
     host.removeEventListener('click', this.handleLinkClick, true);
     host.removeEventListener('input', this.handleVolumeInput, true);
     host.removeEventListener('contextmenu', this.handleContextMenu);
+    host.removeEventListener(TABLE_MENU_EVENT, this.handleTableMenu);
     this.detachLinkPreview?.();
     this.view?.destroy();
   }
@@ -283,6 +294,7 @@ export class AppCodeEditorComponent implements OnDestroy {
     host.addEventListener('click', this.handleLinkClick, true);
     host.addEventListener('input', this.handleVolumeInput, true);
     host.addEventListener('contextmenu', this.handleContextMenu);
+    host.addEventListener(TABLE_MENU_EVENT, this.handleTableMenu);
     this.detachLinkPreview = attachLinkPreviewHover(
       host,
       () => this.linkPreviewLabel(),
@@ -372,6 +384,37 @@ export class AppCodeEditorComponent implements OnDestroy {
     this.view?.focus();
   }
 
+  /** A table cell asked for its menu (right-click or the menu key): open it where the cell says. */
+  private readonly handleTableMenu = (event: Event) => {
+    const request = (event as CustomEvent<TableMenuRequest>).detail;
+    this.tableMenuRequest = request;
+    this.tableMenu().open(request.x, request.y, {
+      canInsertAbove: request.canInsertAbove,
+      canDeleteRow: request.canDeleteRow,
+      canDeleteColumn: request.canDeleteColumn,
+    });
+  };
+
+  protected runTableMenuAction(action: TableMenuAction): void {
+    const request = this.tableMenuRequest;
+    this.tableMenuRequest = null;
+    request?.run(action);
+  }
+
+  /**
+   * Closing the menu without a choice hands the focus back. Choosing an entry closes the menu too, and the
+   * close may be reported before the entry's click handler runs, so this waits for that click to finish:
+   * a choice has taken the request by then, and keeps the focus its own change put in a cell.
+   */
+  protected onTableMenuClosed(): void {
+    setTimeout(() => {
+      if (this.tableMenuRequest) {
+        this.tableMenuRequest = null;
+        this.view?.focus();
+      }
+    });
+  }
+
   /**
    * Right-click opens the insert menu (not in read-only notes). Like a native menu, a click outside
    * the selection first moves the cursor there; inside it the selection stays, for wrapping.
@@ -403,6 +446,10 @@ export class AppCodeEditorComponent implements OnDestroy {
           pageTitle: this.pageTitle(),
           playingAudioPath: this.playingAudioPath(),
           mediaLabels: this.mediaLabels(),
+          tableLabels: {
+            addRow: this.translate.instant('document.table.addRow'),
+            addColumn: this.translate.instant('document.table.addColumn'),
+          },
           // Read untracked: volume changes (slider drags) must not trigger decoration rebuilds.
           volume: untracked(this.audioVolume),
           audioDurations: this.audioDurations(),

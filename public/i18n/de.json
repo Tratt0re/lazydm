@@ -598,6 +598,16 @@
       "failed": "Einige Notizen wurden inzwischen geändert und verwenden noch den alten Namen",
       "error": "Die Notiz konnte nicht umbenannt werden. Prüfe, ob der Codex-Ordner verfügbar ist, und versuche es erneut."
     },
+    "table": {
+      "addRow": "Zeile hinzufügen",
+      "addColumn": "Spalte hinzufügen",
+      "rowAbove": "Zeile oberhalb einfügen",
+      "rowBelow": "Zeile unterhalb einfügen",
+      "columnLeft": "Spalte links einfügen",
+      "columnRight": "Spalte rechts einfügen",
+      "deleteRow": "Zeile löschen",
+      "deleteColumn": "Spalte löschen"
+    },
     "imageFrame": {
       "button": "Bildlayout",
       "width": "Breite",

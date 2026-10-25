@@ -26,9 +26,13 @@ on the app canvas only, opt-in in Settings → General. A grid may still make se
 - [ ] B5 DESIGN_PRINCIPLES §8: describe the "…" width menu and the `|half|wide|full` syntax
 
 ## C. Table editing in Live preview
-- [ ] C1 Parser/serializer `table-edit.ts` + vitest
-- [ ] C2 Phase A: add row/column buttons, row/column "…" menu (insert, delete, align)
-- [ ] C3 Phase B: editable cells, Tab/Shift+Tab, one transaction per edit
+- [x] C1 Parser/serializer `table-edit.ts` + vitest (13 tests)
+- [x] C2a Add row / add column buttons (`table-widget.ts`), shown on hover
+- [x] C2b Cell menu (right-click / menu key): insert row above/below, column left/right, delete row, delete
+      column. Column alignment skipped by the user (model function `setColumnAlign` exists, no UI).
+- [x] C2c Arrow keys: Up/Down/Left/Right enter a table from the neighbouring line and move between cells
+- [x] C3 Editable cells (click = markdown source of the cell), Enter / Tab / Shift+Tab / Esc, Tab out of the
+      last cell adds a row, one change per edit. NOT yet tried in the running app.
 - [ ] C4 Docs, i18n
 
 ## D. Split screen

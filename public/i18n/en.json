@@ -598,6 +598,16 @@
       "failed": "Some notes changed meanwhile and still use the old name",
       "error": "Couldn't rename the note. Check that the Codex folder is available, then try again."
     },
+    "table": {
+      "addRow": "Add row",
+      "addColumn": "Add column",
+      "rowAbove": "Insert row above",
+      "rowBelow": "Insert row below",
+      "columnLeft": "Insert column left",
+      "columnRight": "Insert column right",
+      "deleteRow": "Delete row",
+      "deleteColumn": "Delete column"
+    },
     "imageFrame": {
       "button": "Image layout",
       "width": "Width",
