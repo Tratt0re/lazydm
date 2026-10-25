@@ -73,8 +73,16 @@ on the right); fall back to an explicit `PaneNavigator` plus call-site edits if 
       absolute links, so the stand-in only defers to the real router for relative commands. Not yet checked:
       editor `[[links]]` (needs resolved links in the mock), `ActivatedRoute` params in the right pane.
       The spike shows the right pane whenever the URL has a `split` outlet (`RootLayout.hasSplit`).
-- [ ] D1c `WorkspaceService` with tabs per pane (needs `pane` in the DTO and in `normalizeTab` of
-      `electron/controllers/workspace.controller.js`); right pane's tab bar and titles
+- [x] D1c `WorkspaceService` with tabs per pane: `pane` on tabs (missing = left), `rightActiveTabId` saved in
+      `tabs_json` (`{ tabs, rightActiveTabId }`; old rows are a plain array and still load), one active tab per
+      pane, a focused pane, the right pane exists while it has tabs, closing a pane's last tab closes the pane.
+      `TabBar` takes `pane` and shows that side's tabs; only the left bar listens to the document (link
+      clicks, shortcuts, Cmd+W). Checked in Chrome with the mock: restore, switch tabs in each pane, new tab in
+      the right pane, back in the right pane, close down to no split, saved shape, same note in both panes.
+      Found on the way: reporting a tab title read signals inside an effect, so two panes showing one note
+      renamed each other forever (NG0103); `reportTitle` is now untracked and renames per pane.
+      Not done yet: no way to open the split from the UI (D3), draggable divider and widths (D2), shortcuts
+      for the other pane (D4), the app menu still acts on the focused pane only.
 - [ ] D2 `pane` on tabs, `splitRatio`, second outlet, divider, narrow-window fallback
 - [ ] D3 Tab drag between panes, "Open in split" (explorer, note "…", tab menu)
 - [ ] D4 Shortcuts follow the active pane, persistence, docs

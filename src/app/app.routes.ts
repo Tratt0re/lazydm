@@ -6,10 +6,10 @@ import { documentLeaveGuard } from '@/guards/document-leave.guard';
 import { setupEntryGuard } from '@/guards/setup.guard';
 import { SYSTEM_SLUG_PARAM, systemGuard } from '@/guards/system.guard';
 import { vaultGuard } from '@/guards/vault.guard';
-import { SPLIT_PANE_OUTLET } from '@/layout/pane/pane-router';
 import { RootLayout } from '@/layout/root-layout/root-layout';
 import { APP_SHEET_OUTLET, APP_SHEET_TITLE_ROUTE_DATA } from '@/services/app-sheet.service';
 import { NOTE_SCOPE_ROUTE_DATA } from '@/services/note-scope.service';
+import { SPLIT_PANE_OUTLET } from '@/services/workspace.service';
 
 /** Sections that were renamed: old URLs (saved tabs, links) open the new section. */
 const RENAMED_SECTION_ROUTES: Routes = [

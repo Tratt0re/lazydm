@@ -1,18 +1,23 @@
 @if (workspace.isVisible()) {
-  <div class="flex h-10 items-stretch border-b border-border bg-recessed">
+  <div
+    class="flex h-10 items-stretch border-b border-border bg-recessed"
+    (mousedown)="workspace.focusPane(pane())"
+  >
     <div class="flex shrink-0 items-center gap-1 border-r border-border px-2">
-      <app-sidebar-toggle [sidebarCollapsed]="sidebarCollapsed()" (toggle)="sidebarToggle.emit()" />
+      @if (pane() === 'left') {
+        <app-sidebar-toggle [sidebarCollapsed]="sidebarCollapsed()" (toggle)="sidebarToggle.emit()" />
+      }
       <button
         type="button"
         arc-button
         arcType="ghost"
         arcSize="sm"
         class="size-7"
-        [arcDisabled]="!workspace.canGoBack()"
+        [arcDisabled]="!workspace.canGoBackIn(pane())"
         [attr.aria-label]="'tabs.back' | translate"
         arcPosition="bottom"
         [arcTooltip]="withShortcut('tabs.back' | translate, 'back')"
-        (click)="workspace.goBack()"
+        (click)="workspace.goBack(pane())"
       >
         <arc-icon arcType="chevron-left" />
       </button>
@@ -22,11 +27,11 @@
         arcType="ghost"
         arcSize="sm"
         class="size-7"
-        [arcDisabled]="!workspace.canGoForward()"
+        [arcDisabled]="!workspace.canGoForwardIn(pane())"
         [attr.aria-label]="'tabs.forward' | translate"
         arcPosition="bottom"
         [arcTooltip]="withShortcut('tabs.forward' | translate, 'forward')"
-        (click)="workspace.goForward()"
+        (click)="workspace.goForward(pane())"
       >
         <arc-icon arcType="chevron-right" />
       </button>
@@ -38,12 +43,12 @@
       cdkDropListOrientation="horizontal"
       cdkDropListLockAxis="x"
       class="flex min-w-0 flex-1 items-stretch gap-1 overflow-x-auto px-1 scrollbar-hide"
-      [cdkDropListData]="workspace.tabs()"
+      [cdkDropListData]="workspace.tabsOf(pane())"
       [attr.aria-label]="'tabs.ariaLabel' | translate"
       (cdkDropListDropped)="onDrop($event)"
     >
-      @for (tab of workspace.tabs(); track tab.id) {
-        @let isActive = tab.id === workspace.activeTabId();
+      @for (tab of workspace.tabsOf(pane()); track tab.id) {
+        @let isActive = tab.id === workspace.activeTabIdOf(pane());
         @let title = getTitle(tab) || ('tabs.untitled' | translate);
         <div
           cdkDrag
@@ -110,7 +115,7 @@
         [attr.aria-label]="'tabs.new' | translate"
         arcPosition="bottom"
         [arcTooltip]="withShortcut('tabs.new' | translate, 'newTab')"
-        (click)="workspace.openTab()"
+        (click)="workspace.openTab(undefined, { pane: pane() })"
       >
         <arc-icon arcType="plus" />
       </button>

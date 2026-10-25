@@ -15,7 +15,7 @@ import {
 import { TranslatePipe } from '@ngx-translate/core';
 
 import { SidebarToggleComponent } from '@/components/sidebar-toggle/sidebar-toggle.component';
-import type { WorkspaceTabDto } from '@/dtos';
+import type { WorkspacePane, WorkspaceTabDto } from '@/dtos';
 import { matchesShortcut, withShortcut } from '@/config/shortcuts.config';
 import { REVIEW_ROUTE_SEGMENT } from '@/pages/review-page/review-page';
 import { AppSheetService } from '@/services/app-sheet.service';
@@ -54,6 +54,8 @@ type TabBarMenuTarget =
   },
 })
 export class TabBar {
+  /** The side of the split screen this bar belongs to; it shows that side's tabs. */
+  readonly pane = input<WorkspacePane>('left');
   readonly sidebarCollapsed = input(false);
   readonly sidebarToggle = output<void>();
   protected readonly workspace = inject(WorkspaceService);
@@ -69,6 +71,7 @@ export class TabBar {
   /** Cmd/Ctrl+W is caught by the main process (the default menu would close the window). */
   private readonly handleShortcutEvent = (payload: unknown) => {
     if (
+      this.pane() === 'left' &&
       payload &&
       typeof payload === 'object' &&
       'action' in payload &&
@@ -89,6 +92,11 @@ export class TabBar {
     // the menu just opened (its trigger is a hidden element), closing it right away.
     if (event.type === 'auxclick' && event.button === 2 && this.contextMenuTrigger().isOpen()) {
       event.stopPropagation();
+      return;
+    }
+
+    // The document-wide listeners of both bars would act twice: the left bar handles links.
+    if (this.pane() !== 'left') {
       return;
     }
 
@@ -125,7 +133,7 @@ export class TabBar {
       tabElement && this.elementRef.nativeElement.contains(tabElement)
         ? tabElement.getAttribute('data-tab-id')
         : null;
-    const route = tabId ? null : this.getCampaignLinkRoute(event.target);
+    const route = tabId || this.pane() !== 'left' ? null : this.getCampaignLinkRoute(event.target);
     const target: TabBarMenuTarget | null = tabId
       ? { kind: 'tab', tabId }
       : route
@@ -176,9 +184,10 @@ export class TabBar {
       : null;
   }
 
+  /** Position of the menu's tab among its pane's tabs (for *Close tabs to the right*). */
   protected menuTabIndex(): number {
     const tab = this.menuTab();
-    return tab ? this.workspace.tabs().indexOf(tab) : -1;
+    return tab ? this.workspace.tabsOf(this.pane()).indexOf(tab) : -1;
   }
 
   protected menuLinkUrl(): string | null {
@@ -187,7 +196,7 @@ export class TabBar {
   }
 
   protected onDrop(event: CdkDragDrop<readonly WorkspaceTabDto[]>): void {
-    this.workspace.moveTab(event.previousIndex, event.currentIndex);
+    this.workspace.moveTab(this.pane(), event.previousIndex, event.currentIndex);
   }
 
   protected onTabAuxClick(event: MouseEvent, tab: WorkspaceTabDto): void {
@@ -232,7 +241,8 @@ export class TabBar {
 
   @HostListener('document:keydown', ['$event'])
   protected onKeyDown(event: KeyboardEvent): void {
-    if (!this.workspace.isVisible() || this.sheets.isOpen()) {
+    // Both bars hear the document; the left one acts, on the focused pane.
+    if (this.pane() !== 'left' || !this.workspace.isVisible() || this.sheets.isOpen()) {
       return;
     }
 

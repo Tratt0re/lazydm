@@ -1,4 +1,8 @@
-<app-tab-bar [sidebarCollapsed]="sidebarCollapsed()" (sidebarToggle)="sidebarToggle.emit()" />
+<app-tab-bar
+  [pane]="side()"
+  [sidebarCollapsed]="sidebarCollapsed()"
+  (sidebarToggle)="sidebarToggle.emit()"
+/>
 
 <app-toolbar
   [title]="toolbarTitle()"

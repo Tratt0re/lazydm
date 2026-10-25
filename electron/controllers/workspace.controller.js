@@ -52,7 +52,8 @@ function normalizeTab(value, label, campaign) {
       )
     : history.length - 1;
 
-  return { id, title, history, historyIndex };
+  // The split screen's second pane; a tab without the field (saved before it existed) is in the first.
+  return { id, title, history, historyIndex, pane: tab.pane === 'right' ? 'right' : 'left' };
 }
 
 /** Saved tabs of a campaign (null when none, or while the vault index is not open yet). */
@@ -74,15 +75,29 @@ function save(payload) {
   const activeTabId = normalizeOptionalString(body.activeTabId, 'payload.activeTabId', {
     allowNull: true,
   });
-  const resolvedActiveTabId = tabs.some((tab) => tab.id === activeTabId)
+  const leftTabs = tabs.filter((tab) => tab.pane === 'left');
+  const rightTabs = tabs.filter((tab) => tab.pane === 'right');
+  const rightActiveTabId = normalizeOptionalString(
+    body.rightActiveTabId,
+    'payload.rightActiveTabId',
+    { allowNull: true },
+  );
+  const resolvedActiveTabId = leftTabs.some((tab) => tab.id === activeTabId)
     ? activeTabId
-    : (tabs[0]?.id ?? null);
+    : (leftTabs[0]?.id ?? null);
+  const resolvedRightActiveTabId = rightTabs.some((tab) => tab.id === rightActiveTabId)
+    ? rightActiveTabId
+    : (rightTabs[0]?.id ?? null);
 
   if (!indexerController.isOpen()) {
     return null;
   }
 
-  return workspaceModel.saveWorkspace(campaign, { tabs, activeTabId: resolvedActiveTabId });
+  return workspaceModel.saveWorkspace(campaign, {
+    tabs,
+    activeTabId: resolvedActiveTabId,
+    rightActiveTabId: resolvedRightActiveTabId,
+  });
 }
 
 module.exports = {

@@ -1,19 +1,12 @@
 import { Injectable, signal } from '@angular/core';
 import type { NavigationExtras, Router, UrlTree } from '@angular/router';
 
-/** Router outlet of the first pane, and the name of the second pane's outlet. */
-export const PRIMARY_PANE_OUTLET = 'primary';
-export const SPLIT_PANE_OUTLET = 'split';
+import { outletSegments, PRIMARY_PANE_OUTLET } from '@/services/workspace.service';
 
 /** Which router outlet a pane shows its page in (set by the pane from its input). */
 @Injectable()
 export class PaneState {
   readonly outlet = signal<string>(PRIMARY_PANE_OUTLET);
-}
-
-/** The path of one outlet of a URL tree (`campaigns/x/npcs/bob`), as segments. */
-export function outletSegments(tree: UrlTree, outlet: string): string[] {
-  return (tree.root.children[outlet]?.segments ?? []).map((segment) => segment.path);
 }
 
 /**

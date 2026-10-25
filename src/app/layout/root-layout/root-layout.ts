@@ -9,14 +9,11 @@ import {
   signal,
   ViewEncapsulation,
 } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
-import { NavigationEnd, Router } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
-import { filter, map } from 'rxjs';
 import { LayoutImports } from '@/shared/components/layout/layout.imports';
 import { AppMenuService } from '@/services/app-menu.service';
+import { WorkspaceService } from '@/services/workspace.service';
 import { Pane } from '../pane/pane';
-import { SPLIT_PANE_OUTLET } from '../pane/pane-router';
 import { Sidebar } from '../sidebar/sidebar';
 import { MenuConfiguration, type MenuSectionConfig } from '@/config/menu.config';
 import { CampaignService } from '@/services/campaign.service';
@@ -40,15 +37,7 @@ export class RootLayout implements OnInit {
     this.isFullscreen.set(this.resolveFullscreenState(payload));
   };
 
-  /** Spike: the second pane is shown while the URL has a `split` outlet. */
-  private readonly router = inject(Router);
-  protected readonly hasSplit = toSignal(
-    this.router.events.pipe(
-      filter((event) => event instanceof NavigationEnd),
-      map(() => !!this.router.parseUrl(this.router.url).root.children[SPLIT_PANE_OUTLET]),
-    ),
-    { initialValue: false },
-  );
+  protected readonly hasSplit = inject(WorkspaceService).hasSplit;
 
   protected readonly sidebarCollapsed = signal(false);
   protected readonly isFullscreen = signal(false);

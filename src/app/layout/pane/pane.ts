@@ -9,14 +9,15 @@ import {
 } from '@angular/core';
 import { Router, RouterOutlet } from '@angular/router';
 
+import type { WorkspacePane } from '@/dtos';
 import { VaultActivityBannerComponent } from '@/components/vault-activity-banner/vault-activity-banner.component';
 import { VaultSyncStatusComponent } from '@/components/vault-sync-status/vault-sync-status.component';
 import { ToolbarContextService } from '@/services/toolbar-context.service';
-import { WorkspaceService } from '@/services/workspace.service';
+import { PRIMARY_PANE_OUTLET, WorkspaceService } from '@/services/workspace.service';
 import { LayoutImports } from '@/shared/components/layout/layout.imports';
 import { TabBar } from '../tab-bar/tab-bar';
 import { Toolbar } from '../toolbar/toolbar';
-import { createPaneRouter, PaneState, PRIMARY_PANE_OUTLET } from './pane-router';
+import { createPaneRouter, PaneState } from './pane-router';
 
 /**
  * One side of the workspace: its tab bar, toolbar and page. It provides its own toolbar context, so the page
@@ -57,6 +58,7 @@ export class Pane {
   private readonly workspace = inject(WorkspaceService);
   private readonly state = inject(PaneState);
   protected readonly isFirstPane = computed(() => this.outlet() === PRIMARY_PANE_OUTLET);
+  protected readonly side = computed<WorkspacePane>(() => (this.isFirstPane() ? 'left' : 'right'));
   protected readonly toolbarTitle = this.toolbarContext.title;
   protected readonly toolbarTitleMode = this.toolbarContext.titleMode;
   protected readonly toolbarTitleBreadcrumbs = this.toolbarContext.titleBreadcrumbs;
@@ -67,9 +69,8 @@ export class Pane {
     effect(() => this.state.outlet.set(this.outlet()));
     effect(() => {
       const title = this.toolbarContext.title();
-      // Tab titles of the second pane come with the per-pane workspace (D1b).
-      if (title && this.isFirstPane()) {
-        this.workspace.reportTitle(title);
+      if (title) {
+        this.workspace.reportTitle(title, this.side());
       }
     });
   }
