@@ -15,8 +15,8 @@ The grid was built, critiqued and reverted: DESIGN_PRINCIPLES §9 bans backgroun
 aligned to the layout. Last step of the whole plan, after B, C and D: try a very fine noise at 2-3% (no lines)
 on the app canvas only, opt-in in Settings → General. A grid may still make sense on the Maps page only.
 - [x] A1 Design critique done, grid reverted
-- [ ] A2 (last) Fine noise 2-3%, `BACKGROUND_NOISE` local preference + switch, token based, both themes
-- [ ] A3 (last) i18n (7 languages), amend DESIGN_PRINCIPLES §9 if the noise is kept
+- [x] A2 Fine noise 2-3% was built and tried on a branch (setting + CSS, measured ~1.6% light / 2% dark), then dropped by the user: no canvas pattern ships. Branch deleted.
+- [x] A3 Nothing to amend: DESIGN_PRINCIPLES §9 keeps its ban on background grids and filler decoration.
 
 ## B. Image width (DONE; alignment was dropped by the user because it did not work, only width stays)
 - [x] B1 Parse/write the width word in the embed alias (`![[img.png|half]]`, `wide`, `full`)
