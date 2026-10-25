@@ -730,7 +730,8 @@
   "tabs": {
     "ariaLabel": "Open tabs",
     "split": {
-      "resize": "Resize the two sides"
+      "resize": "Resize the two sides",
+      "showOther": "Show the other side"
     },
     "back": "Back",
     "forward": "Forward",

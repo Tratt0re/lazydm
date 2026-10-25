@@ -138,6 +138,9 @@ export class WorkspaceService extends BaseIpcService<APIChannel.WORKSPACE> {
     return tab !== null && tab.historyIndex < tab.history.length - 1;
   }
 
+  /** The window is too narrow for two panes: only the focused one is shown (set by the layout). */
+  readonly isNarrowSplit = signal(false);
+
   /** The pane the user is working in: the shortcuts and the menu act on it. */
   focusPane(pane: WorkspacePane): void {
     if (this.focusedPaneSignal() !== pane && (pane === 'left' || this.hasSplit())) {
@@ -168,7 +171,10 @@ export class WorkspaceService extends BaseIpcService<APIChannel.WORKSPACE> {
 
     // A link built in the second pane keeps the first pane's page in front and puts its own target in `split:`.
     const tree = this.router.parseUrl(link);
-    const segments = outletSegments(tree, pane === 'right' ? SPLIT_PANE_OUTLET : PRIMARY_PANE_OUTLET);
+    const segments = outletSegments(
+      tree,
+      pane === 'right' ? SPLIT_PANE_OUTLET : PRIMARY_PANE_OUTLET,
+    );
     return segments.length ? '/' + segments.map(encodeURIComponent).join('/') : toPath(link);
   }
 

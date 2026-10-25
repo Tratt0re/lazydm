@@ -37,6 +37,7 @@
           [sidebarCollapsed]="sidebarCollapsed()"
           (sidebarToggle)="toggleSidebar()"
           (pointerdown)="workspace.focusPane('left')"
+          (focusin)="workspace.focusPane('left')"
         />
         @if (hasSplit()) {
           @if (!isNarrow()) {
@@ -69,6 +70,7 @@
             [style.flex]="!isNarrow() ? 1 - leftGrow() + ' 1 0' : null"
             [style.min-width.px]="!isNarrow() ? minPaneWidth : null"
             (pointerdown)="workspace.focusPane('right')"
+            (focusin)="workspace.focusPane('right')"
           />
         }
       </div>

@@ -603,6 +603,24 @@ Planned Electron modules: `vault`, `cloud-readiness`, `campaign`, `document`, `i
   - Shortcuts: Cmd/Ctrl+T new tab, Cmd/Ctrl+W close tab (forwarded by the main process, so it no longer closes the
     window), Ctrl+Tab / Ctrl+Shift+Tab next/previous, Cmd/Ctrl+[ / ] back/forward.
   - Entering a campaign from its root restores the last active tab. The bar is hidden outside campaign pages.
+- **Split screen**: two sides at most, like a code editor. *Open to the side* (explorer and folder-page file menus,
+  the "…" menu of a note, the right-click menu of a campaign link) opens a page as a new tab of the **other** side;
+  the second side appears with it and goes away when its last tab closes. A tab moves from one side to the other by
+  dragging it into the other bar or with *Move to the right / left side* in its menu; the first side always keeps a tab.
+  - Each side has its **own tab bar and toolbar** (own active tab, own back/forward). One side is **focused** (click or
+    keyboard focus in it): Cmd/Ctrl+T/W, Ctrl+Tab, back/forward and the application menu act on it. The active tab of
+    the side that is not focused is drawn with a neutral underline instead of the bronze one.
+  - Any page can be on either side. Links and navigation made inside a side stay in that side (the router is wrapped
+    per pane: the second side is the `split` outlet of the URL, `/a/b(split:c/d)`); Cmd/Ctrl-click opens a background
+    tab on the side the link is in.
+  - A **draggable divider** (arrows move it, Home/End, double-click = 50/50) sets the share, remembered per device;
+    each side keeps at least 360px. In a window too narrow for two, only the focused side shows (the other stays
+    mounted) and a button in the tab bar switches to it.
+  - **One document, however many sides show it**: the same note, map or encounter in both sides is one live document.
+    A change on one side shows at once on the other (the editors keep their own cursor, scroll, view and undo
+    history), it is saved once, and a conflict opens one modal. Leaving a side never saves a note the other side still
+    shows. Opening the second side closes the side panels (Links, *On this map*, the cemetery and the linked-note
+    panel) to leave each side its room.
 - **Breadcrumb**: section and note pages show the path (`CAMPAIGN / SECTION /`, mono, linked) above the page title
   in the toolbar, so a restored tab always tells where it points.
 - **Leaving a note with unsaved edits autosaves it** (tab switch, link, sidebar). If the save hits a conflict or an
@@ -622,7 +640,15 @@ Planned Electron modules: `vault`, `cloud-readiness`, `campaign`, `document`, `i
     on the line below it. The properties box is **collapsed by default**, with a *Properties* trigger button; open or
     closed is remembered per device. The button is there in Live preview and in Reading (not in Source, which shows the
     header as text), and the box looks the same in both. A `title` row that matches the page title is not repeated in it.
-  - **Cursor and marks**: Up/Down always move one line, also through rendered tables and callouts; a click
+  - **Tables are edited where they are rendered**: a click on a cell turns it into its markdown source, Enter / Tab /
+    Shift+Tab / arrows move between cells (Tab out of the last cell adds a row; Up/Down/Left/Right past the edge leave
+    the table for the neighbouring line), Esc undoes the cell. Hovering the table shows **+** buttons for a new row or
+    column; the right-click menu (or the menu key) of a cell inserts a row above / below or a column left / right and
+    deletes the cell's row or column (never the last column). One change per edit, so one undo step.
+  - **Image width**: hovering an image shows the eye button and, right below it, a **"…"** button with the width
+    (*Half*, *Wide*, *Full*, *Reset*). It is written in the embed's alias, `![[map.png|half]]` (`wide` = 75%, `full` =
+    100%); Reading shows the same width. Text after the width word stays the label.
+  - **Cursor and marks**: Up/Down move one line (and, inside a table cell, one cell), also through callouts; a click
     or an inserted list / task / quote / heading puts the cursor after its marks, so typing writes its text.
     Rendered blocks keep their spacing inside the widget, so clicks land on the line under the pointer.
   - **Same look as Reading**: quotes (primary bar, muted text), list markers in primary, task checkboxes as the

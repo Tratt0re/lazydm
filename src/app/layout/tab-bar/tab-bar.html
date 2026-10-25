@@ -58,7 +58,9 @@
           class="group flex max-w-56 shrink-0 items-center border-b-3 transition-colors duration-150 [&.cdk-drag-placeholder]:opacity-40 [.cdk-drop-list-dragging_&]:transition-transform"
           [class]="
             isActive
-              ? 'border-primary text-foreground-strong'
+              ? (workspace.hasSplit() && workspace.focusedPane() !== pane()
+                  ? 'border-border-strong text-foreground'
+                  : 'border-primary text-foreground-strong')
               : 'border-transparent text-foreground-secondary hover:bg-accent hover:text-foreground'
           "
           [attr.data-tab-id]="tab.id"
@@ -105,7 +107,23 @@
       }
     </div>
 
-    <div class="flex shrink-0 items-center border-l border-border px-2">
+    <div class="flex shrink-0 items-center gap-1 border-l border-border px-2">
+      @if (workspace.hasSplit() && workspace.isNarrowSplit()) {
+        <!-- Only one side fits: this shows the other one. -->
+        <button
+          type="button"
+          arc-button
+          arcType="ghost"
+          arcSize="sm"
+          class="size-7"
+          [attr.aria-label]="'tabs.split.showOther' | translate"
+          arcPosition="bottom"
+          [arcTooltip]="'tabs.split.showOther' | translate"
+          (click)="workspace.focusPane(pane() === 'left' ? 'right' : 'left')"
+        >
+          <arc-icon [arcType]="pane() === 'left' ? 'panel-right' : 'panel-left'" />
+        </button>
+      }
       <button
         type="button"
         arc-button

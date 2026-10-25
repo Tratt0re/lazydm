@@ -23,7 +23,7 @@ on the app canvas only, opt-in in Settings → General. A grid may still make se
 - [x] B2 "…" button under the eye in `ImageWidget` + menu
 - [x] B3 Same classes in Reading (`document-preview.markdown.ts`)
 - [x] B4 Editor reference sheet, i18n
-- [ ] B5 DESIGN_PRINCIPLES §8: describe the "…" width menu and the `|half|wide|full` syntax
+- [x] B5 DESIGN_PRINCIPLES §8: the "…" width menu and the `|half|wide|full` syntax
 
 ## C. Table editing in Live preview
 - [x] C1 Parser/serializer `table-edit.ts` + vitest (13 tests)
@@ -34,7 +34,7 @@ on the app canvas only, opt-in in Settings → General. A grid may still make se
 - [x] C3 Editable cells (click = markdown source of the cell), Enter / Tab / Shift+Tab / Esc, Tab out of the
       last cell adds a row, one change per edit. Tried by the user in the app and working.
 - [x] C4 i18n (seven languages)
-- [ ] C5 DESIGN_PRINCIPLES §8 (Editor): describe in-place table editing, the cell menu, the arrow keys, and
+- [x] C5 DESIGN_PRINCIPLES §8 (Editor): describe in-place table editing, the cell menu, the arrow keys, and
       the image width "…" menu with its `![[img|half|wide|full]]` syntax (this is also task B5); add tables
       and image width to the editor reference sheet if a table entry is wanted
 
@@ -86,7 +86,7 @@ on the right); fall back to an explicit `PaneNavigator` plus call-site edits if 
 - [x] D2 divider (drag, arrows, Home/End, double-click = 50%), ratio saved per device (`split_ratio` local preference), panes keep 360px minimum, below two panes' width only the focused pane shows (the other stays mounted). Checked in Chrome. OPEN: in the narrow fallback nothing on screen switches to the other pane (only tab activation does).
 - [~] D3a done (`Open to the side` in the explorer file menu, the tab-bar link menu and the note's "…" menu; `Move to the right/left side` in the tab menu; checked in Chrome). Tab drag between the two bars done (one `cdkDropListGroup` on the panes, drop at the dropped position; checked in Chrome with the drag tool, both directions).
 - [ ] D3 Tab drag between panes, "Open in split" (explorer, note "…", tab menu)
-- [ ] D4 Shortcuts follow the active pane, persistence, docs
+- [x] D4 The focused side follows click and keyboard focus; its active tab keeps the bronze underline, the other side's is neutral; shortcuts, the application menu and back/forward act on the focused side (the workspace defaults to it); in a narrow window a button in the tab bar shows the other side. DESIGN_PRINCIPLES §8 now has the split screen, tables edited in place and the image width menu (B5, C5 done). Checked in Chrome.
 - [x] D5 Shared document: `SharedNoteService` keeps one live document per note path (file, text, save state); each pane's `DocumentPage` joins it, its editor follows remote changes through `syncContent` (a minimal change flagged remote, so undo history and cursor stay per pane), one save and one conflict modal for both panes, leaving one pane never saves while the other still shows the note. Checked in Chrome: typing on each side, undo on one side, one write on save, one modal for two simultaneous saves, reload from the conflict modal, right pane to another note and back.
       cursor/scroll stay per pane, one autosave and one conflict modal
 

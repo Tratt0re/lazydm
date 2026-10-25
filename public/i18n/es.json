@@ -729,7 +729,8 @@
   },
   "tabs": {
     "split": {
-      "resize": "Cambiar el tamaño de los dos lados"
+      "resize": "Cambiar el tamaño de los dos lados",
+      "showOther": "Mostrar el otro lado"
     },
     "ariaLabel": "Pestañas abiertas",
     "back": "Atrás",

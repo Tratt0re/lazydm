@@ -5,6 +5,7 @@ import {
   Component,
   computed,
   DestroyRef,
+  effect,
   ElementRef,
   HostListener,
   inject,
@@ -59,6 +60,7 @@ export class RootLayout implements OnInit {
   protected readonly isNarrow = computed(
     () => this.panesWidth() > 0 && this.panesWidth() < 2 * MIN_PANE_WIDTH_PX,
   );
+  private readonly syncNarrow = effect(() => this.workspace.isNarrowSplit.set(this.isNarrow()));
   /** The share, kept so both panes stay at least `minPaneWidth` wide. */
   protected readonly leftGrow = computed(() => {
     const width = this.panesWidth();

@@ -729,7 +729,8 @@
   },
   "tabs": {
     "split": {
-      "resize": "Redimensionner les deux côtés"
+      "resize": "Redimensionner les deux côtés",
+      "showOther": "Afficher l’autre côté"
     },
     "ariaLabel": "Onglets ouverts",
     "back": "Précédent",

@@ -30,7 +30,11 @@ export class SharedFileService {
     let entry = this.entries.get(key);
     if (!entry) {
       entry = {
-        shared: { file: signal(null), data: signal(null), save: { isSaving: false, needsSave: false } },
+        shared: {
+          file: signal(null),
+          data: signal(null),
+          save: { isSaving: false, needsSave: false },
+        },
         pages: new Set(),
       };
       this.entries.set(key, entry);

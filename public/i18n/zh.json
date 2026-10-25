@@ -729,7 +729,8 @@
   },
   "tabs": {
     "split": {
-      "resize": "调整两侧的大小"
+      "resize": "调整两侧的大小",
+      "showOther": "显示另一侧"
     },
     "ariaLabel": "已打开的标签页",
     "back": "后退",
