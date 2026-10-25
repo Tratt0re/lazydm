@@ -88,6 +88,11 @@ export class WorkspaceService extends BaseIpcService<APIChannel.WORKSPACE> {
   readonly focusedPane = this.focusedPaneSignal.asReadonly();
   /** The second pane is shown while it has tabs. */
   readonly hasSplit = computed(() => this.tabsSignal().some((tab) => paneOf(tab) === 'right'));
+  /**
+   * Goes up each time the second pane appears. Pages with a side panel (Links, On this map, the cemetery) close
+   * it then, to leave each side the room it needs.
+   */
+  readonly splitOpenCount = signal(0);
   /** Active tab of the focused pane. */
   readonly activeTabId = computed(() => this.activeTabIdsSignal()[this.focusedPaneSignal()]);
   readonly activeTab = computed(
@@ -670,6 +675,10 @@ export class WorkspaceService extends BaseIpcService<APIChannel.WORKSPACE> {
   ): Promise<boolean> {
     if (left === this.currentUrlSignal() && right === this.splitUrlSignal()) {
       return true;
+    }
+
+    if (right && !this.splitUrlSignal()) {
+      this.splitOpenCount.update((count) => count + 1);
     }
 
     this.isTabNavigation = true;

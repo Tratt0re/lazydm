@@ -114,7 +114,9 @@ export class RootLayout implements OnInit {
         return;
       }
 
-      const observer = new ResizeObserver(([entry]) => this.panesWidth.set(entry.contentRect.width));
+      const observer = new ResizeObserver(([entry]) =>
+        this.panesWidth.set(entry.contentRect.width),
+      );
       observer.observe(panes);
       destroyRef.onDestroy(() => observer.disconnect());
     });

@@ -441,6 +441,19 @@ export class MapPage {
   };
 
   constructor() {
+    // Opening the second pane closes the *On this map* panel, to leave each side the room it needs.
+    let seenSplitOpens = this.workspace.splitOpenCount();
+    effect(() => {
+      const opens = this.workspace.splitOpenCount();
+      if (opens !== seenSplitOpens) {
+        seenSplitOpens = opens;
+        this.isPanelOpen.set(false);
+      }
+    });
+    if (this.workspace.hasSplit()) {
+      this.isPanelOpen.set(false);
+    }
+
     document.addEventListener('auxclick', this.swallowMenuAuxClick, true);
     this.destroyRef.onDestroy(() =>
       document.removeEventListener('auxclick', this.swallowMenuAuxClick, true),

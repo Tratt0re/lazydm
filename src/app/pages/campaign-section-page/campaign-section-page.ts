@@ -28,6 +28,7 @@ import type {
   TemplateDto,
   TemplateRulesDto,
 } from '@/dtos';
+import { AppOpenInTabMenuComponent } from '@/components/open-in-tab-menu/open-in-tab-menu.component';
 import { AppSheetService } from '@/services/app-sheet.service';
 import { AssetService } from '@/services/asset.service';
 import { getNoteScopeKind, NoteScopeService } from '@/services/note-scope.service';
@@ -84,6 +85,7 @@ function formatFileSize(sizeInBytes: number): string {
     NgTemplateOutlet,
     RouterLink,
     TranslatePipe,
+    AppOpenInTabMenuComponent,
     ArcTechMenuImports,
     ArcTechAlertComponent,
     ArcTechButtonComponent,

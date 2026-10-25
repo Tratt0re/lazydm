@@ -53,6 +53,7 @@ import { LocalPreferencesService } from '@/services/local-preferences.service';
 import { getNoteScopeKind, NoteScopeService } from '@/services/note-scope.service';
 import { SectionService, toSubfolderLabel } from '@/services/section.service';
 import { ToolbarContextService } from '@/services/toolbar-context.service';
+import { WorkspaceService } from '@/services/workspace.service';
 import { ArcTechAlertComponent } from '@/shared/components/alert';
 import { ArcTechBadgeComponent } from '@/shared/components/badge';
 import { ArcTechButtonComponent } from '@/shared/components/button';
@@ -60,7 +61,7 @@ import { ArcTechEmptyComponent } from '@/shared/components/empty';
 import { ArcTechIconComponent } from '@/shared/components/icon';
 import { ArcTechAlertDialogService } from '@/shared/components/alert-dialog';
 import { ArcTechDialogService } from '@/shared/components/dialog';
-import { ArcTechSheetService } from '@/shared/components/sheet';
+import { ArcTechSheetService, type ArcTechSheetRef } from '@/shared/components/sheet';
 import { ArcTechCheckboxComponent } from '@/shared/components/checkbox';
 import { ArcTechMenuImports } from '@/shared/components/menu';
 import { ArcTechTooltipImports } from '@/shared/components/tooltip';
@@ -150,6 +151,9 @@ export class EncounterPage {
   private readonly battleRuleService = inject(BattleRuleService);
   private readonly dialogFormService = inject(AppDialogFormService);
   private readonly sheetService = inject(ArcTechSheetService);
+  private readonly workspace = inject(WorkspaceService);
+  /** The linked-note side panel while it is open (it closes when the second pane appears). */
+  private noteSheet: ArcTechSheetRef<AppEncounterNotePanelComponent> | null = null;
   private readonly dialogService = inject(ArcTechDialogService);
   private readonly alertDialogService = inject(ArcTechAlertDialogService);
   private readonly localPreferences = inject(LocalPreferencesService);
@@ -255,6 +259,18 @@ export class EncounterPage {
   });
 
   constructor() {
+    // Opening the second pane closes the cemetery and the linked-note panel, to leave each side its room.
+    let seenSplitOpens = this.workspace.splitOpenCount();
+    effect(() => {
+      const opens = this.workspace.splitOpenCount();
+      if (opens !== seenSplitOpens) {
+        seenSplitOpens = opens;
+        this.isCemeteryOpen.set(false);
+        this.noteSheet?.close();
+        this.noteSheet = null;
+      }
+    });
+
     effect(() => {
       if (this.scope()) {
         void this.load(this.encounterPath());
@@ -1206,7 +1222,7 @@ export class EncounterPage {
       notePath.split('/').pop()?.replace(/\.md$/i, '') ??
       notePath;
     // Information only: no footer buttons (the close button is in the header; a link inside opens its note).
-    this.sheetService.create<AppEncounterNotePanelComponent, { path: string }>({
+    this.noteSheet = this.sheetService.create<AppEncounterNotePanelComponent, { path: string }>({
       arcTitle: title,
       arcContent: AppEncounterNotePanelComponent,
       arcData: { path: notePath },

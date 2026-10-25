@@ -194,6 +194,7 @@
 
         <ng-template #fileMenu>
           <div arc-menu-content class="w-56">
+            <app-open-in-tab-menu [path]="file.path" />
             <button type="button" arc-menu-item (click)="copyTo.openCopySheet(file.path)">
               <arc-icon [arcType]="copyTo.copyIcon(file.path)" />
               {{ copyLabel(file) | translate }}

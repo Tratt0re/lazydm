@@ -1390,3 +1390,9 @@ button.arc-embed-file:hover,
     transition: none;
   }
 }
+
+/* The second pane's routes sit under a component-less parent, which Angular renders as a bare <ng-component>:
+   it must not take part in the layout, or the page inside (map, image, editor) shrinks to its content. */
+app-pane > arc-content ng-component {
+  display: contents;
+}

@@ -170,7 +170,10 @@ export class DocumentPage {
   protected readonly isLoading = signal(true);
   protected readonly isSaving = signal(false);
   protected readonly errorMessage = signal<string | null>(null);
-  protected readonly isLinksPanelOpen = signal(this.localPreferences.getDocumentLinksPanelOpen());
+  // Closed while the screen is split (each side needs the room); the remembered choice comes back with one pane.
+  protected readonly isLinksPanelOpen = signal(
+    !this.workspace.hasSplit() && this.localPreferences.getDocumentLinksPanelOpen(),
+  );
   /** The properties box (frontmatter) of the live preview: collapsed until the trigger opens it, remembered per device. */
   protected readonly isPropertiesOpen = signal(this.localPreferences.getDocumentPropertiesOpen());
   /** Shown as a badge on the Links button, so a closed panel still tells whether the note has links. */
@@ -301,6 +304,16 @@ export class DocumentPage {
 
     effect(() => {
       void this.loadDocument(this.notePath());
+    });
+
+    // The second pane appearing closes the Links panel (not remembered: it is not the user's choice).
+    let seenSplitOpens = this.workspace.splitOpenCount();
+    effect(() => {
+      const opens = this.workspace.splitOpenCount();
+      if (opens !== seenSplitOpens) {
+        seenSplitOpens = opens;
+        this.isLinksPanelOpen.set(false);
+      }
     });
 
     // The note's audio rows show their length before playing: read it for each embedded sound.
@@ -658,6 +671,8 @@ export class DocumentPage {
 
     const dialogRef: ArcTechDialogRef = this.dialogService.create({
       arcTitle: this.translateService.instant('document.conflict.title'),
+      // Three buttons side by side need more than the default 425px (they were clipped).
+      arcCustomClasses: 'sm:max-w-[600px]',
       arcContent: this.translateService.instant('document.conflict.description'),
       arcOkText: this.translateService.instant('document.conflict.keepMine'),
       arcOkDestructive: true,
