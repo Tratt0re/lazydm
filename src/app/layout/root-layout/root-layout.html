@@ -27,7 +27,8 @@
       [attr.inert]="showSidebarOverlay() ? '' : null"
       [attr.aria-hidden]="showSidebarOverlay() ? 'true' : null"
     >
-      <div #panes class="flex min-h-0 flex-1">
+      <!-- One drop list group: a tab dragged from one pane's bar can be dropped in the other's. -->
+      <div #panes cdkDropListGroup class="flex min-h-0 flex-1">
         <!-- The pane that is not shown (narrow window) stays mounted, so its page and edits are kept. -->
         <app-pane
           [style.display]="showLeft() ? null : 'none'"

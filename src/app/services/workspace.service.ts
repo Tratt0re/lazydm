@@ -326,10 +326,10 @@ export class WorkspaceService extends BaseIpcService<APIChannel.WORKSPACE> {
   }
 
   /**
-   * Moves a tab to the other pane, where it becomes the active tab. The first pane keeps at least one tab; moving
-   * the only tab of the second pane back closes the split.
+   * Moves a tab to the other pane at a position of its bar (dragging it from one bar to the other), where it
+   * becomes the active tab.
    */
-  async moveTabToOtherPane(tabId: string): Promise<void> {
+  async moveTabToOtherPane(tabId: string, index?: number): Promise<void> {
     const tab = this.tabsSignal().find((item) => item.id === tabId);
     if (!tab) {
       return;
@@ -350,8 +350,15 @@ export class WorkspaceService extends BaseIpcService<APIChannel.WORKSPACE> {
     }
 
     const rest = this.tabsSignal().filter((item) => item.id !== tabId);
-    const afterActive = rest.findIndex((item) => item.id === this.activeTabIdOf(to));
-    const at = afterActive < 0 ? rest.length : afterActive + 1;
+    // At the dropped position of the other bar; without one, right after that bar's active tab.
+    const target = index === undefined ? undefined : this.tabsOf(to)[index];
+    const anchor =
+      index === undefined
+        ? rest.findIndex((item) => item.id === this.activeTabIdOf(to)) + 1 || rest.length
+        : target
+          ? rest.findIndex((item) => item.id === target.id)
+          : rest.length;
+    const at = Math.max(anchor, 0);
     const tabs = [...rest.slice(0, at), { ...tab, pane: to }, ...rest.slice(at)];
     const activeTabIds = { ...this.activeTabIdsSignal(), [from]: fromActive, [to]: tabId };
     const urlOf = (id: string | null) => {

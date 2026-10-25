@@ -1,3 +1,4 @@
+import { CdkDropListGroup } from '@angular/cdk/drag-drop';
 import {
   afterNextRender,
   ChangeDetectionStrategy,
@@ -33,7 +34,7 @@ const MIN_PANE_WIDTH_PX = 360;
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-root-layout',
-  imports: [...LayoutImports, TranslatePipe, Sidebar, Pane, UpdateModalComponent],
+  imports: [...LayoutImports, CdkDropListGroup, TranslatePipe, Sidebar, Pane, UpdateModalComponent],
   templateUrl: './root-layout.html',
   encapsulation: ViewEncapsulation.None,
 })

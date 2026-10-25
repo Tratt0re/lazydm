@@ -84,7 +84,7 @@ on the right); fall back to an explicit `PaneNavigator` plus call-site edits if 
       Not done yet: no way to open the split from the UI (D3), draggable divider and widths (D2), shortcuts
       for the other pane (D4), the app menu still acts on the focused pane only.
 - [x] D2 divider (drag, arrows, Home/End, double-click = 50%), ratio saved per device (`split_ratio` local preference), panes keep 360px minimum, below two panes' width only the focused pane shows (the other stays mounted). Checked in Chrome. OPEN: in the narrow fallback nothing on screen switches to the other pane (only tab activation does).
-- [~] D3a done (`Open to the side` in the explorer file menu, the tab-bar link menu and the note's "…" menu; `Move to the right/left side` in the tab menu; checked in Chrome). Still open: drag a tab from one bar to the other.
+- [~] D3a done (`Open to the side` in the explorer file menu, the tab-bar link menu and the note's "…" menu; `Move to the right/left side` in the tab menu; checked in Chrome). Tab drag between the two bars done (one `cdkDropListGroup` on the panes, drop at the dropped position; checked in Chrome with the drag tool, both directions).
 - [ ] D3 Tab drag between panes, "Open in split" (explorer, note "…", tab menu)
 - [ ] D4 Shortcuts follow the active pane, persistence, docs
 - [ ] D5 Shared document store: same note in both panes edits one text; live sync between the two editors,

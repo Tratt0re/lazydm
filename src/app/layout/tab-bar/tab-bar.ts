@@ -195,8 +195,17 @@ export class TabBar {
     return target?.kind === 'link' ? target.url : null;
   }
 
+  /** Dropped in this bar: a reorder when it came from here, a move to this side when it came from the other bar. */
   protected onDrop(event: CdkDragDrop<readonly WorkspaceTabDto[]>): void {
-    this.workspace.moveTab(this.pane(), event.previousIndex, event.currentIndex);
+    if (event.previousContainer === event.container) {
+      this.workspace.moveTab(this.pane(), event.previousIndex, event.currentIndex);
+      return;
+    }
+
+    const tab = event.item.data as WorkspaceTabDto | undefined;
+    if (tab) {
+      void this.workspace.moveTabToOtherPane(tab.id, event.currentIndex);
+    }
   }
 
   protected onTabAuxClick(event: MouseEvent, tab: WorkspaceTabDto): void {

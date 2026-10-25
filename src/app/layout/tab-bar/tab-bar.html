@@ -52,6 +52,7 @@
         @let title = getTitle(tab) || ('tabs.untitled' | translate);
         <div
           cdkDrag
+          [cdkDragData]="tab"
           cdkDragLockAxis="x"
           cdkDragPreviewClass="arc-tab-drag-preview"
           class="group flex max-w-56 shrink-0 items-center border-b-3 transition-colors duration-150 [&.cdk-drag-placeholder]:opacity-40 [.cdk-drop-list-dragging_&]:transition-transform"
