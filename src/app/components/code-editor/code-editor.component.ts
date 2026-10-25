@@ -17,7 +17,7 @@ import { defaultKeymap, history, historyKeymap } from '@codemirror/commands';
 import { markdown, markdownLanguage } from '@codemirror/lang-markdown';
 import { HighlightStyle, syntaxHighlighting } from '@codemirror/language';
 import { languages } from '@codemirror/language-data';
-import { Compartment, EditorState, type Extension } from '@codemirror/state';
+import { Compartment, EditorState, type Extension, Transaction } from '@codemirror/state';
 import {
   Decoration,
   type DecorationSet,
@@ -254,6 +254,46 @@ export class AppCodeEditorComponent implements OnDestroy {
   replaceContent(content: string): void {
     this.view?.setState(this.buildState(content));
     this.syncLinks();
+  }
+
+  /**
+   * Makes the editor's text `content` by changing only what differs (one change over the middle part), so the
+   * cursor, the scroll and the undo history stay: the same note edited in the other pane arrives this way.
+   * Does nothing when the text is already `content`.
+   */
+  syncContent(content: string): void {
+    const view = this.view;
+    if (!view) {
+      return;
+    }
+
+    const current = view.state.doc.toString();
+    if (current === content) {
+      return;
+    }
+
+    let start = 0;
+    const shortest = Math.min(current.length, content.length);
+    while (start < shortest && current.charCodeAt(start) === content.charCodeAt(start)) {
+      start++;
+    }
+
+    let endCurrent = current.length;
+    let endContent = content.length;
+    while (
+      endCurrent > start &&
+      endContent > start &&
+      current.charCodeAt(endCurrent - 1) === content.charCodeAt(endContent - 1)
+    ) {
+      endCurrent--;
+      endContent--;
+    }
+
+    // Not an edit of this editor: it must not be sent back, nor be an undo step of its own.
+    view.dispatch({
+      changes: { from: start, to: endCurrent, insert: content.slice(start, endContent) },
+      annotations: [Transaction.addToHistory.of(false), Transaction.remote.of(true)],
+    });
   }
 
   /** Writes `![[…]]` embeds of saved assets in place of the selection, one per line. */
@@ -563,7 +603,8 @@ export class AppCodeEditorComponent implements OnDestroy {
         EditorView.contentAttributes.of({ 'aria-placeholder': this.placeholderText() }),
         EditorView.domEventHandlers({ paste: (event) => this.handlePaste(event) }),
         EditorView.updateListener.of((update: ViewUpdate) => {
-          if (update.docChanged) {
+          // A change that came from the same note in the other pane is not announced again.
+          if (update.docChanged && !update.transactions.some((tr) => tr.annotation(Transaction.remote))) {
             this.contentChange.emit(update.state.doc.toString());
           }
         }),
