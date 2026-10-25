@@ -6,6 +6,7 @@ import {
   effect,
   inject,
   signal,
+  untracked,
   viewChild,
 } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
@@ -49,6 +50,7 @@ import { SectionService, toSubfolderLabel } from '@/services/section.service';
 import type { DocumentViewMode } from '@/config/local-preferences.config';
 import { LocalPreferencesService } from '@/services/local-preferences.service';
 import { ToolbarContextService } from '@/services/toolbar-context.service';
+import { type SharedNote, SharedNoteService } from '@/services/shared-note.service';
 import { WorkspaceService } from '@/services/workspace.service';
 import { ArcTechAlertComponent } from '@/shared/components/alert';
 import { ArcTechButtonComponent } from '@/shared/components/button';
@@ -108,6 +110,7 @@ export class DocumentPage {
   private readonly toolbarContext = inject(ToolbarContextService);
   private readonly localPreferences = inject(LocalPreferencesService);
   private readonly workspace = inject(WorkspaceService);
+  private readonly sharedNotes = inject(SharedNoteService);
   private readonly brokenLinkActions = inject(BrokenLinkActionsService);
   private readonly copyTo = inject(CopyToService);
   private readonly assetService = inject(AssetService);
@@ -130,6 +133,8 @@ export class DocumentPage {
     'document.linkPreview.showImage',
   );
   private loadToken = 0;
+  /** Path of the note whose live document this page has joined. */
+  private joinedPath: string | null = null;
   private unregisterOpenNote: (() => void) | null = null;
 
   private readonly sectionKey = toSignal(
@@ -153,8 +158,13 @@ export class DocumentPage {
     return `${this.scope()?.rootPath ?? ''}/${folder}/${this.noteSlug()}.md`;
   });
 
-  protected readonly document = signal<DocumentDto | null>(null);
-  protected readonly editedContent = signal('');
+  /**
+   * The note's live document, shared with the other pane when it shows the same note: the file as last read or
+   * saved, the text being edited and the save state. Until a note is loaded the page has a note of its own.
+   */
+  private readonly sharedNote = signal<SharedNote>(this.sharedNotes.join('', this));
+  protected readonly document = computed(() => this.sharedNote().document());
+  protected readonly editedContent = computed(() => this.sharedNote().editedContent());
   protected readonly mode = signal<DocumentViewMode>('live');
   /** Editor views, switched by the toggle buttons above the editor (Source only when enabled in Settings). */
   protected readonly editorModes = computed(() =>
@@ -168,9 +178,12 @@ export class DocumentPage {
   /** Files of the note's scope the editor suggests while a link is typed; refreshed with the index. */
   protected readonly linkTargets = signal<readonly LinkTargetDto[]>([]);
   protected readonly isLoading = signal(true);
-  protected readonly isSaving = signal(false);
+  protected readonly isSaving = computed(() => this.sharedNote().isSaving());
   protected readonly errorMessage = signal<string | null>(null);
-  protected readonly isLinksPanelOpen = signal(this.localPreferences.getDocumentLinksPanelOpen());
+  // Closed while the screen is split (each side needs the room); the remembered choice comes back with one pane.
+  protected readonly isLinksPanelOpen = signal(
+    !this.workspace.hasSplit() && this.localPreferences.getDocumentLinksPanelOpen(),
+  );
   /** The properties box (frontmatter) of the live preview: collapsed until the trigger opens it, remembered per device. */
   protected readonly isPropertiesOpen = signal(this.localPreferences.getDocumentPropertiesOpen());
   /** Shown as a badge on the Links button, so a closed panel still tells whether the note has links. */
@@ -204,6 +217,10 @@ export class DocumentPage {
   constructor() {
     onIndexUpdated(this.handleIndexUpdated);
     inject(DestroyRef).onDestroy(() => {
+      if (this.joinedPath !== null) {
+        this.sharedNotes.leave(this.joinedPath, this);
+      }
+      this.sharedNotes.leave('', this);
       this.unregisterOpenNote?.();
       this.noteAudio.stop();
     });
@@ -261,6 +278,13 @@ export class DocumentPage {
               label: 'common.moreActions',
               entries: [
                 {
+                  id: 'open-to-side',
+                  label: 'tabs.menu.openToSide',
+                  icon: 'panel-right',
+                  disabled: () => !this.document() || !this.workspace.canOpenTab(),
+                  action: () => this.openToSide(),
+                },
+                {
                   id: 'rename',
                   label: 'document.toolbar.rename',
                   icon: 'text-cursor-input',
@@ -294,6 +318,23 @@ export class DocumentPage {
 
     effect(() => {
       void this.loadDocument(this.notePath());
+    });
+
+    // The note's text changed (typed in the other pane, a reload after a conflict…): this editor follows. An edit
+    // typed here is already the shared text, so the editor finds nothing to change.
+    effect(() => {
+      const content = this.sharedNote().editedContent();
+      untracked(() => this.editor()?.syncContent(content));
+    });
+
+    // The second pane appearing closes the Links panel (not remembered: it is not the user's choice).
+    let seenSplitOpens = this.workspace.splitOpenCount();
+    effect(() => {
+      const opens = this.workspace.splitOpenCount();
+      if (opens !== seenSplitOpens) {
+        seenSplitOpens = opens;
+        this.isLinksPanelOpen.set(false);
+      }
     });
 
     // The note's audio rows show their length before playing: read it for each embedded sound.
@@ -336,6 +377,11 @@ export class DocumentPage {
       return true;
     }
 
+    // The other pane still shows this note, edits included: nothing is lost, so leaving here does not save it.
+    if (document && this.sharedNotes.pageCount(document.path) > 1) {
+      return true;
+    }
+
     return !this.isDirty() || (await this.save());
   }
 
@@ -345,7 +391,7 @@ export class DocumentPage {
       return false;
     }
 
-    this.isSaving.set(true);
+    this.sharedNote().setSaving(true);
     try {
       const result = await this.documentService.write({
         path: document.path,
@@ -354,7 +400,7 @@ export class DocumentPage {
       });
 
       if (result.status === 'saved') {
-        this.document.set(await this.documentService.read(document.path));
+        this.sharedNote().setDocument(await this.documentService.read(document.path));
         toast.success(this.translateService.instant('document.toast.saved'));
         return true;
       }
@@ -367,7 +413,7 @@ export class DocumentPage {
       });
       return false;
     } finally {
-      this.isSaving.set(false);
+      this.sharedNote().setSaving(false);
     }
   }
 
@@ -449,6 +495,19 @@ export class DocumentPage {
     const document = this.document();
     if (document && (!this.isDirty() || (await this.save()))) {
       await this.copyTo.openCopySheet(document.path);
+    }
+  }
+
+  /** The editor's text changed by typing: it becomes the note's text, which the other pane's editor follows. */
+  protected onContentChange(content: string): void {
+    this.sharedNote().setContent(content);
+  }
+
+  /** *Open to the side*: this note in the other pane (the page here is a campaign note, never a compendium one). */
+  protected openToSide(): void {
+    const route = this.router.url.split(/[?#(]/)[0];
+    if (this.workspace.isCampaignUrl(route)) {
+      void this.workspace.openToSide(route);
     }
   }
 
@@ -582,8 +641,8 @@ export class DocumentPage {
 
     await this.brokenLinkActions.removeLink(target);
     const reloaded = await this.documentService.read(document.path);
-    this.document.set(reloaded);
-    this.editedContent.set(reloaded.content);
+    this.sharedNote().setDocument(reloaded);
+    this.sharedNote().setContent(reloaded.content);
     this.editor()?.replaceContent(reloaded.content);
   }
 
@@ -631,8 +690,8 @@ export class DocumentPage {
         }
 
         const renamed = await this.documentService.read(newPath);
-        this.document.set(renamed);
-        this.editedContent.set(renamed.content);
+        this.sharedNote().setDocument(renamed);
+        this.sharedNote().setContent(renamed.content);
         this.editor()?.replaceContent(renamed.content);
       },
     );
@@ -643,6 +702,8 @@ export class DocumentPage {
 
     const dialogRef: ArcTechDialogRef = this.dialogService.create({
       arcTitle: this.translateService.instant('document.conflict.title'),
+      // Three buttons side by side need more than the default 425px (they were clipped).
+      arcCustomClasses: 'sm:max-w-[600px]',
       arcContent: this.translateService.instant('document.conflict.description'),
       arcOkText: this.translateService.instant('document.conflict.keepMine'),
       arcOkDestructive: true,
@@ -669,8 +730,8 @@ export class DocumentPage {
         return false;
       },
       arcOnCancel: () => {
-        this.document.set(current);
-        this.editedContent.set(current.content);
+        this.sharedNote().setDocument(current);
+        this.sharedNote().setContent(current.content);
         this.editor()?.replaceContent(current.content);
       },
     });
@@ -685,7 +746,7 @@ export class DocumentPage {
       });
 
       if (result.status === 'saved') {
-        this.document.set(await this.documentService.read(current.path));
+        this.sharedNote().setDocument(await this.documentService.read(current.path));
         toast.success(this.translateService.instant('document.toast.saved'));
       } else {
         toast.error(this.translateService.instant('document.toast.saveError'));
@@ -709,7 +770,7 @@ export class DocumentPage {
         content: this.editedContent(),
       });
       toast.success(this.translateService.instant('document.toast.savedCopy', { path: copy.path }));
-      this.editedContent.set(document.content);
+      this.sharedNote().setContent(document.content);
 
       const copySlug = copy.path.split('/').pop()!.replace(/\.md$/i, '');
       await this.router.navigateByUrl(
@@ -728,7 +789,10 @@ export class DocumentPage {
     this.errorMessage.set(null);
 
     try {
-      const document = await this.documentService.read(notePath);
+      // The other pane may show this note already: join its live document (unsaved text included) instead of
+      // reading the file again over it.
+      const shared = this.joinNote(notePath);
+      const document = shared.document() ?? (await this.documentService.read(notePath));
       if (token === this.loadToken) {
         this.fileActions.forgetDeleted(document.path);
         // The note audio channel belongs to the note shown: another note starts silent.
@@ -739,8 +803,10 @@ export class DocumentPage {
         this.unregisterOpenNote = this.fileActions.registerOpenNote(document.path, () =>
           this.saveBeforeLeave(),
         );
-        this.document.set(document);
-        this.editedContent.set(document.content);
+        if (!shared.document()) {
+          shared.setDocument(document);
+          shared.setContent(document.content);
+        }
         this.editorLinks.set(document.links);
         this.linkTargets.set([]);
         this.loadLinkTargets(document.path);
@@ -755,5 +821,19 @@ export class DocumentPage {
         this.isLoading.set(false);
       }
     }
+  }
+
+  /** Shows the live document of a note: the one the other pane has when it shows the same note, else a new one. */
+  private joinNote(notePath: string): SharedNote {
+    if (this.joinedPath !== notePath) {
+      if (this.joinedPath !== null) {
+        this.sharedNotes.leave(this.joinedPath, this);
+      }
+      this.joinedPath = notePath;
+    }
+
+    const shared = this.sharedNotes.join(notePath, this);
+    this.sharedNote.set(shared);
+    return shared;
   }
 }

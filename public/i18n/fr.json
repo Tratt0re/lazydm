@@ -728,6 +728,10 @@
     "brokenLinkTitle": "Note introuvable : {{name}}"
   },
   "tabs": {
+    "split": {
+      "resize": "Redimensionner les deux côtés",
+      "showOther": "Afficher l’autre côté"
+    },
     "ariaLabel": "Onglets ouverts",
     "back": "Précédent",
     "forward": "Suivant",
@@ -738,6 +742,9 @@
       "open": "Ouvrir",
       "openInNewTab": "Ouvrir dans un nouvel onglet",
       "openInBackground": "Ouvrir en arrière-plan",
+      "openToSide": "Ouvrir sur le côté",
+      "moveToRight": "Déplacer à droite",
+      "moveToLeft": "Déplacer à gauche",
       "duplicate": "Dupliquer l’onglet",
       "closeOthers": "Fermer les autres onglets",
       "closeToRight": "Fermer les onglets à droite"

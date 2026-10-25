@@ -240,26 +240,7 @@
 
   <ng-template #fileMenu>
     <div arc-menu-content class="w-60">
-      @if (isNote && canOpenInTab(route)) {
-        <button
-          type="button"
-          arc-menu-item
-          [arcDisabled]="!workspace.canOpenTab()"
-          (click)="workspace.openTab(route)"
-        >
-          <arc-icon arcType="plus" />
-          {{ 'tabs.menu.openInNewTab' | translate }}
-        </button>
-        <button
-          type="button"
-          arc-menu-item
-          [arcDisabled]="!workspace.canOpenTab()"
-          (click)="workspace.openTab(route, { background: true })"
-        >
-          <arc-icon arcType="copy-plus" />
-          {{ 'tabs.menu.openInBackground' | translate }}
-        </button>
-      }
+      <app-open-in-tab-menu [path]="file.path" />
       <button type="button" arc-menu-item (click)="openRenameSheet(file)">
         <arc-icon [arcType]="isMap(file) ? 'pencil' : 'text-cursor-input'" />
         {{ (isMap(file) ? 'maps.edit.menu' : 'campaigns.sections.renameAsset.menu') | translate }}

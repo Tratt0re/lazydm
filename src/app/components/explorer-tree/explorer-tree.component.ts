@@ -30,6 +30,7 @@ import { FileMoveService } from '@/services/file-move.service';
 import { LocalPreferencesService } from '@/services/local-preferences.service';
 import { type AppSection, SectionService, toSubfolderLabel } from '@/services/section.service';
 import { SectionActionsService } from '@/services/section-actions.service';
+import { AppOpenInTabMenuComponent } from '@/components/open-in-tab-menu/open-in-tab-menu.component';
 import { WorkspaceService } from '@/services/workspace.service';
 import { ArcTechIconComponent, type ArcTechIcon } from '@/shared/components/icon';
 import { ArcTechMenuImports } from '@/shared/components/menu';
@@ -79,6 +80,7 @@ interface SectionTree {
     NgTemplateOutlet,
     RouterLink,
     TranslatePipe,
+    AppOpenInTabMenuComponent,
     ArcTechIconComponent,
     ArcTechMenuImports,
     ArcTechTooltipImports,

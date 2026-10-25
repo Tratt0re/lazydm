@@ -15,7 +15,7 @@ import {
 import { TranslatePipe } from '@ngx-translate/core';
 
 import { SidebarToggleComponent } from '@/components/sidebar-toggle/sidebar-toggle.component';
-import type { WorkspaceTabDto } from '@/dtos';
+import type { WorkspacePane, WorkspaceTabDto } from '@/dtos';
 import { matchesShortcut, withShortcut } from '@/config/shortcuts.config';
 import { REVIEW_ROUTE_SEGMENT } from '@/pages/review-page/review-page';
 import { AppSheetService } from '@/services/app-sheet.service';
@@ -33,7 +33,7 @@ const isMac = typeof navigator !== 'undefined' && /mac/i.test(navigator.platform
 
 type TabBarMenuTarget =
   | { readonly kind: 'tab'; readonly tabId: string }
-  | { readonly kind: 'link'; readonly url: string };
+  | { readonly kind: 'link'; readonly url: string; readonly pane: WorkspacePane };
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -54,6 +54,8 @@ type TabBarMenuTarget =
   },
 })
 export class TabBar {
+  /** The side of the split screen this bar belongs to; it shows that side's tabs. */
+  readonly pane = input<WorkspacePane>('left');
   readonly sidebarCollapsed = input(false);
   readonly sidebarToggle = output<void>();
   protected readonly workspace = inject(WorkspaceService);
@@ -69,6 +71,7 @@ export class TabBar {
   /** Cmd/Ctrl+W is caught by the main process (the default menu would close the window). */
   private readonly handleShortcutEvent = (payload: unknown) => {
     if (
+      this.pane() === 'left' &&
       payload &&
       typeof payload === 'object' &&
       'action' in payload &&
@@ -92,6 +95,11 @@ export class TabBar {
       return;
     }
 
+    // The document-wide listeners of both bars would act twice: the left bar handles links.
+    if (this.pane() !== 'left') {
+      return;
+    }
+
     const isNewTabClick =
       event.type === 'auxclick'
         ? event.button === 1
@@ -107,7 +115,11 @@ export class TabBar {
 
     event.preventDefault();
     event.stopPropagation();
-    void this.workspace.openTab(route, { background: true });
+    // The tab opens on the side the link was clicked in.
+    void this.workspace.openTab(route, {
+      background: true,
+      pane: this.paneOf(event.target as Element | null),
+    });
   };
 
   /** Right-click on a tab or on a campaign link opens the matching menu. */
@@ -125,11 +137,12 @@ export class TabBar {
       tabElement && this.elementRef.nativeElement.contains(tabElement)
         ? tabElement.getAttribute('data-tab-id')
         : null;
-    const route = tabId ? null : this.getCampaignLinkRoute(event.target);
+    // Only the left bar listens for links, for both sides; the menu opens for the side the link is in.
+    const route = tabId || this.pane() !== 'left' ? null : this.getCampaignLinkRoute(event.target);
     const target: TabBarMenuTarget | null = tabId
       ? { kind: 'tab', tabId }
       : route
-        ? { kind: 'link', url: route }
+        ? { kind: 'link', url: route, pane: this.paneOf(event.target as Element | null) }
         : null;
     if (!target) {
       return;
@@ -176,9 +189,10 @@ export class TabBar {
       : null;
   }
 
+  /** Position of the menu's tab among its pane's tabs (for *Close tabs to the right*). */
   protected menuTabIndex(): number {
     const tab = this.menuTab();
-    return tab ? this.workspace.tabs().indexOf(tab) : -1;
+    return tab ? this.workspace.tabsOf(this.pane()).indexOf(tab) : -1;
   }
 
   protected menuLinkUrl(): string | null {
@@ -186,8 +200,23 @@ export class TabBar {
     return target?.kind === 'link' ? target.url : null;
   }
 
+  /** The side of the link the menu is open for. */
+  protected menuLinkPane(): WorkspacePane {
+    const target = this.menuTarget();
+    return target?.kind === 'link' ? target.pane : 'left';
+  }
+
+  /** Dropped in this bar: a reorder when it came from here, a move to this side when it came from the other bar. */
   protected onDrop(event: CdkDragDrop<readonly WorkspaceTabDto[]>): void {
-    this.workspace.moveTab(event.previousIndex, event.currentIndex);
+    if (event.previousContainer === event.container) {
+      this.workspace.moveTab(this.pane(), event.previousIndex, event.currentIndex);
+      return;
+    }
+
+    const tab = event.item.data as WorkspaceTabDto | undefined;
+    if (tab) {
+      void this.workspace.moveTabToOtherPane(tab.id, event.currentIndex);
+    }
   }
 
   protected onTabAuxClick(event: MouseEvent, tab: WorkspaceTabDto): void {
@@ -232,7 +261,8 @@ export class TabBar {
 
   @HostListener('document:keydown', ['$event'])
   protected onKeyDown(event: KeyboardEvent): void {
-    if (!this.workspace.isVisible() || this.sheets.isOpen()) {
+    // Both bars hear the document; the left one acts, on the focused pane.
+    if (this.pane() !== 'left' || !this.workspace.isVisible() || this.sheets.isOpen()) {
       return;
     }
 
@@ -269,11 +299,18 @@ export class TabBar {
 
   private getCampaignLinkRoute(target: EventTarget | null): string | null {
     const anchor = (target as Element | null)?.closest?.('a[data-route], a[href]');
-    const route = (
-      anchor?.getAttribute('data-route') ??
-      anchor?.getAttribute('href') ??
-      ''
-    ).replace(/^#/, '');
+    const raw = (anchor?.getAttribute('data-route') ?? anchor?.getAttribute('href') ?? '').replace(
+      /^#/,
+      '',
+    );
+    // A link in a pane carries the other pane too (`/a/b(split:c/d)`): the page it opens is the one before it,
+    // or, in the second pane, the `split:` one.
+    const route = this.workspace.pageOfLink(raw, this.paneOf(anchor));
     return this.workspace.isCampaignUrl(route) ? route : null;
+  }
+
+  /** The pane the element is in. */
+  private paneOf(element: Element | null | undefined): WorkspacePane {
+    return element?.closest('[data-pane="right"]') ? 'right' : 'left';
   }
 }

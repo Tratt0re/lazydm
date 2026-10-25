@@ -9,16 +9,19 @@ function getWorkspace(campaign) {
     return null;
   }
 
-  let tabs;
+  let stored;
   try {
-    tabs = JSON.parse(row.tabs_json);
+    stored = JSON.parse(row.tabs_json);
   } catch (_) {
     return null;
   }
 
+  // Rows saved before the split screen are a plain array of tabs; now `{ tabs, rightActiveTabId }`.
+  const tabs = Array.isArray(stored) ? stored : stored?.tabs;
   return {
     tabs: Array.isArray(tabs) ? tabs : [],
     activeTabId: row.active_tab ?? null,
+    rightActiveTabId: Array.isArray(stored) ? null : (stored?.rightActiveTabId ?? null),
     updatedAtMs: row.updated_at_ms,
   };
 }
@@ -28,7 +31,7 @@ function deleteWorkspace(campaign) {
   getVaultIndexDatabase().prepare('DELETE FROM workspace WHERE campaign = ?').run(campaign);
 }
 
-function saveWorkspace(campaign, { tabs, activeTabId }) {
+function saveWorkspace(campaign, { tabs, activeTabId, rightActiveTabId }) {
   const updatedAtMs = Date.now();
   getVaultIndexDatabase()
     .prepare(
@@ -38,9 +41,9 @@ function saveWorkspace(campaign, { tabs, activeTabId }) {
          active_tab = excluded.active_tab,
          updated_at_ms = excluded.updated_at_ms`,
     )
-    .run(campaign, JSON.stringify(tabs), activeTabId, updatedAtMs);
+    .run(campaign, JSON.stringify({ tabs, rightActiveTabId }), activeTabId, updatedAtMs);
 
-  return { tabs, activeTabId, updatedAtMs };
+  return { tabs, activeTabId, rightActiveTabId, updatedAtMs };
 }
 
 module.exports = {

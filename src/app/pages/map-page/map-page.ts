@@ -58,6 +58,7 @@ import { MapService } from '@/services/map.service';
 import { getNoteScopeKind, NoteScopeService } from '@/services/note-scope.service';
 import { SectionService, toSubfolderLabel } from '@/services/section.service';
 import { ToolbarContextService, type ToolbarItemAction } from '@/services/toolbar-context.service';
+import { type SharedFile, SharedFileService } from '@/services/shared-file.service';
 import { WorkspaceService } from '@/services/workspace.service';
 import { ArcTechAlertDialogService } from '@/shared/components/alert-dialog';
 import { ArcTechAlertComponent } from '@/shared/components/alert';
@@ -252,6 +253,9 @@ export class MapPage {
   private readonly mapService = inject(MapService);
   private readonly documentService = inject(DocumentService);
   private readonly workspace = inject(WorkspaceService);
+  private readonly sharedFiles = inject(SharedFileService);
+  /** Path of the file whose live state this page has joined. */
+  private joinedPath: string | null = null;
   private readonly preferences = inject(LocalPreferencesService);
   private readonly dialogFormService = inject(AppDialogFormService);
   private readonly dialogService = inject(ArcTechDialogService);
@@ -260,8 +264,6 @@ export class MapPage {
   private readonly contextMenuTrigger = viewChild.required(CdkContextMenuTrigger);
 
   private loadToken = 0;
-  private isSaving = false;
-  private needsSave = false;
 
   // Leaflet objects live outside signals; `viewVersion` tells the render effect when they changed.
   private leaflet: L.Map | null = null;
@@ -310,8 +312,13 @@ export class MapPage {
     return `${this.scope()?.rootPath ?? ''}/${folder}/${this.fileName()}`;
   });
   /** The file as loaded or last saved (its hash is what the next save is checked against). */
-  private readonly file = signal<MapFileDto | null>(null);
-  protected readonly data = signal<MapDto | null>(null);
+  /**
+   * The map's live state, shared with the other pane when it shows the same map (what one adds the other shows).
+   * Until a map is loaded the page has one of its own.
+   */
+  private readonly shared = signal<SharedFile<MapFileDto, MapDto>>(this.sharedFiles.join('', this));
+  private readonly file = computed(() => this.shared().file());
+  protected readonly data = computed(() => this.shared().data());
   protected readonly errorMessage = signal<string | null>(null);
   protected readonly isLoading = signal(true);
   protected readonly imageState = signal<ImageState>('none');
@@ -441,6 +448,26 @@ export class MapPage {
   };
 
   constructor() {
+    this.destroyRef.onDestroy(() => {
+      if (this.joinedPath !== null) {
+        this.sharedFiles.leave(this.joinedPath, this);
+      }
+      this.sharedFiles.leave('', this);
+    });
+
+    // Opening the second pane closes the *On this map* panel, to leave each side the room it needs.
+    let seenSplitOpens = this.workspace.splitOpenCount();
+    effect(() => {
+      const opens = this.workspace.splitOpenCount();
+      if (opens !== seenSplitOpens) {
+        seenSplitOpens = opens;
+        this.isPanelOpen.set(false);
+      }
+    });
+    if (this.workspace.hasSplit()) {
+      this.isPanelOpen.set(false);
+    }
+
     document.addEventListener('auxclick', this.swallowMenuAuxClick, true);
     this.destroyRef.onDestroy(() =>
       document.removeEventListener('auxclick', this.swallowMenuAuxClick, true),
@@ -2062,7 +2089,7 @@ export class MapPage {
   // --- Loading and saving ------------------------------------------------------------------------------
 
   private update(change: (data: MapDto) => MapDto): void {
-    this.data.update((data) => (data ? change(data) : data));
+    this.shared().data.update((data) => (data ? change(data) : data));
     void this.save();
   }
 
@@ -2072,10 +2099,14 @@ export class MapPage {
     this.errorMessage.set(null);
 
     try {
-      const file = await this.mapService.read(path);
+      // The other pane may show this map already: join its live state instead of reading the file over it.
+      const shared = this.joinFile(path);
+      const file = shared.file() ?? (await this.mapService.read(path));
       if (token === this.loadToken) {
-        this.file.set(file);
-        this.data.set(file.map);
+        if (!shared.file()) {
+          shared.file.set(file);
+          shared.data.set(file.map);
+        }
         this.selectedIds.set(new Set());
         this.tool.set('interact');
         // Another map with the same image reuses the page: it still has to show its own view.
@@ -2085,8 +2116,8 @@ export class MapPage {
       }
     } catch (error) {
       if (token === this.loadToken) {
-        this.file.set(null);
-        this.data.set(null);
+        this.shared().file.set(null);
+        this.shared().data.set(null);
         this.errorMessage.set(error instanceof Error ? error.message : String(error));
       }
     } finally {
@@ -2096,17 +2127,31 @@ export class MapPage {
     }
   }
 
+  /** Shows the live state of a map: the one the other pane has when it shows the same map, else a new one. */
+  private joinFile(path: string): SharedFile<MapFileDto, MapDto> {
+    if (this.joinedPath !== path) {
+      if (this.joinedPath !== null) {
+        this.sharedFiles.leave(this.joinedPath, this);
+      }
+      this.joinedPath = path;
+    }
+
+    const shared = this.sharedFiles.join<MapFileDto, MapDto>(path, this);
+    this.shared.set(shared);
+    return shared;
+  }
+
   /** Saves the map; changes made while a save runs are saved right after it, in order. */
   private async save(): Promise<void> {
-    if (this.isSaving) {
-      this.needsSave = true;
+    if (this.shared().save.isSaving) {
+      this.shared().save.needsSave = true;
       return;
     }
 
-    this.isSaving = true;
+    this.shared().save.isSaving = true;
     try {
       do {
-        this.needsSave = false;
+        this.shared().save.needsSave = false;
         const file = this.file();
         const map = this.data();
         if (!file || !map || file.parseError) {
@@ -2119,18 +2164,18 @@ export class MapPage {
           expectedHash: file.contentHash,
         });
         if (result.status === 'saved') {
-          this.file.set({ ...file, contentHash: result.contentHash, mtimeMs: result.mtimeMs });
+          this.shared().file.set({ ...file, contentHash: result.contentHash, mtimeMs: result.mtimeMs });
         } else {
-          this.needsSave = false;
+          this.shared().save.needsSave = false;
           this.openConflictSheet(result.current);
         }
-      } while (this.needsSave);
+      } while (this.shared().save.needsSave);
     } catch (error) {
       toast.error(this.translateService.instant('maps.page.saveError'), {
         description: error instanceof Error ? error.message : String(error),
       });
     } finally {
-      this.isSaving = false;
+      this.shared().save.isSaving = false;
     }
   }
 
@@ -2144,14 +2189,14 @@ export class MapPage {
       arcCancelText: this.translateService.instant('maps.page.loadOther'),
       arcOnOk: () => {
         // Overwrite: the next save is checked against the other version.
-        this.file.set(current);
+        this.shared().file.set(current);
         void this.save();
         dialogRef.close();
         return false;
       },
       arcOnCancel: () => {
-        this.file.set(current);
-        this.data.set(current.map);
+        this.shared().file.set(current);
+        this.shared().data.set(current.map);
       },
     });
   }

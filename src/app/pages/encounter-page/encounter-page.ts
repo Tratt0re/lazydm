@@ -3,6 +3,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
+  DestroyRef,
   effect,
   ElementRef,
   inject,
@@ -53,6 +54,8 @@ import { LocalPreferencesService } from '@/services/local-preferences.service';
 import { getNoteScopeKind, NoteScopeService } from '@/services/note-scope.service';
 import { SectionService, toSubfolderLabel } from '@/services/section.service';
 import { ToolbarContextService } from '@/services/toolbar-context.service';
+import { type SharedFile, SharedFileService } from '@/services/shared-file.service';
+import { WorkspaceService } from '@/services/workspace.service';
 import { ArcTechAlertComponent } from '@/shared/components/alert';
 import { ArcTechBadgeComponent } from '@/shared/components/badge';
 import { ArcTechButtonComponent } from '@/shared/components/button';
@@ -60,7 +63,7 @@ import { ArcTechEmptyComponent } from '@/shared/components/empty';
 import { ArcTechIconComponent } from '@/shared/components/icon';
 import { ArcTechAlertDialogService } from '@/shared/components/alert-dialog';
 import { ArcTechDialogService } from '@/shared/components/dialog';
-import { ArcTechSheetService } from '@/shared/components/sheet';
+import { ArcTechSheetService, type ArcTechSheetRef } from '@/shared/components/sheet';
 import { ArcTechCheckboxComponent } from '@/shared/components/checkbox';
 import { ArcTechMenuImports } from '@/shared/components/menu';
 import { ArcTechTooltipImports } from '@/shared/components/tooltip';
@@ -150,12 +153,16 @@ export class EncounterPage {
   private readonly battleRuleService = inject(BattleRuleService);
   private readonly dialogFormService = inject(AppDialogFormService);
   private readonly sheetService = inject(ArcTechSheetService);
+  private readonly workspace = inject(WorkspaceService);
+  private readonly sharedFiles = inject(SharedFileService);
+  /** Path of the file whose live state this page has joined. */
+  private joinedPath: string | null = null;
+  /** The linked-note side panel while it is open (it closes when the second pane appears). */
+  private noteSheet: ArcTechSheetRef<AppEncounterNotePanelComponent> | null = null;
   private readonly dialogService = inject(ArcTechDialogService);
   private readonly alertDialogService = inject(ArcTechAlertDialogService);
   private readonly localPreferences = inject(LocalPreferencesService);
   private loadToken = 0;
-  private isSaving = false;
-  private needsSave = false;
 
   private readonly params = toSignal(this.route.paramMap, {
     initialValue: this.route.snapshot.paramMap,
@@ -172,8 +179,15 @@ export class EncounterPage {
     return `${this.scope()?.rootPath ?? ''}/${folder}/${this.fileName()}`;
   });
   /** The file as loaded or last saved (its hash is what the next save is checked against). */
-  private readonly file = signal<EncounterFileDto | null>(null);
-  protected readonly encounter = signal<EncounterDto | null>(null);
+  /**
+   * The encounter's live state, shared with the other pane when it shows the same encounter (what one changes the
+   * other shows). Until an encounter is loaded the page has one of its own.
+   */
+  private readonly shared = signal<SharedFile<EncounterFileDto, EncounterDto>>(
+    this.sharedFiles.join('', this),
+  );
+  private readonly file = computed(() => this.shared().file());
+  protected readonly encounter = computed(() => this.shared().data());
   protected readonly rule = signal<BattleRuleDto | null>(null);
   protected readonly parseError = computed(() => this.file()?.parseError ?? null);
   protected readonly errorMessage = signal<string | null>(null);
@@ -255,6 +269,25 @@ export class EncounterPage {
   });
 
   constructor() {
+    inject(DestroyRef).onDestroy(() => {
+      if (this.joinedPath !== null) {
+        this.sharedFiles.leave(this.joinedPath, this);
+      }
+      this.sharedFiles.leave('', this);
+    });
+
+    // Opening the second pane closes the cemetery and the linked-note panel, to leave each side its room.
+    let seenSplitOpens = this.workspace.splitOpenCount();
+    effect(() => {
+      const opens = this.workspace.splitOpenCount();
+      if (opens !== seenSplitOpens) {
+        seenSplitOpens = opens;
+        this.isCemeteryOpen.set(false);
+        this.noteSheet?.close();
+        this.noteSheet = null;
+      }
+    });
+
     effect(() => {
       if (this.scope()) {
         void this.load(this.encounterPath());
@@ -461,7 +494,7 @@ export class EncounterPage {
   private updateEncounter(change: (encounter: EncounterDto) => EncounterDto): void {
     const encounter = this.encounter();
     if (encounter && this.isEditable()) {
-      this.encounter.set(change(encounter));
+      this.shared().data.set(change(encounter));
       void this.save();
     }
   }
@@ -1206,7 +1239,7 @@ export class EncounterPage {
       notePath.split('/').pop()?.replace(/\.md$/i, '') ??
       notePath;
     // Information only: no footer buttons (the close button is in the header; a link inside opens its note).
-    this.sheetService.create<AppEncounterNotePanelComponent, { path: string }>({
+    this.noteSheet = this.sheetService.create<AppEncounterNotePanelComponent, { path: string }>({
       arcTitle: title,
       arcContent: AppEncounterNotePanelComponent,
       arcData: { path: notePath },
@@ -1420,23 +1453,28 @@ export class EncounterPage {
 
     try {
       const scope = this.scope();
+      // The other pane may show this encounter already: join its live state instead of reading the file over it.
+      const shared = this.joinFile(path);
       const [file, rule] = await Promise.all([
-        this.isParty() && scope
-          ? this.encounterService.party(scope.rootPath, this.title())
-          : this.encounterService.read(path),
+        shared.file() ??
+          (this.isParty() && scope
+            ? this.encounterService.party(scope.rootPath, this.title())
+            : this.encounterService.read(path)),
         this.encounterService.rule(path),
       ]);
       if (token === this.loadToken) {
-        this.file.set(file);
-        this.encounter.set(file.encounter);
+        if (!shared.file()) {
+          shared.file.set(file);
+          shared.data.set(file.encounter);
+        }
         this.rule.set(rule);
         this.selectedIds.set(new Set());
         void this.loadNotes(path, file.encounter);
       }
     } catch (error) {
       if (token === this.loadToken) {
-        this.file.set(null);
-        this.encounter.set(null);
+        this.shared().file.set(null);
+        this.shared().data.set(null);
         this.errorMessage.set(error instanceof Error ? error.message : String(error));
       }
     } finally {
@@ -1614,17 +1652,31 @@ export class EncounterPage {
     }
   }
 
+  /** Shows the live state of an encounter: the one the other pane has when it shows the same one, else a new one. */
+  private joinFile(path: string): SharedFile<EncounterFileDto, EncounterDto> {
+    if (this.joinedPath !== path) {
+      if (this.joinedPath !== null) {
+        this.sharedFiles.leave(this.joinedPath, this);
+      }
+      this.joinedPath = path;
+    }
+
+    const shared = this.sharedFiles.join<EncounterFileDto, EncounterDto>(path, this);
+    this.shared.set(shared);
+    return shared;
+  }
+
   /** Saves the encounter; changes made while a save runs are saved right after it, in order. */
   private async save(): Promise<void> {
-    if (this.isSaving) {
-      this.needsSave = true;
+    if (this.shared().save.isSaving) {
+      this.shared().save.needsSave = true;
       return;
     }
 
-    this.isSaving = true;
+    this.shared().save.isSaving = true;
     try {
       do {
-        this.needsSave = false;
+        this.shared().save.needsSave = false;
         const file = this.file();
         const encounter = this.encounter();
         if (!file || !encounter) {
@@ -1637,18 +1689,18 @@ export class EncounterPage {
           expectedHash: file.contentHash,
         });
         if (result.status === 'saved') {
-          this.file.set({ ...file, contentHash: result.contentHash, mtimeMs: result.mtimeMs });
+          this.shared().file.set({ ...file, contentHash: result.contentHash, mtimeMs: result.mtimeMs });
         } else {
-          this.needsSave = false;
+          this.shared().save.needsSave = false;
           this.openConflictSheet(result.current);
         }
-      } while (this.needsSave);
+      } while (this.shared().save.needsSave);
     } catch (error) {
       toast.error(this.translateService.instant('encounters.saveError'), {
         description: error instanceof Error ? error.message : String(error),
       });
     } finally {
-      this.isSaving = false;
+      this.shared().save.isSaving = false;
     }
   }
 
@@ -1662,14 +1714,14 @@ export class EncounterPage {
       arcCancelText: this.translateService.instant('encounters.conflict.reload'),
       arcOnOk: () => {
         // Overwrite: the next save is checked against the other version.
-        this.file.set(current);
+        this.shared().file.set(current);
         void this.save();
         dialogRef.close();
         return false;
       },
       arcOnCancel: () => {
-        this.file.set(current);
-        this.encounter.set(current.encounter);
+        this.shared().file.set(current);
+        this.shared().data.set(current.encounter);
       },
     });
   }

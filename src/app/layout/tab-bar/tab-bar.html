@@ -1,18 +1,23 @@
 @if (workspace.isVisible()) {
-  <div class="flex h-10 items-stretch border-b border-border bg-recessed">
+  <div
+    class="flex h-10 items-stretch border-b border-border bg-recessed"
+    (mousedown)="workspace.focusPane(pane())"
+  >
     <div class="flex shrink-0 items-center gap-1 border-r border-border px-2">
-      <app-sidebar-toggle [sidebarCollapsed]="sidebarCollapsed()" (toggle)="sidebarToggle.emit()" />
+      @if (pane() === 'left') {
+        <app-sidebar-toggle [sidebarCollapsed]="sidebarCollapsed()" (toggle)="sidebarToggle.emit()" />
+      }
       <button
         type="button"
         arc-button
         arcType="ghost"
         arcSize="sm"
         class="size-7"
-        [arcDisabled]="!workspace.canGoBack()"
+        [arcDisabled]="!workspace.canGoBackIn(pane())"
         [attr.aria-label]="'tabs.back' | translate"
         arcPosition="bottom"
         [arcTooltip]="withShortcut('tabs.back' | translate, 'back')"
-        (click)="workspace.goBack()"
+        (click)="workspace.goBack(pane())"
       >
         <arc-icon arcType="chevron-left" />
       </button>
@@ -22,11 +27,11 @@
         arcType="ghost"
         arcSize="sm"
         class="size-7"
-        [arcDisabled]="!workspace.canGoForward()"
+        [arcDisabled]="!workspace.canGoForwardIn(pane())"
         [attr.aria-label]="'tabs.forward' | translate"
         arcPosition="bottom"
         [arcTooltip]="withShortcut('tabs.forward' | translate, 'forward')"
-        (click)="workspace.goForward()"
+        (click)="workspace.goForward(pane())"
       >
         <arc-icon arcType="chevron-right" />
       </button>
@@ -38,21 +43,24 @@
       cdkDropListOrientation="horizontal"
       cdkDropListLockAxis="x"
       class="flex min-w-0 flex-1 items-stretch gap-1 overflow-x-auto px-1 scrollbar-hide"
-      [cdkDropListData]="workspace.tabs()"
+      [cdkDropListData]="workspace.tabsOf(pane())"
       [attr.aria-label]="'tabs.ariaLabel' | translate"
       (cdkDropListDropped)="onDrop($event)"
     >
-      @for (tab of workspace.tabs(); track tab.id) {
-        @let isActive = tab.id === workspace.activeTabId();
+      @for (tab of workspace.tabsOf(pane()); track tab.id) {
+        @let isActive = tab.id === workspace.activeTabIdOf(pane());
         @let title = getTitle(tab) || ('tabs.untitled' | translate);
         <div
           cdkDrag
+          [cdkDragData]="tab"
           cdkDragLockAxis="x"
           cdkDragPreviewClass="arc-tab-drag-preview"
           class="group flex max-w-56 shrink-0 items-center border-b-3 transition-colors duration-150 [&.cdk-drag-placeholder]:opacity-40 [.cdk-drop-list-dragging_&]:transition-transform"
           [class]="
             isActive
-              ? 'border-primary text-foreground-strong'
+              ? (workspace.hasSplit() && workspace.focusedPane() !== pane()
+                  ? 'border-border-strong text-foreground'
+                  : 'border-primary text-foreground-strong')
               : 'border-transparent text-foreground-secondary hover:bg-accent hover:text-foreground'
           "
           [attr.data-tab-id]="tab.id"
@@ -99,7 +107,23 @@
       }
     </div>
 
-    <div class="flex shrink-0 items-center border-l border-border px-2">
+    <div class="flex shrink-0 items-center gap-1 border-l border-border px-2">
+      @if (workspace.hasSplit() && workspace.isNarrowSplit()) {
+        <!-- Only one side fits: this shows the other one. -->
+        <button
+          type="button"
+          arc-button
+          arcType="ghost"
+          arcSize="sm"
+          class="size-7"
+          [attr.aria-label]="'tabs.split.showOther' | translate"
+          arcPosition="bottom"
+          [arcTooltip]="'tabs.split.showOther' | translate"
+          (click)="workspace.focusPane(pane() === 'left' ? 'right' : 'left')"
+        >
+          <arc-icon [arcType]="pane() === 'left' ? 'panel-right' : 'panel-left'" />
+        </button>
+      }
       <button
         type="button"
         arc-button
@@ -110,7 +134,7 @@
         [attr.aria-label]="'tabs.new' | translate"
         arcPosition="bottom"
         [arcTooltip]="withShortcut('tabs.new' | translate, 'newTab')"
-        (click)="workspace.openTab()"
+        (click)="workspace.openTab(undefined, { pane: pane() })"
       >
         <arc-icon arcType="plus" />
       </button>
@@ -128,7 +152,7 @@
 <ng-template #tabBarMenu>
   <div arc-menu-content class="w-60">
     @if (menuLinkUrl(); as url) {
-      <button type="button" arc-menu-item (click)="workspace.openInActiveTab(url)">
+      <button type="button" arc-menu-item (click)="workspace.openInActiveTab(url, menuLinkPane())">
         <arc-icon arcType="file-text" />
         {{ 'tabs.menu.open' | translate }}
       </button>
@@ -136,7 +160,7 @@
         type="button"
         arc-menu-item
         [arcDisabled]="!workspace.canOpenTab()"
-        (click)="workspace.openTab(url)"
+        (click)="workspace.openTab(url, { pane: menuLinkPane() })"
       >
         <arc-icon arcType="plus" />
         {{ 'tabs.menu.openInNewTab' | translate }}
@@ -145,10 +169,19 @@
         type="button"
         arc-menu-item
         [arcDisabled]="!workspace.canOpenTab()"
-        (click)="workspace.openTab(url, { background: true })"
+        (click)="workspace.openTab(url, { background: true, pane: menuLinkPane() })"
       >
         <arc-icon arcType="copy-plus" />
         {{ 'tabs.menu.openInBackground' | translate }}
+      </button>
+      <button
+        type="button"
+        arc-menu-item
+        [arcDisabled]="!workspace.canOpenTab()"
+        (click)="workspace.openTab(url, { pane: menuLinkPane() === 'left' ? 'right' : 'left' })"
+      >
+        <arc-icon arcType="panel-right" />
+        {{ 'tabs.menu.openToSide' | translate }}
       </button>
     } @else if (menuTab(); as tab) {
       <button
@@ -169,6 +202,15 @@
       >
         <arc-icon arcType="copy-plus" />
         {{ 'tabs.menu.duplicate' | translate }}
+      </button>
+      <button
+        type="button"
+        arc-menu-item
+        [arcDisabled]="pane() === 'left' && workspace.tabsOf('left').length < 2"
+        (click)="workspace.moveTabToOtherPane(tab.id)"
+      >
+        <arc-icon [arcType]="pane() === 'left' ? 'panel-right' : 'panel-left'" />
+        {{ (pane() === 'left' ? 'tabs.menu.moveToRight' : 'tabs.menu.moveToLeft') | translate }}
       </button>
       <div class="-mx-1 my-1 h-px bg-border-subtle" role="separator"></div>
       <button

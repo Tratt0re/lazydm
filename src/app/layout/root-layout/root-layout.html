@@ -27,23 +27,53 @@
       [attr.inert]="showSidebarOverlay() ? '' : null"
       [attr.aria-hidden]="showSidebarOverlay() ? 'true' : null"
     >
-      <app-tab-bar [sidebarCollapsed]="sidebarCollapsed()" (sidebarToggle)="toggleSidebar()" />
-
-      <app-toolbar
-        [title]="toolbarTitle()"
-        [titleMode]="toolbarTitleMode()"
-        [titleBreadcrumbs]="toolbarTitleBreadcrumbs()"
-        [itemActions]="toolbarItemActions()"
-        [itemNavigation]="toolbarItemNavigation()"
-      ></app-toolbar>
-
-      <app-vault-activity-banner />
-
-      <arc-content id="main-content" class="min-h-0 px-4">
-        <app-vault-sync-status />
-        <router-outlet />
-      </arc-content>
-
+      <!-- One drop list group: a tab dragged from one pane's bar can be dropped in the other's. -->
+      <div #panes cdkDropListGroup class="flex min-h-0 flex-1">
+        <!-- The pane that is not shown (narrow window) stays mounted, so its page and edits are kept. -->
+        <app-pane
+          [style.display]="showLeft() ? null : 'none'"
+          [style.flex]="hasSplit() && !isNarrow() ? leftGrow() + ' 1 0' : null"
+          [style.min-width.px]="hasSplit() && !isNarrow() ? minPaneWidth : null"
+          [sidebarCollapsed]="sidebarCollapsed()"
+          (sidebarToggle)="toggleSidebar()"
+          (pointerdown)="workspace.focusPane('left')"
+          (focusin)="workspace.focusPane('left')"
+        />
+        @if (hasSplit()) {
+          @if (!isNarrow()) {
+            <div
+              role="separator"
+              aria-orientation="vertical"
+              tabindex="0"
+              class="group relative z-10 w-px shrink-0 cursor-col-resize bg-border outline-none focus-visible:bg-primary"
+              [attr.aria-label]="'tabs.split.resize' | translate"
+              [attr.aria-valuemin]="0"
+              [attr.aria-valuemax]="100"
+              [attr.aria-valuenow]="ratioPercent()"
+              (pointerdown)="startResize($event)"
+              (pointermove)="resize($event)"
+              (pointerup)="endResize($event)"
+              (pointercancel)="endResize($event)"
+              (keydown)="onDividerKeyDown($event)"
+              (dblclick)="resetRatio()"
+            >
+              <!-- A wider hit area than the 1px line; the line turns bronze while it is used. -->
+              <span
+                class="absolute inset-y-0 -left-1.5 w-3 group-hover:bg-primary/20 group-focus-visible:bg-primary/20"
+                [class.bg-primary/30]="isResizing()"
+              ></span>
+            </div>
+          }
+          <app-pane
+            outlet="split"
+            [style.display]="showRight() ? null : 'none'"
+            [style.flex]="!isNarrow() ? 1 - leftGrow() + ' 1 0' : null"
+            [style.min-width.px]="!isNarrow() ? minPaneWidth : null"
+            (pointerdown)="workspace.focusPane('right')"
+            (focusin)="workspace.focusPane('right')"
+          />
+        }
+      </div>
     </arc-layout>
   </arc-layout>
 </arc-layout>

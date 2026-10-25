@@ -1,0 +1,20 @@
+<app-tab-bar
+  [pane]="side()"
+  [sidebarCollapsed]="sidebarCollapsed()"
+  (sidebarToggle)="sidebarToggle.emit()"
+/>
+
+<app-toolbar
+  [title]="toolbarTitle()"
+  [titleMode]="toolbarTitleMode()"
+  [titleBreadcrumbs]="toolbarTitleBreadcrumbs()"
+  [itemActions]="toolbarItemActions()"
+  [itemNavigation]="toolbarItemNavigation()"
+></app-toolbar>
+
+<app-vault-activity-banner />
+
+<arc-content [attr.id]="isFirstPane() ? 'main-content' : null" class="min-h-0 px-4">
+  <app-vault-sync-status />
+  <router-outlet [name]="outlet()" />
+</arc-content>

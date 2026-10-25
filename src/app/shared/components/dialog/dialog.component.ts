@@ -139,7 +139,7 @@ export class ArcTechDialogOptions<T, U> {
 
       @if (!config.arcHideFooter) {
         <footer
-          class="flex flex-col-reverse gap-2 sm:flex-row sm:justify-end sm:gap-0 sm:space-x-2 pt-2"
+          class="flex flex-col-reverse gap-2 sm:flex-row sm:flex-wrap sm:justify-end sm:gap-2 pt-2"
         >
           @if (backText(); as back) {
             <!-- A later step of a multi-step dialog: back to the one before, on the left of the footer. -->

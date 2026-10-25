@@ -728,6 +728,10 @@
     "brokenLinkTitle": "Notiz nicht gefunden: {{name}}"
   },
   "tabs": {
+    "split": {
+      "resize": "Größe der beiden Seiten ändern",
+      "showOther": "Die andere Seite zeigen"
+    },
     "ariaLabel": "Geöffnete Tabs",
     "back": "Zurück",
     "forward": "Vorwärts",
@@ -738,6 +742,9 @@
       "open": "Öffnen",
       "openInNewTab": "In neuem Tab öffnen",
       "openInBackground": "In Hintergrund-Tab öffnen",
+      "openToSide": "Daneben öffnen",
+      "moveToRight": "Nach rechts verschieben",
+      "moveToLeft": "Nach links verschieben",
       "duplicate": "Tab duplizieren",
       "closeOthers": "Andere Tabs schließen",
       "closeToRight": "Tabs rechts schließen"
