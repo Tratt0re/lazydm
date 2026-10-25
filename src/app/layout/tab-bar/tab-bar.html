@@ -134,7 +134,7 @@
 <ng-template #tabBarMenu>
   <div arc-menu-content class="w-60">
     @if (menuLinkUrl(); as url) {
-      <button type="button" arc-menu-item (click)="workspace.openInActiveTab(url)">
+      <button type="button" arc-menu-item (click)="workspace.openInActiveTab(url, menuLinkPane())">
         <arc-icon arcType="file-text" />
         {{ 'tabs.menu.open' | translate }}
       </button>
@@ -142,7 +142,7 @@
         type="button"
         arc-menu-item
         [arcDisabled]="!workspace.canOpenTab()"
-        (click)="workspace.openTab(url)"
+        (click)="workspace.openTab(url, { pane: menuLinkPane() })"
       >
         <arc-icon arcType="plus" />
         {{ 'tabs.menu.openInNewTab' | translate }}
@@ -151,7 +151,7 @@
         type="button"
         arc-menu-item
         [arcDisabled]="!workspace.canOpenTab()"
-        (click)="workspace.openTab(url, { background: true })"
+        (click)="workspace.openTab(url, { background: true, pane: menuLinkPane() })"
       >
         <arc-icon arcType="copy-plus" />
         {{ 'tabs.menu.openInBackground' | translate }}
@@ -160,7 +160,7 @@
         type="button"
         arc-menu-item
         [arcDisabled]="!workspace.canOpenTab()"
-        (click)="workspace.openToSide(url)"
+        (click)="workspace.openTab(url, { pane: menuLinkPane() === 'left' ? 'right' : 'left' })"
       >
         <arc-icon arcType="panel-right" />
         {{ 'tabs.menu.openToSide' | translate }}

@@ -604,7 +604,10 @@ export class AppCodeEditorComponent implements OnDestroy {
         EditorView.domEventHandlers({ paste: (event) => this.handlePaste(event) }),
         EditorView.updateListener.of((update: ViewUpdate) => {
           // A change that came from the same note in the other pane is not announced again.
-          if (update.docChanged && !update.transactions.some((tr) => tr.annotation(Transaction.remote))) {
+          if (
+            update.docChanged &&
+            !update.transactions.some((tr) => tr.annotation(Transaction.remote))
+          ) {
             this.contentChange.emit(update.state.doc.toString());
           }
         }),

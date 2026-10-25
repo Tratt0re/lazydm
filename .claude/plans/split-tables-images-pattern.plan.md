@@ -89,3 +89,12 @@ on the right); fall back to an explicit `PaneNavigator` plus call-site edits if 
 - [ ] D4 Shortcuts follow the active pane, persistence, docs
 - [x] D5 Shared document: `SharedNoteService` keeps one live document per note path (file, text, save state); each pane's `DocumentPage` joins it, its editor follows remote changes through `syncContent` (a minimal change flagged remote, so undo history and cursor stay per pane), one save and one conflict modal for both panes, leaving one pane never saves while the other still shows the note. Checked in Chrome: typing on each side, undo on one side, one write on save, one modal for two simultaneous saves, reload from the conflict modal, right pane to another note and back.
       cursor/scroll stay per pane, one autosave and one conflict modal
+
+## Follow-ups after the user's first try (2026-10-25)
+- [x] Links in a pane carry the other pane (`/a(split:b)`): the tab bar read the first pane's page out of every
+      link, so Cmd/Ctrl-click and the link menu in the right pane (and on a breadcrumb) opened a copy of the
+      left tab. `WorkspaceService.pageOfLink` takes the page of the side the link is in; tabs open on that side.
+- [x] Maps and encounters shown in both panes share one live state (`SharedFileService`: file, data and the
+      save flags), so a pin, a path or an entity added on one side shows on the other and the file is saved once.
+      Checked in Chrome with the pages' own update methods; not by clicking the map tools.
+

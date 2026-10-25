@@ -157,6 +157,21 @@ export class WorkspaceService extends BaseIpcService<APIChannel.WORKSPACE> {
     });
   }
 
+  /**
+   * The page a link opens: its own path, without the other pane's page that links in a pane carry (the second
+   * pane's links are `/<its page>`-less: the page they open is the one in the `split:` part).
+   */
+  pageOfLink(link: string, pane: WorkspacePane): string {
+    if (!link.includes('(')) {
+      return toPath(link);
+    }
+
+    // A link built in the second pane keeps the first pane's page in front and puts its own target in `split:`.
+    const tree = this.router.parseUrl(link);
+    const segments = outletSegments(tree, pane === 'right' ? SPLIT_PANE_OUTLET : PRIMARY_PANE_OUTLET);
+    return segments.length ? '/' + segments.map(encodeURIComponent).join('/') : toPath(link);
+  }
+
   /** Whether a URL belongs to the open campaign (tabs never leave it). */
   isCampaignUrl(url: string): boolean {
     const slug = this.campaignSlugSignal();

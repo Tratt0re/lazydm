@@ -33,7 +33,7 @@ const isMac = typeof navigator !== 'undefined' && /mac/i.test(navigator.platform
 
 type TabBarMenuTarget =
   | { readonly kind: 'tab'; readonly tabId: string }
-  | { readonly kind: 'link'; readonly url: string };
+  | { readonly kind: 'link'; readonly url: string; readonly pane: WorkspacePane };
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -115,7 +115,11 @@ export class TabBar {
 
     event.preventDefault();
     event.stopPropagation();
-    void this.workspace.openTab(route, { background: true });
+    // The tab opens on the side the link was clicked in.
+    void this.workspace.openTab(route, {
+      background: true,
+      pane: this.paneOf(event.target as Element | null),
+    });
   };
 
   /** Right-click on a tab or on a campaign link opens the matching menu. */
@@ -133,11 +137,12 @@ export class TabBar {
       tabElement && this.elementRef.nativeElement.contains(tabElement)
         ? tabElement.getAttribute('data-tab-id')
         : null;
+    // Only the left bar listens for links, for both sides; the menu opens for the side the link is in.
     const route = tabId || this.pane() !== 'left' ? null : this.getCampaignLinkRoute(event.target);
     const target: TabBarMenuTarget | null = tabId
       ? { kind: 'tab', tabId }
       : route
-        ? { kind: 'link', url: route }
+        ? { kind: 'link', url: route, pane: this.paneOf(event.target as Element | null) }
         : null;
     if (!target) {
       return;
@@ -193,6 +198,12 @@ export class TabBar {
   protected menuLinkUrl(): string | null {
     const target = this.menuTarget();
     return target?.kind === 'link' ? target.url : null;
+  }
+
+  /** The side of the link the menu is open for. */
+  protected menuLinkPane(): WorkspacePane {
+    const target = this.menuTarget();
+    return target?.kind === 'link' ? target.pane : 'left';
   }
 
   /** Dropped in this bar: a reorder when it came from here, a move to this side when it came from the other bar. */
@@ -288,11 +299,18 @@ export class TabBar {
 
   private getCampaignLinkRoute(target: EventTarget | null): string | null {
     const anchor = (target as Element | null)?.closest?.('a[data-route], a[href]');
-    const route = (
-      anchor?.getAttribute('data-route') ??
-      anchor?.getAttribute('href') ??
-      ''
-    ).replace(/^#/, '');
+    const raw = (anchor?.getAttribute('data-route') ?? anchor?.getAttribute('href') ?? '').replace(
+      /^#/,
+      '',
+    );
+    // A link in a pane carries the other pane too (`/a/b(split:c/d)`): the page it opens is the one before it,
+    // or, in the second pane, the `split:` one.
+    const route = this.workspace.pageOfLink(raw, this.paneOf(anchor));
     return this.workspace.isCampaignUrl(route) ? route : null;
+  }
+
+  /** The pane the element is in. */
+  private paneOf(element: Element | null | undefined): WorkspacePane {
+    return element?.closest('[data-pane="right"]') ? 'right' : 'left';
   }
 }

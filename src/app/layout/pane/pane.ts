@@ -46,6 +46,8 @@ import { createPaneRouter, PaneState } from './pane-router';
   templateUrl: './pane.html',
   host: {
     class: 'flex min-h-0 min-w-0 flex-1 flex-col',
+    // Which side an element is in (links and menus open their tabs on that side).
+    '[attr.data-pane]': 'side()',
   },
 })
 export class Pane {
