@@ -41,6 +41,14 @@ export const buttonVariants = cva(
         true: 'pointer-events-none border-dashed border-border bg-transparent text-muted-foreground hover:border-border hover:bg-transparent',
       },
     },
+    compoundVariants: [
+      // A borderless button has no outline to dash: it keeps the plain faded look when disabled.
+      {
+        arcType: ['ghost', 'link'],
+        arcDisabled: true,
+        class: 'border-transparent text-inherit opacity-50',
+      },
+    ],
     defaultVariants: {
       arcType: 'default',
       arcSize: 'default',
