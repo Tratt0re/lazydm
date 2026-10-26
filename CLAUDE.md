@@ -36,7 +36,7 @@ A build with no errors is the minimum check after every change. The 3 `NG8113` w
 | `src/app/layout/` | app shell: root layout, sidebar, toolbar, header, breadcrumb |
 | `src/app/shared/components/` | **ArcTechUI** component library |
 | `src/app/components/`, `src/app/pages/` | app components and routed pages |
-| `src/styles.css`, `src/styles/fonts.css` | theme tokens (Nordic Relic dark + light), utilities, fonts |
+| `src/styles.css`, `src/styles/fonts.css` | theme tokens (dark + light), utilities, fonts |
 | `src/assets/` | bundled fonts and icons (the folder name `assets` is intentional — do not rename) |
 | `public/i18n/*.json` | translations (en, it, de, es, fr, uk, zh) |
 
@@ -59,7 +59,7 @@ A build with no errors is the minimum check after every change. The 3 `NG8113` w
   (`arcType`, `arcSize`), provider `provideArcTech()`, id directive `arcTechId`, tokens `ARC_*`.
 - Styles live in `*.variants.ts` (class-variance-authority) merged with `mergeClasses()` from `@/shared/utils/merge-classes`.
 - Use semantic tokens (`bg-card`, `text-primary`, `border-input`…), never raw colours; both themes must work.
-- Square shapes; `font-display` (Barlow Condensed) for titles, `font-sans` (Plex Sans) for UI, `font-mono` (Plex Mono) for labels/metadata. Use the Nordic Relic surface tokens (`bg-recessed`, `bg-card`, `bg-raised`) — see DESIGN_PRINCIPLES.md §9.
+- Square shapes; `font-display` (Barlow Condensed) for titles, `font-sans` (Plex Sans) for UI, `font-mono` (Plex Mono) for labels/metadata. Use the ArcTechUI surface tokens (`bg-recessed`, `bg-card`, `bg-raised`) — see DESIGN_PRINCIPLES.md §9.
 - **Page, route and card titles end with a primary-coloured dot**:
   `{{ title }}<span class="text-primary" aria-hidden="true">.</span>` — no whitespace before the span.
 - No decorative text with fake meaning (runes, mottos, fake codes…). The ornamental symbols of the design (◇ ✣ ◇) stay, used sparingly and with a job (DESIGN_PRINCIPLES §9).

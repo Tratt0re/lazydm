@@ -47,7 +47,7 @@ session without friction. Your campaigns live in plain Markdown files that you o
   both panes edits one live document, and maps and encounters in both panes share one live state.
 - **Customize menu**, toolbar "…" menus and a shortcuts reference in Settings.
 - **Startup**: optionally open the last campaign at start (Settings → General → Startup).
-- **Themes and languages**: *Nordic Relic* dark and light themes, in English, Italian, German, Spanish, French,
+- **Themes and languages**: dark and light themes, in English, Italian, German, Spanish, French,
   Ukrainian and Chinese.
 - **Setup flow**: a short Welcome step (name, language, theme) and a Codex step that explains device versus cloud
   folders.
@@ -60,7 +60,7 @@ session without friction. Your campaigns live in plain Markdown files that you o
 - **Index**: Better-SQLite3 (local, rebuildable)
 - **Editor**: CodeMirror
 - **i18n**: ngx-translate
-- **UI**: ArcTechUI, the in-house component library (Nordic Relic visual style)
+- **UI**: ArcTechUI, the in-house component library (LazyDM's own visual identity)
 - **Tests**: Vitest (Angular and Electron)
 
 ## Architecture

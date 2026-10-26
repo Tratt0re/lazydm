@@ -24,7 +24,7 @@ Heading to 1.0. Built and working:
 - Encounter manager with tracker layouts (battle rules), party roster, cemetery and statuses
 - Map with pins linked to files
 - Tabs and split screen with shared live documents
-- Seven languages (en, it, de, es, fr, uk, zh) and the Nordic Relic dark and light themes
+- Seven languages (en, it, de, es, fr, uk, zh) and the dark and light themes
 
 Current work: UI polish for 1.0 (plans in `.claude/plans/`). The phase-by-phase roadmap is in
 `DESIGN_PRINCIPLES.md` §11, and open decisions are in §12.

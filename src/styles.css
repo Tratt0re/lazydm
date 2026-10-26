@@ -5,7 +5,7 @@
 
 @custom-variant dark (&:is(.dark *));
 
-/* ArcTechUI tokens — Nordic Relic v0.3.3 palette. :root = light, .dark = dark. */
+/* ArcTechUI tokens. :root = light, .dark = dark. */
 :root {
   --radius: 0rem;
   --background: #E9EAE7;
@@ -288,7 +288,7 @@
     color: var(--primary-foreground);
   }
 
-  /* Nordic Relic dialog backdrop: near-black at ~82% in both themes. */
+  /* ArcTechUI dialog backdrop: near-black at ~82% in both themes. */
   .cdk-overlay-dark-backdrop.cdk-overlay-backdrop-showing {
     background: rgb(3 5 7 / 82%) !important;
   }
@@ -362,7 +362,7 @@
   background: var(--background);
 }
 
-/* Nordic Relic engraved rule: hairline, bronze diamond, hairline. Header/body separator in dialogs. */
+/* ArcTechUI engraved rule: hairline, bronze diamond, hairline. Header/body separator in dialogs. */
 /* Full-page sheets (Compendium, Settings) open like a gate: down from under the title bar, back up to close. */
 @keyframes arc-app-sheet-open {
   from {
@@ -398,7 +398,7 @@
   box-shadow: var(--elevation-overlay);
 }
 
-/* Ornamental rule (Nordic Relic "engraved geometry"): bronze bar, three marks, then a hairline. */
+/* Ornamental rule ("engraved geometry"): bronze bar, three marks, then a hairline. */
 .arc-ornament-rule {
   display: flex;
   align-items: center;
@@ -479,7 +479,7 @@
 }
 
 /*
- * Campaign card (Nordic Relic "engraved geometry"): bronze corner brackets that grow on hover/focus.
+ * Campaign card ("engraved geometry"): bronze corner brackets that grow on hover/focus.
  * Decoration only: no text, aria-hidden in the markup.
  */
 .arc-campaign-card {

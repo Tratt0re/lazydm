@@ -477,7 +477,7 @@ Planned Electron modules: `vault`, `cloud-readiness`, `campaign`, `document`, `i
     Cmd/Ctrl-click opens a background tab —, shape); a selection of several lists them. Editing happens in modals,
     and so does every confirmation (§8).
   - **Asset changes**: renaming or moving an image of the assets rewrites the `image` of the maps showing it.
-- **Style**: the map is part of the app, not a widget: square shapes, Nordic Relic surface tokens
+- **Style**: the map is part of the app, not a widget: square shapes, ArcTechUI surface tokens
   (`bg-card`, `bg-raised`), `font-mono` labels, semantic colours for the chrome in both themes. User colours come from
   a fixed palette of the app's `--system-app-color-N` tokens, never free hex input.
 
@@ -557,7 +557,7 @@ Planned Electron modules: `vault`, `cloud-readiness`, `campaign`, `document`, `i
     open the note. Right-click: *Move to…* and *Reveal* on files (plus *Copy to…* on assets), *Open page* and
     *Reveal* on folders. The Compendium one starts with *All systems*, then each system (↗ = its overview) with
     the folders it has.
-  - **Contextual** (Settings): the Nordic Relic sidebar tabs with cascading branches (recessed panel, rows split
+  - **Contextual** (Settings): the ArcTechUI sidebar tabs with cascading branches (recessed panel, rows split
     by 1px lines, active row raised with a 3px bronze marker) carrying the settings-style title with its dot and
     a description.
   - **Tab-based** (Templates): the same tabs grouped into collapsible sections (light header with a count).
@@ -596,7 +596,7 @@ Planned Electron modules: `vault`, `cloud-readiness`, `campaign`, `document`, `i
   - **Drag to sort** tabs (CDK drag-drop, horizontal). Each tab shows its section icon.
   - **Context menu** (right-click, or the menu key / Shift+F10 on a focused tab): on a campaign link — open, open in
     new tab, open in background tab; on a tab — new tab, duplicate, close, close others, close tabs to the right.
-  - Active tab uses the Nordic Relic *page tabs* look: no fill, 3px bronze bottom border. It shows **only its
+  - Active tab uses the ArcTechUI *page tabs* look: no fill, 3px bronze bottom border. It shows **only its
     icon** (the page title right below already names the page; the name stays in the tooltip and for screen readers);
     the other tabs show icon and name. Selecting a tab animates the label's width (about 200ms, none with reduced
     motion), so the bar does not jump. The tablist has roving focus (arrows / Home / End move the focus, Enter activates).
@@ -699,15 +699,15 @@ Planned Electron modules: `vault`, `cloud-readiness`, `campaign`, `document`, `i
     Reading renderer, so it never drifts from the real output; images and properties get a one-line note instead).
     A right-side sheet without footer. Read-only; it never edits the note, and its samples are not clickable.
 
-## 9. ArcTechUI visual style (Nordic Relic)
+## 9. ArcTechUI visual style
 
 The component library is **ArcTechUI** (formerly ZardUI): classes `ArcTech*`, selectors `arc-*`, inputs/outputs `arc*`,
-provider `provideArcTech()`. The visual style is **Nordic Relic**. The library is self-contained: the original
+provider `provideArcTech()`. The visual style is LazyDM's own identity. The library is self-contained: the original
 reference template has been removed, and the existing components and `src/styles.css` tokens are the reference now.
 Component behaviour, variant keys and configuration stay as they are.
 
 - **Theme and language are per-device** preferences (never stored in the vault).
-- **Two themes**: the Nordic Relic dark and light palettes (cold mineral neutrals, a single bronze accent). Both are
+- **Two themes**: the dark and light palettes (cold mineral neutrals, a single bronze accent). Both are
   always supported; use semantic tokens, never raw colours in components.
   - Surfaces: `bg-background` (canvas), `bg-recessed` (inputs, editor, tracks), `bg-card` (panels, dialogs),
     `bg-raised` / `bg-popover` (headers, menus, tooltips, selected/active items), `bg-accent` (hover).
@@ -776,7 +776,7 @@ Component behaviour, variant keys and configuration stay as they are.
 | 3 | Cloud readiness at startup: provider detection, placeholder download, wait UI, conflict copies |
 | 4 | Campaigns: create (slug + `campaign.md` + default folders), grid with empty CTA, campaign layout + back link |
 | 5 | Documents: section lists, CodeMirror live preview, reading mode, wikilinks, assets, save with conflict detection, templates |
-| 5.1 | Design-system alignment to Nordic Relic v0.3.3 (tokens, fonts, component look) |
+| 5.1 | Design-system alignment (tokens, fonts, component look) |
 | 6 | Tab bar |
 | 6.1 | Tab bar usability: context menus, breadcrumb, drag to sort, overview tab rules, page-tabs style |
 | 7 | Link maintenance: backlinks panel, rename with link refactoring, broken links page |

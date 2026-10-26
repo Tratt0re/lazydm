@@ -30,7 +30,7 @@ export interface SecondarySidebarItem {
 }
 
 /**
- * Sidebar of the full-page sheets: the Nordic Relic sidebar tabs — recessed panel, rows split by 1px lines, the
+ * Sidebar of the full-page sheets: the ArcTechUI sidebar tabs — recessed panel, rows split by 1px lines, the
  * active row raised with a 3px bronze marker.
  * - `cascade` (contextual, Settings): branches carry the settings-style title (with its dot) and description.
  * - `groups` (tab-based, Templates): branches are light collapsible section headers with a count, open by default.

@@ -49,7 +49,7 @@ const toastTextActionClass = mergeClasses(
 );
 
 /**
- * Nordic Relic notification banner: card surface, 1px border in the state colour, strong uppercase
+ * ArcTechUI notification banner: card surface, 1px border in the state colour, strong uppercase
  * title, muted mono description and a square close button on the right.
  */
 export const toastClasses = {
