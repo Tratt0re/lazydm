@@ -1,6 +1,6 @@
 # CLAUDE.md
 
-LazyDM — an Obsidian-like desktop app for Dungeon Masters (Electron 44 + Angular 21 + Tailwind 4).
+LazyDM — a desktop app for Dungeon Masters (Electron 44 + Angular 21 + Tailwind 4).
 Content lives in `.md` files inside a user-owned vault folder; SQLite is only a local, rebuildable index.
 
 **Read [`DESIGN_PRINCIPLES.md`](DESIGN_PRINCIPLES.md) before designing or changing anything.** It is the source of
@@ -66,7 +66,7 @@ A build with no errors is the minimum check after every change. The 3 `NG8113` w
 
 ## Workflow
 
-- Git is a **local-only** repository: never add a remote or push.
+- The git remote is `origin` (https://github.com/Tratt0re/lazydm.git). Never push unless the user asks.
 - Commit at the end of each completed phase/step with a descriptive message.
 - Verify UI changes visually (`npm start`, check dark and light themes) when possible.
 - Before deleting files, list them and get confirmation.

@@ -7,7 +7,7 @@ When a change would break one of these rules, update this file first (and agree 
 
 ## 1. Product model
 
-LazyDM works like **Obsidian**, specialised for Dungeon Masters.
+LazyDM is a note-based desktop app built for Dungeon Masters.
 
 - The user's content lives in **plain `.md` files inside a folder the user owns** (the *vault*).
 - LazyDM reads, renders and edits those files. It never locks content into a database.
@@ -633,7 +633,7 @@ Planned Electron modules: `vault`, `cloud-readiness`, `campaign`, `document`, `i
 - **Editor**: CodeMirror 6 with three views, switched by three toggle buttons in a row above the editor (not a
   segmented control); the *Unsaved changes* label sits at the right end of that row. The view is remembered **per note on this device** (`document_view_modes` local preference, the most
   recent 500 notes; a new note opens in Live preview), so moving between notes always shows each one as left.
-  - **Live preview** (default, Obsidian-like): the note stays editable and is shown rendered; the markdown syntax of
+  - **Live preview** (default): the note stays editable and is shown rendered; the markdown syntax of
     an element comes back only while the cursor is on it. Headings, emphasis, code, quotes, lists, task checkboxes
     (clickable), images, links, tables, callouts and frontmatter (as a properties box) are rendered. The note opens
     with the cursor below the frontmatter. An image being edited stays shown, with its `![[…]]` / `![](…)` source

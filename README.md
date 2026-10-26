@@ -1,176 +1,165 @@
 # LazyDM
 
-**LazyDM** - Your lazy dungeon master assistant for managing D&D campaigns, characters, and encounters.
+**LazyDM** is a desktop app for Dungeon Masters, built by a DM for DMs and lazy by design: prepare fast, run the
+session without friction. Your campaigns live in plain Markdown files that you own.
 
-## Overview
+## How it works
 
-LazyDM is a desktop application built with Electron and Angular that helps dungeon masters organize and manage their tabletop RPG sessions. The application follows a local-first architecture with all data stored locally on your machine.
+- Your content lives in plain **`.md` files inside a folder you own** (the *Codex*, called the vault in the code).
+  LazyDM never locks it into a database.
+- The Codex is ordinary Markdown in ordinary folders, and stays Obsidian-compatible: any Markdown editor can open it.
+- SQLite is only a local, rebuildable index (search, links, tags). Delete it and it is rebuilt from the files.
+- The Codex can live on the device or in a cloud-synced folder. LazyDM detects the provider, waits for placeholder
+  files to download and handles conflict copies.
 
 ## Features
 
-- **Campaigns Management**: Organize your D&D campaigns
-- **Character Tracking**: Manage player characters and NPCs
-- **Encounter Planning**: Plan and run combat encounters
-- **Dark Mode**: Built-in theme support
-- **Responsive Design**: Works on various screen sizes
+### Campaigns and notes
 
-## Tech Stack
+- **Campaigns** with a start card, a campaign overview and per-campaign **sections** (Enemies, Encounters, Assets…):
+  hide, reorder, rename, add custom sections, sub-folders as sub-types.
+- **Editor** (CodeMirror): Live preview, Source and Reading views remembered per note; clickable `[[wikilinks]]`,
+  tables edited in place, info boxes, properties box, `◇` dividers, image width (half, wide, full), Cmd/Ctrl+B and
+  Cmd/Ctrl+I, auto-close pairs and a right-click insert menu.
+- **Links panel** (backlinks), rename with link refactoring, a linked-note preview card and **Review**, a page that
+  lists broken links and misplaced, untyped or unknown notes, with a move that rewrites the links.
+- **Templates** per note type and per campaign, with placeholders.
+- **Compendium**: shared systems and content you can copy to and from campaigns.
+- **Assets**: images, audio and PDFs. Paste or drop them anywhere, or use *Import from disk*. Audio plays inline and
+  PDFs open in the system viewer.
+- **Search** from the header and file actions everywhere: rename, copy, delete (to the system Trash) and move.
 
-- **Framework**: Angular 21+ (Standalone Components)
-- **Desktop**: Electron 44+
-- **Styling**: Tailwind CSS 4+
-- **Database**: Better-SQLite3 (local-first)
-- **State Management**: RxJS + Angular Signals
+### Encounters and the map
+
+- **Encounter manager**: encounters are `.json` files linked like assets (`![[ambush.json]]`). Combatants with
+  initiative, a health bar (HP and temporary HP), statuses with round counters, a cemetery to recover the dead and
+  a **party roster** you can add to any encounter.
+- **Tracker layouts**: the row of a combatant is driven by a battle rule (`_battle-rules/`). Use the built-in
+  *Default* layout, customise it, or write your own with dice-formula initiative and *Roll initiative*.
+  A *Tracker rows* density setting makes the rows more compact.
+- **Battle bar**: *Start battle*, *Stop battle*, next turn, with the round and the turn always visible.
+- **Map**: pins that link to notes and files, with Copy, Edit and Delete in the "…" menu.
+
+### Workspace
+
+- **Tabs** with context menus, drag to sort and an icon-only open tab.
+- **Split screen**: open any file to the side, drag tabs between the two panes, resize the divider. The same note in
+  both panes edits one live document, and maps and encounters in both panes share one live state.
+- **Customize menu**, toolbar "…" menus and a shortcuts reference in Settings.
+- **Startup**: optionally open the last campaign at start (Settings → General → Startup).
+- **Themes and languages**: *Nordic Relic* dark and light themes, in English, Italian, German, Spanish, French,
+  Ukrainian and Chinese.
+- **Setup flow**: a short Welcome step (name, language, theme) and a Codex step that explains device versus cloud
+  folders.
+
+## Tech stack
+
+- **Framework**: Angular 21 (standalone components, signals)
+- **Desktop**: Electron 44
+- **Styling**: Tailwind CSS 4
+- **Index**: Better-SQLite3 (local, rebuildable)
+- **Editor**: CodeMirror
 - **i18n**: ngx-translate
-- **UI Components**: Custom "ArcTechUI" component library (Techno-Brutalism / Retro-Futurism style)
+- **UI**: ArcTechUI, the in-house component library (Nordic Relic visual style)
+- **Tests**: Vitest (Angular and Electron)
 
 ## Architecture
 
-This application follows the **IPC-Driven Layered Architecture** pattern:
+LazyDM uses an IPC-driven layered architecture:
 
-- **Renderer Process**: Angular UI (sandboxed)
-- **Main Process**: Electron backend with IPC communication
-- **Local Database**: SQLite for data persistence
-- **Type-Safe Boundaries**: DTOs for IPC communication
+- **Renderer**: Angular UI, sandboxed. It does the UI and minor calculations.
+- **Main process**: Electron owns all file-system, index and sync logic. Controllers validate input and
+  orchestrate, models access data.
+- **Typed IPC**: channels are declared in `electron/ipc/channels.js` and `src/app/config/api.ts`.
 
-For detailed architecture information, see `architecture-blueprint.md` in the parent directory.
+The full set of rules (data placement, sync, security, UI, visual style, roadmap) is in
+[`DESIGN_PRINCIPLES.md`](DESIGN_PRINCIPLES.md). Read it before changing anything.
 
-## Project Structure
+## Project structure
 
-```
+```text
 lazy_dm/
 ├── src/
 │   ├── app/
-│   │   ├── components/       # Reusable components
-│   │   ├── config/           # App configuration
-│   │   ├── layout/           # Layout components
-│   │   ├── pages/            # Page components
-│   │   ├── services/         # IPC services
-│   │   └── shared/           # Shared component library
+│   │   ├── components/       # App components
+│   │   ├── config/           # Typed IPC channels, preferences
+│   │   ├── guards/           # Route guards (vault, campaign, launch)
+│   │   ├── layout/           # Shell: sidebar, toolbar, panes, tab bar
+│   │   ├── pages/            # Routed pages
+│   │   ├── services/         # Angular services (IPC, workspace…)
+│   │   └── shared/           # ArcTechUI component library
 │   ├── assets/               # Fonts, icons
-│   └── styles.css            # Global styles
-├── electron/                 # Electron main process
+│   └── styles.css            # Theme tokens and utilities
+├── electron/
+│   ├── controllers/          # One controller per feature
+│   ├── models/               # Data access (SQLite, files)
+│   ├── database/             # Schema and migrations
+│   ├── ipc/                  # Channels, handlers, push events
+│   └── __tests__/            # Electron tests
+├── public/i18n/              # Translations
 ├── scripts/                  # Build scripts
-└── package.json
+├── CLAUDE.md                 # Working notes for Claude Code
+└── DESIGN_PRINCIPLES.md      # Source of truth for design
 ```
 
-## Getting Started
+## Getting started
 
 ### Prerequisites
 
-- Node.js 18+ 
+- Node.js 18+
 - npm 11+
 
-### Installation
+### Install
 
 ```bash
-# Install dependencies
 npm install
-
-# Build preload script
 npm run build:preload
 ```
 
-### Development
+### Develop
 
 ```bash
-# Start development server (Angular + Electron)
-npm run dev
-
-# Or run separately:
-npm start              # Angular dev server only
-npm run electron:dev   # Electron with hot reload
+npm run dev            # Angular dev server + preload watch + Electron
+npm start              # Angular only, http://localhost:4200 (no Electron APIs)
 ```
 
-### Building
+### Test
 
 ```bash
-# Build for production
-npm run build:prod
-
-# Build desktop app (without packaging)
-npm run build:desktop
-
-# Create distributable
-npm run dist
-
-# Platform-specific builds
-npm run dist:mac
-npm run dist:win
-npm run dist:linux
+npm test               # Angular unit tests (Vitest)
+npm run test:electron  # Electron-side tests
+npx ng build --configuration development   # fast type and template check
 ```
 
-## Available Scripts
+### Build
 
-- `npm start` - Start Angular dev server
-- `npm run dev` - Start full development environment
-- `npm run build` - Build Angular app
-- `npm run build:prod` - Production build
-- `npm run electron:dev` - Start Electron in dev mode
-- `npm run electron:start` - Start Electron
-- `npm run dist` - Create distributable package
-
-## Development Guidelines
-
-### Code Style
-
-- Use **standalone components** (no NgModules)
-- Use **Angular signals** for reactive state
-- Use **inject()** function for dependency injection
-- Follow **PascalCase** for classes, **kebab-case** for files
-- Use `@/` path alias for app imports
-
-### Component Pattern
-
-```typescript
-import { Component, inject } from '@angular/core';
-
-@Component({
-  selector: 'app-example',
-  imports: [/* standalone imports */],
-  template: `...`,
-})
-export class ExampleComponent {
-  private readonly service = inject(SomeService);
-}
+```bash
+npm run build:prod     # production web build + preload bundle
+npm run build:desktop  # unpackaged desktop app
+npm run dist           # distributable for the current platform
+npm run dist:mac       # or dist:win, dist:linux
 ```
 
-### Service Pattern
+`electron/preload.bundle.cjs` is generated by `npm run build:preload`. Never edit it by hand, and rebuild and commit it
+whenever `electron/ipc/channels.js` changes.
 
-```typescript
-@Injectable({ providedIn: 'root' })
-export class ExampleService extends BaseIpcService<APIChannel.EXAMPLE> {
-  constructor() {
-    super(APIChannel.EXAMPLE);
-  }
-}
-```
+## Development guidelines
 
-## Current Status
+- Standalone components, signals, `inject()` and the `@/` path alias.
+- User-facing strings go through i18n keys, in all 7 languages. UI words follow the glossary in
+  `DESIGN_PRINCIPLES.md` §1b (Codex, Combatant, Tracker layout, Links, Review…).
+- Use semantic theme tokens (`bg-card`, `text-primary`…), never raw colours. Both themes must work.
+- Prettier: `printWidth: 100`, single quotes.
 
-🚧 **In Development** - This is a scaffolding project with:
+## Status
 
-- ✅ Project structure
-- ✅ Layout system (sidebar, header, toolbar)
-- ✅ Routing (home + 3 sections)
-- ✅ Theme support (dark/light mode)
-- ✅ Reusable component library
-- ⏳ Database integration (pending)
-- ⏳ IPC implementation (pending)
-- ⏳ Feature implementation (pending)
-
-## Contributing
-
-This project follows the architecture patterns defined in `architecture-blueprint.md`. Please review the blueprint before contributing.
+Heading to 1.0. The Codex, editor, link maintenance, compendium, encounter manager, map, split screen and setup flow
+are in place; the current work is UI polish. The roadmap is in `DESIGN_PRINCIPLES.md` §11.
 
 ## License
 
-Private project - All rights reserved
+Private project. All rights reserved.
 
 ## Author
 
-Your Name
-
----
-
-Built with ❤️ using Angular and Electron
+Salvatore De Luca
