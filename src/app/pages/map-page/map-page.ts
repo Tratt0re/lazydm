@@ -2181,7 +2181,11 @@ export class MapPage {
           expectedHash: file.contentHash,
         });
         if (result.status === 'saved') {
-          this.shared().file.set({ ...file, contentHash: result.contentHash, mtimeMs: result.mtimeMs });
+          this.shared().file.set({
+            ...file,
+            contentHash: result.contentHash,
+            mtimeMs: result.mtimeMs,
+          });
         } else {
           this.shared().save.needsSave = false;
           this.openConflictSheet(result.current);

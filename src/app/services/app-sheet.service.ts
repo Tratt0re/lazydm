@@ -12,7 +12,12 @@ export const APP_SHEET_TITLE_ROUTE_DATA = 'sheetTitle';
 
 export type AppSheetKind = 'compendium' | 'templates' | 'battle-rules' | 'settings';
 
-const APP_SHEET_KINDS: readonly AppSheetKind[] = ['compendium', 'templates', 'battle-rules', 'settings'];
+const APP_SHEET_KINDS: readonly AppSheetKind[] = [
+  'compendium',
+  'templates',
+  'battle-rules',
+  'settings',
+];
 /** Length of the closing slide (`.app-sheet-leave` in styles.css). */
 const SHEET_CLOSE_ANIMATION_MS = 260;
 const DEFAULT_SHEET_PATHS: Readonly<Record<AppSheetKind, string>> = {

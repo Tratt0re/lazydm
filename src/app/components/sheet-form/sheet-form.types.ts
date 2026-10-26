@@ -10,7 +10,10 @@ export type AppSheetInputType = 'text' | 'number' | 'email' | 'password' | 'sear
 export type AppSheetFieldValue = Date | string | readonly string[] | boolean | null;
 export type AppSheetFieldValueMap = Record<string, AppSheetFieldValue>;
 
-export interface AppSheetFieldBase<TType extends AppSheetFieldType, TValue extends AppSheetFieldValue> {
+export interface AppSheetFieldBase<
+  TType extends AppSheetFieldType,
+  TValue extends AppSheetFieldValue,
+> {
   readonly id: string;
   readonly type: TType;
   readonly value?: TValue;
@@ -25,7 +28,10 @@ export interface AppSheetFieldBase<TType extends AppSheetFieldType, TValue exten
   readonly validate?: (value: TValue | undefined) => string | null;
 }
 
-export interface AppSheetDatePickerField extends AppSheetFieldBase<'date-picker', Date | string | null> {
+export interface AppSheetDatePickerField extends AppSheetFieldBase<
+  'date-picker',
+  Date | string | null
+> {
   readonly arcFormat?: string;
   readonly arcIconPosition?: 'left' | 'right';
   readonly arcPopoverPlacement?: ArcTechPopoverPlacement;
@@ -47,8 +53,10 @@ export interface AppSheetComboboxGroup extends Omit<ArcTechComboboxGroup, 'label
   readonly options: readonly AppSheetComboboxOption[];
 }
 
-export interface AppSheetComboboxField
-  extends AppSheetFieldBase<'combobox', string | readonly string[] | null> {
+export interface AppSheetComboboxField extends AppSheetFieldBase<
+  'combobox',
+  string | readonly string[] | null
+> {
   readonly multiple?: boolean;
   readonly maxLabelCount?: number;
   readonly searchable?: boolean;
@@ -68,7 +76,10 @@ export interface AppSheetSelectOption {
   readonly disabled?: boolean;
 }
 
-export interface AppSheetSelectField extends AppSheetFieldBase<'select', string | readonly string[] | null> {
+export interface AppSheetSelectField extends AppSheetFieldBase<
+  'select',
+  string | readonly string[] | null
+> {
   readonly multiple?: boolean;
   readonly maxLabelCount?: number;
   readonly showSelectedLabel?: boolean;
@@ -87,7 +98,9 @@ export interface AppSheetInputAction {
   /** Accessible name and tooltip (already translated). */
   readonly label: string;
   /** Runs when pressed; a returned string becomes the value of the input. */
-  readonly run: (form: import('./sheet-form.component').AppSheetFormComponent) => string | null | Promise<string | null>;
+  readonly run: (
+    form: import('./sheet-form.component').AppSheetFormComponent,
+  ) => string | null | Promise<string | null>;
 }
 
 export interface AppSheetInputField extends AppSheetFieldBase<'input', string | null> {
