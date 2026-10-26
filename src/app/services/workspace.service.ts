@@ -185,7 +185,12 @@ export class WorkspaceService extends BaseIpcService<APIChannel.WORKSPACE> {
    */
   urlKeepingSplit(url: string): string | null {
     const right = this.activeUrlOf('right');
-    if (!this.hasSplit() || this.isTabNavigation || !right || this.outletPath(url, SPLIT_PANE_OUTLET)) {
+    if (
+      !this.hasSplit() ||
+      this.isTabNavigation ||
+      !right ||
+      this.outletPath(url, SPLIT_PANE_OUTLET)
+    ) {
       return null;
     }
 

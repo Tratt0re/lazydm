@@ -19,7 +19,9 @@ export class KeepSplitUrlHandlingStrategy extends UrlHandlingStrategy {
 
   extract(url: UrlTree): UrlTree {
     // Looked up when used: the router (which needs this strategy) is what the workspace service depends on.
-    const kept = this.injector.get(WorkspaceService).urlKeepingSplit(this.serializer.serialize(url));
+    const kept = this.injector
+      .get(WorkspaceService)
+      .urlKeepingSplit(this.serializer.serialize(url));
     return kept ? this.serializer.parse(kept) : url;
   }
 
