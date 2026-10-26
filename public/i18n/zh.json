@@ -536,11 +536,11 @@
       "delete": "删除战役"
     },
     "newAnything": {
-      "title": "新建笔记",
-      "description": "选择它所属的分区。任何分区都可以作为起点。",
+      "title": "新建…",
+      "description": "选择放入哪个分区。",
       "sectionLabel": "分区",
       "submit": "下一步",
-      "button": "新建笔记",
+      "button": "新建…",
       "startTitle": "从哪里开始都行",
       "startDescription": "创建第一篇笔记、敌人、遭遇或地图。其他分区会在你使用后出现在这里。",
       "moreSections": "更多分区"

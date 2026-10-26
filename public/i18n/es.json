@@ -536,11 +536,11 @@
       "delete": "Eliminar campaña"
     },
     "newAnything": {
-      "title": "Nueva nota",
-      "description": "Elige la sección a la que pertenece. Cualquier sección vale como punto de partida.",
+      "title": "Nuevo…",
+      "description": "Elige la sección donde va.",
       "sectionLabel": "Sección",
       "submit": "Siguiente",
-      "button": "Nueva nota",
+      "button": "Nuevo…",
       "startTitle": "Empieza por donde quieras",
       "startDescription": "Crea la primera nota, enemigo, encuentro o mapa. Las demás secciones aparecen aquí a medida que las uses.",
       "moreSections": "Más secciones"

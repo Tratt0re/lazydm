@@ -536,11 +536,11 @@
       "delete": "Kampagne löschen"
     },
     "newAnything": {
-      "title": "Neue Notiz",
-      "description": "Wähle den Bereich, zu dem sie gehört. Jeder Bereich eignet sich als Anfang.",
+      "title": "Neu …",
+      "description": "Wähle den Bereich, in den es kommt.",
       "sectionLabel": "Bereich",
       "submit": "Weiter",
-      "button": "Neue Notiz",
+      "button": "Neu …",
       "startTitle": "Fang an, wo du willst",
       "startDescription": "Lege die erste Notiz, den ersten Gegner, die erste Begegnung oder Karte an. Die übrigen Bereiche erscheinen hier, sobald du sie nutzt.",
       "moreSections": "Weitere Bereiche"

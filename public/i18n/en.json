@@ -536,11 +536,11 @@
       "delete": "Delete campaign"
     },
     "newAnything": {
-      "title": "New note",
-      "description": "Pick the section it belongs to. Any section works as a starting point.",
+      "title": "New…",
+      "description": "Pick the section it goes in.",
       "sectionLabel": "Section",
       "submit": "Next",
-      "button": "New note",
+      "button": "New…",
       "startTitle": "Start anywhere",
       "startDescription": "Create the first note, enemy, encounter or map. The other sections show up here as you use them.",
       "moreSections": "More sections"

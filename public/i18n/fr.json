@@ -536,11 +536,11 @@
       "delete": "Supprimer la campagne"
     },
     "newAnything": {
-      "title": "Nouvelle note",
-      "description": "Choisissez la section à laquelle elle appartient. N’importe quelle section convient pour commencer.",
+      "title": "Nouveau…",
+      "description": "Choisissez la section où il va.",
       "sectionLabel": "Section",
       "submit": "Suivant",
-      "button": "Nouvelle note",
+      "button": "Nouveau…",
       "startTitle": "Commencez où vous voulez",
       "startDescription": "Créez la première note, le premier ennemi, la première rencontre ou carte. Les autres sections apparaissent ici au fil de leur usage.",
       "moreSections": "Autres sections"

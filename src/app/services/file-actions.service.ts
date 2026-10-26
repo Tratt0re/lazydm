@@ -261,6 +261,12 @@ export class FileActionsService {
       return;
     }
 
+    // Nothing to pick from: straight to the form of the only section.
+    if (choices.length === 1) {
+      this.openCreateInSection(campaignPath, choices[0]);
+      return;
+    }
+
     // Step 1 picks the section; confirming it shows that section's own form in the same modal.
     this.dialogFormService.openWizard({
       title: this.translateService.instant('campaigns.newAnything.title'),
