@@ -1,4 +1,4 @@
-const { campaignModel, sectionModel, vaultIndexModel } = require('../models');
+const { campaignModel, encounterModel, sectionModel, vaultIndexModel } = require('../models');
 const indexerController = require('./indexer.controller');
 const vaultController = require('./vault.controller');
 const { ensurePlainObject, requireString } = require('./utils');
@@ -12,12 +12,20 @@ async function requireCampaign(vaultPath, value) {
   return slug;
 }
 
-/** Sections of a campaign with the number of files each folder holds (shown for hidden sections). */
+/**
+ * Sections of a campaign with the number of files each folder holds (shown for hidden sections and in the sidebar).
+ * The party roster is a hidden file of the Encounters folder: it is not counted.
+ */
 function withFileCounts(campaign, sections) {
   return sections.map((section) => ({
     ...section,
     fileCount: indexerController.isOpen()
-      ? vaultIndexModel.listFolderFiles(`${campaign}/${section.key}`).length
+      ? vaultIndexModel
+          .listFolderFiles(`${campaign}/${section.key}`)
+          .filter(
+            (file) =>
+              file.path !== `${campaign}/encounters/${encounterModel.PARTY_FILE_NAME}`,
+          ).length
       : 0,
   }));
 }
