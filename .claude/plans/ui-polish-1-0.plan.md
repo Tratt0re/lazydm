@@ -19,7 +19,7 @@ the editor controls. Dropped: old Phases 1 (dot), 4 (editor controls) and the mo
 | A | Split screen bugs: Back to campaigns, Settings sidebar | none | low | code done, not checked live | |
 | 0 | Review the screens not yet seen, richer fixture, **and the split screen** | `/impeccable:critique` | none | mostly done (see Phase 0 findings) | |
 | 2 | Campaign sidebar: collapse empty sections, counts (fonts stay) | `/impeccable:normalize` | low | done | |
-| 3 | Creation flow: *New...*, fewer steps | `/impeccable:clarify` | medium | done (list of choices instead of a select was not done, see log) | |
+| 3 | Creation flow: *New...*, fewer steps | `/impeccable:clarify` | medium | done | |
 | 5 | Light theme and control states, **reversible** | `/impeccable:audit` then `/impeccable:colorize` | medium | pending | |
 | 6 | Copy and small fixes (watermark stays) | `/impeccable:clarify` | low | pending | |
 | 8 | Setting: open the last opened campaign at start | none | low | pending | |
@@ -141,7 +141,7 @@ Findings, most important first:
 
 - [x] 3.1 Rename the button and modal title to *New…* (7 languages). Check the glossary: no new word is needed
 - [x] 3.2 (already so: the section pages open their own form) Inside a section page the section is already known: *New note / New encounter / New map* keeps skipping the picker
-- [~] 3.3 Done: the filler line is shortened to "Pick the section it goes in."; a campaign with a single choice skips the picker. Not done: a list of icon choices instead of the select (the dialog form has no such field type; it would be a new component, so it needs the user's agreement). Original wording: replace the select with a list of choices (icon + label), one click goes to the form; remove "Any section works as a
+- [x] 3.3 Done (the user agreed to the new component, 2026-10-26): `choice` field type in the dialog form (`AppSheetChoiceField`, radio group of square buttons, arrows move the pick, `submitOnPick`), used by the *New…* picker. Also: the filler line is shortened to "Pick the section it goes in."; a campaign with a single choice skips the picker. Original wording: replace the select with a list of choices (icon + label), one click goes to the form; remove "Any section works as a
       starting point." Keep it one wizard modal with *Back* (`AppDialogFormService.openWizard`, §8)
 - [x] 3.4 (DESIGN_PRINCIPLES §8 already says *New…*) Update §8 "Campaign overview" if the wording of the button changes
 - Files: `campaign-home-page.ts`, `file-actions.service.ts`, `public/i18n/*.json` (`campaigns.newAnything.*`)

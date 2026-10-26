@@ -3,7 +3,8 @@ import type { ArcTechIcon } from '@/shared/components/icon';
 import type { ArcTechPopoverPlacement } from '@/shared/components/popover/popover.component';
 import type { ArcTechSelectSizeVariants } from '@/shared/components/select';
 
-export type AppSheetFieldType = 'date-picker' | 'combobox' | 'select' | 'checkbox' | 'input';
+export type AppSheetFieldType =
+  'date-picker' | 'combobox' | 'select' | 'checkbox' | 'input' | 'choice';
 export type AppSheetFieldWidth = `${number}/${number}` | 'full';
 export type AppSheetInputType = 'text' | 'number' | 'email' | 'password' | 'search' | 'url';
 
@@ -76,6 +77,16 @@ export interface AppSheetSelectField extends AppSheetFieldBase<'select', string 
   readonly options: readonly AppSheetSelectOption[];
 }
 
+/**
+ * One choice among a few, all in view (icon and label on a square button), for lists too short to hide in a
+ * dropdown. The value is the picked option's value.
+ */
+export interface AppSheetChoiceField extends AppSheetFieldBase<'choice', string | null> {
+  readonly options: readonly AppSheetSelectOption[];
+  /** Picking an option confirms the form right away (a wizard step that only asks this). */
+  readonly submitOnPick?: boolean;
+}
+
 export interface AppSheetCheckboxField extends AppSheetFieldBase<'checkbox', boolean> {
   readonly checkboxLabel?: string;
   readonly icon?: ArcTechIcon;
@@ -101,6 +112,7 @@ export type AppSheetField =
   | AppSheetDatePickerField
   | AppSheetComboboxField
   | AppSheetSelectField
+  | AppSheetChoiceField
   | AppSheetCheckboxField
   | AppSheetInputField;
 
