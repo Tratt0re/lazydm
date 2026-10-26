@@ -50,6 +50,10 @@
       "maximize": "Maximize",
       "restore": "Restore",
       "close": "Close window"
+    },
+    "mcp": {
+      "running": "MCP server running",
+      "stopped": "MCP server stopped"
     }
   },
   "settings": {
@@ -69,6 +73,10 @@
       "vault": {
         "title": "Codex",
         "description": "The folder your notes live in, and a reset of this app."
+      },
+      "mcp": {
+        "title": "MCP",
+        "description": "Let AI assistants such as Claude Code or Codex work with your notes."
       }
     },
     "general": {
@@ -323,6 +331,75 @@
         "description": "The open Codex and all settings of this device are forgotten. Your notes stay in their folder and nothing is deleted.",
         "confirm": "Reset the app",
         "error": "Couldn't reset the app"
+      }
+    },
+    "mcp": {
+      "about": {
+        "title": "What is MCP?",
+        "what": "MCP (Model Context Protocol) is a standard way for AI assistants to talk to an app. When it is on, LazyDM lets programs on this computer, like Claude Code or Codex, look up and work with your Codex.",
+        "use": "Use it to ask an assistant to find a note, prepare a session, draft an enemy or tidy your links, using your real notes.",
+        "risksTitle": "Risks",
+        "riskRead": "Any program that has the token can read every note of the open Codex.",
+        "riskWrite": "If you allow changes, an assistant can create and rewrite notes. Saves are conflict-checked and nothing is deleted, but a wrong edit is still possible: keep a backup of your Codex.",
+        "riskInjection": "Notes can come from other people through a shared folder. Text inside a note may try to steer the assistant.",
+        "riskLocal": "The server only answers on this computer (127.0.0.1) and only with the token. It is off until you switch it on."
+      },
+      "enable": {
+        "label": "Use MCP",
+        "hint": "Off by default. Switching it on shows the settings below.",
+        "title": "Switch on MCP?",
+        "description": "Programs on this computer that have your token will be able to read your open Codex. You decide below whether they may also change it.",
+        "confirm": "Switch on"
+      },
+      "server": {
+        "title": "Server",
+        "running": "Running",
+        "stopped": "Stopped",
+        "start": "Start",
+        "stop": "Stop",
+        "address": "Address",
+        "port": "Port"
+      },
+      "write": {
+        "label": "Allow changes",
+        "hint": "Lets assistants create notes and edit them. Off: read only. A running server restarts to apply it."
+      },
+      "autostart": {
+        "label": "Start with LazyDM",
+        "hint": "Starts the server when the app opens a Codex."
+      },
+      "token": {
+        "title": "Token",
+        "hint": "Programs must send this secret to use the server. It stays on this device and is never saved in your Codex.",
+        "toggle": "Show or hide the token",
+        "copy": "Copy the token",
+        "regenerate": "New token",
+        "regenerateTitle": "Create a new token?",
+        "regenerateDescription": "Programs set up with the old token stop working until you update them.",
+        "regenerateConfirm": "New token"
+      },
+      "connect": {
+        "title": "Connect an assistant",
+        "hint": "Copy a line into the assistant. They only work while the server runs.",
+        "copy": "Copy",
+        "codexEnv": "Then set the token in the terminal that starts Codex:"
+      },
+      "copied": "Copied",
+      "copyError": "Couldn’t copy",
+      "error": "Couldn’t change the MCP setting",
+      "scope": {
+        "label": "Limit to some campaigns",
+        "hint": "Agents only see and change the campaigns you tick. Off: the whole Codex. A running server restarts.",
+        "listTitle": "Allowed campaigns and systems",
+        "empty": "There are no campaigns or compendium systems yet.",
+        "noneChosen": "Nothing is ticked, so agents can reach no notes at all."
+      },
+      "safe": {
+        "title": "Keep agents on MCP only",
+        "why": "The limits above apply to MCP. An assistant that can also edit files or run commands on this computer can write .md files in your Codex folder directly and skip them. That is controlled in the assistant, not in LazyDM.",
+        "claude": "In Claude Code, deny file edits in the Codex folder, in ~/.claude/settings.json, and keep shell commands on ask-first:",
+        "codex": "In Codex, start it read-only, in ~/.codex/config.toml (or with --sandbox read-only):",
+        "limits": "A deny rule does not stop every shell command, and nothing here replaces a backup of your Codex."
       }
     }
   },
@@ -619,7 +696,11 @@
       "button": "Image layout",
       "width": "Width",
       "reset": "Reset width",
-      "widths": { "half": "Half", "wide": "Wide", "full": "Full width" }
+      "widths": {
+        "half": "Half",
+        "wide": "Wide",
+        "full": "Full width"
+      }
     },
     "insertMenu": {
       "cut": "Cut",

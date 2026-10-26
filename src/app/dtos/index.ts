@@ -6,6 +6,7 @@ export * from './document.dto';
 export * from './index-status.dto';
 export * from './encounter.dto';
 export * from './map.dto';
+export * from './mcp.dto';
 export * from './review.dto';
 export * from './search.dto';
 export * from './section.dto';

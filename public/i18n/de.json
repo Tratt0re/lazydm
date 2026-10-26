@@ -50,6 +50,10 @@
       "maximize": "Maximieren",
       "restore": "Wiederherstellen",
       "close": "Fenster schließen"
+    },
+    "mcp": {
+      "running": "MCP-Server läuft",
+      "stopped": "MCP-Server gestoppt"
     }
   },
   "settings": {
@@ -69,6 +73,10 @@
       "vault": {
         "title": "Codex",
         "description": "Der Ordner mit deinen Notizen und das Zurücksetzen der App."
+      },
+      "mcp": {
+        "title": "MCP",
+        "description": "KI-Assistenten wie Claude Code oder Codex mit deinen Notizen arbeiten lassen."
       }
     },
     "general": {
@@ -323,6 +331,75 @@
         "description": "Der geöffnete Codex und alle Einstellungen dieses Geräts werden vergessen. Die Notizen bleiben im Ordner, nichts wird gelöscht.",
         "confirm": "App zurücksetzen",
         "error": "Die App konnte nicht zurückgesetzt werden"
+      }
+    },
+    "mcp": {
+      "about": {
+        "title": "Was ist MCP?",
+        "what": "MCP (Model Context Protocol) ist ein Standard, mit dem KI-Assistenten mit einer App sprechen. Ist es an, erlaubt LazyDM Programmen auf diesem Computer, etwa Claude Code oder Codex, dein Codex nachzuschlagen und zu nutzen.",
+        "use": "Damit kannst du einen Assistenten bitten, eine Notiz zu finden, eine Sitzung vorzubereiten, einen Gegner zu entwerfen oder Links aufzuräumen – mit deinen echten Notizen.",
+        "risksTitle": "Risiken",
+        "riskRead": "Jedes Programm mit dem Token kann alle Notizen des geöffneten Codex lesen.",
+        "riskWrite": "Erlaubst du Änderungen, kann ein Assistent Notizen anlegen und umschreiben. Speichern prüft auf Konflikte und nichts wird gelöscht, aber ein Fehler ist möglich: Halte ein Backup deines Codex bereit.",
+        "riskInjection": "Notizen können von anderen über einen geteilten Ordner stammen. Text in einer Notiz kann versuchen, den Assistenten zu lenken.",
+        "riskLocal": "Der Server antwortet nur auf diesem Computer (127.0.0.1) und nur mit dem Token. Er ist aus, bis du ihn einschaltest."
+      },
+      "enable": {
+        "label": "MCP verwenden",
+        "hint": "Standardmäßig aus. Einschalten zeigt die Einstellungen darunter.",
+        "title": "MCP einschalten?",
+        "description": "Programme auf diesem Computer mit deinem Token können das geöffnete Codex lesen. Unten legst du fest, ob sie es auch ändern dürfen.",
+        "confirm": "Einschalten"
+      },
+      "server": {
+        "title": "Server",
+        "running": "Läuft",
+        "stopped": "Gestoppt",
+        "start": "Starten",
+        "stop": "Stoppen",
+        "address": "Adresse",
+        "port": "Port"
+      },
+      "write": {
+        "label": "Änderungen erlauben",
+        "hint": "Assistenten dürfen Notizen anlegen und bearbeiten. Aus: nur lesen. Ein laufender Server startet neu."
+      },
+      "autostart": {
+        "label": "Mit LazyDM starten",
+        "hint": "Startet den Server, wenn die App ein Codex öffnet."
+      },
+      "token": {
+        "title": "Token",
+        "hint": "Programme müssen dieses Geheimnis senden, um den Server zu nutzen. Es bleibt auf diesem Gerät und wird nie im Codex gespeichert.",
+        "toggle": "Token zeigen oder verbergen",
+        "copy": "Token kopieren",
+        "regenerate": "Neuer Token",
+        "regenerateTitle": "Neuen Token erstellen?",
+        "regenerateDescription": "Programme mit dem alten Token funktionieren nicht mehr, bis du sie aktualisierst.",
+        "regenerateConfirm": "Neuer Token"
+      },
+      "connect": {
+        "title": "Assistenten verbinden",
+        "hint": "Kopiere eine Zeile in den Assistenten. Sie funktionieren nur, solange der Server läuft.",
+        "copy": "Kopieren",
+        "codexEnv": "Setze dann den Token im Terminal, das Codex startet:"
+      },
+      "copied": "Kopiert",
+      "copyError": "Kopieren nicht möglich",
+      "error": "MCP-Einstellung konnte nicht geändert werden",
+      "scope": {
+        "label": "Auf einige Kampagnen beschränken",
+        "hint": "Agenten sehen und ändern nur die angehakten Kampagnen. Aus: das ganze Codex. Ein laufender Server startet neu.",
+        "listTitle": "Erlaubte Kampagnen und Systeme",
+        "empty": "Es gibt noch keine Kampagnen oder Kompendium-Systeme.",
+        "noneChosen": "Nichts ist angehakt, daher erreichen Agenten gar keine Notizen."
+      },
+      "safe": {
+        "title": "Agenten nur auf MCP halten",
+        "why": "Die Grenzen oben gelten für MCP. Ein Assistent, der auf diesem Computer auch Dateien bearbeiten oder Befehle ausführen kann, kann .md-Dateien direkt in deinen Codex-Ordner schreiben und sie umgehen. Das steuerst du im Assistenten, nicht in LazyDM.",
+        "claude": "Sperre in Claude Code Dateibearbeitungen im Codex-Ordner, in ~/.claude/settings.json, und lass Shell-Befehle bestätigen:",
+        "codex": "Starte Codex schreibgeschützt, in ~/.codex/config.toml (oder mit --sandbox read-only):",
+        "limits": "Eine Sperrregel hält nicht jeden Shell-Befehl auf, und nichts hier ersetzt ein Backup deines Codex."
       }
     }
   },
@@ -619,7 +696,11 @@
       "button": "Bildlayout",
       "width": "Breite",
       "reset": "Breite zurücksetzen",
-      "widths": { "half": "Halb", "wide": "Breit", "full": "Volle Breite" }
+      "widths": {
+        "half": "Halb",
+        "wide": "Breit",
+        "full": "Volle Breite"
+      }
     },
     "insertMenu": {
       "cut": "Ausschneiden",

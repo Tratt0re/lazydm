@@ -14,6 +14,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { matchesShortcut } from '@/config/shortcuts.config';
 import { HeaderSearchComponent } from '@/components/header-search/header-search.component';
 import { type AppSheetKind, AppSheetService } from '@/services/app-sheet.service';
+import { McpService } from '@/services/mcp.service';
 import { ShortcutsSheetService } from '@/services/shortcuts-sheet.service';
 import { VaultService } from '@/services/vault.service';
 import { WorkspaceService } from '@/services/workspace.service';
@@ -61,6 +62,12 @@ export class Header {
   protected readonly sheets = inject(AppSheetService);
   protected readonly workspace = inject(WorkspaceService);
   protected readonly shortcutsSheet = inject(ShortcutsSheetService);
+  private readonly mcp = inject(McpService);
+  /** Only while the MCP feature is switched on (it is off by default); green while the server runs, red when stopped. */
+  protected readonly mcpState = computed(() => {
+    const state = this.mcp.state();
+    return state?.enabled ? state : null;
+  });
   /**
    * Title-bar buttons, icon only (the name is the tooltip): the Compendium and Settings sheets, with the
    * *Customize* menu between them.
@@ -97,6 +104,7 @@ export class Header {
     this.isFullscreen.set(this.readFlag(payload, 'isFullscreen'));
 
   constructor() {
+    void this.mcp.connect();
     window.electronAPI?.ipcClient?.window
       ?.getState()
       .then((state) => {
@@ -114,6 +122,10 @@ export class Header {
       event.preventDefault();
       this.shortcutsSheet.toggle();
     }
+  }
+
+  protected openMcpSettings(): void {
+    void this.sheets.open('settings', 'settings/mcp');
   }
 
   protected minimize(): void {

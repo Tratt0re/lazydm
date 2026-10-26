@@ -22,6 +22,7 @@ export enum APIChannel {
   ENCOUNTERS = 'encounters',
   INDEX = 'index',
   MAPS = 'maps',
+  MCP = 'mcp',
   MENU = 'menu',
   REVIEW = 'review',
   SECTIONS = 'sections',
@@ -160,6 +161,18 @@ export interface ElectronIpcClient {
     readonly inspect: IpcRequest<{ folderPath: string }, DTO.VaultInspectionDto>;
     readonly open: IpcRequest<{ folderPath: string }, DTO.VaultStateDto>;
     readonly close: OptionalIpcRequest<void, DTO.VaultStateDto>;
+  };
+  readonly mcp: {
+    readonly getStatus: OptionalIpcRequest<void, DTO.McpStatusDto>;
+    readonly setEnabled: IpcRequest<{ enabled: boolean }, DTO.McpStatusDto>;
+    readonly start: OptionalIpcRequest<void, DTO.McpStatusDto>;
+    readonly stop: OptionalIpcRequest<void, DTO.McpStatusDto>;
+    readonly setAutostart: IpcRequest<{ autostart: boolean }, DTO.McpStatusDto>;
+    readonly setAllowWrite: IpcRequest<{ allowWrite: boolean }, DTO.McpStatusDto>;
+    readonly setLimitScope: IpcRequest<{ limitScope: boolean }, DTO.McpStatusDto>;
+    readonly setScopeRoots: IpcRequest<{ roots: readonly string[] }, DTO.McpStatusDto>;
+    readonly setPort: IpcRequest<{ port: number }, DTO.McpStatusDto>;
+    readonly regenerateToken: OptionalIpcRequest<void, DTO.McpStatusDto>;
   };
   readonly menu: {
     readonly update: IpcRequest<

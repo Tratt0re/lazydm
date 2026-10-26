@@ -116,6 +116,18 @@ var require_channels = __commonJS({
         getStatus: "index:getStatus",
         rebuild: "index:rebuild"
       }),
+      mcp: Object.freeze({
+        getStatus: "mcp:getStatus",
+        setEnabled: "mcp:setEnabled",
+        start: "mcp:start",
+        stop: "mcp:stop",
+        setAutostart: "mcp:setAutostart",
+        setAllowWrite: "mcp:setAllowWrite",
+        setLimitScope: "mcp:setLimitScope",
+        setScopeRoots: "mcp:setScopeRoots",
+        setPort: "mcp:setPort",
+        regenerateToken: "mcp:regenerateToken"
+      }),
       menu: Object.freeze({
         update: "menu:update"
       }),
@@ -288,6 +300,7 @@ var require_package = __commonJS({
         "@codemirror/state": "^6.7.6",
         "@codemirror/view": "^6.43.14",
         "@lezer/highlight": "^1.2.5",
+        "@modelcontextprotocol/sdk": "1.31.0",
         "@ngx-translate/core": "^17.0.0",
         "@ngx-translate/http-loader": "^17.0.0",
         "better-sqlite3": "^12.6.2",
@@ -308,7 +321,8 @@ var require_package = __commonJS({
         semver: "^7.7.4",
         "tailwind-merge": "^3.4.0",
         tslib: "^2.3.0",
-        yaml: "^2.9.1"
+        yaml: "^2.9.1",
+        zod: "4.3.6"
       },
       devDependencies: {
         "@angular/build": "^21.1.4",

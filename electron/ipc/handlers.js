@@ -8,6 +8,7 @@ const {
   documentController,
   encounterController,
   mapController,
+  mcpController,
   menuController,
   indexerController,
   resetController,
@@ -107,6 +108,17 @@ const IPC_HANDLERS = Object.freeze({
 
   [CHANNELS.index.getStatus]: indexerController.getStatus,
   [CHANNELS.index.rebuild]: indexerController.rebuild,
+
+  [CHANNELS.mcp.getStatus]: mcpController.getStatus,
+  [CHANNELS.mcp.setEnabled]: mcpController.setEnabled,
+  [CHANNELS.mcp.start]: mcpController.start,
+  [CHANNELS.mcp.stop]: mcpController.stop,
+  [CHANNELS.mcp.setAutostart]: mcpController.setAutostart,
+  [CHANNELS.mcp.setAllowWrite]: mcpController.setAllowWrite,
+  [CHANNELS.mcp.setLimitScope]: mcpController.setLimitScope,
+  [CHANNELS.mcp.setScopeRoots]: mcpController.setScopeRoots,
+  [CHANNELS.mcp.setPort]: mcpController.setPort,
+  [CHANNELS.mcp.regenerateToken]: mcpController.regenerateToken,
 
   [CHANNELS.menu.update]: menuController.update,
 

@@ -167,7 +167,8 @@ let activeSessionToken = 0;
  */
 function startSession(vault) {
   const sessionToken = ++activeSessionToken;
-  const isCurrentSession = () => sessionToken === activeSessionToken && readCurrentVaultId() === vault.id;
+  const isCurrentSession = () =>
+    sessionToken === activeSessionToken && readCurrentVaultId() === vault.id;
 
   void cloudReadinessController
     .prepare(vault)
@@ -199,6 +200,8 @@ function close() {
   activeSessionToken += 1;
   cloudReadinessController.cancel();
   indexerController.stop();
+  // Required here, not at the top: the MCP controller itself needs this one (it only serves an open Codex).
+  void require('./mcp.controller').stop();
   if (readCurrentVaultId()) {
     appMetaModel.deleteByKey(CURRENT_VAULT_ID_KEY);
   }

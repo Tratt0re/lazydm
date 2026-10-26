@@ -50,6 +50,10 @@
       "maximize": "最大化",
       "restore": "还原",
       "close": "关闭窗口"
+    },
+    "mcp": {
+      "running": "MCP 服务器运行中",
+      "stopped": "MCP 服务器已停止"
     }
   },
   "settings": {
@@ -69,6 +73,10 @@
       "vault": {
         "title": "Codex",
         "description": "存放笔记的文件夹，以及应用重置。"
+      },
+      "mcp": {
+        "title": "MCP",
+        "description": "让 Claude Code、Codex 等 AI 助手使用你的笔记。"
       }
     },
     "general": {
@@ -323,6 +331,75 @@
         "description": "将忘记已打开的 Codex 和此设备的所有设置。笔记保留在其文件夹中，不会删除任何内容。",
         "confirm": "重置应用",
         "error": "无法重置应用"
+      }
+    },
+    "mcp": {
+      "about": {
+        "title": "什么是 MCP？",
+        "what": "MCP（Model Context Protocol）是 AI 助手与应用对话的标准方式。开启后，LazyDM 允许这台电脑上的程序（如 Claude Code 或 Codex）查找并使用你的 Codex。",
+        "use": "可以让助手基于你的真实笔记查找笔记、准备战役场次、起草敌人或整理链接。",
+        "risksTitle": "风险",
+        "riskRead": "任何持有令牌的程序都能读取已打开 Codex 的所有笔记。",
+        "riskWrite": "如果允许修改，助手可以创建和重写笔记。保存会检查冲突且不会删除任何内容，但仍可能出错：请备份你的 Codex。",
+        "riskInjection": "笔记可能通过共享文件夹来自他人。笔记中的文字可能试图引导助手。",
+        "riskLocal": "服务器只在本机（127.0.0.1）响应，且必须持有令牌。在你开启之前它一直是关闭的。"
+      },
+      "enable": {
+        "label": "使用 MCP",
+        "hint": "默认关闭。开启后会显示下面的设置。",
+        "title": "开启 MCP？",
+        "description": "这台电脑上持有你令牌的程序将能读取已打开的 Codex。下面可以决定它们是否也能修改。",
+        "confirm": "开启"
+      },
+      "server": {
+        "title": "服务器",
+        "running": "运行中",
+        "stopped": "已停止",
+        "start": "启动",
+        "stop": "停止",
+        "address": "地址",
+        "port": "端口"
+      },
+      "write": {
+        "label": "允许修改",
+        "hint": "允许助手创建和编辑笔记。关闭：只读。运行中的服务器会重启。"
+      },
+      "autostart": {
+        "label": "随 LazyDM 启动",
+        "hint": "应用打开 Codex 时启动服务器。"
+      },
+      "token": {
+        "title": "令牌",
+        "hint": "程序必须发送这个密钥才能使用服务器。它只保存在本设备，绝不会写入 Codex。",
+        "toggle": "显示或隐藏令牌",
+        "copy": "复制令牌",
+        "regenerate": "新令牌",
+        "regenerateTitle": "创建新令牌？",
+        "regenerateDescription": "使用旧令牌的程序将失效，直到你更新它们。",
+        "regenerateConfirm": "新令牌"
+      },
+      "connect": {
+        "title": "连接助手",
+        "hint": "把一行命令复制到助手中。只有服务器运行时才有效。",
+        "copy": "复制",
+        "codexEnv": "然后在启动 Codex 的终端中设置令牌："
+      },
+      "copied": "已复制",
+      "copyError": "无法复制",
+      "error": "无法更改 MCP 设置",
+      "scope": {
+        "label": "限制为部分战役",
+        "hint": "代理只能查看和修改勾选的战役。关闭：整个 Codex。运行中的服务器会重启。",
+        "listTitle": "允许的战役和系统",
+        "empty": "还没有战役或图鉴系统。",
+        "noneChosen": "没有勾选任何项，因此代理无法访问任何笔记。"
+      },
+      "safe": {
+        "title": "让代理只通过 MCP",
+        "why": "上面的限制只适用于 MCP。如果助手在这台电脑上还能编辑文件或运行命令，它可以直接在 Codex 文件夹里写 .md 文件并绕过这些限制。这要在助手中设置，而不是在 LazyDM 中。",
+        "claude": "在 Claude Code 中，在 ~/.claude/settings.json 里禁止编辑 Codex 文件夹中的文件，并让 shell 命令保持先询问：",
+        "codex": "在 Codex 中，以只读模式启动，写在 ~/.codex/config.toml（或使用 --sandbox read-only）：",
+        "limits": "禁止规则不能拦住每个 shell 命令，这里的任何设置都不能取代对 Codex 的备份。"
       }
     }
   },
@@ -619,7 +696,11 @@
       "button": "图片布局",
       "width": "宽度",
       "reset": "重置宽度",
-      "widths": { "half": "一半", "wide": "较宽", "full": "整行宽度" }
+      "widths": {
+        "half": "一半",
+        "wide": "较宽",
+        "full": "整行宽度"
+      }
     },
     "insertMenu": {
       "cut": "剪切",

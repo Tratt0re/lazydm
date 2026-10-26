@@ -20,6 +20,7 @@ import {
 import { SettingsSectionHeaderComponent } from './components/settings-section-header/settings-section-header.component';
 import { EditorSectionComponent } from './components/sections/editor-section/editor-section.component';
 import { GeneralSectionComponent } from './components/sections/general-section/general-section.component';
+import { McpSectionComponent } from './components/sections/mcp-section/mcp-section.component';
 import { SectionsSectionComponent } from './components/sections/sections-section/sections-section.component';
 import { VaultSectionComponent } from './components/sections/vault-section/vault-section.component';
 import {
@@ -38,6 +39,7 @@ import {
     GeneralSectionComponent,
     EditorSectionComponent,
     SectionsSectionComponent,
+    McpSectionComponent,
     VaultSectionComponent,
   ],
   template: `
@@ -69,6 +71,9 @@ import {
           }
           @case ('sections') {
             <app-sections-section />
+          }
+          @case ('mcp') {
+            <app-mcp-section />
           }
           @case ('vault') {
             <app-vault-section />

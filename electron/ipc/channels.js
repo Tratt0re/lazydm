@@ -102,6 +102,18 @@ const CHANNELS = Object.freeze({
     getStatus: 'index:getStatus',
     rebuild: 'index:rebuild',
   }),
+  mcp: Object.freeze({
+    getStatus: 'mcp:getStatus',
+    setEnabled: 'mcp:setEnabled',
+    start: 'mcp:start',
+    stop: 'mcp:stop',
+    setAutostart: 'mcp:setAutostart',
+    setAllowWrite: 'mcp:setAllowWrite',
+    setLimitScope: 'mcp:setLimitScope',
+    setScopeRoots: 'mcp:setScopeRoots',
+    setPort: 'mcp:setPort',
+    regenerateToken: 'mcp:regenerateToken',
+  }),
   menu: Object.freeze({
     update: 'menu:update',
   }),

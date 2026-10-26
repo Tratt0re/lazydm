@@ -9,6 +9,7 @@ const encounterController = require('./encounter.controller');
 const indexerController = require('./indexer.controller');
 const menuController = require('./menu.controller');
 const mapController = require('./map.controller');
+const mcpController = require('./mcp.controller');
 const resetController = require('./reset.controller');
 const reviewController = require('./review.controller');
 const searchController = require('./search.controller');
@@ -31,6 +32,7 @@ module.exports = {
   indexerController,
   menuController,
   mapController,
+  mcpController,
   resetController,
   reviewController,
   searchController,

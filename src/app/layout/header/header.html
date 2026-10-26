@@ -73,6 +73,26 @@
         class="window-no-drag flex items-center gap-1 px-1"
         [attr.aria-label]="'header.sheetsAriaLabel' | translate"
       >
+        @if (mcpState(); as mcp) {
+          <button
+            type="button"
+            class="flex h-8 cursor-pointer items-center gap-1.5 px-2 font-mono text-[11px] tracking-[0.08em] text-muted-foreground uppercase transition-colors duration-150 hover:bg-accent hover:text-foreground focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-ring"
+            [attr.aria-label]="
+              (mcp.running ? 'header.mcp.running' : 'header.mcp.stopped') | translate
+            "
+            arcPosition="bottom"
+            [arcTooltip]="(mcp.running ? 'header.mcp.running' : 'header.mcp.stopped') | translate"
+            (click)="openMcpSettings()"
+          >
+            MCP
+            <span
+              class="size-2 shrink-0 rounded-full"
+              [class.bg-success]="mcp.running"
+              [class.bg-destructive]="!mcp.running"
+              aria-hidden="true"
+            ></span>
+          </button>
+        }
         @for (entry of orderedNavEntries; track $index) {
           @if (entry.type === 'customize') {
             <button

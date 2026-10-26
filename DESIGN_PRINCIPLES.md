@@ -185,7 +185,7 @@ their technical names; only the text the user sees changes. Add to this table be
 | `.json` encounters, battle rules | encounters (`<scope>/encounters/*.json`), the party roster, battle rules (`_battle-rules/*.json`), see §6d | ✅ via the cloud folder |
 | `.lazydm/*.json` | template rules (`vault.json` → `templates`, see §6c), battle-rule choices (`vault.json` → `battleRules`, see §6d), per-campaign sections (`vault.json` → `sections`, see §2a), vault format version, vault settings | ✅ |
 | Local SQLite | rebuildable index + device-local state | ❌ never |
-| Device-local preferences | **theme, language** (renderer `localStorage` via `LocalPreferencesService`), Electron-side settings (`settings-store` userData JSON), current vault (`app_meta.current_vault_id`) | ❌ never |
+| Device-local preferences | **theme, language** (renderer `localStorage` via `LocalPreferencesService`), Electron-side settings (`settings-store` userData JSON), current vault (`app_meta.current_vault_id`), MCP server settings and token (`settings-store` → `mcp`, §6f) | ❌ never |
 
 ### 3.1 SQLite is a local, rebuildable index
 
@@ -481,6 +481,47 @@ Planned Electron modules: `vault`, `cloud-readiness`, `campaign`, `document`, `i
   (`bg-card`, `bg-raised`), `font-mono` labels, semantic colours for the chrome in both themes. User colours come from
   a fixed palette of the app's `--system-app-color-N` tokens, never free hex input.
 
+## 6f. MCP server
+
+LazyDM can host an **MCP server** so AI assistants on the same computer (Claude Code, Codex…) can work with the open
+Codex. It is **off by default** and lives in the Electron main process (`electron/mcp/`, `mcp.controller.js`).
+
+- **Opt-in in two steps.** *Settings → MCP* first explains what MCP is, what it is for and its risks, with one switch
+  (*Use MCP*, confirmed in a dialog). Only while it is on do the other settings appear (start/stop, port, *Allow
+  changes*, *Start with LazyDM*, token, copy-paste lines for Claude Code and Codex).
+- **Header indicator.** While the feature is on, the title bar shows `MCP` with a coloured dot: green = server running,
+  red = stopped. It opens *Settings → MCP*. While the feature is off nothing is shown.
+- **Transport.** MCP streamable HTTP, stateless, `POST /mcp` on `127.0.0.1` only (default port 47821, editable). The
+  app starts and stops it; it also stops on quit, when the Codex closes and when the feature is switched off. It can
+  start with the app (*Start with LazyDM*, off by default).
+- **Same code as the app.** Every tool calls an existing controller (`documentController`, `searchController`…), so
+  the path guard, the index, conflict-checked saves and the validation are the same as for the UI. No tool deletes,
+  renames or moves anything.
+- **Tools.** Read: `get_syntax_guide` (also the resource `lazydm://syntax-guide`, from `electron/mcp/guide.md`: layout,
+  slugs, frontmatter, links, embeds, placeholders — keep it in step with §2, §6 and §6c), `list_campaigns`,
+  `list_compendium_systems`, `list_sections`, `list_notes`, `read_note`, `search_notes`, `get_note_links`,
+  `get_broken_links`, `read_encounter`, `list_templates`, `get_section_templates`, `preview_copy`.
+  Write (only with *Allow changes*): `create_note`, `update_note` (needs the `contentHash` from `read_note`; a changed
+  note returns `conflict` and is not written), `append_to_note`, `create_folder` (sub-folder), `create_section`
+  (adds a custom section, sends every existing section setting back unchanged), `move_note` (links rewritten, to a
+  section or sub-folder of the same campaign or system), `add_asset` (an absolute path to an image, PDF or audio
+  file on this computer, 200 MB cap; the file is read, nothing is returned from outside the Codex),
+  `create_template`, `set_section_template`, `create_compendium_system`, `copy_note` (campaign ⇄ system, the
+  original stays). Changing *Allow changes* restarts a running server. There is no tool to delete, rename or trash
+  anything, and none that summarises: an assistant reads notes with the read tools and writes its own note.
+- **Shared things.** `create_template` (vault-wide `_templates/`) and `create_compendium_system` belong to the whole
+  Codex, not to a campaign, so they are refused while *Limit to some campaigns* is on. `set_section_template` links
+  an existing template of an allowed campaign (or `builtin`, or automatic).
+- **Scope.** *Limit to some campaigns* (off by default) restricts the tools to the ticked campaigns and compendium
+  systems (`limitScope`, `scopeRoots`). `electron/mcp/scope.js` runs every path an agent sends through the same check
+  (backslashes and `..` resolved, whole-segment match, so `lost-mine-2` is not `lost-mine`); lists, links and
+  backlinks that point outside are dropped. Nothing ticked = no notes reachable. This limits the MCP tools only: an
+  assistant with its own file or shell tools can still write in the Codex folder, so *Settings → MCP* also shows how to
+  deny that in Claude Code (`Edit(//<codex path>/**)`) and run Codex read-only (`sandbox_mode = "read-only"`).
+- **Device-local.** The settings (`mcp` section: `enabled`, `autostart`, `allowWrite`, `limitScope`, `scopeRoots`, `port`, `token`) live in
+  `settings-store`, never in the vault, so the token cannot sync through the cloud folder. The renderer follows the
+  state through `mcp:statusChanged`.
+
 ## 7. Security
 
 - **Path guard**: every path received from the renderer is resolved and rejected if it escapes the vault root.
@@ -496,6 +537,11 @@ Planned Electron modules: `vault`, `cloud-readiness`, `campaign`, `document`, `i
   update the hash if that script changes). Production builds do not inline critical CSS, which would need
   `unsafe-inline` scripts.
 - `documents:open` only opens media files (images, PDFs, audio), never executables or scripts.
+- **MCP server (§6f)** is the app's only network listener, with these rules: bound to `127.0.0.1` (never another
+  interface), off until the user switches it on, every request needs `Authorization: Bearer <token>` (32 random bytes,
+  constant-time compare, regenerable), requests with an `Origin` header or a `Host` other than the loopback name of
+  its own port are refused (browsers and DNS rebinding), body size limited to 1 MB, only `POST /mcp`. Note text is
+  untrusted input for the assistant (prompt injection through a shared folder); the tool descriptions say so.
 
 ## 8. UI and navigation
 
@@ -825,6 +871,7 @@ Component behaviour, variant keys and configuration stay as they are.
 | 15.1 | Setup flow: *Welcome* (Franco, name, what it is for, language and theme) and *Vault* (device or cloud folder explained, folder check with the cloud drive), step marker, ornaments, entry guard |
 | 16.1 | UI smoothing review (phases A–F): glossary (Codex, Combatant, Tracker layout), Customize menu, "…" menus on toolbars and rows, start card and *New note* picker, Assets import as a modal with paste, two-step wizard modal, plainer errors, ornament rule reworded |
 | 17.1 | UI polish pass for the MVP (plan in `.claude/plans/ui-polish-mvp.plan.md`): compact tracker row (2-row Default layout, left rail, single "…" menu, Turn chip, statuses help once with an info icon) and a *Tracker rows* density setting, battle bar with the round and turn on one line, Encounters section page without watermark, note toolbar with Save and Links and the rest in the menu, collapsed properties box with a toggle (Live and Reading), code map hidden on short notes (option), icon-only open tab, ornament only on top-level pages, sans for note names, full-width left-aligned page columns, `warning` alert for Review, lighter light-theme fields and a readable destructive red, setup flow with icon rows and language and theme in the footer, side panels with a left margin |
+| 18.1 | MCP server (§6f): opt-in *Settings → MCP* tab, `MCP` + green/red dot in the title bar, loopback HTTP with bearer token, read tools and (opt-in) create / update / append tools reusing the controllers |
 
 ## 12. Open decisions
 
