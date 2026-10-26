@@ -18,7 +18,7 @@ the editor controls. Dropped: old Phases 1 (dot), 4 (editor controls) and the mo
 | --- | --- | --- | --- | --- | --- |
 | A | Split screen bugs: Back to campaigns, Settings sidebar | none | low | code done, not checked live | |
 | 0 | Review the screens not yet seen, richer fixture, **and the split screen** | `/impeccable:critique` | none | mostly done (see Phase 0 findings) | |
-| 2 | Campaign sidebar: collapse empty sections, counts (fonts stay) | `/impeccable:normalize` | low | pending | |
+| 2 | Campaign sidebar: collapse empty sections, counts (fonts stay) | `/impeccable:normalize` | low | done in code; empty-section default not checked on a fresh device | |
 | 3 | Creation flow: *New...*, fewer steps | `/impeccable:clarify` | medium | pending | |
 | 5 | Light theme and control states, **reversible** | `/impeccable:audit` then `/impeccable:colorize` | medium | pending | |
 | 6 | Copy and small fixes (watermark stays) | `/impeccable:clarify` | low | pending | |
@@ -118,13 +118,19 @@ Findings, most important first:
 8. **Tracker layouts sheet**: when nothing is picked it shows only "Pick a tracker layout on the left, or create one."
    in a very large empty panel; the one built-in layout could be preselected.
 
+## Phase S. Sidebar collapses when a split opens (decided by the user, 2026-10-26)
+
+- [x] S1 Opening a split collapses the sidebar once (`root-layout.ts`, effect on the first split only). Reopening it
+      on a split keeps it open until the split closes and opens again
+- [x] S2 Checked live: a split opened from the start shows the collapsed sidebar; reopening it on the split stays open
+
 ## Phase 2. The campaign sidebar reads as an IDE
 
 - [ ] 2.1 **Propose the change first** (§9 "Fonts": mono for "nav items"). Section names and the Overview row go to `font-sans`
       like note names already do; mono stays for counts, the CAMPAIGN label and metadata
-- [ ] 2.2 Explorer: sections with no files start collapsed and do not render the "Empty folder" row (`en.json:991`);
+- [x] 2.2 (partly) Explorer: section rows show the file count; the empty-folder line is gone from open bodies. Still open: sections with no files start collapsed and do not render the "Empty folder" row (`en.json:991`);
       show a file count on the row instead (mono, muted). A section with files keeps its remembered open state
-- [ ] 2.3 Keep **+** on hover/focus and ↗ as they are (§8)
+- [x] 2.3 Keep **+** on hover/focus and ↗ as they are (§8)
 - Files: `src/app/components/explorer-tree/explorer-tree.component.html`, `explorer-tree.component.ts`, `layout/sidebar/sidebar.html`
 - Validate: build; keyboard expand/collapse still works; empty campaign, one-section campaign, 20-section campaign
 

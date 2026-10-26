@@ -11,6 +11,7 @@ import {
   inject,
   OnInit,
   signal,
+  untracked,
   viewChild,
   ViewEncapsulation,
 } from '@angular/core';
@@ -77,6 +78,15 @@ export class RootLayout implements OnInit {
   );
 
   protected readonly sidebarCollapsed = signal(false);
+  /** A split opening collapses the sidebar once, so the two sides get the room; the user can reopen it. */
+  private hadSplit = false;
+  private readonly collapseOnSplit = effect(() => {
+    const hasSplit = this.hasSplit();
+    if (hasSplit && !this.hadSplit) {
+      untracked(() => this.sidebarCollapsed.set(true));
+    }
+    this.hadSplit = hasSplit;
+  });
   protected readonly isFullscreen = signal(false);
   protected readonly isSmallScreen = signal(detectSmallScreenViewport());
   private readonly campaignService = inject(CampaignService);

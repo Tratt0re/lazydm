@@ -41,6 +41,9 @@
         <span class="truncate" [attr.title]="label">{{ label }}</span>
       </button>
       @let rowSection = sectionOf(node);
+      @if (rowSection && rowSection.fileCount > 0) {
+        <span class="shrink-0 pr-1 font-mono text-[10px] text-muted-foreground" aria-hidden="true">{{ rowSection.fileCount }}</span>
+      }
       @if (canCreateHere(node, rowSection) && rowSection) {
         <!-- New file in this section: shown on hover or focus, like the arrow next to it. -->
         <button
@@ -205,11 +208,6 @@
               <ng-container *ngTemplateOutlet="fileRow; context: { $implicit: file, node }" />
             }
 
-            @if (tree.folders.length === 0 && tree.files.length === 0) {
-              <p class="px-3 py-1.5 font-mono text-[11px] text-muted-foreground">
-                {{ 'explorer.empty' | translate }}
-              </p>
-            }
           }
         }
       </div>
