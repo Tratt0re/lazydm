@@ -106,55 +106,6 @@
             <p class="mt-1 text-xs text-muted-foreground">{{ displayDescription(field) }}</p>
           }
         </div>
-      } @else if (isChoiceField(field)) {
-        <div>
-          @if (field.label) {
-            <p class="mb-1.5 block text-sm font-medium" [id]="'choice-label-' + field.id">
-              {{ displayLabel(field) }}
-              @if (field.required) {
-                <span class="text-destructive">*</span>
-              }
-            </p>
-          }
-
-          <!-- A few options in view at once: one square button each, the picked one raised with the bronze marker. -->
-          <div
-            role="radiogroup"
-            class="grid grid-cols-2 gap-2"
-            [attr.aria-labelledby]="field.label ? 'choice-label-' + field.id : null"
-          >
-            @for (option of choiceOptions(field); track option.value) {
-              @let isPicked = choiceValue(field) === option.value;
-              <button
-                type="button"
-                role="radio"
-                class="flex h-11 min-w-0 cursor-pointer items-center gap-2 border border-l-[3px] px-3 text-left text-sm transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring disabled:cursor-not-allowed disabled:opacity-50"
-                [class]="
-                  isPicked
-                    ? 'border-border-strong border-l-primary bg-raised text-foreground-strong'
-                    : 'border-input border-l-transparent bg-recessed text-foreground hover:bg-accent'
-                "
-                [attr.data-choice]="option.value"
-                [attr.aria-checked]="isPicked"
-                [attr.tabindex]="isPicked || (!choiceValue(field) && $first) ? 0 : -1"
-                [disabled]="(field.disabled ?? false) || (option.disabled ?? false)"
-                (click)="onChoicePick(field, option.value)"
-                (keydown)="onChoiceKeydown(field, $event)"
-              >
-                @if (option.icon) {
-                  <arc-icon [arcType]="option.icon" class="size-4 shrink-0 text-primary" aria-hidden="true" />
-                }
-                <span class="truncate">{{ option.label }}</span>
-              </button>
-            }
-          </div>
-
-          @if (fieldError(field); as error) {
-            <p class="mt-1 text-xs text-destructive" role="alert">{{ error }}</p>
-          } @else if (field.description) {
-            <p class="mt-1 text-xs text-muted-foreground">{{ displayDescription(field) }}</p>
-          }
-        </div>
       } @else if (isCheckboxField(field)) {
         <div>
           <arc-checkbox

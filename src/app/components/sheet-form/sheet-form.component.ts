@@ -28,7 +28,6 @@ import { ARC_SHEET_DATA } from '@/shared/components/sheet';
 import { mergeClasses } from '@/shared/utils/merge-classes';
 import type {
   AppSheetCheckboxField,
-  AppSheetChoiceField,
   AppSheetComboboxField,
   AppSheetDatePickerField,
   AppSheetField,
@@ -371,53 +370,6 @@ export class AppSheetFormComponent {
     return field.type === 'select';
   }
 
-  protected isChoiceField(field: AppSheetField): field is AppSheetChoiceField {
-    return field.type === 'choice';
-  }
-
-  protected choiceValue(field: AppSheetChoiceField): string | null {
-    const value = this.fieldValueState()[field.id];
-    return typeof value === 'string' ? value : null;
-  }
-
-  protected choiceOptions(field: AppSheetChoiceField): AppSheetSelectOption[] {
-    const fieldTranslate = field.translate ?? false;
-    return field.options.map((option) => ({
-      ...option,
-      label: this.translateMaybe(option.label, option.translate ?? fieldTranslate),
-    }));
-  }
-
-  protected onChoicePick(field: AppSheetChoiceField, value: string): void {
-    this.userChanged(field, value);
-    if (field.submitOnPick) {
-      this.sheetData?.submit?.();
-    }
-  }
-
-  /** Arrow keys move the pick through the choices, like the options of a radio group. */
-  protected onChoiceKeydown(field: AppSheetChoiceField, event: KeyboardEvent): void {
-    const step = ['ArrowRight', 'ArrowDown'].includes(event.key)
-      ? 1
-      : ['ArrowLeft', 'ArrowUp'].includes(event.key)
-        ? -1
-        : 0;
-    if (step === 0) {
-      return;
-    }
-
-    event.preventDefault();
-    const options = field.options.filter((option) => !option.disabled);
-    const current = options.findIndex((option) => option.value === this.choiceValue(field));
-    const next = options[(current + step + options.length) % options.length];
-    if (next) {
-      this.userChanged(field, next.value);
-      this.host.nativeElement
-        .querySelector<HTMLElement>(`[data-field-id="${field.id}"] [data-choice="${next.value}"]`)
-        ?.focus();
-    }
-  }
-
   protected isCheckboxField(field: AppSheetField): field is AppSheetCheckboxField {
     return field.type === 'checkbox';
   }
@@ -572,8 +524,6 @@ export class AppSheetFormComponent {
       }
       case 'checkbox':
         return Boolean(value);
-      case 'choice':
-        return typeof value === 'string' && value.trim().length > 0 ? value.trim() : null;
       case 'input': {
         if (typeof value !== 'string') {
           return null;
@@ -615,8 +565,6 @@ export class AppSheetFormComponent {
     switch (field.type) {
       case 'checkbox':
         return value !== true;
-      case 'choice':
-        return typeof value !== 'string' || value.trim().length === 0;
       case 'combobox':
         if (field.multiple) {
           return !Array.isArray(value) || value.length === 0;

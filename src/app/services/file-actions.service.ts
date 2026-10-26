@@ -275,11 +275,10 @@ export class FileActionsService {
       fields: [
         {
           id: 'section',
-          type: 'choice',
+          type: 'select',
           label: 'campaigns.newAnything.sectionLabel',
           translate: true,
           required: true,
-          submitOnPick: true,
           value: choices[0].key,
           options: choices.map((section) => ({
             value: section.key,
