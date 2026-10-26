@@ -2,6 +2,8 @@ import { computed, inject, Injectable, signal } from '@angular/core';
 import { NavigationEnd, Router, type UrlTree } from '@angular/router';
 import { filter } from 'rxjs';
 
+import { SPLIT_PANE_OUTLET } from '@/services/workspace.service';
+
 /** Router outlet of the full-page sheets (Compendium, Templates, Settings), drawn over the current page. */
 export const APP_SHEET_OUTLET = 'overlay';
 
@@ -114,6 +116,8 @@ export class AppSheetService {
         ? primary.split('/')
         : ['campaigns'];
 
+    // The second pane (split screen) stays as it is under the sheet, like the first one.
+    const split = getOutletPath(current, SPLIT_PANE_OUTLET);
     return this.router.createUrlTree(
       [
         '/',
@@ -121,6 +125,9 @@ export class AppSheetService {
           outlets: {
             primary: primarySegments,
             [APP_SHEET_OUTLET]: getOutletPath(target, 'primary').split('/'),
+            ...(split && primarySegments[0] === 'campaigns' && primarySegments.length > 1
+              ? { [SPLIT_PANE_OUTLET]: split.split('/') }
+              : {}),
           },
         },
       ],

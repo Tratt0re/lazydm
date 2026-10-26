@@ -189,13 +189,30 @@ export class WorkspaceService extends BaseIpcService<APIChannel.WORKSPACE> {
       !this.hasSplit() ||
       this.isTabNavigation ||
       !right ||
+      // Leaving the campaign (Back to campaigns) or opening another one has no second pane to keep.
+      !this.isCampaignUrl(toPath(url)) ||
       this.outletPath(url, SPLIT_PANE_OUTLET)
     ) {
       return null;
     }
 
-    const query = url.includes('?') ? url.slice(url.indexOf('?')) : '';
-    return composeUrl(toPath(url), right) + query;
+    // The other outlets of the URL (`(overlay:settings/editor)`) stay; the second pane joins them.
+    const suffixAt = url.search(/[?#]/);
+    const suffix = suffixAt === -1 ? '' : url.slice(suffixAt);
+    const main = suffixAt === -1 ? url : url.slice(0, suffixAt);
+    const pane = `${SPLIT_PANE_OUTLET}:${right.replace(/^\//, '')}`;
+    return (main.endsWith(')') ? `${main.slice(0, -1)}//${pane})` : `${main}(${pane})`) + suffix;
+  }
+
+  /**
+   * Whether a navigation names a main page that is not one of the open campaign: the campaign list, another
+   * campaign, or a link that opens in a sheet (`/settings/editor`). The router keeps the other outlets of the URL it
+   * comes from, so such a URL arrives with a `split:` outlet that the page it names cannot sit beside (two routes
+   * would claim the main outlet). A sheet link gets the second pane back from the sheet guard.
+   */
+  leavesCampaign(url: string): boolean {
+    const path = toPath(url);
+    return path !== '/' && !this.isCampaignUrl(path);
   }
 
   /** Whether a URL belongs to the open campaign (tabs never leave it). */

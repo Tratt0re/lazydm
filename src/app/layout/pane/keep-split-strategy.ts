@@ -1,7 +1,7 @@
 import { inject, Injectable, Injector } from '@angular/core';
-import { UrlHandlingStrategy, UrlSerializer, type UrlTree } from '@angular/router';
+import { UrlHandlingStrategy, UrlSegmentGroup, UrlSerializer, UrlTree } from '@angular/router';
 
-import { WorkspaceService } from '@/services/workspace.service';
+import { SPLIT_PANE_OUTLET, WorkspaceService } from '@/services/workspace.service';
 
 /**
  * Keeps the second pane through navigations that name only the first one (a service's `navigateByUrl('/a/b')`):
@@ -19,9 +19,16 @@ export class KeepSplitUrlHandlingStrategy extends UrlHandlingStrategy {
 
   extract(url: UrlTree): UrlTree {
     // Looked up when used: the router (which needs this strategy) is what the workspace service depends on.
-    const kept = this.injector
-      .get(WorkspaceService)
-      .urlKeepingSplit(this.serializer.serialize(url));
+    const workspace = this.injector.get(WorkspaceService);
+    const serialized = this.serializer.serialize(url);
+    if (url.root.children[SPLIT_PANE_OUTLET] && workspace.leavesCampaign(serialized)) {
+      // Back to campaigns: the list has no second pane, so the URL goes there without it.
+      const { [SPLIT_PANE_OUTLET]: _split, ...children } = url.root.children;
+      const root = new UrlSegmentGroup(url.root.segments, children);
+      return new UrlTree(root, url.queryParams, url.fragment);
+    }
+
+    const kept = workspace.urlKeepingSplit(serialized);
     return kept ? this.serializer.parse(kept) : url;
   }
 

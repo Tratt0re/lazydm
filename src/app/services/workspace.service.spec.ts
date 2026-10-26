@@ -256,6 +256,31 @@ describe('WorkspaceService', () => {
       expect(service.urlKeepingSplit(`${ALICE}${split(GOBLIN)}`)).toBeNull();
     });
 
+    it('keeps the sheet outlet of the URL (Settings sidebar) and adds the second side beside it', async () => {
+      const { service } = await open(TWO_PANES, TWO_PANES_URL);
+
+      expect(service.urlKeepingSplit(`${ALICE}(overlay:settings/editor)`)).toBe(
+        `${ALICE}(overlay:settings/editor//split:${BOB.slice(1)})`,
+      );
+    });
+
+    it('leaves a URL outside the campaign alone (Back to campaigns)', async () => {
+      const { service } = await open(TWO_PANES, TWO_PANES_URL);
+
+      expect(service.urlKeepingSplit('/campaigns')).toBeNull();
+      expect(service.urlKeepingSplit('/campaigns/other-campaign/enemies/goblin')).toBeNull();
+    });
+
+    it('says which URLs leave the campaign: the list, another campaign, a sheet link', async () => {
+      const { service } = await open(TWO_PANES, TWO_PANES_URL);
+
+      expect(service.leavesCampaign('/campaigns')).toBe(true);
+      expect(service.leavesCampaign('/campaigns/other/enemies/goblin')).toBe(true);
+      expect(service.leavesCampaign('/settings/editor(overlay:settings/general)')).toBe(true);
+      expect(service.leavesCampaign(ALICE)).toBe(false);
+      expect(service.leavesCampaign(`${ALICE}(overlay:settings/general)`)).toBe(false);
+    });
+
     it('does nothing without a split', async () => {
       const { service } = await open(null, GOBLIN);
 
