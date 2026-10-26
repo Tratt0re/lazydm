@@ -46,7 +46,7 @@ export const buttonVariants = cva(
       {
         arcType: ['ghost', 'link'],
         arcDisabled: true,
-        class: 'border-transparent text-inherit opacity-50',
+        class: 'border-solid border-transparent text-inherit opacity-50',
       },
     ],
     defaultVariants: {
