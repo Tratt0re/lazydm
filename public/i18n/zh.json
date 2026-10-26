@@ -357,7 +357,7 @@
         "missing": "无法访问位于 {{path}} 的 Codex。它可能已被移动或删除，或其云盘尚不可用。",
         "readOnlyTitle": "只读文件夹",
         "readOnly": "LazyDM 无法写入此文件夹。请选择一个可编辑的文件夹。",
-        "genericTitle": "出现问题"
+        "genericTitle": "这一步没有成功"
       }
     },
     "sync": {
@@ -881,7 +881,7 @@
     "ok": "确定",
     "confirm": "确认",
     "closeDialog": "关闭对话框",
-    "empty": "这里空空如也",
+    "empty": "空",
     "pagination": {
       "previous": "上一页",
       "next": "下一页",

@@ -357,7 +357,7 @@
         "missing": "No se puede acceder al Codex en {{path}}. Puede que se haya movido o eliminado, o que su unidad en la nube aún no esté disponible.",
         "readOnlyTitle": "Carpeta de solo lectura",
         "readOnly": "LazyDM no puede escribir en esta carpeta. Elige una carpeta que puedas editar.",
-        "genericTitle": "Algo salió mal"
+        "genericTitle": "No ha funcionado"
       }
     },
     "sync": {
@@ -881,7 +881,7 @@
     "ok": "Aceptar",
     "confirm": "Confirmar",
     "closeDialog": "Cerrar diálogo",
-    "empty": "Nada aquí",
+    "empty": "Vacío",
     "pagination": {
       "previous": "Anterior",
       "next": "Siguiente",

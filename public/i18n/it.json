@@ -357,7 +357,7 @@
         "missing": "Il Codex in {{path}} non è raggiungibile. Potrebbe essere stato spostato o eliminato, oppure il suo cloud non è ancora disponibile.",
         "readOnlyTitle": "Cartella di sola lettura",
         "readOnly": "LazyDM non può scrivere in questa cartella. Scegli una cartella modificabile.",
-        "genericTitle": "Qualcosa è andato storto"
+        "genericTitle": "Non ha funzionato"
       }
     },
     "sync": {
@@ -881,7 +881,7 @@
     "ok": "OK",
     "confirm": "Conferma",
     "closeDialog": "Chiudi finestra",
-    "empty": "Niente qui",
+    "empty": "Vuoto",
     "pagination": {
       "previous": "Precedente",
       "next": "Successiva",

@@ -357,7 +357,7 @@
         "missing": "Le Codex situé à {{path}} est inaccessible. Il a peut-être été déplacé ou supprimé, ou son lecteur cloud n'est pas encore disponible.",
         "readOnlyTitle": "Dossier en lecture seule",
         "readOnly": "LazyDM ne peut pas écrire dans ce dossier. Choisissez un dossier modifiable.",
-        "genericTitle": "Un problème est survenu"
+        "genericTitle": "Cela n’a pas fonctionné"
       }
     },
     "sync": {
@@ -881,7 +881,7 @@
     "ok": "OK",
     "confirm": "Confirmer",
     "closeDialog": "Fermer la boîte de dialogue",
-    "empty": "Rien ici",
+    "empty": "Vide",
     "pagination": {
       "previous": "Précédent",
       "next": "Suivant",

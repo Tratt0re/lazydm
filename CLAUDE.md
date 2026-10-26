@@ -76,4 +76,3 @@ A build with no errors is the minimum check after every change. The 3 `NG8113` w
 - The shell is **zsh**: unquoted `$VAR` lists are not word-split (use `bash -c` or arrays), and `====` lines expand.
 - Tailwind radius tokens derive from `--radius: 0`, so `rounded-sm/md/lg` render square; `rounded-full`/`rounded-xl` do not.
 - ngx-sonner toasts are themed through `--ngx-sonner-*` variables in `toast.variants.ts`, not global CSS.
-- Some i18n keys are missing from `en.json` (e.g. `common.skipToContent`, `sidebar.expand`) and render as raw keys.
