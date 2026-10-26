@@ -16,10 +16,6 @@
       />
       }
     } @else {
-      <p class="font-mono text-[11px] font-semibold tracking-[0.04em] text-muted-foreground">
-        {{ 'links.broken.summary' | translate: { links: rows().length, notes: groups().length } }}
-      </p>
-
       <ul class="flex flex-col border border-border bg-card">
         @for (group of groups(); track group.sourcePath) {
           <li class="border-b border-border last:border-b-0">

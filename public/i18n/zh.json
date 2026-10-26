@@ -760,7 +760,6 @@
   "links": {
     "broken": {
       "title": "失效链接",
-      "summary": "失效链接：{{links}} · 笔记：{{notes}}",
       "line": "第 {{line}} 行",
       "emptyTitle": "没有失效链接",
       "emptyDescription": "此战役中的每个链接都指向现有的笔记或文件。",

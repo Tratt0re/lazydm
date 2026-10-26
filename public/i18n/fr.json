@@ -760,7 +760,6 @@
   "links": {
     "broken": {
       "title": "Liens cassés",
-      "summary": "Liens cassés : {{links}} · notes : {{notes}}",
       "line": "Ligne {{line}}",
       "emptyTitle": "Aucun lien cassé",
       "emptyDescription": "Chaque lien de cette campagne pointe vers une note ou un fichier existant.",

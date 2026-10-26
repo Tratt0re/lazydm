@@ -760,7 +760,6 @@
   "links": {
     "broken": {
       "title": "Broken links",
-      "summary": "Broken links: {{links}} · notes: {{notes}}",
       "line": "Line {{line}}",
       "emptyTitle": "No broken links",
       "emptyDescription": "Every link in this campaign points to an existing note or file.",

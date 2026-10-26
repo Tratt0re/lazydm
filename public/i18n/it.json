@@ -760,7 +760,6 @@
   "links": {
     "broken": {
       "title": "Collegamenti interrotti",
-      "summary": "Collegamenti interrotti: {{links}} · note: {{notes}}",
       "line": "Riga {{line}}",
       "emptyTitle": "Nessun collegamento interrotto",
       "emptyDescription": "Ogni collegamento della campagna punta a una nota o a un file esistente.",

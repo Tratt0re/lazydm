@@ -760,7 +760,6 @@
   "links": {
     "broken": {
       "title": "Defekte Links",
-      "summary": "Defekte Links: {{links}} · Notizen: {{notes}}",
       "line": "Zeile {{line}}",
       "emptyTitle": "Keine defekten Links",
       "emptyDescription": "Jeder Link dieser Kampagne verweist auf eine vorhandene Notiz oder Datei.",

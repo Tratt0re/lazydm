@@ -760,7 +760,6 @@
   "links": {
     "broken": {
       "title": "Enlaces rotos",
-      "summary": "Enlaces rotos: {{links}} · notas: {{notes}}",
       "line": "Línea {{line}}",
       "emptyTitle": "No hay enlaces rotos",
       "emptyDescription": "Todos los enlaces de esta campaña apuntan a una nota o archivo existente.",
