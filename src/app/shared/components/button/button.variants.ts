@@ -12,10 +12,12 @@ export const buttonVariants = cva(
   {
     variants: {
       arcType: {
-        default: 'border-primary bg-primary text-primary-foreground hover:border-highlight hover:bg-highlight active:bg-primary-pressed',
+        default:
+          'border-primary bg-primary text-primary-foreground hover:border-highlight hover:bg-highlight active:bg-primary-pressed',
         destructive:
           'border-destructive bg-destructive text-destructive-foreground hover:brightness-110 focus-visible:outline-destructive',
-        outline: 'border-input bg-card text-foreground hover:bg-accent hover:text-accent-foreground',
+        outline:
+          'border-input bg-card text-foreground hover:bg-accent hover:text-accent-foreground',
         secondary: 'border-input bg-secondary text-secondary-foreground hover:bg-accent',
         ghost: 'border-transparent hover:bg-accent hover:text-accent-foreground',
         link: 'border-transparent text-primary underline-offset-4 hover:underline',
@@ -56,6 +58,8 @@ export const buttonVariants = cva(
     },
   },
 );
-export type ArcTechButtonShapeVariants = NonNullable<VariantProps<typeof buttonVariants>['arcShape']>;
+export type ArcTechButtonShapeVariants = NonNullable<
+  VariantProps<typeof buttonVariants>['arcShape']
+>;
 export type ArcTechButtonSizeVariants = NonNullable<VariantProps<typeof buttonVariants>['arcSize']>;
 export type ArcTechButtonTypeVariants = NonNullable<VariantProps<typeof buttonVariants>['arcType']>;
