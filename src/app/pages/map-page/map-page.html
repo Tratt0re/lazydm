@@ -22,12 +22,9 @@
               [arcTooltip]="item.label | translate"
               [attr.aria-label]="item.label | translate"
               [attr.aria-pressed]="tool() === item.tool"
-              class="h-auto! w-16 flex-col gap-0.5 px-1! py-1.5!"
               (click)="selectTool(item.tool)"
             >
               <arc-icon [arcType]="item.icon" />
-              <!-- The name is the label too, so the tools can be told apart without hovering. -->
-              <span class="max-w-full truncate font-mono text-[9px] leading-none font-medium tracking-normal normal-case">{{ item.label | translate }}</span>
             </button>
 
             @if (item.tool === 'path' && tool() === 'path') {
