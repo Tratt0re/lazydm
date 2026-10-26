@@ -12,15 +12,15 @@
   --foreground: #30363A;
   --foreground-strong: #202428;
   --foreground-secondary: #4C5356;
-  --card: #F1F0EB;
+  --card: #FAF9F6;
   --card-foreground: #30363A;
-  --popover: #F8F7F2;
+  --popover: #FDFCFA;
   --popover-foreground: #30363A;
   --primary: #6D5A3E;
   --primary-foreground: #F1F0EB;
   --highlight: #8B724E;
   --primary-pressed: #59482F;
-  --secondary: #F8F7F2;
+  --secondary: #FDFCFA;
   --secondary-foreground: #30363A;
   --muted: #D7D8D6;
   --muted-foreground: #50575A;
@@ -34,7 +34,7 @@
   --input: #71777A;
   --ring: #8B724E;
   --recessed: #ECECE8;
-  --raised: #F8F7F2;
+  --raised: #FDFCFA;
   --chart-1: #766043;
   --chart-2: #93473D;
   --chart-3: #4E7355;
