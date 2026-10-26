@@ -546,31 +546,34 @@ export class MapPage {
           action: () => this.isPanelOpen.update((isOpen) => !isOpen),
         },
         {
-          id: 'copy',
-          label: this.translateService.instant(
-            scope.kind === 'system' ? 'compendium.copy.toCampaign' : 'compendium.copy.toCompendium',
-          ),
-          icon: scope.kind === 'system' ? 'book-down' : 'book-up',
-          buttonType: 'outline',
-          iconOnly: true,
-          action: () => void this.copyTo.openCopySheet(this.mapPath()),
-        },
-        {
-          id: 'edit',
-          label: this.translateService.instant('maps.edit.menu'),
-          icon: 'pencil',
-          buttonType: 'outline',
-          iconOnly: true,
-          action: () => this.openEditSheet(),
-        },
-        {
-          id: 'delete',
-          label: this.translateService.instant('files.delete.menu'),
-          icon: 'trash',
-          buttonType: 'secondary',
-          destructive: true,
-          iconOnly: true,
-          action: () => this.openDeleteSheet(),
+          // Less used: behind the "…" like every other page; Delete last, after a separator.
+          id: 'more',
+          type: 'menu',
+          label: 'common.moreActions',
+          entries: [
+            {
+              id: 'copy',
+              label:
+                scope.kind === 'system'
+                  ? 'compendium.copy.toCampaign'
+                  : 'compendium.copy.toCompendium',
+              icon: scope.kind === 'system' ? 'book-down' : 'book-up',
+              action: () => void this.copyTo.openCopySheet(this.mapPath()),
+            },
+            {
+              id: 'edit',
+              label: 'maps.edit.menu',
+              icon: 'pencil',
+              action: () => this.openEditSheet(),
+            },
+            {
+              id: 'delete',
+              label: 'files.delete.menu',
+              icon: 'trash',
+              destructive: true,
+              action: () => this.openDeleteSheet(),
+            },
+          ],
         },
       ];
       onCleanup(
@@ -1847,6 +1850,20 @@ export class MapPage {
         description: error instanceof Error ? error.message : String(error),
       }),
     );
+  }
+
+  /** Whether a linked file is a page of this campaign, which *Open to the side* can show in the other pane. */
+  protected canOpenLinkToSide(link: string): boolean {
+    const route = this.linkRoute(link);
+    return route !== null && this.workspace.isCampaignUrl(route) && this.workspace.canOpenTab();
+  }
+
+  /** *Open to the side*: the linked file in a new tab of the other pane. */
+  protected openLinkToSide(link: string): void {
+    const route = this.linkRoute(link);
+    if (route && this.workspace.isCampaignUrl(route)) {
+      void this.workspace.openToSide(route);
+    }
   }
 
   protected linkName(link: string): string {

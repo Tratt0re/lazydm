@@ -437,6 +437,12 @@
               <arc-icon arcType="plus" />
               {{ 'maps.menu.openLinkBackground' | translate }}
             </button>
+            @if (canOpenLinkToSide(link)) {
+              <button type="button" arc-menu-item (click)="openLinkToSide(link)">
+                <arc-icon arcType="panel-right" />
+                {{ 'tabs.menu.openToSide' | translate }}
+              </button>
+            }
           }
           <div class="-mx-1 my-1 h-px bg-border-subtle" role="separator"></div>
         }
