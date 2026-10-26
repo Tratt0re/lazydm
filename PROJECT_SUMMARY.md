@@ -1,214 +1,107 @@
-# LazyDM Project - Setup Summary
+# LazyDM — Project Summary
 
-## ✅ Project Successfully Created!
+A snapshot of what the project is and where things live. For the rules behind it, read
+[`DESIGN_PRINCIPLES.md`](DESIGN_PRINCIPLES.md); for setup and commands, [`README.md`](README.md).
 
-The **LazyDM** scaffolding project has been successfully created with all necessary components and structure from the expense_tracker application.
+## What it is
 
-## 📁 What Was Created
+A desktop app for Dungeon Masters, lazy by design: prepare fast, run the session without friction.
 
-### Core Structure
-- ✅ Complete project directory structure
-- ✅ Package.json configured for "LazyDM" 
-- ✅ Angular configuration (angular.json, tsconfig files)
-- ✅ Build scripts and Electron setup
-- ✅ Editor configuration files
+- Content lives in plain `.md` files (plus `.json` encounters and maps) inside a user-owned folder, the *Codex*
+  (`vault` in the code). The Codex stays Obsidian-compatible.
+- SQLite is only a local, rebuildable index of the Codex.
+- Electron owns the file system, the index and sync. Angular is the UI plus minor calculations.
 
-### Application Files
-- ✅ Main app component (app.ts, app.html, app.css)
-- ✅ App configuration (app.config.ts)
-- ✅ Routing configuration (app.routes.ts)
-- ✅ Entry point (main.ts, index.html)
-- ✅ Global styles (styles.css)
+## Status
 
-### Layout System
-- ✅ Root layout with responsive sidebar
-- ✅ Header component
-- ✅ Toolbar component
-- ✅ Breadcrumb component
-- ✅ Sidebar with navigation
+Heading to 1.0. Built and working:
 
-### Pages (4 Routes)
-1. **Home Page** (`/`) - Welcome page with feature overview
-2. **Campaigns Page** (`/campaigns`) - Empty placeholder for campaigns
-3. **Characters Page** (`/characters`) - Empty placeholder for characters
-4. **Encounters Page** (`/encounters`) - Empty placeholder for encounters
-5. **Settings Page** (`/settings`) - Empty placeholder for settings
+- Setup flow (Welcome, Codex step), Codex selection, cloud-folder readiness and conflict copies
+- Indexer with a file watcher (links, tags, headings, frontmatter)
+- Campaigns with per-campaign sections, sub-types, templates and a compendium
+- Editor (Live preview, Source, Reading), links panel, rename with link refactoring, Review page
+- Assets: paste, drop, import, inline audio, PDFs
+- Encounter manager with tracker layouts (battle rules), party roster, cemetery and statuses
+- Map with pins linked to files
+- Tabs and split screen with shared live documents
+- Seven languages (en, it, de, es, fr, uk, zh) and the Nordic Relic dark and light themes
 
-### Shared Component Library (~60 Components)
-Complete "ArcTechUI" component library (Techno-Brutalism / Retro-Futurism style) including:
-- Form controls (Button, Input, Select, Checkbox, Switch, etc.)
-- Data display (Table, Badge, Alert, Empty, Loader, etc.)
-- Overlays (Dialog, Sheet, Popover, Tooltip, Dropdown, etc.)
-- Navigation (Accordion, Pagination, Menu)
-- Advanced (Command palette, Combobox, Carousel, Calendar)
+Current work: UI polish for 1.0 (plans in `.claude/plans/`). The phase-by-phase roadmap is in
+`DESIGN_PRINCIPLES.md` §11, and open decisions are in §12.
 
-### Services & Utilities
-- ✅ Base IPC service for Electron communication
-- ✅ Service utilities (mapping, pagination)
-- ✅ Local preferences service
-- ✅ Toolbar context service
-- ✅ i18n service
-- ✅ Number format service
-- ✅ Dark mode service
+## Technologies
 
-### Configuration
-- ✅ Menu configuration (4 navigation items)
-- ✅ API/IPC channel configuration
-- ✅ Visual options configuration
-- ✅ Local preferences configuration
-- ✅ ECharts configuration
+| Area | Choice |
+| --- | --- |
+| UI framework | Angular 21 (standalone components, signals) |
+| Desktop | Electron 44 |
+| Styling | Tailwind CSS 4, class-variance-authority |
+| Language | TypeScript 5.9 (Angular), JavaScript (Electron) |
+| Index | Better-SQLite3 12 |
+| Editor | CodeMirror 6 |
+| i18n | ngx-translate 17 |
+| Icons, toasts, charts | Lucide, ngx-sonner, ECharts |
+| Tests | Vitest 4 (Angular and Electron) |
 
-### Assets
-- ✅ Barlow Condensed font family (display, 500–900)
-- ✅ IBM Plex Mono font family (base, 400–700)
-- ✅ Icon assets structure
-- ✅ Styles directory
+## Architecture
 
-### Documentation
-- ✅ Comprehensive README.md
-- ✅ This PROJECT_SUMMARY.md
-
-## 🎨 Menu Structure
-
-The sidebar navigation includes:
-
-**Main Section:**
-- 🏠 Home
-- 📖 Campaigns
-- 👥 Characters  
-- ⚔️ Encounters
-
-**Bottom Section:**
-- ⚙️ Settings
-
-## 🏗️ Architecture
-
-The project follows the **IPC-Driven Layered Architecture** pattern:
-
-```
-┌─────────────────────────────────────┐
-│   Renderer Process (Angular UI)    │
-│   - Standalone Components           │
-│   - Angular Signals                 │
-│   - RxJS State Management          │
-└──────────────┬──────────────────────┘
-               │ IPC Communication
-               │ (Typed Channels)
-┌──────────────┴──────────────────────┐
-│   Main Process (Electron)           │
-│   - Controllers (validation)        │
-│   - Models (data access)            │
-│   - Database (SQLite)               │
-└─────────────────────────────────────┘
+```text
+┌──────────────────────────────────────┐
+│  Renderer (Angular)                  │
+│  pages, components, services         │
+└──────────────────┬───────────────────┘
+                   │ typed IPC channels
+┌──────────────────┴───────────────────┐
+│  Main process (Electron)             │
+│  controllers → models                │
+│  vault files · SQLite index · sync   │
+└──────────────────────────────────────┘
 ```
 
-## 📦 Technologies
+| Path | What |
+| --- | --- |
+| `electron/controllers/` | Input validation and orchestration, one per feature (campaign, document, encounter, map, review, section, template, compendium…) |
+| `electron/models/` | Data access: vault files, SQLite index |
+| `electron/database/` | SQLite setup, schemas, migrations |
+| `electron/ipc/` | Channel names, handler registration, push events |
+| `electron/preload.js` | Preload source (`preload.bundle.cjs` is generated, never edited) |
+| `src/app/config/api.ts` | Typed IPC channels for Angular |
+| `src/app/services/` | Angular services (`BaseIpcService` for IPC, workspace, file actions…) |
+| `src/app/layout/` | Shell: sidebar, toolbar, panes, tab bar |
+| `src/app/pages/` | Routed pages |
+| `src/app/shared/components/` | ArcTechUI component library (35 component folders) |
+| `public/i18n/` | Translations |
 
-- **Angular**: 21.1.0 (standalone components)
-- **Electron**: 40.4.0
-- **Tailwind CSS**: 4.1.18
-- **TypeScript**: 5.9.2
-- **Better-SQLite3**: 12.6.2
-- **ngx-translate**: 17.0.0 (i18n)
-- **RxJS**: 7.8.0
-- **Lucide Angular**: 0.563.0 (icons)
-- **ngx-sonner**: 3.1.0 (toasts)
-- **ECharts**: 6.0.0 (charts)
+## Routes
 
-## 🚀 Next Steps
+| Route | Page |
+| --- | --- |
+| `/setup/welcome`, `/setup/vault` | Setup flow |
+| `/campaigns` | Campaign list |
+| `/campaigns/:slug` | Campaign overview, `review`, and `:section` pages with their notes, encounters and maps |
+| `/compendium` | Systems and shared content |
+| `/templates`, `/battle-rules` | Template and tracker layout libraries |
+| `/settings/:section` | Settings |
 
-### 1. Install Dependencies
-```bash
-cd lazy_dm
-npm install
-```
+## Adding a feature
 
-### 2. Start Development
-```bash
-# Start Angular dev server only
-npm start
+1. Read the matching section of `DESIGN_PRINCIPLES.md`.
+2. Add the controller and model in `electron/`, and the channel in `electron/ipc/channels.js` and
+   `src/app/config/api.ts`.
+3. Run `npm run build:preload` and commit the regenerated bundle whenever channels change.
+4. Add the Angular service (extending `BaseIpcService`), the page or component, and the route.
+5. Put every user-facing string in the i18n files, in all 7 languages, using the glossary words (§1b).
+6. Run `npx ng build --configuration development`, `npm test` and `npm run test:electron`.
 
-# Or start full development environment (Angular + Electron)
-npm run dev
-```
+## Conventions
 
-### 3. Build for Production
-```bash
-# Build web app
-npm run build:prod
-
-# Create desktop distributable
-npm run dist
-```
-
-## ⚠️ Known TypeScript Errors
-
-The project currently shows TypeScript errors because:
-1. Node modules are not installed yet (`npm install` needed)
-2. Some imports reference modules that will be available after installation
-
-These errors will resolve after running `npm install`.
-
-## 🎯 Current State
-
-**Status**: ✅ Scaffolding Complete
-
-The project is a **fully functional scaffolding** with:
-- ✅ Complete UI framework
-- ✅ Routing system
-- ✅ Layout components
-- ✅ 4 empty page sections ready for development
-- ✅ Theme support (dark/light mode)
-- ✅ Responsive design
-- ✅ 60+ reusable UI components
-- ⏳ Database integration (to be implemented)
-- ⏳ IPC handlers (to be implemented)
-- ⏳ Business logic (to be implemented)
-
-## 📝 Development Guidelines
-
-### Code Style
-- Use **standalone components** (no NgModules)
-- Use **Angular signals** for reactive state
-- Use **inject()** function for dependency injection
-- Follow **PascalCase** for classes, **kebab-case** for files
-- Use `@/` path alias for app imports
-
-### Adding New Features
-1. Create page component in `src/app/pages/`
-2. Add route in `app.routes.ts`
-3. Add menu item in `config/menu.config.ts`
-4. Create IPC channel in `config/api.ts` (if needed)
-5. Create service extending `BaseIpcService` (if needed)
-
-### Component Pattern
-```typescript
-import { Component, inject } from '@angular/core';
-
-@Component({
-  selector: 'app-example',
-  imports: [/* standalone imports */],
-  template: `...`,
-})
-export class ExampleComponent {
-  private readonly service = inject(SomeService);
-}
-```
-
-## 📚 Resources
-
-- **Architecture Blueprint**: See `../architecture-blueprint.md`
-- **README**: See `README.md` for detailed setup instructions
-- **Expense Tracker Reference**: See `../expense_tracker/` for implementation examples
-
-## 🎉 Success!
-
-Your LazyDM project is ready for development. All reusable components from expense_tracker have been successfully integrated, and the project structure follows the established architecture patterns.
-
-Happy coding! 🚀
+- Standalone components, signals, `inject()` and the `@/` alias.
+- Semantic theme tokens only; both themes must work.
+- Prettier: `printWidth: 100`, single quotes.
+- Git: commit at the end of each completed step. The remote is `origin` (GitHub), and nothing is pushed unless the
+  user asks.
 
 ---
 
-**Created**: 2026-06-16  
-**Based on**: expense_tracker architecture  
-**Framework**: Angular 21 + Electron 40
+**Created**: 2026-06-16, from the expense_tracker architecture
+**Last updated**: 2026-10-26
