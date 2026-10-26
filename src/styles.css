@@ -442,12 +442,40 @@
   background: var(--border);
 }
 
+/*
+ * The centre diamond is the span, turned 45°; the two small ones beside it are its ::before / ::after. They live in
+ * the turned frame, so a screen-horizontal offset of --side is (±0.7071 · --side, ∓0.7071 · --side) there.
+ */
 .arc-engraved-divider > span {
+  --side: 19px;
+  --small: 7px;
+  position: relative;
   flex: none;
   width: 13px;
   height: 13px;
+  margin-inline: 15px;
   border: 1px solid var(--primary);
   transform: rotate(45deg);
+}
+
+.arc-engraved-divider > span::before,
+.arc-engraved-divider > span::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: var(--small);
+  height: var(--small);
+  margin: calc(var(--small) / -2 - 1px) 0 0 calc(var(--small) / -2 - 1px);
+  border: 1px solid var(--primary);
+}
+
+.arc-engraved-divider > span::before {
+  transform: translate(calc(var(--side) * -0.7071), calc(var(--side) * 0.7071));
+}
+
+.arc-engraved-divider > span::after {
+  transform: translate(calc(var(--side) * 0.7071), calc(var(--side) * -0.7071));
 }
 
 /*

@@ -732,7 +732,8 @@ Component behaviour, variant keys and configuration stay as they are.
   - Selected segments/tabs: bronze fill with canvas-coloured text.
   - Dialogs and sheets: no coloured header band, same surface throughout, large condensed title, a 2px
     `border-strong` frame; dialogs add the engraved divider
-    `<div class="arc-engraved-divider" aria-hidden="true"><span></span></div>` under the title. Backdrop is
+    `<div class="arc-engraved-divider" aria-hidden="true"><span></span></div>` under the title (a bronze ◇ with a
+    smaller one on each side, all drawn in CSS from that one `<span>`). Backdrop is
     `rgb(3 5 7 / 82%)`.
   - Alerts: full 1px border plus a 3px left bar in the state colour. `destructive` is for things that failed or
     cannot continue; `warning` (the `--warning` bronze-gold bar and icon, normal text) is for things worth a look
