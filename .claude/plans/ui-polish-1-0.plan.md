@@ -17,7 +17,7 @@ the editor controls. Dropped: old Phases 1 (dot), 4 (editor controls) and the mo
 | Phase | Scope | Command | Risk | Status | Commit |
 | --- | --- | --- | --- | --- | --- |
 | A | Split screen bugs: Back to campaigns, Settings sidebar | none | low | code done, not checked live | |
-| 0 | Review the screens not yet seen, richer fixture, **and the split screen** | `/impeccable:critique` | none | pending | |
+| 0 | Review the screens not yet seen, richer fixture, **and the split screen** | `/impeccable:critique` | none | mostly done (see Phase 0 findings) | |
 | 2 | Campaign sidebar: collapse empty sections, counts (fonts stay) | `/impeccable:normalize` | low | pending | |
 | 3 | Creation flow: *New...*, fewer steps | `/impeccable:clarify` | medium | pending | |
 | 5 | Light theme and control states, **reversible** | `/impeccable:audit` then `/impeccable:colorize` | medium | pending | |
@@ -50,8 +50,8 @@ was lost and a Settings sidebar entry could not be selected.
 Settings → General gets a switch: *Open the last campaign at start*. Off by default, device-local (§3: preferences like theme
 and language are per device and never stored in the Codex).
 
-- [ ] 8.1 Question for the user: which campaign counts as last (the last one opened, restoring its active tab through
-      `getEntryUrl`), and what if it was deleted or the Codex is another one (fall back to the list)
+- [x] 8.1 Answered by the user (2026-10-26): the last campaign opened, restored through `getEntryUrl` with its tabs and split;
+      a deleted campaign (or another Codex) falls back to the list; it applies **at launch only**, never when the window reopens
 - [ ] 8.2 `LocalPreferencesService`: a boolean and the last campaign slug. **Ask before adding the preference key** (new
       key with no similar counterpart? check the existing keys first; it is likely the same pattern as other settings)
 - [ ] 8.3 Start-up redirect where `/` goes to `/campaigns` today (route or guard in `app.routes.ts`); only on the first
@@ -84,6 +84,39 @@ no longer marks anything and the Settings page repeats title and description (si
       Keep the sidebar entry as a plain label, keep the heading, drop the repeated description from the sidebar row
 - [ ] 1.4 Update DESIGN_PRINCIPLES §9 and CLAUDE.md to the new rule; both themes checked
 - Validate: build; grep that no sidebar row or sub-heading still carries the span; screenshots of Settings, overview, a note
+
+### Phase 0 findings (2026-10-26)
+
+Seen with `mock-electron-rich.js` (campaign with a map, a running encounter, Review data), light theme, 1360 px:
+encounter page, map page, map with a split side, Review, Tracker layouts sheet (empty state).
+Not seen: Tracker layouts editor with a layout open, Compendium sheet, Links panel, dark theme of these pages, ~900 px.
+The browser actions timed out at the end; finish these in the next step.
+
+- [x] 0.1 Fixture: `.claude/plans/mock-electron-rich.js`. Gaps found while using it were fixture gaps, not app bugs
+      (`documents.brokenLinks` was missing; the dev server answers 404 to a path ending in `.json`)
+- [x] 0.2 Verified: *Open to the side* on a pin with a linked note opens the second side with that note, no console error
+- [ ] 0.3 Finish: Tracker layouts editor, Compendium sheet, Links panel, dark theme, ~900 px, Cemetery, a narrow split
+
+Findings, most important first:
+
+1. **Sidebar repeats "Empty folder" under every section** on every page (already Phase 2). With 5 sections it fills the
+   column with five identical lines and pushes the real content down.
+2. **Split screen: both panes show the full campaign sidebar and the sidebar eats ~360 px.** At 1360 px each pane gets
+   about 400 px, which cuts the map toolbar and the note's code map. The sidebar toggle exists, but the split does not
+   offer to collapse it. *Question for the user: collapse the sidebar automatically when the second side opens?*
+3. **Split screen: the note in the second pane keeps its view row, code map and properties button at full size** while
+   the pane is narrow; the code map takes about a third of the editor width.
+4. **Split screen: tab bar controls (back, forward, +) repeat on both sides** and the active tab of the unfocused side
+   is drawn grey, which reads as disabled rather than "inactive". The brief asks for a neutral underline, so the
+   behaviour is as designed; the grey on the Save button of the unfocused note is the part that looks disabled.
+5. **Map**: the tool palette sits on the image with no label; Pin, Path, Note and Select are icons only. The "On this
+   map" panel lists the same items as the map, which is useful, but its header is mono and small next to a large title.
+6. **Review**: the first group is "Broken links" with a mono count line ("Broken links: 1 · notes: 1") that repeats the
+   group title. The delete (trash) button on each row has no label and sits beside *Move to…* with the same weight.
+7. **Encounter page**: strong. The battle bar, round counter and turn marker read well. The rows are dense but
+   consistent; the heart (manage HP) button and the note icon have no visible label.
+8. **Tracker layouts sheet**: when nothing is picked it shows only "Pick a tracker layout on the left, or create one."
+   in a very large empty panel; the one built-in layout could be preselected.
 
 ## Phase 2. The campaign sidebar reads as an IDE
 
