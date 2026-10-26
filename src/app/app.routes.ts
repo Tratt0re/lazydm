@@ -2,6 +2,7 @@ import type { Route, Routes, UrlMatchResult, UrlSegment } from '@angular/router'
 
 import { openInSheetGuard } from '@/guards/app-sheet.guard';
 import { CAMPAIGN_SLUG_PARAM, campaignEntryGuard, campaignGuard } from '@/guards/campaign.guard';
+import { launchGuard } from '@/guards/launch.guard';
 import { documentLeaveGuard } from '@/guards/document-leave.guard';
 import { setupEntryGuard } from '@/guards/setup.guard';
 import { SYSTEM_SLUG_PARAM, systemGuard } from '@/guards/system.guard';
@@ -284,7 +285,14 @@ export const routes: Routes = [
     path: '',
     canMatch: [vaultGuard],
     children: [
-      { path: '', pathMatch: 'full', redirectTo: 'campaigns' },
+      // At launch: the last campaign when Settings → General asks for it (see launchGuard); otherwise the list.
+      {
+        path: '',
+        pathMatch: 'full',
+        canActivate: [launchGuard],
+        loadComponent: () =>
+          import('./pages/campaign-list-page/campaign-list-page').then((m) => m.CampaignListPage),
+      },
       // Compendium, Templates and Settings links open in the full-page sheet over the current page.
       { matcher: matchSheetPaths, canActivate: [openInSheetGuard], children: [] },
       {

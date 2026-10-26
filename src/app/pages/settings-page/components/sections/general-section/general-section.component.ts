@@ -34,11 +34,16 @@ export class GeneralSectionComponent {
   protected readonly selectedLanguage = this.i18nService.language;
   private readonly localPreferences = inject(LocalPreferencesService);
   protected readonly showFileSizes = this.localPreferences.showFileSizes;
+  protected readonly openLastCampaign = this.localPreferences.openLastCampaign;
   protected readonly trackerRowDensity = this.localPreferences.trackerRowDensity;
   protected readonly trackerRowDensities = TRACKER_ROW_DENSITIES;
 
   protected setShowFileSizes(show: boolean): void {
     this.localPreferences.setShowFileSizes(show);
+  }
+
+  protected setOpenLastCampaign(open: boolean): void {
+    this.localPreferences.setOpenLastCampaign(open);
   }
 
   protected onTrackerRowDensityChange(value: string | string[]): void {

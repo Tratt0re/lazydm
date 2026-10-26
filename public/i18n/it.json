@@ -86,6 +86,13 @@
           "fieldLabel": "Lingua app"
         }
       },
+      "startup": {
+        "title": "Avvio",
+        "openLastCampaign": {
+          "label": "Apri l'ultima campagna",
+          "description": "All'avvio, apri la campagna su cui hai lavorato per ultima, con le sue schede e la divisione. Altrimenti si apre l'elenco delle campagne."
+        }
+      },
       "lists": {
         "title": "Elenchi",
         "fileSizes": {

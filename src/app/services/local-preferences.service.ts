@@ -34,6 +34,11 @@ export class LocalPreferencesService {
   private readonly showFileSizesSignal = signal<boolean>(LOCAL_PREFERENCE_DEFAULTS.showFileSizes);
   /** Settings → General → file sizes in the section lists, on this device. */
   readonly showFileSizes = this.showFileSizesSignal.asReadonly();
+  private readonly openLastCampaignSignal = signal<boolean>(
+    LOCAL_PREFERENCE_DEFAULTS.openLastCampaign,
+  );
+  /** Settings → General → open the last campaign at start, on this device. */
+  readonly openLastCampaign = this.openLastCampaignSignal.asReadonly();
   private readonly trackerRowDensitySignal = signal<TrackerRowDensity>(
     LOCAL_PREFERENCE_DEFAULTS.trackerRowDensity,
   );
@@ -54,6 +59,7 @@ export class LocalPreferencesService {
     this.setOnboardingCompleted(this.getOnboardingCompleted());
     this.applyEditorSettings(this.readEditorSettings());
     this.showFileSizesSignal.set(this.getShowFileSizes());
+    this.openLastCampaignSignal.set(this.getOpenLastCampaign());
     this.trackerRowDensitySignal.set(this.getTrackerRowDensity());
   }
 
@@ -131,6 +137,31 @@ export class LocalPreferencesService {
   setShowFileSizes(show: boolean): void {
     this.showFileSizesSignal.set(show);
     this.setText(LocalPreferenceKey.SHOW_FILE_SIZES, show ? '1' : '0');
+  }
+
+  /** Settings → General: open the last campaign at start, on this device. */
+  getOpenLastCampaign(): boolean {
+    const value = this.getText(LocalPreferenceKey.OPEN_LAST_CAMPAIGN);
+    return value === undefined ? LOCAL_PREFERENCE_DEFAULTS.openLastCampaign : value === '1';
+  }
+
+  setOpenLastCampaign(open: boolean): void {
+    this.openLastCampaignSignal.set(open);
+    this.setText(LocalPreferenceKey.OPEN_LAST_CAMPAIGN, open ? '1' : '0');
+  }
+
+  /**
+   * The campaign opened last on this vault (per device, so it never goes into the Codex). Stored as
+   * `<vault id>:<campaign slug>` so a campaign of another Codex is never reused.
+   */
+  getLastCampaign(vaultId: string): string | null {
+    const value = this.getText(LocalPreferenceKey.LAST_CAMPAIGN);
+    const prefix = `${vaultId}:`;
+    return value?.startsWith(prefix) ? value.slice(prefix.length) || null : null;
+  }
+
+  setLastCampaign(vaultId: string, slug: string): void {
+    this.setText(LocalPreferenceKey.LAST_CAMPAIGN, `${vaultId}:${slug}`);
   }
 
   getTrackerRowDensity(): TrackerRowDensity {

@@ -40,6 +40,27 @@
 
   <section class="rounded-lg border border-border/60 bg-card p-4 md:p-5">
     <h3 class="mb-3 font-display text-lg font-semibold tracking-wide uppercase">
+      {{ 'settings.general.startup.title' | translate }}<span class="text-primary" aria-hidden="true">.</span>
+    </h3>
+    <div class="flex items-start justify-between gap-4">
+      <div class="min-w-0">
+        <p class="text-sm font-medium">
+          {{ 'settings.general.startup.openLastCampaign.label' | translate }}
+        </p>
+        <p class="mt-1 text-xs text-muted-foreground">
+          {{ 'settings.general.startup.openLastCampaign.description' | translate }}
+        </p>
+      </div>
+      <arc-switch
+        [arcChecked]="openLastCampaign()"
+        [arcAriaLabel]="'settings.general.startup.openLastCampaign.label' | translate"
+        (arcCheckedChange)="setOpenLastCampaign($event)"
+      />
+    </div>
+  </section>
+
+  <section class="rounded-lg border border-border/60 bg-card p-4 md:p-5">
+    <h3 class="mb-3 font-display text-lg font-semibold tracking-wide uppercase">
       {{ 'settings.general.lists.title' | translate }}<span class="text-primary" aria-hidden="true">.</span>
     </h3>
     <div class="flex items-start justify-between gap-4">

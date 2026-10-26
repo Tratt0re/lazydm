@@ -11,6 +11,8 @@ export enum LocalPreferenceKey {
   EDITOR_SETTINGS = 'editor_settings',
   NOTE_AUDIO_VOLUME = 'note_audio_volume',
   SHOW_FILE_SIZES = 'show_file_sizes',
+  OPEN_LAST_CAMPAIGN = 'open_last_campaign',
+  LAST_CAMPAIGN = 'last_campaign',
   SPLIT_RATIO = 'split_ratio',
   TRACKER_ROW_DENSITY = 'tracker_row_density',
 }
@@ -99,6 +101,8 @@ export interface LocalPreferences {
   readonly noteAudioVolume: number;
   /** Whether the file rows of the section pages show the size of the file. */
   readonly showFileSizes: boolean;
+  /** Settings → General: open the last campaign at start instead of the campaign list. */
+  readonly openLastCampaign: boolean;
   /** Height of a combatant row in the encounter page. */
   readonly trackerRowDensity: TrackerRowDensity;
 }
@@ -112,5 +116,6 @@ export const LOCAL_PREFERENCE_DEFAULTS: Readonly<LocalPreferences> = Object.free
   documentPropertiesOpen: false,
   noteAudioVolume: 1,
   showFileSizes: false,
+  openLastCampaign: false,
   trackerRowDensity: 'compact',
 });

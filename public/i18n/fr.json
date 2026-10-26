@@ -86,6 +86,13 @@
           "fieldLabel": "Langue de l'application"
         }
       },
+      "startup": {
+        "title": "Démarrage",
+        "openLastCampaign": {
+          "label": "Ouvrir la dernière campagne",
+          "description": "Au démarrage, ouvre la campagne sur laquelle tu as travaillé en dernier, avec ses onglets et son découpage. Sinon, la liste des campagnes s’ouvre."
+        }
+      },
       "lists": {
         "title": "Listes",
         "fileSizes": {

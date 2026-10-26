@@ -86,6 +86,13 @@
           "fieldLabel": "App language"
         }
       },
+      "startup": {
+        "title": "Startup",
+        "openLastCampaign": {
+          "label": "Open the last campaign",
+          "description": "Open the campaign you worked on last when the app starts, with its tabs and split. Otherwise the app opens the campaign list."
+        }
+      },
       "lists": {
         "title": "Lists",
         "fileSizes": {

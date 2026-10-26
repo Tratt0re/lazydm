@@ -86,6 +86,13 @@
           "fieldLabel": "Idioma de la app"
         }
       },
+      "startup": {
+        "title": "Inicio",
+        "openLastCampaign": {
+          "label": "Abrir la última campaña",
+          "description": "Al iniciar, abre la campaña en la que trabajaste por última vez, con sus pestañas y la división. Si no, se abre la lista de campañas."
+        }
+      },
       "lists": {
         "title": "Listas",
         "fileSizes": {

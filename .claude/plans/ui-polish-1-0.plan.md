@@ -22,7 +22,7 @@ the editor controls. Dropped: old Phases 1 (dot), 4 (editor controls) and the mo
 | 3 | Creation flow: *New...*, fewer steps | `/impeccable:clarify` | medium | done (the picker stays a dropdown) | |
 | 5 | Light theme and control states, **reversible** | `/impeccable:audit` then `/impeccable:colorize` | medium | pending | |
 | 6 | Copy and small fixes (watermark stays) | `/impeccable:clarify` | low | pending | |
-| 8 | Setting: open the last opened campaign at start | none | low | pending | |
+| 8 | Setting: open the last opened campaign at start | none | low | done (checked in the browser; not merged to a release) | |
 | 7 | Final pass, both themes, 7 languages, narrow window | `/impeccable:polish` | none | pending | |
 
 ## Phase A. Split screen bugs
@@ -216,3 +216,5 @@ Settings switch is hard to read as on or off; a disabled Save looks like a muted
 
 - 2026-10-26: plan written from the critique. No code touched.
 - 2026-10-26: scope revised by the user (look stays). Phase A fix written in `workspace.service.ts`, 47 specs pass; not yet checked in the running app, not committed.
+
+- 2026-10-26: Phase 8 done. Setting in Settings → General (*Startup*), per device. `launchGuard` (root route) sends the first navigation of a launch to the last campaign of this vault (`last_campaign` = `<vault id>:<slug>`, written by `campaignGuard`); a deleted campaign or no saved one goes to the list; later visits to `/` and *Back to campaigns* go to the list. Checked live: launch goes to the campaign; *Back to campaigns* and a second `/` show the list; deleted campaign shows the list.

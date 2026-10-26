@@ -86,6 +86,13 @@
           "fieldLabel": "App-Sprache"
         }
       },
+      "startup": {
+        "title": "Start",
+        "openLastCampaign": {
+          "label": "Letzte Kampagne öffnen",
+          "description": "Beim Start die Kampagne öffnen, an der du zuletzt gearbeitet hast, mit ihren Tabs und der geteilten Ansicht. Sonst öffnet sich die Kampagnenliste."
+        }
+      },
       "lists": {
         "title": "Listen",
         "fileSizes": {

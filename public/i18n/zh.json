@@ -86,6 +86,13 @@
           "fieldLabel": "应用语言"
         }
       },
+      "startup": {
+        "title": "启动",
+        "openLastCampaign": {
+          "label": "启动时打开上次的战役",
+          "description": "启动时打开你最后使用的战役，包括它的标签页和分屏。否则打开战役列表。"
+        }
+      },
       "lists": {
         "title": "列表",
         "fileSizes": {
