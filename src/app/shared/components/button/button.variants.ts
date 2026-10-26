@@ -36,8 +36,9 @@ export const buttonVariants = cva(
       arcLoading: {
         true: 'opacity-50 pointer-events-none',
       },
+      // Not a faded copy of the button: an empty outline with muted text, so it never reads as a filled (active) one.
       arcDisabled: {
-        true: 'pointer-events-none opacity-50',
+        true: 'pointer-events-none border-dashed border-border bg-transparent text-muted-foreground hover:border-border hover:bg-transparent',
       },
     },
     defaultVariants: {
