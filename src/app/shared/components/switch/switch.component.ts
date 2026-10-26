@@ -15,6 +15,7 @@ import { type ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 import type { ClassValue } from 'clsx';
 
+import { ArcTechIconComponent } from '@/shared/components/icon';
 import { ArcTechIdDirective } from '@/shared/core';
 import { mergeClasses, noopFn } from '@/shared/utils/merge-classes';
 
@@ -30,7 +31,7 @@ type OnChangeType = (value: boolean) => void;
 
 @Component({
   selector: 'arc-switch',
-  imports: [ArcTechIdDirective],
+  imports: [ArcTechIconComponent, ArcTechIdDirective],
   template: `
     <span class="inline-flex min-h-11 items-center" arcTechId="switch" #z="arcTechId"
     [class.gap-2]="hasLabel()">
@@ -54,8 +55,13 @@ type OnChangeType = (value: boolean) => void;
           <span
             [attr.data-size]="arcSize()"
             [attr.data-state]="status()"
-            class="bg-muted-foreground data-[state=checked]:bg-primary-foreground pointer-events-none block h-5 w-5 rounded-none ring-0 transition-transform data-[size=lg]:h-6 data-[size=lg]:w-6 data-[size=sm]:h-4 data-[size=sm]:w-4 data-[state=checked]:translate-x-5 data-[size=lg]:data-[state=checked]:translate-x-6 data-[size=sm]:data-[state=checked]:translate-x-4 data-[state=unchecked]:translate-x-0 data-[size=lg]:data-[state=unchecked]:translate-x-0 data-[size=sm]:data-[state=unchecked]:translate-x-0"
-          ></span>
+            class="bg-muted-foreground data-[state=checked]:bg-primary-foreground pointer-events-none flex h-5 w-5 items-center justify-center rounded-none ring-0 transition-transform data-[size=lg]:h-6 data-[size=lg]:w-6 data-[size=sm]:h-4 data-[size=sm]:w-4 data-[state=checked]:translate-x-5 data-[size=lg]:data-[state=checked]:translate-x-6 data-[size=sm]:data-[state=checked]:translate-x-4 data-[state=unchecked]:translate-x-0 data-[size=lg]:data-[state=unchecked]:translate-x-0 data-[size=sm]:data-[state=unchecked]:translate-x-0"
+          >
+            <!-- The on state is told by a mark as well as by the colour. -->
+            @if (arcChecked()) {
+              <arc-icon arcType="check" [arcStrokeWidth]="3" class="size-3 text-primary" aria-hidden="true" />
+            }
+          </span>
         </span>
       </button>
 
