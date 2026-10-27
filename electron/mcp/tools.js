@@ -303,7 +303,7 @@ function registerReadTools(server, scope, c) {
       description:
         'The tracker layout (battle rule) the encounters of a campaign follow, and how to fill it: its fields ' +
         'with the key, the kind of value each takes and where it is read from, the dice formula for initiative, and ' +
-        'the frontmatter keys of the notes it reads (from the rule\'s template). Call this before create_encounter, ' +
+        "the frontmatter keys of the notes it reads (from the rule's template). Call this before create_encounter, " +
         'so the entities use the campaign\'s own fields. Pass "encounter" to ask about one existing encounter.',
       inputSchema: {
         scope: z.string().describe('Campaign slug, or "compendium/<system>".'),
@@ -664,19 +664,28 @@ function registerGameFileTools(server, scope, c) {
       description:
         'Creates an encounter (a combat tracker file) in the Encounters folder of a campaign and fills it with ' +
         'combatants. Call get_encounter_rule first: each entity\'s "values" are keyed by the fields of the ' +
-        'campaign\'s tracker layout and checked against it, and a note-link value ties an entity to a stat-block ' +
+        "campaign's tracker layout and checked against it, and a note-link value ties an entity to a stat-block " +
         'note (its frontmatter then supplies the stats, so set only what differs). quantity makes numbered copies ' +
         '("Goblin 1", "Goblin 2"). The battle stays idle: the user starts it in the app. A taken name fails; ' +
         'embed the result in a note with ![[linkTarget]].',
       inputSchema: {
         folder: z.string().describe('Encounters folder, e.g. "my-campaign/encounters".'),
         name: z.string().describe('Encounter name; the file name is its slug.'),
-        notes: z.string().optional().describe('Free text notes for the encounter (what the DM should remember).'),
+        notes: z
+          .string()
+          .optional()
+          .describe('Free text notes for the encounter (what the DM should remember).'),
         entities: z
           .array(
             z.object({
               name: z.string().describe('Combatant name.'),
-              quantity: z.number().int().min(1).max(15).optional().describe('Numbered copies, 1 to 15.'),
+              quantity: z
+                .number()
+                .int()
+                .min(1)
+                .max(15)
+                .optional()
+                .describe('Numbered copies, 1 to 15.'),
               values: z
                 .record(z.string(), z.unknown())
                 .optional()
@@ -694,7 +703,7 @@ function registerGameFileTools(server, scope, c) {
     'create_map',
     {
       description:
-        'Creates an interactive map on an image already in the campaign\'s assets (add it with add_asset first), ' +
+        "Creates an interactive map on an image already in the campaign's assets (add it with add_asset first), " +
         'with optional pins, paths and text notes. All coordinates are fractions of the image from 0 to 1, origin ' +
         'top-left (x to the right, y down). A pin link must be a note, asset or encounter of the same campaign. ' +
         'Colours and icons come from fixed lists. A taken name fails; embed the result with ![[linkTarget]].',
@@ -718,7 +727,10 @@ function registerGameFileTools(server, scope, c) {
         paths: z
           .array(
             z.object({
-              points: z.array(z.object({ x: unitNumber, y: unitNumber })).min(2).max(200),
+              points: z
+                .array(z.object({ x: unitNumber, y: unitNumber }))
+                .min(2)
+                .max(200),
               label: z.string().optional(),
               color: mapColor.optional(),
               width: z.number().int().min(1).max(12).optional(),

@@ -39,7 +39,9 @@ async function loadRule(c, root, encounterPath = null) {
   }
 
   // Only campaigns can choose a rule; a compendium system always uses the built-in one.
-  const choice = root.includes('/') ? null : (await c.battleRule.getChoice({ campaign: root })).rule;
+  const choice = root.includes('/')
+    ? null
+    : (await c.battleRule.getChoice({ campaign: root })).rule;
   if (choice && choice !== 'builtin') {
     return {
       rule: (await c.battleRule.read({ path: choice })).rule,
@@ -247,7 +249,9 @@ async function createEncounter(c, scope, input) {
   const folder = scope.resolve(input.folder);
   const location = parseSectionFolder(folder);
   if (!location || location.section !== ENCOUNTERS_SECTION) {
-    throw new Error(`${folder} is not an Encounters folder (for example "my-campaign/encounters").`);
+    throw new Error(
+      `${folder} is not an Encounters folder (for example "my-campaign/encounters").`,
+    );
   }
 
   const { rule } = await loadRule(c, location.scope);
@@ -269,7 +273,9 @@ async function createEncounter(c, scope, input) {
       );
     }
     if (saved.status !== 'saved') {
-      throw new Error(`Created ${created.path} but it changed before it could be filled. Read it again.`);
+      throw new Error(
+        `Created ${created.path} but it changed before it could be filled. Read it again.`,
+      );
     }
   }
 

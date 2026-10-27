@@ -15,11 +15,41 @@ const GENERIC_RULE = {
   template: 'builtin:enemy',
   initiative: { roll: '1d20 + {initiative_mod}' },
   fields: [
-    { key: 'initiative', component: 'initiative', label: 'encounters.fields.initiative', source: 'entity', showInRow: true },
-    { key: 'ac', component: 'number', label: 'encounters.fields.ac', source: 'frontmatter:ac', showInRow: true },
-    { key: 'hp', component: 'healthbar', label: 'encounters.fields.hp', source: 'frontmatter:hp', showInRow: true },
-    { key: 'statuses', component: 'statuses', label: 'encounters.fields.statuses', source: 'entity', showInRow: true },
-    { key: 'note', component: 'note-link', label: 'encounters.fields.note', source: 'entity', showInRow: true },
+    {
+      key: 'initiative',
+      component: 'initiative',
+      label: 'encounters.fields.initiative',
+      source: 'entity',
+      showInRow: true,
+    },
+    {
+      key: 'ac',
+      component: 'number',
+      label: 'encounters.fields.ac',
+      source: 'frontmatter:ac',
+      showInRow: true,
+    },
+    {
+      key: 'hp',
+      component: 'healthbar',
+      label: 'encounters.fields.hp',
+      source: 'frontmatter:hp',
+      showInRow: true,
+    },
+    {
+      key: 'statuses',
+      component: 'statuses',
+      label: 'encounters.fields.statuses',
+      source: 'entity',
+      showInRow: true,
+    },
+    {
+      key: 'note',
+      component: 'note-link',
+      label: 'encounters.fields.note',
+      source: 'entity',
+      showInRow: true,
+    },
   ],
 };
 
@@ -29,8 +59,21 @@ const CUSTOM_RULE = {
   template: '_templates/pf-enemy.md',
   initiative: { roll: '1d20 + {perception}' },
   fields: [
-    { key: 'initiative', component: 'initiative', label: 'Init', source: 'entity', showInRow: true },
-    { key: 'side', component: 'side', label: 'Side', source: 'entity', showInRow: true, options: ['foe', 'pc'] },
+    {
+      key: 'initiative',
+      component: 'initiative',
+      label: 'Init',
+      source: 'entity',
+      showInRow: true,
+    },
+    {
+      key: 'side',
+      component: 'side',
+      label: 'Side',
+      source: 'entity',
+      showInRow: true,
+      options: ['foe', 'pc'],
+    },
     { key: 'hp', component: 'healthbar', label: 'HP', source: 'frontmatter:hp', showInRow: true },
     { key: 'trait', component: 'text', label: 'Trait', source: 'entity', showInRow: true },
     { key: 'note', component: 'note-link', label: 'Note', source: 'entity', showInRow: true },
@@ -115,7 +158,14 @@ function createStubControllers() {
       read: record('map.read', { path: 'lost-mine/maps/world.json', map: {}, contentHash: 'm1' }),
       create: record('map.create', (payload) => ({
         path: `${payload.folder}/${payload.name.toLowerCase().replace(/\s+/g, '-')}.json`,
-        map: { version: 1, name: payload.name, image: payload.image, pins: [], paths: [], notes: [] },
+        map: {
+          version: 1,
+          name: payload.name,
+          image: payload.image,
+          pins: [],
+          paths: [],
+          notes: [],
+        },
         contentHash: 'm1',
       })),
       write: record('map.write', { status: 'saved', contentHash: 'm2' }),
@@ -320,9 +370,16 @@ describe('get_encounter_rule', () => {
     await connect({ allowWrite: false, roots: ['lost-mine'] });
 
     expect((await call('get_encounter_rule', { scope: 'other' })).isError).toBe(true);
-    expect((await call('get_encounter_rule', { scope: 'lost-mine/encounters' })).isError).toBe(true);
+    expect((await call('get_encounter_rule', { scope: 'lost-mine/encounters' })).isError).toBe(
+      true,
+    );
     expect(
-      (await call('get_encounter_rule', { scope: 'lost-mine', encounter: 'other/encounters/a.json' })).isError,
+      (
+        await call('get_encounter_rule', {
+          scope: 'lost-mine',
+          encounter: 'other/encounters/a.json',
+        })
+      ).isError,
     ).toBe(true);
   });
 });
@@ -341,7 +398,12 @@ describe('create_encounter', () => {
         {
           name: 'Goblin',
           quantity: 3,
-          values: { hp: { max: 7 }, ac: 15, statuses: [{ name: 'hidden', rounds: 2 }], note: 'lost-mine/enemies/goblin.md' },
+          values: {
+            hp: { max: 7 },
+            ac: 15,
+            statuses: [{ name: 'hidden', rounds: 2 }],
+            note: 'lost-mine/enemies/goblin.md',
+          },
         },
         { name: 'Klarg', values: { hp: 27, initiative: 12 } },
       ],
@@ -370,7 +432,10 @@ describe('create_encounter', () => {
       statuses: [{ name: 'hidden', rounds: 2 }],
       note: 'lost-mine/enemies/goblin.md',
     });
-    expect(written.encounter.entities[3].values).toEqual({ hp: { current: 27, max: 27 }, initiative: 12 });
+    expect(written.encounter.entities[3].values).toEqual({
+      hp: { current: 27, max: 27 },
+      initiative: 12,
+    });
     expect(written.encounter.entities.every((entity) => entity.isDead === false)).toBe(true);
     // Copies never share one values object.
     written.encounter.entities[0].values.hp.current = 1;
@@ -433,13 +498,23 @@ describe('create_encounter', () => {
   it('refuses a folder that is not an Encounters folder, another campaign, and too many combatants', async () => {
     const controllers = await connect({ allowWrite: true, roots: ['lost-mine'] });
 
-    expect((await call('create_encounter', { folder: 'lost-mine/scenes', name: 'X' })).isError).toBe(true);
-    expect((await call('create_encounter', { folder: 'lost-mine', name: 'X' })).isError).toBe(true);
-    expect((await call('create_encounter', { folder: 'other/encounters', name: 'X' })).isError).toBe(true);
     expect(
-      (await call('create_encounter', { folder, name: 'Horde', entities: [{ name: 'Rat', quantity: 15 }].concat(
-        Array.from({ length: 7 }, (_, index) => ({ name: `Rat ${index}`, quantity: 15 })),
-      ) })).isError,
+      (await call('create_encounter', { folder: 'lost-mine/scenes', name: 'X' })).isError,
+    ).toBe(true);
+    expect((await call('create_encounter', { folder: 'lost-mine', name: 'X' })).isError).toBe(true);
+    expect(
+      (await call('create_encounter', { folder: 'other/encounters', name: 'X' })).isError,
+    ).toBe(true);
+    expect(
+      (
+        await call('create_encounter', {
+          folder,
+          name: 'Horde',
+          entities: [{ name: 'Rat', quantity: 15 }].concat(
+            Array.from({ length: 7 }, (_, index) => ({ name: `Rat ${index}`, quantity: 15 })),
+          ),
+        })
+      ).isError,
     ).toBe(true);
     expect(controllers.encounter.create).not.toHaveBeenCalled();
   });
@@ -503,10 +578,26 @@ describe('create_map', () => {
       name: 'World Map',
       image: 'lost-mine/assets/world.png',
       pins: [
-        { x: 0.25, y: 0.5, label: 'Phandalin', icon: 'house', color: 'green', link: 'lost-mine/locations/phandalin.md' },
+        {
+          x: 0.25,
+          y: 0.5,
+          label: 'Phandalin',
+          icon: 'house',
+          color: 'green',
+          link: 'lost-mine/locations/phandalin.md',
+        },
         { x: 0.8, y: 0.1, label: 'Cave', icon: 'skull' },
       ],
-      paths: [{ points: [{ x: 0.1, y: 0.1 }, { x: 0.4, y: 0.4 }], label: 'Road', width: 4 }],
+      paths: [
+        {
+          points: [
+            { x: 0.1, y: 0.1 },
+            { x: 0.4, y: 0.4 },
+          ],
+          label: 'Road',
+          width: 4,
+        },
+      ],
       notes: [{ x: 0.5, y: 0.5, text: 'Ambush here', color: 'red' }],
     });
 
@@ -525,7 +616,11 @@ describe('create_map', () => {
     });
     const written = controllers.map.write.mock.calls[0][0];
     expect(written.expectedHash).toBe('m1');
-    expect(written.map.pins[0]).toMatchObject({ x: 0.25, y: 0.5, link: 'lost-mine/locations/phandalin.md' });
+    expect(written.map.pins[0]).toMatchObject({
+      x: 0.25,
+      y: 0.5,
+      link: 'lost-mine/locations/phandalin.md',
+    });
     expect(written.map.pins[1].link).toBeNull();
   });
 
@@ -542,7 +637,7 @@ describe('create_map', () => {
     expect(controllers.map.create).not.toHaveBeenCalled();
   });
 
-  it('keeps pin links inside the map\'s own campaign and the scope', async () => {
+  it("keeps pin links inside the map's own campaign and the scope", async () => {
     const controllers = await connectWithCodex({ allowWrite: true, roots: ['lost-mine', 'other'] });
 
     const crossCampaign = await call('create_map', {
@@ -568,10 +663,22 @@ describe('create_map', () => {
     const controllers = await connectWithCodex({ allowWrite: true, roots: ['lost-mine'] });
 
     expect(
-      (await call('create_map', { folder: 'lost-mine/scenes', name: 'M', image: 'lost-mine/assets/world.png' })).isError,
+      (
+        await call('create_map', {
+          folder: 'lost-mine/scenes',
+          name: 'M',
+          image: 'lost-mine/assets/world.png',
+        })
+      ).isError,
     ).toBe(true);
     expect(
-      (await call('create_map', { folder: 'other/maps', name: 'M', image: 'other/assets/world.png' })).isError,
+      (
+        await call('create_map', {
+          folder: 'other/maps',
+          name: 'M',
+          image: 'other/assets/world.png',
+        })
+      ).isError,
     ).toBe(true);
     for (const bad of [
       { pins: [{ x: 1.5, y: 0.5 }] },
@@ -580,7 +687,12 @@ describe('create_map', () => {
       { paths: [{ points: [{ x: 0, y: 0 }] }] },
       { notes: [{ x: 0.5, y: 0.5, text: 'x'.repeat(2001) }] },
     ]) {
-      const result = await call('create_map', { folder, name: 'M', image: 'lost-mine/assets/world.png', ...bad });
+      const result = await call('create_map', {
+        folder,
+        name: 'M',
+        image: 'lost-mine/assets/world.png',
+        ...bad,
+      });
       expect(result.isError, JSON.stringify(bad)).toBe(true);
     }
     expect(controllers.map.create).not.toHaveBeenCalled();
