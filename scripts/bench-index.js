@@ -5,6 +5,7 @@
 const fs = require('node:fs');
 const os = require('node:os');
 const path = require('node:path');
+const { Worker } = require('node:worker_threads');
 
 const ROOT = path.join(__dirname, '..');
 const noteCount = Number(process.argv[2] || 3000);
@@ -70,6 +71,43 @@ function generateVault(vaultPath) {
   }
 }
 
+/**
+ * Measures how long the main thread stays blocked. A timer on the main thread cannot: it only fires after the block
+ * ends. A worker thread watches a heartbeat the main thread writes, so a synchronous block shows up as a long gap.
+ */
+function startStallMonitor() {
+  const heartbeat = new Float64Array(new SharedArrayBuffer(8));
+  heartbeat[0] = Date.now();
+  const beat = setInterval(() => {
+    heartbeat[0] = Date.now();
+  }, 5);
+  const worker = new Worker(
+    `const { workerData, parentPort } = require('node:worker_threads');
+     const beat = new Float64Array(workerData);
+     let longest = 0; let total = 0; let count = 0;
+     const timer = setInterval(() => {
+       const gap = Date.now() - beat[0];
+       if (gap > 50) { total += gap; count += 1; }
+       if (gap > longest) longest = gap;
+     }, 5);
+     parentPort.on('message', () => { clearInterval(timer); parentPort.postMessage({ longest }); });`,
+    { eval: true, workerData: heartbeat.buffer },
+  );
+  return {
+    /** Longest stretch (ms) the main thread did not run since the monitor started or was last read. */
+    async read() {
+      return new Promise((resolve) => {
+        worker.once('message', ({ longest }) => resolve(longest));
+        worker.postMessage('stop');
+      });
+    },
+    stop() {
+      clearInterval(beat);
+      void worker.terminate();
+    },
+  };
+}
+
 /** Lets the file watcher report what LazyDM just wrote, then prints how many reloads the whole operation caused. */
 async function settle(label) {
   await sleep(1500);
@@ -83,6 +121,7 @@ async function main() {
   const indexer = require(path.join(ROOT, 'electron/controllers/indexer.controller.js'));
   const report = (label, startedAt) => console.log(`${label}: ${Date.now() - startedAt} ms`);
 
+  let monitor = startStallMonitor();
   let startedAt = Date.now();
   indexer.start({ id: 'bench', path: vaultPath });
   while (indexer.getStatus().status !== 'ready') {
@@ -93,23 +132,31 @@ async function main() {
     `full scan of ${indexer.getStatus().fileCount} files (${noteCount * LINKS_PER_NOTE} links)`,
     startedAt,
   );
+  console.log(`  main thread blocked for at most ${await monitor.read()} ms in a row`);
+  monitor.stop();
 
   fs.writeFileSync(
     path.join(vaultPath, 'camp-one', 'npcs', 'brand-new.md'),
     '---\ntitle: New\n---\n# New [[note-5]]\n',
   );
+  monitor = startStallMonitor();
   startedAt = Date.now();
   await indexer.reindexPaths(['camp-one/npcs/brand-new.md']);
   report('create one note', startedAt);
+  console.log(`  main thread blocked for at most ${await monitor.read()} ms in a row`);
+  monitor.stop();
   await settle('create one note');
 
   fs.renameSync(
     path.join(vaultPath, 'camp-one', 'enemies'),
     path.join(vaultPath, 'camp-one', 'monsters'),
   );
+  monitor = startStallMonitor();
   startedAt = Date.now();
   await indexer.reindexPaths(['camp-one/enemies', 'camp-one/monsters']);
   report(`rename a folder of ${noteCount / sections.length} notes`, startedAt);
+  console.log(`  main thread blocked for at most ${await monitor.read()} ms in a row`);
+  monitor.stop();
   await settle('rename a folder');
 
   // The echo skip must never hide a real change: an edit made by another app right after our own write.
