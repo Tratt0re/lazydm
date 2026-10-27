@@ -76,7 +76,7 @@
       },
       "mcp": {
         "title": "MCP",
-        "description": "Let AI assistants such as Claude Code or Codex work with your notes."
+        "description": "Let AI assistants such as Claude Code, OpenAI Codex or OpenCode work with your notes."
       }
     },
     "general": {
@@ -336,7 +336,7 @@
     "mcp": {
       "about": {
         "title": "What is MCP?",
-        "what": "MCP (Model Context Protocol) is a standard way for AI assistants to talk to an app. When it is on, LazyDM lets programs on this computer, like Claude Code or Codex, look up and work with your Codex.",
+        "what": "MCP (Model Context Protocol) is a standard way for AI assistants to talk to an app. When it is on, LazyDM lets programs on this computer, like Claude Code, OpenAI Codex or OpenCode, look up and work with your Codex.",
         "use": "Use it to ask an assistant to find a note, prepare a session, draft an enemy or tidy your links, using your real notes.",
         "risksTitle": "Risks",
         "riskRead": "Any program that has the token can read every note of the open Codex.",
@@ -382,7 +382,8 @@
         "title": "Connect an assistant",
         "hint": "Copy a line into the assistant. They only work while the server runs.",
         "copy": "Copy",
-        "codexEnv": "Then set the token in the terminal that starts Codex:"
+        "tokenEnv": "Then set the token in the terminal that starts OpenAI Codex or OpenCode:",
+        "opencode": "Paste this into the file, or merge the \"mcp\" part if it already exists. It reads the token from the variable set below."
       },
       "copied": "Copied",
       "copyError": "Couldn’t copy",
@@ -398,8 +399,9 @@
         "title": "Keep agents on MCP only",
         "why": "The limits above apply to MCP. An assistant that can also edit files or run commands on this computer can write .md files in your Codex folder directly and skip them. That is controlled in the assistant, not in LazyDM.",
         "claude": "In Claude Code, deny file edits in the Codex folder, in ~/.claude/settings.json, and keep shell commands on ask-first:",
-        "codex": "In Codex, start it read-only, in ~/.codex/config.toml (or with --sandbox read-only):",
-        "limits": "A deny rule does not stop every shell command, and nothing here replaces a backup of your Codex."
+        "codex": "In OpenAI Codex, start it read-only, in ~/.codex/config.toml (or with --sandbox read-only):",
+        "limits": "A deny rule does not stop every shell command, and nothing here replaces a backup of your Codex.",
+        "opencode": "In OpenCode, ask before every edit and refuse the ones in the Codex folder, in ~/.config/opencode/opencode.json:"
       },
       "delete": {
         "label": "Allow deleting",

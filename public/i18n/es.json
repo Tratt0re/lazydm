@@ -76,7 +76,7 @@
       },
       "mcp": {
         "title": "MCP",
-        "description": "Deja que asistentes de IA como Claude Code o Codex trabajen con tus notas."
+        "description": "Deja que asistentes de IA como Claude Code, OpenAI Codex u OpenCode trabajen con tus notas."
       }
     },
     "general": {
@@ -336,7 +336,7 @@
     "mcp": {
       "about": {
         "title": "¿Qué es MCP?",
-        "what": "MCP (Model Context Protocol) es una forma estándar de que los asistentes de IA hablen con una app. Activado, LazyDM deja que programas de este equipo, como Claude Code o Codex, consulten y usen tu Codex.",
+        "what": "MCP (Model Context Protocol) es una forma estándar de que los asistentes de IA hablen con una app. Activado, LazyDM deja que programas de este equipo, como Claude Code, OpenAI Codex u OpenCode, consulten y usen tu Codex.",
         "use": "Úsalo para pedir a un asistente que encuentre una nota, prepare una sesión, esboce un enemigo u ordene tus enlaces, con tus notas reales.",
         "risksTitle": "Riesgos",
         "riskRead": "Cualquier programa con el token puede leer todas las notas del Codex abierto.",
@@ -382,7 +382,8 @@
         "title": "Conectar un asistente",
         "hint": "Copia una línea en el asistente. Solo funcionan mientras el servidor está en marcha.",
         "copy": "Copiar",
-        "codexEnv": "Luego define el token en la terminal que inicia Codex:"
+        "tokenEnv": "Luego define el token en la terminal que inicia OpenAI Codex u OpenCode:",
+        "opencode": "Pégalo en el archivo, o une solo la parte \"mcp\" si ya existe. Lee el token de la variable definida abajo."
       },
       "copied": "Copiado",
       "copyError": "No se pudo copiar",
@@ -398,8 +399,9 @@
         "title": "Mantén a los agentes solo en MCP",
         "why": "Los límites de arriba valen para MCP. Un asistente que también puede editar archivos o ejecutar comandos en este equipo puede escribir archivos .md directamente en la carpeta del Codex y saltarse los límites. Eso se controla en el asistente, no en LazyDM.",
         "claude": "En Claude Code, prohíbe editar archivos en la carpeta del Codex, en ~/.claude/settings.json, y deja los comandos de shell con confirmación:",
-        "codex": "En Codex, inícialo en solo lectura, en ~/.codex/config.toml (o con --sandbox read-only):",
-        "limits": "Una regla de denegación no detiene todos los comandos de shell, y nada de esto sustituye una copia de seguridad del Codex."
+        "codex": "En OpenAI Codex, inícialo en solo lectura, en ~/.codex/config.toml (o con --sandbox read-only):",
+        "limits": "Una regla de denegación no detiene todos los comandos de shell, y nada de esto sustituye una copia de seguridad del Codex.",
+        "opencode": "En OpenCode, pide confirmación en cada edición y rechaza las de la carpeta del Codex, en ~/.config/opencode/opencode.json:"
       },
       "delete": {
         "label": "Permitir eliminar",

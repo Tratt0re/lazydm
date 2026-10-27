@@ -76,7 +76,7 @@
       },
       "mcp": {
         "title": "MCP",
-        "description": "Laissez des assistants IA comme Claude Code ou Codex travailler avec vos notes."
+        "description": "Laissez des assistants IA comme Claude Code, OpenAI Codex ou OpenCode travailler avec vos notes."
       }
     },
     "general": {
@@ -336,7 +336,7 @@
     "mcp": {
       "about": {
         "title": "Qu’est-ce que MCP ?",
-        "what": "MCP (Model Context Protocol) est une façon standard pour les assistants IA de parler à une application. Activé, LazyDM permet aux programmes de cet ordinateur, comme Claude Code ou Codex, de consulter et d’utiliser votre Codex.",
+        "what": "MCP (Model Context Protocol) est une façon standard pour les assistants IA de parler à une application. Activé, LazyDM permet aux programmes de cet ordinateur, comme Claude Code, OpenAI Codex ou OpenCode, de consulter et d’utiliser votre Codex.",
         "use": "Servez-vous-en pour demander à un assistant de trouver une note, préparer une séance, esquisser un ennemi ou ranger vos liens, à partir de vos vraies notes.",
         "risksTitle": "Risques",
         "riskRead": "Tout programme possédant le jeton peut lire toutes les notes du Codex ouvert.",
@@ -382,7 +382,8 @@
         "title": "Connecter un assistant",
         "hint": "Copiez une ligne dans l’assistant. Ils ne fonctionnent que tant que le serveur tourne.",
         "copy": "Copier",
-        "codexEnv": "Puis définissez le jeton dans le terminal qui lance Codex :"
+        "tokenEnv": "Puis définissez le jeton dans le terminal qui lance OpenAI Codex ou OpenCode :",
+        "opencode": "Collez-le dans le fichier, ou fusionnez seulement la partie « mcp » s’il existe déjà. Il lit le jeton dans la variable définie ci-dessous."
       },
       "copied": "Copié",
       "copyError": "Copie impossible",
@@ -398,8 +399,9 @@
         "title": "Garder les agents sur MCP uniquement",
         "why": "Les limites ci-dessus valent pour MCP. Un assistant qui peut aussi modifier des fichiers ou lancer des commandes sur cet ordinateur peut écrire des fichiers .md directement dans le dossier du Codex et les contourner. Cela se règle dans l’assistant, pas dans LazyDM.",
         "claude": "Dans Claude Code, interdisez la modification de fichiers dans le dossier du Codex, dans ~/.claude/settings.json, et gardez les commandes shell avec confirmation :",
-        "codex": "Dans Codex, lancez-le en lecture seule, dans ~/.codex/config.toml (ou avec --sandbox read-only) :",
-        "limits": "Une règle d’interdiction n’arrête pas toutes les commandes shell, et rien ici ne remplace une sauvegarde de votre Codex."
+        "codex": "Dans OpenAI Codex, lancez-le en lecture seule, dans ~/.codex/config.toml (ou avec --sandbox read-only) :",
+        "limits": "Une règle d’interdiction n’arrête pas toutes les commandes shell, et rien ici ne remplace une sauvegarde de votre Codex.",
+        "opencode": "Dans OpenCode, demandez confirmation à chaque modification et refusez celles du dossier du Codex, dans ~/.config/opencode/opencode.json :"
       },
       "delete": {
         "label": "Autoriser la suppression",

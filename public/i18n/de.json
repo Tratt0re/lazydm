@@ -76,7 +76,7 @@
       },
       "mcp": {
         "title": "MCP",
-        "description": "KI-Assistenten wie Claude Code oder Codex mit deinen Notizen arbeiten lassen."
+        "description": "KI-Assistenten wie Claude Code, OpenAI Codex oder OpenCode mit deinen Notizen arbeiten lassen."
       }
     },
     "general": {
@@ -336,7 +336,7 @@
     "mcp": {
       "about": {
         "title": "Was ist MCP?",
-        "what": "MCP (Model Context Protocol) ist ein Standard, mit dem KI-Assistenten mit einer App sprechen. Ist es an, erlaubt LazyDM Programmen auf diesem Computer, etwa Claude Code oder Codex, dein Codex nachzuschlagen und zu nutzen.",
+        "what": "MCP (Model Context Protocol) ist ein Standard, mit dem KI-Assistenten mit einer App sprechen. Ist es an, erlaubt LazyDM Programmen auf diesem Computer, etwa Claude Code, OpenAI Codex oder OpenCode, dein Codex nachzuschlagen und zu nutzen.",
         "use": "Damit kannst du einen Assistenten bitten, eine Notiz zu finden, eine Sitzung vorzubereiten, einen Gegner zu entwerfen oder Links aufzuräumen – mit deinen echten Notizen.",
         "risksTitle": "Risiken",
         "riskRead": "Jedes Programm mit dem Token kann alle Notizen des geöffneten Codex lesen.",
@@ -382,7 +382,8 @@
         "title": "Assistenten verbinden",
         "hint": "Kopiere eine Zeile in den Assistenten. Sie funktionieren nur, solange der Server läuft.",
         "copy": "Kopieren",
-        "codexEnv": "Setze dann den Token im Terminal, das Codex startet:"
+        "tokenEnv": "Setze dann den Token im Terminal, das OpenAI Codex oder OpenCode startet:",
+        "opencode": "Füge das in die Datei ein oder ergänze nur den Teil „mcp“, falls sie schon existiert. Der Token kommt aus der unten gesetzten Variable."
       },
       "copied": "Kopiert",
       "copyError": "Kopieren nicht möglich",
@@ -398,8 +399,9 @@
         "title": "Agenten nur auf MCP halten",
         "why": "Die Grenzen oben gelten für MCP. Ein Assistent, der auf diesem Computer auch Dateien bearbeiten oder Befehle ausführen kann, kann .md-Dateien direkt in deinen Codex-Ordner schreiben und sie umgehen. Das steuerst du im Assistenten, nicht in LazyDM.",
         "claude": "Sperre in Claude Code Dateibearbeitungen im Codex-Ordner, in ~/.claude/settings.json, und lass Shell-Befehle bestätigen:",
-        "codex": "Starte Codex schreibgeschützt, in ~/.codex/config.toml (oder mit --sandbox read-only):",
-        "limits": "Eine Sperrregel hält nicht jeden Shell-Befehl auf, und nichts hier ersetzt ein Backup deines Codex."
+        "codex": "Starte OpenAI Codex schreibgeschützt, in ~/.codex/config.toml (oder mit --sandbox read-only):",
+        "limits": "Eine Sperrregel hält nicht jeden Shell-Befehl auf, und nichts hier ersetzt ein Backup deines Codex.",
+        "opencode": "Lass OpenCode vor jeder Änderung fragen und die im Codex-Ordner ablehnen, in ~/.config/opencode/opencode.json:"
       },
       "delete": {
         "label": "Löschen erlauben",

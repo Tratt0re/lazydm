@@ -483,7 +483,7 @@ Planned Electron modules: `vault`, `cloud-readiness`, `campaign`, `document`, `i
 
 ## 6f. MCP server
 
-LazyDM can host an **MCP server** so AI assistants on the same computer (Claude Code, Codex…) can work with the open
+LazyDM can host an **MCP server** so AI assistants on the same computer (Claude Code, OpenAI Codex, OpenCode…) can work with the open
 Codex. It is **off by default** and lives in the Electron main process (`electron/mcp/`, `mcp.controller.js`).
 
 - **Opt-in in two steps.** *Settings → MCP* first explains what MCP is, what it is for and its risks, with one switch
@@ -544,7 +544,12 @@ Codex. It is **off by default** and lives in the Electron main process (`electro
   (backslashes and `..` resolved, whole-segment match, so `lost-mine-2` is not `lost-mine`); lists, links and
   backlinks that point outside are dropped. Nothing ticked = no notes reachable. This limits the MCP tools only: an
   assistant with its own file or shell tools can still write in the Codex folder, so *Settings → MCP* also shows how to
-  deny that in Claude Code (`Edit(//<codex path>/**)`) and run Codex read-only (`sandbox_mode = "read-only"`).
+  deny that in Claude Code (`Edit(//<codex path>/**)`), run OpenAI Codex read-only (`sandbox_mode = "read-only"`) and
+  make OpenCode ask before edits and refuse the ones in the folder (`permission.edit`). In the UI and the docs the
+  agent is always **OpenAI Codex**: *Codex* alone is the word for the vault (§1b), and the two must never be confused.
+  *Settings → MCP* gives a paste-ready connection for Claude Code (one command), OpenAI Codex (`config.toml`) and
+  OpenCode (`opencode.json`, token from `{env:LAZYDM_MCP_TOKEN}`); a program that only speaks stdio, such as
+  llama.cpp's `llama-server`, cannot connect to the HTTP server directly.
 - **Device-local.** The settings (`mcp` section: `enabled`, `autostart`, `allowWrite`, `allowDelete`, `limitScope`, `scopeRoots`, `port`, `token`) live in
   `settings-store`, never in the vault, so the token cannot sync through the cloud folder. The renderer follows the
   state through `mcp:statusChanged`.

@@ -69,6 +69,21 @@ export class McpSectionComponent implements OnInit {
   protected readonly claudeSettingsSnippet = computed(
     () => `{\n  "permissions": {\n    "deny": ["${this.claudeDenyRule()}"]\n  }\n}`,
   );
+  /**
+   * OpenCode asks before every edit and refuses the ones inside the Codex folder; its docs say the last matching
+   * rule wins, so the catch-all comes first.
+   */
+  protected readonly opencodePermissionSnippet = computed(() => {
+    const folder = (this.vault()?.path ?? '').replace(/\\/g, '/').replace(/\/+$/, '');
+    return JSON.stringify(
+      {
+        $schema: 'https://opencode.ai/config.json',
+        permission: { edit: { '*': 'ask', [`${folder}/**`]: 'deny' }, bash: 'ask' },
+      },
+      null,
+      2,
+    );
+  });
   protected readonly isBusy = signal(false);
   protected readonly portText = computed(() => String(this.state()?.port ?? ''));
   protected readonly isTokenShown = signal(false);
@@ -85,18 +100,40 @@ export class McpSectionComponent implements OnInit {
   /** The lines hold the token: they are shown masked until the eye is pressed, but always copied in full. */
   protected readonly areLinesShown = signal(false);
   protected readonly claudeCommandShown = computed(() => this.maskToken(this.claudeCommand()));
-  /** Codex reads the token from an environment variable, so the token is never written into its config. */
+  /** OpenAI Codex reads the token from an environment variable, so the token is never written into its config. */
   protected readonly codexConfig = computed(() => {
     const state = this.state();
     return state?.token
       ? `[mcp_servers.lazydm]\nurl = "${state.url}"\nbearer_token_env_var = "LAZYDM_MCP_TOKEN"`
       : '';
   });
-  protected readonly codexEnv = computed(() => {
+  /** OpenCode fills `{env:NAME}` from the environment, so it shares the variable OpenAI Codex reads. */
+  protected readonly opencodeConfig = computed(() => {
+    const state = this.state();
+    return state?.token
+      ? JSON.stringify(
+          {
+            $schema: 'https://opencode.ai/config.json',
+            mcp: {
+              lazydm: {
+                type: 'remote',
+                url: state.url,
+                enabled: true,
+                headers: { Authorization: 'Bearer {env:LAZYDM_MCP_TOKEN}' },
+              },
+            },
+          },
+          null,
+          2,
+        )
+      : '';
+  });
+  /** The one line both set the token with: shown masked until the eye is pressed, always copied in full. */
+  protected readonly tokenEnv = computed(() => {
     const token = this.state()?.token;
     return token ? `export LAZYDM_MCP_TOKEN="${token}"` : '';
   });
-  protected readonly codexEnvShown = computed(() => this.maskToken(this.codexEnv()));
+  protected readonly tokenEnvShown = computed(() => this.maskToken(this.tokenEnv()));
 
   ngOnInit(): void {
     void this.mcp.connect();
