@@ -584,7 +584,9 @@ function decorateSyntax(target: DecorationContext, frontmatterEnd: number): void
             Decoration.replace({
               block: true,
               widget: new BlockWidget(
-                `callout:${text}`,
+                // The html is part of the key: the links resolve after the note opens, and an unchanged key
+                // would keep the callout drawn with them broken.
+                `callout:${text}:${html}`,
                 renderHtmlBlock(html, 'cm-lp-callout'),
                 firstLine.to,
               ),
@@ -634,7 +636,7 @@ function decorateSyntax(target: DecorationContext, frontmatterEnd: number): void
             context.tableLabels && !state.readOnly && state.facet(EditorView.editable)
               ? new TableWidget(text, html, context.tableLabels)
               : new BlockWidget(
-                  `table:${text}`,
+                  `table:${text}:${html}`,
                   renderHtmlBlock(html, 'cm-lp-table'),
                   state.doc.lineAt(from).to,
                 );

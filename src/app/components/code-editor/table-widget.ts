@@ -118,6 +118,7 @@ export class TableWidget extends WidgetType {
   override eq(other: TableWidget): boolean {
     return (
       other.text === this.text &&
+      other.html === this.html &&
       other.labels.addRow === this.labels.addRow &&
       other.labels.addColumn === this.labels.addColumn
     );
