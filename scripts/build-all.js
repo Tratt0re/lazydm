@@ -26,6 +26,44 @@ const TARGETS = {
   'linux-x64': { args: ['--linux', 'zip', '--x64'], extension: '.zip', host: null },
 };
 
+/** First bytes of a native module per target OS: PE (Windows), ELF (Linux), Mach-O (macOS, 64-bit or fat). */
+const NATIVE_MAGIC = {
+  win: [Buffer.from('MZ')],
+  linux: [Buffer.from([0x7f, 0x45, 0x4c, 0x46])],
+  mac: [Buffer.from([0xcf, 0xfa, 0xed, 0xfe]), Buffer.from([0xca, 0xfe, 0xba, 0xbe])],
+};
+
+function findFiles(dir, fileName) {
+  const found = [];
+  for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+    const fullPath = path.join(dir, entry.name);
+    if (entry.isDirectory()) found.push(...findFiles(fullPath, fileName));
+    else if (entry.name === fileName) found.push(fullPath);
+  }
+  return found;
+}
+
+/**
+ * Packaging can ship a SQLite module built for another OS (e.g. the macOS one inside a Windows build), and the app
+ * then fails at startup. Returns an error message, or null when the packaged module matches the target's OS.
+ */
+function checkNativeModule(id, targetWorkDir) {
+  const os = id.split('-')[0];
+  const modules = findFiles(targetWorkDir, 'better_sqlite3.node');
+  if (modules.length === 0) return 'better_sqlite3.node is missing from the package';
+
+  for (const modulePath of modules) {
+    const head = Buffer.alloc(4);
+    const fd = fs.openSync(modulePath, 'r');
+    fs.readSync(fd, head, 0, 4, 0);
+    fs.closeSync(fd);
+    if (!NATIVE_MAGIC[os].some((magic) => head.subarray(0, magic.length).equals(magic))) {
+      return `better_sqlite3.node is not a ${os} binary (${path.relative(targetWorkDir, modulePath)})`;
+    }
+  }
+  return null;
+}
+
 function run(label, args) {
   console.log(`\n[build-all] ${label}`);
   const result = spawnSync(process.execPath, args, { cwd: rootDir, stdio: 'inherit' });
@@ -101,6 +139,12 @@ function main() {
       const seconds = Math.round((Date.now() - started) / 1000);
       if (!isBuilt) {
         results.push({ id, status: 'failed', note: `after ${seconds}s` });
+        continue;
+      }
+
+      const nativeError = checkNativeModule(id, targetWorkDir);
+      if (nativeError) {
+        results.push({ id, status: 'failed', note: nativeError });
         continue;
       }
 
