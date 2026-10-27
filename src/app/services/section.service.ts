@@ -13,6 +13,7 @@ import type {
 } from '@/dtos';
 import { BaseIpcService } from '@/services/base-ipc.service';
 import { CampaignService } from '@/services/campaign.service';
+import { onIndexUpdated, onVaultConfigChanged } from '@/services/ipc-events';
 import { ARCTECH_ICONS } from '@/shared/components/icon';
 
 /** Name of an icon of the ArcTechUI icon set (what the vault config stores). */
@@ -57,6 +58,8 @@ export const CUSTOM_SECTION_ICONS: readonly SectionIcon[] = [
 ];
 
 const FALLBACK_SECTION_ICON: SectionIcon = 'folder';
+/** Wait for a burst of index updates to settle before re-reading the sections. */
+const RELOAD_DEBOUNCE_MS = 300;
 
 /** Settings payload that saves sections as they are listed (order, hidden, names, custom sections). */
 export function toSectionSettings(rows: readonly AppSection[]): SectionSettingsPayload {
@@ -163,6 +166,11 @@ export class SectionService extends BaseIpcService<APIChannel.SECTIONS> {
         void this.loadCampaign(slug);
       }
     });
+
+    // Sections added, hidden or renamed in `vault.json`, and the file counts of their folders, follow what an
+    // agent or another device wrote.
+    onVaultConfigChanged(() => this.scheduleReload());
+    onIndexUpdated(() => this.scheduleReload());
   }
 
   /** Sections of any campaign (hidden ones included), e.g. the one under the Settings sheet. */
@@ -229,6 +237,22 @@ export class SectionService extends BaseIpcService<APIChannel.SECTIONS> {
     } catch (error) {
       console.warn('[app] Failed to load the default sections:', error);
     }
+  }
+
+  private reloadTimer: ReturnType<typeof setTimeout> | null = null;
+
+  private scheduleReload(): void {
+    if (this.reloadTimer) {
+      clearTimeout(this.reloadTimer);
+    }
+
+    this.reloadTimer = setTimeout(() => {
+      this.reloadTimer = null;
+      const slug = this.campaignService.activeCampaign()?.slug;
+      if (slug) {
+        void this.loadCampaign(slug);
+      }
+    }, RELOAD_DEBOUNCE_MS);
   }
 
   private async loadCampaign(slug: string): Promise<void> {

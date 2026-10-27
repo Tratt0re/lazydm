@@ -45,6 +45,7 @@ import { BattleRuleService, DEFAULT_BATTLE_RULE_CHOICE } from '@/services/battle
 import { PARTY_FILE_NAME } from '@/services/encounter.service';
 import { FileActionsService } from '@/services/file-actions.service';
 import { FileMoveService, type MoveSection } from '@/services/file-move.service';
+import { onIndexUpdated } from '@/services/ipc-events';
 import { LocalPreferencesService } from '@/services/local-preferences.service';
 import { SectionService, toSubfolderLabel } from '@/services/section.service';
 import { AUTOMATIC_TEMPLATE_RULE, TemplateService } from '@/services/template.service';
@@ -229,6 +230,14 @@ export class CampaignSectionPage {
   protected readonly errorMessage = signal<string | null>(null);
 
   constructor() {
+    // Files or folders of this section changed (an agent, another device, a move from another page).
+    onIndexUpdated((paths) => {
+      const sectionPath = this.sectionPath();
+      if (this.scope() && paths.some((path) => path.startsWith(`${sectionPath}/`) || path === sectionPath)) {
+        void this.reloadTreeQuietly(sectionPath);
+      }
+    });
+
     effect((onCleanup) => {
       const scope = this.scope();
       const section = this.section();
@@ -934,6 +943,19 @@ export class CampaignSectionPage {
   private async moveFile(path: string, target: string): Promise<void> {
     if (await this.fileMove.move(path, this.moveSection(), target)) {
       await this.loadTree(this.sectionPath());
+    }
+  }
+
+  /** Reloads the list without the loading state, so the page does not flash while an agent writes. */
+  private async reloadTreeQuietly(sectionPath: string): Promise<void> {
+    const token = ++this.loadToken;
+    try {
+      const tree = await this.documentService.listSectionTree(sectionPath);
+      if (token === this.loadToken) {
+        this.tree.set(tree);
+      }
+    } catch (error) {
+      console.warn('[app] Failed to refresh the section:', sectionPath, error);
     }
   }
 

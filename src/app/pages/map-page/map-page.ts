@@ -50,6 +50,7 @@ import {
 } from '@/dtos';
 import { ASSET_FILE_PARAM, ASSET_SUBFOLDER_PARAM } from '@/pages/asset-page/asset-page';
 import { CAMPAIGN_SECTION_PARAM } from '@/pages/campaign-section-page/campaign-section-page';
+import { onIndexUpdated } from '@/services/ipc-events';
 import { DocumentService } from '@/services/document.service';
 import { CopyToService } from '@/services/copy-to.service';
 import { FileActionsService } from '@/services/file-actions.service';
@@ -448,6 +449,13 @@ export class MapPage {
   };
 
   constructor() {
+    // An agent or another device changed this map's file: show it (our own saves match the loaded hash).
+    onIndexUpdated((paths) => {
+      if (paths.includes(this.mapPath())) {
+        void this.refreshFromDisk(this.mapPath());
+      }
+    });
+
     this.destroyRef.onDestroy(() => {
       if (this.joinedPath !== null) {
         this.sharedFiles.leave(this.joinedPath, this);
@@ -2108,6 +2116,30 @@ export class MapPage {
   private update(change: (data: MapDto) => MapDto): void {
     this.shared().data.update((data) => (data ? change(data) : data));
     void this.save();
+  }
+
+  /** Shows the file as it is on disk when it is not the version loaded here; never while a save is running. */
+  private async refreshFromDisk(path: string): Promise<void> {
+    const shared = this.shared();
+    const loaded = shared.file();
+    if (!loaded || shared.save.isSaving || shared.save.needsSave) {
+      return;
+    }
+
+    try {
+      const file = await this.mapService.read(path);
+      if (
+        file.contentHash !== loaded.contentHash &&
+        !shared.save.isSaving &&
+        !shared.save.needsSave &&
+        shared.file() === loaded
+      ) {
+        shared.file.set(file);
+        shared.data.set(file.map);
+      }
+    } catch (error) {
+      console.warn('[app] Failed to refresh the map:', path, error);
+    }
   }
 
   private async load(path: string): Promise<void> {

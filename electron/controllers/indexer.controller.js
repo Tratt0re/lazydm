@@ -16,7 +16,10 @@ const INDEX_STATUS = Object.freeze({
 const INDEX_EVENT_CHANNELS = Object.freeze({
   statusChanged: 'index:statusChanged',
   updated: 'index:updated',
+  /** `.lazydm/vault.json` changed (sections, templates, battle rules): written by the app, an agent or another device. */
+  configChanged: 'vault:configChanged',
 });
+const VAULT_CONFIG_PATH = '.lazydm/vault.json';
 const INDEX_STATE_DEFAULTS = Object.freeze({
   status: INDEX_STATUS.idle,
   vaultId: null,
@@ -241,7 +244,8 @@ async function reindexWatchedPaths(token, relativePaths) {
           changedPaths.push(relativePath);
         }
       } else if (stats.isDirectory()) {
-        changedPaths.push(...(await reconcile(token, rootPath, relativePath)));
+        // A new or renamed folder can hold no file yet: the lists still have to show it.
+        changedPaths.push(relativePath, ...(await reconcile(token, rootPath, relativePath)));
       } else if (stats.isFile()) {
         const file = { path: relativePath, size: stats.size, mtimeMs: Math.trunc(stats.mtimeMs) };
         const knownState = vaultIndexModel.getFileState(relativePath);
@@ -270,6 +274,10 @@ function flushWatchedPaths() {
   watchTimer = null;
   const relativePaths = [...pendingWatchPaths];
   pendingWatchPaths = new Set();
+
+  if (relativePaths.includes(VAULT_CONFIG_PATH)) {
+    broadcastIpcEvent(INDEX_EVENT_CHANNELS.configChanged, {});
+  }
 
   const token = activeToken;
   enqueueDetached(token, () => reindexWatchedPaths(token, relativePaths));

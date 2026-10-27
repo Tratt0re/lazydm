@@ -21,6 +21,7 @@ import {
 } from '@/components/battle-rule-row-editor/battle-rule-row-editor.component';
 import type { BattleRuleDto, BattleRuleRowDto } from '@/dtos';
 import { BattleRuleService } from '@/services/battle-rule.service';
+import { onIndexUpdated, onVaultConfigChanged } from '@/services/ipc-events';
 import { TemplateService } from '@/services/template.service';
 import { ArcTechAlertDialogService } from '@/shared/components/alert-dialog';
 import { ArcTechButtonComponent } from '@/shared/components/button';
@@ -167,6 +168,14 @@ export class BattleRuleLibraryPage implements OnInit {
   });
 
   constructor() {
+    // Rules are `_battle-rules/*.json` files and choices in `vault.json`.
+    onIndexUpdated((paths) => {
+      if (paths.some((path) => path.includes('_battle-rules/'))) {
+        void this.load();
+      }
+    });
+    onVaultConfigChanged(() => void this.load());
+
     // Leaving the sheet saves pending edits, like leaving a note.
     inject(DestroyRef).onDestroy(() => void this.save());
   }

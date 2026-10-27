@@ -49,6 +49,7 @@ import { DocumentService } from '@/services/document.service';
 import { BattleRuleService } from '@/services/battle-rule.service';
 import { EncounterService, PARTY_FILE_NAME } from '@/services/encounter.service';
 import { CopyToService } from '@/services/copy-to.service';
+import { onIndexUpdated } from '@/services/ipc-events';
 import { FileActionsService } from '@/services/file-actions.service';
 import { LocalPreferencesService } from '@/services/local-preferences.service';
 import { getNoteScopeKind, NoteScopeService } from '@/services/note-scope.service';
@@ -269,6 +270,13 @@ export class EncounterPage {
   });
 
   constructor() {
+    // An agent or another device changed this encounter's file: show it (our own saves match the loaded hash).
+    onIndexUpdated((paths) => {
+      if (paths.includes(this.encounterPath())) {
+        void this.refreshFromDisk(this.encounterPath());
+      }
+    });
+
     inject(DestroyRef).onDestroy(() => {
       if (this.joinedPath !== null) {
         this.sharedFiles.leave(this.joinedPath, this);
@@ -1445,6 +1453,33 @@ export class EncounterPage {
   }
 
   // --- Loading and saving ------------------------------------------------------------------------------
+
+  /** Shows the file as it is on disk when it is not the version loaded here; never while a save is running. */
+  private async refreshFromDisk(path: string): Promise<void> {
+    const shared = this.shared();
+    const loaded = shared.file();
+    if (!loaded || shared.save.isSaving || shared.save.needsSave) {
+      return;
+    }
+
+    try {
+      const file = this.isParty() && this.scope()
+        ? await this.encounterService.party(this.scope()!.rootPath, this.title())
+        : await this.encounterService.read(path);
+      if (
+        file.contentHash !== loaded.contentHash &&
+        !shared.save.isSaving &&
+        !shared.save.needsSave &&
+        shared.file() === loaded
+      ) {
+        shared.file.set(file);
+        shared.data.set(file.encounter);
+        void this.loadNotes(path, file.encounter);
+      }
+    } catch (error) {
+      console.warn('[app] Failed to refresh the encounter:', path, error);
+    }
+  }
 
   private async load(path: string): Promise<void> {
     const token = ++this.loadToken;

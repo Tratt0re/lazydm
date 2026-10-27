@@ -3,6 +3,10 @@ import { Injectable, signal } from '@angular/core';
 import { APIChannel } from '@/config/api';
 import type { CompendiumSystemDto, CreateCompendiumSystemPayload } from '@/dtos';
 import { BaseIpcService } from '@/services/base-ipc.service';
+import { onIndexUpdated } from '@/services/ipc-events';
+
+const RELOAD_DEBOUNCE_MS = 300;
+const COMPENDIUM_PREFIX = 'compendium/';
 
 /** Systems of the vault compendium: cross-campaign folders to copy notes and files to and from. */
 @Injectable({
@@ -16,12 +20,21 @@ export class CompendiumService extends BaseIpcService<APIChannel.COMPENDIUM> {
   /** The system the app shell is showing; it drives the sidebar folders. */
   readonly activeSystem = this.activeSystemSignal.asReadonly();
 
+  private hasLoaded = false;
+  private reloadTimer: ReturnType<typeof setTimeout> | null = null;
+
   constructor() {
     super(APIChannel.COMPENDIUM);
+    onIndexUpdated((paths) => {
+      if (this.hasLoaded && paths.some((path) => path.startsWith(COMPENDIUM_PREFIX))) {
+        this.scheduleReload();
+      }
+    });
   }
 
   async loadSystems(): Promise<readonly CompendiumSystemDto[]> {
     const { rows } = await this.ipcClient.list();
+    this.hasLoaded = true;
     this.systemsSignal.set(rows);
     return rows;
   }
@@ -54,6 +67,19 @@ export class CompendiumService extends BaseIpcService<APIChannel.COMPENDIUM> {
       console.warn('[app] Failed to open compendium system:', slug, error);
       return null;
     }
+  }
+
+  private scheduleReload(): void {
+    if (this.reloadTimer) {
+      clearTimeout(this.reloadTimer);
+    }
+
+    this.reloadTimer = setTimeout(() => {
+      this.reloadTimer = null;
+      this.refreshActive().catch((error: unknown) =>
+        console.warn('[app] Failed to refresh the compendium:', error),
+      );
+    }, RELOAD_DEBOUNCE_MS);
   }
 
   /** Re-reads the active system, e.g. after a copy created a new folder in it. */

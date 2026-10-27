@@ -13,6 +13,7 @@ import {
 import { AppDialogFormService } from '@/components/sheet-form/dialog-form.service';
 import type { TemplateDto } from '@/dtos';
 import { DocumentService } from '@/services/document.service';
+import { onIndexUpdated, onVaultConfigChanged } from '@/services/ipc-events';
 import { SectionService } from '@/services/section.service';
 import { TemplateService } from '@/services/template.service';
 import { ArcTechAlertComponent } from '@/shared/components/alert';
@@ -177,6 +178,14 @@ export class TemplateLibraryPage implements OnInit {
   });
 
   constructor() {
+    // Templates are `_templates/*.md` files and rules in `vault.json`: both can change under the open sheet.
+    onIndexUpdated((paths) => {
+      if (paths.some((path) => path.includes('_templates/'))) {
+        void this.load();
+      }
+    });
+    onVaultConfigChanged(() => void this.load());
+
     // Leaving the sheet saves pending edits, like leaving a note.
     inject(DestroyRef).onDestroy(() => void this.save());
   }
