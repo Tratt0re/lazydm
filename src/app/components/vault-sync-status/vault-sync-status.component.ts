@@ -1,10 +1,13 @@
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
-import { TranslatePipe } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+
+import { AppPendingNotesSheetComponent } from '@/components/pending-notes-sheet/pending-notes-sheet.component';
 
 import { CloudReadinessService } from '@/services/cloud-readiness.service';
 import { ArcTechAlertComponent } from '@/shared/components/alert';
 import { ArcTechButtonComponent } from '@/shared/components/button';
 import { ArcTechProgressBarComponent } from '@/shared/components/progress-bar';
+import { ArcTechSheetService } from '@/shared/components/sheet';
 
 const CONFLICT_PATHS_PREVIEW_LIMIT = 5;
 
@@ -21,6 +24,8 @@ const CONFLICT_PATHS_PREVIEW_LIMIT = 5;
 })
 export class VaultSyncStatusComponent {
   private readonly cloudReadinessService = inject(CloudReadinessService);
+  private readonly sheetService = inject(ArcTechSheetService);
+  private readonly translateService = inject(TranslateService);
   private readonly dismissedConflictsKey = signal<string | null>(null);
 
   protected readonly state = this.cloudReadinessService.state;
@@ -63,6 +68,16 @@ export class VaultSyncStatusComponent {
 
   protected recheck(): void {
     void this.runTask(() => this.cloudReadinessService.recheck());
+  }
+
+  protected openPendingNotes(): void {
+    this.sheetService.create<AppPendingNotesSheetComponent, void>({
+      arcTitle: this.translateService.instant('vault.sync.pendingTitle'),
+      arcContent: AppPendingNotesSheetComponent,
+      arcSide: 'right',
+      arcWidth: '560px',
+      arcHideFooter: true,
+    });
   }
 
   protected dismissConflicts(): void {

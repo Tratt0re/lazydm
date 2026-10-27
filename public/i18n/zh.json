@@ -454,6 +454,8 @@
       "pendingTitle": "部分笔记仍在同步",
       "pendingDescription": "还有 {{count}} 条笔记不在本设备上。{{provider}} 下载完成后它们就会出现。",
       "recheck": "重新检查",
+      "showFiles": "显示文件",
+      "noneLeft": "没有等待中的笔记了。",
       "conflictsTitle": "发现冲突副本",
       "conflictsDescription": "你的云服务为同时在两台设备上编辑的笔记创建了副本。请检查并删除不需要的副本：",
       "conflictsMore": "……另有 {{count}} 个",

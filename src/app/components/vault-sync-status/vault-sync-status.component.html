@@ -47,6 +47,9 @@
           'vault.sync.pendingDescription' | translate: { count: status.pendingFiles, provider: (providerLabelKey() | translate) }
         "
       />
+      <button arc-button type="button" arcType="ghost" (click)="openPendingNotes()">
+        {{ 'vault.sync.showFiles' | translate }}
+      </button>
       <button arc-button type="button" arcType="outline" [arcLoading]="isBusy()" (click)="recheck()">
         {{ 'vault.sync.recheck' | translate }}
       </button>

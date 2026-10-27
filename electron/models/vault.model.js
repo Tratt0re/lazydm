@@ -99,11 +99,12 @@ function toVaultRelativePath(rootPath, absolutePath) {
 
 /**
  * A cloud placeholder whose content is not downloaded yet: it reports a size but occupies no disk block.
- * Reliable for File Provider drives on macOS (iCloud, Box, Dropbox, OneDrive, Google Drive);
- * `blocks` is not available on Windows, where this is always false.
+ * Reliable for File Provider drives on macOS (iCloud, Box, Dropbox, OneDrive, Google Drive).
+ * Never true on Windows: NTFS keeps small files inside the file table, so a note that is fully local
+ * can report no blocks. A placeholder there is fetched when it is read, so nothing is waited for.
  */
-function isDatalessStats(stats) {
-  return stats.size > 0 && stats.blocks === 0;
+function isDatalessStats(stats, platform = process.platform) {
+  return platform !== 'win32' && stats.size > 0 && stats.blocks === 0;
 }
 
 /**

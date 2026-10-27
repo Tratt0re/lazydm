@@ -454,6 +454,8 @@
       "pendingTitle": "Alcune note sono ancora in sincronizzazione",
       "pendingDescription": "{{count}} note non sono ancora su questo dispositivo. Appariranno appena {{provider}} le avrà scaricate.",
       "recheck": "Controlla di nuovo",
+      "showFiles": "Mostra i file",
+      "noneLeft": "Nessuna nota è più in attesa.",
       "conflictsTitle": "Trovate copie in conflitto",
       "conflictsDescription": "Il tuo servizio cloud ha creato copie di note modificate contemporaneamente su due dispositivi. Controllale ed elimina la copia che non ti serve:",
       "conflictsMore": "…e altre {{count}}",

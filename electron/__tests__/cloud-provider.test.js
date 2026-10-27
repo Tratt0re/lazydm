@@ -3,6 +3,7 @@ import { describe, expect, it } from 'vitest';
 
 const require = createRequire(import.meta.url);
 const { detectCloudProvider } = require('../models/cloud-readiness.model');
+const { isDatalessStats } = require('../models/vault.model');
 
 describe('detectCloudProvider', () => {
   it('finds iCloud Drive from the Mobile Documents path', () => {
@@ -27,5 +28,17 @@ describe('detectCloudProvider', () => {
 
   it('returns null for a folder that is only on this device', () => {
     expect(detectCloudProvider('/Users/dm/Documents/LazyDM')).toBeNull();
+  });
+});
+
+describe('isDatalessStats', () => {
+  it('flags a note with a size but no disk block on macOS and Linux', () => {
+    expect(isDatalessStats({ size: 120, blocks: 0 }, 'darwin')).toBe(true);
+    expect(isDatalessStats({ size: 120, blocks: 8 }, 'darwin')).toBe(false);
+    expect(isDatalessStats({ size: 0, blocks: 0 }, 'darwin')).toBe(false);
+  });
+
+  it('never flags a note on Windows, where small local files report no blocks', () => {
+    expect(isDatalessStats({ size: 120, blocks: 0 }, 'win32')).toBe(false);
   });
 });

@@ -454,6 +454,8 @@
       "pendingTitle": "Some notes are still syncing",
       "pendingDescription": "{{count}} notes are not on this device yet. They will appear as soon as {{provider}} downloads them.",
       "recheck": "Check again",
+      "showFiles": "Show files",
+      "noneLeft": "No notes are waiting any more.",
       "conflictsTitle": "Conflicting copies found",
       "conflictsDescription": "Your cloud service created copies of notes edited on two devices at the same time. Review them and delete the copy you don't need:",
       "conflictsMore": "…and {{count}} more",

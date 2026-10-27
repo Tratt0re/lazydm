@@ -5,7 +5,7 @@ const { broadcastIpcEvent } = require('../ipc/broadcast');
 const DOWNLOAD_CONCURRENCY = 4;
 const DOWNLOAD_TIMEOUT_MS = 30 * 1000;
 const READINESS_TIMEOUT_MS = 2 * 60 * 1000;
-const PENDING_PATHS_PREVIEW_LIMIT = 10;
+const PENDING_PATHS_PREVIEW_LIMIT = 200;
 const MARKDOWN_EXTENSION = '.md';
 const CLOUD_STATUS = Object.freeze({
   idle: 'idle',
