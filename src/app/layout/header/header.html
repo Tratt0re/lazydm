@@ -27,10 +27,10 @@
     }
 
     @if (isDesktop && !isMac) {
-      <div class="window-no-drag flex h-full items-stretch border-l border-border">
+      <div class="window-no-drag flex h-full items-center gap-1 border-l border-border px-1">
         <button
           type="button"
-          class="flex w-11 cursor-pointer items-center justify-center text-muted-foreground transition-colors duration-150 hover:bg-accent hover:text-foreground focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-ring [&_svg]:size-4"
+          class="flex size-8 cursor-pointer items-center justify-center border border-transparent text-muted-foreground transition-colors duration-150 hover:bg-accent hover:text-foreground focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-ring [&_svg]:size-4"
           [attr.aria-label]="'header.window.minimize' | translate"
           arcPosition="bottom"
           [arcTooltip]="'header.window.minimize' | translate"
@@ -40,7 +40,7 @@
         </button>
         <button
           type="button"
-          class="flex w-11 cursor-pointer items-center justify-center text-muted-foreground transition-colors duration-150 hover:bg-accent hover:text-foreground focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-ring [&_svg]:size-3.5"
+          class="flex size-8 cursor-pointer items-center justify-center border border-transparent text-muted-foreground transition-colors duration-150 hover:bg-accent hover:text-foreground focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-ring [&_svg]:size-4"
           [attr.aria-label]="
             (isMaximized() ? 'header.window.restore' : 'header.window.maximize') | translate
           "
@@ -54,7 +54,7 @@
         </button>
         <button
           type="button"
-          class="flex w-11 cursor-pointer items-center justify-center text-muted-foreground transition-colors duration-150 hover:bg-destructive hover:text-destructive-foreground focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-ring [&_svg]:size-4"
+          class="flex size-8 cursor-pointer items-center justify-center border border-transparent text-muted-foreground transition-colors duration-150 hover:bg-destructive hover:text-destructive-foreground focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-ring [&_svg]:size-4"
           [attr.aria-label]="'header.window.close' | translate"
           arcPosition="bottom"
           [arcTooltip]="'header.window.close' | translate"
