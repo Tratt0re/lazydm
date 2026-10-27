@@ -7,6 +7,13 @@ const { hashContent, resolveInsideVault } = require('../utils/file-utils');
 const { parseMarkdownDocument } = require('../utils/markdown-parse');
 
 const WATCH_DEBOUNCE_MS = 300;
+/**
+ * The watcher reports LazyDM's own writes a moment after they were indexed. A path indexed this recently, with the
+ * same size and mtime, is not read and broadcast again; any other change to it differs in size or mtime.
+ */
+const OWN_WRITE_ECHO_WINDOW_MS = 5000;
+const OWN_WRITE_MEMORY_LIMIT = 2000;
+const DIRECTORY_SIGNATURE = 'dir';
 const INDEX_STATUS = Object.freeze({
   idle: 'idle',
   indexing: 'indexing',
@@ -40,6 +47,8 @@ let watcher = null;
 let watchTimer = null;
 let pendingWatchPaths = new Set();
 let taskQueue = Promise.resolve();
+/** Path -> what LazyDM last indexed there and when, to recognise the watcher's echo of its own writes. */
+const recentlyIndexed = new Map();
 
 function getStatus() {
   return { ...indexState };
@@ -86,6 +95,36 @@ function enqueueDetached(token, task) {
   enqueue(token, task).catch(() => undefined);
 }
 
+function toFileSignature(file) {
+  return `${file.size}:${file.mtimeMs}`;
+}
+
+function rememberIndexed(relativePath, signature) {
+  if (recentlyIndexed.size >= OWN_WRITE_MEMORY_LIMIT) {
+    const cutoff = Date.now() - OWN_WRITE_ECHO_WINDOW_MS;
+    for (const [knownPath, entry] of recentlyIndexed) {
+      if (entry.at < cutoff) {
+        recentlyIndexed.delete(knownPath);
+      }
+    }
+    if (recentlyIndexed.size >= OWN_WRITE_MEMORY_LIMIT) {
+      recentlyIndexed.clear();
+    }
+  }
+
+  recentlyIndexed.set(relativePath, { signature, at: Date.now() });
+}
+
+/** True when the watcher reports a path exactly as LazyDM indexed it a moment ago. */
+function isOwnWriteEcho(relativePath, signature) {
+  const entry = recentlyIndexed.get(relativePath);
+  return (
+    entry !== undefined &&
+    entry.signature === signature &&
+    Date.now() - entry.at < OWN_WRITE_ECHO_WINDOW_MS
+  );
+}
+
 /** A file touched this recently can change again with the same size and mtime tick: its hash decides. */
 const RECENT_EDIT_WINDOW_MS = 1000;
 
@@ -114,6 +153,11 @@ async function readEncounterTitle(rootPath, relativePath) {
 }
 
 async function indexFile(rootPath, file, knownState) {
+  await indexFileContent(rootPath, file, knownState);
+  rememberIndexed(file.path, toFileSignature(file));
+}
+
+async function indexFileContent(rootPath, file, knownState) {
   if (vaultIndexModel.getFileKind(file.path) !== 'md') {
     vaultIndexModel.saveFile(file, null, await readEncounterTitle(rootPath, file.path));
     return;
@@ -142,7 +186,13 @@ async function indexFile(rootPath, file, knownState) {
 }
 
 /** Brings the index in line with the files on disk: indexes new or changed files and drops deleted ones. */
-async function reconcile(token, rootPath, relativeDir = '', onProgress = null) {
+async function reconcile(
+  token,
+  rootPath,
+  relativeDir = '',
+  onProgress = null,
+  skipOwnWrites = false,
+) {
   const knownStates = vaultIndexModel.listFileStates();
   const files = await vaultModel.listVaultFiles(rootPath, relativeDir);
   const folderPrefix = relativeDir ? `${relativeDir}/` : '';
@@ -162,6 +212,10 @@ async function reconcile(token, rootPath, relativeDir = '', onProgress = null) {
     }
 
     seenPaths.add(file.path);
+    if (skipOwnWrites && isOwnWriteEcho(file.path, toFileSignature(file))) {
+      continue;
+    }
+
     const knownState = knownStates.get(file.path);
     if (!isFileChanged(file, knownState)) {
       continue;
@@ -221,7 +275,7 @@ async function runFullReconcile(token) {
   });
 }
 
-async function reindexWatchedPaths(token, relativePaths) {
+async function reindexWatchedPaths(token, relativePaths, { fromWatcher = false } = {}) {
   const rootPath = activeVault.path;
   const changedPaths = [];
 
@@ -244,10 +298,23 @@ async function reindexWatchedPaths(token, relativePaths) {
           changedPaths.push(relativePath);
         }
       } else if (stats.isDirectory()) {
+        // The folder was just handled by LazyDM: changes inside it arrive as their own watcher paths.
+        if (fromWatcher && isOwnWriteEcho(relativePath, DIRECTORY_SIGNATURE)) {
+          continue;
+        }
+
         // A new or renamed folder can hold no file yet: the lists still have to show it.
-        changedPaths.push(relativePath, ...(await reconcile(token, rootPath, relativePath)));
+        changedPaths.push(
+          relativePath,
+          ...(await reconcile(token, rootPath, relativePath, null, fromWatcher)),
+        );
+        rememberIndexed(relativePath, DIRECTORY_SIGNATURE);
       } else if (stats.isFile()) {
         const file = { path: relativePath, size: stats.size, mtimeMs: Math.trunc(stats.mtimeMs) };
+        if (fromWatcher && isOwnWriteEcho(relativePath, toFileSignature(file))) {
+          continue;
+        }
+
         const knownState = vaultIndexModel.getFileState(relativePath);
         if (isFileChanged(file, knownState)) {
           await indexFile(rootPath, file, knownState);
@@ -280,7 +347,7 @@ function flushWatchedPaths() {
   }
 
   const token = activeToken;
-  enqueueDetached(token, () => reindexWatchedPaths(token, relativePaths));
+  enqueueDetached(token, () => reindexWatchedPaths(token, relativePaths, { fromWatcher: true }));
 }
 
 function startWatcher() {
@@ -358,6 +425,7 @@ function stop() {
 
   activeToken += 1;
   activeVault = null;
+  recentlyIndexed.clear();
   stopWatcher();
   closeVaultIndexDatabase();
   indexState = { ...INDEX_STATE_DEFAULTS };

@@ -20,11 +20,28 @@ require.cache[electronPath] = {
   loaded: true,
   exports: {
     app: { getPath: () => dataDir, isPackaged: false },
-    BrowserWindow: { getAllWindows: () => [] },
+    BrowserWindow: {
+      getAllWindows: () => [
+        {
+          isDestroyed: () => false,
+          webContents: {
+            isDestroyed: () => false,
+            send: (channel) => {
+              if (channel === 'index:updated') {
+                broadcasts.updated += 1;
+              }
+            },
+          },
+        },
+      ],
+    },
   },
 };
 
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+/** `index:updated` pushes seen by the (fake) window: every one makes the open pages reload. */
+const broadcasts = { updated: 0 };
 
 function generateVault(vaultPath) {
   fs.mkdirSync(path.join(vaultPath, '.lazydm'), { recursive: true });
@@ -53,6 +70,13 @@ function generateVault(vaultPath) {
   }
 }
 
+/** Lets the file watcher report what LazyDM just wrote, then prints how many reloads the whole operation caused. */
+async function settle(label) {
+  await sleep(1500);
+  console.log(`  ${label}: ${broadcasts.updated} index:updated push(es) in total`);
+  broadcasts.updated = 0;
+}
+
 async function main() {
   const vaultPath = path.join(dataDir, 'vault');
   generateVault(vaultPath);
@@ -64,6 +88,7 @@ async function main() {
   while (indexer.getStatus().status !== 'ready') {
     await sleep(20);
   }
+  broadcasts.updated = 0;
   report(
     `full scan of ${indexer.getStatus().fileCount} files (${noteCount * LINKS_PER_NOTE} links)`,
     startedAt,
@@ -76,6 +101,7 @@ async function main() {
   startedAt = Date.now();
   await indexer.reindexPaths(['camp-one/npcs/brand-new.md']);
   report('create one note', startedAt);
+  await settle('create one note');
 
   fs.renameSync(
     path.join(vaultPath, 'camp-one', 'enemies'),
@@ -84,6 +110,21 @@ async function main() {
   startedAt = Date.now();
   await indexer.reindexPaths(['camp-one/enemies', 'camp-one/monsters']);
   report(`rename a folder of ${noteCount / sections.length} notes`, startedAt);
+  await settle('rename a folder');
+
+  // The echo skip must never hide a real change: an edit made by another app right after our own write.
+  const editedPath = 'camp-one/npcs/brand-new.md';
+  const vaultIndexModel = require(path.join(ROOT, 'electron/models/vault-index.model.js'));
+  fs.appendFileSync(path.join(vaultPath, editedPath), '\nEdited by another app, with a longer body.\n');
+  await sleep(1500);
+  const indexedSize = vaultIndexModel.getFileState(editedPath)?.size;
+  const diskSize = fs.statSync(path.join(vaultPath, editedPath)).size;
+  console.log(
+    `external edit right after our write: ${indexedSize === diskSize ? 'indexed (ok)' : `MISSED (index ${indexedSize}, disk ${diskSize})`}`,
+  );
+  if (indexedSize !== diskSize) {
+    process.exitCode = 1;
+  }
 
   indexer.stop();
 }
