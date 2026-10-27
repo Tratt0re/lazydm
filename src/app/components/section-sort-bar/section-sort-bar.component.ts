@@ -1,10 +1,7 @@
 import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 
-import {
-  SECTION_SORT_MODES,
-  type SectionSortMode,
-} from '@/config/section-sort.config';
+import { SECTION_SORT_MODES, type SectionSortMode } from '@/config/section-sort.config';
 import { ArcTechButtonComponent } from '@/shared/components/button';
 import { ArcTechIconComponent, type ArcTechIcon } from '@/shared/components/icon';
 import { ArcTechMenuImports } from '@/shared/components/menu';
