@@ -142,6 +142,22 @@ export class McpSectionComponent implements OnInit {
     void this.run(() => this.mcp.setAllowWrite(allowWrite));
   }
 
+  /** Switching on asks first: the agent can then send notes to the Trash. Switching off just stops it. */
+  protected onAllowDeleteChange(allowDelete: boolean): void {
+    if (!allowDelete) {
+      void this.run(() => this.mcp.setAllowDelete(false));
+      return;
+    }
+
+    this.alertDialogService.confirm({
+      arcTitle: this.translateService.instant('settings.mcp.delete.confirmTitle'),
+      arcDescription: this.translateService.instant('settings.mcp.delete.confirmDescription'),
+      arcOkText: this.translateService.instant('settings.mcp.delete.confirm'),
+      arcCancelText: this.translateService.instant('common.cancel'),
+      arcOnOk: () => void this.run(() => this.mcp.setAllowDelete(true)),
+    });
+  }
+
   protected onAutostartChange(autostart: boolean): void {
     void this.run(() => this.mcp.setAutostart(autostart));
   }

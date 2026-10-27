@@ -169,6 +169,7 @@ export interface ElectronIpcClient {
     readonly stop: OptionalIpcRequest<void, DTO.McpStatusDto>;
     readonly setAutostart: IpcRequest<{ autostart: boolean }, DTO.McpStatusDto>;
     readonly setAllowWrite: IpcRequest<{ allowWrite: boolean }, DTO.McpStatusDto>;
+    readonly setAllowDelete: IpcRequest<{ allowDelete: boolean }, DTO.McpStatusDto>;
     readonly setLimitScope: IpcRequest<{ limitScope: boolean }, DTO.McpStatusDto>;
     readonly setScopeRoots: IpcRequest<{ roots: readonly string[] }, DTO.McpStatusDto>;
     readonly setPort: IpcRequest<{ port: number }, DTO.McpStatusDto>;

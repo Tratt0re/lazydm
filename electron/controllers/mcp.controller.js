@@ -20,6 +20,8 @@ const SETTINGS_DEFAULTS = Object.freeze({
   autostart: false,
   /** Agents may create and change notes; without it the server only reads. */
   allowWrite: false,
+  /** Agents may send notes and folders to the system Trash; only counts while `allowWrite` is on. */
+  allowDelete: false,
   /** Agents only reach `scopeRoots` (campaign slugs, `compendium/<system>`); off = the whole Codex. */
   limitScope: false,
   scopeRoots: [],
@@ -62,6 +64,7 @@ function getStatus() {
     running: running !== null,
     autostart: settings.autostart === true,
     allowWrite: settings.allowWrite === true,
+    allowDelete: settings.allowDelete === true,
     limitScope: settings.limitScope === true,
     scopeRoots: readScopeRoots(settings),
     port,
@@ -92,13 +95,14 @@ async function start() {
 
   const token = ensureToken();
   const allowWrite = settings.allowWrite === true;
+  const allowDelete = allowWrite && settings.allowDelete === true;
   // Read once at start: a change of the limit restarts the server, so it never serves an old scope.
   const roots = settings.limitScope === true ? readScopeRoots(settings) : null;
   try {
     const server = await startMcpServer({
       port: settings.port,
       token,
-      createMcp: () => createMcpServer({ allowWrite, roots }),
+      createMcp: () => createMcpServer({ allowWrite, allowDelete, roots }),
     });
     running = server;
     lastError = null;
@@ -173,8 +177,19 @@ function setAutostart(payload) {
   return applySettings({ autostart: requireFlag(payload, 'autostart') });
 }
 
+/** Turning changes off also turns deleting off: it is never left on behind a switch the user can no longer see. */
 function setAllowWrite(payload) {
-  return applySettings({ allowWrite: requireFlag(payload, 'allowWrite') });
+  const allowWrite = requireFlag(payload, 'allowWrite');
+  return applySettings(allowWrite ? { allowWrite } : { allowWrite, allowDelete: false });
+}
+
+function setAllowDelete(payload) {
+  const allowDelete = requireFlag(payload, 'allowDelete');
+  if (allowDelete && readSettings().allowWrite !== true) {
+    throw new Error('Allow changes must be on before deleting can be allowed.');
+  }
+
+  return applySettings({ allowDelete });
 }
 
 function setLimitScope(payload) {
@@ -230,6 +245,7 @@ async function startIfWanted() {
 module.exports = {
   getStatus,
   regenerateToken,
+  setAllowDelete,
   setAllowWrite,
   setAutostart,
   setEnabled,

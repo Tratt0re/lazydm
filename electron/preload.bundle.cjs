@@ -123,6 +123,7 @@ var require_channels = __commonJS({
         stop: "mcp:stop",
         setAutostart: "mcp:setAutostart",
         setAllowWrite: "mcp:setAllowWrite",
+        setAllowDelete: "mcp:setAllowDelete",
         setLimitScope: "mcp:setLimitScope",
         setScopeRoots: "mcp:setScopeRoots",
         setPort: "mcp:setPort",

@@ -115,6 +115,7 @@ const IPC_HANDLERS = Object.freeze({
   [CHANNELS.mcp.stop]: mcpController.stop,
   [CHANNELS.mcp.setAutostart]: mcpController.setAutostart,
   [CHANNELS.mcp.setAllowWrite]: mcpController.setAllowWrite,
+  [CHANNELS.mcp.setAllowDelete]: mcpController.setAllowDelete,
   [CHANNELS.mcp.setLimitScope]: mcpController.setLimitScope,
   [CHANNELS.mcp.setScopeRoots]: mcpController.setScopeRoots,
   [CHANNELS.mcp.setPort]: mcpController.setPort,

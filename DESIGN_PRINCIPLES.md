@@ -507,8 +507,25 @@ Codex. It is **off by default** and lives in the Electron main process (`electro
   section or sub-folder of the same campaign or system), `add_asset` (an absolute path to an image, PDF or audio
   file on this computer, 200 MB cap; the file is read, nothing is returned from outside the Codex),
   `create_template`, `set_section_template`, `create_compendium_system`, `copy_note` (campaign ⇄ system, the
-  original stays). Changing *Allow changes* restarts a running server. There is no tool to delete, rename or trash
-  anything, and none that summarises: an assistant reads notes with the read tools and writes its own note.
+  original stays), `rename_note`, `rename_asset`, `rename_folder` (links rewritten like the app does; notes changed
+  meanwhile are reported and left alone) and `import_campaign` (below). Changing *Allow changes* restarts a running
+  server. None summarises: an assistant reads notes with the read tools and writes its own note.
+- **Trash.** `trash_file` (a note or an asset) and `trash_folder` (a sub-folder, with its files or after moving them
+  to the main folder) need a third switch, *Allow deleting* (`allowDelete`, off by default, shown only while *Allow
+  changes* is on). They send the item to the **system Trash** (recoverable), never delete for good, and turn the
+  links to it into plain text unless told otherwise. There is no tool to empty the Trash and none to delete a
+  campaign, a section or a compendium system: those stay the user's. The Trash is local to the computer: in a
+  synced folder the other devices see the file go at once.
+- **Import.** `scan_import_source` (read-only) and `import_campaign` read a folder of `.md` files on this computer —
+  Obsidian or any plain folder, its path given by the agent — and write a **new** campaign; they never merge into an
+  existing one. What they read is limited: only `.md` and media files (the types `add_asset` takes), no hidden
+  folders (`.obsidian`, `.git`), no symlinks, a source inside the Codex is refused, and caps on files and size.
+  The scan copies nothing and reports folders, counts, folders deeper than one level, names that collide once
+  slugged and files LazyDM cannot use. `import_campaign` takes a name and a mapping from source folder to section;
+  notes go to their section (deeper folders flatten into the sub-folder level), media to `assets/`, taken names get a
+  suffix, frontmatter and links are kept; files the mapping does not cover are skipped and listed. Refused while
+  *Limit to some campaigns* is on (it creates a campaign). Other apps' syntax (Logseq properties, Notion exports) is
+  not converted.
 - **Shared things.** `create_template` (vault-wide `_templates/`) and `create_compendium_system` belong to the whole
   Codex, not to a campaign, so they are refused while *Limit to some campaigns* is on. `set_section_template` links
   an existing template of an allowed campaign (or `builtin`, or automatic).
@@ -518,7 +535,7 @@ Codex. It is **off by default** and lives in the Electron main process (`electro
   backlinks that point outside are dropped. Nothing ticked = no notes reachable. This limits the MCP tools only: an
   assistant with its own file or shell tools can still write in the Codex folder, so *Settings → MCP* also shows how to
   deny that in Claude Code (`Edit(//<codex path>/**)`) and run Codex read-only (`sandbox_mode = "read-only"`).
-- **Device-local.** The settings (`mcp` section: `enabled`, `autostart`, `allowWrite`, `limitScope`, `scopeRoots`, `port`, `token`) live in
+- **Device-local.** The settings (`mcp` section: `enabled`, `autostart`, `allowWrite`, `allowDelete`, `limitScope`, `scopeRoots`, `port`, `token`) live in
   `settings-store`, never in the vault, so the token cannot sync through the cloud folder. The renderer follows the
   state through `mcp:statusChanged`.
 
@@ -872,6 +889,7 @@ Component behaviour, variant keys and configuration stay as they are.
 | 16.1 | UI smoothing review (phases A–F): glossary (Codex, Combatant, Tracker layout), Customize menu, "…" menus on toolbars and rows, start card and *New note* picker, Assets import as a modal with paste, two-step wizard modal, plainer errors, ornament rule reworded |
 | 17.1 | UI polish pass for the MVP (plan in `.claude/plans/ui-polish-mvp.plan.md`): compact tracker row (2-row Default layout, left rail, single "…" menu, Turn chip, statuses help once with an info icon) and a *Tracker rows* density setting, battle bar with the round and turn on one line, Encounters section page without watermark, note toolbar with Save and Links and the rest in the menu, collapsed properties box with a toggle (Live and Reading), code map hidden on short notes (option), icon-only open tab, ornament only on top-level pages, sans for note names, full-width left-aligned page columns, `warning` alert for Review, lighter light-theme fields and a readable destructive red, setup flow with icon rows and language and theme in the footer, side panels with a left margin |
 | 18.1 | MCP server (§6f): opt-in *Settings → MCP* tab, `MCP` + green/red dot in the title bar, loopback HTTP with bearer token, read tools and (opt-in) create / update / append tools reusing the controllers |
+| 18.2 | MCP: rename tools, trash tools behind *Allow deleting*, import of an Obsidian-like folder as a new campaign (`scan_import_source`, `import_campaign`) |
 
 ## 12. Open decisions
 

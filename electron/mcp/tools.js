@@ -2,6 +2,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 const { McpServer } = require('@modelcontextprotocol/sdk/server/mcp.js');
 const { z } = require('zod');
+const { importCampaign, scanSource } = require('./importer');
 const { createScopeGuard } = require('./scope');
 
 const SYNTAX_GUIDE_URI = 'lazydm://syntax-guide';
@@ -39,6 +40,8 @@ const WRITES = { readOnlyHint: false, destructiveHint: false, openWorldHint: fal
 /** The real controllers, loaded on first use (they need Electron; tests pass stubs instead). */
 function loadControllers() {
   return {
+    vaultPath: () => require('../controllers/vault.controller').getReadyVaultPath(),
+    reindex: (paths) => require('../controllers/indexer.controller').reindexPaths(paths),
     asset: require('../controllers/asset.controller'),
     campaign: require('../controllers/campaign.controller'),
     compendium: require('../controllers/compendium.controller'),
@@ -265,6 +268,26 @@ function registerReadTools(server, scope, c) {
     run(({ path: sourcePath, target }) =>
       c.document.copyPlan({ path: scope.resolve(sourcePath), target: scope.resolve(target) }),
     ),
+  );
+
+  server.registerTool(
+    'scan_import_source',
+    {
+      description:
+        'Looks at a folder of .md notes on this computer (Obsidian or any plain folder) and copies nothing: ' +
+        'folders with note and media counts, link styles, files that cannot be imported, notes nested deeper ' +
+        'than LazyDM allows, names that collide once slugged. Use it to choose the mapping for import_campaign. ' +
+        'Hidden folders and symbolic links are skipped; a folder inside the Codex is refused.' +
+        UNTRUSTED_NOTE,
+      inputSchema: {
+        sourcePath: z.string().describe('Absolute path of the folder to look at, outside the Codex.'),
+      },
+      annotations: READ_ONLY,
+    },
+    run(async ({ sourcePath }) => {
+      requireUnlimited(scope, 'Importing a campaign');
+      return scanSource({ sourcePath }, importDeps(c));
+    }),
   );
 
   server.registerResource(
@@ -534,6 +557,145 @@ function registerWriteTools(server, scope, c) {
       }),
     ),
   );
+
+  server.registerTool(
+    'rename_note',
+    {
+      description:
+        'Renames a note: the new title gives the new file name (slug) in the same folder, and the title and the ' +
+        'first heading are updated. With updateLinks (default true) the links to it in other notes are rewritten; ' +
+        'notes that changed meanwhile are listed in failedPaths and left alone.',
+      inputSchema: {
+        path: z.string().describe('Vault-relative path of the .md file.'),
+        title: z.string().describe('The new title.'),
+        updateLinks: z.boolean().optional().describe('Rewrite links to the note. Default true.'),
+      },
+      annotations: WRITES,
+    },
+    run(({ path: notePath, title, updateLinks }) =>
+      c.document.rename({ path: scope.resolve(notePath), title, updateLinks }),
+    ),
+  );
+
+  server.registerTool(
+    'rename_asset',
+    {
+      description:
+        'Renames an image, PDF or audio file: the new name gives the slug, the extension and folder stay. With ' +
+        'updateLinks (default true) the embeds and links to it are rewritten.',
+      inputSchema: {
+        path: z.string().describe('Vault-relative path of the asset.'),
+        name: z.string().describe('The new name.'),
+        updateLinks: z.boolean().optional().describe('Rewrite links to the asset. Default true.'),
+      },
+      annotations: WRITES,
+    },
+    run(({ path: assetPath, name, updateLinks }) =>
+      c.document.renameAsset({ path: scope.resolve(assetPath), name, updateLinks }),
+    ),
+  );
+
+  server.registerTool(
+    'rename_folder',
+    {
+      description:
+        'Renames a sub-folder of a section, e.g. "my-campaign/enemies/humans". The folder and the path links ' +
+        'through it are rewritten. A taken name is refused. Sections themselves cannot be renamed.',
+      inputSchema: {
+        folder: z.string().describe('The sub-folder, e.g. "my-campaign/enemies/humans".'),
+        name: z.string().describe('The new name; the folder name is its slug.'),
+      },
+      annotations: WRITES,
+    },
+    run(({ folder, name }) => c.document.renameFolder({ folder: scope.resolve(folder), name })),
+  );
+
+  registerImportTools(server, scope, c);
+}
+
+/** What the importer needs from the app: the open Codex, the media test, and the index update. */
+function importDeps(c) {
+  return {
+    vaultPath: c.vaultPath(),
+    isMedia: c.asset.isMediaFileName,
+    reindex: (paths) => c.reindex(paths),
+  };
+}
+
+/** Reads another folder of the computer and writes a new campaign: needs the whole Codex, not a campaign limit. */
+function registerImportTools(server, scope, c) {
+  server.registerTool(
+    'import_campaign',
+    {
+      description:
+        'Imports a folder of .md notes from another app (Obsidian or any plain folder) as a NEW campaign. Run ' +
+        'scan_import_source first, then call this with a mapping { "<source folder>": "<section>" } and dryRun ' +
+        'true to see the plan, then again with dryRun false. Never merges into an existing campaign. Links are ' +
+        'kept working (names become slugs; the old name stays as the link label), media that notes use go to ' +
+        'assets/, folders deeper than one level are flattened, files not mapped are skipped and listed. Only ' +
+        '.md and media files are read; hidden folders and symbolic links are skipped. Logseq properties and ' +
+        'Notion exports are not converted.' +
+        UNTRUSTED_NOTE,
+      inputSchema: {
+        sourcePath: z.string().describe('Absolute path of the folder to import, outside the Codex.'),
+        name: z.string().describe('Name of the new campaign; its folder is the slug.'),
+        mapping: z
+          .record(z.string(), z.string())
+          .describe('Source folder name (or "." for notes in the root) -> section, from scan_import_source.'),
+        description: z.string().optional().describe('One short line for the campaign card.'),
+        includeAllMedia: z
+          .boolean()
+          .optional()
+          .describe('Also copy media that no imported note uses. Default false.'),
+        dryRun: z.boolean().optional().describe('Only report the plan. Default false: do it.'),
+      },
+      annotations: WRITES,
+    },
+    run(async (input) => {
+      requireUnlimited(scope, 'Importing a campaign');
+      return importCampaign(input, importDeps(c));
+    }),
+  );
+}
+
+/** Sends files and folders to the system Trash (recoverable). Needs both Allow changes and Allow deleting. */
+function registerTrashTools(server, scope, c) {
+  server.registerTool(
+    'trash_file',
+    {
+      description:
+        'Moves a note or an asset to the system Trash (recoverable by the user, never deleted for good). With ' +
+        'rewriteLinks (default true) the links to a note become plain text and the embeds of an asset are ' +
+        'removed; with false the links stay and show as broken. Check get_note_links first.',
+      inputSchema: {
+        path: z.string().describe('Vault-relative path of the file.'),
+        rewriteLinks: z.boolean().optional().describe('Handle links to it. Default true.'),
+      },
+      annotations: { readOnlyHint: false, destructiveHint: true, openWorldHint: false },
+    },
+    run(({ path: filePath, rewriteLinks }) =>
+      c.document.deleteFile({ path: scope.resolve(filePath), rewriteLinks }),
+    ),
+  );
+
+  server.registerTool(
+    'trash_folder',
+    {
+      description:
+        'Moves a sub-folder of a section to the system Trash (recoverable). mode "delete" sends its files with it; ' +
+        'mode "moveToMain" first moves its files to the main folder of the section (links rewritten) and stops with ' +
+        'status "clashes" if a name is taken there. Sections and whole campaigns cannot be trashed from here.',
+      inputSchema: {
+        folder: z.string().describe('The sub-folder, e.g. "my-campaign/enemies/humans".'),
+        mode: z.enum(['delete', 'moveToMain']).describe('What happens to the files inside.'),
+        rewriteLinks: z.boolean().optional().describe('Handle links to the files. Default true.'),
+      },
+      annotations: { readOnlyHint: false, destructiveHint: true, openWorldHint: false },
+    },
+    run(({ folder, mode, rewriteLinks }) =>
+      c.document.deleteFolder({ folder: scope.resolve(folder), mode, rewriteLinks }),
+    ),
+  );
 }
 
 /**
@@ -541,7 +703,7 @@ function registerWriteTools(server, scope, c) {
  * `roots` limits it to some campaigns / compendium systems (see `createScopeGuard`); null = the whole Codex.
  * `controllers` is for tests; the app uses the real ones.
  */
-function createMcpServer({ allowWrite, roots = null, controllers = null }) {
+function createMcpServer({ allowWrite, allowDelete = false, roots = null, controllers = null }) {
   const scope = createScopeGuard(roots);
   const c = controllers ?? loadControllers();
   const server = new McpServer(
@@ -560,6 +722,10 @@ function createMcpServer({ allowWrite, roots = null, controllers = null }) {
   registerReadTools(server, scope, c);
   if (allowWrite) {
     registerWriteTools(server, scope, c);
+    // Deleting is a separate switch and only on top of writing, never on its own.
+    if (allowDelete) {
+      registerTrashTools(server, scope, c);
+    }
   }
 
   return server;

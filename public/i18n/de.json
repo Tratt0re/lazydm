@@ -400,6 +400,13 @@
         "claude": "Sperre in Claude Code Dateibearbeitungen im Codex-Ordner, in ~/.claude/settings.json, und lass Shell-Befehle bestätigen:",
         "codex": "Starte Codex schreibgeschützt, in ~/.codex/config.toml (oder mit --sandbox read-only):",
         "limits": "Eine Sperrregel hält nicht jeden Shell-Befehl auf, und nichts hier ersetzt ein Backup deines Codex."
+      },
+      "delete": {
+        "label": "Löschen erlauben",
+        "hint": "Assistenten dürfen Notizen und Unterordner in den Papierkorb legen. Nichts wird endgültig gelöscht, Kampagnen bleiben unberührt. Standardmäßig aus.",
+        "confirmTitle": "Assistenten das Löschen erlauben?",
+        "confirmDescription": "Sie können Notizen, Dateien und Unterordner in den Papierkorb legen; Links darauf werden zu einfachem Text. Du kannst sie aus dem Papierkorb wiederherstellen. Liegt dein Codex in einem synchronisierten Ordner, verschwinden sie auf deinen anderen Geräten sofort.",
+        "confirm": "Löschen erlauben"
       }
     }
   },

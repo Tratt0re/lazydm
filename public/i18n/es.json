@@ -400,6 +400,13 @@
         "claude": "En Claude Code, prohíbe editar archivos en la carpeta del Codex, en ~/.claude/settings.json, y deja los comandos de shell con confirmación:",
         "codex": "En Codex, inícialo en solo lectura, en ~/.codex/config.toml (o con --sandbox read-only):",
         "limits": "Una regla de denegación no detiene todos los comandos de shell, y nada de esto sustituye una copia de seguridad del Codex."
+      },
+      "delete": {
+        "label": "Permitir eliminar",
+        "hint": "Permite a los asistentes enviar notas y subcarpetas a la Papelera. Nada se elimina para siempre y las campañas nunca se tocan. Apagado por defecto.",
+        "confirmTitle": "¿Permitir que los asistentes eliminen?",
+        "confirmDescription": "Podrán enviar notas, recursos y subcarpetas a la Papelera, y los enlaces a ellos pasan a texto simple. Puedes restaurarlos desde la Papelera. Si tu Codex está en una carpeta sincronizada, tus otros dispositivos los verán desaparecer al instante.",
+        "confirm": "Permitir eliminar"
       }
     }
   },

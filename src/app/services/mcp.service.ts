@@ -59,6 +59,10 @@ export class McpService extends BaseIpcService<APIChannel.MCP> {
     this.stateSignal.set(await this.ipcClient.setAllowWrite({ allowWrite }));
   }
 
+  async setAllowDelete(allowDelete: boolean): Promise<void> {
+    this.stateSignal.set(await this.ipcClient.setAllowDelete({ allowDelete }));
+  }
+
   async setLimitScope(limitScope: boolean): Promise<void> {
     this.stateSignal.set(await this.ipcClient.setLimitScope({ limitScope }));
   }

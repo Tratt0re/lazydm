@@ -4,6 +4,8 @@ export interface McpStatusDto {
   readonly running: boolean;
   readonly autostart: boolean;
   readonly allowWrite: boolean;
+  /** Agents may send notes and folders to the system Trash; only while `allowWrite` is on. */
+  readonly allowDelete: boolean;
   /** Agents only reach `scopeRoots`; off = the whole Codex. */
   readonly limitScope: boolean;
   /** Campaign slugs (`lost-mine`) and compendium systems (`compendium/dnd-5e`) agents may reach. */

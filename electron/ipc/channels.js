@@ -109,6 +109,7 @@ const CHANNELS = Object.freeze({
     stop: 'mcp:stop',
     setAutostart: 'mcp:setAutostart',
     setAllowWrite: 'mcp:setAllowWrite',
+    setAllowDelete: 'mcp:setAllowDelete',
     setLimitScope: 'mcp:setLimitScope',
     setScopeRoots: 'mcp:setScopeRoots',
     setPort: 'mcp:setPort',

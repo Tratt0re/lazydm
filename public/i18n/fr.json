@@ -400,6 +400,13 @@
         "claude": "Dans Claude Code, interdisez la modification de fichiers dans le dossier du Codex, dans ~/.claude/settings.json, et gardez les commandes shell avec confirmation :",
         "codex": "Dans Codex, lancez-le en lecture seule, dans ~/.codex/config.toml (ou avec --sandbox read-only) :",
         "limits": "Une règle d’interdiction n’arrête pas toutes les commandes shell, et rien ici ne remplace une sauvegarde de votre Codex."
+      },
+      "delete": {
+        "label": "Autoriser la suppression",
+        "hint": "Permet aux assistants d’envoyer des notes et des sous-dossiers à la Corbeille. Rien n’est supprimé définitivement et les campagnes ne sont jamais touchées. Désactivé par défaut.",
+        "confirmTitle": "Autoriser les assistants à supprimer ?",
+        "confirmDescription": "Ils pourront envoyer des notes, des fichiers et des sous-dossiers à la Corbeille, et les liens vers eux deviennent du texte simple. Vous pouvez les restaurer depuis la Corbeille. Si votre Codex est dans un dossier synchronisé, vos autres appareils les verront disparaître aussitôt.",
+        "confirm": "Autoriser la suppression"
       }
     }
   },

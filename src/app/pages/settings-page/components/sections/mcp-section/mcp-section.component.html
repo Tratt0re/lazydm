@@ -93,6 +93,20 @@
               (arcCheckedChange)="onAllowWriteChange($event)"
             />
           </div>
+          @if (mcp.allowWrite) {
+            <div class="flex items-center justify-between gap-4">
+              <div class="min-w-0">
+                <p class="text-sm font-medium">{{ 'settings.mcp.delete.label' | translate }}</p>
+                <p class="text-xs text-muted-foreground">{{ 'settings.mcp.delete.hint' | translate }}</p>
+              </div>
+              <arc-switch
+                [arcChecked]="mcp.allowDelete"
+                [arcDisabled]="isBusy()"
+                [arcAriaLabel]="'settings.mcp.delete.label' | translate"
+                (arcCheckedChange)="onAllowDeleteChange($event)"
+              />
+            </div>
+          }
           <div class="flex items-center justify-between gap-4">
             <div class="min-w-0">
               <p class="text-sm font-medium">{{ 'settings.mcp.scope.label' | translate }}</p>

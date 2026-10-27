@@ -400,6 +400,13 @@
         "claude": "In Claude Code, vieta le modifiche ai file nella cartella del Codex, in ~/.claude/settings.json, e tieni i comandi di shell con richiesta di conferma:",
         "codex": "In Codex, avvialo in sola lettura, in ~/.codex/config.toml (o con --sandbox read-only):",
         "limits": "Una regola di divieto non ferma ogni comando di shell, e nulla qui sostituisce una copia di backup del Codex."
+      },
+      "delete": {
+        "label": "Consenti eliminazioni",
+        "hint": "Permette agli assistenti di mandare note e sottocartelle nel Cestino. Nulla viene eliminato per sempre e le campagne non vengono mai toccate. Spento di default.",
+        "confirmTitle": "Consentire agli assistenti di eliminare?",
+        "confirmDescription": "Potranno mandare nel Cestino note, risorse e sottocartelle, e i collegamenti verso di esse diventano testo semplice. Puoi ripristinarli dal Cestino. Se il Codex è in una cartella sincronizzata, gli altri dispositivi li vedranno sparire subito.",
+        "confirm": "Consenti eliminazioni"
       }
     }
   },

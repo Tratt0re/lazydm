@@ -400,6 +400,13 @@
         "claude": "In Claude Code, deny file edits in the Codex folder, in ~/.claude/settings.json, and keep shell commands on ask-first:",
         "codex": "In Codex, start it read-only, in ~/.codex/config.toml (or with --sandbox read-only):",
         "limits": "A deny rule does not stop every shell command, and nothing here replaces a backup of your Codex."
+      },
+      "delete": {
+        "label": "Allow deleting",
+        "hint": "Lets assistants send notes and sub-folders to the Trash. Nothing is deleted for good, and campaigns are never touched. Off by default.",
+        "confirmTitle": "Allow assistants to delete?",
+        "confirmDescription": "They will be able to send notes, assets and sub-folders to the Trash, and links to them become plain text. You can restore them from the Trash. If your Codex is in a synced folder, your other devices will see them disappear at once.",
+        "confirm": "Allow deleting"
       }
     }
   },

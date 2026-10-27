@@ -60,7 +60,10 @@ Body text.
 - A campaign never links into the compendium or into another campaign. Copy what you need first (copy_note).
 - Do not invent links: use search_notes, list_notes or get_note_links to check a target exists. An unresolved link
   shows as broken on the campaign's Review page.
-- Do not rename or move files by hand; move_note rewrites the links that point to the note.
+- Do not rename or move files by hand; rename_note, rename_asset, rename_folder and move_note rewrite the links
+  that point to them. Deleting is trash_file / trash_folder when the user allowed it (the system Trash, recoverable).
+- To bring in notes from another app (Obsidian or a plain folder of .md files): scan_import_source, then
+  import_campaign with a folder -> section mapping (dryRun first). It always creates a new campaign.
 
 ## Markdown that the editor renders
 
