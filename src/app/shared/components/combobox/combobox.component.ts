@@ -43,6 +43,8 @@ export interface ArcTechComboboxOption {
   label: string;
   disabled?: boolean;
   icon?: ArcTechIcon;
+  /** Muted second line under the label, also searched (a file path, for notes that share a name). */
+  description?: string;
 }
 
 export interface ArcTechComboboxGroup {
@@ -176,6 +178,7 @@ export interface ArcTechComboboxGroup {
       <arc-command-option
         [arcValue]="option.value"
         [arcLabel]="option.label"
+        [arcDescription]="option.description ?? ''"
         [arcDisabled]="option.disabled ?? false"
         [arcIcon]="option.icon"
         [arcSelected]="isOptionSelected(option.value)"

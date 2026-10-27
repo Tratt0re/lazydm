@@ -42,7 +42,14 @@ import { mergeClasses, transform } from '@/shared/utils/merge-classes';
         @if (arcIcon()) {
           <div arc-icon [arcType]="arcIcon()!" class="mr-2 flex shrink-0 items-center justify-center"></div>
         }
-        <span class="flex-1">{{ arcLabel() }}</span>
+        <span class="flex min-w-0 flex-1 flex-col">
+          <span>{{ arcLabel() }}</span>
+          @if (arcDescription()) {
+            <span class="truncate font-mono text-[11px] tracking-[0.02em] text-muted-foreground">
+              {{ arcDescription() }}
+            </span>
+          }
+        </span>
         @if (arcShortcut()) {
           <span [class]="shortcutClasses()">{{ arcShortcut() }}</span>
         }
@@ -67,6 +74,8 @@ export class ArcTechCommandOptionComponent {
   readonly arcValue = input.required<unknown>();
   readonly arcLabel = input.required<string>();
   readonly arcCommand = input<string>('');
+  /** Second, muted line under the label (e.g. a file path); the search of the list also looks in it. */
+  readonly arcDescription = input<string>('');
   readonly arcIcon = input<ArcTechIcon>();
   readonly arcShortcut = input<string>('');
   readonly arcDisabled = input(false, { transform });

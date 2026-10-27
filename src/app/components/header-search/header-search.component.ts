@@ -16,6 +16,7 @@ import { CampaignService } from '@/services/campaign.service';
 import { SearchService } from '@/services/search.service';
 import { SectionService } from '@/services/section.service';
 import { ArcTechIconComponent } from '@/shared/components/icon';
+import { toDisplayPath } from '@/shared/utils/vault-path';
 
 /** Milliseconds to wait after the user stops typing before firing a search. */
 const DEBOUNCE_MS = 150;
@@ -31,6 +32,8 @@ interface SearchHit extends SearchResultDto {
   readonly route: string;
   /** Display name of the section the note's folder is, null outside a section. */
   readonly sectionLabel: string | null;
+  /** The path shown under the title: the campaign folder left out, the rest as it is in the Codex. */
+  readonly displayPath: string;
   readonly snippetParts: readonly SnippetPart[];
 }
 
@@ -165,6 +168,7 @@ export class HeaderSearchComponent {
             ...row,
             route,
             sectionLabel: row.type ? this.sectionService.labelOfPath(row.path) : null,
+            displayPath: toDisplayPath(row.path),
             snippetParts: toSnippetParts(row.snippet ?? ''),
           });
         }

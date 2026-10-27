@@ -51,6 +51,7 @@ import {
 import { ASSET_FILE_PARAM, ASSET_SUBFOLDER_PARAM } from '@/pages/asset-page/asset-page';
 import { CAMPAIGN_SECTION_PARAM } from '@/pages/campaign-section-page/campaign-section-page';
 import { onIndexUpdated } from '@/services/ipc-events';
+import { toDisplayPath } from '@/shared/utils/vault-path';
 import { DocumentService } from '@/services/document.service';
 import { CopyToService } from '@/services/copy-to.service';
 import { FileActionsService } from '@/services/file-actions.service';
@@ -1959,6 +1960,7 @@ export class MapPage {
               ...targets.map((target) => ({
                 value: target.path,
                 label: target.title || target.name,
+                description: toDisplayPath(target.path),
                 translate: false,
               })),
             ],

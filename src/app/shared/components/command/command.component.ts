@@ -130,7 +130,12 @@ export class ArcTechCommandComponent implements ControlValueAccessor, ArcTechCom
     return this.optionComponents().filter(option => {
       const label = option.arcLabel().toLowerCase();
       const command = option.arcCommand()?.toLowerCase() ?? '';
-      return label.includes(lowerSearchTerm) || command.includes(lowerSearchTerm);
+      const description = option.arcDescription()?.toLowerCase() ?? '';
+      return (
+        label.includes(lowerSearchTerm) ||
+        command.includes(lowerSearchTerm) ||
+        description.includes(lowerSearchTerm)
+      );
     });
   });
 

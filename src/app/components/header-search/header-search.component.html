@@ -76,6 +76,9 @@
                     </span>
                   }
                 </span>
+                <span class="truncate pl-5 font-mono text-[11px] tracking-[0.02em] text-muted-foreground">
+                  {{ hit.displayPath }}
+                </span>
                 @if (hit.snippetParts.length) {
                   <span class="line-clamp-1 pl-5 font-sans text-[11px] leading-snug text-muted-foreground">
                     @for (part of hit.snippetParts; track $index) {

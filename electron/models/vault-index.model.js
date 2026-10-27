@@ -167,13 +167,35 @@ function hasFileNamed(scope, name) {
   );
 }
 
-/**
- * Full-text search within a campaign (or compendium scope). Searches both title and body.
- * @param {string|null} scope - Campaign slug (e.g. `lost-mine`) or `compendium/<system>`, or null for all.
- * @param {string} term - Raw user input; sanitised and converted to a prefix FTS5 query.
- * @returns {{ path: string, title: string, kind: string, type: string|null, snippet: string }[]}
- */
-function searchFiles(scope, term) {
+const SEARCH_LIMIT = 20;
+
+/** Escapes the characters that mean something to LIKE, so a path such as `100%_done` is searched literally. */
+function escapeLike(text) {
+  return text.replace(/[!%_]/g, (character) => `!${character}`);
+}
+
+/** Notes whose path contains every word typed (case-insensitive): `scene/capitolo-1/` lists that folder. */
+function searchByPath(scope, words, limit) {
+  const conditions = words.map(() => "f.path LIKE ? ESCAPE '!'").join(' AND ');
+  return getVaultIndexDatabase()
+    .prepare(
+      `SELECT f.path,
+              COALESCE(f.title, f.name) AS title,
+              f.kind,
+              f.type,
+              '' AS snippet
+       FROM files f
+       WHERE (? IS NULL OR f.campaign IS ?)
+         AND f.kind = 'md'
+         AND f.path NOT LIKE '%/!_templates/%' ESCAPE '!'
+         AND ${conditions}
+       ORDER BY length(f.path), f.path
+       LIMIT ?`,
+    )
+    .all(scope, scope, ...words.map((word) => `%${escapeLike(word)}%`), limit);
+}
+
+function searchByText(scope, term, limit) {
   // Sanitise: strip FTS5 operators, collapse whitespace, require at least one word.
   const words = term
     .replace(/["""''*^():\-]/g, ' ')
@@ -199,9 +221,36 @@ function searchFiles(scope, term) {
          AND f.path NOT LIKE '%/!_templates/%' ESCAPE '!'
          AND files_fts MATCH ?
        ORDER BY rank
-       LIMIT 20`,
+       LIMIT ?`,
     )
-    .all(scope, scope, query);
+    .all(scope, scope, query, limit);
+}
+
+/**
+ * Search within a campaign (or compendium scope): the notes whose path contains what was typed come first, then the
+ * full-text matches on title and body (the same note is listed once, with its text snippet when it has one).
+ * @param {string|null} scope - Campaign slug (e.g. `lost-mine`) or `compendium/<system>`, or null for all.
+ * @param {string} term - Raw user input; sanitised and converted to a prefix FTS5 query.
+ * @returns {{ path: string, title: string, kind: string, type: string|null, snippet: string }[]}
+ */
+function searchFiles(scope, term) {
+  const pathWords = term.trim().split(/\s+/).filter(Boolean);
+  if (pathWords.length === 0) {
+    return [];
+  }
+
+  const byText = searchByText(scope, term, SEARCH_LIMIT);
+  const snippets = new Map(byText.map((row) => [row.path, row]));
+  const rows = [];
+  const seen = new Set();
+  for (const row of [...searchByPath(scope, pathWords, SEARCH_LIMIT), ...byText]) {
+    if (!seen.has(row.path)) {
+      seen.add(row.path);
+      rows.push(snippets.get(row.path) ?? row);
+    }
+  }
+
+  return rows.slice(0, SEARCH_LIMIT);
 }
 
 function countFiles() {

@@ -127,4 +127,55 @@ describeWithSqlite('vault index link resolution', () => {
     model.resolveLinks();
     expect(resolved('camp/refs.md')).toEqual([['unique-target', null]]);
   });
+
+  describe('search', () => {
+    const body = (text) => ({ title: 'T', frontmatter: {}, tags: [], headings: [], body: text, links: [], type: null });
+    const save = (filePath, text = '') =>
+      model.saveFile({ path: filePath, size: 10, mtimeMs: 1 }, { ...body(text), title: path.posix.basename(filePath, '.md') });
+    const paths = (term, scope = 'srch') => model.searchFiles(scope, term).map((row) => row.path);
+
+    beforeAll(() => {
+      save('srch/scene/capitolo-1/arrivo.md', 'the party arrives');
+      save('srch/scene/capitolo-1/imboscata.md', 'goblins attack');
+      save('srch/scene/capitolo-2/arrivo.md', 'second arrival');
+      save('srch/npcs/goblin-king.md', 'rules the scene from below');
+      save('srch/npcs/100%_done.md', 'a literal percent sign');
+      save('srch/npcs/100x done.md', 'not a literal percent sign');
+      save('srch/_templates/scene.md', 'template body');
+      save('other/scene/capitolo-1/estraneo.md', 'another campaign');
+    });
+
+    it('finds the notes of a folder by their path', () => {
+      expect(paths('scene/capitolo-1/')).toEqual([
+        'srch/scene/capitolo-1/arrivo.md',
+        'srch/scene/capitolo-1/imboscata.md',
+      ]);
+    });
+
+    it('matches the path case-insensitively and needs every word', () => {
+      expect(paths('SCENE capitolo-2')).toEqual(['srch/scene/capitolo-2/arrivo.md']);
+    });
+
+    it('lists a note once, path matches first, and keeps the text snippet', () => {
+      const rows = model.searchFiles('srch', 'scene');
+      const found = rows.map((row) => row.path);
+      expect(new Set(found).size).toBe(found.length);
+      expect(found.slice(0, 3).every((item) => item.includes('/scene/'))).toBe(true);
+      expect(found).toContain('srch/npcs/goblin-king.md');
+      expect(rows.find((row) => row.path === 'srch/npcs/goblin-king.md').snippet).toContain('<m>');
+    });
+
+    it('treats % and _ in the typed text literally', () => {
+      expect(paths('100%_done')).toEqual(['srch/npcs/100%_done.md']);
+    });
+
+    it('stays inside the scope and out of the templates', () => {
+      expect(paths('scene')).not.toContain('other/scene/capitolo-1/estraneo.md');
+      expect(paths('scene')).not.toContain('srch/_templates/scene.md');
+    });
+
+    it('returns nothing for an empty search', () => {
+      expect(paths('   ')).toEqual([]);
+    });
+  });
 });

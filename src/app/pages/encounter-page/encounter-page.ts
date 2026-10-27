@@ -69,6 +69,7 @@ import { ArcTechCheckboxComponent } from '@/shared/components/checkbox';
 import { ArcTechMenuImports } from '@/shared/components/menu';
 import { ArcTechTooltipImports } from '@/shared/components/tooltip';
 import { rollDice } from '@/shared/utils/dice';
+import { toDisplayPath } from '@/shared/utils/vault-path';
 
 /** Health points of an entity (`values[<healthbar field key>]`); each part is optional. */
 interface HealthValue {
@@ -791,6 +792,7 @@ export class EncounterPage {
             options: this.scopeNotes().map((note) => ({
               value: note.path,
               label: note.title,
+              description: toDisplayPath(note.path),
               icon: 'file-text' as const,
             })),
           },
@@ -1463,9 +1465,10 @@ export class EncounterPage {
     }
 
     try {
-      const file = this.isParty() && this.scope()
-        ? await this.encounterService.party(this.scope()!.rootPath, this.title())
-        : await this.encounterService.read(path);
+      const file =
+        this.isParty() && this.scope()
+          ? await this.encounterService.party(this.scope()!.rootPath, this.title())
+          : await this.encounterService.read(path);
       if (
         file.contentHash !== loaded.contentHash &&
         !shared.save.isSaving &&
@@ -1724,7 +1727,11 @@ export class EncounterPage {
           expectedHash: file.contentHash,
         });
         if (result.status === 'saved') {
-          this.shared().file.set({ ...file, contentHash: result.contentHash, mtimeMs: result.mtimeMs });
+          this.shared().file.set({
+            ...file,
+            contentHash: result.contentHash,
+            mtimeMs: result.mtimeMs,
+          });
         } else {
           this.shared().save.needsSave = false;
           this.openConflictSheet(result.current);
