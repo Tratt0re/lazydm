@@ -342,39 +342,135 @@ function deleteAll() {
   })();
 }
 
+/** SQLite's NOCASE folds ASCII letters only: `É` and `é` are different names, `A` and `a` are the same. */
+function foldAscii(text) {
+  return text.replace(/[A-Z]/g, (letter) => letter.toLowerCase());
+}
+
+function addToList(map, key, value) {
+  const list = map.get(key);
+  if (list) {
+    list.push(value);
+  } else {
+    map.set(key, [value]);
+  }
+}
+
+/** Lookup tables over the files of one scope, so a link finds its candidates without scanning them all. */
+function buildScopeLookup(files) {
+  const byPath = new Map();
+  const byBaseName = new Map();
+  const byName = new Map();
+  for (const file of files) {
+    byPath.set(file.path, file);
+    addToList(byBaseName, file.path.slice(file.path.lastIndexOf('/') + 1), file);
+    addToList(byName, foldAscii(file.name), file);
+  }
+  return { byPath, byBaseName, byName };
+}
+
 /**
- * Re-resolves every link target, only among the files of the source's own scope (its campaign, or its
- * compendium system): a campaign never resolves into the compendium or another campaign. Order of
- * preference: exact path, path suffix (`enemies/grimlock`), then by name, then the shortest path.
- * Heading-only links (`[[#Treasure]]`) point to their own file.
+ * The file a link points to inside its scope, or null. Order of preference: exact path (with or without
+ * `.md`), then path suffix (`enemies/grimlock`), then name (case-insensitive), then the shortest path.
  */
-function resolveLinks() {
-  getVaultIndexDatabase()
+function findLinkTarget(lookup, link) {
+  const best = { file: null, tier: -1, length: 0 };
+  const consider = (file, tier) => {
+    if (
+      tier > best.tier ||
+      (tier === best.tier && file.path.length < best.length) ||
+      (tier === best.tier && file.path.length === best.length && file.id < best.file.id)
+    ) {
+      best.file = file;
+      best.tier = tier;
+      best.length = file.path.length;
+    }
+  };
+
+  const targetPath = link.target_path;
+  if (targetPath) {
+    for (const exact of [targetPath, `${targetPath}.md`]) {
+      const file = lookup.byPath.get(exact);
+      if (file) {
+        consider(file, 2);
+      }
+    }
+
+    const baseName = targetPath.slice(targetPath.lastIndexOf('/') + 1);
+    for (const suffix of [targetPath, `${targetPath}.md`]) {
+      const baseCandidates =
+        lookup.byBaseName.get(suffix === targetPath ? baseName : `${baseName}.md`) ?? [];
+      for (const file of baseCandidates) {
+        if (file.path.endsWith(`/${suffix}`)) {
+          consider(file, 1);
+        }
+      }
+    }
+  }
+
+  for (const file of lookup.byName.get(foldAscii(link.target_name)) ?? []) {
+    consider(file, 0);
+  }
+
+  return best.file;
+}
+
+/**
+ * The scopes (`files.campaign`) a change to these vault paths can affect: a campaign, a compendium system, or
+ * null for vault-level files. A link only resolves inside its own scope.
+ */
+function getAffectedScopes(relativePaths) {
+  const scopes = new Set();
+  for (const relativePath of relativePaths) {
+    scopes.add(getCampaignSlug(relativePath));
+    if (!relativePath.includes('/') && isCampaignDirName(relativePath)) {
+      scopes.add(relativePath);
+    }
+  }
+  return scopes;
+}
+
+function listScopeLinkRows(database, scope) {
+  return database
     .prepare(
-      `UPDATE links SET target_file_id = CASE
-         WHEN links.target_name = '' THEN links.source_file_id
-         ELSE (
-           SELECT f.id
-           FROM files f, files s
-           WHERE s.id = links.source_file_id
-             AND f.campaign IS s.campaign
-             AND (
-               f.path = links.target_path
-               OR f.path = links.target_path || '.md'
-               OR substr(f.path, -length('/' || links.target_path)) = '/' || links.target_path
-               OR substr(f.path, -length('/' || links.target_path || '.md')) = '/' || links.target_path || '.md'
-               OR f.name = links.target_name COLLATE NOCASE
-             )
-           ORDER BY
-             (f.path = links.target_path OR f.path = links.target_path || '.md') DESC,
-             (substr(f.path, -length('/' || links.target_path)) = '/' || links.target_path
-               OR substr(f.path, -length('/' || links.target_path || '.md')) = '/' || links.target_path || '.md') DESC,
-             length(f.path) ASC
-           LIMIT 1
-         )
-       END`,
+      `SELECT l.id, l.source_file_id, l.target_path, l.target_name, l.target_file_id
+       FROM links l JOIN files s ON s.id = l.source_file_id
+       WHERE s.campaign IS ?`,
     )
-    .run();
+    .all(scope);
+}
+
+/**
+ * Re-resolves link targets, only among the files of the source's own scope (its campaign, or its compendium
+ * system): a campaign never resolves into the compendium or another campaign. Heading-only links
+ * (`[[#Treasure]]`) point to their own file. Works in memory per scope and writes only the links that changed,
+ * so the cost follows the scopes given, not the whole vault.
+ *
+ * @param {Iterable<string|null>|null} scopes - Scopes to re-resolve (see `getAffectedScopes`); null: every scope.
+ */
+function resolveLinks(scopes = null) {
+  const database = getVaultIndexDatabase();
+  const scopeList = scopes
+    ? [...scopes]
+    : database
+        .prepare('SELECT DISTINCT campaign FROM files')
+        .all()
+        .map((row) => row.campaign);
+  const listFiles = database.prepare('SELECT id, path, name FROM files WHERE campaign IS ?');
+  const updateTarget = database.prepare('UPDATE links SET target_file_id = ? WHERE id = ?');
+
+  database.transaction(() => {
+    for (const scope of scopeList) {
+      const lookup = buildScopeLookup(listFiles.all(scope));
+      for (const link of listScopeLinkRows(database, scope)) {
+        const targetId =
+          link.target_name === '' ? link.source_file_id : (findLinkTarget(lookup, link)?.id ?? null);
+        if (targetId !== link.target_file_id) {
+          updateTarget.run(targetId, link.id);
+        }
+      }
+    }
+  })();
 }
 
 module.exports = {
@@ -382,6 +478,7 @@ module.exports = {
   deleteAll,
   searchFiles,
   deletePath,
+  getAffectedScopes,
   getCampaignSlug,
   getFileKind,
   getFileName,

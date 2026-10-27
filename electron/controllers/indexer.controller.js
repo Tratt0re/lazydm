@@ -190,7 +190,7 @@ function publishChanges(changedPaths) {
     return;
   }
 
-  vaultIndexModel.resolveLinks();
+  vaultIndexModel.resolveLinks(vaultIndexModel.getAffectedScopes(changedPaths));
   setIndexState({ fileCount: vaultIndexModel.countFiles(), lastIndexedAtMs: Date.now() });
   broadcastIpcEvent(INDEX_EVENT_CHANNELS.updated, { paths: changedPaths });
 }
