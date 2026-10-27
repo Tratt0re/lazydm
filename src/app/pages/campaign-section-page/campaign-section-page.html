@@ -260,6 +260,11 @@
           </button>
         </ng-template>
       } @else {
+        <app-section-sort-bar
+          [count]="files().length + folders().length"
+          [mode]="sortMode()"
+          (changed)="setSortMode($event)"
+        />
         <ul class="flex flex-col border border-border bg-card">
           @for (folder of folders(); track folder.name) {
             @let isOpen = isExpanded(folder.name);

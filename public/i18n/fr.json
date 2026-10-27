@@ -572,6 +572,7 @@
       "sort": {
         "label": "Trier",
         "ariaLabel": "Trier les fichiers",
+        "entries": "{{count}} éléments",
         "name-asc": "Nom A → Z",
         "name-desc": "Nom Z → A",
         "modified": "Modifiés récemment",

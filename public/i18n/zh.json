@@ -572,6 +572,7 @@
       "sort": {
         "label": "排序",
         "ariaLabel": "文件排序",
+        "entries": "{{count}} 项",
         "name-asc": "名称 A → Z",
         "name-desc": "名称 Z → A",
         "modified": "最近修改",
