@@ -226,7 +226,9 @@ var require_package = __commonJS({
         "electron:dev": "npm run build:preload && electronmon .",
         "electron:start": "npm run build:preload && electron .",
         "electron:prod": "npm run build:prod && electron . --prod",
-        dev: 'concurrently -k "ng serve" "npm run preload:watch" "wait-on http://localhost:4200 && npm run electron:dev"'
+        dev: 'concurrently -k "ng serve" "npm run preload:watch" "wait-on http://localhost:4200 && npm run electron:dev"',
+        "test:electron:index": "ELECTRON_RUN_AS_NODE=1 electron node_modules/vitest/vitest.mjs run --config vitest.electron.config.mjs electron/__tests__/link-resolution.test.js",
+        "bench:index": "ELECTRON_RUN_AS_NODE=1 electron scripts/bench-index.js"
       },
       prettier: {
         printWidth: 100,
