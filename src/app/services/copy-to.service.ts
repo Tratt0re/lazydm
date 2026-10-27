@@ -15,6 +15,7 @@ import { CompendiumService } from '@/services/compendium.service';
 import { DocumentService } from '@/services/document.service';
 import { SectionService, toSubfolderLabel } from '@/services/section.service';
 import { toastOpenActionClass } from '@/shared/components/toast';
+import { toDisplayPath } from '@/shared/utils/vault-path';
 import type { NoteScope } from '@/services/note-scope.service';
 
 interface CopyTarget {
@@ -120,7 +121,11 @@ export class CopyToService {
           sources.map(async (source) => ({
             label: source.label,
             options: (await this.documentService.listFolder(`${source.value}/${sectionKey}`)).map(
-              (file) => ({ value: file.path, label: file.kind === 'md' ? file.title : file.name }),
+              (file) => ({
+                value: file.path,
+                label: file.kind === 'md' ? file.title : file.name,
+                description: toDisplayPath(file.path),
+              }),
             ),
           })),
         )
