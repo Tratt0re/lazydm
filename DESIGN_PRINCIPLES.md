@@ -500,7 +500,9 @@ Codex. It is **off by default** and lives in the Electron main process (`electro
 - **Tools.** Read: `get_syntax_guide` (also the resource `lazydm://syntax-guide`, from `electron/mcp/guide.md`: layout,
   slugs, frontmatter, links, embeds, placeholders — keep it in step with §2, §6 and §6c), `list_campaigns`,
   `list_compendium_systems`, `list_sections`, `list_notes`, `read_note`, `search_notes`, `get_note_links`,
-  `get_broken_links`, `read_encounter`, `list_templates`, `get_section_templates`, `preview_copy`.
+  `get_broken_links`, `read_encounter`, `read_map`, `get_encounter_rule` (the tracker layout of a campaign: its
+  fields, how each is filled, the dice formula and the frontmatter keys its template gives), `list_templates`,
+  `get_section_templates`, `preview_copy`.
   Write (only with *Allow changes*): `create_note`, `update_note` (needs the `contentHash` from `read_note`; a changed
   note returns `conflict` and is not written), `append_to_note`, `create_folder` (sub-folder), `create_section`
   (adds a custom section, sends every existing section setting back unchanged), `move_note` (links rewritten, to a
@@ -510,6 +512,14 @@ Codex. It is **off by default** and lives in the Electron main process (`electro
   original stays), `rename_note`, `rename_asset`, `rename_folder` (links rewritten like the app does; notes changed
   meanwhile are reported and left alone) and `import_campaign` (below). Changing *Allow changes* restarts a running
   server. None summarises: an assistant reads notes with the read tools and writes its own note.
+- **Encounters and maps.** `create_encounter` and `create_map` write the `.json` files of §6d and §6e through the same
+  controllers and models as the pages. An encounter's combatant values are checked against the campaign's battle rule
+  (fetched with `get_encounter_rule`; the campaign's own choice, else the built-in): a field the rule does not have, a
+  wrong kind of value or a linked note of another campaign is refused before anything is created. Copies are numbered
+  like *Add entity* does, the battle is created idle, and the agent cannot start, advance or stop one. A map needs its
+  image already in the campaign's `assets/` (the map never copies it), takes coordinates as fractions 0..1, colours and
+  icons from the fixed lists of §6e, and pin links only to files of its own campaign. Both are refused outside the
+  allowed campaigns like every other path.
 - **Trash.** `trash_file` (a note or an asset) and `trash_folder` (a sub-folder, with its files or after moving them
   to the main folder) need a third switch, *Allow deleting* (`allowDelete`, off by default, shown only while *Allow
   changes* is on). They send the item to the **system Trash** (recoverable), never delete for good, and turn the
@@ -890,6 +900,7 @@ Component behaviour, variant keys and configuration stay as they are.
 | 17.1 | UI polish pass for the MVP (plan in `.claude/plans/ui-polish-mvp.plan.md`): compact tracker row (2-row Default layout, left rail, single "…" menu, Turn chip, statuses help once with an info icon) and a *Tracker rows* density setting, battle bar with the round and turn on one line, Encounters section page without watermark, note toolbar with Save and Links and the rest in the menu, collapsed properties box with a toggle (Live and Reading), code map hidden on short notes (option), icon-only open tab, ornament only on top-level pages, sans for note names, full-width left-aligned page columns, `warning` alert for Review, lighter light-theme fields and a readable destructive red, setup flow with icon rows and language and theme in the footer, side panels with a left margin |
 | 18.1 | MCP server (§6f): opt-in *Settings → MCP* tab, `MCP` + green/red dot in the title bar, loopback HTTP with bearer token, read tools and (opt-in) create / update / append tools reusing the controllers |
 | 18.2 | MCP: rename tools, trash tools behind *Allow deleting*, import of an Obsidian-like folder as a new campaign (`scan_import_source`, `import_campaign`) |
+| 18.3 | MCP: `get_encounter_rule`, `create_encounter` (values checked against the campaign's battle rule), `create_map`, `read_map` |
 
 ## 12. Open decisions
 

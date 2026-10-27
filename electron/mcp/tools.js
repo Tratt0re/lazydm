@@ -2,7 +2,10 @@ const fs = require('node:fs');
 const path = require('node:path');
 const { McpServer } = require('@modelcontextprotocol/sdk/server/mcp.js');
 const { z } = require('zod');
+const { createEncounter, describeEncounterRule } = require('./encounters');
 const { importCampaign, scanSource } = require('./importer');
+const { createMap } = require('./maps');
+const { MAP_COLORS, PIN_ICONS } = require('../models/map.model');
 const { createScopeGuard } = require('./scope');
 
 const SYNTAX_GUIDE_URI = 'lazydm://syntax-guide';
@@ -43,7 +46,9 @@ function loadControllers() {
     vaultPath: () => require('../controllers/vault.controller').getReadyVaultPath(),
     reindex: (paths) => require('../controllers/indexer.controller').reindexPaths(paths),
     asset: require('../controllers/asset.controller'),
+    battleRule: require('../controllers/battle-rule.controller'),
     campaign: require('../controllers/campaign.controller'),
+    map: require('../controllers/map.controller'),
     compendium: require('../controllers/compendium.controller'),
     document: require('../controllers/document.controller'),
     encounter: require('../controllers/encounter.controller'),
@@ -280,7 +285,9 @@ function registerReadTools(server, scope, c) {
         'Hidden folders and symbolic links are skipped; a folder inside the Codex is refused.' +
         UNTRUSTED_NOTE,
       inputSchema: {
-        sourcePath: z.string().describe('Absolute path of the folder to look at, outside the Codex.'),
+        sourcePath: z
+          .string()
+          .describe('Absolute path of the folder to look at, outside the Codex.'),
       },
       annotations: READ_ONLY,
     },
@@ -288,6 +295,38 @@ function registerReadTools(server, scope, c) {
       requireUnlimited(scope, 'Importing a campaign');
       return scanSource({ sourcePath }, importDeps(c));
     }),
+  );
+
+  server.registerTool(
+    'get_encounter_rule',
+    {
+      description:
+        'The tracker layout (battle rule) the encounters of a campaign follow, and how to fill it: its fields ' +
+        'with the key, the kind of value each takes and where it is read from, the dice formula for initiative, and ' +
+        'the frontmatter keys of the notes it reads (from the rule\'s template). Call this before create_encounter, ' +
+        'so the entities use the campaign\'s own fields. Pass "encounter" to ask about one existing encounter.',
+      inputSchema: {
+        scope: z.string().describe('Campaign slug, or "compendium/<system>".'),
+        encounter: z
+          .string()
+          .optional()
+          .describe('Optional path of an existing encounter .json, to get the rule that one uses.'),
+      },
+      annotations: READ_ONLY,
+    },
+    run((input) => describeEncounterRule(c, scope, input)),
+  );
+
+  server.registerTool(
+    'read_map',
+    {
+      description:
+        'Reads an interactive map (.json file of a "maps" folder): its image, pins, paths and notes, with the ' +
+        'contentHash. Coordinates are fractions of the image, 0..1 from the top-left.',
+      inputSchema: { path: z.string().describe('Vault-relative path of the map .json file.') },
+      annotations: READ_ONLY,
+    },
+    run(({ path: mapPath }) => c.map.read({ path: scope.resolve(mapPath) })),
   );
 
   server.registerResource(
@@ -610,7 +649,100 @@ function registerWriteTools(server, scope, c) {
     run(({ folder, name }) => c.document.renameFolder({ folder: scope.resolve(folder), name })),
   );
 
+  registerGameFileTools(server, scope, c);
   registerImportTools(server, scope, c);
+}
+
+const unitNumber = z.number().min(0).max(1);
+const mapColor = z.enum(MAP_COLORS);
+
+/** Encounters and maps: `.json` files the app opens on their own pages, not notes. */
+function registerGameFileTools(server, scope, c) {
+  server.registerTool(
+    'create_encounter',
+    {
+      description:
+        'Creates an encounter (a combat tracker file) in the Encounters folder of a campaign and fills it with ' +
+        'combatants. Call get_encounter_rule first: each entity\'s "values" are keyed by the fields of the ' +
+        'campaign\'s tracker layout and checked against it, and a note-link value ties an entity to a stat-block ' +
+        'note (its frontmatter then supplies the stats, so set only what differs). quantity makes numbered copies ' +
+        '("Goblin 1", "Goblin 2"). The battle stays idle: the user starts it in the app. A taken name fails; ' +
+        'embed the result in a note with ![[linkTarget]].',
+      inputSchema: {
+        folder: z.string().describe('Encounters folder, e.g. "my-campaign/encounters".'),
+        name: z.string().describe('Encounter name; the file name is its slug.'),
+        notes: z.string().optional().describe('Free text notes for the encounter (what the DM should remember).'),
+        entities: z
+          .array(
+            z.object({
+              name: z.string().describe('Combatant name.'),
+              quantity: z.number().int().min(1).max(15).optional().describe('Numbered copies, 1 to 15.'),
+              values: z
+                .record(z.string(), z.unknown())
+                .optional()
+                .describe('Values by field key from get_encounter_rule.'),
+            }),
+          )
+          .optional(),
+      },
+      annotations: WRITES,
+    },
+    run((input) => createEncounter(c, scope, input)),
+  );
+
+  server.registerTool(
+    'create_map',
+    {
+      description:
+        'Creates an interactive map on an image already in the campaign\'s assets (add it with add_asset first), ' +
+        'with optional pins, paths and text notes. All coordinates are fractions of the image from 0 to 1, origin ' +
+        'top-left (x to the right, y down). A pin link must be a note, asset or encounter of the same campaign. ' +
+        'Colours and icons come from fixed lists. A taken name fails; embed the result with ![[linkTarget]].',
+      inputSchema: {
+        folder: z.string().describe('Maps folder, e.g. "my-campaign/maps".'),
+        name: z.string().describe('Map name; the file name is its slug.'),
+        image: z.string().describe('Vault path of the image, e.g. "my-campaign/assets/world.png".'),
+        pins: z
+          .array(
+            z.object({
+              x: unitNumber,
+              y: unitNumber,
+              label: z.string().optional(),
+              color: mapColor.optional(),
+              icon: z.enum(PIN_ICONS).optional(),
+              link: z.string().optional().describe('Vault path of a file of the same campaign.'),
+            }),
+          )
+          .max(200)
+          .optional(),
+        paths: z
+          .array(
+            z.object({
+              points: z.array(z.object({ x: unitNumber, y: unitNumber })).min(2).max(200),
+              label: z.string().optional(),
+              color: mapColor.optional(),
+              width: z.number().int().min(1).max(12).optional(),
+              closed: z.boolean().optional().describe('A polygon; needs three points.'),
+            }),
+          )
+          .max(100)
+          .optional(),
+        notes: z
+          .array(
+            z.object({
+              x: unitNumber,
+              y: unitNumber,
+              text: z.string().max(2000),
+              color: mapColor.optional(),
+            }),
+          )
+          .max(100)
+          .optional(),
+      },
+      annotations: WRITES,
+    },
+    run((input) => createMap(c, scope, input)),
+  );
 }
 
 /** What the importer needs from the app: the open Codex, the media test, and the index update. */
@@ -637,11 +769,15 @@ function registerImportTools(server, scope, c) {
         'Notion exports are not converted.' +
         UNTRUSTED_NOTE,
       inputSchema: {
-        sourcePath: z.string().describe('Absolute path of the folder to import, outside the Codex.'),
+        sourcePath: z
+          .string()
+          .describe('Absolute path of the folder to import, outside the Codex.'),
         name: z.string().describe('Name of the new campaign; its folder is the slug.'),
         mapping: z
           .record(z.string(), z.string())
-          .describe('Source folder name (or "." for notes in the root) -> section, from scan_import_source.'),
+          .describe(
+            'Source folder name (or "." for notes in the root) -> section, from scan_import_source.',
+          ),
         description: z.string().optional().describe('One short line for the campaign card.'),
         includeAllMedia: z
           .boolean()

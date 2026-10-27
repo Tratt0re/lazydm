@@ -9,6 +9,34 @@ const { createMcpServer } = require('../mcp/tools');
 const { Client } = require('@modelcontextprotocol/sdk/client/index.js');
 const { InMemoryTransport } = require('@modelcontextprotocol/sdk/inMemory.js');
 
+/** The built-in tracker layout, as the app returns it (labels are i18n keys). */
+const GENERIC_RULE = {
+  name: 'Generic',
+  template: 'builtin:enemy',
+  initiative: { roll: '1d20 + {initiative_mod}' },
+  fields: [
+    { key: 'initiative', component: 'initiative', label: 'encounters.fields.initiative', source: 'entity', showInRow: true },
+    { key: 'ac', component: 'number', label: 'encounters.fields.ac', source: 'frontmatter:ac', showInRow: true },
+    { key: 'hp', component: 'healthbar', label: 'encounters.fields.hp', source: 'frontmatter:hp', showInRow: true },
+    { key: 'statuses', component: 'statuses', label: 'encounters.fields.statuses', source: 'entity', showInRow: true },
+    { key: 'note', component: 'note-link', label: 'encounters.fields.note', source: 'entity', showInRow: true },
+  ],
+};
+
+/** A campaign's own layout: a Pathfinder-style rule with a side, a text field and its own keys. */
+const CUSTOM_RULE = {
+  name: 'Pathfinder 2e',
+  template: '_templates/pf-enemy.md',
+  initiative: { roll: '1d20 + {perception}' },
+  fields: [
+    { key: 'initiative', component: 'initiative', label: 'Init', source: 'entity', showInRow: true },
+    { key: 'side', component: 'side', label: 'Side', source: 'entity', showInRow: true, options: ['foe', 'pc'] },
+    { key: 'hp', component: 'healthbar', label: 'HP', source: 'frontmatter:hp', showInRow: true },
+    { key: 'trait', component: 'text', label: 'Trait', source: 'entity', showInRow: true },
+    { key: 'note', component: 'note-link', label: 'Note', source: 'entity', showInRow: true },
+  ],
+};
+
 /** Controllers that only record their calls: the tools' wiring and scope checks are what is under test. */
 function createStubControllers() {
   const calls = [];
@@ -67,7 +95,31 @@ function createStubControllers() {
       }),
       brokenLinks: record('document.brokenLinks', { rows: [] }),
     },
-    encounter: { read: record('encounter.read') },
+    encounter: {
+      read: record('encounter.read'),
+      rule: record('encounter.rule', GENERIC_RULE),
+      create: record('encounter.create', (payload) => ({
+        path: `${payload.folder}/${payload.name.toLowerCase().replace(/\s+/g, '-')}.json`,
+        encounter: { version: 1, name: payload.name, notes: '', rule: null, entities: [] },
+        contentHash: 'e1',
+      })),
+      write: record('encounter.write', { status: 'saved', contentHash: 'e2' }),
+    },
+    battleRule: {
+      getChoice: record('battleRule.getChoice', { rule: null }),
+      read: record('battleRule.read', { rule: CUSTOM_RULE }),
+      list: record('battleRule.list', { rows: [], builtIn: GENERIC_RULE }),
+      attributes: record('battleRule.attributes', { keys: ['ac', 'hp', 'initiative_mod'] }),
+    },
+    map: {
+      read: record('map.read', { path: 'lost-mine/maps/world.json', map: {}, contentHash: 'm1' }),
+      create: record('map.create', (payload) => ({
+        path: `${payload.folder}/${payload.name.toLowerCase().replace(/\s+/g, '-')}.json`,
+        map: { version: 1, name: payload.name, image: payload.image, pins: [], paths: [], notes: [] },
+        contentHash: 'm1',
+      })),
+      write: record('map.write', { status: 'saved', contentHash: 'm2' }),
+    },
     search: { query: record('search.query', { rows: [] }) },
     section: {
       list: record('section.list', {
@@ -191,7 +243,13 @@ describe('tool list', () => {
     expect(names).toContain('trash_file');
     expect(names).toContain('trash_folder');
     // Nothing deletes for good, empties the Trash or removes a whole campaign, section or system.
-    expect(names.filter((name) => /campaign|section|system|empty|purge|permanent/.test(name) && /trash|delete|remove/.test(name))).toEqual([]);
+    expect(
+      names.filter(
+        (name) =>
+          /campaign|section|system|empty|purge|permanent/.test(name) &&
+          /trash|delete|remove/.test(name),
+      ),
+    ).toEqual([]);
     expect(names.filter((name) => /^(delete|remove)_/.test(name))).toEqual([]);
   });
 
@@ -212,18 +270,357 @@ describe('tool list', () => {
   });
 });
 
+describe('get_encounter_rule', () => {
+  it('gives the built-in layout, its fields and how to fill them, when the campaign chose none', async () => {
+    await connect({ allowWrite: false });
+
+    const result = await call('get_encounter_rule', { scope: 'lost-mine' });
+
+    expect(result.isError).toBe(false);
+    expect(result.json.ruleName).toBe('Generic');
+    expect(result.json.ruleChosenBy).toBe('the built-in default');
+    expect(result.json.initiativeRoll).toBe('1d20 + {initiative_mod}');
+    expect(result.json.noteKeys).toEqual(['ac', 'hp', 'initiative_mod']);
+    const hp = result.json.fields.find((field) => field.key === 'hp');
+    expect(hp.component).toBe('healthbar');
+    expect(hp.valueFormat).toMatch(/current.*max/);
+    expect(hp.valueFormat).toMatch(/frontmatter key "hp"/);
+    // The built-in labels are i18n keys: the agent gets the field key instead.
+    expect(result.json.fields.find((field) => field.key === 'ac').label).toBe('ac');
+  });
+
+  it('gives the rule the campaign chose, with its own fields and side options', async () => {
+    const controllers = await connect({ allowWrite: false });
+    controllers.battleRule.getChoice = vi.fn(async () => ({ rule: '_battle-rules/pf2e.json' }));
+
+    const result = await call('get_encounter_rule', { scope: 'lost-mine' });
+
+    expect(result.json.ruleName).toBe('Pathfinder 2e');
+    expect(result.json.ruleChosenBy).toBe('the campaign');
+    expect(result.json.rulePath).toBe('_battle-rules/pf2e.json');
+    expect(result.json.noteTemplate).toBe('_templates/pf-enemy.md');
+    expect(result.json.fields.find((field) => field.key === 'side').valueFormat).toMatch(/foe, pc/);
+    expect(controllers.battleRule.read).toHaveBeenCalledWith({ path: '_battle-rules/pf2e.json' });
+  });
+
+  it('asks the app which rule one existing encounter uses', async () => {
+    const controllers = await connect({ allowWrite: false });
+
+    await call('get_encounter_rule', {
+      scope: 'lost-mine',
+      encounter: 'lost-mine/encounters/ambush.json',
+    });
+
+    expect(controllers.encounter.rule).toHaveBeenCalledWith({
+      path: 'lost-mine/encounters/ambush.json',
+    });
+  });
+
+  it('refuses another campaign, a path that is not a scope, and an encounter of another campaign', async () => {
+    await connect({ allowWrite: false, roots: ['lost-mine'] });
+
+    expect((await call('get_encounter_rule', { scope: 'other' })).isError).toBe(true);
+    expect((await call('get_encounter_rule', { scope: 'lost-mine/encounters' })).isError).toBe(true);
+    expect(
+      (await call('get_encounter_rule', { scope: 'lost-mine', encounter: 'other/encounters/a.json' })).isError,
+    ).toBe(true);
+  });
+});
+
+describe('create_encounter', () => {
+  const folder = 'lost-mine/encounters';
+
+  it('creates the file and fills it with checked values, numbering the copies', async () => {
+    const controllers = await connect({ allowWrite: true });
+
+    const result = await call('create_encounter', {
+      folder,
+      name: 'Goblin Ambush',
+      notes: 'They hide in the brush.',
+      entities: [
+        {
+          name: 'Goblin',
+          quantity: 3,
+          values: { hp: { max: 7 }, ac: 15, statuses: [{ name: 'hidden', rounds: 2 }], note: 'lost-mine/enemies/goblin.md' },
+        },
+        { name: 'Klarg', values: { hp: 27, initiative: 12 } },
+      ],
+    });
+
+    expect(result.isError).toBe(false);
+    expect(result.json).toMatchObject({
+      path: 'lost-mine/encounters/goblin-ambush.json',
+      linkTarget: 'goblin-ambush.json',
+      entities: 4,
+      rule: 'Generic',
+    });
+
+    const written = controllers.encounter.write.mock.calls[0][0];
+    expect(written.expectedHash).toBe('e1');
+    expect(written.encounter.notes).toBe('They hide in the brush.');
+    expect(written.encounter.entities.map((entity) => entity.name)).toEqual([
+      'Goblin 1',
+      'Goblin 2',
+      'Goblin 3',
+      'Klarg',
+    ]);
+    expect(written.encounter.entities[0].values).toEqual({
+      hp: { current: 7, max: 7 },
+      ac: 15,
+      statuses: [{ name: 'hidden', rounds: 2 }],
+      note: 'lost-mine/enemies/goblin.md',
+    });
+    expect(written.encounter.entities[3].values).toEqual({ hp: { current: 27, max: 27 }, initiative: 12 });
+    expect(written.encounter.entities.every((entity) => entity.isDead === false)).toBe(true);
+    // Copies never share one values object.
+    written.encounter.entities[0].values.hp.current = 1;
+    expect(written.encounter.entities[1].values.hp.current).toBe(7);
+  });
+
+  it('uses the rule the campaign chose to check the values', async () => {
+    const controllers = await connect({ allowWrite: true });
+    controllers.battleRule.getChoice = vi.fn(async () => ({ rule: '_battle-rules/pf2e.json' }));
+
+    const good = await call('create_encounter', {
+      folder,
+      name: 'Bandits',
+      entities: [{ name: 'Bandit', values: { side: 'foe', trait: 'sneaky' } }],
+    });
+    const wrongSide = await call('create_encounter', {
+      folder,
+      name: 'Bandits 2',
+      entities: [{ name: 'Bandit', values: { side: 'enemy' } }],
+    });
+    // "ac" exists in the built-in layout but not in this campaign's.
+    const unknownField = await call('create_encounter', {
+      folder,
+      name: 'Bandits 3',
+      entities: [{ name: 'Bandit', values: { ac: 15 } }],
+    });
+
+    expect(good.isError).toBe(false);
+    expect(wrongSide.isError).toBe(true);
+    expect(wrongSide.text).toMatch(/one of: foe, pc/);
+    expect(unknownField.isError).toBe(true);
+    expect(unknownField.text).toMatch(/Pathfinder 2e.*no field "ac"/);
+  });
+
+  it('checks every value before creating anything', async () => {
+    const controllers = await connect({ allowWrite: true });
+    const bad = (values) =>
+      call('create_encounter', { folder, name: 'X', entities: [{ name: 'Orc', values }] });
+
+    for (const values of [
+      { hp: 'lots' },
+      { hp: { current: 'x' } },
+      { hp: {} },
+      { ac: '15' },
+      { initiative: Number.NaN },
+      { statuses: 'stunned' },
+      { statuses: [{ name: 'stunned', rounds: 0 }] },
+      { statuses: [{ rounds: 2 }] },
+      { note: 'lost-mine/enemies/orc.txt' },
+      { note: 'other/enemies/orc.md' },
+      { note: '../escape.md' },
+      { unknown: 1 },
+    ]) {
+      expect((await bad(values)).isError, JSON.stringify(values)).toBe(true);
+    }
+    expect(controllers.encounter.create).not.toHaveBeenCalled();
+    expect(controllers.encounter.write).not.toHaveBeenCalled();
+  });
+
+  it('refuses a folder that is not an Encounters folder, another campaign, and too many combatants', async () => {
+    const controllers = await connect({ allowWrite: true, roots: ['lost-mine'] });
+
+    expect((await call('create_encounter', { folder: 'lost-mine/scenes', name: 'X' })).isError).toBe(true);
+    expect((await call('create_encounter', { folder: 'lost-mine', name: 'X' })).isError).toBe(true);
+    expect((await call('create_encounter', { folder: 'other/encounters', name: 'X' })).isError).toBe(true);
+    expect(
+      (await call('create_encounter', { folder, name: 'Horde', entities: [{ name: 'Rat', quantity: 15 }].concat(
+        Array.from({ length: 7 }, (_, index) => ({ name: `Rat ${index}`, quantity: 15 })),
+      ) })).isError,
+    ).toBe(true);
+    expect(controllers.encounter.create).not.toHaveBeenCalled();
+  });
+
+  it('creates an empty encounter without a second write, and starts it idle', async () => {
+    const controllers = await connect({ allowWrite: true });
+
+    const result = await call('create_encounter', { folder, name: 'Empty' });
+
+    expect(result.json.entities).toBe(0);
+    expect(controllers.encounter.write).not.toHaveBeenCalled();
+    expect(controllers.encounter.create.mock.calls[0][0]).toEqual({ folder, name: 'Empty' });
+  });
+
+  it('says so when the file was created but could not be filled', async () => {
+    const controllers = await connect({ allowWrite: true });
+    controllers.encounter.write = vi.fn(async () => ({ status: 'conflict' }));
+
+    const result = await call('create_encounter', {
+      folder,
+      name: 'Ambush',
+      entities: [{ name: 'Goblin' }],
+    });
+
+    expect(result.isError).toBe(true);
+    expect(result.text).toMatch(/Created lost-mine\/encounters\/ambush\.json but it changed/);
+  });
+
+  it('is not offered without Allow changes', async () => {
+    await connect({ allowWrite: false });
+    const names = (await client.listTools()).tools.map((tool) => tool.name);
+
+    expect(names).toContain('get_encounter_rule');
+    expect(names).toContain('read_map');
+    expect(names).not.toContain('create_encounter');
+    expect(names).not.toContain('create_map');
+  });
+});
+
+describe('create_map', () => {
+  const folder = 'lost-mine/maps';
+  let codex;
+
+  beforeEach(() => {
+    codex = path.join(tempDir, 'codex');
+    fs.mkdirSync(path.join(codex, 'lost-mine/assets'), { recursive: true });
+    fs.writeFileSync(path.join(codex, 'lost-mine/assets/world.png'), 'PNG');
+  });
+
+  async function connectWithCodex(options) {
+    const controllers = await connect(options);
+    controllers.vaultPath = () => codex;
+    return controllers;
+  }
+
+  it('creates the map on an existing image and fills pins, paths and notes', async () => {
+    const controllers = await connectWithCodex({ allowWrite: true });
+
+    const result = await call('create_map', {
+      folder,
+      name: 'World Map',
+      image: 'lost-mine/assets/world.png',
+      pins: [
+        { x: 0.25, y: 0.5, label: 'Phandalin', icon: 'house', color: 'green', link: 'lost-mine/locations/phandalin.md' },
+        { x: 0.8, y: 0.1, label: 'Cave', icon: 'skull' },
+      ],
+      paths: [{ points: [{ x: 0.1, y: 0.1 }, { x: 0.4, y: 0.4 }], label: 'Road', width: 4 }],
+      notes: [{ x: 0.5, y: 0.5, text: 'Ambush here', color: 'red' }],
+    });
+
+    expect(result.isError).toBe(false);
+    expect(result.json).toMatchObject({
+      path: 'lost-mine/maps/world-map.json',
+      linkTarget: 'world-map.json',
+      pins: 2,
+      paths: 1,
+      notes: 1,
+    });
+    expect(controllers.map.create.mock.calls[0][0]).toEqual({
+      folder,
+      name: 'World Map',
+      image: 'lost-mine/assets/world.png',
+    });
+    const written = controllers.map.write.mock.calls[0][0];
+    expect(written.expectedHash).toBe('m1');
+    expect(written.map.pins[0]).toMatchObject({ x: 0.25, y: 0.5, link: 'lost-mine/locations/phandalin.md' });
+    expect(written.map.pins[1].link).toBeNull();
+  });
+
+  it('refuses an image that is missing, not an image, or in another campaign', async () => {
+    const controllers = await connectWithCodex({ allowWrite: true });
+    const create = (image) => call('create_map', { folder, name: 'M', image });
+
+    const missing = await create('lost-mine/assets/nope.png');
+    expect(missing.isError).toBe(true);
+    expect(missing.text).toMatch(/add_asset first/);
+    expect((await create('lost-mine/assets/world.pdf')).isError).toBe(true);
+    expect((await create('other/assets/world.png')).isError).toBe(true);
+    expect((await create('../world.png')).isError).toBe(true);
+    expect(controllers.map.create).not.toHaveBeenCalled();
+  });
+
+  it('keeps pin links inside the map\'s own campaign and the scope', async () => {
+    const controllers = await connectWithCodex({ allowWrite: true, roots: ['lost-mine', 'other'] });
+
+    const crossCampaign = await call('create_map', {
+      folder,
+      name: 'M',
+      image: 'lost-mine/assets/world.png',
+      pins: [{ x: 0.5, y: 0.5, link: 'other/locations/x.md' }],
+    });
+    const escape = await call('create_map', {
+      folder,
+      name: 'M',
+      image: 'lost-mine/assets/world.png',
+      pins: [{ x: 0.5, y: 0.5, link: 'lost-mine/../other/x.md' }],
+    });
+
+    expect(crossCampaign.isError).toBe(true);
+    expect(crossCampaign.text).toMatch(/only uses files of its own campaign/);
+    expect(escape.isError).toBe(true);
+    expect(controllers.map.create).not.toHaveBeenCalled();
+  });
+
+  it('refuses a folder that is not a Maps folder, another campaign, and bad coordinates', async () => {
+    const controllers = await connectWithCodex({ allowWrite: true, roots: ['lost-mine'] });
+
+    expect(
+      (await call('create_map', { folder: 'lost-mine/scenes', name: 'M', image: 'lost-mine/assets/world.png' })).isError,
+    ).toBe(true);
+    expect(
+      (await call('create_map', { folder: 'other/maps', name: 'M', image: 'other/assets/world.png' })).isError,
+    ).toBe(true);
+    for (const bad of [
+      { pins: [{ x: 1.5, y: 0.5 }] },
+      { pins: [{ x: 0.5, y: 0.5, color: 'magenta' }] },
+      { pins: [{ x: 0.5, y: 0.5, icon: 'rocket' }] },
+      { paths: [{ points: [{ x: 0, y: 0 }] }] },
+      { notes: [{ x: 0.5, y: 0.5, text: 'x'.repeat(2001) }] },
+    ]) {
+      const result = await call('create_map', { folder, name: 'M', image: 'lost-mine/assets/world.png', ...bad });
+      expect(result.isError, JSON.stringify(bad)).toBe(true);
+    }
+    expect(controllers.map.create).not.toHaveBeenCalled();
+  });
+
+  it('read_map is limited to the scope', async () => {
+    const controllers = await connect({ allowWrite: false, roots: ['lost-mine'] });
+
+    expect((await call('read_map', { path: 'lost-mine/maps/world.json' })).isError).toBe(false);
+    expect((await call('read_map', { path: 'other/maps/world.json' })).isError).toBe(true);
+    expect(controllers.map.read).toHaveBeenCalledTimes(1);
+  });
+});
+
 describe('rename tools', () => {
   it('pass the new name through and check the scope', async () => {
     const controllers = await connect({ allowWrite: true, roots: ['lost-mine'] });
 
     expect(
-      (await call('rename_note', { path: 'lost-mine/enemies/a.md', title: 'Boss', updateLinks: false })).isError,
+      (
+        await call('rename_note', {
+          path: 'lost-mine/enemies/a.md',
+          title: 'Boss',
+          updateLinks: false,
+        })
+      ).isError,
     ).toBe(false);
-    expect((await call('rename_asset', { path: 'lost-mine/assets/m.png', name: 'Map' })).isError).toBe(false);
-    expect((await call('rename_folder', { folder: 'lost-mine/enemies/humans', name: 'People' })).isError).toBe(false);
+    expect(
+      (await call('rename_asset', { path: 'lost-mine/assets/m.png', name: 'Map' })).isError,
+    ).toBe(false);
+    expect(
+      (await call('rename_folder', { folder: 'lost-mine/enemies/humans', name: 'People' })).isError,
+    ).toBe(false);
 
-    expect((await call('rename_note', { path: 'other/enemies/a.md', title: 'Boss' })).isError).toBe(true);
-    expect((await call('rename_folder', { folder: 'other/enemies/humans', name: 'x' })).isError).toBe(true);
+    expect((await call('rename_note', { path: 'other/enemies/a.md', title: 'Boss' })).isError).toBe(
+      true,
+    );
+    expect(
+      (await call('rename_folder', { folder: 'other/enemies/humans', name: 'x' })).isError,
+    ).toBe(true);
 
     expect(controllers.calls.map((entry) => entry.name)).toEqual([
       'document.rename',
@@ -240,16 +637,31 @@ describe('rename tools', () => {
 
 describe('trash tools', () => {
   it('trash a file or a sub-folder inside the scope, with the chosen link handling', async () => {
-    const controllers = await connect({ allowWrite: true, allowDelete: true, roots: ['lost-mine'] });
+    const controllers = await connect({
+      allowWrite: true,
+      allowDelete: true,
+      roots: ['lost-mine'],
+    });
 
     expect((await call('trash_file', { path: 'lost-mine/enemies/a.md' })).isError).toBe(false);
     expect(
-      (await call('trash_folder', { folder: 'lost-mine/enemies/humans', mode: 'moveToMain', rewriteLinks: false })).isError,
+      (
+        await call('trash_folder', {
+          folder: 'lost-mine/enemies/humans',
+          mode: 'moveToMain',
+          rewriteLinks: false,
+        })
+      ).isError,
     ).toBe(false);
 
     expect((await call('trash_file', { path: 'other/enemies/a.md' })).isError).toBe(true);
-    expect((await call('trash_folder', { folder: 'other/enemies/humans', mode: 'delete' })).isError).toBe(true);
-    expect((await call('trash_folder', { folder: 'lost-mine/enemies/humans', mode: 'everything' })).isError).toBe(true);
+    expect(
+      (await call('trash_folder', { folder: 'other/enemies/humans', mode: 'delete' })).isError,
+    ).toBe(true);
+    expect(
+      (await call('trash_folder', { folder: 'lost-mine/enemies/humans', mode: 'everything' }))
+        .isError,
+    ).toBe(true);
 
     expect(controllers.calls.map((entry) => entry.name)).toEqual([
       'document.deleteFile',

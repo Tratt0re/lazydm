@@ -89,9 +89,9 @@ describe('source limits', () => {
     await expect(scanSource({ sourcePath: path.join(root, 'nope') }, deps())).rejects.toThrow(
       /not found/,
     );
-    await expect(
-      scanSource({ sourcePath: path.join(source, 'Daily.md') }, deps()),
-    ).rejects.toThrow(/not a folder/);
+    await expect(scanSource({ sourcePath: path.join(source, 'Daily.md') }, deps())).rejects.toThrow(
+      /not a folder/,
+    );
     await expect(scanSource({ sourcePath: path.parse(root).root }, deps())).rejects.toThrow(
       /root of a drive/,
     );

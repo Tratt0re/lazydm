@@ -72,6 +72,19 @@ Body text.
 - Tables with `| a | b |` and `| --- | --- |`; fenced code blocks; divider `---` (blank lines around it, so it is not
   read as frontmatter).
 
+## Encounters and maps (`.json` files, not notes)
+
+- **Encounter** (`<campaign>/encounters/<slug>.json`): a combat tracker. Do not write the JSON by hand: call
+  get_encounter_rule for the campaign (its tracker layout: which fields a combatant has and how to fill each, plus
+  the frontmatter keys of the stat-block notes), then create_encounter with combatants whose `values` use those field
+  keys. Link a combatant to its stat-block note (the note-link field) so you only set what differs. `quantity`
+  makes numbered copies. The battle starts idle; the user runs it in the app.
+- **Map** (`<campaign>/maps/<slug>.json`): an image of the campaign's `assets/` with pins, paths and text notes.
+  add_asset the image first, then create_map. Coordinates are fractions of the image, 0 to 1 from the top-left
+  (x right, y down), so they survive a replaced image. Colours and pin icons come from fixed lists; a pin can link
+  a note, asset or encounter of the same campaign.
+- Embed either in a note with the full file name: `![[ambush.json]]`, `![[world-map.json]]`.
+
 ## Templates (`_templates/*.md`)
 
 A template is a normal note with placeholders: `{{title}}`, `{{date}}` (YYYY-MM-DD), `{{time}}` (HH:MM),

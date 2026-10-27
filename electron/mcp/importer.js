@@ -300,7 +300,9 @@ function createLinkResolver(notes, media) {
     const fileName = path.posix.basename(lowerRel);
     byFileName.set(fileName, [...(byFileName.get(fileName) ?? []), entry]);
   }
-  const mediaExtensions = new Set(media.map((entry) => path.posix.extname(entry.rel).toLowerCase()));
+  const mediaExtensions = new Set(
+    media.map((entry) => path.posix.extname(entry.rel).toLowerCase()),
+  );
 
   return function resolve(link) {
     const target = (link.targetPath ?? '').toLowerCase().replace(/^\/+/, '');
