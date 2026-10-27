@@ -215,6 +215,8 @@ var require_package = __commonJS({
         "build:desktop": "npm run build:prod && electron-builder --dir --publish never",
         dist: "npm run build:prod && electron-builder --publish never",
         "dist:mac": "npm run build:prod && electron-builder --mac --publish never",
+        "dist:mac-intel": "npm run build:prod && electron-builder --mac --x64 --publish never",
+        "dist:all": "node scripts/build-all.js",
         "dist:win": "npm run build:prod && electron-builder --win --x64 --publish never",
         "dist:linux": "npm run build:prod && electron-builder --linux --publish never",
         watch: "ng build --watch --configuration development",
