@@ -128,7 +128,11 @@ interface PreviewState {
                 (error)="onImageError()"
               />
             } @else if (preview.html) {
-              <div class="arc-markdown-body arc-link-preview-body" [innerHTML]="preview.html"></div>
+              <div
+                class="arc-markdown-body arc-link-preview-body"
+                [innerHTML]="preview.html"
+                (click)="onBodyClick($event)"
+              ></div>
             } @else {
               <p class="font-mono text-[11px] tracking-[0.06em] text-muted-foreground uppercase">
                 {{ 'document.linkPreview.loading' | translate }}
@@ -283,6 +287,43 @@ export class AppLinkPreviewCardComponent {
     this.overlayRef?.dispose();
     this.overlayRef = null;
     this.state.set(null);
+  }
+
+  /**
+   * Links inside the previewed note. A note link opens in this tab (a new background tab with Cmd/Ctrl); a
+   * `#heading` link scrolls the card. Neither may follow its `href`: the built app sets `<base href="./">`, so
+   * a bare `#` would navigate the window to the build folder and blank it.
+   */
+  protected onBodyClick(event: MouseEvent): void {
+    const anchor = (event.target as HTMLElement).closest<HTMLAnchorElement>('a');
+    if (!anchor) {
+      return;
+    }
+
+    event.preventDefault();
+    const route = anchor.getAttribute('data-route');
+    if (route) {
+      this.close();
+      if ((event.metaKey || event.ctrlKey) && this.workspace.isCampaignUrl(route)) {
+        void this.workspace.openTab(route, { background: true });
+      } else {
+        void this.router.navigateByUrl(route);
+      }
+      return;
+    }
+
+    const href = anchor.getAttribute('href') ?? '';
+    if (href.startsWith('#') && href.length > 1) {
+      let id = href.slice(1);
+      try {
+        id = decodeURIComponent(id);
+      } catch {
+        // keep the raw id when it is not valid URI encoding
+      }
+      (event.currentTarget as HTMLElement)
+        .querySelector(`[id="${CSS.escape(id)}"]`)
+        ?.scrollIntoView({ block: 'start' });
+    }
   }
 
   /** *Open*: the note in this tab, or in a new background tab with Cmd/Ctrl. */

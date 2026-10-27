@@ -265,11 +265,37 @@ export class AppDocumentPreviewComponent {
     const anchor = (event.target as HTMLElement).closest('a[data-route]');
     const route = anchor?.getAttribute('data-route');
     if (!route) {
+      this.jumpToHeading(event);
       return;
     }
 
     event.preventDefault();
     void this.router.navigateByUrl(route);
+  }
+
+  /**
+   * A `#heading` link of the same note scrolls inside the page. It must never navigate: the built app sets
+   * `<base href="./">`, so a bare `#slug` would resolve to the build folder and blank the window.
+   */
+  private jumpToHeading(event: MouseEvent): void {
+    const hashLink = (event.target as HTMLElement).closest<HTMLAnchorElement>('a[href^="#"]');
+    if (!hashLink) {
+      return;
+    }
+
+    event.preventDefault();
+    let id = hashLink.getAttribute('href')?.slice(1) ?? '';
+    try {
+      id = decodeURIComponent(id);
+    } catch {
+      // keep the raw id when it is not valid URI encoding
+    }
+
+    if (id) {
+      this.bodyElement()
+        .nativeElement.querySelector(`[id="${CSS.escape(id)}"]`)
+        ?.scrollIntoView({ block: 'start' });
+    }
   }
 
   private syncCodeMap(isOn: boolean): void {
