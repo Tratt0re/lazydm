@@ -569,6 +569,15 @@
         "specialDescription": "Una subcarpeta de {{section}} para organizar sus archivos. Un solo nivel."
       },
       "folderFiles": "{{count}} archivos",
+      "sort": {
+        "label": "Ordenar",
+        "ariaLabel": "Ordenar los archivos",
+        "name-asc": "Nombre A → Z",
+        "name-desc": "Nombre Z → A",
+        "modified": "Modificados recientemente",
+        "size": "Más grandes primero",
+        "type": "Tipo"
+      },
       "foldersAriaLabel": "Subcarpetas",
       "move": {
         "menu": "Mover a…",

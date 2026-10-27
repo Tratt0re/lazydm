@@ -569,6 +569,15 @@
         "specialDescription": "Una sottocartella di {{section}} per organizzarne i file. Un solo livello."
       },
       "folderFiles": "{{count}} file",
+      "sort": {
+        "label": "Ordina",
+        "ariaLabel": "Ordina i file",
+        "name-asc": "Nome A → Z",
+        "name-desc": "Nome Z → A",
+        "modified": "Modificati di recente",
+        "size": "Più grandi prima",
+        "type": "Tipo"
+      },
       "foldersAriaLabel": "Sottocartelle",
       "move": {
         "menu": "Sposta in…",

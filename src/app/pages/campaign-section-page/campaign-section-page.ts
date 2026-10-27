@@ -28,6 +28,12 @@ import type {
   TemplateDto,
   TemplateRulesDto,
 } from '@/dtos';
+import {
+  SECTION_SORT_MODES,
+  type SectionSortMode,
+  sortSectionFiles,
+  sortSectionFolders,
+} from '@/config/section-sort.config';
 import { AppOpenInTabMenuComponent } from '@/components/open-in-tab-menu/open-in-tab-menu.component';
 import { AppSheetService } from '@/services/app-sheet.service';
 import { AssetService } from '@/services/asset.service';
@@ -167,16 +173,30 @@ export class CampaignSectionPage {
     files: readonly DocumentFileListItemDto[];
     folders: readonly SectionTreeFolder[];
   }>({ files: [], folders: [] });
+  private readonly localPreferences = inject(LocalPreferencesService);
+  /** Sort of this section on this device (kept per section, the same inside its sub-folders). */
+  protected readonly sortMode = signal<SectionSortMode>('name-asc');
   /** Files shown: those of the open sub-folder, else those directly in the section. */
   protected readonly files = computed(() => {
     const subfolder = this.subfolder();
     const tree = this.tree();
-    return subfolder
+    const files = subfolder
       ? (tree.folders.find((folder) => folder.name === subfolder)?.files ?? [])
       : tree.files;
+    return sortSectionFiles(files, this.sortMode());
   });
   /** Sub-folders listed (collapsible, with their files); none inside a sub-folder (one level only). */
-  protected readonly folders = computed(() => (this.subfolder() ? [] : this.tree().folders));
+  protected readonly folders = computed(() => {
+    if (this.subfolder()) {
+      return [];
+    }
+
+    const mode = this.sortMode();
+    return sortSectionFolders(this.tree().folders, mode).map((folder) => ({
+      ...folder,
+      files: sortSectionFiles(folder.files, mode),
+    }));
+  });
   protected readonly expandedFolders = signal<ReadonlySet<string>>(new Set());
   /** File being dragged, and the folder it would land in (`''`: the section itself). */
   protected readonly draggedPath = signal<string | null>(null);
@@ -197,7 +217,7 @@ export class CampaignSectionPage {
   private readonly assetService = inject(AssetService);
   protected readonly revealLabel = this.fileMove.revealLabel;
   protected readonly toSubfolderLabel = toSubfolderLabel;
-  protected readonly showFileSizes = inject(LocalPreferencesService).showFileSizes;
+  protected readonly showFileSizes = this.localPreferences.showFileSizes;
   protected readonly formatFileSize = formatFileSize;
   protected readonly isLoading = signal(true);
   protected readonly errorMessage = signal<string | null>(null);
@@ -216,6 +236,10 @@ export class CampaignSectionPage {
       }
 
       void this.loadTree(this.sectionPath());
+    });
+
+    effect(() => {
+      this.sortMode.set(this.localPreferences.getSectionSort(this.sectionPath()));
     });
 
     effect((onCleanup) => {
@@ -256,12 +280,31 @@ export class CampaignSectionPage {
     });
   }
 
+  private setSortMode(mode: SectionSortMode): void {
+    this.sortMode.set(mode);
+    this.localPreferences.setSectionSort(this.sectionPath(), mode);
+  }
+
   /** Template select (campaign folders of a note type), Import, New note. */
   private buildToolbarActions(): readonly ToolbarItemAction[] {
     const scope = this.scope();
     const section = this.section();
     const noteType = section?.type ?? null;
     const actions: ToolbarItemAction[] = [];
+
+    actions.push({
+      id: 'section-sort',
+      type: 'select',
+      label: 'campaigns.sections.sort.label',
+      ariaLabel: this.translateService.instant('campaigns.sections.sort.ariaLabel'),
+      class: 'w-48',
+      value: () => this.sortMode(),
+      options: SECTION_SORT_MODES.map((mode) => ({
+        value: mode,
+        label: this.translateService.instant(`campaigns.sections.sort.${mode}`),
+      })),
+      change: (value) => this.setSortMode(value as SectionSortMode),
+    });
 
     // Custom sections have no built-in of their own but can still pick a template.
     const hasTemplates =

@@ -16,10 +16,16 @@ import {
   TRACKER_ROW_DENSITIES,
   type TrackerRowDensity,
 } from '@/config/local-preferences.config';
+import {
+  DEFAULT_SECTION_SORT,
+  isSectionSortMode,
+  type SectionSortMode,
+} from '@/config/section-sort.config';
 
 const DOCUMENT_VIEW_MODES_MAX_ENTRIES = 500;
 const EXPLORER_EXPANDED_MAX_ENTRIES = 50;
 const MAP_VIEWS_MAX_ENTRIES = 200;
+const SECTION_SORTS_MAX_ENTRIES = 200;
 
 @Injectable({
   providedIn: 'root',
@@ -314,6 +320,28 @@ export class LocalPreferencesService {
     all[path] = view;
     const entries = Object.entries(all).slice(-MAP_VIEWS_MAX_ENTRIES);
     this.setJson(LocalPreferenceKey.MAP_VIEWS, Object.fromEntries(entries));
+  }
+
+  /** How the files of a section (its folder path in the vault) are sorted on this device. */
+  getSectionSort(sectionPath: string): SectionSortMode {
+    const mode = this.readSectionSorts()[sectionPath];
+    return isSectionSortMode(mode) ? mode : DEFAULT_SECTION_SORT;
+  }
+
+  /** Remembers the sort of a section; only the most recent sections are kept. */
+  setSectionSort(sectionPath: string, mode: SectionSortMode): void {
+    const all = this.readSectionSorts();
+    delete all[sectionPath];
+    all[sectionPath] = mode;
+    const entries = Object.entries(all).slice(-SECTION_SORTS_MAX_ENTRIES);
+    this.setJson(LocalPreferenceKey.SECTION_SORTS, Object.fromEntries(entries));
+  }
+
+  private readSectionSorts(): Record<string, unknown> {
+    const parsed = this.getJson<unknown>(LocalPreferenceKey.SECTION_SORTS);
+    return parsed && typeof parsed === 'object' && !Array.isArray(parsed)
+      ? { ...(parsed as Record<string, unknown>) }
+      : {};
   }
 
   private readMapViews(): Record<string, unknown> {

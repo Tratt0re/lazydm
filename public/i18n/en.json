@@ -569,6 +569,15 @@
         "specialDescription": "A sub-folder of {{section}} to organise its files. One level only."
       },
       "folderFiles": "{{count}} files",
+      "sort": {
+        "label": "Sort",
+        "ariaLabel": "Sort the files",
+        "name-asc": "Name A → Z",
+        "name-desc": "Name Z → A",
+        "modified": "Recently modified",
+        "size": "Largest first",
+        "type": "Type"
+      },
       "foldersAriaLabel": "Sub-folders",
       "move": {
         "menu": "Move to…",

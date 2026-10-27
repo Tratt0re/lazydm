@@ -569,6 +569,15 @@
         "specialDescription": "Ein Unterordner von {{section}}, um seine Dateien zu ordnen. Nur eine Ebene."
       },
       "folderFiles": "{{count}} Dateien",
+      "sort": {
+        "label": "Sortieren",
+        "ariaLabel": "Dateien sortieren",
+        "name-asc": "Name A → Z",
+        "name-desc": "Name Z → A",
+        "modified": "Zuletzt geändert",
+        "size": "Größte zuerst",
+        "type": "Typ"
+      },
       "foldersAriaLabel": "Unterordner",
       "move": {
         "menu": "Verschieben nach…",

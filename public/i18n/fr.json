@@ -569,6 +569,15 @@
         "specialDescription": "Un sous-dossier de {{section}} pour ranger ses fichiers. Un seul niveau."
       },
       "folderFiles": "{{count}} fichiers",
+      "sort": {
+        "label": "Trier",
+        "ariaLabel": "Trier les fichiers",
+        "name-asc": "Nom A → Z",
+        "name-desc": "Nom Z → A",
+        "modified": "Modifiés récemment",
+        "size": "Plus gros d’abord",
+        "type": "Type"
+      },
       "foldersAriaLabel": "Sous-dossiers",
       "move": {
         "menu": "Déplacer vers…",

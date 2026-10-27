@@ -8,6 +8,7 @@ export enum LocalPreferenceKey {
   DOCUMENT_VIEW_MODES = 'document_view_modes',
   EXPLORER_EXPANDED = 'explorer_expanded',
   MAP_VIEWS = 'map_views',
+  SECTION_SORTS = 'section_sorts',
   EDITOR_SETTINGS = 'editor_settings',
   NOTE_AUDIO_VOLUME = 'note_audio_volume',
   SHOW_FILE_SIZES = 'show_file_sizes',
