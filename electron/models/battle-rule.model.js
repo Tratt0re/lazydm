@@ -84,18 +84,18 @@ const DEFAULT_BATTLE_RULE = Object.freeze({
   template: 'builtin:enemy',
   initiative: Object.freeze({ roll: '1d20 + {initiative_mod}' }),
   // Where the name sits in the row grid (it is in every rule).
-  nameArea: area(1, 3, 4),
+  nameArea: area(1, 2, 5),
   fields: Object.freeze([
     entityField('initiative', 'initiative', { area: area(1, 1, 1) }),
     entityField('ac', 'number', {
       source: `${FRONTMATTER_SOURCE_PREFIX}ac`,
-      area: area(1, 2, 1),
+      area: area(2, 1, 1),
     }),
     entityField('hp', 'healthbar', {
       source: `${FRONTMATTER_SOURCE_PREFIX}hp`,
       area: area(1, 7, 6),
     }),
-    entityField('statuses', 'statuses', { area: area(2, 1, 11) }),
+    entityField('statuses', 'statuses', { area: area(2, 2, 10) }),
     entityField('note', 'note-link', { area: area(2, 12, 1) }),
   ]),
 });
