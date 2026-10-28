@@ -150,13 +150,13 @@
 
   <!-- Information about the map and what is selected. Editing is in modals. -->
   <aside
-    class="shrink-0 overflow-hidden bg-card transition-[width,opacity] duration-200 ease-out motion-reduce:transition-none"
+    class="flex min-h-0 shrink-0 flex-col overflow-hidden bg-card transition-[width,opacity] duration-200 ease-out motion-reduce:transition-none"
     [class]="isPanelOpen() ? 'w-80 opacity-100' : 'w-0 opacity-0'"
     [attr.inert]="isPanelOpen() ? null : ''"
     [attr.aria-hidden]="isPanelOpen() ? null : 'true'"
     [attr.aria-label]="'maps.panel.label' | translate"
   >
-    <div class="flex h-full w-80 flex-col">
+    <div class="flex min-h-0 w-80 flex-1 flex-col">
       @if (selectedCount() > 0) {
         <div class="flex h-12 shrink-0 items-center justify-between gap-2 border-b border-border px-4">
           <h2 class="font-mono text-[11px] font-semibold tracking-[0.11em] text-muted-foreground uppercase">
