@@ -210,17 +210,20 @@
               }
             </div>
 
-            <!-- The row is the rule's grid: each element sits where the rule put it. -->
-            <div
-              class="grid min-w-0 flex-1 grid-cols-12 items-center gap-x-3"
-              [class]="isCompact() ? 'gap-y-1 p-2' : 'gap-y-2 p-3'"
-            >
-              @for (cell of rowCells(); track cell.id) {
-                <div
-                  class="flex min-w-0 items-center gap-1"
-                  [style.grid-row]="cell.area.row"
-                  [style.grid-column]="cell.area.column + ' / span ' + cell.area.span"
-                >
+            <!-- The row is the rule's grid: each element sits where the rule put it. The grid needs room (about
+                 42rem of row): in a narrower row the elements flow and wrap instead, each at the size it needs. -->
+            <div class="@container min-w-0 flex-1">
+              <div
+                class="flex flex-wrap items-center gap-x-3 @2xl:grid @2xl:grid-cols-12"
+                [class]="isCompact() ? 'gap-y-1 p-2' : 'gap-y-2 p-3'"
+              >
+                @for (cell of rowCells(); track cell.id) {
+                  <div
+                    class="flex items-center gap-1 @2xl:min-w-0 @2xl:[grid-column:var(--column)] @2xl:[grid-row:var(--row)]"
+                    [class]="cellSizing(cell)"
+                    [style.--row]="cell.area.row"
+                    [style.--column]="cell.area.column + ' / span ' + cell.area.span"
+                  >
                   @if (cell.field === null) {
                     <span
                       class="min-w-0 truncate text-sm font-semibold"
@@ -359,6 +362,7 @@
                   }
                 </div>
               }
+              </div>
             </div>
 
             <!-- Actions: one "…" menu with all of them (Delete last). -->

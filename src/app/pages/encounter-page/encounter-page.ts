@@ -468,6 +468,26 @@ export class EncounterPage {
     return label === key ? side : label;
   }
 
+  /**
+   * Size of an element while the row is too narrow for the grid and its elements wrap: small ones keep the
+   * room they need, the others share the line, and statuses take a line of their own.
+   */
+  protected cellSizing(cell: RowCell): string {
+    switch (cell.field?.component) {
+      case undefined:
+      case null:
+        return 'min-w-28 flex-1 @2xl:min-w-0';
+      case 'healthbar':
+        return 'min-w-44 flex-1 @2xl:min-w-0';
+      case 'statuses':
+        return 'basis-full @2xl:basis-auto';
+      case 'text':
+        return 'min-w-28 flex-1 @2xl:min-w-0';
+      default:
+        return 'shrink-0';
+    }
+  }
+
   protected fieldLabel(field: BattleRuleFieldDto): string {
     return this.translateService.instant(field.label);
   }
