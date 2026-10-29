@@ -230,6 +230,58 @@ async function prepare(vault) {
   return getStatus();
 }
 
+/**
+ * Placeholders the watcher found while the vault is open (another device synced new files): the notes among
+ * them block the app with the download screen, like at startup; the assets follow in the background.
+ * Does nothing while a check already owns the download workers: that check lists the same placeholders.
+ */
+async function fetchIncoming(relativePaths) {
+  if (!activeVault) {
+    return;
+  }
+
+  const { status } = getStatus();
+  if (status === CLOUD_STATUS.checking || status === CLOUD_STATUS.downloading) {
+    return;
+  }
+
+  const token = activeToken;
+  const rootPath = activeVault.path;
+  const notePaths = relativePaths.filter(isNotePath);
+  const assetPaths = relativePaths.filter((relativePath) => !isNotePath(relativePath));
+
+  if (notePaths.length > 0) {
+    setCloudState({
+      status: CLOUD_STATUS.downloading,
+      pendingFiles: notePaths.length,
+      pendingPaths: notePaths.slice(0, PENDING_PATHS_PREVIEW_LIMIT),
+    });
+    const outcome = await Promise.race([
+      downloadFiles(token, rootPath, notePaths, {
+        onRemaining: (remainingPaths) => publishPending(token, remainingPaths),
+        onLanded: createLandedNotesIndexer(token),
+      }),
+      delay(READINESS_TIMEOUT_MS, CLOUD_STATUS.timeout),
+      new Promise((resolve) => {
+        releaseWait = () => resolve(CLOUD_STATUS.skipped);
+      }),
+    ]);
+
+    releaseWait = null;
+    if (isCurrent(token)) {
+      setCloudState({
+        status: outcome === 'done' ? CLOUD_STATUS.ready : outcome,
+        lastCheckedAtMs: Date.now(),
+      });
+    }
+  }
+
+  if (isCurrent(token) && assetPaths.length > 0) {
+    setCloudState({ pendingAssetFiles: cloudState.pendingAssetFiles + assetPaths.length });
+    void downloadAssetsInBackground(token, rootPath, assetPaths);
+  }
+}
+
 /** Stops waiting for downloads (they keep going in the background) so the vault can be used right away. */
 function skipWait() {
   releaseWait?.();
@@ -259,6 +311,7 @@ function cancel() {
 
 module.exports = {
   cancel,
+  fetchIncoming,
   getStatus,
   prepare,
   recheck,

@@ -468,7 +468,9 @@
         "onedrive": "OneDrive",
         "google-drive": "Google Drive",
         "generic": "Votre service cloud"
-      }
+      },
+      "indexingDescription": "Votre Codex a changé sur un autre appareil. LazyDM lit les fichiers nouveaux et modifiés pour que les liens et la recherche restent justes.",
+      "indexProgress": "{{done}} fichiers indexés sur {{total}}"
     },
     "activity": {
       "checking": "Recherche de modifications dans le cloud",

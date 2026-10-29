@@ -468,7 +468,9 @@
         "onedrive": "OneDrive",
         "google-drive": "Google Drive",
         "generic": "你的云服务"
-      }
+      },
+      "indexingDescription": "你的 Codex 在另一台设备上有更改。LazyDM 正在读取新增和已更改的文件，以保证链接和搜索准确。",
+      "indexProgress": "已索引 {{done}} / {{total}} 个文件"
     },
     "activity": {
       "checking": "正在检查云端更改",

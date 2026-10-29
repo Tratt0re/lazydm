@@ -188,7 +188,9 @@ function startSession(vault) {
       }
 
       if (isCurrentSession()) {
-        indexerController.start(vault);
+        indexerController.start(vault, {
+          onDataless: (paths) => void cloudReadinessController.fetchIncoming(paths),
+        });
       }
     })
     .catch((error) => {

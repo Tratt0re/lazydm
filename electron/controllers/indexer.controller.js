@@ -14,6 +14,10 @@ const WATCH_DEBOUNCE_MS = 300;
 const OWN_WRITE_ECHO_WINDOW_MS = 5000;
 const OWN_WRITE_MEMORY_LIMIT = 2000;
 const DIRECTORY_SIGNATURE = 'dir';
+/** An update touching at least this many files blocks the app with the progress screen (smaller ones only show the banner). */
+const LARGE_UPDATE_FILE_COUNT = 20;
+/** `.json` of the Encounters / Maps section: read to be indexed, like a note. */
+const SPECIAL_JSON_PATTERN = /(^|\/)(encounters|maps)\/(.+\/)?[^/]+\.json$/i;
 const INDEX_STATUS = Object.freeze({
   idle: 'idle',
   indexing: 'indexing',
@@ -36,9 +40,13 @@ const INDEX_STATE_DEFAULTS = Object.freeze({
   /** Files looked at so far / to look at in the running full scan (0 outside of one). */
   scannedCount: 0,
   scanTotal: 0,
+  /** The running update is big enough to block the app with the progress screen. */
+  isLargeUpdate: false,
 });
-/** A full scan reports its progress every this many files (each report is a broadcast). */
+/** A scan reports its progress every this many files (each report is a broadcast). */
 const PROGRESS_STEP = 25;
+/** A watcher batch is small, so it reports more often. */
+const WATCH_PROGRESS_STEP = 5;
 
 let indexState = { ...INDEX_STATE_DEFAULTS };
 let activeVault = null;
@@ -47,6 +55,8 @@ let watcher = null;
 let watchTimer = null;
 let pendingWatchPaths = new Set();
 let taskQueue = Promise.resolve();
+/** Called with the vault paths found still in the cloud (not downloaded) after the vault was open. */
+let datalessHandler = null;
 /** Path -> what LazyDM last indexed there and when, to recognise the watcher's echo of its own writes. */
 const recentlyIndexed = new Map();
 
@@ -139,7 +149,7 @@ function isFileChanged(file, knownState) {
 
 /** An encounter or a map (`.json` of the Encounters / Maps section) is listed by its `name`, like a note by its title; null for any other file. */
 async function readEncounterTitle(rootPath, relativePath) {
-  if (!/(^|\/)(encounters|maps)\/(.+\/)?[^/]+\.json$/i.test(relativePath)) {
+  if (!SPECIAL_JSON_PATTERN.test(relativePath)) {
     return null;
   }
 
@@ -185,32 +195,40 @@ async function indexFileContent(rootPath, file, knownState) {
   vaultIndexModel.saveFile({ ...file, contentHash }, { ...document, type: section?.type ?? null });
 }
 
-/** Brings the index in line with the files on disk: indexes new or changed files and drops deleted ones. */
+/** Files whose content is read to be indexed: a placeholder of those would make the read wait for the download. */
+function needsContentRead(relativePath) {
+  return vaultIndexModel.getFileKind(relativePath) === 'md' || SPECIAL_JSON_PATTERN.test(relativePath);
+}
+
+/** Tells the cloud check about placeholders the watcher found while the vault is open, so they get downloaded. */
+function reportDataless(paths) {
+  if (paths.length > 0) {
+    datalessHandler?.(paths);
+  }
+}
+
+/**
+ * Brings the index in line with the files on disk: indexes new or changed files and drops deleted ones.
+ * `onProgress(done, total)` counts the files that have to be indexed, not the ones that were only looked at.
+ * A note still in the cloud is left for later (collected in `datalessSink`) instead of waiting for its download.
+ */
 async function reconcile(
   token,
   rootPath,
   relativeDir = '',
   onProgress = null,
   skipOwnWrites = false,
+  datalessSink = null,
 ) {
   const knownStates = vaultIndexModel.listFileStates();
   const files = await vaultModel.listVaultFiles(rootPath, relativeDir);
   const folderPrefix = relativeDir ? `${relativeDir}/` : '';
   const seenPaths = new Set();
   const changedPaths = [];
+  const datalessPaths = [];
+  const pending = [];
 
-  onProgress?.(0, files.length);
-  let scanned = 0;
   for (const file of files) {
-    if (!isCurrent(token)) {
-      return changedPaths;
-    }
-
-    scanned += 1;
-    if (onProgress && scanned % PROGRESS_STEP === 0) {
-      onProgress(scanned, files.length);
-    }
-
     seenPaths.add(file.path);
     if (skipOwnWrites && isOwnWriteEcho(file.path, toFileSignature(file))) {
       continue;
@@ -221,11 +239,33 @@ async function reconcile(
       continue;
     }
 
+    if (file.isDataless) {
+      datalessPaths.push(file.path);
+      if (needsContentRead(file.path)) {
+        continue;
+      }
+    }
+
+    pending.push({ file, knownState });
+  }
+
+  onProgress?.(0, pending.length);
+  let done = 0;
+  for (const { file, knownState } of pending) {
+    if (!isCurrent(token)) {
+      return changedPaths;
+    }
+
     try {
       await indexFile(rootPath, file, knownState);
       changedPaths.push(file.path);
     } catch (error) {
       console.warn('[electron] Failed to index file ->', file.path, error);
+    }
+
+    done += 1;
+    if (onProgress && done % PROGRESS_STEP === 0) {
+      onProgress(done, pending.length);
     }
   }
 
@@ -236,6 +276,7 @@ async function reconcile(
     }
   }
 
+  datalessSink?.push(...datalessPaths);
   return changedPaths;
 }
 
@@ -249,17 +290,22 @@ function publishChanges(changedPaths) {
   broadcastIpcEvent(INDEX_EVENT_CHANNELS.updated, { paths: changedPaths });
 }
 
-async function runFullReconcile(token) {
+async function runFullReconcile(token, { forceBlocking = false } = {}) {
   setIndexState({
     status: INDEX_STATUS.indexing,
     vaultId: activeVault.id,
     lastError: null,
     scannedCount: 0,
     scanTotal: 0,
+    isLargeUpdate: forceBlocking,
   });
 
   const changedPaths = await reconcile(token, activeVault.path, '', (scannedCount, scanTotal) =>
-    setIndexState({ scannedCount, scanTotal }),
+    setIndexState({
+      scannedCount,
+      scanTotal,
+      isLargeUpdate: forceBlocking || scanTotal >= LARGE_UPDATE_FILE_COUNT,
+    }),
   );
   if (!isCurrent(token)) {
     return;
@@ -270,6 +316,7 @@ async function runFullReconcile(token) {
     status: INDEX_STATUS.ready,
     scannedCount: 0,
     scanTotal: 0,
+    isLargeUpdate: false,
     fileCount: vaultIndexModel.countFiles(),
     lastIndexedAtMs: Date.now(),
   });
@@ -278,11 +325,25 @@ async function runFullReconcile(token) {
 async function reindexWatchedPaths(token, relativePaths, { fromWatcher = false } = {}) {
   const rootPath = activeVault.path;
   const changedPaths = [];
+  const datalessPaths = [];
+  // A big batch (a sync that brought many files) blocks the app with the progress screen right away.
+  const isLarge = fromWatcher && relativePaths.length >= LARGE_UPDATE_FILE_COUNT;
+  const reportProgress = (scannedCount, scanTotal) =>
+    setIndexState({ status: INDEX_STATUS.indexing, scannedCount, scanTotal, isLargeUpdate: true });
+  if (isLarge) {
+    reportProgress(0, relativePaths.length);
+  }
 
+  let handled = 0;
   for (const relativePath of relativePaths) {
     if (!isCurrent(token)) {
       return;
     }
+
+    if (isLarge && handled > 0 && handled % WATCH_PROGRESS_STEP === 0) {
+      reportProgress(handled, relativePaths.length);
+    }
+    handled += 1;
 
     if (vaultModel.isIgnoredVaultPath(relativePath)) {
       continue;
@@ -304,9 +365,23 @@ async function reindexWatchedPaths(token, relativePaths, { fromWatcher = false }
         }
 
         // A new or renamed folder can hold no file yet: the lists still have to show it.
+        const folderProgress = isLarge
+          ? null
+          : (scannedCount, scanTotal) => {
+              if (fromWatcher && scanTotal >= LARGE_UPDATE_FILE_COUNT) {
+                reportProgress(scannedCount, scanTotal);
+              }
+            };
         changedPaths.push(
           relativePath,
-          ...(await reconcile(token, rootPath, relativePath, null, fromWatcher)),
+          ...(await reconcile(
+            token,
+            rootPath,
+            relativePath,
+            folderProgress,
+            fromWatcher,
+            fromWatcher ? datalessPaths : null,
+          )),
         );
         rememberIndexed(relativePath, DIRECTORY_SIGNATURE);
       } else if (stats.isFile()) {
@@ -317,6 +392,13 @@ async function reindexWatchedPaths(token, relativePaths, { fromWatcher = false }
 
         const knownState = vaultIndexModel.getFileState(relativePath);
         if (isFileChanged(file, knownState)) {
+          if (vaultModel.isDatalessStats(stats)) {
+            datalessPaths.push(relativePath);
+            if (needsContentRead(relativePath)) {
+              continue;
+            }
+          }
+
           await indexFile(rootPath, file, knownState);
           changedPaths.push(relativePath);
         }
@@ -328,6 +410,17 @@ async function reindexWatchedPaths(token, relativePaths, { fromWatcher = false }
 
   if (isCurrent(token)) {
     publishChanges(changedPaths);
+    if (indexState.isLargeUpdate && indexState.status === INDEX_STATUS.indexing) {
+      setIndexState({
+        status: INDEX_STATUS.ready,
+        scannedCount: 0,
+        scanTotal: 0,
+        isLargeUpdate: false,
+      });
+    }
+    if (fromWatcher) {
+      reportDataless(datalessPaths);
+    }
   }
 }
 
@@ -397,7 +490,7 @@ function stopWatcher() {
 }
 
 /** Opens the index of a vault, starts watching its folder and reconciles it with the files on disk. */
-function start(vault) {
+function start(vault, { onDataless = null } = {}) {
   if (!vault || typeof vault.id !== 'string' || typeof vault.path !== 'string') {
     throw new Error('vault must have an id and a path.');
   }
@@ -407,6 +500,7 @@ function start(vault) {
   }
 
   stop();
+  datalessHandler = onDataless;
   openVaultIndexDatabase(vault.id);
   activeVault = { id: vault.id, path: vault.path };
   activeToken += 1;
@@ -425,6 +519,7 @@ function stop() {
 
   activeToken += 1;
   activeVault = null;
+  datalessHandler = null;
   recentlyIndexed.clear();
   stopWatcher();
   closeVaultIndexDatabase();
@@ -440,7 +535,7 @@ function rebuild() {
   const token = activeToken;
   enqueueDetached(token, async () => {
     vaultIndexModel.deleteAll();
-    await runFullReconcile(token);
+    await runFullReconcile(token, { forceBlocking: true });
   });
 
   return getStatus();
