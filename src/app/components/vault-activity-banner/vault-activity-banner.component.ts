@@ -11,7 +11,7 @@ const SHOW_DELAY_MS = 400;
 /** Once shown, the banner stays at least this long. */
 const MIN_VISIBLE_MS = 800;
 
-type ActivityKind = 'checking' | 'downloading' | 'indexing';
+type ActivityKind = 'checking' | 'downloading' | 'indexing' | 'downloadingAssets';
 
 interface Activity {
   readonly kind: ActivityKind;
@@ -21,7 +21,7 @@ interface Activity {
 
 /**
  * Thin banner under the toolbar showing what the vault is busy with: checking the cloud for changes,
- * downloading notes, or scanning files for the index (with a counter when the total is known).
+ * downloading notes, scanning files for the index, or fetching assets in the background (with a counter when the total is known).
  */
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -47,6 +47,11 @@ export class VaultActivityBannerComponent {
     const index = this.index.state();
     if (index?.status === 'indexing') {
       return { kind: 'indexing', done: index.scannedCount, total: index.scanTotal };
+    }
+
+    if (cloud && cloud.pendingAssetFiles > 0) {
+      const total = this.cloud.assetTotal();
+      return { kind: 'downloadingAssets', done: Math.max(0, total - cloud.pendingAssetFiles), total };
     }
 
     return null;

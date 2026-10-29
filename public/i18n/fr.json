@@ -474,7 +474,8 @@
       "checking": "Recherche de modifications dans le cloud",
       "downloading": "Téléchargement des notes depuis le cloud",
       "indexing": "Indexation du Codex",
-      "indexError": "Impossible d'indexer le Codex"
+      "indexError": "Impossible d'indexer le Codex",
+      "downloadingAssets": "Téléchargement des images et fichiers en arrière-plan"
     }
   },
   "campaigns": {

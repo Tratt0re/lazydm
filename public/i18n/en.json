@@ -474,7 +474,8 @@
       "checking": "Checking the cloud for changes",
       "downloading": "Downloading notes from the cloud",
       "indexing": "Indexing the Codex",
-      "indexError": "Couldn't index the Codex"
+      "indexError": "Couldn't index the Codex",
+      "downloadingAssets": "Downloading images and files in the background"
     }
   },
   "campaigns": {

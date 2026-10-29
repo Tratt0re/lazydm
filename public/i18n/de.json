@@ -474,7 +474,8 @@
       "checking": "Cloud wird auf Änderungen geprüft",
       "downloading": "Notizen werden aus der Cloud geladen",
       "indexing": "Codex wird indiziert",
-      "indexError": "Codex konnte nicht indiziert werden"
+      "indexError": "Codex konnte nicht indiziert werden",
+      "downloadingAssets": "Bilder und Dateien werden im Hintergrund geladen"
     }
   },
   "campaigns": {

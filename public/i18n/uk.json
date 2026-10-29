@@ -474,7 +474,8 @@
       "checking": "Перевірка змін у хмарі",
       "downloading": "Завантаження нотаток із хмари",
       "indexing": "Індексування Codex",
-      "indexError": "Не вдалося індексувати Codex"
+      "indexError": "Не вдалося індексувати Codex",
+      "downloadingAssets": "Завантаження зображень і файлів у фоновому режимі"
     }
   },
   "campaigns": {

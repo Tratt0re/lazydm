@@ -10,6 +10,8 @@ export interface CloudReadinessStatusDto {
   readonly totalFiles: number;
   readonly pendingFiles: number;
   readonly pendingPaths: readonly string[];
+  /** Assets (images, pdfs…) still downloading in the background; they never block the vault. */
+  readonly pendingAssetFiles: number;
   readonly conflictPaths: readonly string[];
   readonly lastCheckedAtMs: number | null;
   readonly lastError: string | null;

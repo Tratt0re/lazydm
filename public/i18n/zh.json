@@ -474,7 +474,8 @@
       "checking": "正在检查云端更改",
       "downloading": "正在从云端下载笔记",
       "indexing": "正在为 Codex 建立索引",
-      "indexError": "无法为 Codex 建立索引"
+      "indexError": "无法为 Codex 建立索引",
+      "downloadingAssets": "正在后台下载图片和文件"
     }
   },
   "campaigns": {

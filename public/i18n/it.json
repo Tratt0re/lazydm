@@ -474,7 +474,8 @@
       "checking": "Controllo delle modifiche nel cloud",
       "downloading": "Download delle note dal cloud",
       "indexing": "Indicizzazione del Codex",
-      "indexError": "Impossibile indicizzare il Codex"
+      "indexError": "Impossibile indicizzare il Codex",
+      "downloadingAssets": "Download di immagini e file in background"
     }
   },
   "campaigns": {

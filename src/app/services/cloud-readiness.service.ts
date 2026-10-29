@@ -12,6 +12,7 @@ const CLOUD_STATUS_CHANGED_EVENT = 'cloud:statusChanged';
 export class CloudReadinessService extends BaseIpcService<APIChannel.CLOUD> {
   private readonly stateSignal = signal<CloudReadinessStatusDto | null>(null);
   private readonly downloadTotalSignal = signal(0);
+  private readonly assetTotalSignal = signal(0);
   private connected = false;
 
   private readonly handleStatusChanged = (payload: unknown) => {
@@ -21,6 +22,8 @@ export class CloudReadinessService extends BaseIpcService<APIChannel.CLOUD> {
   readonly state = this.stateSignal.asReadonly();
   /** Number of notes to download in the current check, used as the 100% of the progress bar. */
   readonly downloadTotal = this.downloadTotalSignal.asReadonly();
+  /** Number of assets to download in the current check, used as the 100% of the background counter. */
+  readonly assetTotal = this.assetTotalSignal.asReadonly();
   readonly isDownloading = computed(() => this.stateSignal()?.status === 'downloading');
 
   constructor() {
@@ -53,8 +56,10 @@ export class CloudReadinessService extends BaseIpcService<APIChannel.CLOUD> {
   private applyState(state: CloudReadinessStatusDto): void {
     if (state.status === 'checking' || state.status === 'idle') {
       this.downloadTotalSignal.set(state.pendingFiles);
+      this.assetTotalSignal.set(state.pendingAssetFiles);
     } else {
       this.downloadTotalSignal.update((total) => Math.max(total, state.pendingFiles));
+      this.assetTotalSignal.update((total) => Math.max(total, state.pendingAssetFiles));
     }
 
     this.stateSignal.set(state);

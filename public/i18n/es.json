@@ -474,7 +474,8 @@
       "checking": "Buscando cambios en la nube",
       "downloading": "Descargando notas de la nube",
       "indexing": "Indexando el Codex",
-      "indexError": "No se pudo indexar el Codex"
+      "indexError": "No se pudo indexar el Codex",
+      "downloadingAssets": "Descargando imágenes y archivos en segundo plano"
     }
   },
   "campaigns": {
