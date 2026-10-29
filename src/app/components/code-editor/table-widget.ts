@@ -11,6 +11,7 @@ import {
   type TableModel,
   toCellSource,
 } from './table-edit';
+import { attachTableLinkSuggest } from './table-link-suggest';
 
 /** Accessible names of the table's own controls (i18n, set by the editor). */
 export interface TableLabels {
@@ -307,6 +308,8 @@ export class TableWidget extends WidgetType {
           openMenu(row, column, event.clientX, event.clientY);
         });
         cell.addEventListener('blur', () => finish(null));
+        // Before the key handling below, so an open file-name list gets Arrow / Enter / Tab / Escape first.
+        attachTableLinkSuggest(view, cell);
         cell.addEventListener('keydown', (event) => {
           if (editing?.cell !== cell) {
             return;

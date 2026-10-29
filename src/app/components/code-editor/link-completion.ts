@@ -7,7 +7,7 @@ import {
   completionKeymap,
   pickedCompletion,
 } from '@codemirror/autocomplete';
-import { type Extension, Prec, StateEffect, StateField } from '@codemirror/state';
+import { type EditorState, type Extension, Prec, StateEffect, StateField } from '@codemirror/state';
 import { EditorView, keymap } from '@codemirror/view';
 
 import type { LinkTargetDto } from '@/dtos';
@@ -76,43 +76,60 @@ export function linkCompletion(): Extension {
   ];
 }
 
-function linkCompletions(context: CompletionContext): CompletionResult | null {
-  const { targets, sourcePath } = context.state.field(contextField);
+/** One suggested link: what the list shows and what picking it writes (`linkTarget` + `closing`). */
+export interface LinkSuggestion {
+  readonly label: string;
+  readonly detail: string;
+  readonly linkTarget: string;
+  readonly closing: string;
+}
+
+/** Suggestions for the link being typed at the end of `textBefore`; `from` is where its target starts in it. */
+export interface LinkSuggestions {
+  readonly from: number;
+  readonly suggestions: readonly LinkSuggestion[];
+}
+
+/** The link-suggestion context of an editor (null before the editor set it). */
+export function getLinkCompletionContext(state: EditorState): LinkCompletionContext | null {
+  return state.field(contextField, false) ?? null;
+}
+
+/**
+ * The suggestions for a link typed at the end of `textBefore` (the text of the line before the caret), or null
+ * when the caret is not in a link target. Shared by the editor's list and the one of the table cells.
+ */
+export function suggestLinks(
+  textBefore: string,
+  { targets, sourcePath }: LinkCompletionContext,
+): LinkSuggestions | null {
   if (targets.length === 0) {
     return null;
   }
 
   const scopePrefix = getScopePrefix(sourcePath);
-  const wikilink = context.matchBefore(WIKILINK_BEFORE);
+  const wikilink = WIKILINK_BEFORE.exec(textBefore);
   if (wikilink) {
-    const isEmbed = wikilink.text.startsWith('!');
-    const from = wikilink.from + (isEmbed ? 3 : 2);
+    const isEmbed = wikilink[0].startsWith('!');
+    const from = wikilink.index + (isEmbed ? 3 : 2);
     const duplicateNames = findDuplicateNames(targets);
     return {
       from,
-      filter: false,
-      options: rankTargets(targets, context.state.sliceDoc(from, context.pos), isEmbed).map(
-        (target) =>
-          toOption(
-            target,
-            scopePrefix,
-            getWikilinkTarget(target, scopePrefix, duplicateNames),
-            ']]',
-          ),
+      suggestions: rankTargets(targets, textBefore.slice(from), isEmbed).map((target) =>
+        toSuggestion(target, scopePrefix, getWikilinkTarget(target, scopePrefix, duplicateNames), ']]'),
       ),
     };
   }
 
-  const markdown = context.matchBefore(MARKDOWN_BEFORE);
+  const markdown = MARKDOWN_BEFORE.exec(textBefore);
   if (markdown) {
-    const from = markdown.from + markdown.text.lastIndexOf('](') + 2;
-    const isEmbed = context.state.sliceDoc(markdown.from - 1, markdown.from) === '!';
+    const from = markdown.index + markdown[0].lastIndexOf('](') + 2;
+    const isEmbed = textBefore.charAt(markdown.index - 1) === '!';
     const sourceDir = sourcePath.split('/').slice(0, -1);
     return {
       from,
-      filter: false,
-      options: rankTargets(targets, context.state.sliceDoc(from, context.pos), isEmbed).map(
-        (target) => toOption(target, scopePrefix, toMarkdownHref(sourceDir, target.path), ')'),
+      suggestions: rankTargets(targets, textBefore.slice(from), isEmbed).map((target) =>
+        toSuggestion(target, scopePrefix, toMarkdownHref(sourceDir, target.path), ')'),
       ),
     };
   }
@@ -120,13 +137,23 @@ function linkCompletions(context: CompletionContext): CompletionResult | null {
   return null;
 }
 
-/** Inserts the link target, adds the closing brackets unless they are already there, and moves past them. */
-function toOption(
+function linkCompletions(context: CompletionContext): CompletionResult | null {
+  const line = context.state.doc.lineAt(context.pos);
+  const found = suggestLinks(
+    context.state.sliceDoc(line.from, context.pos),
+    context.state.field(contextField),
+  );
+  return found
+    ? { from: line.from + found.from, filter: false, options: found.suggestions.map(toOption) }
+    : null;
+}
+
+function toSuggestion(
   target: LinkTargetDto,
   scopePrefix: string,
   linkTarget: string,
   closing: string,
-): Completion {
+): LinkSuggestion {
   const detailPath = target.path.startsWith(scopePrefix)
     ? target.path.slice(scopePrefix.length)
     : target.path;
@@ -134,6 +161,16 @@ function toOption(
     // Maps and encounters are shown by their name, not by `name.json` (the link keeps the full file name).
     label: target.title || target.name,
     detail: detailPath.replace(SPECIAL_FILE_EXTENSION_PATTERN, ''),
+    linkTarget,
+    closing,
+  };
+}
+
+/** Inserts the link target, adds the closing brackets unless they are already there, and moves past them. */
+function toOption({ label, detail, linkTarget, closing }: LinkSuggestion): Completion {
+  return {
+    label,
+    detail,
     apply: (view, completion, from, to) => {
       const hasClosing = view.state.sliceDoc(to, to + closing.length) === closing;
       const insert = hasClosing ? linkTarget : `${linkTarget}${closing}`;
