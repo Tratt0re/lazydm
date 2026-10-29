@@ -331,6 +331,15 @@
         "description": "Der geöffnete Codex und alle Einstellungen dieses Geräts werden vergessen. Die Notizen bleiben im Ordner, nichts wird gelöscht.",
         "confirm": "App zurücksetzen",
         "error": "Die App konnte nicht zurückgesetzt werden"
+      },
+      "reindex": {
+        "heading": "Index neu aufbauen",
+        "explanation": "LazyDM führt einen lokalen Index deiner Dateien für Links, Suche und Listen. Wirkt etwas veraltet oder wird ein Link nicht aufgelöst, baue ihn neu auf: Jede Datei wird erneut gelesen. Deine Dateien bleiben unverändert.",
+        "action": "Index neu aufbauen",
+        "title": "Index neu aufbauen?",
+        "description": "Jede Datei wird erneut gelesen. Die App zeigt einen Fortschrittsbildschirm, bis alles fertig ist, was in einem großen Codex dauern kann. An deinen Dateien ändert sich nichts.",
+        "confirm": "Neu aufbauen",
+        "error": "Index konnte nicht neu aufgebaut werden"
       }
     },
     "mcp": {

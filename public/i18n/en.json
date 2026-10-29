@@ -331,6 +331,15 @@
         "description": "The open Codex and all settings of this device are forgotten. Your notes stay in their folder and nothing is deleted.",
         "confirm": "Reset the app",
         "error": "Couldn't reset the app"
+      },
+      "reindex": {
+        "heading": "Rebuild the index",
+        "explanation": "LazyDM keeps a local index of your files for links, search and lists. If something looks out of date or a link does not resolve, rebuild it: every file is read again. Your files are not changed.",
+        "action": "Rebuild index",
+        "title": "Rebuild the index?",
+        "description": "Every file is read again. The app shows a progress screen until it is done, which can take a while in a big Codex. Nothing in your files changes.",
+        "confirm": "Rebuild",
+        "error": "Couldn’t rebuild the index"
       }
     },
     "mcp": {

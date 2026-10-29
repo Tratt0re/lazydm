@@ -331,6 +331,15 @@
         "description": "Il Codex aperto e tutte le impostazioni di questo dispositivo vengono dimenticati. Le note restano nella cartella e nulla viene eliminato.",
         "confirm": "Ripristina l'app",
         "error": "Impossibile ripristinare l'app"
+      },
+      "reindex": {
+        "heading": "Ricostruisci l’indice",
+        "explanation": "LazyDM tiene un indice locale dei tuoi file per link, ricerca ed elenchi. Se qualcosa sembra non aggiornato o un link non si risolve, ricostruiscilo: ogni file viene riletto. I tuoi file non vengono modificati.",
+        "action": "Ricostruisci indice",
+        "title": "Ricostruire l’indice?",
+        "description": "Ogni file viene riletto. L’app mostra una schermata di avanzamento finché non ha finito, e in un Codex grande può volerci un po’. Nei tuoi file non cambia nulla.",
+        "confirm": "Ricostruisci",
+        "error": "Impossibile ricostruire l’indice"
       }
     },
     "mcp": {

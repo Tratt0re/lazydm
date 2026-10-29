@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { toast } from 'ngx-sonner';
 
+import { IndexStatusService } from '@/services/index-status.service';
 import { ResetService } from '@/services/reset.service';
 import { VaultService } from '@/services/vault.service';
 import { ArcTechAlertDialogService } from '@/shared/components/alert-dialog/alert-dialog.service';
@@ -16,6 +17,7 @@ import { ArcTechButtonComponent } from '@/shared/components/button';
 })
 export class VaultSectionComponent {
   private readonly vaultService = inject(VaultService);
+  private readonly indexStatusService = inject(IndexStatusService);
   private readonly resetService = inject(ResetService);
   private readonly alertDialogService = inject(ArcTechAlertDialogService);
   private readonly translateService = inject(TranslateService);
@@ -36,6 +38,22 @@ export class VaultSectionComponent {
           await this.vaultService.close();
           await this.router.navigateByUrl('/setup');
         }, 'settings.vault.close.error');
+      },
+    });
+  }
+
+  /** Drops the index and reads every file again (links, search and lists); the files themselves are not touched. */
+  protected confirmReindex(): void {
+    this.alertDialogService.confirm({
+      arcTitle: this.translateService.instant('settings.vault.reindex.title'),
+      arcDescription: this.translateService.instant('settings.vault.reindex.description'),
+      arcOkText: this.translateService.instant('settings.vault.reindex.confirm'),
+      arcCancelText: this.translateService.instant('common.cancel'),
+      arcOnOk: () => {
+        void this.run(async () => {
+          await this.indexStatusService.connect();
+          await this.indexStatusService.rebuild();
+        }, 'settings.vault.reindex.error');
       },
     });
   }

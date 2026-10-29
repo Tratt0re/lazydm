@@ -331,6 +331,15 @@
         "description": "Se olvidan el Codex abierto y todos los ajustes de este dispositivo. Tus notas siguen en su carpeta y no se elimina nada.",
         "confirm": "Restablecer la app",
         "error": "No se pudo restablecer la app"
+      },
+      "reindex": {
+        "heading": "Reconstruir el índice",
+        "explanation": "LazyDM mantiene un índice local de tus archivos para enlaces, búsqueda y listas. Si algo parece desactualizado o un enlace no se resuelve, reconstrúyelo: se vuelve a leer cada archivo. Tus archivos no se modifican.",
+        "action": "Reconstruir índice",
+        "title": "¿Reconstruir el índice?",
+        "description": "Se vuelve a leer cada archivo. La app muestra una pantalla de progreso hasta terminar, algo que puede tardar en un Codex grande. Nada cambia en tus archivos.",
+        "confirm": "Reconstruir",
+        "error": "No se pudo reconstruir el índice"
       }
     },
     "mcp": {
