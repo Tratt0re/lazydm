@@ -3,7 +3,7 @@ const path = require('node:path');
 const { dialog, net, protocol } = require('electron');
 const { pathToFileURL } = require('node:url');
 const { formatTimestampForFilename, resolveInsideVault } = require('../utils/file-utils');
-const { toSlug } = require('../utils/string-sanitize');
+const { toLinkKey, toSlug } = require('../utils/string-sanitize');
 const { documentModel, sectionModel, vaultIndexModel } = require('../models');
 const indexerController = require('./indexer.controller');
 const vaultController = require('./vault.controller');
@@ -134,7 +134,7 @@ function getLinkTarget(scope, relativePath) {
     .some(
       (file) =>
         file.path !== relativePath &&
-        file.name.toLocaleLowerCase() === fileName.toLocaleLowerCase(),
+        toLinkKey(file.name) === toLinkKey(fileName),
     );
   return isNameTaken ? relativePath.slice(scope.length + 1) : fileName;
 }

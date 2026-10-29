@@ -1,5 +1,6 @@
 const path = require('node:path');
 const YAML = require('yaml');
+const { toLinkKey } = require('./string-sanitize');
 
 const FRONTMATTER_OPEN = '---';
 const FRONTMATTER_CLOSE = new Set(['---', '...']);
@@ -326,7 +327,7 @@ function replaceLinkFileName(linkPath, oldName, newName, { encoded = false } = {
     }
   }
 
-  if (comparableName.toLocaleLowerCase() !== oldName.toLocaleLowerCase()) {
+  if (toLinkKey(comparableName) !== toLinkKey(oldName)) {
     return null;
   }
 

@@ -6,7 +6,8 @@ const Database = require('better-sqlite3');
 const INDEX_SCHEMA_FILE_PATH = path.join(__dirname, 'index-schemas', '000_vault_index.sql');
 // 2: files.campaign holds the link scope, `compendium/<system>` for compendium files.
 // 4: files.type is the type of the section the folder gives (no longer the frontmatter `type`).
-const INDEX_SCHEMA_VERSION = 4;
+// 5: link resolution compares Unicode-normalized names (accents), so older indexes are rebuilt.
+const INDEX_SCHEMA_VERSION = 5;
 const INDEX_SCHEMA_VERSION_KEY = 'schema_version';
 
 let indexDb = null;

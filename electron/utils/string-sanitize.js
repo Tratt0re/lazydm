@@ -29,6 +29,16 @@ function toCaseInsensitiveLookupKey(value) {
   return normalizeWhitespace(value).toLocaleLowerCase();
 }
 
+/**
+ * Key to compare file names and link targets: macOS and cloud providers store names decomposed (`e` + accent),
+ * links and the keyboard write them composed. Both fold to the same key; the real name is kept for file access.
+ */
+function toLinkKey(value) {
+  return String(value ?? '')
+    .normalize('NFC')
+    .toLocaleLowerCase();
+}
+
 const SLUG_APOSTROPHE_PATTERN = /['’]/g;
 const SLUG_SEPARATOR_PATTERN = /[^\p{L}\p{N}]+/gu;
 const SLUG_MAX_LENGTH = 64;
@@ -64,5 +74,6 @@ module.exports = {
   normalizeWhitespace,
   startsWithFormulaPrefix,
   toCaseInsensitiveLookupKey,
+  toLinkKey,
   toSlug,
 };

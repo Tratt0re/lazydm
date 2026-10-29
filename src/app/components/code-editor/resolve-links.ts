@@ -9,6 +9,11 @@ const URL_SCHEME_PATTERN = /^[a-z][a-z0-9+.-]*:/i;
 const FENCE_PATTERN = /^\s*(```|~~~)/;
 const INLINE_CODE_PATTERN = /`[^`\n]*`/g;
 
+/** Names compare composed and lowercase: the disk may hold `e` + accent where the link has `é` (as the index does). */
+function toLinkKey(text: string): string {
+  return text.normalize('NFC').toLocaleLowerCase();
+}
+
 /** Link name of a target path: the file name, without `.md` for notes (as the index stores it). */
 function toLinkName(targetPath: string): string {
   const baseName = targetPath.split('/').pop() ?? '';
@@ -36,16 +41,18 @@ function normalizePath(path: string): string {
  * path. Null when nothing matches.
  */
 function resolveTarget(targets: readonly LinkTargetDto[], targetPath: string): string | null {
-  const name = toLinkName(targetPath).toLocaleLowerCase();
-  const withExtension = `${targetPath}${MARKDOWN_EXTENSION}`;
-  const isSuffix = (path: string) =>
-    path.endsWith(`/${targetPath}`) || path.endsWith(`/${withExtension}`);
-  const rank = (path: string) =>
-    path === targetPath || path === withExtension ? 2 : isSuffix(path) ? 1 : 0;
+  const name = toLinkKey(toLinkName(targetPath));
+  const key = toLinkKey(targetPath);
+  const withExtension = `${key}${MARKDOWN_EXTENSION}`;
+  const isSuffix = (path: string) => path.endsWith(`/${key}`) || path.endsWith(`/${withExtension}`);
+  const rank = (path: string) => {
+    const pathKey = toLinkKey(path);
+    return pathKey === key || pathKey === withExtension ? 2 : isSuffix(pathKey) ? 1 : 0;
+  };
 
   let best: LinkTargetDto | null = null;
   for (const target of targets) {
-    if (rank(target.path) === 0 && target.name.toLocaleLowerCase() !== name) {
+    if (rank(target.path) === 0 && toLinkKey(target.name) !== name) {
       continue;
     }
     if (

@@ -20,7 +20,7 @@ const {
   replaceDocumentTitle,
   rewriteLinks,
 } = require('../utils/markdown-parse');
-const { toSlug } = require('../utils/string-sanitize');
+const { toLinkKey, toSlug } = require('../utils/string-sanitize');
 const { isMediaFileName } = require('./asset.controller');
 const indexerController = require('./indexer.controller');
 const vaultController = require('./vault.controller');
@@ -1190,7 +1190,7 @@ async function createFromLink(payload) {
     section,
   });
 
-  if (link.targetName.toLocaleLowerCase() !== slug) {
+  if (toLinkKey(link.targetName) !== slug) {
     const rewritten = rewriteLinks(
       source.content,
       (item) => {

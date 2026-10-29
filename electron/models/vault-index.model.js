@@ -1,5 +1,6 @@
 const path = require('node:path');
 const { getVaultIndexDatabase } = require('../database/vault-index-db');
+const { toLinkKey } = require('../utils/string-sanitize');
 const { isCampaignDirName } = require('./vault.model');
 
 const MARKDOWN_EXTENSION = '.md';
@@ -160,11 +161,11 @@ function listScopeNotes(scope) {
  * resolving by name there would find it, so there is no need to copy another one in.
  */
 function hasFileNamed(scope, name) {
-  return Boolean(
-    getVaultIndexDatabase()
-      .prepare('SELECT 1 FROM files WHERE campaign IS ? AND name = ? COLLATE NOCASE LIMIT 1')
-      .get(scope, name),
-  );
+  const key = toLinkKey(name);
+  return getVaultIndexDatabase()
+    .prepare('SELECT name FROM files WHERE campaign IS ?')
+    .all(scope)
+    .some((row) => toLinkKey(row.name) === key);
 }
 
 const SEARCH_LIMIT = 20;
@@ -391,11 +392,6 @@ function deleteAll() {
   })();
 }
 
-/** SQLite's NOCASE folds ASCII letters only: `É` and `é` are different names, `A` and `a` are the same. */
-function foldAscii(text) {
-  return text.replace(/[A-Z]/g, (letter) => letter.toLowerCase());
-}
-
 function addToList(map, key, value) {
   const list = map.get(key);
   if (list) {
@@ -411,9 +407,9 @@ function buildScopeLookup(files) {
   const byBaseName = new Map();
   const byName = new Map();
   for (const file of files) {
-    byPath.set(file.path, file);
-    addToList(byBaseName, file.path.slice(file.path.lastIndexOf('/') + 1), file);
-    addToList(byName, foldAscii(file.name), file);
+    byPath.set(toLinkKey(file.path), file);
+    addToList(byBaseName, toLinkKey(file.path.slice(file.path.lastIndexOf('/') + 1)), file);
+    addToList(byName, toLinkKey(file.name), file);
   }
   return { byPath, byBaseName, byName };
 }
@@ -436,7 +432,7 @@ function findLinkTarget(lookup, link) {
     }
   };
 
-  const targetPath = link.target_path;
+  const targetPath = link.target_path ? toLinkKey(link.target_path) : '';
   if (targetPath) {
     for (const exact of [targetPath, `${targetPath}.md`]) {
       const file = lookup.byPath.get(exact);
@@ -450,14 +446,14 @@ function findLinkTarget(lookup, link) {
       const baseCandidates =
         lookup.byBaseName.get(suffix === targetPath ? baseName : `${baseName}.md`) ?? [];
       for (const file of baseCandidates) {
-        if (file.path.endsWith(`/${suffix}`)) {
+        if (toLinkKey(file.path).endsWith(`/${suffix}`)) {
           consider(file, 1);
         }
       }
     }
   }
 
-  for (const file of lookup.byName.get(foldAscii(link.target_name)) ?? []) {
+  for (const file of lookup.byName.get(toLinkKey(link.target_name)) ?? []) {
     consider(file, 0);
   }
 
