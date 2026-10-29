@@ -606,9 +606,10 @@
   }
 }
 
-/* The note and encounter pages fill the content area and scroll inside it, not the page (the encounter's battle bar is sticky in that scroller). */
+/* The note, encounter and map pages fill the content area and scroll inside it, not the page (the encounter's battle bar is sticky in that scroller; the map's side panel scrolls its own list). */
 arc-content > main:has(> app-document-page),
-arc-content > main:has(> app-encounter-page) {
+arc-content > main:has(> app-encounter-page),
+arc-content > main:has(> app-map-page) {
   min-height: 0;
 }
 
