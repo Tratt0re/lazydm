@@ -236,6 +236,16 @@ Planned Electron modules: `vault`, `cloud-readiness`, `campaign`, `document`, `i
 - At startup LazyDM detects the provider from the vault path, finds **not-yet-downloaded placeholders**
   (iCloud dataless files, Dropbox/OneDrive on-demand files), triggers their download and **waits** with a
   progress screen and a timeout before indexing.
+- **Two tiers.** *Notes* (`.md`, and the `.json` of maps and encounters) block: the app needs them to open pages.
+  Every other file (*assets*: images, pdfs, sounds…) downloads **afterwards, in the background**, never blocking;
+  the thin activity banner shows the count. Assets are indexed from their stats without being read, so links to them
+  resolve before the file lands.
+- **Updates while running.** Placeholders the watcher finds (another device synced) follow the same two tiers. A
+  batch of **20 or more files**, a note download or a rebuild blocks the app with the same progress screen
+  (download phase, then indexing phase with a counter); smaller batches only show the banner. *Continue without
+  waiting* appears after **10 seconds**; skipping leaves the work running in the background.
+- **Settings → Codex → Rebuild the index** drops the index and reads every file again (confirm first, then the
+  blocking screen). The files are never touched.
 - The setup flow says exactly this (§8): the cloud app syncs the files, LazyDM never claims to sync by itself.
 - Be honest about the limit: no provider tells us that another device has an edit still in flight.
   The safety net is **conflict detection on save**: compare the on-disk mtime + hash with the version that was
@@ -245,6 +255,10 @@ Planned Electron modules: `vault`, `cloud-readiness`, `campaign`, `document`, `i
 ## 6. Links
 
 - Obsidian syntax: `[[note-name]]`, `[[note-name|label]]`, `[[note-name#heading]]`, embeds `![[image.png]]`.
+- **Names compare Unicode-normalized**: macOS and cloud folders store file names decomposed (`e` + accent), the
+  keyboard writes them composed. Link resolution, rename rewrites and the editor compare names through one key
+  (NFC + lowercase, `toLinkKey`); the real on-disk name is kept for file access. Accents, parentheses and other
+  symbols in a name are legal; a change to this rule bumps the index version so every device rebuilds.
 - Resolution happens **only inside the link's own scope**: a campaign, or a compendium system. A campaign never
   resolves into the compendium or another campaign (copy what you need instead). The index stores the scope in
   `files.campaign` (`lost-mine`, `compendium/my-system`).
@@ -253,7 +267,8 @@ Planned Electron modules: `vault`, `cloud-readiness`, `campaign`, `document`, `i
   typed; links list notes first, embeds list assets first. Picking one writes a link that resolves: the bare name,
   or the scope-relative path when two files share the name (`[[enemies/goblin]]`); markdown links get the path
   relative to the note (`../assets/map.png`). The closing `]]` / `)` is added unless already there. The list comes
-  from the index (`documents:linkTargets`) and follows index updates.
+  from the index (`documents:linkTargets`) and follows index updates. The same list opens under a **table cell**
+  being edited in place (a popup that never takes focus; Arrow keys move, Enter or Tab pick, Escape closes).
 - **Rename** (note toolbar → *Rename*): the new title gives the new kebab-case file name in the same folder;
   `title:` and the `# Heading` (if it still shows the old title) are updated. The modal previews the notes linking
   here; with *Update links* (default on) every link the index resolved to the note is rewritten, keeping its form
