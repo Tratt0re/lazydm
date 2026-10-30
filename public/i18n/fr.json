@@ -77,6 +77,10 @@
       "mcp": {
         "title": "MCP",
         "description": "Laissez des assistants IA comme Claude Code, OpenAI Codex ou OpenCode travailler avec vos notes."
+      },
+      "agentRules": {
+        "title": "Règles pour les agents IA",
+        "description": "Vos instructions pour les assistants IA : comment écrire et mettre en forme les notes de cette campagne."
       }
     },
     "general": {
@@ -419,6 +423,25 @@
         "confirmDescription": "Ils pourront envoyer des notes, des fichiers et des sous-dossiers à la Corbeille, et les liens vers eux deviennent du texte simple. Vous pouvez les restaurer depuis la Corbeille. Si votre Codex est dans un dossier synchronisé, vos autres appareils les verront disparaître aussitôt.",
         "confirm": "Autoriser la suppression"
       }
+    },
+    "agentRules": {
+      "about": {
+        "title": "Règles pour les agents IA",
+        "what": "C'est un fichier markdown, agents.md, dans le dossier de cette campagne. Vous l'écrivez : il indique aux assistants IA comment vous voulez que vos notes soient écrites et mises en forme. LazyDM ne le remplit jamais.",
+        "how": "Écrivez des instructions simples, par exemple la langue et le ton de vos notes, comment nommer les choses, quel modèle ou quelles sections utiliser, quoi relier et quoi laisser de côté. Court et concret fonctionne le mieux.",
+        "noMcp": "Les assistants qui utilisent le serveur MCP de LazyDM lisent ce fichier d'eux-mêmes avant d'écrire. Si vous utilisez un assistant sans MCP, dites-lui vous-même de lire ce fichier, par exemple dans son propre fichier d'instructions.",
+        "path": "Fichier :"
+      },
+      "noCampaign": "Ouvrez une campagne, puis revenez ici pour écrire ses règles.",
+      "create": "Créer le fichier de règles",
+      "placeholder": "Écrivez ici vos instructions pour les assistants IA",
+      "save": "Enregistrer",
+      "saved": "Règles enregistrées",
+      "saveError": "Impossible d'enregistrer les règles",
+      "createError": "Impossible de créer le fichier de règles",
+      "loadError": "Impossible de charger les règles",
+      "conflict": "Les règles ont changé sur le disque.",
+      "reload": "Recharger"
     }
   },
   "vault": {

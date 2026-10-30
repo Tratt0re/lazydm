@@ -77,6 +77,10 @@
       "mcp": {
         "title": "MCP",
         "description": "Deja que asistentes de IA como Claude Code, OpenAI Codex u OpenCode trabajen con tus notas."
+      },
+      "agentRules": {
+        "title": "Reglas para agentes de IA",
+        "description": "Tus instrucciones para los asistentes de IA: cómo deben escribir y dar formato a las notas de esta campaña."
       }
     },
     "general": {
@@ -419,6 +423,25 @@
         "confirmDescription": "Podrán enviar notas, recursos y subcarpetas a la Papelera, y los enlaces a ellos pasan a texto simple. Puedes restaurarlos desde la Papelera. Si tu Codex está en una carpeta sincronizada, tus otros dispositivos los verán desaparecer al instante.",
         "confirm": "Permitir eliminar"
       }
+    },
+    "agentRules": {
+      "about": {
+        "title": "Reglas para agentes de IA",
+        "what": "Es un archivo markdown, agents.md, en la carpeta de esta campaña. Lo escribes tú: indica a los asistentes de IA cómo quieres que se escriban y se formateen tus notas. LazyDM nunca lo rellena.",
+        "how": "Escribe instrucciones sencillas, por ejemplo el idioma y el tono de tus notas, cómo poner nombres, qué plantilla o secciones usar, qué enlazar y qué dejar fuera. Breves y concretas funcionan mejor.",
+        "noMcp": "Los asistentes que usan el servidor MCP de LazyDM leen este archivo por sí solos antes de escribir. Si usas un asistente sin MCP, dile tú que lea este archivo, por ejemplo en su propio archivo de instrucciones.",
+        "path": "Archivo:"
+      },
+      "noCampaign": "Abre una campaña y vuelve aquí para escribir sus reglas.",
+      "create": "Crear el archivo de reglas",
+      "placeholder": "Escribe aquí tus instrucciones para los asistentes de IA",
+      "save": "Guardar",
+      "saved": "Reglas guardadas",
+      "saveError": "No se pudieron guardar las reglas",
+      "createError": "No se pudo crear el archivo de reglas",
+      "loadError": "No se pudieron cargar las reglas",
+      "conflict": "Las reglas han cambiado en el disco.",
+      "reload": "Recargar"
     }
   },
   "vault": {

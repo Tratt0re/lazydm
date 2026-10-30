@@ -77,6 +77,10 @@
       "mcp": {
         "title": "MCP",
         "description": "Lascia che assistenti AI come Claude Code, OpenAI Codex o OpenCode lavorino con le tue note."
+      },
+      "agentRules": {
+        "title": "Regole per gli agenti AI",
+        "description": "Le tue istruzioni per gli assistenti AI: come devono scrivere e formattare le note di questa campagna."
       }
     },
     "general": {
@@ -419,6 +423,25 @@
         "confirmDescription": "Potranno mandare nel Cestino note, risorse e sottocartelle, e i collegamenti verso di esse diventano testo semplice. Puoi ripristinarli dal Cestino. Se il Codex è in una cartella sincronizzata, gli altri dispositivi li vedranno sparire subito.",
         "confirm": "Consenti eliminazioni"
       }
+    },
+    "agentRules": {
+      "about": {
+        "title": "Regole per gli agenti AI",
+        "what": "È un file markdown, agents.md, nella cartella di questa campagna. Lo scrivi tu: dice agli assistenti AI come vuoi che le tue note siano scritte e formattate. LazyDM non lo compila mai.",
+        "how": "Scrivi istruzioni semplici, per esempio la lingua e il tono delle note, come dare i nomi, quali modelli o sezioni usare, cosa collegare e cosa lasciare fuori. Brevi e concrete funzionano meglio.",
+        "noMcp": "Gli assistenti che usano il server MCP di LazyDM leggono questo file da soli prima di scrivere. Se usi un assistente senza MCP, digli tu di leggere questo file, per esempio nel suo file di istruzioni.",
+        "path": "File:"
+      },
+      "noCampaign": "Apri una campagna, poi torna qui per scriverne le regole.",
+      "create": "Crea il file delle regole",
+      "placeholder": "Scrivi qui le tue istruzioni per gli assistenti AI",
+      "save": "Salva",
+      "saved": "Regole salvate",
+      "saveError": "Impossibile salvare le regole",
+      "createError": "Impossibile creare il file delle regole",
+      "loadError": "Impossibile caricare le regole",
+      "conflict": "Le regole sono cambiate su disco.",
+      "reload": "Ricarica"
     }
   },
   "vault": {

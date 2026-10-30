@@ -77,6 +77,10 @@
       "mcp": {
         "title": "MCP",
         "description": "KI-Assistenten wie Claude Code, OpenAI Codex oder OpenCode mit deinen Notizen arbeiten lassen."
+      },
+      "agentRules": {
+        "title": "KI-Agenten-Regeln",
+        "description": "Deine Anweisungen für KI-Assistenten: wie sie die Notizen dieser Kampagne schreiben und formatieren sollen."
       }
     },
     "general": {
@@ -419,6 +423,25 @@
         "confirmDescription": "Sie können Notizen, Dateien und Unterordner in den Papierkorb legen; Links darauf werden zu einfachem Text. Du kannst sie aus dem Papierkorb wiederherstellen. Liegt dein Codex in einem synchronisierten Ordner, verschwinden sie auf deinen anderen Geräten sofort.",
         "confirm": "Löschen erlauben"
       }
+    },
+    "agentRules": {
+      "about": {
+        "title": "KI-Agenten-Regeln",
+        "what": "Das ist eine Markdown-Datei, agents.md, im Ordner dieser Kampagne. Du schreibst sie selbst: Sie sagt KI-Assistenten, wie deine Notizen geschrieben und formatiert sein sollen. LazyDM füllt sie nie aus.",
+        "how": "Schreibe einfache Anweisungen, zum Beispiel Sprache und Ton deiner Notizen, wie Dinge benannt werden, welche Vorlage oder Bereiche genutzt werden, was verlinkt wird und was wegbleibt. Kurz und konkret funktioniert am besten.",
+        "noMcp": "Assistenten, die den MCP-Server von LazyDM nutzen, lesen diese Datei vor dem Schreiben selbst. Nutzt du einen Assistenten ohne MCP, sage ihm selbst, dass er diese Datei lesen soll, zum Beispiel in seiner eigenen Anweisungsdatei.",
+        "path": "Datei:"
+      },
+      "noCampaign": "Öffne eine Kampagne und komm dann hierher zurück, um ihre Regeln zu schreiben.",
+      "create": "Regeldatei erstellen",
+      "placeholder": "Schreibe hier deine Anweisungen für KI-Assistenten",
+      "save": "Speichern",
+      "saved": "Regeln gespeichert",
+      "saveError": "Die Regeln konnten nicht gespeichert werden",
+      "createError": "Die Regeldatei konnte nicht erstellt werden",
+      "loadError": "Die Regeln konnten nicht geladen werden",
+      "conflict": "Die Regeln haben sich auf dem Datenträger geändert.",
+      "reload": "Neu laden"
     }
   },
   "vault": {

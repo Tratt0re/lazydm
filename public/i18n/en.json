@@ -77,6 +77,10 @@
       "mcp": {
         "title": "MCP",
         "description": "Let AI assistants such as Claude Code, OpenAI Codex or OpenCode work with your notes."
+      },
+      "agentRules": {
+        "title": "AI Agents rules",
+        "description": "Your instructions for AI assistants: how they should write and format the notes of this campaign."
       }
     },
     "general": {
@@ -419,6 +423,25 @@
         "confirmDescription": "They will be able to send notes, assets and sub-folders to the Trash, and links to them become plain text. You can restore them from the Trash. If your Codex is in a synced folder, your other devices will see them disappear at once.",
         "confirm": "Allow deleting"
       }
+    },
+    "agentRules": {
+      "about": {
+        "title": "AI Agents rules",
+        "what": "This is a markdown file, agents.md, in the folder of this campaign. You write it: it tells AI assistants how you want your notes written and formatted. LazyDM never fills it in.",
+        "how": "Write plain instructions, for example the language and tone of your notes, how to name things, which template or sections to use, what to link, and what to leave out. Short and concrete works best.",
+        "noMcp": "Assistants that use the LazyDM MCP server read this file by themselves before they write. If you use an assistant without MCP, tell it to read this file yourself, for example in its own instructions file.",
+        "path": "File:"
+      },
+      "noCampaign": "Open a campaign, then come back here to write its rules.",
+      "create": "Create the rules file",
+      "placeholder": "Write your instructions for AI assistants here",
+      "save": "Save",
+      "saved": "Rules saved",
+      "saveError": "Couldn't save the rules",
+      "createError": "Couldn't create the rules file",
+      "loadError": "Couldn't load the rules",
+      "conflict": "The rules changed on disk.",
+      "reload": "Reload"
     }
   },
   "vault": {
