@@ -349,17 +349,16 @@
     "mcp": {
       "about": {
         "title": "¿Qué es MCP?",
-        "what": "MCP (Model Context Protocol) es una forma estándar de que los asistentes de IA hablen con una app. Activado, LazyDM deja que programas de este equipo, como Claude Code, OpenAI Codex u OpenCode, consulten y usen tu Codex.",
+        "what": "MCP (Model Context Protocol) es una forma estándar de que los asistentes de IA hablen con una app. Activado, LazyDM deja que programas de este equipo, como Claude Code, OpenAI Codex u OpenCode, consulten y usen tus notas.",
         "use": "Úsalo para pedir a un asistente que encuentre una nota, prepare una sesión, esboce un enemigo u ordene tus enlaces, con tus notas reales.",
         "risksTitle": "Riesgos",
         "riskRead": "Cualquier programa con el token puede leer todas las notas del Codex abierto.",
-        "riskWrite": "Si permites cambios, un asistente puede crear y reescribir notas. Los guardados comprueban conflictos y no se borra nada, pero un error es posible: guarda una copia de tu Codex.",
-        "riskInjection": "Las notas pueden venir de otras personas por una carpeta compartida. El texto de una nota puede intentar dirigir al asistente.",
-        "riskLocal": "El servidor solo responde en este equipo (127.0.0.1) y solo con el token. Está apagado hasta que lo actives."
+        "riskWrite": "Si permites cambios, un asistente puede crear y reescribir notas. Los guardados comprueban conflictos y no se borra nada, salvo que también permitas borrar, pero un error es posible: guarda una copia de tu Codex.",
+        "riskInjection": "Las notas pueden venir de otras personas por una carpeta compartida. El texto de una nota puede intentar dirigir al asistente."
       },
       "enable": {
         "label": "Usar MCP",
-        "hint": "Apagado por defecto. Al activarlo aparecen los ajustes de abajo.",
+        "hint": "Apagado por defecto. El servidor solo responde en este equipo (127.0.0.1) y solo con el token. Al activarlo aparecen los ajustes de abajo.",
         "title": "¿Activar MCP?",
         "description": "Los programas de este equipo con tu token podrán leer el Codex abierto. Abajo decides si también pueden cambiarlo.",
         "confirm": "Activar"
@@ -393,10 +392,11 @@
       },
       "connect": {
         "title": "Conectar un asistente",
-        "hint": "Copia una línea en el asistente. Solo funcionan mientras el servidor está en marcha.",
+        "hint": "Estas líneas solo funcionan mientras el servidor está en marcha.",
         "copy": "Copiar",
         "tokenEnv": "Luego define el token en la terminal que inicia OpenAI Codex u OpenCode:",
-        "opencode": "Pégalo en el archivo, o une solo la parte \"mcp\" si ya existe. Lee el token de la variable definida abajo."
+        "opencode": "Pégalo en el archivo, o une solo la parte \"mcp\" si ya existe. Lee el token de la variable definida abajo.",
+        "linesToggle": "Mostrar u ocultar el token en las líneas"
       },
       "copied": "Copiado",
       "copyError": "No se pudo copiar",
@@ -429,7 +429,7 @@
         "title": "Reglas para agentes de IA",
         "what": "Es un archivo markdown, agents.md, en la carpeta de esta campaña. Lo escribes tú: indica a los asistentes de IA cómo quieres que se escriban y se formateen tus notas. LazyDM nunca lo rellena.",
         "how": "Escribe instrucciones sencillas, por ejemplo el idioma y el tono de tus notas, cómo poner nombres, qué plantilla o secciones usar, qué enlazar y qué dejar fuera. Breves y concretas funcionan mejor.",
-        "noMcp": "Los asistentes que usan el servidor MCP de LazyDM leen este archivo por sí solos antes de escribir. Si usas un asistente sin MCP, dile tú que lea este archivo, por ejemplo en su propio archivo de instrucciones.",
+        "noMcp": "Los asistentes que usan el servidor MCP de LazyDM leen este archivo por sí solos antes de escribir. Si usas un asistente sin MCP, dile que lea este archivo, por ejemplo en su propio archivo de instrucciones.",
         "path": "Archivo:"
       },
       "noCampaign": "Abre una campaña y vuelve aquí para escribir sus reglas.",

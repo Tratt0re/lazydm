@@ -349,17 +349,16 @@
     "mcp": {
       "about": {
         "title": "Che cos’è MCP?",
-        "what": "MCP (Model Context Protocol) è un modo standard con cui gli assistenti AI parlano con un’app. Quando è attivo, LazyDM permette ai programmi di questo computer, come Claude Code, OpenAI Codex o OpenCode, di cercare e usare il tuo Codex.",
+        "what": "MCP (Model Context Protocol) è un modo standard con cui gli assistenti AI parlano con un’app. Quando è attivo, LazyDM permette ai programmi di questo computer, come Claude Code, OpenAI Codex o OpenCode, di cercare e usare le tue note.",
         "use": "Usalo per chiedere a un assistente di trovare una nota, preparare una sessione, abbozzare un nemico o sistemare i collegamenti, partendo dalle tue note vere.",
         "risksTitle": "Rischi",
         "riskRead": "Qualsiasi programma con il token può leggere tutte le note del Codex aperto.",
-        "riskWrite": "Se consenti le modifiche, un assistente può creare e riscrivere note. I salvataggi controllano i conflitti e non si cancella nulla, ma un errore resta possibile: tieni una copia del Codex.",
-        "riskInjection": "Le note possono arrivare da altre persone tramite una cartella condivisa. Il testo di una nota può provare a guidare l’assistente.",
-        "riskLocal": "Il server risponde solo su questo computer (127.0.0.1) e solo con il token. Resta spento finché non lo attivi."
+        "riskWrite": "Se consenti le modifiche, un assistente può creare e riscrivere note. I salvataggi controllano i conflitti e non si cancella nulla, a meno che tu non consenta anche l’eliminazione, ma un errore resta possibile: tieni una copia del Codex.",
+        "riskInjection": "Le note possono arrivare da altre persone tramite una cartella condivisa. Il testo di una nota può provare a guidare l’assistente."
       },
       "enable": {
         "label": "Usa MCP",
-        "hint": "Spento di default. Attivandolo compaiono le impostazioni qui sotto.",
+        "hint": "Spento di default. Il server risponde solo su questo computer (127.0.0.1) e solo con il token. Attivandolo compaiono le impostazioni qui sotto.",
         "title": "Attivare MCP?",
         "description": "I programmi di questo computer con il tuo token potranno leggere il Codex aperto. Sotto decidi se possono anche modificarlo.",
         "confirm": "Attiva"
@@ -393,10 +392,11 @@
       },
       "connect": {
         "title": "Collega un assistente",
-        "hint": "Copia una riga nell’assistente. Funzionano solo mentre il server è attivo.",
+        "hint": "Queste righe funzionano solo mentre il server è attivo.",
         "copy": "Copia",
         "tokenEnv": "Poi imposta il token nel terminale che avvia OpenAI Codex o OpenCode:",
-        "opencode": "Incollalo nel file, oppure unisci la parte \"mcp\" se esiste già. Legge il token dalla variabile impostata qui sotto."
+        "opencode": "Incollalo nel file, oppure unisci la parte \"mcp\" se esiste già. Legge il token dalla variabile impostata qui sotto.",
+        "linesToggle": "Mostra o nascondi il token nelle righe"
       },
       "copied": "Copiato",
       "copyError": "Impossibile copiare",
@@ -429,7 +429,7 @@
         "title": "Regole per gli agenti AI",
         "what": "È un file markdown, agents.md, nella cartella di questa campagna. Lo scrivi tu: dice agli assistenti AI come vuoi che le tue note siano scritte e formattate. LazyDM non lo compila mai.",
         "how": "Scrivi istruzioni semplici, per esempio la lingua e il tono delle note, come dare i nomi, quali modelli o sezioni usare, cosa collegare e cosa lasciare fuori. Brevi e concrete funzionano meglio.",
-        "noMcp": "Gli assistenti che usano il server MCP di LazyDM leggono questo file da soli prima di scrivere. Se usi un assistente senza MCP, digli tu di leggere questo file, per esempio nel suo file di istruzioni.",
+        "noMcp": "Gli assistenti che usano il server MCP di LazyDM leggono questo file da soli prima di scrivere. Se usi un assistente senza MCP, digli di leggere questo file, per esempio nel suo file di istruzioni.",
         "path": "File:"
       },
       "noCampaign": "Apri una campagna, poi torna qui per scriverne le regole.",

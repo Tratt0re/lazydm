@@ -349,17 +349,16 @@
     "mcp": {
       "about": {
         "title": "Was ist MCP?",
-        "what": "MCP (Model Context Protocol) ist ein Standard, mit dem KI-Assistenten mit einer App sprechen. Ist es an, erlaubt LazyDM Programmen auf diesem Computer, etwa Claude Code, OpenAI Codex oder OpenCode, dein Codex nachzuschlagen und zu nutzen.",
+        "what": "MCP (Model Context Protocol) ist ein Standard, mit dem KI-Assistenten mit einer App sprechen. Ist es an, erlaubt LazyDM Programmen auf diesem Computer, etwa Claude Code, OpenAI Codex oder OpenCode, deine Notizen nachzuschlagen und zu nutzen.",
         "use": "Damit kannst du einen Assistenten bitten, eine Notiz zu finden, eine Sitzung vorzubereiten, einen Gegner zu entwerfen oder Links aufzuräumen – mit deinen echten Notizen.",
         "risksTitle": "Risiken",
         "riskRead": "Jedes Programm mit dem Token kann alle Notizen des geöffneten Codex lesen.",
-        "riskWrite": "Erlaubst du Änderungen, kann ein Assistent Notizen anlegen und umschreiben. Speichern prüft auf Konflikte und nichts wird gelöscht, aber ein Fehler ist möglich: Halte ein Backup deines Codex bereit.",
-        "riskInjection": "Notizen können von anderen über einen geteilten Ordner stammen. Text in einer Notiz kann versuchen, den Assistenten zu lenken.",
-        "riskLocal": "Der Server antwortet nur auf diesem Computer (127.0.0.1) und nur mit dem Token. Er ist aus, bis du ihn einschaltest."
+        "riskWrite": "Erlaubst du Änderungen, kann ein Assistent Notizen anlegen und umschreiben. Speichern prüft auf Konflikte und nichts wird gelöscht, außer du erlaubst auch das Löschen, aber ein Fehler ist möglich: Halte ein Backup deines Codex bereit.",
+        "riskInjection": "Notizen können von anderen über einen geteilten Ordner stammen. Text in einer Notiz kann versuchen, den Assistenten zu lenken."
       },
       "enable": {
         "label": "MCP verwenden",
-        "hint": "Standardmäßig aus. Einschalten zeigt die Einstellungen darunter.",
+        "hint": "Standardmäßig aus. Der Server antwortet nur auf diesem Computer (127.0.0.1) und nur mit dem Token. Einschalten zeigt die Einstellungen darunter.",
         "title": "MCP einschalten?",
         "description": "Programme auf diesem Computer mit deinem Token können das geöffnete Codex lesen. Unten legst du fest, ob sie es auch ändern dürfen.",
         "confirm": "Einschalten"
@@ -393,10 +392,11 @@
       },
       "connect": {
         "title": "Assistenten verbinden",
-        "hint": "Kopiere eine Zeile in den Assistenten. Sie funktionieren nur, solange der Server läuft.",
+        "hint": "Diese Zeilen funktionieren nur, solange der Server läuft.",
         "copy": "Kopieren",
         "tokenEnv": "Setze dann den Token im Terminal, das OpenAI Codex oder OpenCode startet:",
-        "opencode": "Füge das in die Datei ein oder ergänze nur den Teil „mcp“, falls sie schon existiert. Der Token kommt aus der unten gesetzten Variable."
+        "opencode": "Füge das in die Datei ein oder ergänze nur den Teil „mcp“, falls sie schon existiert. Der Token kommt aus der unten gesetzten Variable.",
+        "linesToggle": "Token in den Zeilen anzeigen oder verbergen"
       },
       "copied": "Kopiert",
       "copyError": "Kopieren nicht möglich",
@@ -429,7 +429,7 @@
         "title": "KI-Agenten-Regeln",
         "what": "Das ist eine Markdown-Datei, agents.md, im Ordner dieser Kampagne. Du schreibst sie selbst: Sie sagt KI-Assistenten, wie deine Notizen geschrieben und formatiert sein sollen. LazyDM füllt sie nie aus.",
         "how": "Schreibe einfache Anweisungen, zum Beispiel Sprache und Ton deiner Notizen, wie Dinge benannt werden, welche Vorlage oder Bereiche genutzt werden, was verlinkt wird und was wegbleibt. Kurz und konkret funktioniert am besten.",
-        "noMcp": "Assistenten, die den MCP-Server von LazyDM nutzen, lesen diese Datei vor dem Schreiben selbst. Nutzt du einen Assistenten ohne MCP, sage ihm selbst, dass er diese Datei lesen soll, zum Beispiel in seiner eigenen Anweisungsdatei.",
+        "noMcp": "Assistenten, die den MCP-Server von LazyDM nutzen, lesen diese Datei vor dem Schreiben selbst. Nutzt du einen Assistenten ohne MCP, sage ihm, dass er diese Datei lesen soll, zum Beispiel in seiner eigenen Anweisungsdatei.",
         "path": "Datei:"
       },
       "noCampaign": "Öffne eine Kampagne und komm dann hierher zurück, um ihre Regeln zu schreiben.",

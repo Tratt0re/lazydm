@@ -13,7 +13,6 @@
       <li>{{ 'settings.mcp.about.riskRead' | translate }}</li>
       <li>{{ 'settings.mcp.about.riskWrite' | translate }}</li>
       <li>{{ 'settings.mcp.about.riskInjection' | translate }}</li>
-      <li>{{ 'settings.mcp.about.riskLocal' | translate }}</li>
     </ul>
 
     <div class="mt-4 flex items-center justify-between gap-4 border-t border-border pt-4">
@@ -210,7 +209,7 @@
             arcType="ghost"
             arcSize="sm"
             class="size-8"
-            [attr.aria-label]="'settings.mcp.token.toggle' | translate"
+            [attr.aria-label]="'settings.mcp.connect.linesToggle' | translate"
             [attr.aria-pressed]="areLinesShown()"
             (click)="areLinesShown.set(!areLinesShown())"
           >

@@ -80,6 +80,7 @@
           [documentKey]="current.path"
           [initialContent]="current.content"
           [mode]="editorMode()"
+          [allowCodeMap]="false"
           [sourcePath]="current.path"
           [placeholderText]="'settings.agentRules.placeholder' | translate"
           (contentChange)="editedContent.set($event)"

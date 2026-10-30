@@ -349,17 +349,16 @@
     "mcp": {
       "about": {
         "title": "Qu’est-ce que MCP ?",
-        "what": "MCP (Model Context Protocol) est une façon standard pour les assistants IA de parler à une application. Activé, LazyDM permet aux programmes de cet ordinateur, comme Claude Code, OpenAI Codex ou OpenCode, de consulter et d’utiliser votre Codex.",
+        "what": "MCP (Model Context Protocol) est une façon standard pour les assistants IA de parler à une application. Activé, LazyDM permet aux programmes de cet ordinateur, comme Claude Code, OpenAI Codex ou OpenCode, de consulter et d’utiliser vos notes.",
         "use": "Servez-vous-en pour demander à un assistant de trouver une note, préparer une séance, esquisser un ennemi ou ranger vos liens, à partir de vos vraies notes.",
         "risksTitle": "Risques",
         "riskRead": "Tout programme possédant le jeton peut lire toutes les notes du Codex ouvert.",
-        "riskWrite": "Si vous autorisez les modifications, un assistant peut créer et réécrire des notes. Les enregistrements vérifient les conflits et rien n’est supprimé, mais une erreur reste possible : gardez une sauvegarde de votre Codex.",
-        "riskInjection": "Les notes peuvent venir d’autres personnes via un dossier partagé. Le texte d’une note peut tenter de diriger l’assistant.",
-        "riskLocal": "Le serveur ne répond que sur cet ordinateur (127.0.0.1) et seulement avec le jeton. Il est désactivé tant que vous ne l’activez pas."
+        "riskWrite": "Si vous autorisez les modifications, un assistant peut créer et réécrire des notes. Les enregistrements vérifient les conflits et rien n’est supprimé, sauf si vous autorisez aussi la suppression, mais une erreur reste possible : gardez une sauvegarde de votre Codex.",
+        "riskInjection": "Les notes peuvent venir d’autres personnes via un dossier partagé. Le texte d’une note peut tenter de diriger l’assistant."
       },
       "enable": {
         "label": "Utiliser MCP",
-        "hint": "Désactivé par défaut. L’activer affiche les réglages ci-dessous.",
+        "hint": "Désactivé par défaut. Le serveur ne répond que sur cet ordinateur (127.0.0.1) et seulement avec le jeton. L’activer affiche les réglages ci-dessous.",
         "title": "Activer MCP ?",
         "description": "Les programmes de cet ordinateur qui ont votre jeton pourront lire le Codex ouvert. Vous décidez ci-dessous s’ils peuvent aussi le modifier.",
         "confirm": "Activer"
@@ -393,10 +392,11 @@
       },
       "connect": {
         "title": "Connecter un assistant",
-        "hint": "Copiez une ligne dans l’assistant. Ils ne fonctionnent que tant que le serveur tourne.",
+        "hint": "Ces lignes ne fonctionnent que tant que le serveur tourne.",
         "copy": "Copier",
         "tokenEnv": "Puis définissez le jeton dans le terminal qui lance OpenAI Codex ou OpenCode :",
-        "opencode": "Collez-le dans le fichier, ou fusionnez seulement la partie « mcp » s’il existe déjà. Il lit le jeton dans la variable définie ci-dessous."
+        "opencode": "Collez-le dans le fichier, ou fusionnez seulement la partie « mcp » s’il existe déjà. Il lit le jeton dans la variable définie ci-dessous.",
+        "linesToggle": "Afficher ou masquer le jeton dans les lignes"
       },
       "copied": "Copié",
       "copyError": "Copie impossible",
@@ -429,7 +429,7 @@
         "title": "Règles pour les agents IA",
         "what": "C'est un fichier markdown, agents.md, dans le dossier de cette campagne. Vous l'écrivez : il indique aux assistants IA comment vous voulez que vos notes soient écrites et mises en forme. LazyDM ne le remplit jamais.",
         "how": "Écrivez des instructions simples, par exemple la langue et le ton de vos notes, comment nommer les choses, quel modèle ou quelles sections utiliser, quoi relier et quoi laisser de côté. Court et concret fonctionne le mieux.",
-        "noMcp": "Les assistants qui utilisent le serveur MCP de LazyDM lisent ce fichier d'eux-mêmes avant d'écrire. Si vous utilisez un assistant sans MCP, dites-lui vous-même de lire ce fichier, par exemple dans son propre fichier d'instructions.",
+        "noMcp": "Les assistants qui utilisent le serveur MCP de LazyDM lisent ce fichier d'eux-mêmes avant d'écrire. Si vous utilisez un assistant sans MCP, dites-lui de lire ce fichier, par exemple dans son propre fichier d'instructions.",
         "path": "Fichier :"
       },
       "noCampaign": "Ouvrez une campagne, puis revenez ici pour écrire ses règles.",

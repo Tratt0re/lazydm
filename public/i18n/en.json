@@ -349,17 +349,16 @@
     "mcp": {
       "about": {
         "title": "What is MCP?",
-        "what": "MCP (Model Context Protocol) is a standard way for AI assistants to talk to an app. When it is on, LazyDM lets programs on this computer, like Claude Code, OpenAI Codex or OpenCode, look up and work with your Codex.",
+        "what": "MCP (Model Context Protocol) is a standard way for AI assistants to talk to an app. When it is on, LazyDM lets programs on this computer, like Claude Code, OpenAI Codex or OpenCode, look up and work with your notes.",
         "use": "Use it to ask an assistant to find a note, prepare a session, draft an enemy or tidy your links, using your real notes.",
         "risksTitle": "Risks",
         "riskRead": "Any program that has the token can read every note of the open Codex.",
-        "riskWrite": "If you allow changes, an assistant can create and rewrite notes. Saves are conflict-checked and nothing is deleted, but a wrong edit is still possible: keep a backup of your Codex.",
-        "riskInjection": "Notes can come from other people through a shared folder. Text inside a note may try to steer the assistant.",
-        "riskLocal": "The server only answers on this computer (127.0.0.1) and only with the token. It is off until you switch it on."
+        "riskWrite": "If you allow changes, an assistant can create and rewrite notes. Saves are conflict-checked and nothing is deleted unless you also allow deleting, but a wrong edit is still possible: keep a backup of your Codex.",
+        "riskInjection": "Notes can come from other people through a shared folder. Text inside a note may try to steer the assistant."
       },
       "enable": {
         "label": "Use MCP",
-        "hint": "Off by default. Switching it on shows the settings below.",
+        "hint": "Off by default. The server only answers on this computer (127.0.0.1) and only with the token. Switching it on shows the settings below.",
         "title": "Switch on MCP?",
         "description": "Programs on this computer that have your token will be able to read your open Codex. You decide below whether they may also change it.",
         "confirm": "Switch on"
@@ -393,10 +392,11 @@
       },
       "connect": {
         "title": "Connect an assistant",
-        "hint": "Copy a line into the assistant. They only work while the server runs.",
+        "hint": "These lines only work while the server is running.",
         "copy": "Copy",
         "tokenEnv": "Then set the token in the terminal that starts OpenAI Codex or OpenCode:",
-        "opencode": "Paste this into the file, or merge the \"mcp\" part if it already exists. It reads the token from the variable set below."
+        "opencode": "Paste this into the file, or merge the \"mcp\" part if it already exists. It reads the token from the variable set below.",
+        "linesToggle": "Show or hide the token in the lines"
       },
       "copied": "Copied",
       "copyError": "Couldn’t copy",
@@ -429,7 +429,7 @@
         "title": "AI Agents rules",
         "what": "This is a markdown file, agents.md, in the folder of this campaign. You write it: it tells AI assistants how you want your notes written and formatted. LazyDM never fills it in.",
         "how": "Write plain instructions, for example the language and tone of your notes, how to name things, which template or sections to use, what to link, and what to leave out. Short and concrete works best.",
-        "noMcp": "Assistants that use the LazyDM MCP server read this file by themselves before they write. If you use an assistant without MCP, tell it to read this file yourself, for example in its own instructions file.",
+        "noMcp": "Assistants that use the LazyDM MCP server read this file by themselves before they write. If you use an assistant without MCP, tell it to read this file, for example in its own instructions file.",
         "path": "File:"
       },
       "noCampaign": "Open a campaign, then come back here to write its rules.",
