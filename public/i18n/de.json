@@ -426,11 +426,10 @@
     },
     "agentRules": {
       "about": {
-        "title": "KI-Agenten-Regeln",
+        "title": "So funktioniert es",
         "what": "Das ist eine Markdown-Datei, agents.md, im Ordner dieser Kampagne. Du schreibst sie selbst: Sie sagt KI-Assistenten, wie deine Notizen geschrieben und formatiert sein sollen. LazyDM füllt sie nie aus.",
         "how": "Schreibe einfache Anweisungen, zum Beispiel Sprache und Ton deiner Notizen, wie Dinge benannt werden, welche Vorlage oder Bereiche genutzt werden, was verlinkt wird und was wegbleibt. Kurz und konkret funktioniert am besten.",
-        "noMcp": "Assistenten, die den MCP-Server von LazyDM nutzen, lesen diese Datei vor dem Schreiben selbst. Nutzt du einen Assistenten ohne MCP, sage ihm, dass er diese Datei lesen soll, zum Beispiel in seiner eigenen Anweisungsdatei.",
-        "path": "Datei:"
+        "noMcp": "Assistenten, die den MCP-Server von LazyDM nutzen, lesen diese Datei vor dem Schreiben selbst. Nutzt du einen Assistenten ohne MCP, sage ihm, dass er diese Datei lesen soll, zum Beispiel in seiner eigenen Anweisungsdatei."
       },
       "noCampaign": "Öffne eine Kampagne und komm dann hierher zurück, um ihre Regeln zu schreiben.",
       "create": "Regeldatei erstellen",
@@ -441,7 +440,22 @@
       "createError": "Die Regeldatei konnte nicht erstellt werden",
       "loadError": "Die Regeln konnten nicht geladen werden",
       "conflict": "Die Regeln haben sich auf dem Datenträger geändert.",
-      "reload": "Neu laden"
+      "reload": "Neu laden",
+      "empty": {
+        "title": "Regeln für diese Kampagne",
+        "what": "Erstelle agents.md in dieser Kampagne und schreibe, wie KI-Assistenten mit deinen Notizen umgehen sollen. Zum Beispiel:",
+        "exampleLanguage": "Sprache und Ton deiner Notizen",
+        "exampleNames": "Wie Dinge benannt werden",
+        "exampleTemplates": "Welche Vorlage oder Bereiche genutzt werden",
+        "exampleLinks": "Was verlinkt wird und was wegbleibt"
+      },
+      "copyInstruction": "Anweisung kopieren",
+      "copyInstructionHint": "Für einen Assistenten ohne MCP: kopiert einen Satz, der ihm sagt, diese Datei zu lesen",
+      "copyPath": "Dateipfad kopieren",
+      "instruction": "Lies {{path}}, bevor du in dieser Kampagne Notizen schreibst oder bearbeitest, und halte dich daran.",
+      "pathCopied": "Pfad kopiert",
+      "instructionCopied": "Anweisung kopiert",
+      "copyError": "Kopieren nicht möglich"
     }
   },
   "vault": {

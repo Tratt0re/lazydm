@@ -426,11 +426,10 @@
     },
     "agentRules": {
       "about": {
-        "title": "AI Agents rules",
+        "title": "How it works",
         "what": "This is a markdown file, agents.md, in the folder of this campaign. You write it: it tells AI assistants how you want your notes written and formatted. LazyDM never fills it in.",
         "how": "Write plain instructions, for example the language and tone of your notes, how to name things, which template or sections to use, what to link, and what to leave out. Short and concrete works best.",
-        "noMcp": "Assistants that use the LazyDM MCP server read this file by themselves before they write. If you use an assistant without MCP, tell it to read this file, for example in its own instructions file.",
-        "path": "File:"
+        "noMcp": "Assistants that use the LazyDM MCP server read this file by themselves before they write. If you use an assistant without MCP, tell it to read this file, for example in its own instructions file."
       },
       "noCampaign": "Open a campaign, then come back here to write its rules.",
       "create": "Create the rules file",
@@ -441,7 +440,22 @@
       "createError": "Couldn't create the rules file",
       "loadError": "Couldn't load the rules",
       "conflict": "The rules changed on disk.",
-      "reload": "Reload"
+      "reload": "Reload",
+      "empty": {
+        "title": "Rules for this campaign",
+        "what": "Create agents.md in this campaign and write how you want AI assistants to handle your notes. For example:",
+        "exampleLanguage": "The language and tone of your notes",
+        "exampleNames": "How to name things",
+        "exampleTemplates": "Which template or sections to use",
+        "exampleLinks": "What to link, and what to leave out"
+      },
+      "copyInstruction": "Copy instruction",
+      "copyInstructionHint": "For an assistant without MCP: copies a sentence telling it to read this file",
+      "copyPath": "Copy the file path",
+      "instruction": "Read {{path}} before you write or edit notes in this campaign, and follow what it says.",
+      "pathCopied": "Path copied",
+      "instructionCopied": "Instruction copied",
+      "copyError": "Couldn't copy"
     }
   },
   "vault": {

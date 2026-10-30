@@ -426,11 +426,10 @@
     },
     "agentRules": {
       "about": {
-        "title": "Regole per gli agenti AI",
+        "title": "Come funziona",
         "what": "È un file markdown, agents.md, nella cartella di questa campagna. Lo scrivi tu: dice agli assistenti AI come vuoi che le tue note siano scritte e formattate. LazyDM non lo compila mai.",
         "how": "Scrivi istruzioni semplici, per esempio la lingua e il tono delle note, come dare i nomi, quali modelli o sezioni usare, cosa collegare e cosa lasciare fuori. Brevi e concrete funzionano meglio.",
-        "noMcp": "Gli assistenti che usano il server MCP di LazyDM leggono questo file da soli prima di scrivere. Se usi un assistente senza MCP, digli di leggere questo file, per esempio nel suo file di istruzioni.",
-        "path": "File:"
+        "noMcp": "Gli assistenti che usano il server MCP di LazyDM leggono questo file da soli prima di scrivere. Se usi un assistente senza MCP, digli di leggere questo file, per esempio nel suo file di istruzioni."
       },
       "noCampaign": "Apri una campagna, poi torna qui per scriverne le regole.",
       "create": "Crea il file delle regole",
@@ -441,7 +440,22 @@
       "createError": "Impossibile creare il file delle regole",
       "loadError": "Impossibile caricare le regole",
       "conflict": "Le regole sono cambiate su disco.",
-      "reload": "Ricarica"
+      "reload": "Ricarica",
+      "empty": {
+        "title": "Regole per questa campagna",
+        "what": "Crea agents.md in questa campagna e scrivi come vuoi che gli assistenti AI trattino le tue note. Per esempio:",
+        "exampleLanguage": "La lingua e il tono delle note",
+        "exampleNames": "Come dare i nomi",
+        "exampleTemplates": "Quale modello o sezioni usare",
+        "exampleLinks": "Cosa collegare e cosa lasciare fuori"
+      },
+      "copyInstruction": "Copia istruzione",
+      "copyInstructionHint": "Per un assistente senza MCP: copia una frase che gli dice di leggere questo file",
+      "copyPath": "Copia il percorso del file",
+      "instruction": "Leggi {{path}} prima di scrivere o modificare note in questa campagna e segui quello che dice.",
+      "pathCopied": "Percorso copiato",
+      "instructionCopied": "Istruzione copiata",
+      "copyError": "Impossibile copiare"
     }
   },
   "vault": {

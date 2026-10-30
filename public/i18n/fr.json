@@ -426,11 +426,10 @@
     },
     "agentRules": {
       "about": {
-        "title": "Règles pour les agents IA",
+        "title": "Comment ça marche",
         "what": "C'est un fichier markdown, agents.md, dans le dossier de cette campagne. Vous l'écrivez : il indique aux assistants IA comment vous voulez que vos notes soient écrites et mises en forme. LazyDM ne le remplit jamais.",
         "how": "Écrivez des instructions simples, par exemple la langue et le ton de vos notes, comment nommer les choses, quel modèle ou quelles sections utiliser, quoi relier et quoi laisser de côté. Court et concret fonctionne le mieux.",
-        "noMcp": "Les assistants qui utilisent le serveur MCP de LazyDM lisent ce fichier d'eux-mêmes avant d'écrire. Si vous utilisez un assistant sans MCP, dites-lui de lire ce fichier, par exemple dans son propre fichier d'instructions.",
-        "path": "Fichier :"
+        "noMcp": "Les assistants qui utilisent le serveur MCP de LazyDM lisent ce fichier d'eux-mêmes avant d'écrire. Si vous utilisez un assistant sans MCP, dites-lui de lire ce fichier, par exemple dans son propre fichier d'instructions."
       },
       "noCampaign": "Ouvrez une campagne, puis revenez ici pour écrire ses règles.",
       "create": "Créer le fichier de règles",
@@ -441,7 +440,22 @@
       "createError": "Impossible de créer le fichier de règles",
       "loadError": "Impossible de charger les règles",
       "conflict": "Les règles ont changé sur le disque.",
-      "reload": "Recharger"
+      "reload": "Recharger",
+      "empty": {
+        "title": "Règles de cette campagne",
+        "what": "Créez agents.md dans cette campagne et écrivez comment vous voulez que les assistants IA traitent vos notes. Par exemple :",
+        "exampleLanguage": "La langue et le ton de vos notes",
+        "exampleNames": "Comment nommer les choses",
+        "exampleTemplates": "Quel modèle ou quelles sections utiliser",
+        "exampleLinks": "Quoi relier et quoi laisser de côté"
+      },
+      "copyInstruction": "Copier l'instruction",
+      "copyInstructionHint": "Pour un assistant sans MCP : copie une phrase qui lui dit de lire ce fichier",
+      "copyPath": "Copier le chemin du fichier",
+      "instruction": "Lisez {{path}} avant d'écrire ou de modifier des notes dans cette campagne, et suivez ce qu'il dit.",
+      "pathCopied": "Chemin copié",
+      "instructionCopied": "Instruction copiée",
+      "copyError": "Impossible de copier"
     }
   },
   "vault": {

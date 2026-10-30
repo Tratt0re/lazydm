@@ -426,11 +426,10 @@
     },
     "agentRules": {
       "about": {
-        "title": "AI 代理规则",
+        "title": "工作方式",
         "what": "这是战役文件夹里的一个 markdown 文件 agents.md，由你来写：它告诉 AI 助手你希望笔记怎样撰写和排版。LazyDM 不会自动填写它。",
         "how": "写下简单的指示，例如笔记的语言和语气、如何命名、使用哪个模板或分区、链接什么、省略什么。简短而具体的效果最好。",
-        "noMcp": "使用 LazyDM MCP 服务器的助手会在写作前自己读取这个文件。如果你使用不带 MCP 的助手，请告诉它去读这个文件，例如写进它自己的指示文件。",
-        "path": "文件："
+        "noMcp": "使用 LazyDM MCP 服务器的助手会在写作前自己读取这个文件。如果你使用不带 MCP 的助手，请告诉它去读这个文件，例如写进它自己的指示文件。"
       },
       "noCampaign": "先打开一个战役，再回到这里编写它的规则。",
       "create": "创建规则文件",
@@ -441,7 +440,22 @@
       "createError": "无法创建规则文件",
       "loadError": "无法加载规则",
       "conflict": "规则在磁盘上已更改。",
-      "reload": "重新加载"
+      "reload": "重新加载",
+      "empty": {
+        "title": "这个战役的规则",
+        "what": "在这个战役中创建 agents.md，写下你希望 AI 助手如何处理你的笔记。例如：",
+        "exampleLanguage": "笔记的语言和语气",
+        "exampleNames": "如何命名",
+        "exampleTemplates": "使用哪个模板或分区",
+        "exampleLinks": "链接什么，省略什么"
+      },
+      "copyInstruction": "复制指示",
+      "copyInstructionHint": "适用于不带 MCP 的助手：复制一句让它读取这个文件的话",
+      "copyPath": "复制文件路径",
+      "instruction": "在这个战役中撰写或编辑笔记之前，请先阅读 {{path}}，并遵照其中的内容。",
+      "pathCopied": "路径已复制",
+      "instructionCopied": "指示已复制",
+      "copyError": "无法复制"
     }
   },
   "vault": {

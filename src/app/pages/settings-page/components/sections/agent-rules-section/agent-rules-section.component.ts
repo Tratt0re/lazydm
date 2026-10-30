@@ -17,10 +17,14 @@ import {
 import { AppSheetService } from '@/services/app-sheet.service';
 import { CampaignService } from '@/services/campaign.service';
 import { DocumentService } from '@/services/document.service';
+import { VaultService } from '@/services/vault.service';
+import { ArcTechAccordionImports } from '@/shared/components/accordion/accordion.imports';
 import { ArcTechAlertComponent } from '@/shared/components/alert';
 import { ArcTechButtonComponent } from '@/shared/components/button';
 import { ArcTechIconComponent, type ArcTechIcon } from '@/shared/components/icon';
 import { ArcTechTooltipImports } from '@/shared/components/tooltip';
+
+import { toAgentRulesAbsolutePath } from './agent-rules-path';
 
 interface LoadedRules {
   readonly path: string;
@@ -42,6 +46,7 @@ interface LoadedRules {
     ArcTechAlertComponent,
     ArcTechButtonComponent,
     ArcTechIconComponent,
+    ...ArcTechAccordionImports,
     ...ArcTechTooltipImports,
   ],
   templateUrl: './agent-rules-section.component.html',
@@ -51,6 +56,7 @@ export class AgentRulesSectionComponent implements OnInit {
   private readonly documentService = inject(DocumentService);
   private readonly appSheetService = inject(AppSheetService);
   private readonly translateService = inject(TranslateService);
+  private readonly vault = inject(VaultService).currentVault;
 
   protected readonly editorModes: readonly {
     value: CodeEditorMode;
@@ -69,6 +75,11 @@ export class AgentRulesSectionComponent implements OnInit {
     return campaign?.slug === slug ? campaign.name : (slug ?? '');
   });
   protected readonly path = computed(() => (this.campaignSlug() ? `${this.campaignSlug()}/agents.md` : ''));
+  /** Where the file is on this computer: what an assistant without the MCP server has to be pointed to. */
+  protected readonly absolutePath = computed(() => {
+    const codexPath = this.vault()?.path;
+    return codexPath && this.path() ? toAgentRulesAbsolutePath(codexPath, this.path()) : '';
+  });
   protected readonly isLoading = signal(true);
   /** Null until the user creates the file. */
   protected readonly rules = signal<LoadedRules | null>(null);
@@ -89,6 +100,20 @@ export class AgentRulesSectionComponent implements OnInit {
   ngOnInit(): void {
     this.campaignSlug.set(this.readCampaignSlug());
     void this.load();
+  }
+
+  protected copyPath(): Promise<void> {
+    return this.copy(this.absolutePath(), 'settings.agentRules.pathCopied');
+  }
+
+  /** A sentence to paste into an assistant that does not use the MCP server. */
+  protected copyInstruction(): Promise<void> {
+    return this.copy(
+      this.translateService.instant('settings.agentRules.instruction', {
+        path: this.absolutePath(),
+      }),
+      'settings.agentRules.instructionCopied',
+    );
   }
 
   protected async create(): Promise<void> {
@@ -165,6 +190,15 @@ export class AgentRulesSectionComponent implements OnInit {
       this.errorMessage.set(error instanceof Error ? error.message : String(error));
     } finally {
       this.isLoading.set(false);
+    }
+  }
+
+  private async copy(text: string, doneKey: string): Promise<void> {
+    try {
+      await navigator.clipboard.writeText(text);
+      toast.success(this.translateService.instant(doneKey));
+    } catch {
+      toast.error(this.translateService.instant('settings.agentRules.copyError'));
     }
   }
 
