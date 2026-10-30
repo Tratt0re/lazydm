@@ -423,6 +423,12 @@
         "confirmTitle": "Allow assistants to delete?",
         "confirmDescription": "They will be able to send notes, assets and sub-folders to the Trash, and links to them become plain text. You can restore them from the Trash. If your Codex is in a synced folder, your other devices will see them disappear at once.",
         "confirm": "Allow deleting"
+      },
+      "access": {
+        "title": "Access"
+      },
+      "assistant": {
+        "ariaLabel": "Assistant"
       }
     },
     "agentRules": {

@@ -423,6 +423,12 @@
         "confirmTitle": "Consentire agli assistenti di eliminare?",
         "confirmDescription": "Potranno mandare nel Cestino note, risorse e sottocartelle, e i collegamenti verso di esse diventano testo semplice. Puoi ripristinarli dal Cestino. Se il Codex è in una cartella sincronizzata, gli altri dispositivi li vedranno sparire subito.",
         "confirm": "Consenti eliminazioni"
+      },
+      "access": {
+        "title": "Accesso"
+      },
+      "assistant": {
+        "ariaLabel": "Assistente"
       }
     },
     "agentRules": {

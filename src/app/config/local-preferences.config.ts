@@ -16,7 +16,13 @@ export enum LocalPreferenceKey {
   LAST_CAMPAIGN = 'last_campaign',
   SPLIT_RATIO = 'split_ratio',
   TRACKER_ROW_DENSITY = 'tracker_row_density',
+  MCP_ASSISTANT = 'mcp_assistant',
 }
+
+/** The assistant Settings → MCP shows the connection and lock-down lines of. */
+export type McpAssistant = 'claude' | 'codex' | 'opencode';
+
+export const MCP_ASSISTANTS: readonly McpAssistant[] = ['claude', 'codex', 'opencode'];
 
 /** How tall a combatant row of the encounter page is (Settings → General → Tracker rows). */
 export type TrackerRowDensity = 'compact' | 'roomy';

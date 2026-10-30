@@ -423,6 +423,12 @@
         "confirmTitle": "Assistenten das Löschen erlauben?",
         "confirmDescription": "Sie können Notizen, Dateien und Unterordner in den Papierkorb legen; Links darauf werden zu einfachem Text. Du kannst sie aus dem Papierkorb wiederherstellen. Liegt dein Codex in einem synchronisierten Ordner, verschwinden sie auf deinen anderen Geräten sofort.",
         "confirm": "Löschen erlauben"
+      },
+      "access": {
+        "title": "Zugriff"
+      },
+      "assistant": {
+        "ariaLabel": "Assistent"
       }
     },
     "agentRules": {

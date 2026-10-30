@@ -13,6 +13,8 @@ import {
   LocalPreferenceKey,
   type MapViewPreference,
   type ThemePreference,
+  MCP_ASSISTANTS,
+  type McpAssistant,
   TRACKER_ROW_DENSITIES,
   type TrackerRowDensity,
 } from '@/config/local-preferences.config';
@@ -183,6 +185,18 @@ export class LocalPreferencesService {
       : LOCAL_PREFERENCE_DEFAULTS.trackerRowDensity;
     this.trackerRowDensitySignal.set(normalized);
     this.setText(LocalPreferenceKey.TRACKER_ROW_DENSITY, normalized);
+  }
+
+  /** The assistant Settings → MCP shows lines for (per device; Claude Code by default). */
+  getMcpAssistant(): McpAssistant {
+    const value = this.getText(LocalPreferenceKey.MCP_ASSISTANT);
+    return MCP_ASSISTANTS.includes(value as McpAssistant) ? (value as McpAssistant) : 'claude';
+  }
+
+  setMcpAssistant(assistant: McpAssistant): void {
+    if (MCP_ASSISTANTS.includes(assistant)) {
+      this.setText(LocalPreferenceKey.MCP_ASSISTANT, assistant);
+    }
   }
 
   /** Share of the width the first pane takes in the split screen (0–1, per device; half by default). */

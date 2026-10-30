@@ -423,6 +423,12 @@
         "confirmTitle": "Autoriser les assistants à supprimer ?",
         "confirmDescription": "Ils pourront envoyer des notes, des fichiers et des sous-dossiers à la Corbeille, et les liens vers eux deviennent du texte simple. Vous pouvez les restaurer depuis la Corbeille. Si votre Codex est dans un dossier synchronisé, vos autres appareils les verront disparaître aussitôt.",
         "confirm": "Autoriser la suppression"
+      },
+      "access": {
+        "title": "Accès"
+      },
+      "assistant": {
+        "ariaLabel": "Assistant"
       }
     },
     "agentRules": {

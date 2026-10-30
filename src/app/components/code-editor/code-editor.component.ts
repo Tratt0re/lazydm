@@ -140,6 +140,8 @@ export class AppCodeEditorComponent implements OnDestroy {
   readonly initialContent = input('');
   readonly readOnly = input(false, { transform: booleanAttribute });
   readonly placeholderText = input('');
+  /** The code map (Settings → Editor) is left out where the text is short by nature, such as a rules file. */
+  readonly allowCodeMap = input(true, { transform: booleanAttribute });
   readonly mode = input<CodeEditorMode>('live');
   /** Resolved links of the note (vault index), for the live preview's links and embeds. */
   readonly links = input<readonly DocumentLinkDto[]>([]);
@@ -194,7 +196,7 @@ export class AppCodeEditorComponent implements OnDestroy {
     });
 
     effect(() => {
-      const extensions = settingsExtensions(this.editorSettings());
+      const extensions = settingsExtensions(this.editorSettings(), this.allowCodeMap());
       this.view?.dispatch({ effects: this.settingsCompartment.reconfigure(extensions) });
     });
 
@@ -598,7 +600,7 @@ export class AppCodeEditorComponent implements OnDestroy {
         wrapSelectionOnInput,
         this.modeCompartment.of(this.modeExtensions(this.mode())),
         editorTheme,
-        this.settingsCompartment.of(settingsExtensions(this.editorSettings())),
+        this.settingsCompartment.of(settingsExtensions(this.editorSettings(), this.allowCodeMap())),
         EditorView.editable.of(!this.readOnly()),
         EditorView.contentAttributes.of({ 'aria-placeholder': this.placeholderText() }),
         EditorView.domEventHandlers({ paste: (event) => this.handlePaste(event) }),
@@ -617,13 +619,13 @@ export class AppCodeEditorComponent implements OnDestroy {
 }
 
 /** Settings → Editor, as editor extensions (text size and column width are CSS variables instead). */
-function settingsExtensions(settings: EditorSettings): Extension {
+function settingsExtensions(settings: EditorSettings, allowCodeMap: boolean): Extension {
   return [
     settings.lineNumbers ? [lineNumbers(), highlightActiveLineGutter()] : [],
     settings.highlightActiveLine ? highlightActiveLine() : [],
     settings.lineWrapping ? EditorView.lineWrapping : [],
     EditorView.contentAttributes.of({ spellcheck: settings.spellcheck ? 'true' : 'false' }),
-    settings.codeMap ? codeMap(settings.codeMapHideShort) : [],
+    allowCodeMap && settings.codeMap ? codeMap(settings.codeMapHideShort) : [],
     settings.autoClosePairs ? autoClosePairs() : [],
   ];
 }

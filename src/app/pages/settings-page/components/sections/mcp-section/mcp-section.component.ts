@@ -1,3 +1,4 @@
+import { NgTemplateOutlet } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -11,6 +12,7 @@ import { toast } from 'ngx-sonner';
 
 import { CampaignService } from '@/services/campaign.service';
 import { CompendiumService } from '@/services/compendium.service';
+import { LocalPreferencesService } from '@/services/local-preferences.service';
 import { McpService } from '@/services/mcp.service';
 import { VaultService } from '@/services/vault.service';
 import { ArcTechAccordionImports } from '@/shared/components/accordion/accordion.imports';
@@ -19,13 +21,20 @@ import { ArcTechButtonComponent } from '@/shared/components/button';
 import { ArcTechCheckboxComponent } from '@/shared/components/checkbox/checkbox.component';
 import { ArcTechIconComponent } from '@/shared/components/icon';
 import { ArcTechInputDirective } from '@/shared/components/input';
+import {
+  ArcTechSegmentedComponent,
+  ArcTechSegmentedItemComponent,
+} from '@/shared/components/segmented';
 import { ArcTechSwitchComponent } from '@/shared/components/switch';
+
+import type { McpAssistant } from '@/config/local-preferences.config';
 
 /** Settings → MCP: what it is and what it risks first; everything else only while it is switched on. */
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-mcp-section',
   imports: [
+    NgTemplateOutlet,
     TranslatePipe,
     ArcTechButtonComponent,
     ArcTechCheckboxComponent,
@@ -33,6 +42,8 @@ import { ArcTechSwitchComponent } from '@/shared/components/switch';
     ArcTechInputDirective,
     ArcTechSwitchComponent,
     ...ArcTechAccordionImports,
+    ArcTechSegmentedComponent,
+    ArcTechSegmentedItemComponent,
   ],
   templateUrl: './mcp-section.component.html',
 })
@@ -43,6 +54,17 @@ export class McpSectionComponent implements OnInit {
   private readonly campaignService = inject(CampaignService);
   private readonly compendiumService = inject(CompendiumService);
   private readonly vault = inject(VaultService).currentVault;
+  private readonly preferences = inject(LocalPreferencesService);
+
+  /** Brand names, never translated. */
+  protected readonly assistants: readonly { value: McpAssistant; label: string }[] = [
+    { value: 'claude', label: 'Claude Code' },
+    { value: 'codex', label: 'OpenAI Codex' },
+    { value: 'opencode', label: 'OpenCode' },
+  ];
+  protected readonly codexSandboxLine = 'sandbox_mode = "read-only"';
+  /** The assistant whose lines are shown; remembered on this device. */
+  protected readonly assistant = signal<McpAssistant>(this.preferences.getMcpAssistant());
 
   protected readonly state = this.mcp.state;
   /** What an agent can be limited to: each campaign, and each compendium system. */
@@ -141,6 +163,12 @@ export class McpSectionComponent implements OnInit {
     void this.mcp.connect();
     void this.campaignService.loadCampaigns().catch(() => undefined);
     void this.compendiumService.loadSystems().catch(() => undefined);
+  }
+
+  protected onAssistantChange(value: string): void {
+    const assistant = value as McpAssistant;
+    this.assistant.set(assistant);
+    this.preferences.setMcpAssistant(assistant);
   }
 
   protected onLimitScopeChange(limitScope: boolean): void {

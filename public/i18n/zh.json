@@ -423,6 +423,12 @@
         "confirmTitle": "允许助手删除？",
         "confirmDescription": "它们可以把笔记、资源和子文件夹移到废纸篓，指向它们的链接会变成普通文字。你可以从废纸篓恢复。如果 Codex 在同步文件夹中，你的其他设备会立即看到它们消失。",
         "confirm": "允许删除"
+      },
+      "access": {
+        "title": "访问权限"
+      },
+      "assistant": {
+        "ariaLabel": "助手"
       }
     },
     "agentRules": {

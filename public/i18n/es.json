@@ -423,6 +423,12 @@
         "confirmTitle": "¿Permitir que los asistentes eliminen?",
         "confirmDescription": "Podrán enviar notas, recursos y subcarpetas a la Papelera, y los enlaces a ellos pasan a texto simple. Puedes restaurarlos desde la Papelera. Si tu Codex está en una carpeta sincronizada, tus otros dispositivos los verán desaparecer al instante.",
         "confirm": "Permitir eliminar"
+      },
+      "access": {
+        "title": "Acceso"
+      },
+      "assistant": {
+        "ariaLabel": "Asistente"
       }
     },
     "agentRules": {
