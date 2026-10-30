@@ -354,7 +354,8 @@
         "risksTitle": "Rischi",
         "riskRead": "Qualsiasi programma con il token può leggere tutte le note del Codex aperto.",
         "riskWrite": "Se consenti le modifiche, un assistente può creare e riscrivere note. I salvataggi controllano i conflitti e non si cancella nulla, a meno che tu non consenta anche l’eliminazione, ma un errore resta possibile: tieni una copia del Codex.",
-        "riskInjection": "Le note possono arrivare da altre persone tramite una cartella condivisa. Il testo di una nota può provare a guidare l’assistente."
+        "riskInjection": "Le note possono arrivare da altre persone tramite una cartella condivisa. Il testo di una nota può provare a guidare l’assistente.",
+        "moreTitle": "Rischi e a cosa serve"
       },
       "enable": {
         "label": "Usa MCP",

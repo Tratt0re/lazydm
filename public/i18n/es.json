@@ -354,7 +354,8 @@
         "risksTitle": "Riesgos",
         "riskRead": "Cualquier programa con el token puede leer todas las notas del Codex abierto.",
         "riskWrite": "Si permites cambios, un asistente puede crear y reescribir notas. Los guardados comprueban conflictos y no se borra nada, salvo que también permitas borrar, pero un error es posible: guarda una copia de tu Codex.",
-        "riskInjection": "Las notas pueden venir de otras personas por una carpeta compartida. El texto de una nota puede intentar dirigir al asistente."
+        "riskInjection": "Las notas pueden venir de otras personas por una carpeta compartida. El texto de una nota puede intentar dirigir al asistente.",
+        "moreTitle": "Riesgos y para qué sirve"
       },
       "enable": {
         "label": "Usar MCP",

@@ -354,7 +354,8 @@
         "risksTitle": "Risques",
         "riskRead": "Tout programme possédant le jeton peut lire toutes les notes du Codex ouvert.",
         "riskWrite": "Si vous autorisez les modifications, un assistant peut créer et réécrire des notes. Les enregistrements vérifient les conflits et rien n’est supprimé, sauf si vous autorisez aussi la suppression, mais une erreur reste possible : gardez une sauvegarde de votre Codex.",
-        "riskInjection": "Les notes peuvent venir d’autres personnes via un dossier partagé. Le texte d’une note peut tenter de diriger l’assistant."
+        "riskInjection": "Les notes peuvent venir d’autres personnes via un dossier partagé. Le texte d’une note peut tenter de diriger l’assistant.",
+        "moreTitle": "Risques et à quoi ça sert"
       },
       "enable": {
         "label": "Utiliser MCP",

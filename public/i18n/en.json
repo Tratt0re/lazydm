@@ -354,7 +354,8 @@
         "risksTitle": "Risks",
         "riskRead": "Any program that has the token can read every note of the open Codex.",
         "riskWrite": "If you allow changes, an assistant can create and rewrite notes. Saves are conflict-checked and nothing is deleted unless you also allow deleting, but a wrong edit is still possible: keep a backup of your Codex.",
-        "riskInjection": "Notes can come from other people through a shared folder. Text inside a note may try to steer the assistant."
+        "riskInjection": "Notes can come from other people through a shared folder. Text inside a note may try to steer the assistant.",
+        "moreTitle": "Risks and what it is for"
       },
       "enable": {
         "label": "Use MCP",

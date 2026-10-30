@@ -13,6 +13,7 @@ import { CampaignService } from '@/services/campaign.service';
 import { CompendiumService } from '@/services/compendium.service';
 import { McpService } from '@/services/mcp.service';
 import { VaultService } from '@/services/vault.service';
+import { ArcTechAccordionImports } from '@/shared/components/accordion/accordion.imports';
 import { ArcTechAlertDialogService } from '@/shared/components/alert-dialog/alert-dialog.service';
 import { ArcTechButtonComponent } from '@/shared/components/button';
 import { ArcTechCheckboxComponent } from '@/shared/components/checkbox/checkbox.component';
@@ -31,6 +32,7 @@ import { ArcTechSwitchComponent } from '@/shared/components/switch';
     ArcTechIconComponent,
     ArcTechInputDirective,
     ArcTechSwitchComponent,
+    ...ArcTechAccordionImports,
   ],
   templateUrl: './mcp-section.component.html',
 })

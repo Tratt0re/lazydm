@@ -4,16 +4,34 @@
       {{ 'settings.mcp.about.title' | translate }}<span class="text-primary" aria-hidden="true">.</span>
     </h3>
     <p class="text-sm">{{ 'settings.mcp.about.what' | translate }}</p>
-    <p class="mt-2 text-sm text-muted-foreground">{{ 'settings.mcp.about.use' | translate }}</p>
 
-    <h4 class="mt-4 mb-1 font-mono text-xs tracking-[0.08em] text-warning uppercase">
-      {{ 'settings.mcp.about.risksTitle' | translate }}
-    </h4>
-    <ul class="list-disc space-y-1 pl-5 text-sm text-muted-foreground">
-      <li>{{ 'settings.mcp.about.riskRead' | translate }}</li>
-      <li>{{ 'settings.mcp.about.riskWrite' | translate }}</li>
-      <li>{{ 'settings.mcp.about.riskInjection' | translate }}</li>
-    </ul>
+    @if (state()?.enabled) {
+      <!-- On: the explanation stays one click away, the controls come first. -->
+      <arc-accordion class="mt-2">
+        <arc-accordion-item arcValue="risks" [arcTitle]="'settings.mcp.about.moreTitle' | translate">
+          <p class="text-sm text-muted-foreground">{{ 'settings.mcp.about.use' | translate }}</p>
+          <h4 class="mt-4 mb-1 font-mono text-xs tracking-[0.08em] text-warning uppercase">
+            {{ 'settings.mcp.about.risksTitle' | translate }}
+          </h4>
+          <ul class="list-disc space-y-1 pl-5 text-sm text-muted-foreground">
+            <li>{{ 'settings.mcp.about.riskRead' | translate }}</li>
+            <li>{{ 'settings.mcp.about.riskWrite' | translate }}</li>
+            <li>{{ 'settings.mcp.about.riskInjection' | translate }}</li>
+          </ul>
+        </arc-accordion-item>
+      </arc-accordion>
+    } @else {
+      <p class="mt-2 text-sm text-muted-foreground">{{ 'settings.mcp.about.use' | translate }}</p>
+
+      <h4 class="mt-4 mb-1 font-mono text-xs tracking-[0.08em] text-warning uppercase">
+        {{ 'settings.mcp.about.risksTitle' | translate }}
+      </h4>
+      <ul class="list-disc space-y-1 pl-5 text-sm text-muted-foreground">
+        <li>{{ 'settings.mcp.about.riskRead' | translate }}</li>
+        <li>{{ 'settings.mcp.about.riskWrite' | translate }}</li>
+        <li>{{ 'settings.mcp.about.riskInjection' | translate }}</li>
+      </ul>
+    }
 
     <div class="mt-4 flex items-center justify-between gap-4 border-t border-border pt-4">
       <div class="min-w-0">

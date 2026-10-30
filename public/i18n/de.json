@@ -354,7 +354,8 @@
         "risksTitle": "Risiken",
         "riskRead": "Jedes Programm mit dem Token kann alle Notizen des geöffneten Codex lesen.",
         "riskWrite": "Erlaubst du Änderungen, kann ein Assistent Notizen anlegen und umschreiben. Speichern prüft auf Konflikte und nichts wird gelöscht, außer du erlaubst auch das Löschen, aber ein Fehler ist möglich: Halte ein Backup deines Codex bereit.",
-        "riskInjection": "Notizen können von anderen über einen geteilten Ordner stammen. Text in einer Notiz kann versuchen, den Assistenten zu lenken."
+        "riskInjection": "Notizen können von anderen über einen geteilten Ordner stammen. Text in einer Notiz kann versuchen, den Assistenten zu lenken.",
+        "moreTitle": "Risiken und wofür es gedacht ist"
       },
       "enable": {
         "label": "MCP verwenden",
