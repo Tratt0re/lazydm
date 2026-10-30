@@ -1,7 +1,12 @@
 import { Injectable, signal } from '@angular/core';
 
 import { APIChannel } from '@/config/api';
-import type { CampaignDto, CreateCampaignPayload, UpdateCampaignPayload } from '@/dtos';
+import type {
+  AgentRulesDto,
+  CampaignDto,
+  CreateCampaignPayload,
+  UpdateCampaignPayload,
+} from '@/dtos';
 import { BaseIpcService } from '@/services/base-ipc.service';
 import { onIndexUpdated } from '@/services/ipc-events';
 
@@ -49,6 +54,16 @@ export class CampaignService extends BaseIpcService<APIChannel.CAMPAIGNS> {
       this.activeCampaignSignal.set(campaign);
     }
     return campaign;
+  }
+
+  /** Where the campaign's AI Agents rules are and whether they exist yet. */
+  getAgentRules(slug: string): Promise<AgentRulesDto> {
+    return this.ipcClient.getAgentRules({ slug });
+  }
+
+  /** Creates the empty rules file for the user to write. */
+  createAgentRules(slug: string): Promise<AgentRulesDto> {
+    return this.ipcClient.createAgentRules({ slug });
   }
 
   /** Number of files that deleting the campaign would send to the Trash. */

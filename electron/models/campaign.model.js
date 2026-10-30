@@ -8,7 +8,12 @@ const {
   setFrontmatterField,
 } = require('../utils/markdown-parse');
 const { DEFAULT_SECTIONS } = require('./section.model');
-const { isCampaignDirName, readVaultConfig, writeVaultConfig } = require('./vault.model');
+const {
+  AGENT_RULES_FILE_NAME,
+  isCampaignDirName,
+  readVaultConfig,
+  writeVaultConfig,
+} = require('./vault.model');
 
 const CAMPAIGN_FILE_NAME = 'campaign.md';
 const CAMPAIGN_SECTION_DIR_NAMES = Object.freeze(DEFAULT_SECTIONS.map((section) => section.key));
@@ -62,6 +67,26 @@ async function readCampaign(rootPath, slug) {
     slug,
     parseMarkdownDocument(text, { sourcePath: `${slug}/${CAMPAIGN_FILE_NAME}` }),
   );
+}
+
+/** Vault-relative path of the campaign's AI Agents rules. */
+function getAgentRulesRelativePath(slug) {
+  return `${slug}/${AGENT_RULES_FILE_NAME}`;
+}
+
+function agentRulesExist(rootPath, slug) {
+  return fs.existsSync(resolveInsideVault(rootPath, getAgentRulesRelativePath(slug)));
+}
+
+/** Creates the empty rules file (the user writes it); never touches one that exists. */
+function createAgentRules(rootPath, slug) {
+  const filePath = resolveInsideVault(rootPath, getAgentRulesRelativePath(slug));
+  if (fs.existsSync(filePath)) {
+    throw new Error(`${getAgentRulesRelativePath(slug)} already exists.`);
+  }
+
+  safeWriteFileAtomic(filePath, '');
+  return getAgentRulesRelativePath(slug);
 }
 
 /** A campaign is a top-level folder of the vault that contains a `campaign.md` note. */
@@ -175,6 +200,9 @@ function forgetCampaignSettings(rootPath, slug) {
 }
 
 module.exports = {
+  agentRulesExist,
+  createAgentRules,
+  getAgentRulesRelativePath,
   CAMPAIGN_SECTION_DIR_NAMES,
   NOTE_TYPE_DIR_NAMES,
   campaignFolderExists,

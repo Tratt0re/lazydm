@@ -25,3 +25,11 @@ export interface UpdateCampaignPayload {
   readonly description?: string | null;
   readonly icon?: string | null;
 }
+
+/** The campaign's AI Agents rules file (`<campaign>/agents.md`). */
+export interface AgentRulesDto {
+  /** Vault-relative path, `<campaign>/agents.md`. */
+  readonly path: string;
+  /** False until the user creates it. */
+  readonly exists: boolean;
+}

@@ -27,6 +27,7 @@ their technical names; only the text the user sees changes. Add to this table be
 | **Links** | backlinks panel, linked files / notes | The note panel and its toolbar button; groups inside it are *Notes* and *Assets* |
 | **Review** | broken links page, `/review` | The page and its alert; *Broken links* is only a group title inside it |
 | **Delete forever** | permanent delete | Combatant card, cemetery and its confirmation |
+| **AI Agents rules** | `agents.md` of a campaign | The campaign's instructions for AI assistants, written by the user in *Settings → AI Agents rules* (§6f) |
 | **Info box** | callout | `> [!note]` stays as the markdown syntax example |
 | **Default** | built-in tracker layout (`Generic` in the file) | Display name only; the stored name never changes |
 
@@ -45,6 +46,7 @@ their technical names; only the text the user sees changes. Add to this table be
 │       └── <folders on demand>        sessions/, enemies/, assets/, notes/… appear with their first file
 └── <campaign-slug>/                   one folder per campaign (section folders appear with their first file)
     ├── campaign.md                    campaign card: display name, cover, description
+    ├── agents.md                      AI Agents rules: the user's instructions for AI assistants (optional, §6f)
     ├── scenes/
     ├── characters/
     ├── enemies/
@@ -551,6 +553,15 @@ Codex. It is **off by default** and lives in the Electron main process (`electro
   suffix, frontmatter and links are kept; files the mapping does not cover are skipped and listed. Refused while
   *Limit to some campaigns* is on (it creates a campaign). Other apps' syntax (Logseq properties, Notion exports) is
   not converted.
+- **AI Agents rules.** A campaign may hold an `agents.md` at its root: plain markdown the **user** writes (in the
+  app's note editor, *Settings → AI Agents rules*, for the campaign under the sheet) to say how their notes should be
+  written and formatted (language, tone, names, templates…). Campaign only, no vault-wide file. The app only creates
+  (empty), opens and saves it; it never fills it. For agents: `get_agent_rules` returns it (inside the scope check)
+  with a notice that it holds formatting preferences, never permissions; `list_campaigns` reports `hasAgentRules`;
+  the server instructions and the write tools' results point to it. It is **read-only for agents**: every write,
+  rename, move, copy and trash tool refuses it. Like `campaign.md` it is not a note: it is left out of note lists,
+  counts, search, link targets and the Review page. Agents outside the LazyDM MCP are not told about it: the card in
+  Settings says so and the user points their agent to the file.
 - **Shared things.** `create_template` (vault-wide `_templates/`) and `create_compendium_system` belong to the whole
   Codex, not to a campaign, so they are refused while *Limit to some campaigns* is on. `set_section_template` links
   an existing template of an allowed campaign (or `builtin`, or automatic).

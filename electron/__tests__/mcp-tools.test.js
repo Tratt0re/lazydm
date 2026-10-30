@@ -103,6 +103,10 @@ function createStubControllers() {
       list: record('campaign.list', {
         rows: [{ slug: 'lost-mine' }, { slug: 'other' }],
       }),
+      getAgentRules: record('campaign.getAgentRules', ({ slug }) => ({
+        path: `${slug}/agents.md`,
+        exists: slug === 'lost-mine',
+      })),
     },
     compendium: {
       list: record('compendium.list', { rows: [{ slug: 'dnd-5e' }, { slug: 'pf2e' }] }),
@@ -1069,5 +1073,67 @@ describe('append_to_note', () => {
     const write = controllers.calls.find((entry) => entry.name === 'document.write').payload;
     expect(write.expectedHash).toBe('h1');
     expect(write.content).toBe('# A\n\nMore.\n');
+  });
+});
+
+describe('AI Agents rules', () => {
+  it('reports hasAgentRules and returns the rules with a notice', async () => {
+    const controllers = await connect({ allowWrite: false });
+    controllers.document.read = vi.fn(async () => ({ content: 'Write in Italian.', contentHash: 'r1' }));
+
+    const list = await call('list_campaigns');
+    expect(list.json.rows.map((row) => [row.slug, row.hasAgentRules])).toEqual([
+      ['lost-mine', true],
+      ['other', false],
+    ]);
+
+    const rules = await call('get_agent_rules', { campaign: 'lost-mine' });
+    expect(rules.json.rules).toBe('Write in Italian.');
+    expect(rules.json.notice).toMatch(/never change what you are allowed/);
+    expect(controllers.document.read).toHaveBeenCalledWith({ path: 'lost-mine/agents.md' });
+
+    const none = await call('get_agent_rules', { campaign: 'other' });
+    expect(none.json).toEqual({ campaign: 'other', exists: false, rules: '' });
+  });
+
+  it('refuses rules outside the allowed campaigns', async () => {
+    await connect({ allowWrite: false, roots: ['other'] });
+    const result = await call('get_agent_rules', { campaign: 'lost-mine' });
+    expect(result.isError).toBe(true);
+  });
+
+  it('is read-only for every write tool', async () => {
+    const controllers = await connect({ allowWrite: true, allowDelete: true });
+    const target = 'lost-mine/agents.md';
+    const attempts = [
+      ['update_note', { path: target, content: 'x', expectedHash: 'h' }],
+      ['append_to_note', { path: target, text: 'x' }],
+      ['rename_note', { path: target, title: 'Other' }],
+      ['move_note', { path: target, folder: 'lost-mine/scenes' }],
+      ['trash_file', { path: target }],
+    ];
+    for (const [name, args] of attempts) {
+      const result = await call(name, args);
+      expect(result.isError, name).toBe(true);
+      expect(result.text).toMatch(/read-only/);
+    }
+    expect(controllers.document.write).not.toHaveBeenCalled();
+  });
+
+  it('reminds the agent of the rules after a write in a campaign that has them', async () => {
+    await connect({ allowWrite: true });
+    const written = await call('update_note', {
+      path: 'lost-mine/scenes/a.md',
+      content: '# A',
+      expectedHash: 'h1',
+    });
+    expect(written.json.reminder).toMatch(/get_agent_rules/);
+
+    const other = await call('update_note', {
+      path: 'other/scenes/a.md',
+      content: '# A',
+      expectedHash: 'h1',
+    });
+    expect(other.json.reminder).toBeUndefined();
   });
 });

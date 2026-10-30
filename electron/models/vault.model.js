@@ -88,9 +88,25 @@ function isCampaignDirName(dirName) {
   );
 }
 
+/** The user's instructions for AI assistants, at the root of a campaign (DESIGN_PRINCIPLES §6f). */
+const AGENT_RULES_FILE_NAME = 'agents.md';
+
+/** `<campaign>/agents.md`: a file of the vault the index never holds, so no list, search or link finds it. */
+function isAgentRulesPath(relativePath) {
+  const segments = relativePath.split('/');
+  return (
+    segments.length === 2 &&
+    segments[1].toLocaleLowerCase() === AGENT_RULES_FILE_NAME &&
+    isCampaignDirName(segments[0])
+  );
+}
+
 /** Hidden entries (`.lazydm`, `.obsidian`, `.git`, `.DS_Store`, iCloud `.name.icloud` placeholders…) are not vault content. */
 function isIgnoredVaultPath(relativePath) {
-  return relativePath.split('/').some((segment) => segment.startsWith('.'));
+  return (
+    relativePath.split('/').some((segment) => segment.startsWith('.')) ||
+    isAgentRulesPath(relativePath)
+  );
 }
 
 function toVaultRelativePath(rootPath, absolutePath) {
@@ -130,9 +146,14 @@ async function listVaultFiles(rootPath, relativeDir = '') {
       if (entry.isDirectory()) {
         pendingDirs.push(absolutePath);
       } else if (entry.isFile()) {
+        const filePath = toVaultRelativePath(realRootPath, absolutePath);
+        if (isAgentRulesPath(filePath)) {
+          continue;
+        }
+
         const stats = await fs.promises.stat(absolutePath);
         files.push({
-          path: toVaultRelativePath(realRootPath, absolutePath),
+          path: filePath,
           size: stats.size,
           mtimeMs: Math.trunc(stats.mtimeMs),
           isDataless: isDatalessStats(stats),
@@ -146,6 +167,7 @@ async function listVaultFiles(rootPath, relativeDir = '') {
 
 module.exports = {
   ...vaultBaseModel,
+  AGENT_RULES_FILE_NAME,
   VAULT_CONFIG_SCHEMA_VERSION,
   createDefaultVaultConfig,
   ensureVaultStructure,
@@ -154,6 +176,7 @@ module.exports = {
   isCampaignDirName,
   isDatalessStats,
   isDirectoryEmpty,
+  isAgentRulesPath,
   isIgnoredVaultPath,
   listVaultFiles,
   readVaultConfig,

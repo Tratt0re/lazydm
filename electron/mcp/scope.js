@@ -22,6 +22,14 @@ function normalizeVaultPath(value) {
   return normalized;
 }
 
+const AGENT_RULES_FILE_NAME = 'agents.md';
+
+/** `<campaign>/agents.md`: the user's rules for agents, which agents may read but never change. */
+function isAgentRulesPath(relativePath) {
+  const segments = relativePath.split('/');
+  return segments.length === 2 && segments[1].toLocaleLowerCase() === AGENT_RULES_FILE_NAME;
+}
+
 /**
  * Limits what the MCP tools may reach to some campaigns and compendium systems.
  *
@@ -45,6 +53,15 @@ function createScopeGuard(roots) {
 
       return relativePath;
     },
+    /** `resolve` for tools that change something: the AI Agents rules are the user's alone to edit. */
+    resolveWritable(value) {
+      const relativePath = this.resolve(value);
+      if (isAgentRulesPath(relativePath)) {
+        throw new Error(`${relativePath} holds the user's rules for agents: it is read-only for MCP.`);
+      }
+
+      return relativePath;
+    },
     /** Like `resolve`, but a yes/no for results to filter (links pointing out of the scope are dropped). */
     allows(value) {
       try {
@@ -60,6 +77,8 @@ function createScopeGuard(roots) {
 }
 
 module.exports = {
+  AGENT_RULES_FILE_NAME,
+  isAgentRulesPath,
   createScopeGuard,
   normalizeVaultPath,
 };

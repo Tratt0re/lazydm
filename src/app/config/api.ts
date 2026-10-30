@@ -69,6 +69,8 @@ export interface ElectronIpcClient {
     readonly create: IpcRequest<DTO.CreateCampaignPayload, DTO.CampaignDto>;
     readonly update: IpcRequest<DTO.UpdateCampaignPayload, DTO.CampaignDto>;
     readonly countFiles: IpcRequest<{ slug: string }, { count: number }>;
+    readonly getAgentRules: IpcRequest<{ slug: string }, DTO.AgentRulesDto>;
+    readonly createAgentRules: IpcRequest<{ slug: string }, DTO.AgentRulesDto>;
     readonly remove: IpcRequest<{ slug: string }, { slug: string; deleted: number }>;
   };
   readonly cloud: {

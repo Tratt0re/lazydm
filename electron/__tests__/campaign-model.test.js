@@ -73,3 +73,33 @@ describe('forgetCampaignSettings', () => {
     expect(readVaultConfig(vault)).toEqual({ name: 'v' });
   });
 });
+
+describe('AI Agents rules', () => {
+  const vaultModel = require('../models/vault.model');
+
+  it('creates an empty agents.md once and never overwrites it', () => {
+    expect(campaignModel.agentRulesExist(vault, 'lost-mine')).toBe(false);
+    expect(campaignModel.createAgentRules(vault, 'lost-mine')).toBe('lost-mine/agents.md');
+    expect(fs.readFileSync(path.join(vault, 'lost-mine', 'agents.md'), 'utf8')).toBe('');
+
+    fs.writeFileSync(path.join(vault, 'lost-mine', 'agents.md'), 'Write in Italian.');
+    expect(() => campaignModel.createAgentRules(vault, 'lost-mine')).toThrow(/already exists/);
+    expect(fs.readFileSync(path.join(vault, 'lost-mine', 'agents.md'), 'utf8')).toBe(
+      'Write in Italian.',
+    );
+  });
+
+  it('is left out of the index: never listed, never reindexed', async () => {
+    campaignModel.createAgentRules(vault, 'lost-mine');
+    fs.mkdirSync(path.join(vault, 'lost-mine', 'scenes'));
+    fs.writeFileSync(path.join(vault, 'lost-mine', 'scenes', 'agents.md'), '# A scene named agents');
+
+    const files = (await vaultModel.listVaultFiles(vault)).map((file) => file.path);
+    expect(files).toContain('lost-mine/campaign.md');
+    expect(files).toContain('lost-mine/scenes/agents.md');
+    expect(files).not.toContain('lost-mine/agents.md');
+    expect(vaultModel.isIgnoredVaultPath('lost-mine/agents.md')).toBe(true);
+    expect(vaultModel.isIgnoredVaultPath('lost-mine/scenes/agents.md')).toBe(false);
+    expect(vaultModel.isIgnoredVaultPath('compendium/agents.md')).toBe(false);
+  });
+});

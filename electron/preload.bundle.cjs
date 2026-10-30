@@ -41,6 +41,8 @@ var require_channels = __commonJS({
         create: "campaigns:create",
         update: "campaigns:update",
         countFiles: "campaigns:countFiles",
+        getAgentRules: "campaigns:getAgentRules",
+        createAgentRules: "campaigns:createAgentRules",
         remove: "campaigns:remove"
       }),
       cloud: Object.freeze({

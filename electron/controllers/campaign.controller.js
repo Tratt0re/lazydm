@@ -130,9 +130,30 @@ async function remove(payload) {
   return { slug, deleted: files.length };
 }
 
+/** The campaign's AI Agents rules file: where it is and whether the user created it yet. */
+async function getAgentRules(payload) {
+  const body = ensurePlainObject(payload, 'payload');
+  const vaultPath = vaultController.getReadyVaultPath();
+  const slug = await requireExistingCampaign(body, vaultPath);
+  return {
+    path: campaignModel.getAgentRulesRelativePath(slug),
+    exists: campaignModel.agentRulesExist(vaultPath, slug),
+  };
+}
+
+/** Creates the empty rules file; the user writes it in the editor. */
+async function createAgentRules(payload) {
+  const body = ensurePlainObject(payload, 'payload');
+  const vaultPath = vaultController.getReadyVaultPath();
+  const slug = await requireExistingCampaign(body, vaultPath);
+  return { path: campaignModel.createAgentRules(vaultPath, slug), exists: true };
+}
+
 module.exports = {
   countFiles,
   create,
+  createAgentRules,
+  getAgentRules,
   get,
   list,
   remove,
