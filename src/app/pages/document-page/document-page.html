@@ -76,11 +76,12 @@
         </div>
       </div>
 
-      <div class="min-h-0 flex-1">
+      <!-- The editor is pinned to this box, so only its own scroller scrolls (the code map stays in view). -->
+      <div class="relative min-h-0 flex-1">
         <app-code-editor
           #editor
           [hidden]="mode() === 'reading'"
-          class="h-full"
+          class="absolute inset-0"
           [mode]="mode() === 'source' ? 'source' : 'live'"
           [links]="liveLinks()"
           [linkTargets]="linkTargets()"

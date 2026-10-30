@@ -231,6 +231,15 @@ export class AppExplorerTreeComponent {
     this.expandedKeys.set(next);
   }
 
+  /** Cmd/Ctrl-click on a section row opens its page in a background tab; a plain click expands it. */
+  protected onFolderClick(event: MouseEvent, key: string, route: string): void {
+    if ((event.metaKey || event.ctrlKey) && this.canOpenInTab(route)) {
+      void this.workspace.openTab(route, { background: true });
+      return;
+    }
+    this.toggle(key);
+  }
+
   /** New tabs hold campaign pages only (the Compendium opens in its sheet). */
   protected canOpenInTab(route: string | null): route is string {
     return !!route && this.workspace.isCampaignUrl(route);
