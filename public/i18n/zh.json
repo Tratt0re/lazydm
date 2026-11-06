@@ -344,6 +344,14 @@
         "description": "每个文件都会被重新读取。完成前应用会显示进度界面，大型 Codex 可能需要一些时间。你的文件不会有任何更改。",
         "confirm": "重建",
         "error": "无法重建索引"
+      },
+      "copies": {
+        "heading": "同步产生的副本",
+        "explanation": "云服务有时会为同时在两台设备上编辑的笔记保留第二个副本，例如“goblin 2.md”或“goblin (conflicted copy).md”。LazyDM 会在打开 Codex 时查找；你也可以随时在这里再次查找。不会更改或删除任何内容。",
+        "action": "查找副本",
+        "none": "未发现副本。",
+        "found": "发现 {{count}} 个可能的副本。逐个打开，保留需要的内容，然后删除副本：",
+        "error": "无法查找副本"
       }
     },
     "mcp": {

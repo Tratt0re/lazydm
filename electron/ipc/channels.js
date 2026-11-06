@@ -35,6 +35,7 @@ const CHANNELS = Object.freeze({
     getStatus: 'cloud:getStatus',
     skipWait: 'cloud:skipWait',
     recheck: 'cloud:recheck',
+    scanCopies: 'cloud:scanCopies',
   }),
   compendium: Object.freeze({
     list: 'compendium:list',

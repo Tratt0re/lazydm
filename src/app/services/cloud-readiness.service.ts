@@ -53,6 +53,13 @@ export class CloudReadinessService extends BaseIpcService<APIChannel.CLOUD> {
     this.applyState(await this.ipcClient.recheck());
   }
 
+  /** Looks for copies made by a sync client (`note 2.md`…); the files are only listed. Returns what was found. */
+  async scanCopies(): Promise<readonly string[]> {
+    const state = await this.ipcClient.scanCopies();
+    this.applyState(state);
+    return state.conflictPaths;
+  }
+
   private applyState(state: CloudReadinessStatusDto): void {
     if (state.status === 'checking' || state.status === 'idle') {
       this.downloadTotalSignal.set(state.pendingFiles);

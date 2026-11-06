@@ -301,6 +301,24 @@ function recheck() {
   return getStatus();
 }
 
+/**
+ * Looks for copies made by a sync client (`note 2.md`, `(conflicted copy)`…) without downloading anything: the
+ * startup check does the same, this one is run by hand from the Codex settings. Files are only listed, never touched.
+ */
+async function scanConflictCopies() {
+  if (!activeVault) {
+    throw new Error('No vault is open.');
+  }
+
+  const token = activeToken;
+  const files = await vaultModel.listVaultFiles(activeVault.path);
+  if (isCurrent(token)) {
+    setCloudState({ conflictPaths: cloudReadinessModel.findConflictCopies(files) });
+  }
+
+  return getStatus();
+}
+
 function cancel() {
   activeToken += 1;
   activeVault = null;
@@ -315,5 +333,6 @@ module.exports = {
   getStatus,
   prepare,
   recheck,
+  scanConflictCopies,
   skipWait,
 };

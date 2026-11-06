@@ -48,7 +48,8 @@ var require_channels = __commonJS({
       cloud: Object.freeze({
         getStatus: "cloud:getStatus",
         skipWait: "cloud:skipWait",
-        recheck: "cloud:recheck"
+        recheck: "cloud:recheck",
+        scanCopies: "cloud:scanCopies"
       }),
       compendium: Object.freeze({
         list: "compendium:list",

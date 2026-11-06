@@ -77,6 +77,7 @@ export interface ElectronIpcClient {
     readonly getStatus: OptionalIpcRequest<void, DTO.CloudReadinessStatusDto>;
     readonly skipWait: OptionalIpcRequest<void, DTO.CloudReadinessStatusDto>;
     readonly recheck: OptionalIpcRequest<void, DTO.CloudReadinessStatusDto>;
+    readonly scanCopies: OptionalIpcRequest<void, DTO.CloudReadinessStatusDto>;
   };
   readonly compendium: {
     readonly list: OptionalIpcRequest<void, { rows: DTO.CompendiumSystemDto[] }>;

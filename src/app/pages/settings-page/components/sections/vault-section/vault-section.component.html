@@ -39,6 +39,32 @@
         </button>
       </div>
     </section>
+
+    <section class="rounded-lg border border-border/60 bg-card p-4 md:p-5">
+      <h3 class="mb-3 font-display text-lg font-semibold tracking-wide uppercase">
+        {{ 'settings.vault.copies.heading' | translate }}<span class="text-primary" aria-hidden="true">.</span>
+      </h3>
+      <p class="text-sm text-muted-foreground">{{ 'settings.vault.copies.explanation' | translate }}</p>
+      @if (foundCopies(); as copies) {
+        @if (copies.length === 0) {
+          <p class="mt-3 text-sm" role="status">{{ 'settings.vault.copies.none' | translate }}</p>
+        } @else {
+          <div class="mt-3" role="status">
+            <p class="text-sm">{{ 'settings.vault.copies.found' | translate: { count: copies.length } }}</p>
+            <ul class="mt-2 flex flex-col gap-1 font-mono text-xs break-all">
+              @for (copy of copies; track copy) {
+                <li>{{ copy }}</li>
+              }
+            </ul>
+          </div>
+        }
+      }
+      <div class="mt-4 flex justify-end">
+        <button type="button" arc-button arcType="secondary" [arcLoading]="isBusy()" (click)="scanCopies()">
+          {{ 'settings.vault.copies.action' | translate }}
+        </button>
+      </div>
+    </section>
   }
 
   <section class="rounded-lg border border-destructive/40 bg-card p-4 md:p-5">

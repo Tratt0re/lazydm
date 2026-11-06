@@ -344,6 +344,14 @@
         "description": "Jede Datei wird erneut gelesen. Die App zeigt einen Fortschrittsbildschirm, bis alles fertig ist, was in einem großen Codex dauern kann. An deinen Dateien ändert sich nichts.",
         "confirm": "Neu aufbauen",
         "error": "Index konnte nicht neu aufgebaut werden"
+      },
+      "copies": {
+        "heading": "Kopien durch die Synchronisierung",
+        "explanation": "Cloud-Dienste behalten manchmal eine zweite Kopie einer Notiz, die auf zwei Geräten gleichzeitig bearbeitet wurde, etwa „goblin 2.md“ oder „goblin (conflicted copy).md“. LazyDM sucht sie beim Öffnen eines Codex; hier kannst du jederzeit erneut suchen. Nichts wird geändert oder gelöscht.",
+        "action": "Nach Kopien suchen",
+        "none": "Keine Kopien gefunden.",
+        "found": "{{count}} mögliche Kopien gefunden. Öffne jede, behalte, was du brauchst, und lösche die Kopie:",
+        "error": "Die Suche nach Kopien ist fehlgeschlagen"
       }
     },
     "mcp": {

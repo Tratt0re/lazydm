@@ -344,6 +344,14 @@
         "description": "Every file is read again. The app shows a progress screen until it is done, which can take a while in a big Codex. Nothing in your files changes.",
         "confirm": "Rebuild",
         "error": "Couldn’t rebuild the index"
+      },
+      "copies": {
+        "heading": "Copies made by sync",
+        "explanation": "Cloud services sometimes keep a second copy of a note edited on two devices at once, like “goblin 2.md” or “goblin (conflicted copy).md”. LazyDM looks for them when a Codex opens; look again here any time. Nothing is changed or deleted.",
+        "action": "Look for copies",
+        "none": "No copies found.",
+        "found": "{{count}} possible copies found. Open each one, keep what you need and delete the copy:",
+        "error": "Couldn’t look for copies"
       }
     },
     "mcp": {

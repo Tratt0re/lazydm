@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { toast } from 'ngx-sonner';
 
+import { CloudReadinessService } from '@/services/cloud-readiness.service';
 import { IndexStatusService } from '@/services/index-status.service';
 import { ResetService } from '@/services/reset.service';
 import { VaultService } from '@/services/vault.service';
@@ -18,6 +19,7 @@ import { ArcTechButtonComponent } from '@/shared/components/button';
 export class VaultSectionComponent {
   private readonly vaultService = inject(VaultService);
   private readonly indexStatusService = inject(IndexStatusService);
+  private readonly cloudReadinessService = inject(CloudReadinessService);
   private readonly resetService = inject(ResetService);
   private readonly alertDialogService = inject(ArcTechAlertDialogService);
   private readonly translateService = inject(TranslateService);
@@ -25,6 +27,8 @@ export class VaultSectionComponent {
 
   protected readonly vault = this.vaultService.currentVault;
   protected readonly isBusy = signal(false);
+  /** Copies found by the last manual look (null: not looked yet in this visit). */
+  protected readonly foundCopies = signal<readonly string[] | null>(null);
 
   /** Closes the vault (its files stay where they are) and goes back to the vault chooser. */
   protected confirmClose(): void {
@@ -56,6 +60,14 @@ export class VaultSectionComponent {
         }, 'settings.vault.reindex.error');
       },
     });
+  }
+
+  /** Looks for copies made by the cloud service (`note 2.md`…), like the check at startup; nothing is changed. */
+  protected scanCopies(): void {
+    void this.run(async () => {
+      await this.cloudReadinessService.connect();
+      this.foundCopies.set(await this.cloudReadinessService.scanCopies());
+    }, 'settings.vault.copies.error');
   }
 
   /** Forgets the vault and this device's settings; the vault folder and its notes are not touched. */

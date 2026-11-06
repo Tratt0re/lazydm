@@ -55,6 +55,7 @@ const IPC_HANDLERS = Object.freeze({
   [CHANNELS.cloud.getStatus]: cloudReadinessController.getStatus,
   [CHANNELS.cloud.skipWait]: cloudReadinessController.skipWait,
   [CHANNELS.cloud.recheck]: cloudReadinessController.recheck,
+  [CHANNELS.cloud.scanCopies]: cloudReadinessController.scanConflictCopies,
 
   [CHANNELS.compendium.list]: compendiumController.list,
   [CHANNELS.compendium.get]: compendiumController.get,

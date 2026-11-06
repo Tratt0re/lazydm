@@ -344,6 +344,14 @@
         "description": "Se vuelve a leer cada archivo. La app muestra una pantalla de progreso hasta terminar, algo que puede tardar en un Codex grande. Nada cambia en tus archivos.",
         "confirm": "Reconstruir",
         "error": "No se pudo reconstruir el índice"
+      },
+      "copies": {
+        "heading": "Copias creadas por la sincronización",
+        "explanation": "Los servicios en la nube a veces guardan una segunda copia de una nota editada en dos dispositivos a la vez, como «goblin 2.md» o «goblin (conflicted copy).md». LazyDM las busca al abrir un Codex; busca de nuevo aquí cuando quieras. No se cambia ni se borra nada.",
+        "action": "Buscar copias",
+        "none": "No se encontraron copias.",
+        "found": "{{count}} posibles copias encontradas. Abre cada una, conserva lo que necesites y borra la copia:",
+        "error": "No se pudo buscar copias"
       }
     },
     "mcp": {
