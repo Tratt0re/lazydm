@@ -114,6 +114,44 @@ describeWithSqlite('vault index link resolution', () => {
     ]);
   });
 
+  it('lists every path and every unresolved link of the vault, templates left out', () => {
+    note('syn/enemies/goblin 2.md');
+    note('syn/scenes/cave.md', ['goblin', 'goblin 2']);
+    note('syn/_templates/scene.md', ['{{placeholder}}']);
+    model.resolveLinks();
+
+    expect(model.listAllPaths().map((row) => row.path)).toEqual(
+      expect.arrayContaining(['syn/enemies/goblin 2.md', 'syn/scenes/cave.md']),
+    );
+    const broken = model.listAllBrokenLinks().filter((link) => link.campaign === 'syn');
+    expect(broken).toEqual([{ campaign: 'syn', raw: 'goblin', targetName: 'goblin' }]);
+  });
+
+  it('turns a lone numbered note into an orphan only while a link waits for its name', () => {
+    const { findSyncCopies } = require('../models/cloud-readiness.model');
+    const copiesOf = () =>
+      findSyncCopies(model.listAllPaths(), model.listAllBrokenLinks()).filter((copy) =>
+        copy.path.startsWith('orph/'),
+      );
+
+    note('orph/enemies/wolf 2.md');
+    note('orph/scenes/cave.md');
+    model.resolveLinks();
+    expect(copiesOf()).toEqual([]);
+
+    note('orph/scenes/cave.md', ['wolf']);
+    model.resolveLinks();
+    expect(copiesOf()).toEqual([
+      { path: 'orph/enemies/wolf 2.md', originalPath: 'orph/enemies/wolf.md', kind: 'orphan' },
+    ]);
+
+    note('orph/enemies/wolf.md');
+    model.resolveLinks();
+    expect(copiesOf()).toEqual([
+      { path: 'orph/enemies/wolf 2.md', originalPath: 'orph/enemies/wolf.md', kind: 'pair' },
+    ]);
+  });
+
   it('breaks a link when its target is deleted and mends it when the target returns', () => {
     note('camp/refs.md', ['unique-target']);
     model.resolveLinks();
