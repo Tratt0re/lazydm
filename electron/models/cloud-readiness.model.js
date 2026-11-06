@@ -1,6 +1,7 @@
 const fs = require('node:fs');
 const path = require('node:path');
 const { resolveInsideVault } = require('../utils/file-utils');
+const { toLinkKey } = require('../utils/string-sanitize');
 const { isDatalessStats } = require('./vault.model');
 
 const CLOUD_PROVIDER = Object.freeze({
@@ -126,10 +127,74 @@ function findConflictCopies(files) {
     .map((file) => file.path);
 }
 
+/** Path text of a raw link without `./`, `../`, a `#heading` or the `.md` extension, lower-cased. */
+function toLinkPathKey(raw) {
+  return toLinkKey(String(raw ?? '').split('#')[0])
+    .replace(/^(\.{1,2}\/)+/, '')
+    .replace(/\.md$/, '');
+}
+
+/**
+ * Copies made by sync clients, told apart by what is left of the original:
+ * - `pair`: the original exists next to the copy (`goblin.md`, `goblin 2.md`);
+ * - `orphan`: the original is gone and only the copy is left, which is the case when a note links to `goblin` that
+ *   the index cannot find. A lone numbered note only counts when a broken link names it without the number, and,
+ *   when that link has a folder in it, when the copy sits in that folder (a note really named `Session 2.md` is left alone).
+ * Only notes can be orphans. Provider copies named with `conflict` always count, as a `pair` of an original that
+ * may not exist.
+ *
+ * @param {{ path: string }[]} files - Vault files as listed by the vault model.
+ * @param {{ targetName: string, raw: string }[]} brokenLinks - Links the index could not resolve.
+ * @returns {{ path: string, originalPath: string, kind: 'pair' | 'orphan' }[]}
+ */
+function findSyncCopies(files, brokenLinks = []) {
+  const existingPaths = new Set(files.map((file) => file.path.toLocaleLowerCase()));
+  const brokenByName = new Map();
+  for (const link of brokenLinks) {
+    const key = toLinkKey(link.targetName);
+    brokenByName.set(key, [...(brokenByName.get(key) ?? []), link]);
+  }
+
+  const copies = [];
+  for (const file of files) {
+    const extension = path.posix.extname(file.path);
+    const directory = path.posix.dirname(file.path);
+    const baseName = path.posix.basename(file.path, extension);
+
+    for (const { pattern, requiresOriginal } of CONFLICT_COPY_PATTERNS) {
+      const match = baseName.match(pattern);
+      if (!match) {
+        continue;
+      }
+
+      const originalPath = path.posix.join(directory, `${match[1]}${extension}`);
+      if (existingPaths.has(originalPath.toLocaleLowerCase())) {
+        copies.push({ path: file.path, originalPath, kind: 'pair' });
+      } else if (!requiresOriginal) {
+        copies.push({ path: file.path, originalPath, kind: 'pair' });
+      } else if (extension.toLocaleLowerCase() === '.md') {
+        const wanted = toLinkKey(match[1]);
+        const originalKey = toLinkPathKey(originalPath);
+        const isWanted = (brokenByName.get(wanted) ?? []).some((link) => {
+          const linkKey = toLinkPathKey(link.raw);
+          return !linkKey.includes('/') || originalKey.endsWith(linkKey);
+        });
+        if (isWanted) {
+          copies.push({ path: file.path, originalPath, kind: 'orphan' });
+        }
+      }
+      break;
+    }
+  }
+
+  return copies;
+}
+
 module.exports = {
   CLOUD_PROVIDER,
   detectCloudProvider,
   findConflictCopies,
+  findSyncCopies,
   isStillDataless,
   requestDownload,
 };
