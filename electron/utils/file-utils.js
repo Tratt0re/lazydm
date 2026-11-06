@@ -166,6 +166,37 @@ function safeWriteFileAtomic(filePath, content, { overwrite = true } = {}) {
   return normalizedPath;
 }
 
+/**
+ * Writes a file in place (open, truncate, write, fsync) with no temporary file and no rename: a sync client such
+ * as iCloud sees one file change instead of a new file next to the note, which it may keep as a `name 2.md` copy.
+ * Not atomic: callers keep a recovery copy until `verifyFileHash` confirms the result.
+ */
+function writeFileInPlace(filePath, content) {
+  if (typeof filePath !== 'string' || filePath.trim().length === 0) {
+    throw new Error('filePath must be a non-empty string.');
+  }
+
+  if (!Buffer.isBuffer(content) && typeof content !== 'string') {
+    throw new Error('content must be a string or Buffer.');
+  }
+
+  fs.mkdirSync(path.dirname(filePath), { recursive: true });
+  const descriptor = fs.openSync(filePath, 'w');
+  try {
+    fs.writeFileSync(descriptor, content);
+    fs.fsyncSync(descriptor);
+  } finally {
+    fs.closeSync(descriptor);
+  }
+
+  return filePath;
+}
+
+/** True when the file on disk has exactly this hash (reads it back after an in-place write). */
+async function verifyFileHash(filePath, expectedHash) {
+  return hashContent(await fs.promises.readFile(filePath)) === expectedHash;
+}
+
 function listFilesSortedByMtime(directoryPath, options = {}) {
   if (typeof directoryPath !== 'string' || directoryPath.trim().length === 0) {
     throw new Error('directoryPath must be a non-empty string.');
@@ -223,4 +254,6 @@ module.exports = {
   resolveInsideVault,
   safeWriteFileAtomic,
   trashVaultItem,
+  verifyFileHash,
+  writeFileInPlace,
 };

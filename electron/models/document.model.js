@@ -8,7 +8,10 @@ const {
   moveFileNoOverwrite,
   resolveInsideVault,
   safeWriteFileAtomic,
+  verifyFileHash,
+  writeFileInPlace,
 } = require('../utils/file-utils');
+const writeJournal = require('../utils/write-journal');
 const { parseMarkdownDocument } = require('../utils/markdown-parse');
 const templateModel = require('./template.model');
 
@@ -66,12 +69,27 @@ async function writeDocument(rootPath, relativePath, content, expectedHash) {
     return { status: 'conflict', current: await readDocument(rootPath, relativePath) };
   }
 
-  safeWriteFileAtomic(absolutePath, content);
+  const newHash = hashContent(Buffer.from(content, 'utf8'));
+  // Nothing changed: no write, so a sync client has nothing to see.
+  if (currentHash === newHash) {
+    const stats = await fs.promises.stat(absolutePath);
+    return { status: 'saved', contentHash: newHash, mtimeMs: Math.trunc(stats.mtimeMs) };
+  }
+
+  // In place, not through a temporary file and a rename (see `writeFileInPlace`); the journal keeps the new
+  // content in the app's local data until the file is read back and matches.
+  const entryPath = writeJournal.begin(rootPath, relativePath, content, expectedHash);
+  writeFileInPlace(absolutePath, content);
+  if (!(await verifyFileHash(absolutePath, newHash))) {
+    throw new Error(`"${relativePath}" could not be written completely. Your edits are kept for recovery.`);
+  }
+
+  writeJournal.complete(entryPath);
   const stats = await fs.promises.stat(absolutePath);
 
   return {
     status: 'saved',
-    contentHash: hashContent(Buffer.from(content, 'utf8')),
+    contentHash: newHash,
     mtimeMs: Math.trunc(stats.mtimeMs),
   };
 }
