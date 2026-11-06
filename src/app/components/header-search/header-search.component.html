@@ -59,11 +59,12 @@
           @for (hit of results(); track hit.path; let i = $index) {
             @let isActive = activeIndex() === i;
             <li role="option" [attr.aria-selected]="isActive">
+              <!-- No href: the app's document-wide Cmd / Ctrl-click handler would swallow the click and the
+                   dropdown would stay open. The modifier is read here (Cmd/Ctrl: tab, plus Alt: other side). -->
               <a
-                [routerLink]="hit.route"
-                (click)="close()"
+                (click)="navigate(hit, $event)"
                 (mouseenter)="activeIndex.set(i)"
-                class="flex flex-col gap-0.5 px-3 py-2 transition-colors"
+                class="flex cursor-pointer flex-col gap-0.5 px-3 py-2 transition-colors"
                 [class.bg-accent]="isActive"
                 [class.text-accent-foreground]="isActive"
               >

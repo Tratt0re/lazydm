@@ -51,6 +51,7 @@ import {
 import { ASSET_FILE_PARAM, ASSET_SUBFOLDER_PARAM } from '@/pages/asset-page/asset-page';
 import { CAMPAIGN_SECTION_PARAM } from '@/pages/campaign-section-page/campaign-section-page';
 import { onIndexUpdated } from '@/services/ipc-events';
+import { getLinkOpenMode, type LinkOpenMode } from '@/shared/utils/link-open-mode';
 import { toDisplayPath } from '@/shared/utils/vault-path';
 import { DocumentService } from '@/services/document.service';
 import { CopyToService } from '@/services/copy-to.service';
@@ -321,6 +322,7 @@ export class MapPage {
   private readonly shared = signal<SharedFile<MapFileDto, MapDto>>(this.sharedFiles.join('', this));
   private readonly file = computed(() => this.shared().file());
   protected readonly data = computed(() => this.shared().data());
+  protected readonly getLinkOpenMode = getLinkOpenMode;
   protected readonly errorMessage = signal<string | null>(null);
   protected readonly isLoading = signal(true);
   protected readonly imageState = signal<ImageState>('none');
@@ -1147,7 +1149,7 @@ export class MapPage {
     // Cmd / Ctrl-click on a pin goes to its linked file, in a background tab like any link of the app.
     const link = kind === 'pin' ? this.data()?.pins.find((pin) => pin.id === id)?.link : null;
     if (isModifier && link) {
-      this.openLink(link, true);
+      this.openLink(link, getLinkOpenMode(event));
       return;
     }
 
@@ -1161,7 +1163,7 @@ export class MapPage {
 
     const link = kind === 'pin' ? this.data()?.pins.find((pin) => pin.id === id)?.link : null;
     if (link) {
-      this.openLink(link, false);
+      this.openLink(link);
     } else if (this.isEditable()) {
       this.selectOnly(id);
       void this.openEdit({ kind, id });
@@ -1842,10 +1844,12 @@ export class MapPage {
   }
 
   /** Goes to a linked file: in this tab, or in a background tab like Cmd / Ctrl-click anywhere in the app. */
-  protected openLink(link: string, isBackground = false): void {
+  protected openLink(link: string, mode: LinkOpenMode | null = null): void {
     const route = this.linkRoute(link);
     if (route) {
-      if (isBackground && this.workspace.isCampaignUrl(route)) {
+      if (mode === 'side' && this.workspace.isCampaignUrl(route)) {
+        void this.workspace.openToSide(route);
+      } else if (mode === 'tab' && this.workspace.isCampaignUrl(route)) {
         void this.workspace.openTab(route, { background: true });
       } else {
         void this.router.navigateByUrl(route);

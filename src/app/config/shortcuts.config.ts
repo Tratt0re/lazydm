@@ -41,6 +41,7 @@ export const SHORTCUTS: readonly ShortcutDefinition[] = [
   { id: 'linkSuggestions', scope: 'editor', combos: [{ key: '[[' }] },
   { id: 'acceptSuggestion', scope: 'editor', combos: [{ key: 'tab' }, { key: 'enter' }] },
   { id: 'openLinkInTab', scope: 'editor', combos: [], gesture: true },
+  { id: 'openLinkInSide', scope: 'editor', combos: [], gesture: true },
 
   { id: 'mapFinishPath', scope: 'map', combos: [{ key: 'enter' }] },
   { id: 'mapCancel', scope: 'map', combos: [{ key: 'escape' }] },

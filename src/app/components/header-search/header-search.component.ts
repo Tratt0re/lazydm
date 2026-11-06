@@ -7,7 +7,7 @@ import {
   signal,
   ViewChild,
 } from '@angular/core';
-import { Router, RouterLink } from '@angular/router';
+import { Router } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 
 import { toInAppNoteRoute } from '@/components/document-preview/document-preview.markdown';
@@ -16,6 +16,8 @@ import { CampaignService } from '@/services/campaign.service';
 import { SearchService } from '@/services/search.service';
 import { SectionService } from '@/services/section.service';
 import { ArcTechIconComponent } from '@/shared/components/icon';
+import { WorkspaceService } from '@/services/workspace.service';
+import { getLinkOpenMode } from '@/shared/utils/link-open-mode';
 import { toDisplayPath } from '@/shared/utils/vault-path';
 
 /** Milliseconds to wait after the user stops typing before firing a search. */
@@ -57,7 +59,7 @@ function toSnippetParts(snippet: string): readonly SnippetPart[] {
 @Component({
   selector: 'app-header-search',
   standalone: true,
-  imports: [RouterLink, TranslatePipe, ArcTechIconComponent],
+  imports: [TranslatePipe, ArcTechIconComponent],
   templateUrl: './header-search.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -74,6 +76,7 @@ export class HeaderSearchComponent {
   private readonly campaignService = inject(CampaignService);
   private readonly sectionService = inject(SectionService);
   private readonly router = inject(Router);
+  private readonly workspace = inject(WorkspaceService);
   protected readonly shortcutLabel = window.electronAPI?.platform === 'darwin' ? '⌘K' : 'Ctrl K';
   private debounceTimer?: ReturnType<typeof setTimeout>;
 
@@ -128,8 +131,15 @@ export class HeaderSearchComponent {
     this.close();
   }
 
-  protected navigate(hit: SearchHit): void {
-    void this.router.navigateByUrl(hit.route);
+  protected navigate(hit: SearchHit, event?: MouseEvent): void {
+    const mode = event && this.workspace.isCampaignUrl(hit.route) ? getLinkOpenMode(event) : null;
+    if (mode === 'side') {
+      void this.workspace.openToSide(hit.route);
+    } else if (mode === 'tab') {
+      void this.workspace.openTab(hit.route, { background: true });
+    } else {
+      void this.router.navigateByUrl(hit.route);
+    }
     this.close();
   }
 

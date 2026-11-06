@@ -887,7 +887,8 @@
         "acceptSuggestion": "Markierten Vorschlag übernehmen (auch Eingabe)",
         "wrapSelection": "Mit markiertem Text: ihn in das getippte Zeichen einschließen",
         "insertMenu": "Rechtsklick: Formatierung, Blöcke, Links und Assets einfügen",
-        "openInNewTab": "Cmd/Strg-Klick auf einen Link: in neuem Tab öffnen"
+        "openInNewTab": "Cmd/Strg-Klick auf einen Link: in neuem Tab öffnen",
+        "openInSide": "Cmd/Strg+Alt-Klick auf einen Link: auf der anderen Seite öffnen"
       }
     },
     "brokenLinkTitle": "Notiz nicht gefunden: {{name}}"
@@ -1621,6 +1622,7 @@
       "linkSuggestions": "Notizen und Dateien zum Verlinken vorschlagen",
       "acceptSuggestion": "Markierten Vorschlag übernehmen",
       "openLinkInTab": "Cmd/Strg-Klick auf einen Link: in neuem Tab öffnen",
+      "openLinkInSide": "Cmd/Strg+Alt-Klick auf einen Link: auf der anderen Seite öffnen",
       "mapFinishPath": "Gezeichneten Pfad beenden",
       "mapCancel": "Zeichnung abbrechen, dann Werkzeug verlassen oder Auswahl aufheben",
       "mapPan": "Mit dem Auswahlwerkzeug gedrückt halten: Karte verschieben",

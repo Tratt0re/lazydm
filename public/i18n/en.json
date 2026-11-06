@@ -887,7 +887,8 @@
         "acceptSuggestion": "Pick the highlighted suggestion (Enter too)",
         "wrapSelection": "With text selected: wrap it in the typed mark",
         "insertMenu": "Right-click: insert formatting, blocks, links and assets",
-        "openInNewTab": "Cmd/Ctrl-click a link: open it in a new tab"
+        "openInNewTab": "Cmd/Ctrl-click a link: open it in a new tab",
+        "openInSide": "Cmd/Ctrl+Alt-click a link: open it in the other side"
       }
     },
     "brokenLinkTitle": "Note not found: {{name}}"
@@ -1621,6 +1622,7 @@
       "linkSuggestions": "Suggest notes and assets to link",
       "acceptSuggestion": "Pick the highlighted suggestion",
       "openLinkInTab": "Cmd/Ctrl-click a link: open it in a new tab",
+      "openLinkInSide": "Cmd/Ctrl+Alt-click a link: open it in the other side",
       "mapFinishPath": "Finish the path being drawn",
       "mapCancel": "Cancel the drawing, then leave the tool or clear the selection",
       "mapPan": "Hold with the Select tool: move the map",

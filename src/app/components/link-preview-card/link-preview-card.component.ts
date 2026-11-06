@@ -25,6 +25,7 @@ import { WorkspaceService } from '@/services/workspace.service';
 import { ArcTechButtonComponent } from '@/shared/components/button';
 import { ArcTechIconComponent } from '@/shared/components/icon';
 import { ArcTechTooltipImports } from '@/shared/components/tooltip';
+import { getLinkOpenMode } from '@/shared/utils/link-open-mode';
 
 const CARD_WIDTH = 420;
 const CARD_MAX_HEIGHT = 440;
@@ -334,7 +335,15 @@ export class AppLinkPreviewCardComponent {
     }
 
     this.close();
-    if ((event.metaKey || event.ctrlKey) && this.workspace.isCampaignUrl(route)) {
+    this.openRoute(route, event);
+  }
+
+  /** Cmd/Ctrl+Alt: the other side; Cmd/Ctrl: a background tab; otherwise this tab. */
+  private openRoute(route: string, event: MouseEvent): void {
+    const mode = this.workspace.isCampaignUrl(route) ? getLinkOpenMode(event) : null;
+    if (mode === 'side') {
+      void this.workspace.openToSide(route);
+    } else if (mode === 'tab') {
       void this.workspace.openTab(route, { background: true });
     } else {
       void this.router.navigateByUrl(route);

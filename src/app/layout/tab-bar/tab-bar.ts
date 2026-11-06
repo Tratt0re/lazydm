@@ -26,6 +26,7 @@ import { ArcTechIconComponent } from '@/shared/components/icon';
 import type { ArcTechIcon } from '@/shared/components/icon';
 import { ArcTechMenuImports } from '@/shared/components/menu';
 import { ArcTechTooltipImports } from '@/shared/components/tooltip';
+import { getLinkOpenMode, type LinkOpenMode } from '@/shared/utils/link-open-mode';
 import { listenToIpcEvent } from '@/services/ipc-events';
 
 const WORKSPACE_SHORTCUT_EVENT = 'workspace:shortcut';
@@ -100,11 +101,15 @@ export class TabBar {
       return;
     }
 
-    const isNewTabClick =
+    const mode: LinkOpenMode | null =
       event.type === 'auxclick'
         ? event.button === 1
-        : event.button === 0 && (event.metaKey || event.ctrlKey);
-    if (!isNewTabClick || !this.workspace.isVisible()) {
+          ? 'tab'
+          : null
+        : event.button === 0
+          ? getLinkOpenMode(event)
+          : null;
+    if (!mode || !this.workspace.isVisible()) {
       return;
     }
 
@@ -115,6 +120,14 @@ export class TabBar {
 
     event.preventDefault();
     event.stopPropagation();
+    if (mode === 'side') {
+      // Cmd/Ctrl+Alt-click: the other side of the split screen, whichever side the link is in.
+      void this.workspace.openTab(route, {
+        pane: this.paneOf(event.target as Element | null) === 'left' ? 'right' : 'left',
+      });
+      return;
+    }
+
     // The tab opens on the side the link was clicked in.
     void this.workspace.openTab(route, {
       background: true,

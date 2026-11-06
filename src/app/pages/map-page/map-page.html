@@ -214,7 +214,7 @@
                       type="button"
                       class="flex max-w-full cursor-pointer items-center gap-2 text-left text-primary hover:underline focus-visible:outline-2 focus-visible:outline-ring"
                       [attr.title]="link"
-                      (click)="openLink(link, $event.metaKey || $event.ctrlKey)"
+                      (click)="openLink(link, getLinkOpenMode($event))"
                     >
                       <arc-icon arcType="external-link" class="size-4 shrink-0" />
                       <span class="truncate">{{ linkName(link) }}</span>
@@ -433,7 +433,7 @@
               <arc-icon arcType="external-link" />
               {{ 'maps.menu.openLink' | translate }}
             </button>
-            <button type="button" arc-menu-item (click)="openLink(link, true)">
+            <button type="button" arc-menu-item (click)="openLink(link, 'tab')">
               <arc-icon arcType="plus" />
               {{ 'maps.menu.openLinkBackground' | translate }}
             </button>

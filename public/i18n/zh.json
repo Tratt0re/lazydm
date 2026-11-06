@@ -887,7 +887,8 @@
         "acceptSuggestion": "选择高亮的建议（回车也可）",
         "wrapSelection": "选中文本时：用输入的符号包裹它",
         "insertMenu": "右键：插入格式、块、链接和资源",
-        "openInNewTab": "Cmd/Ctrl 点击链接：在新标签页中打开"
+        "openInNewTab": "Cmd/Ctrl 点击链接：在新标签页中打开",
+        "openInSide": "Cmd/Ctrl+Alt 点击链接：在另一侧打开"
       }
     },
     "brokenLinkTitle": "未找到笔记：{{name}}"
@@ -1621,6 +1622,7 @@
       "linkSuggestions": "建议可链接的笔记和资源",
       "acceptSuggestion": "选择高亮的建议",
       "openLinkInTab": "Cmd/Ctrl 点击链接：在新标签页打开",
+      "openLinkInSide": "Cmd/Ctrl+Alt 点击链接：在另一侧打开",
       "mapFinishPath": "完成正在绘制的路径",
       "mapCancel": "取消绘制，然后退出工具或清除选择",
       "mapPan": "使用选择工具时按住：移动地图",

@@ -887,7 +887,8 @@
         "acceptSuggestion": "Sceglie il suggerimento evidenziato (anche Invio)",
         "wrapSelection": "Con del testo selezionato: lo racchiude nel segno digitato",
         "insertMenu": "Clic destro: inserisci formattazione, blocchi, collegamenti e risorse",
-        "openInNewTab": "Cmd/Ctrl-clic su un collegamento: lo apre in una nuova scheda"
+        "openInNewTab": "Cmd/Ctrl-clic su un collegamento: lo apre in una nuova scheda",
+        "openInSide": "Cmd/Ctrl+Alt-clic su un link: aprilo nell'altro lato"
       }
     },
     "brokenLinkTitle": "Nota non trovata: {{name}}"
@@ -1621,6 +1622,7 @@
       "linkSuggestions": "Suggerisci note e risorse da collegare",
       "acceptSuggestion": "Scegli il suggerimento evidenziato",
       "openLinkInTab": "Cmd/Ctrl-clic su un link: aprilo in una nuova scheda",
+      "openLinkInSide": "Cmd/Ctrl+Alt-clic su un link: aprilo nell'altro lato",
       "mapFinishPath": "Termina il percorso in disegno",
       "mapCancel": "Annulla il disegno, poi esci dallo strumento o svuota la selezione",
       "mapPan": "Tieni premuto con lo strumento Seleziona: sposta la mappa",

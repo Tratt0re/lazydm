@@ -887,7 +887,8 @@
         "acceptSuggestion": "Elegir la sugerencia resaltada (también Intro)",
         "wrapSelection": "Con texto seleccionado: rodearlo con la marca escrita",
         "insertMenu": "Clic derecho: insertar formato, bloques, enlaces y recursos",
-        "openInNewTab": "Cmd/Ctrl-clic en un enlace: abrirlo en una pestaña nueva"
+        "openInNewTab": "Cmd/Ctrl-clic en un enlace: abrirlo en una pestaña nueva",
+        "openInSide": "Cmd/Ctrl+Alt-clic en un enlace: abrirlo en el otro lado"
       }
     },
     "brokenLinkTitle": "Nota no encontrada: {{name}}"
@@ -1621,6 +1622,7 @@
       "linkSuggestions": "Sugerir notas y recursos para enlazar",
       "acceptSuggestion": "Elegir la sugerencia resaltada",
       "openLinkInTab": "Cmd/Ctrl-clic en un enlace: abrirlo en una pestaña nueva",
+      "openLinkInSide": "Cmd/Ctrl+Alt-clic en un enlace: abrirlo en el otro lado",
       "mapFinishPath": "Terminar el camino que se dibuja",
       "mapCancel": "Cancelar el dibujo, luego salir de la herramienta o vaciar la selección",
       "mapPan": "Mantener con la herramienta Seleccionar: mover el mapa",

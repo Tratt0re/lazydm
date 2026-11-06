@@ -887,7 +887,8 @@
         "acceptSuggestion": "Choisir la suggestion en surbrillance (Entrée aussi)",
         "wrapSelection": "Avec du texte sélectionné : l’entourer du signe tapé",
         "insertMenu": "Clic droit : insérer mise en forme, blocs, liens et ressources",
-        "openInNewTab": "Cmd/Ctrl-clic sur un lien : l’ouvrir dans un nouvel onglet"
+        "openInNewTab": "Cmd/Ctrl-clic sur un lien : l’ouvrir dans un nouvel onglet",
+        "openInSide": "Cmd/Ctrl+Alt-clic sur un lien : l’ouvrir de l’autre côté"
       }
     },
     "brokenLinkTitle": "Note introuvable : {{name}}"
@@ -1621,6 +1622,7 @@
       "linkSuggestions": "Suggérer des notes et fichiers à lier",
       "acceptSuggestion": "Choisir la suggestion en surbrillance",
       "openLinkInTab": "Cmd/Ctrl-clic sur un lien : l'ouvrir dans un nouvel onglet",
+      "openLinkInSide": "Cmd/Ctrl+Alt-clic sur un lien : l’ouvrir de l’autre côté",
       "mapFinishPath": "Terminer le tracé en cours",
       "mapCancel": "Annuler le dessin, puis quitter l'outil ou vider la sélection",
       "mapPan": "Maintenir avec l'outil Sélection : déplacer la carte",

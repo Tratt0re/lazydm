@@ -35,6 +35,7 @@ import { WorkspaceService } from '@/services/workspace.service';
 import { ArcTechIconComponent, type ArcTechIcon } from '@/shared/components/icon';
 import { ArcTechMenuImports } from '@/shared/components/menu';
 import { ArcTechTooltipImports } from '@/shared/components/tooltip';
+import { getLinkOpenMode } from '@/shared/utils/link-open-mode';
 import { mergeClasses } from '@/shared/utils/merge-classes';
 import { onIndexUpdated } from '@/services/ipc-events';
 
@@ -233,7 +234,12 @@ export class AppExplorerTreeComponent {
 
   /** Cmd/Ctrl-click on a section row opens its page in a background tab; a plain click expands it. */
   protected onFolderClick(event: MouseEvent, key: string, route: string): void {
-    if ((event.metaKey || event.ctrlKey) && this.canOpenInTab(route)) {
+    const mode = this.canOpenInTab(route) ? getLinkOpenMode(event) : null;
+    if (mode === 'side') {
+      void this.workspace.openToSide(route);
+      return;
+    }
+    if (mode === 'tab') {
       void this.workspace.openTab(route, { background: true });
       return;
     }

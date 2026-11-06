@@ -715,7 +715,7 @@ Codex. It is **off by default** and lives in the Electron main process (`electro
     keyboard focus in it): Cmd/Ctrl+T/W, Ctrl+Tab, back/forward and the application menu act on it. The active tab of
     the side that is not focused is drawn with a neutral underline instead of the bronze one.
   - Any page can be on either side. Links and navigation made inside a side stay in that side (the router is wrapped
-    per pane: the second side is the `split` outlet of the URL, `/a/b(split:c/d)`); Cmd/Ctrl-click opens a background
+    per pane: the second side is the `split` outlet of the URL, `/a/b(split:c/d)`); **Cmd/Ctrl+Alt-click opens the link in the other side** (a new tab there, everywhere a Cmd/Ctrl-click opens a tab: rows of the section pages, search results, links in notes and previews, the explorer, map pins); Cmd/Ctrl-click opens a background
     tab on the side the link is in.
   - A **draggable divider** (arrows move it, Home/End, double-click = 50/50) sets the share, remembered per device;
     each side keeps at least 360px. In a window too narrow for two, only the focused side shows (the other stays

@@ -139,6 +139,7 @@ const SHORTCUTS: readonly { readonly key: string; readonly keys: readonly string
   { key: 'wrapSelection', keys: ['*', '_', '`', '('] },
   { key: 'insertMenu', keys: [] },
   { key: 'openInNewTab', keys: [] },
+  { key: 'openInSide', keys: [] },
 ];
 
 /**
