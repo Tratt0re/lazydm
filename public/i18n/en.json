@@ -1178,7 +1178,7 @@
       "loading": "Looking at both files…",
       "original": "Original",
       "thisCopy": "This copy",
-      "links": "{{count}} links point here",
+      "links": "Links to this file: {{count}}",
       "missing": "Not found: only this copy is left.",
       "identical": "The two files are identical.",
       "unchanged": "{{count}} unchanged lines",

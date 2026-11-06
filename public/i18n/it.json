@@ -1178,7 +1178,7 @@
       "loading": "Sto guardando i due file…",
       "original": "Originale",
       "thisCopy": "Questa copia",
-      "links": "{{count}} link puntano qui",
+      "links": "Link a questo file: {{count}}",
       "missing": "Non trovato: resta solo questa copia.",
       "identical": "I due file sono identici.",
       "unchanged": "{{count}} righe invariate",

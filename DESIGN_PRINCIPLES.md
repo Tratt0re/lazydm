@@ -252,7 +252,20 @@ Planned Electron modules: `vault`, `cloud-readiness`, `campaign`, `document`, `i
 - Be honest about the limit: no provider tells us that another device has an edit still in flight.
   The safety net is **conflict detection on save**: compare the on-disk mtime + hash with the version that was
   loaded; if different, offer *reload / keep mine / save as copy*.
-- Provider conflict copies (`file 2.md`, `(conflicted copy)`) are detected and shown to the user.
+- **Notes are saved in place** (open, truncate, write, fsync, read back) with no temporary file and no rename: a sync
+  client that sees a new file next to the note may keep it as `name 2.md`. The new text is kept in a **write journal**
+  in the app's local data (`userData/recovery`, never in the vault) until the file reads back correctly. An entry left
+  after a crash opens, once per session, a modal (*Restore my edits*, *Save as a copy*, *Discard*; a note changed
+  elsewhere since can only be saved as a copy). Entries older than 7 days are purged. Saving unchanged text writes
+  nothing. Settings, `vault.json`, maps and encounters still use the atomic temp-file write.
+- **Copies made by the sync client** (`file 2.md`, `file (1).md`, `(conflicted copy)`) are found from the index, so
+  they follow the files while the app runs (banner, Codex settings → *Look for copies*, Review). Two kinds: a **pair**
+  (the original is still there) and an **orphan** (only `goblin 2.md` is left and a broken link names `goblin`; when
+  that link has a folder, the copy must sit in it). The Review group *Copies made by sync* opens a panel under each
+  row with both files side by side (line diff for notes; size, date and image preview for other files). Pair:
+  *Keep the original* (links to the copy follow, the copy goes to the Trash, after a confirmation) or *Keep both* (the
+  copy becomes `name-copy`). Orphan: *Restore the original name* or *Keep both*. Nothing is automatic, both files must
+  still be what was shown, and every link rewrite is conflict-checked.
 
 ## 6. Links
 

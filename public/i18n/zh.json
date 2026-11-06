@@ -1178,7 +1178,7 @@
       "loading": "正在查看两个文件…",
       "original": "原件",
       "thisCopy": "此副本",
-      "links": "{{count}} 个链接指向这里",
+      "links": "指向此文件的链接：{{count}}",
       "missing": "未找到：只剩这个副本。",
       "identical": "两个文件完全相同。",
       "unchanged": "{{count}} 行未改动",
