@@ -2,6 +2,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 const { shell } = require('electron');
 const { resolveInsideVault } = require('../utils/file-utils');
+const writeJournal = require('../utils/write-journal');
 const {
   campaignModel,
   compendiumModel,
@@ -344,6 +345,87 @@ function saveCopy(payload) {
     requirePath(body),
     requireContent(body),
   );
+}
+
+const RECOVERY_ID_PATTERN = /^[a-f0-9]{64}$/;
+const RECOVERY_ACTIONS = Object.freeze(['restore', 'copy', 'discard']);
+
+/**
+ * Notes whose last save may have been cut short (see `write-journal`): old entries are purged, entries whose note
+ * already has the saved content are dropped, the rest are listed for the user to decide.
+ */
+function recoveryList() {
+  const vaultPath = path.resolve(vaultController.getReadyVaultPath());
+  writeJournal.purgeStale();
+  const rows = [];
+  for (const entry of writeJournal.listPending()) {
+    if (entry.rootPath !== vaultPath) {
+      continue;
+    }
+
+    let inspection;
+    try {
+      inspection = writeJournal.inspect(entry);
+    } catch {
+      // The note cannot be read now (a placeholder not downloaded yet): ask again at the next start.
+      continue;
+    }
+
+    if (inspection.state === 'done') {
+      writeJournal.complete(entry.entryPath);
+      continue;
+    }
+
+    rows.push({
+      id: writeJournal.idOf(entry.entryPath),
+      path: entry.path,
+      state: inspection.state,
+      createdAt: entry.createdAt,
+    });
+  }
+
+  return { rows };
+}
+
+/** *Restore my edits* (conflict-checked like a save), *Save as a copy* next to the note, or *Discard*. */
+async function recoveryResolve(payload) {
+  const body = ensurePlainObject(payload, 'payload');
+  const id = requireString(body.id, 'payload.id');
+  const action = requireString(body.action, 'payload.action');
+  if (!RECOVERY_ID_PATTERN.test(id) || !RECOVERY_ACTIONS.includes(action)) {
+    throw new Error('Not a recovery request.');
+  }
+
+  const vaultPath = path.resolve(vaultController.getReadyVaultPath());
+  const entry = writeJournal.findById(id);
+  if (!entry || entry.rootPath !== vaultPath) {
+    throw new Error('This recovery entry is gone.');
+  }
+
+  if (action === 'discard') {
+    writeJournal.complete(entry.entryPath);
+    return { id, path: entry.path };
+  }
+
+  if (action === 'copy') {
+    await documentModel.saveDocumentCopy(vaultPath, entry.path, entry.content);
+    writeJournal.complete(entry.entryPath);
+    return { id, path: entry.path };
+  }
+
+  // Restore: never over a note that someone else changed.
+  const { state, diskHash } = writeJournal.inspect(entry);
+  if (state === 'changed') {
+    throw new Error('The note changed since: save the recovered text as a copy instead.');
+  }
+
+  const result = await documentModel.writeDocument(vaultPath, entry.path, entry.content, diskHash);
+  if (result.status !== 'saved') {
+    throw new Error('The note changed since: save the recovered text as a copy instead.');
+  }
+
+  writeJournal.complete(entry.entryPath);
+  return { id, path: entry.path };
 }
 
 function create(payload) {
@@ -1512,6 +1594,8 @@ module.exports = {
   rename,
   renameAsset,
   renameFolder,
+  recoveryList,
+  recoveryResolve,
   reveal,
   saveCopy,
   unlink,

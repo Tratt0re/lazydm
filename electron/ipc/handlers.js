@@ -66,6 +66,8 @@ const IPC_HANDLERS = Object.freeze({
   [CHANNELS.documents.read]: documentController.read,
   [CHANNELS.documents.write]: documentController.write,
   [CHANNELS.documents.saveCopy]: documentController.saveCopy,
+  [CHANNELS.documents.recoveryList]: documentController.recoveryList,
+  [CHANNELS.documents.recoveryResolve]: documentController.recoveryResolve,
   [CHANNELS.documents.create]: documentController.create,
   [CHANNELS.documents.rename]: documentController.rename,
   [CHANNELS.documents.renameAsset]: documentController.renameAsset,

@@ -729,6 +729,23 @@
       "saveError": "No se pudo guardar la nota. Tu texto sigue en el editor. Comprueba que la carpeta del Codex esté disponible y vuelve a intentarlo.",
       "savedCopy": "Guardada como copia: {{path}}"
     },
+    "recovery": {
+      "title": "Se encontraron cambios sin guardar",
+      "description": {
+        "interrupted": "El último guardado de «{{path}}» se interrumpió, así que la nota en el disco está incompleta. Tu texto sin guardar se conservó en este equipo.",
+        "untouched": "El último guardado de «{{path}}» nunca llegó al archivo. Tu texto sin guardar se conservó en este equipo.",
+        "changed": "«{{path}}» se cambió en otro lugar después de un guardado interrumpido. Tu texto se conservó, pero restaurarlo sobrescribiría ese cambio."
+      },
+      "restore": "Restaurar mis cambios",
+      "saveCopy": "Guardar como copia",
+      "discard": "Descartar",
+      "done": {
+        "restore": "«{{path}}» restaurada.",
+        "copy": "Copia guardada junto a «{{path}}».",
+        "discard": "Cambios sin guardar de «{{path}}» descartados."
+      },
+      "error": "No se pudo recuperar la nota"
+    },
     "conflict": {
       "title": "Esta nota cambió en otro lugar",
       "description": "Alguien —quizás tú, desde otro dispositivo— guardó una versión más reciente de esta nota mientras la editabas. Elige qué hacer con tus cambios.",

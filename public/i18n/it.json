@@ -729,6 +729,23 @@
       "saveError": "Impossibile salvare la nota. Il testo è ancora nell’editor. Controlla che la cartella del Codex sia disponibile, poi riprova.",
       "savedCopy": "Salvata come copia: {{path}}"
     },
+    "recovery": {
+      "title": "Trovate modifiche non salvate",
+      "description": {
+        "interrupted": "L’ultimo salvataggio di «{{path}}» si è interrotto, quindi la nota sul disco è incompleta. Il testo non salvato è stato conservato su questo computer.",
+        "untouched": "L’ultimo salvataggio di «{{path}}» non è mai arrivato al file. Il testo non salvato è stato conservato su questo computer.",
+        "changed": "«{{path}}» è stata modificata altrove dopo un tuo salvataggio interrotto. Il testo non salvato è stato conservato, ma ripristinarlo sovrascriverebbe quella modifica."
+      },
+      "restore": "Ripristina le mie modifiche",
+      "saveCopy": "Salva come copia",
+      "discard": "Scarta",
+      "done": {
+        "restore": "«{{path}}» ripristinata.",
+        "copy": "Copia salvata accanto a «{{path}}».",
+        "discard": "Modifiche non salvate di «{{path}}» scartate."
+      },
+      "error": "Impossibile recuperare la nota"
+    },
     "conflict": {
       "title": "Questa nota è cambiata altrove",
       "description": "Qualcuno — forse tu, da un altro dispositivo — ha salvato una versione più recente di questa nota mentre la stavi modificando. Scegli cosa fare con le tue modifiche.",

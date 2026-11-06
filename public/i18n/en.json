@@ -729,6 +729,23 @@
       "saveError": "Couldn't save the note. Your text is still in the editor. Check that the Codex folder is available, then try again.",
       "savedCopy": "Saved as a copy: {{path}}"
     },
+    "recovery": {
+      "title": "Unsaved edits were found",
+      "description": {
+        "interrupted": "The last save of “{{path}}” was cut short, so the note on disk is incomplete. Your unsaved text was kept on this computer.",
+        "untouched": "The last save of “{{path}}” never reached the file. Your unsaved text was kept on this computer.",
+        "changed": "“{{path}}” was changed elsewhere after a save of yours was cut short. Your unsaved text was kept, but restoring it would overwrite that change."
+      },
+      "restore": "Restore my edits",
+      "saveCopy": "Save as a copy",
+      "discard": "Discard",
+      "done": {
+        "restore": "“{{path}}” restored.",
+        "copy": "Saved a copy next to “{{path}}”.",
+        "discard": "Unsaved edits of “{{path}}” discarded."
+      },
+      "error": "Could not recover the note"
+    },
     "conflict": {
       "title": "This note changed elsewhere",
       "description": "Someone — maybe you, on another device — saved a newer version of this note while you were editing. Choose what to do with your changes.",

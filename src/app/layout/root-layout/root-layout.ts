@@ -18,6 +18,7 @@ import {
 import { TranslatePipe } from '@ngx-translate/core';
 import { LayoutImports } from '@/shared/components/layout/layout.imports';
 import { AppMenuService } from '@/services/app-menu.service';
+import { WriteRecoveryService } from '@/services/write-recovery.service';
 import { WorkspaceService } from '@/services/workspace.service';
 import { Pane } from '../pane/pane';
 import { Sidebar } from '../sidebar/sidebar';
@@ -97,6 +98,7 @@ export class RootLayout implements OnInit {
       this.sectionService.visibleCampaignSections(),
     ),
   );
+  private readonly writeRecovery = inject(WriteRecoveryService);
   protected readonly showSidebarOverlay = computed(
     () => this.isSmallScreen() && !this.sidebarCollapsed(),
   );
@@ -116,6 +118,7 @@ export class RootLayout implements OnInit {
 
   ngOnInit(): void {
     this.isFullscreen.set(this.readDocumentFullscreenState());
+    void this.writeRecovery.checkOnce();
   }
 
   /** The width the panes share changes with the window and the sidebar. */

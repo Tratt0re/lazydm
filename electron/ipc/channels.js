@@ -48,6 +48,8 @@ const CHANNELS = Object.freeze({
     read: 'documents:read',
     write: 'documents:write',
     saveCopy: 'documents:saveCopy',
+    recoveryList: 'documents:recoveryList',
+    recoveryResolve: 'documents:recoveryResolve',
     create: 'documents:create',
     rename: 'documents:rename',
     renameAsset: 'documents:renameAsset',

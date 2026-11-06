@@ -22,6 +22,8 @@ import type {
   RenameDocumentPayload,
   RenameDocumentResultDto,
   RenameFolderResultDto,
+  RecoveryEntryDto,
+  ResolveRecoveryPayload,
   SaveDocumentCopyPayload,
   UnlinkPayload,
   WriteDocumentPayload,
@@ -102,6 +104,16 @@ export class DocumentService extends BaseIpcService<APIChannel.DOCUMENTS> {
 
   write(payload: WriteDocumentPayload): Promise<WriteDocumentResultDto> {
     return this.ipcClient.write(payload);
+  }
+
+  /** Notes whose last save may have been cut short (their unsaved text is kept for recovery). */
+  async listRecovery(): Promise<readonly RecoveryEntryDto[]> {
+    const { rows } = await this.ipcClient.recoveryList();
+    return rows;
+  }
+
+  resolveRecovery(payload: ResolveRecoveryPayload): Promise<{ id: string; path: string }> {
+    return this.ipcClient.recoveryResolve(payload);
   }
 
   saveCopy(payload: SaveDocumentCopyPayload): Promise<DocumentDto> {

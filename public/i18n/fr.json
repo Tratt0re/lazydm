@@ -729,6 +729,23 @@
       "saveError": "Impossible d'enregistrer la note. Votre texte est toujours dans l’éditeur. Vérifiez que le dossier du Codex est disponible, puis réessayez.",
       "savedCopy": "Enregistrée comme copie : {{path}}"
     },
+    "recovery": {
+      "title": "Modifications non enregistrées retrouvées",
+      "description": {
+        "interrupted": "Le dernier enregistrement de « {{path}} » a été interrompu : la note sur le disque est incomplète. Votre texte non enregistré a été conservé sur cet ordinateur.",
+        "untouched": "Le dernier enregistrement de « {{path}} » n’a jamais atteint le fichier. Votre texte non enregistré a été conservé sur cet ordinateur.",
+        "changed": "« {{path}} » a été modifiée ailleurs après un enregistrement interrompu. Votre texte a été conservé, mais le restaurer écraserait cette modification."
+      },
+      "restore": "Restaurer mes modifications",
+      "saveCopy": "Enregistrer comme copie",
+      "discard": "Abandonner",
+      "done": {
+        "restore": "« {{path}} » restaurée.",
+        "copy": "Copie enregistrée à côté de « {{path}} ».",
+        "discard": "Modifications non enregistrées de « {{path}} » abandonnées."
+      },
+      "error": "Impossible de récupérer la note"
+    },
     "conflict": {
       "title": "Cette note a changé ailleurs",
       "description": "Quelqu'un — peut-être vous, depuis un autre appareil — a enregistré une version plus récente de cette note pendant que vous la modifiiez. Choisissez quoi faire de vos modifications.",

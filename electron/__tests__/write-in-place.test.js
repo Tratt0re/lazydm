@@ -86,3 +86,32 @@ describe('write journal', () => {
     expect(writeJournal.purgeStale()).toBe(1);
   });
 });
+
+describe('write journal inspect', () => {
+  const entryFor = (content, expectedHash) => {
+    writeJournal.begin(vault, 'n.md', content, expectedHash);
+    return writeJournal.listPending()[0];
+  };
+
+  it('knows a finished write', () => {
+    fs.writeFileSync(path.join(vault, 'n.md'), 'new text');
+    expect(writeJournal.inspect(entryFor('new text', hashContent('old'))).state).toBe('done');
+  });
+
+  it('knows a write that never started', () => {
+    fs.writeFileSync(path.join(vault, 'n.md'), 'old');
+    expect(writeJournal.inspect(entryFor('new text', hashContent('old'))).state).toBe('untouched');
+  });
+
+  it('knows a write cut short (empty or a prefix)', () => {
+    fs.writeFileSync(path.join(vault, 'n.md'), '');
+    expect(writeJournal.inspect(entryFor('new text', hashContent('old'))).state).toBe('interrupted');
+    fs.writeFileSync(path.join(vault, 'n.md'), 'new t');
+    expect(writeJournal.inspect(writeJournal.listPending()[0]).state).toBe('interrupted');
+  });
+
+  it('never overwrites a note changed by someone else', () => {
+    fs.writeFileSync(path.join(vault, 'n.md'), 'something else entirely');
+    expect(writeJournal.inspect(entryFor('new text', hashContent('old'))).state).toBe('changed');
+  });
+});

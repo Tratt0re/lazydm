@@ -1,6 +1,7 @@
 const fs = require('node:fs');
 const path = require('node:path');
 const { createHash } = require('node:crypto');
+const { hashContent, resolveInsideVault } = require('./file-utils');
 
 /**
  * Recovery journal of in-place note writes. Before a note is overwritten its new content is kept in the app's local
@@ -93,8 +94,52 @@ function purgeStale(now = Date.now()) {
   return removed;
 }
 
+/** Id of an entry (its file name without extension): what the UI sends back to resolve it. */
+function idOf(entryPath) {
+  return path.basename(entryPath, '.json');
+}
+
+/** The pending entry with this id, or null. */
+function findById(id) {
+  return listPending().find((entry) => idOf(entry.entryPath) === id) ?? null;
+}
+
+/**
+ * What the note on disk looks like next to an entry:
+ * - `done`: it already has the journaled content (the entry is only left over);
+ * - `untouched`: it still has the content the editor loaded, or is gone: the write never started;
+ * - `interrupted`: it is empty or cut short, a prefix of the journaled content: the write stopped half way;
+ * - `changed`: anything else (another device or app changed it): the journaled edits must not overwrite it.
+ */
+function inspect(entry) {
+  let disk;
+  try {
+    disk = fs.readFileSync(resolveInsideVault(entry.rootPath, entry.path));
+  } catch (error) {
+    if (error?.code === 'ENOENT') {
+      return { state: 'untouched', diskHash: null };
+    }
+    throw error;
+  }
+
+  const diskHash = hashContent(disk);
+  if (diskHash === hashContent(Buffer.from(entry.content, 'utf8'))) {
+    return { state: 'done', diskHash };
+  }
+
+  if (diskHash === entry.expectedHash) {
+    return { state: 'untouched', diskHash };
+  }
+
+  const text = disk.toString('utf8');
+  return { state: entry.content.startsWith(text) ? 'interrupted' : 'changed', diskHash };
+}
+
 module.exports = {
   RETENTION_MS,
+  findById,
+  idOf,
+  inspect,
   begin,
   complete,
   listPending,

@@ -206,3 +206,19 @@ export interface RenameDocumentResultDto {
   readonly failedPaths: readonly string[];
   readonly linkCount: number;
 }
+
+/** A note whose last save may have been cut short; its unsaved text is kept in the app's local data. */
+export interface RecoveryEntryDto {
+  readonly id: string;
+  readonly path: string;
+  /** `interrupted`: the note on disk is cut short; `untouched`: the save never started; `changed`: edited elsewhere since. */
+  readonly state: 'interrupted' | 'untouched' | 'changed';
+  readonly createdAt: number;
+}
+
+export type RecoveryAction = 'restore' | 'copy' | 'discard';
+
+export interface ResolveRecoveryPayload {
+  readonly id: string;
+  readonly action: RecoveryAction;
+}

@@ -729,6 +729,23 @@
       "saveError": "Notiz konnte nicht gespeichert werden. Dein Text steht noch im Editor. Prüfe, ob der Codex-Ordner verfügbar ist, und versuche es erneut.",
       "savedCopy": "Als Kopie gespeichert: {{path}}"
     },
+    "recovery": {
+      "title": "Nicht gespeicherte Änderungen gefunden",
+      "description": {
+        "interrupted": "Das letzte Speichern von „{{path}}“ wurde unterbrochen, daher ist die Notiz auf der Festplatte unvollständig. Dein ungespeicherter Text wurde auf diesem Computer aufbewahrt.",
+        "untouched": "Das letzte Speichern von „{{path}}“ hat die Datei nie erreicht. Dein ungespeicherter Text wurde auf diesem Computer aufbewahrt.",
+        "changed": "„{{path}}“ wurde nach einem unterbrochenen Speichern anderswo geändert. Dein Text wurde aufbewahrt, aber das Wiederherstellen würde diese Änderung überschreiben."
+      },
+      "restore": "Meine Änderungen wiederherstellen",
+      "saveCopy": "Als Kopie speichern",
+      "discard": "Verwerfen",
+      "done": {
+        "restore": "„{{path}}“ wiederhergestellt.",
+        "copy": "Kopie neben „{{path}}“ gespeichert.",
+        "discard": "Ungespeicherte Änderungen an „{{path}}“ verworfen."
+      },
+      "error": "Die Notiz konnte nicht wiederhergestellt werden"
+    },
     "conflict": {
       "title": "Diese Notiz hat sich anderswo geändert",
       "description": "Jemand — vielleicht du, auf einem anderen Gerät — hat eine neuere Version dieser Notiz gespeichert, während du sie bearbeitet hast. Wähle, was mit deinen Änderungen passieren soll.",

@@ -90,6 +90,8 @@ export interface ElectronIpcClient {
     readonly read: IpcRequest<DTO.ReadDocumentPayload, DTO.DocumentDto>;
     readonly write: IpcRequest<DTO.WriteDocumentPayload, DTO.WriteDocumentResultDto>;
     readonly saveCopy: IpcRequest<DTO.SaveDocumentCopyPayload, DTO.DocumentDto>;
+    readonly recoveryList: OptionalIpcRequest<void, { rows: DTO.RecoveryEntryDto[] }>;
+    readonly recoveryResolve: IpcRequest<DTO.ResolveRecoveryPayload, { id: string; path: string }>;
     readonly create: IpcRequest<DTO.CreateDocumentPayload, DTO.DocumentDto>;
     readonly rename: IpcRequest<DTO.RenameDocumentPayload, DTO.RenameDocumentResultDto>;
     readonly renameAsset: IpcRequest<DTO.RenameAssetPayload, DTO.RenameDocumentResultDto>;
