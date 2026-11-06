@@ -44,6 +44,10 @@ const CHANNELS = Object.freeze({
     countFiles: 'compendium:countFiles',
     remove: 'compendium:remove',
   }),
+  copies: Object.freeze({
+    compare: 'copies:compare',
+    resolve: 'copies:resolve',
+  }),
   documents: Object.freeze({
     list: 'documents:list',
     read: 'documents:read',

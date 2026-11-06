@@ -5,6 +5,7 @@ const {
   vaultIndexModel,
   vaultModel,
 } = require('../models');
+const cloudReadinessController = require('./cloud-readiness.controller');
 const indexerController = require('./indexer.controller');
 const vaultController = require('./vault.controller');
 const { ensurePlainObject, requireString } = require('./utils');
@@ -34,6 +35,7 @@ function emptyReview() {
     outside: [],
     unknownFolders: [],
     tooDeep: [],
+    copies: [],
   };
 }
 
@@ -57,6 +59,9 @@ async function list(payload) {
   const review = {
     ...emptyReview(),
     brokenLinkCount: vaultIndexModel.listBrokenLinks(scope).length,
+    copies: cloudReadinessController
+      .listSyncCopies()
+      .filter((copy) => copy.path.startsWith(`${scope}/`)),
   };
   const deepFolders = new Map();
 

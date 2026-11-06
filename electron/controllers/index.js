@@ -4,6 +4,7 @@ const battleRuleController = require('./battle-rule.controller');
 const campaignController = require('./campaign.controller');
 const cloudReadinessController = require('./cloud-readiness.controller');
 const compendiumController = require('./compendium.controller');
+const copiesController = require('./copies.controller');
 const documentController = require('./document.controller');
 const encounterController = require('./encounter.controller');
 const indexerController = require('./indexer.controller');
@@ -27,6 +28,7 @@ module.exports = {
   campaignController,
   cloudReadinessController,
   compendiumController,
+  copiesController,
   documentController,
   encounterController,
   indexerController,

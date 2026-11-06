@@ -5,6 +5,7 @@ const {
   campaignController,
   cloudReadinessController,
   compendiumController,
+  copiesController,
   documentController,
   encounterController,
   mapController,
@@ -63,6 +64,8 @@ const IPC_HANDLERS = Object.freeze({
   [CHANNELS.compendium.countFiles]: compendiumController.countFiles,
   [CHANNELS.compendium.remove]: compendiumController.remove,
 
+  [CHANNELS.copies.compare]: copiesController.compare,
+  [CHANNELS.copies.resolve]: copiesController.resolve,
   [CHANNELS.documents.list]: documentController.list,
   [CHANNELS.documents.read]: documentController.read,
   [CHANNELS.documents.write]: documentController.write,
