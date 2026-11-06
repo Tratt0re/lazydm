@@ -280,6 +280,13 @@ async function reconcile(
   return changedPaths;
 }
 
+const changeListeners = new Set();
+
+/** Calls `listener(paths)` after the index took in changes (links resolved), so other checks can follow the files. */
+function onIndexChanged(listener) {
+  changeListeners.add(listener);
+}
+
 function publishChanges(changedPaths) {
   if (changedPaths.length === 0) {
     return;
@@ -288,6 +295,17 @@ function publishChanges(changedPaths) {
   vaultIndexModel.resolveLinks(vaultIndexModel.getAffectedScopes(changedPaths));
   setIndexState({ fileCount: vaultIndexModel.countFiles(), lastIndexedAtMs: Date.now() });
   broadcastIpcEvent(INDEX_EVENT_CHANNELS.updated, { paths: changedPaths });
+  notifyChangeListeners(changedPaths);
+}
+
+function notifyChangeListeners(changedPaths) {
+  for (const listener of changeListeners) {
+    try {
+      listener(changedPaths);
+    } catch (error) {
+      console.warn('[electron] Index change listener failed:', error);
+    }
+  }
 }
 
 async function runFullReconcile(token, { forceBlocking = false } = {}) {
@@ -320,6 +338,8 @@ async function runFullReconcile(token, { forceBlocking = false } = {}) {
     fileCount: vaultIndexModel.countFiles(),
     lastIndexedAtMs: Date.now(),
   });
+  // Nothing may have changed since the last run, but the listeners still need a first look at the index.
+  notifyChangeListeners([]);
 }
 
 async function reindexWatchedPaths(token, relativePaths, { fromWatcher = false } = {}) {
@@ -544,6 +564,7 @@ function rebuild() {
 module.exports = {
   getStatus,
   isOpen,
+  onIndexChanged,
   rebuild,
   reindexPaths,
   start,

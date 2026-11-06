@@ -124,6 +124,26 @@ function listBrokenLinks(campaign) {
     .all(campaign);
 }
 
+/** Every indexed file path (the check for copies made by sync works from the index, not from the disk). */
+function listAllPaths() {
+  return getVaultIndexDatabase()
+    .prepare('SELECT path FROM files')
+    .all();
+}
+
+/** Links of the whole vault that resolve to no file (templates excluded), for the check for copies made by sync. */
+function listAllBrokenLinks() {
+  return getVaultIndexDatabase()
+    .prepare(
+      `SELECT s.campaign AS campaign, l.target_raw AS raw, l.target_name AS targetName
+       FROM links l
+       JOIN files s ON s.id = l.source_file_id
+       WHERE l.target_file_id IS NULL AND l.target_name <> ''
+         AND s.path NOT LIKE '%/!_templates/%' ESCAPE '!'`,
+    )
+    .all();
+}
+
 /** Files a link written in a scope can resolve to (templates excluded), for the editor's link suggestions. */
 function listScopeFiles(scope) {
   return getVaultIndexDatabase()
@@ -529,6 +549,8 @@ module.exports = {
   getFileName,
   hasFileNamed,
   getFileState,
+  listAllBrokenLinks,
+  listAllPaths,
   listBrokenLinks,
   listFileStates,
   listFolderFiles,

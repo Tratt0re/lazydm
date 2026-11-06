@@ -1,5 +1,5 @@
 const path = require('node:path');
-const { cloudReadinessModel, vaultModel } = require('../models');
+const { cloudReadinessModel, vaultIndexModel, vaultModel } = require('../models');
 const { broadcastIpcEvent } = require('../ipc/broadcast');
 const indexerController = require('./indexer.controller');
 
@@ -188,7 +188,10 @@ async function prepare(vault) {
       pendingFiles: pendingPaths.length,
       pendingAssetFiles: assetPaths.length,
       pendingPaths: pendingPaths.slice(0, PENDING_PATHS_PREVIEW_LIMIT),
-      conflictPaths: cloudReadinessModel.findConflictCopies(files),
+      // Before the first index run only pairs are known; the index adds the orphans once it is ready.
+      conflictPaths: indexerController.isOpen()
+        ? listSyncCopies().map((copy) => copy.path)
+        : cloudReadinessModel.findConflictCopies(files),
     });
 
     if (pendingPaths.length === 0) {
@@ -302,22 +305,51 @@ function recheck() {
 }
 
 /**
- * Looks for copies made by a sync client (`note 2.md`, `(conflicted copy)`…) without downloading anything: the
- * startup check does the same, this one is run by hand from the Codex settings. Files are only listed, never touched.
+ * Copies made by a sync client (`note 2.md`, `(conflicted copy)`…), pairs and orphans (see `findSyncCopies`), from
+ * the index: it is always current, so the check is cheap and needs no walk of the disk. Empty while the index is closed.
  */
+function listSyncCopies() {
+  if (!indexerController.isOpen()) {
+    return [];
+  }
+
+  const brokenByCampaign = new Map();
+  for (const link of vaultIndexModel.listAllBrokenLinks()) {
+    brokenByCampaign.set(link.campaign, [...(brokenByCampaign.get(link.campaign) ?? []), link]);
+  }
+
+  const files = vaultIndexModel.listAllPaths();
+  const brokenLinks = [...brokenByCampaign.values()].flat();
+  return cloudReadinessModel.findSyncCopies(files, brokenLinks);
+}
+
+/** Refreshes the list of copies shown by the banner and the Codex settings; announces it only when it changed. */
+function refreshConflictCopies() {
+  if (!activeVault) {
+    return getStatus();
+  }
+
+  const conflictPaths = listSyncCopies().map((copy) => copy.path);
+  if (conflictPaths.join('\n') !== cloudState.conflictPaths.join('\n')) {
+    setCloudState({ conflictPaths });
+  }
+
+  return getStatus();
+}
+
+/** The *Look for copies* button of the Codex settings. */
 async function scanConflictCopies() {
   if (!activeVault) {
     throw new Error('No vault is open.');
   }
 
-  const token = activeToken;
-  const files = await vaultModel.listVaultFiles(activeVault.path);
-  if (isCurrent(token)) {
-    setCloudState({ conflictPaths: cloudReadinessModel.findConflictCopies(files) });
-  }
-
-  return getStatus();
+  return refreshConflictCopies();
 }
+
+// The files change while the app runs (another device syncs, a cloud client keeps a copy): follow them.
+indexerController.onIndexChanged(() => {
+  refreshConflictCopies();
+});
 
 function cancel() {
   activeToken += 1;
@@ -332,6 +364,7 @@ module.exports = {
   fetchIncoming,
   getStatus,
   prepare,
+  listSyncCopies,
   recheck,
   scanConflictCopies,
   skipWait,
