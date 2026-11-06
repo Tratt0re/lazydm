@@ -1125,6 +1125,10 @@
       "tooDeep": {
         "title": "Cartelle troppo profonde",
         "description": "LazyDM usa un solo livello di sottocartelle: i file nelle cartelle più profonde non compaiono nelle sezioni."
+      },
+      "copies": {
+        "title": "Copie create dalla sincronizzazione",
+        "description": "Il tuo servizio cloud ha tenuto questi file accanto a una nota o a un file, o al suo posto. Confronta ognuno con l’originale, poi decidi."
       }
     },
     "fix": {
@@ -1159,7 +1163,45 @@
       "unknown_one": "1 cartella sconosciuta",
       "unknown_other": "{{count}} cartelle sconosciute",
       "deep_one": "1 cartella troppo profonda",
-      "deep_other": "{{count}} cartelle troppo profonde"
+      "deep_other": "{{count}} cartelle troppo profonde",
+      "copies_one": "1 copia creata dalla sincronizzazione",
+      "copies_other": "{{count}} copie create dalla sincronizzazione"
+    },
+    "copies": {
+      "kind": {
+        "pair": "Copia",
+        "orphan": "Originale mancante"
+      },
+      "copyOf": "Copia di {{original}}",
+      "compare": "Confronta",
+      "hide": "Nascondi",
+      "loading": "Sto guardando i due file…",
+      "original": "Originale",
+      "thisCopy": "Questa copia",
+      "links": "{{count}} link puntano qui",
+      "missing": "Non trovato: resta solo questa copia.",
+      "identical": "I due file sono identici.",
+      "unchanged": "{{count}} righe invariate",
+      "diffLegend": "− solo nell’originale · + solo nella copia",
+      "tooBig": "I file sono troppo diversi per mostrarli riga per riga.",
+      "fileHint": "Non sono note, quindi non c’è nulla da leggere affiancato: scegli quale vuoi tenere.",
+      "orphanHint": "Alcune note rimandano a «{{original}}» ma resta solo questa copia. Ridalle quel nome e quei link funzioneranno di nuovo.",
+      "actions": {
+        "keep-original": "Tieni l’originale",
+        "keep-both": "Tieni entrambi",
+        "restore-name": "Ripristina il nome originale"
+      },
+      "done": {
+        "keep-original": "Tenuto {{name}}; la copia è nel Cestino.",
+        "keep-both": "La copia ora è {{name}}.",
+        "restore-name": "Ripristinato {{name}}."
+      },
+      "error": "Impossibile riparare la copia",
+      "confirm": {
+        "title": "Spostare {{name}} nel Cestino?",
+        "description": "I link a «{{name}}» punteranno a «{{original}}». La copia va nel Cestino, da cui puoi sempre recuperarla.",
+        "ok": "Tieni l’originale"
+      }
     }
   },
   "sidebar": {

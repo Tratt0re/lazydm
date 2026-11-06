@@ -16,6 +16,7 @@ import { toInAppNoteRoute } from '@/components/document-preview/document-preview
 import { AppDialogFormService } from '@/components/sheet-form/dialog-form.service';
 import { buildIconPickerField } from '@/config/icon-picker.config';
 import type { ReviewDto, ReviewNoteDto } from '@/dtos';
+import { ReviewCopiesComponent } from '@/components/review-copies/review-copies.component';
 import { BrokenLinksPage } from '@/pages/broken-links-page/broken-links-page';
 import { DocumentService } from '@/services/document.service';
 import { FileActionsService } from '@/services/file-actions.service';
@@ -50,6 +51,7 @@ const NON_NOTE_SECTION_KEYS: readonly string[] = ['encounters'];
     RouterLink,
     TranslatePipe,
     BrokenLinksPage,
+    ReviewCopiesComponent,
     ArcTechAlertComponent,
     ArcTechButtonComponent,
     ArcTechEmptyComponent,
@@ -362,7 +364,7 @@ export class ReviewPage {
     }
   }
 
-  private reload(): void {
+  protected reload(): void {
     const scope = this.scope();
     if (scope) {
       void this.load(scope.rootPath);

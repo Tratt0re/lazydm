@@ -1125,6 +1125,10 @@
       "tooDeep": {
         "title": "层级过深的文件夹",
         "description": "LazyDM 只使用一层子文件夹：更深文件夹中的文件不会出现在分区中。"
+      },
+      "copies": {
+        "title": "同步产生的副本",
+        "description": "你的云服务把这些文件保留在某个笔记或文件旁边，或代替了它。逐个与原件比较，然后决定。"
       }
     },
     "fix": {
@@ -1159,7 +1163,45 @@
       "unknown_one": "1 个未知文件夹",
       "unknown_other": "{{count}} 个未知文件夹",
       "deep_one": "1 个文件夹层级过深",
-      "deep_other": "{{count}} 个文件夹层级过深"
+      "deep_other": "{{count}} 个文件夹层级过深",
+      "copies_one": "1 个同步副本",
+      "copies_other": "{{count}} 个同步副本"
+    },
+    "copies": {
+      "kind": {
+        "pair": "副本",
+        "orphan": "缺少原件"
+      },
+      "copyOf": "{{original}} 的副本",
+      "compare": "比较",
+      "hide": "收起",
+      "loading": "正在查看两个文件…",
+      "original": "原件",
+      "thisCopy": "此副本",
+      "links": "{{count}} 个链接指向这里",
+      "missing": "未找到：只剩这个副本。",
+      "identical": "两个文件完全相同。",
+      "unchanged": "{{count}} 行未改动",
+      "diffLegend": "− 仅在原件中 · + 仅在副本中",
+      "tooBig": "两个文件差异太大，无法逐行显示。",
+      "fileHint": "这些不是笔记，无法并排阅读：请选择要保留哪一个。",
+      "orphanHint": "有笔记链接到“{{original}}”，但只剩这个副本。把名字改回来，这些链接就能重新生效。",
+      "actions": {
+        "keep-original": "保留原件",
+        "keep-both": "两个都保留",
+        "restore-name": "恢复原名"
+      },
+      "done": {
+        "keep-original": "已保留 {{name}}；副本在废纸篓中。",
+        "keep-both": "副本现在叫 {{name}}。",
+        "restore-name": "已恢复 {{name}}。"
+      },
+      "error": "无法修复副本",
+      "confirm": {
+        "title": "将 {{name}} 移到废纸篓？",
+        "description": "指向“{{name}}”的链接将指向“{{original}}”。副本会进入废纸篓，你仍可恢复。",
+        "ok": "保留原件"
+      }
     }
   },
   "sidebar": {

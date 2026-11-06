@@ -1125,6 +1125,10 @@
       "tooDeep": {
         "title": "Dossiers trop profonds",
         "description": "LazyDM utilise un niveau de sous-dossiers : les fichiers des dossiers plus profonds n’apparaissent pas dans les sections."
+      },
+      "copies": {
+        "title": "Copies créées par la synchronisation",
+        "description": "Votre service cloud a gardé ces fichiers à côté d’une note ou d’un fichier, ou à sa place. Comparez chacun à son original, puis décidez."
       }
     },
     "fix": {
@@ -1159,7 +1163,45 @@
       "unknown_one": "1 dossier inconnu",
       "unknown_other": "{{count}} dossiers inconnus",
       "deep_one": "1 dossier trop profond",
-      "deep_other": "{{count}} dossiers trop profonds"
+      "deep_other": "{{count}} dossiers trop profonds",
+      "copies_one": "1 copie créée par la synchronisation",
+      "copies_other": "{{count}} copies créées par la synchronisation"
+    },
+    "copies": {
+      "kind": {
+        "pair": "Copie",
+        "orphan": "Original manquant"
+      },
+      "copyOf": "Copie de {{original}}",
+      "compare": "Comparer",
+      "hide": "Masquer",
+      "loading": "Examen des deux fichiers…",
+      "original": "Original",
+      "thisCopy": "Cette copie",
+      "links": "{{count}} liens pointent ici",
+      "missing": "Introuvable : il ne reste que cette copie.",
+      "identical": "Les deux fichiers sont identiques.",
+      "unchanged": "{{count}} lignes inchangées",
+      "diffLegend": "− seulement dans l’original · + seulement dans la copie",
+      "tooBig": "Les fichiers diffèrent trop pour être montrés ligne à ligne.",
+      "fileHint": "Ce ne sont pas des notes, il n’y a donc rien à lire côte à côte : choisissez celui que vous gardez.",
+      "orphanHint": "Des notes renvoient à « {{original}} » mais il ne reste que cette copie. Redonnez-lui ce nom et ces liens fonctionneront de nouveau.",
+      "actions": {
+        "keep-original": "Garder l’original",
+        "keep-both": "Garder les deux",
+        "restore-name": "Rétablir le nom d’origine"
+      },
+      "done": {
+        "keep-original": "{{name}} conservé ; la copie est dans la Corbeille.",
+        "keep-both": "La copie s’appelle maintenant {{name}}.",
+        "restore-name": "{{name}} rétabli."
+      },
+      "error": "Impossible de réparer la copie",
+      "confirm": {
+        "title": "Mettre {{name}} à la Corbeille ?",
+        "description": "Les liens vers « {{name}} » pointeront vers « {{original}} ». La copie va à la Corbeille, d’où vous pouvez la récupérer.",
+        "ok": "Garder l’original"
+      }
     }
   },
   "sidebar": {

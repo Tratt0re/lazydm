@@ -18,6 +18,7 @@ export enum APIChannel {
   CAMPAIGNS = 'campaigns',
   CLOUD = 'cloud',
   COMPENDIUM = 'compendium',
+  COPIES = 'copies',
   DOCUMENTS = 'documents',
   ENCOUNTERS = 'encounters',
   INDEX = 'index',
@@ -78,6 +79,10 @@ export interface ElectronIpcClient {
     readonly skipWait: OptionalIpcRequest<void, DTO.CloudReadinessStatusDto>;
     readonly recheck: OptionalIpcRequest<void, DTO.CloudReadinessStatusDto>;
     readonly scanCopies: OptionalIpcRequest<void, DTO.CloudReadinessStatusDto>;
+  };
+  readonly copies: {
+    readonly compare: IpcRequest<{ path: string }, DTO.CopyComparisonDto>;
+    readonly resolve: IpcRequest<DTO.ResolveCopyPayload, DTO.ResolveCopyResultDto>;
   };
   readonly compendium: {
     readonly list: OptionalIpcRequest<void, { rows: DTO.CompendiumSystemDto[] }>;

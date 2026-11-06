@@ -1125,6 +1125,10 @@
       "tooDeep": {
         "title": "Carpetas demasiado profundas",
         "description": "LazyDM usa un nivel de subcarpetas: los archivos de carpetas más profundas no aparecen en las secciones."
+      },
+      "copies": {
+        "title": "Copias creadas por la sincronización",
+        "description": "Tu servicio en la nube conservó estos archivos junto a una nota o archivo, o en su lugar. Compara cada uno con su original y decide."
       }
     },
     "fix": {
@@ -1159,7 +1163,45 @@
       "unknown_one": "1 carpeta desconocida",
       "unknown_other": "{{count}} carpetas desconocidas",
       "deep_one": "1 carpeta demasiado profunda",
-      "deep_other": "{{count}} carpetas demasiado profundas"
+      "deep_other": "{{count}} carpetas demasiado profundas",
+      "copies_one": "1 copia creada por la sincronización",
+      "copies_other": "{{count}} copias creadas por la sincronización"
+    },
+    "copies": {
+      "kind": {
+        "pair": "Copia",
+        "orphan": "Falta el original"
+      },
+      "copyOf": "Copia de {{original}}",
+      "compare": "Comparar",
+      "hide": "Ocultar",
+      "loading": "Mirando ambos archivos…",
+      "original": "Original",
+      "thisCopy": "Esta copia",
+      "links": "{{count}} enlaces apuntan aquí",
+      "missing": "No encontrado: solo queda esta copia.",
+      "identical": "Los dos archivos son idénticos.",
+      "unchanged": "{{count}} líneas sin cambios",
+      "diffLegend": "− solo en el original · + solo en la copia",
+      "tooBig": "Los archivos difieren demasiado para mostrarlos línea a línea.",
+      "fileHint": "No son notas, así que no hay nada que leer lado a lado: elige cuál quieres conservar.",
+      "orphanHint": "Hay notas que enlazan a «{{original}}» pero solo queda esta copia. Devuélvele ese nombre y esos enlaces volverán a funcionar.",
+      "actions": {
+        "keep-original": "Conservar el original",
+        "keep-both": "Conservar ambos",
+        "restore-name": "Restaurar el nombre original"
+      },
+      "done": {
+        "keep-original": "Se conservó {{name}}; la copia está en la Papelera.",
+        "keep-both": "La copia ahora es {{name}}.",
+        "restore-name": "{{name}} restaurado."
+      },
+      "error": "No se pudo reparar la copia",
+      "confirm": {
+        "title": "¿Mover {{name}} a la Papelera?",
+        "description": "Los enlaces a «{{name}}» apuntarán a «{{original}}». La copia va a la Papelera, de donde puedes recuperarla.",
+        "ok": "Conservar el original"
+      }
     }
   },
   "sidebar": {

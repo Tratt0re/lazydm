@@ -11,7 +11,8 @@ export function countReviewItems(review: ReviewDto): number {
     review.brokenLinkCount +
     review.outside.length +
     review.unknownFolders.length +
-    review.tooDeep.length
+    review.tooDeep.length +
+    review.copies.length
   );
 }
 
@@ -33,6 +34,7 @@ export class ReviewService extends BaseIpcService<APIChannel.REVIEW> {
       ['outside', review.outside.length],
       ['unknown', review.unknownFolders.length],
       ['deep', review.tooDeep.length],
+      ['copies', review.copies.length],
     ];
     return parts
       .filter(([, count]) => count > 0)

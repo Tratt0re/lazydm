@@ -1,0 +1,117 @@
+<ul class="flex flex-col border border-border bg-card">
+  @for (copy of copies(); track copy.path) {
+    @let isOpen = openPath() === copy.path;
+    <li class="border-b border-border last:border-b-0">
+      <div class="flex flex-wrap items-center justify-between gap-3 p-4">
+        <div class="flex min-w-0 flex-col gap-1">
+          <span class="flex min-w-0 items-center gap-3">
+            <arc-icon arcType="copy" class="size-4 shrink-0 text-primary" />
+            <span class="truncate text-sm font-semibold">{{ nameOf(copy.path) }}</span>
+            <span class="shrink-0 font-mono text-[11px] tracking-[0.1em] text-muted-foreground uppercase">
+              {{ 'review.copies.kind.' + copy.kind | translate }}
+            </span>
+          </span>
+          <p class="truncate font-mono text-[11px] tracking-[0.04em] text-muted-foreground">
+            {{ 'review.copies.copyOf' | translate: { original: nameOf(copy.originalPath) } }} · {{ copy.path }}
+          </p>
+        </div>
+        <button
+          arc-button
+          type="button"
+          arcType="outline"
+          arcSize="sm"
+          [attr.aria-expanded]="isOpen"
+          (click)="toggle(copy)"
+        >
+          <arc-icon [arcType]="isOpen ? 'chevron-up' : 'chevron-down'" />
+          {{ (isOpen ? 'review.copies.hide' : 'review.copies.compare') | translate }}
+        </button>
+      </div>
+
+      @if (isOpen) {
+        <div class="border-t border-border bg-recessed p-4" data-testid="copy-panel">
+          @if (isLoading()) {
+            <p class="font-mono text-[11px] text-muted-foreground">{{ 'review.copies.loading' | translate }}</p>
+          } @else if (errorMessage(); as message) {
+            <p class="text-sm text-destructive" role="alert">{{ message }}</p>
+          } @else if (comparison(); as view) {
+            <div class="grid gap-3 sm:grid-cols-2">
+              @for (side of [view.original, view.copy]; track $index) {
+                <div class="flex min-w-0 flex-col gap-1 border border-border bg-card p-3">
+                  <p class="font-mono text-[11px] tracking-[0.1em] text-muted-foreground uppercase">
+                    {{ ($index === 0 ? 'review.copies.original' : 'review.copies.thisCopy') | translate }}
+                  </p>
+                  @if (side; as file) {
+                    <p class="truncate text-sm font-semibold">{{ nameOf(file.path) }}</p>
+                    <p class="font-mono text-[11px] text-muted-foreground">
+                      {{ formatDate(file.mtimeMs) }} · {{ formatSize(file.size) }}
+                    </p>
+                    <p class="font-mono text-[11px] text-muted-foreground">
+                      {{ 'review.copies.links' | translate: { count: file.linkCount } }}
+                    </p>
+                    @if (!view.isNote && imageUrl(file.path); as url) {
+                      <img [src]="url" alt="" class="mt-2 max-h-40 w-auto self-start border border-border object-contain" />
+                    }
+                  } @else {
+                    <p class="text-sm text-muted-foreground">{{ 'review.copies.missing' | translate }}</p>
+                  }
+                </div>
+              }
+            </div>
+
+            @if (view.isIdentical) {
+              <p class="mt-3 text-sm">{{ 'review.copies.identical' | translate }}</p>
+            } @else if (view.diff; as diff) {
+              <div class="mt-3 max-h-80 overflow-auto border border-border bg-card font-mono text-[12px] leading-5" data-testid="copy-diff">
+                @for (op of diff; track $index) {
+                  @switch (op.type) {
+                    @case ('skip') {
+                      <div class="px-3 text-muted-foreground">
+                        {{ 'review.copies.unchanged' | translate: { count: op.count } }}
+                      </div>
+                    }
+                    @case ('del') {
+                      <div class="bg-destructive/12 px-3 whitespace-pre-wrap"><span aria-hidden="true">− </span>{{ op.text }}</div>
+                    }
+                    @case ('add') {
+                      <div class="bg-primary/12 px-3 whitespace-pre-wrap"><span aria-hidden="true">+ </span>{{ op.text }}</div>
+                    }
+                    @default {
+                      <div class="px-3 whitespace-pre-wrap text-muted-foreground"><span aria-hidden="true">&nbsp; </span>{{ op.text }}</div>
+                    }
+                  }
+                }
+              </div>
+              <p class="mt-1 text-xs text-muted-foreground">{{ 'review.copies.diffLegend' | translate }}</p>
+            } @else if (view.isNote) {
+              <p class="mt-3 text-sm text-muted-foreground">{{ 'review.copies.tooBig' | translate }}</p>
+            } @else {
+              <p class="mt-3 text-sm text-muted-foreground">{{ 'review.copies.fileHint' | translate }}</p>
+            }
+
+            @if (view.original === null) {
+              <p class="mt-3 text-sm">{{ 'review.copies.orphanHint' | translate: { original: nameOf(view.originalPath) } }}</p>
+            }
+
+            <div class="mt-4 flex flex-wrap justify-end gap-2">
+              @for (action of view.actions; track action) {
+                <button
+                  arc-button
+                  type="button"
+                  [arcType]="$first ? 'default' : 'outline'"
+                  arcSize="sm"
+                  [arcDisabled]="isBusy()"
+                  [attr.data-testid]="'copy-action-' + action"
+                  (click)="run(view, action)"
+                >
+                  <arc-icon [arcType]="actionIcon(action)" />
+                  {{ 'review.copies.actions.' + action | translate }}
+                </button>
+              }
+            </div>
+          }
+        </div>
+      }
+    </li>
+  }
+</ul>

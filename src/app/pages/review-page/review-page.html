@@ -38,6 +38,18 @@
       </section>
     }
 
+    @if (review.copies.length > 0) {
+      <section class="flex flex-col gap-3" data-testid="review-copies">
+        <div>
+          <h2 class="font-display text-xl font-semibold tracking-wide uppercase">
+            {{ 'review.groups.copies.title' | translate }}<span class="text-primary" aria-hidden="true">.</span>
+          </h2>
+          <p class="text-sm text-muted-foreground">{{ 'review.groups.copies.description' | translate }}</p>
+        </div>
+        <app-review-copies [copies]="review.copies" (repaired)="reload()" />
+      </section>
+    }
+
     @if (review.outside.length > 0) {
       <section class="flex flex-col gap-3">
         <div>

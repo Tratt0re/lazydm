@@ -1125,6 +1125,10 @@
       "tooDeep": {
         "title": "Folders too deep",
         "description": "LazyDM uses one level of sub-folders: files in deeper folders do not appear in sections."
+      },
+      "copies": {
+        "title": "Copies made by sync",
+        "description": "Your cloud service kept these files next to a note or file, or instead of it. Compare each one with its original, then decide."
       }
     },
     "fix": {
@@ -1159,7 +1163,45 @@
       "unknown_one": "1 unknown folder",
       "unknown_other": "{{count}} unknown folders",
       "deep_one": "1 folder too deep",
-      "deep_other": "{{count}} folders too deep"
+      "deep_other": "{{count}} folders too deep",
+      "copies_one": "1 copy made by sync",
+      "copies_other": "{{count}} copies made by sync"
+    },
+    "copies": {
+      "kind": {
+        "pair": "Copy",
+        "orphan": "Original missing"
+      },
+      "copyOf": "Copy of {{original}}",
+      "compare": "Compare",
+      "hide": "Hide",
+      "loading": "Looking at both files…",
+      "original": "Original",
+      "thisCopy": "This copy",
+      "links": "{{count}} links point here",
+      "missing": "Not found: only this copy is left.",
+      "identical": "The two files are identical.",
+      "unchanged": "{{count}} unchanged lines",
+      "diffLegend": "− only in the original · + only in the copy",
+      "tooBig": "The files differ too much to show line by line.",
+      "fileHint": "These are not notes, so there is nothing to read side by side: choose which one you want to keep.",
+      "orphanHint": "Notes link to “{{original}}” but only this copy is left. Give it that name back and those links work again.",
+      "actions": {
+        "keep-original": "Keep the original",
+        "keep-both": "Keep both",
+        "restore-name": "Restore the original name"
+      },
+      "done": {
+        "keep-original": "Kept {{name}}; the copy is in the Trash.",
+        "keep-both": "The copy is now {{name}}.",
+        "restore-name": "Restored {{name}}."
+      },
+      "error": "Couldn’t repair the copy",
+      "confirm": {
+        "title": "Move {{name}} to the Trash?",
+        "description": "Links to “{{name}}” will point to “{{original}}”. The copy goes to the Trash, where you can still get it back.",
+        "ok": "Keep the original"
+      }
     }
   },
   "sidebar": {

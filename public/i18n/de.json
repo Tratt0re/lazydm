@@ -1125,6 +1125,10 @@
       "tooDeep": {
         "title": "Zu tiefe Ordner",
         "description": "LazyDM nutzt eine Ebene von Unterordnern: Dateien in tieferen Ordnern erscheinen nicht in den Bereichen."
+      },
+      "copies": {
+        "title": "Kopien durch die Synchronisierung",
+        "description": "Dein Cloud-Dienst hat diese Dateien neben einer Notiz oder Datei oder an ihrer Stelle behalten. Vergleiche jede mit dem Original und entscheide dann."
       }
     },
     "fix": {
@@ -1159,7 +1163,45 @@
       "unknown_one": "1 unbekannter Ordner",
       "unknown_other": "{{count}} unbekannte Ordner",
       "deep_one": "1 Ordner zu tief",
-      "deep_other": "{{count}} Ordner zu tief"
+      "deep_other": "{{count}} Ordner zu tief",
+      "copies_one": "1 Kopie durch die Synchronisierung",
+      "copies_other": "{{count}} Kopien durch die Synchronisierung"
+    },
+    "copies": {
+      "kind": {
+        "pair": "Kopie",
+        "orphan": "Original fehlt"
+      },
+      "copyOf": "Kopie von {{original}}",
+      "compare": "Vergleichen",
+      "hide": "Ausblenden",
+      "loading": "Beide Dateien werden angesehen…",
+      "original": "Original",
+      "thisCopy": "Diese Kopie",
+      "links": "{{count}} Links zeigen hierher",
+      "missing": "Nicht gefunden: nur diese Kopie ist übrig.",
+      "identical": "Die beiden Dateien sind identisch.",
+      "unchanged": "{{count}} unveränderte Zeilen",
+      "diffLegend": "− nur im Original · + nur in der Kopie",
+      "tooBig": "Die Dateien unterscheiden sich zu stark für eine Zeilenansicht.",
+      "fileHint": "Das sind keine Notizen, daher gibt es nichts nebeneinander zu lesen: Wähle, welche du behalten willst.",
+      "orphanHint": "Notizen verweisen auf „{{original}}“, aber nur diese Kopie ist übrig. Gib ihr den Namen zurück, dann funktionieren diese Links wieder.",
+      "actions": {
+        "keep-original": "Original behalten",
+        "keep-both": "Beide behalten",
+        "restore-name": "Originalnamen wiederherstellen"
+      },
+      "done": {
+        "keep-original": "{{name}} behalten; die Kopie liegt im Papierkorb.",
+        "keep-both": "Die Kopie heißt jetzt {{name}}.",
+        "restore-name": "{{name}} wiederhergestellt."
+      },
+      "error": "Die Kopie konnte nicht repariert werden",
+      "confirm": {
+        "title": "{{name}} in den Papierkorb legen?",
+        "description": "Links auf „{{name}}“ zeigen dann auf „{{original}}“. Die Kopie landet im Papierkorb und kann zurückgeholt werden.",
+        "ok": "Original behalten"
+      }
     }
   },
   "sidebar": {
