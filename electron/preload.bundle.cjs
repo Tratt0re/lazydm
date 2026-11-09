@@ -231,12 +231,11 @@ var require_package = __commonJS({
         watch: "ng build --watch --configuration development",
         test: "ng test",
         "test:electron": "vitest run --config vitest.electron.config.mjs",
-        postinstall: "electron-rebuild -f -w better-sqlite3",
         "electron:dev": "npm run build:preload && electronmon .",
         "electron:start": "npm run build:preload && electron .",
         "electron:prod": "npm run build:prod && electron . --prod",
         dev: 'concurrently -k "ng serve" "npm run preload:watch" "wait-on http://localhost:4200 && npm run electron:dev"',
-        "test:electron:index": "ELECTRON_RUN_AS_NODE=1 electron node_modules/vitest/vitest.mjs run --config vitest.electron.config.mjs electron/__tests__/link-resolution.test.js",
+        "test:electron:index": "ELECTRON_RUN_AS_NODE=1 electron node_modules/vitest/vitest.mjs run --config vitest.electron.config.mjs electron/__tests__/link-resolution.test.js electron/__tests__/sync-copies-flow.test.js",
         "bench:index": "ELECTRON_RUN_AS_NODE=1 electron scripts/bench-index.js"
       },
       prettier: {
@@ -261,6 +260,7 @@ var require_package = __commonJS({
           buildResources: "."
         },
         asar: true,
+        npmRebuild: false,
         asarUnpack: [
           "**/*.node"
         ],
@@ -317,7 +317,7 @@ var require_package = __commonJS({
         "@modelcontextprotocol/sdk": "1.31.0",
         "@ngx-translate/core": "^17.0.0",
         "@ngx-translate/http-loader": "^17.0.0",
-        "better-sqlite3": "^12.6.2",
+        "better-sqlite3": "^13.0.3",
         "class-variance-authority": "^0.7.1",
         clsx: "^2.1.1",
         dompurify: "^3.4.16",
