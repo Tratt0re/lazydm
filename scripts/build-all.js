@@ -16,7 +16,6 @@ const releaseDir = path.join(rootDir, 'release');
 const outDir = path.join(releaseDir, 'all');
 const workDir = path.join(releaseDir, '.work');
 const builderCli = path.join(rootDir, 'node_modules', 'electron-builder', 'cli.js');
-const rebuildCli = path.join(rootDir, 'node_modules', '@electron', 'rebuild', 'lib', 'cli.js');
 
 /** `args` go to electron-builder; `extension` picks the file to keep; `host` is the only OS that can build it. */
 const TARGETS = {
@@ -43,14 +42,21 @@ function findFiles(dir, fileName) {
   return found;
 }
 
+/** Name of the OS in the file names of the `better-sqlite3` prebuilds. */
+const PREBUILD_PLATFORM = { mac: 'darwin', win: 'win32', linux: 'linux' };
+
 /**
- * Packaging can ship a SQLite module built for another OS (e.g. the macOS one inside a Windows build), and the app
- * then fails at startup. Returns an error message, or null when the packaged module matches the target's OS.
+ * `better-sqlite3` ships one prebuilt binary per platform (`prebuilds/win32-x64.node`…), all of them in every
+ * package, and loads the one for the running OS and architecture. The target's own must be there and be a binary of
+ * that OS, or the app fails at startup. Returns an error message, or null when it is.
  */
 function checkNativeModule(id, targetWorkDir) {
-  const os = id.split('-')[0];
-  const modules = findFiles(targetWorkDir, 'better_sqlite3.node');
-  if (modules.length === 0) return 'better_sqlite3.node is missing from the package';
+  const [os, arch] = id.split('-');
+  const fileName = `${PREBUILD_PLATFORM[os]}-${arch}.node`;
+  const modules = findFiles(targetWorkDir, fileName).filter((file) =>
+    file.includes(`${path.sep}better-sqlite3${path.sep}prebuilds${path.sep}`),
+  );
+  if (modules.length === 0) return `${fileName} is missing from the package`;
 
   for (const modulePath of modules) {
     const head = Buffer.alloc(4);
@@ -58,7 +64,7 @@ function checkNativeModule(id, targetWorkDir) {
     fs.readSync(fd, head, 0, 4, 0);
     fs.closeSync(fd);
     if (!NATIVE_MAGIC[os].some((magic) => head.subarray(0, magic.length).equals(magic))) {
-      return `better_sqlite3.node is not a ${os} binary (${path.relative(targetWorkDir, modulePath)})`;
+      return `${fileName} is not a ${os} binary (${path.relative(targetWorkDir, modulePath)})`;
     }
   }
   return null;
@@ -109,7 +115,6 @@ function main() {
   const ids = selectTargets();
   const results = [];
   const takenNames = new Set();
-  let builderRan = false;
 
   // Files of an earlier run are removed first, so the folder only ever holds this run's results.
   fs.rmSync(outDir, { recursive: true, force: true });
@@ -128,7 +133,6 @@ function main() {
 
       const targetWorkDir = path.join(workDir, id);
       const started = Date.now();
-      builderRan = true;
       const isBuilt = run(`Packaging ${id}`, [
         builderCli,
         ...target.args,
@@ -157,18 +161,10 @@ function main() {
     }
   }
 
-  // Packaging swaps the native SQLite module and the preload bundle for the last target's. Put this computer's
-  // development versions back so `npm run dev` still works.
+  // Packaging swaps the preload bundle for the production one. Put the development version back so `npm run dev`
+  // still works. (The SQLite module needs no restoring: its prebuilt binaries are never rebuilt or replaced.)
   fs.rmSync(workDir, { recursive: true, force: true });
   run('Restore the development preload bundle', [path.join(__dirname, 'build-preload.js')]);
-  if (builderRan) {
-    run('Restore the native SQLite module for this computer', [
-      rebuildCli,
-      '-f',
-      '-w',
-      'better-sqlite3',
-    ]);
-  }
 
   console.log('\n[build-all] Summary');
   for (const result of results) {
