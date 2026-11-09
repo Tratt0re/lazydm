@@ -35,3 +35,9 @@ python3 -m http.server 8123   # then open http://127.0.0.1:8123/
 
 One-time: repository Settings, Pages, Source: GitHub Actions. After that every push to `website` publishes `site/`.
 Asset paths are relative, so the site works from `/lazydm/` or a custom domain.
+
+## Provenance of assets
+
+- `site/assets/img/dungeon-map.webp`: the sample dungeon map, supplied by the project owner (`map_41x36.webp`, resized to 2000px wide).
+- Franco and every icon are drawn from the app's own data (`franco.icon.ts` and the Lucide set it uses), written into the icon sprite at the top of `site/index.html`.
+- The sample note, encounter and map are made up for this page and labelled as such on it.
