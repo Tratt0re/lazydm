@@ -773,7 +773,8 @@ h3 { font: 700 1.75rem / 1.1 var(--font-display); }
 .shot-media { line-height: 0; }
 
 /* Bronze corner brackets (the app's campaign card): they mark the edge of the frame and grow when it is hovered. */
-.shot-frame > .arc-card-corner {
+.shot-frame > .arc-card-corner,
+.more > .arc-card-corner {
   position: absolute;
   width: var(--bracket-size);
   height: var(--bracket-size);
@@ -785,9 +786,12 @@ h3 { font: 700 1.75rem / 1.1 var(--font-display); }
 .arc-card-corner-tr { top: -2px; right: -2px; border-top-width: 3px !important; border-right-width: 3px !important; }
 .arc-card-corner-bl { bottom: -2px; left: -2px; border-bottom-width: 3px !important; border-left-width: 3px !important; }
 .arc-card-corner-br { bottom: -2px; right: -2px; border-bottom-width: 3px !important; border-right-width: 3px !important; }
-.shot-frame:hover > .arc-card-corner { width: var(--bracket-grow); height: var(--bracket-grow); }
+.shot-frame:hover > .arc-card-corner,
+.more:hover > .arc-card-corner,
+.more:focus-within > .arc-card-corner { width: var(--bracket-grow); height: var(--bracket-grow); }
 @media (prefers-reduced-motion: reduce) {
-  .shot-frame > .arc-card-corner { transition: none; }
+  .shot-frame > .arc-card-corner,
+  .more > .arc-card-corner { transition: none; }
 }
 
 /* Badge (the app's outlined mono chip): names what the screenshot shows. */
@@ -861,4 +865,40 @@ h3 { font: 700 1.75rem / 1.1 var(--font-display); }
       rotateY(calc((1 - var(--p)) * var(--dir) * -30deg));
     will-change: transform;
   }
+}
+
+/* ---------- "One more thing": a card with the app's corner brackets and ornamental rule ---------- */
+
+.more {
+  --bracket-size: 18px;
+  --bracket-grow: 30px;
+  position: relative;
+  padding: 2rem 1.5rem 1.75rem;
+  background: var(--card);
+  border: 2px solid var(--border-strong);
+}
+.more h2.section { margin-bottom: 0.75rem; }
+.more .arc-ornament-rule { margin-bottom: 1.5rem; }
+.more .more-lede { max-width: none; font-size: 1.125rem; line-height: 1.5; color: var(--foreground-strong); }
+.more .defs { margin-top: 1.5rem; }
+.more .defs > div { grid-template-columns: 11rem minmax(0, 1fr); gap: 0.5rem 1.5rem; padding: 1rem 0; }
+.more .defs dd { max-width: none; }
+.more .more-safe {
+  max-width: none;
+  margin: 1.5rem 0 0;
+  font-size: 0.9375rem;
+  color: var(--foreground-secondary);
+}
+.more .more-soon {
+  max-width: none;
+  margin: 1.5rem 0 0;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border-subtle);
+  font: 500 0.8125rem var(--font-mono);
+  letter-spacing: 0.04em;
+  color: var(--muted-foreground);
+}
+@media (max-width: 599px) {
+  .more { padding: 1.5rem 1rem 1.25rem; }
+  .more .defs > div { grid-template-columns: 1fr; }
 }
