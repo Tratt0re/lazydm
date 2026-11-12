@@ -488,7 +488,6 @@ p code, li code, dd code {
 .props {
   display: block;
   width: 100%;
-  max-width: 28rem;
   margin-bottom: 1.75rem;
   background: var(--recessed);
   border: 1px solid var(--border-subtle);
@@ -515,17 +514,18 @@ p code, li code, dd code {
 .props dt { color: var(--muted-foreground); }
 .props dd { margin: 0; color: var(--foreground); }
 
-/* Franco beside the title, as on the app's welcome page. */
+/* Franco beside the title, on the right: the title and the ornamental rule keep the left column. */
 .hero {
   display: grid;
-  grid-template-columns: auto 1fr;
+  grid-template-columns: minmax(0, 1fr) auto;
   align-items: center;
   column-gap: 1.5rem;
-  row-gap: 0.5rem;
+  row-gap: calc(0.5rem + 1px);
   margin-bottom: 1.5rem;
 }
 .hero .franco {
-  grid-row: span 2;
+  grid-column: 2;
+  grid-row: 1 / span 2;
   width: 5rem;
   height: 5rem;
   color: var(--primary);
@@ -533,7 +533,8 @@ p code, li code, dd code {
 @media (min-width: 640px) {
   .hero .franco { width: 9rem; height: 9rem; }
 }
-.hero .arc-ornament-rule { align-self: start; }
+.hero h1.title { grid-column: 1; grid-row: 1; }
+.hero .arc-ornament-rule { grid-column: 1; grid-row: 2; align-self: start; }
 
 h1.title {
   align-self: end;
@@ -563,7 +564,6 @@ h1.title {
 /* Info box (the app's callout): 1px frame, status bar, mono title */
 .infobox {
   position: relative;
-  max-width: 34rem;
   padding: 0.85rem 1.1rem 0.85rem 1.4rem;
   background: var(--card);
   border: 1px solid var(--border);
@@ -613,7 +613,7 @@ h3 { font: 700 1.75rem / 1.1 var(--font-display); }
   .defs > div { grid-template-columns: 1fr; }
 }
 
-.checks { margin: 1.5rem 0 0; padding: 0; list-style: none; max-width: 38rem; }
+.checks { margin: 1.5rem 0 0; padding: 0; list-style: none; }
 .checks li { position: relative; padding: 0.55rem 0 0.55rem 1.75rem; border-top: 1px solid var(--border-subtle); }
 .checks li:last-child { border-bottom: 1px solid var(--border-subtle); }
 .checks li::before {
