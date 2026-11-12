@@ -1,0 +1,48 @@
+name: Deploy site
+
+# Copies only the files the website needs from the website branch to the gh-pages branch.
+# GitHub Pages is set to serve that branch (Settings > Pages > Deploy from a branch > gh-pages / root).
+# README, PRODUCT.md, .impeccable and the workflow itself stay on the website branch only.
+# Same scheme as the portfolio site.
+
+on:
+  push:
+    branches: [website]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: deploy-site
+  cancel-in-progress: true
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out website
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Collect the site files
+        run: |
+          mkdir _site
+          cp -r site/. _site/
+          touch _site/.nojekyll
+          # a custom domain needs a CNAME file at the root of the published branch; it must be carried over or each deploy would erase it
+          if [ ! -f _site/CNAME ] && [ -f CNAME ]; then cp CNAME _site/; fi
+          echo "Files going live:" && find _site -type f | sort
+
+      - name: Publish to gh-pages
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          cd _site
+          git init -q -b gh-pages
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -q -m "Deploy ${GITHUB_SHA::7} from website"
+          git push --force "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" gh-pages

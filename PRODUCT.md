@@ -52,9 +52,9 @@ licence allows personal use but not commercialisation, because paid features may
 - "Free to use" is the user's intent, but not "free forever": paid features may be added later, so no "always free"
   or "free without limits" promise.
 - A licence that forbids commercial use is **source-available**, not "open source" in the OSI sense. Do not write
-  "open source" unless the user chooses an OSI licence. The licence itself is not chosen yet; `package.json` / README
-  still say "Private project. All rights reserved". Choosing the licence is a separate task on the `main` branch.
-- No licence name appears on the site until the licence file exists in the repository.
+  "open source" unless the user chooses an OSI licence. Chosen on 2026-11-12: PolyForm Noncommercial 1.0.0
+  (`LICENSE` on `main`), so the README calls the app source-available.
+- No licence name appears on the landing page itself; the README and the repository carry it.
 
 Other undecided facts, so the copy must not claim them:
 - **Repository.** `package.json` `repository.url` is a placeholder. The real repo is
