@@ -805,7 +805,7 @@ h3 { font: 700 1.75rem / 1.1 var(--font-display); }
   white-space: nowrap;
 }
 
-/* ---------- alternating rows: text over a tilted screen that flattens and slides out as the row scrolls in ---------- */
+/* ---------- alternating rows: the text box starts centred over a tilted screen, then both slide to their sides as the row scrolls in ---------- */
 
 .row { margin-block: 0; }
 .row-text > :last-child { margin-bottom: 0; }
@@ -824,6 +824,7 @@ h3 { font: 700 1.75rem / 1.1 var(--font-display); }
     column-gap: 0;
   }
   .row.flip { --dir: -1; }
+  /* Text takes five columns and the screen six; the column between them is the gap. */
   .row-text {
     position: relative;
     z-index: 2;
@@ -834,20 +835,29 @@ h3 { font: 700 1.75rem / 1.1 var(--font-display); }
     border: 1px solid var(--border-subtle);
   }
   .row .shot {
-    grid-column: 6 / 13;
+    grid-column: 7 / 13;
     grid-row: 1;
     z-index: 1;
     margin: 0;
   }
   .row.flip .row-text { grid-column: 8 / 13; }
-  .row.flip .shot { grid-column: 1 / 8; }
+  .row.flip .shot { grid-column: 1 / 7; }
 
-  /* JS drives --p from 0 (tilted, half under the text) to 1 (flat, aligned to its side). Without JS the shot is flat. */
-  .rows-live .row .shot {
+  /* JS sets, per row, --p (0 = start, 1 = settled) and --tx / --sx (px that bring the text and the screen to the row's centre).
+     Without JS both are in their final places. */
+  .rows-live .row {
     --p: 0;
+    --tx: 0px;
+    --sx: 0px;
+  }
+  .rows-live .row .row-text {
+    transform: translateX(calc((1 - var(--p)) * var(--tx)));
+    will-change: transform;
+  }
+  .rows-live .row .shot {
     transform:
       perspective(1500px)
-      translateX(calc((1 - var(--p)) * var(--dir) * -34%))
+      translateX(calc((1 - var(--p)) * var(--sx)))
       rotateY(calc((1 - var(--p)) * var(--dir) * -30deg));
     will-change: transform;
   }

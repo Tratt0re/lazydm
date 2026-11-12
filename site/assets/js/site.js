@@ -134,7 +134,7 @@
   }
   paint(currentChoice());
 
-  /* ---------- rows: the screen starts tilted and half under its text, and flattens out to its side as the row scrolls in ---------- */
+  /* ---------- rows: the text box starts centred over a tilted screen; both slide to their sides as the row scrolls in ---------- */
 
   (function rows() {
     var list = Array.prototype.slice.call(document.querySelectorAll('.row'));
@@ -143,16 +143,26 @@
     var live = false;
     var queued = false;
 
+    // Offsets that bring the text and the screen to the centre of the row, from their layout (transforms do not move offsetLeft).
+    function measure() {
+      list.forEach(function (row) {
+        var text = row.querySelector('.row-text');
+        var shot = row.querySelector('.shot');
+        if (!text || !shot) return;
+        var mid = row.offsetWidth / 2;
+        row.style.setProperty('--tx', Math.round(mid - (text.offsetLeft + text.offsetWidth / 2)) + 'px');
+        row.style.setProperty('--sx', Math.round(mid - (shot.offsetLeft + shot.offsetWidth / 2)) + 'px');
+      });
+    }
+
     function update() {
       queued = false;
       var vh = window.innerHeight || 800;
       list.forEach(function (row) {
-        var shot = row.querySelector('.shot');
-        if (!shot) return;
         var top = row.getBoundingClientRect().top;
         // 0 while the row's top is in the lower part of the screen, 1 once it has risen to about a third of the way up.
         var p = (vh * 0.85 - top) / (vh * 0.5);
-        shot.style.setProperty('--p', String(Math.max(0, Math.min(1, p))));
+        row.style.setProperty('--p', String(Math.max(0, Math.min(1, p))));
       });
     }
 
@@ -164,14 +174,18 @@
 
     function sync() {
       var on = wide.matches && !reduceMotion;
-      if (on === live) return;
       live = on;
       html.classList.toggle('rows-live', on);
-      if (on) update();
+      if (on) {
+        measure();
+        update();
+      }
     }
 
     window.addEventListener('scroll', function () { if (live) soon(); }, { passive: true });
-    window.addEventListener('resize', function () { if (live) soon(); });
+    window.addEventListener('resize', function () { if (live) { measure(); soon(); } });
+    window.addEventListener('load', function () { if (live) { measure(); soon(); } });
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { if (live) { measure(); soon(); } });
     if (wide.addEventListener) wide.addEventListener('change', sync);
     sync();
   })();
