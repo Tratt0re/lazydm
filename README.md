@@ -19,7 +19,8 @@ python3 -m http.server 8123   # then open http://127.0.0.1:8123/
 | `site/index.html` | the page: one long LazyDM note |
 | `site/assets/css/styles.css` | tokens, fonts and ornaments copied from the app (`src/styles.css`) |
 | `site/assets/js/theme-init.js` | sets the theme before first paint (same `localStorage.theme` key as the app) |
-| `site/assets/js/site.js` | theme switch, Source/Reading tabs, sample tracker, code map |
+| `site/assets/js/site.js` | theme switch and the code map (a port of the app's `code-map.ts`) |
+| `site/assets/img/shots/` | screenshots of the real app, one dark and one light each (see below) |
 | `site/assets/fonts/` | Barlow Condensed, IBM Plex Sans and Mono, from the app |
 | `PRODUCT.md` | who the site is for and which claims are settled (read before editing copy) |
 | `.github/workflows/pages.yml` | deploys `site/` to GitHub Pages on every push to `website` |
@@ -29,7 +30,7 @@ python3 -m http.server 8123   # then open http://127.0.0.1:8123/
 - Keep the tokens in step with the app. Light is `:root`, dark is `:root.dark`; use the semantic variables, never raw colours.
 - Words follow the app's glossary: Codex, Combatant, Tracker layout, Links, Review, Info box.
 - Do not claim a licence, a price, "open source" or a release date until they exist. See `PRODUCT.md`.
-- Screenshots of the real app are still to be added (dark and light). The samples on the page are drawn for it and labelled as such.
+- Every screenshot has a `-dark` and a `-light` file; the page shows the one that matches the theme. Retake both together.
 
 ## Deploy
 
@@ -38,6 +39,9 @@ Asset paths are relative, so the site works from `/lazydm/` or a custom domain.
 
 ## Provenance of assets
 
-- `site/assets/img/dungeon-map.webp`: the sample dungeon map, supplied by the project owner (`map_41x36.webp`, resized to 2000px wide).
+- `site/assets/img/shots/*`: screenshots of the real LazyDM app (Angular build, 1440x900 at 2x, resized to 1920px wide), running in a browser with a faked `window.electronAPI` and made-up data (campaign "Lost Mine", the encounter and scene "Ambush at the fort"). The map is the sample dungeon supplied by the project owner.
 - Franco and every icon are drawn from the app's own data (`franco.icon.ts` and the Lucide set it uses), written into the icon sprite at the top of `site/index.html`.
-- The sample note, encounter and map are made up for this page and labelled as such on it.
+
+## Retaking the screenshots
+
+Start the app's dev server (`npx ng serve` in the app repo), load `/campaigns/lost-mine` with a fake `window.electronAPI` (the app repo has `.claude/plans/mock-electron-rich.js` as a starting point), and capture the encounter, the map and a note in both themes at 1440x900.
