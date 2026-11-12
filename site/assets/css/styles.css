@@ -289,7 +289,7 @@ p code, li code, dd code {
 .arc-ornament-rule::before {
   content: '';
   flex: none;
-  width: 68px;
+  width: 64px;
   height: 5px;
   background: var(--primary);
 }
