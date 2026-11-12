@@ -145,7 +145,7 @@ sync, security and visual style, and for the words the UI uses (§1b). In short:
 - Semantic theme tokens only (`bg-card`, `text-primary`…), never raw colours. Both themes must work.
 - Prettier: `printWidth: 100`, single quotes.
 
-Because the licence below does not allow commercial use, please open an issue to discuss a larger change before sending
+Work happens on the `develop` branch: open pull requests against it, not `main`. Because the licence below does not allow commercial use, please open an issue to discuss a larger change before sending
 a pull request.
 
 ## Documentation

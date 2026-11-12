@@ -67,6 +67,8 @@ A build with no errors is the minimum check after every change. The 3 `NG8113` w
 
 ## Workflow
 
+- Work happens on `develop`; `main` only receives merges from it when something is ready to release. Never commit
+  straight to `main`, and open pull requests against `develop`.
 - The git remote is `origin` (https://github.com/Tratt0re/lazydm.git). Never push unless the user asks.
 - Commit at the end of each completed phase/step with a descriptive message.
 - Verify UI changes visually (`npm start`, check dark and light themes) when possible.
