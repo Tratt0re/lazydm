@@ -45,3 +45,9 @@ Asset paths are relative, so the site works from `/lazydm/` or a custom domain.
 ## Retaking the screenshots
 
 Start the app's dev server (`npx ng serve` in the app repo), load `/campaigns/lost-mine` with a fake `window.electronAPI` (the app repo has `.claude/plans/mock-electron-rich.js` as a starting point), and capture the encounter, the map, a note and the split screen (open `/campaigns/lost-mine` with `window.__workspace` set to a left tab and a right tab) in both themes at 1440x900.
+
+## Domain
+
+The site is served at `https://lazydm.com/` (`site/CNAME`). The canonical, Open Graph, JSON-LD, `robots.txt` and
+`sitemap.xml` URLs all use it; change them together if the domain ever changes. DNS: an `A`/`AAAA` set (or `ALIAS`)
+for the apex pointing at GitHub Pages, plus Settings → Pages → Custom domain → `lazydm.com` and "Enforce HTTPS".
