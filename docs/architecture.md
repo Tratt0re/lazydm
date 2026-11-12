@@ -1,7 +1,7 @@
-# LazyDM — Project Summary
+# LazyDM — Architecture
 
-A snapshot of what the project is and where things live. For the rules behind it, read
-[`DESIGN_PRINCIPLES.md`](DESIGN_PRINCIPLES.md); for setup and commands, [`README.md`](README.md).
+A snapshot of what the project is and where things live, for anyone reading or contributing to the code. For the rules behind it, read
+[`design-principles.md`](design-principles.md); for setup and commands, the [`README`](../README.md).
 
 ## What it is
 
@@ -27,7 +27,7 @@ Heading to 1.0. Built and working:
 - Seven languages (en, it, de, es, fr, uk, zh) and the dark and light themes
 
 Current work: UI polish for 1.0 (plans in `.claude/plans/`). The phase-by-phase roadmap is in
-`DESIGN_PRINCIPLES.md` §11, and open decisions are in §12.
+`design-principles.md` §11, and open decisions are in §12.
 
 ## Technologies
 
@@ -85,7 +85,7 @@ Current work: UI polish for 1.0 (plans in `.claude/plans/`). The phase-by-phase 
 
 ## Adding a feature
 
-1. Read the matching section of `DESIGN_PRINCIPLES.md`.
+1. Read the matching section of `design-principles.md`.
 2. Add the controller and model in `electron/`, and the channel in `electron/ipc/channels.js` and
    `src/app/config/api.ts`.
 3. Run `npm run build:preload` and commit the regenerated bundle whenever channels change.
@@ -103,5 +103,5 @@ Current work: UI polish for 1.0 (plans in `.claude/plans/`). The phase-by-phase 
 
 ---
 
-**Created**: 2026-06-16, from the expense_tracker architecture
-**Last updated**: 2026-10-26
+**Created**: 2026-06-16
+**Last updated**: 2026-11-12

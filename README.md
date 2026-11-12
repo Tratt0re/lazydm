@@ -1,166 +1,167 @@
-# LazyDM
+<div align="center">
 
-**LazyDM** is a desktop app for Dungeon Masters, built by a DM for DMs and lazy by design: prepare fast, run the
-session without friction. Your campaigns live in plain Markdown files that you own.
+# LazyDM.
 
-## How it works
+**Prep at your desk. Run at the table.**
 
-- Your content lives in plain **`.md` files inside a folder you own** (the *Codex*, called the vault in the code).
-  LazyDM never locks it into a database.
-- The Codex is ordinary Markdown in ordinary folders, and stays Obsidian-compatible: any Markdown editor can open it.
-- SQLite is only a local, rebuildable index (search, links, tags). Delete it and it is rebuilt from the files.
-- The Codex can live on the device or in a cloud-synced folder. LazyDM detects the provider, waits for placeholder
-  files to download and handles conflict copies.
+A desktop app for Dungeon Masters. Prepare your campaign and run it at the table from the same app, with notes that
+stay plain Markdown in a folder you own.
 
-## Features
+[Website](https://lazydm.com) · [Issues](https://github.com/Tratt0re/lazydm/issues) · macOS · Windows · Linux
 
-### Campaigns and notes
+</div>
 
-- **Campaigns** with a start card, a campaign overview and per-campaign **sections** (Enemies, Encounters, Assets…):
-  hide, reorder, rename, add custom sections, sub-folders as sub-types.
-- **Editor** (CodeMirror): Live preview, Source and Reading views remembered per note; clickable `[[wikilinks]]`,
-  tables edited in place, info boxes, properties box, `◇` dividers, image width (half, wide, full), Cmd/Ctrl+B and
-  Cmd/Ctrl+I, auto-close pairs and a right-click insert menu.
-- **Links panel** (backlinks), rename with link refactoring, a linked-note preview card and **Review**, a page that
-  lists broken links and misplaced, untyped or unknown notes, with a move that rewrites the links.
-- **Templates** per note type and per campaign, with placeholders.
-- **Compendium**: shared systems and content you can copy to and from campaigns.
-- **Assets**: images, audio and PDFs. Paste or drop them anywhere, or use *Import from disk*. Audio plays inline and
-  PDFs open in the system viewer.
-- **Search** from the header and file actions everywhere: rename, copy, delete (to the system Trash) and move.
+> **Status:** LazyDM is heading toward 1.0 and is not available to download yet. You can follow the project here, or
+> build it yourself (see [Build from source](#build-from-source)).
 
-### Encounters and the map
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/images/split-dark.webp" />
+  <img src="docs/images/split-light.webp" alt="LazyDM split screen: a campaign note on the left and a dungeon map with pins on the right." />
+</picture>
 
-- **Encounter manager**: encounters are `.json` files linked like assets (`![[ambush.json]]`). Combatants with
-  initiative, a health bar (HP and temporary HP), statuses with round counters, a cemetery to recover the dead and
-  a **party roster** you can add to any encounter.
-- **Tracker layouts**: the row of a combatant is driven by a battle rule (`_battle-rules/`). Use the built-in
-  *Default* layout, customise it, or write your own with dice-formula initiative and *Roll initiative*.
-  A *Tracker rows* density setting makes the rows more compact.
-- **Battle bar**: *Start battle*, *Stop battle*, next turn, with the round and the turn always visible.
-- **Map**: pins that link to notes and files, with Copy, Edit and Delete in the "…" menu.
+<sub>All screenshots use made-up campaign data.</sub>
 
-### Workspace
+## The campaign stays yours
 
-- **Tabs** with context menus, drag to sort and an icon-only open tab.
-- **Split screen**: open any file to the side, drag tabs between the two panes, resize the divider. The same note in
-  both panes edits one live document, and maps and encounters in both panes share one live state.
-- **Customize menu**, toolbar "…" menus and a shortcuts reference in Settings.
-- **Startup**: optionally open the last campaign at start (Settings → General → Startup).
-- **Themes and languages**: dark and light themes, in English, Italian, German, Spanish, French,
-  Ukrainian and Chinese.
-- **Setup flow**: a short Welcome step (name, language, theme) and a Codex step that explains device versus cloud
-  folders.
+LazyDM calls your campaign folder the **Codex**. Its notes are ordinary `.md` files that LazyDM reads and edits
+without locking them into a database. Every file stays yours, and your Markdown notes remain compatible with other
+tools, including Obsidian.
 
-## Tech stack
+- **Take it anywhere.** Move the folder, back it up or open its notes in any Markdown editor.
+- **Lazy by design.** Sensible defaults and short paths keep preparation moving and table tools close.
+- **Built from your files.** Search and links use a local index (SQLite) that LazyDM can rebuild from the Codex.
+- **Make it comfortable.** Light and dark themes, in English, Italian, German, Spanish, French, Ukrainian and Chinese.
 
-- **Framework**: Angular 21 (standalone components, signals)
-- **Desktop**: Electron 44
-- **Styling**: Tailwind CSS 4
-- **Index**: Better-SQLite3 (local, rebuildable)
-- **Editor**: CodeMirror
-- **i18n**: ngx-translate
-- **UI**: ArcTechUI, the in-house component library (LazyDM's own visual identity)
-- **Tests**: Vitest (Angular and Electron)
+## Prepare at your desk
 
-## Architecture
+Write scenes, characters and enemies as notes, then connect them with `[[links]]`. Rename a note and LazyDM updates the
+links to it. Before the session, **Review** shows you any broken links that need attention.
 
-LazyDM uses an IPC-driven layered architecture:
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/images/note-dark.webp" />
+  <img src="docs/images/note-light.webp" alt="A LazyDM note in Live preview, with its links and Info box visible while you write." />
+</picture>
 
-- **Renderer**: Angular UI, sandboxed. It does the UI and minor calculations.
-- **Main process**: Electron owns all file-system, index and sync logic. Controllers validate input and
-  orchestrate, models access data.
-- **Typed IPC**: channels are declared in `electron/ipc/channels.js` and `src/app/config/api.ts`.
+- **Campaigns** with an overview and per-campaign sections (Enemies, Encounters, Assets…): hide, reorder, rename, add
+  your own, and use sub-folders as sub-types.
+- **Editor** with Live preview, Source and Reading views, clickable `[[wikilinks]]`, tables edited in place, Info boxes,
+  a Properties box and a right-click insert menu.
+- **Templates** give each kind of note a useful starting point, per note type and per campaign.
+- **Links** shows what points to the open note and where that note leads next.
+- **Compendium** keeps shared systems and content ready to copy into any campaign.
+- **Assets**: paste or drop images, audio and PDFs into your notes. Audio plays inline and PDFs open in the system
+  viewer.
+- **Search** from the header, and file actions everywhere: rename, copy, move and delete (to the system Trash).
 
-The full set of rules (data placement, sync, security, UI, visual style, roadmap) is in
-[`DESIGN_PRINCIPLES.md`](DESIGN_PRINCIPLES.md). Read it before changing anything.
+## Run at the table
 
-## Project structure
+When play begins, the campaign you prepared is already in front of you. Add Combatants, roll initiative and advance
+through the turns while hit points, temporary hit points and timed statuses stay visible.
 
-```text
-lazy_dm/
-├── src/
-│   ├── app/
-│   │   ├── components/       # App components
-│   │   ├── config/           # Typed IPC channels, preferences
-│   │   ├── guards/           # Route guards (vault, campaign, launch)
-│   │   ├── layout/           # Shell: sidebar, toolbar, panes, tab bar
-│   │   ├── pages/            # Routed pages
-│   │   ├── services/         # Angular services (IPC, workspace…)
-│   │   └── shared/           # ArcTechUI component library
-│   ├── assets/               # Fonts, icons
-│   └── styles.css            # Theme tokens and utilities
-├── electron/
-│   ├── controllers/          # One controller per feature
-│   ├── models/               # Data access (SQLite, files)
-│   ├── database/             # Schema and migrations
-│   ├── ipc/                  # Channels, handlers, push events
-│   └── __tests__/            # Electron tests
-├── public/i18n/              # Translations
-├── scripts/                  # Build scripts
-├── CLAUDE.md                 # Working notes for Claude Code
-└── DESIGN_PRINCIPLES.md      # Source of truth for design
-```
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/images/tracker-dark.webp" />
+  <img src="docs/images/tracker-light.webp" alt="The LazyDM encounter page: a battle bar with the round and the active turn, then Combatants in initiative order with HP bars and statuses." />
+</picture>
 
-## Getting started
+- **Encounters** are `.json` files you link like any note (`![[ambush.json]]`).
+- **Tracker layouts** decide the details each Combatant row shows. Use the built-in Default, customise it, or write your
+  own with a dice formula for initiative.
+- **Battle bar** with Start battle, Stop battle and next turn, and the round and whose turn it is always visible.
+- **Cemetery** keeps defeated enemies in case they return, and a **party roster** can be added to any encounter.
 
-### Prerequisites
+## Open the right place
 
-- Node.js 18+
-- npm 11+
+Add a map image and place pins for the locations that matter. Link a pin to a note, and the guard post on the map opens
+the guard post you prepared earlier.
 
-### Install
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/images/map-dark.webp" />
+  <img src="docs/images/map-light.webp" alt="A dungeon map in LazyDM with linked pins and a list of its marked locations." />
+</picture>
+
+## Keep the scene together
+
+Open any note, map or encounter beside another, each side with its own tabs. Drag tabs between the two panes. The same
+note in both panes is one live document, and maps and encounters share one live state.
+
+## Bring the Codex with you
+
+Keep the Codex on your computer, or put it in an iCloud, Dropbox, OneDrive, Box or Google Drive folder. Your cloud app
+handles the sync; LazyDM waits for files still downloading and warns you about conflicting copies.
+
+## AI-friendly, on your terms
+
+When you choose to enable it, LazyDM can make the Codex available to an AI assistant running on the same computer
+through a local MCP server. It stays off until you switch it on. It listens only on your own computer and asks for a
+token. Writing is a separate switch, and so is deleting; both start off. Claude Code, OpenAI Codex and OpenCode can
+connect to it. The design is in [`docs/design-principles.md`](docs/design-principles.md) §6f.
+
+## Build from source
+
+You need Node.js 18+ and npm 11+.
 
 ```bash
 npm install
 npm run build:preload
-```
-
-### Develop
-
-```bash
 npm run dev            # Angular dev server + preload watch + Electron
-npm start              # Angular only, http://localhost:4200 (no Electron APIs)
 ```
 
-### Test
+| Command | What it does |
+| --- | --- |
+| `npm start` | Angular only, at `http://localhost:4200` (no Electron APIs) |
+| `npm test` | Angular unit tests (Vitest) |
+| `npm run test:electron` | Electron-side tests |
+| `npx ng build --configuration development` | Fast type and template check |
+| `npm run build:prod` | Production web build and preload bundle |
+| `npm run build:desktop` | Unpackaged desktop app |
+| `npm run dist` | Distributable for the current platform (`dist:mac`, `dist:win`, `dist:linux`) |
 
-```bash
-npm test               # Angular unit tests (Vitest)
-npm run test:electron  # Electron-side tests
-npx ng build --configuration development   # fast type and template check
-```
+`electron/preload.bundle.cjs` is generated from `electron/preload.js` by `npm run build:preload` and is not in git. Every
+dev and build script makes it first; run it yourself before starting Electron any other way.
 
-### Build
+## How it is built
 
-```bash
-npm run build:prod     # production web build + preload bundle
-npm run build:desktop  # unpackaged desktop app
-npm run dist           # distributable for the current platform
-npm run dist:mac       # or dist:win, dist:linux
-```
+| Area | Choice |
+| --- | --- |
+| UI | Angular 21 (standalone components, signals), Tailwind CSS 4 |
+| Desktop | Electron 44 |
+| Index | Better-SQLite3 (local and rebuildable) |
+| Editor | CodeMirror 6 |
+| i18n | ngx-translate |
+| Components | ArcTechUI, the in-house component library |
+| Tests | Vitest |
 
-`electron/preload.bundle.cjs` is generated from `electron/preload.js` by `npm run build:preload` and is not in git.
-`npm run dev`, `electron:dev`, `electron:start` and every build script make it first; run it yourself before starting
-Electron any other way (a bare `electron .` stops with a message asking for it). Never edit it by hand.
+The renderer (Angular) is sandboxed and handles the UI. The Electron main process owns all file-system, index and sync
+logic, and the two talk over typed IPC channels. A tour of the code is in [`docs/architecture.md`](docs/architecture.md).
 
-## Development guidelines
+## Contributing
+
+The code is public, so you are welcome to read it, build it and open an issue. Before changing anything, read
+[`docs/design-principles.md`](docs/design-principles.md): it is the source of truth for architecture, data placement,
+sync, security and visual style, and for the words the UI uses (§1b). In short:
 
 - Standalone components, signals, `inject()` and the `@/` path alias.
-- User-facing strings go through i18n keys, in all 7 languages. UI words follow the glossary in
-  `DESIGN_PRINCIPLES.md` §1b (Codex, Combatant, Tracker layout, Links, Review…).
-- Use semantic theme tokens (`bg-card`, `text-primary`…), never raw colours. Both themes must work.
+- User-facing strings go through i18n keys, in all 7 languages.
+- Semantic theme tokens only (`bg-card`, `text-primary`…), never raw colours. Both themes must work.
 - Prettier: `printWidth: 100`, single quotes.
 
-## Status
+Because the licence below does not allow commercial use, please open an issue to discuss a larger change before sending
+a pull request.
 
-Heading to 1.0. The Codex, editor, link maintenance, compendium, encounter manager, map, split screen and setup flow
-are in place; the current work is UI polish. The roadmap is in `DESIGN_PRINCIPLES.md` §11.
+## Documentation
+
+| File | What |
+| --- | --- |
+| [`docs/design-principles.md`](docs/design-principles.md) | Architecture, data, sync, security, UI and visual rules, roadmap |
+| [`docs/architecture.md`](docs/architecture.md) | Stack, code layout, routes and how to add a feature |
+| [`CLAUDE.md`](CLAUDE.md) | Working notes for Claude Code |
 
 ## License
 
-Private project. All rights reserved.
+LazyDM is **source-available**, not open source in the OSI sense. It is licensed under the
+[PolyForm Noncommercial License 1.0.0](LICENSE): you can read, run and modify it for personal and other noncommercial
+use. Commercial use needs the author's permission. Future paid features may exist.
 
 ## Author
 
-Salvatore De Luca
+Salvatore De Luca ([@Tratt0re](https://github.com/Tratt0re))

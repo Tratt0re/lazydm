@@ -69,7 +69,7 @@ export interface ResolveCopyResultDto {
   readonly linkCount: number;
 }
 
-/** What disagrees with the folders of a campaign or system (see DESIGN_PRINCIPLES §2a, Review). */
+/** What disagrees with the folders of a campaign or system (see docs/design-principles.md §2a, Review). */
 export interface ReviewDto {
   readonly brokenLinkCount: number;
   readonly outside: readonly ReviewNoteDto[];

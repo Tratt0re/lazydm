@@ -3,7 +3,7 @@
 LazyDM — a desktop app for Dungeon Masters (Electron 44 + Angular 21 + Tailwind 4).
 Content lives in `.md` files inside a user-owned vault folder; SQLite is only a local, rebuildable index.
 
-**Read [`DESIGN_PRINCIPLES.md`](DESIGN_PRINCIPLES.md) before designing or changing anything.** It is the source of
+**Read [`docs/design-principles.md`](docs/design-principles.md) before designing or changing anything.** It is the source of
 truth for architecture, data placement, sync, security, UI and visual style. If a change would break one of its
 rules, propose an update to that file first and get agreement.
 
@@ -24,6 +24,7 @@ A build with no errors is the minimum check after every change. The 3 `NG8113` w
 
 | Path | What |
 | --- | --- |
+| `docs/` | `design-principles.md` (source of truth) and `architecture.md`; `docs/images/` holds the README screenshots |
 | `electron/main.js` | app lifecycle |
 | `electron/controllers/` | input validation + orchestration, one controller per feature |
 | `electron/models/` | data access (SQLite, file system) |
@@ -43,7 +44,7 @@ A build with no errors is the minimum check after every change. The 3 `NG8113` w
 ## Conventions
 
 - **Follow existing patterns.** Reuse existing functions and utilities; match the surrounding code's style.
-- **UI words follow the glossary** in `DESIGN_PRINCIPLES.md` §1b (Codex, Combatant, Tracker layout, Links, Review…).
+- **UI words follow the glossary** in `docs/design-principles.md` §1b (Codex, Combatant, Tracker layout, Links, Review…).
   Code, files and folders keep their technical names (`vault`, `entity`, `battleRules`).
 - **Ask first** before creating a new function/utility with no similar existing counterpart (say what and why),
   and before adding any npm dependency.
@@ -59,10 +60,10 @@ A build with no errors is the minimum check after every change. The 3 `NG8113` w
   (`arcType`, `arcSize`), provider `provideArcTech()`, id directive `arcTechId`, tokens `ARC_*`.
 - Styles live in `*.variants.ts` (class-variance-authority) merged with `mergeClasses()` from `@/shared/utils/merge-classes`.
 - Use semantic tokens (`bg-card`, `text-primary`, `border-input`…), never raw colours; both themes must work.
-- Square shapes; `font-display` (Barlow Condensed) for titles, `font-sans` (Plex Sans) for UI, `font-mono` (Plex Mono) for labels/metadata. Use the ArcTechUI surface tokens (`bg-recessed`, `bg-card`, `bg-raised`) — see DESIGN_PRINCIPLES.md §9.
+- Square shapes; `font-display` (Barlow Condensed) for titles, `font-sans` (Plex Sans) for UI, `font-mono` (Plex Mono) for labels/metadata. Use the ArcTechUI surface tokens (`bg-recessed`, `bg-card`, `bg-raised`) — see docs/design-principles.md §9.
 - **Page, route and card titles end with a primary-coloured dot**:
   `{{ title }}<span class="text-primary" aria-hidden="true">.</span>` — no whitespace before the span.
-- No decorative text with fake meaning (runes, mottos, fake codes…). The ornamental symbols of the design (◇ ✣ ◇) stay, used sparingly and with a job (DESIGN_PRINCIPLES §9).
+- No decorative text with fake meaning (runes, mottos, fake codes…). The ornamental symbols of the design (◇ ✣ ◇) stay, used sparingly and with a job (docs/design-principles.md §9).
 
 ## Workflow
 

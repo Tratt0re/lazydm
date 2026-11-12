@@ -1,7 +1,8 @@
 # LazyDM — Design Principles
 
-The rules we agreed on for this project. Read this before designing or changing anything.
-When a change would break one of these rules, update this file first (and agree on it).
+The rules this project follows. Read this before designing or changing anything, whether you are the maintainer or a
+contributor. When a change would break one of these rules, propose an update to this file first and get agreement.
+For a short tour of the code, see [`architecture.md`](architecture.md); for setup, the [`README`](../README.md).
 
 ---
 
@@ -953,8 +954,8 @@ Component behaviour, variant keys and configuration stay as they are.
   cloud controllers first.
 
 - **TODO — update check repository**: `package.json` `repository.url` is still a placeholder
-  (`github.com/yourusername/lazy_dm`). Set the real GitHub repository once it exists; the update check and the
-  release-URL allowlist both derive from it.
+  (`github.com/yourusername/lazy_dm`). The real repository is now public at `github.com/Tratt0re/lazydm`; set it
+  here once the first release page exists, because the update check and the release-URL allowlist both derive from it.
 
 - **Encounters, later**: richer statuses (shared definitions with descriptions), combat timers, delay / hold turns,
   a roll for several encounters at once, and a starting-HP reset are left out on purpose and can be added without

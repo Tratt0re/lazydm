@@ -48,6 +48,8 @@
     ]
   },
   "private": true,
+  "license": "SEE LICENSE IN LICENSE",
+  "homepage": "https://lazydm.com",
   "packageManager": "npm@11.8.0",
   "build": {
     "appId": "com.lazydm.desktop",

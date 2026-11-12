@@ -88,7 +88,7 @@ function isCampaignDirName(dirName) {
   );
 }
 
-/** The user's instructions for AI assistants, at the root of a campaign (DESIGN_PRINCIPLES §6f). */
+/** The user's instructions for AI assistants, at the root of a campaign (docs/design-principles.md §6f). */
 const AGENT_RULES_FILE_NAME = 'agents.md';
 
 /** `<campaign>/agents.md`: a file of the vault the index never holds, so no list, search or link finds it. */
