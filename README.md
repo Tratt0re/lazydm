@@ -14,10 +14,7 @@ stay plain Markdown in a folder you own.
 > **Status:** LazyDM is heading toward 1.0 and is not available to download yet. You can follow the project here, or
 > build it yourself (see [Build from source](#build-from-source)).
 
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="docs/images/split-dark.webp" />
-  <img src="docs/images/split-light.webp" alt="LazyDM split screen: a campaign note on the left and a dungeon map with pins on the right." />
-</picture>
+<img src="docs/images/social-card.png" alt="LazyDM. Prep at your desk. Run at the table." />
 
 <sub>All screenshots use made-up campaign data.</sub>
 
@@ -83,6 +80,11 @@ the guard post you prepared earlier.
 
 Open any note, map or encounter beside another, each side with its own tabs. Drag tabs between the two panes. The same
 note in both panes is one live document, and maps and encounters share one live state.
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/images/split-dark.webp" />
+  <img src="docs/images/split-light.webp" alt="LazyDM split screen: a campaign note on the left and a dungeon map with pins on the right." />
+</picture>
 
 ## Bring the Codex with you
 
