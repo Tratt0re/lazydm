@@ -37,14 +37,16 @@
     return el;
   }
 
-    function dot() {
-    return h('span', { class: 'dot', 'aria-hidden': 'true', text: '.' });
-  }
 
-    /* ---------- theme switch ---------- */
+  /* ---------- theme menu: one button showing the current choice, a menu with Light, Dark and System ---------- */
 
-  var buttons = Array.prototype.slice.call(document.querySelectorAll('[data-theme-choice]'));
+  var wrap = document.querySelector('.theme');
+  var btn = document.getElementById('theme-btn');
+  var menu = document.getElementById('theme-menu');
+  var items = Array.prototype.slice.call(document.querySelectorAll('[data-theme-choice]'));
   var media = window.matchMedia ? window.matchMedia('(prefers-color-scheme: dark)') : null;
+  var LABEL = { light: 'Light', dark: 'Dark', system: 'System' };
+  var ICON = { light: '#i-sun', dark: '#i-moon', system: '#i-monitor' };
 
   function currentChoice() {
     var c = html.getAttribute('data-theme');
@@ -55,9 +57,12 @@
     var dark = choice === 'dark' || (choice === 'system' && !!(media && media.matches));
     html.classList.toggle('dark', dark);
     html.setAttribute('data-theme', choice);
-    buttons.forEach(function (b) {
-      b.setAttribute('aria-pressed', String(b.getAttribute('data-theme-choice') === choice));
+    items.forEach(function (b) {
+      b.setAttribute('aria-checked', String(b.getAttribute('data-theme-choice') === choice));
     });
+    btn.querySelector('use').setAttribute('href', ICON[choice]);
+    btn.setAttribute('aria-label', 'Theme: ' + LABEL[choice]);
+    btn.setAttribute('title', 'Theme: ' + LABEL[choice]);
   }
 
   function choose(choice) {
@@ -74,10 +79,53 @@
     paint(choice);
   }
 
-  buttons.forEach(function (b) {
+  function setOpen(open) {
+    menu.hidden = !open;
+    btn.setAttribute('aria-expanded', String(open));
+    if (open) {
+      var current = items.filter(function (b) { return b.getAttribute('aria-checked') === 'true'; })[0] || items[0];
+      current.focus();
+    }
+  }
+
+  btn.addEventListener('click', function () {
+    setOpen(menu.hidden);
+  });
+  btn.addEventListener('keydown', function (e) {
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      setOpen(true);
+    }
+  });
+  items.forEach(function (b, i) {
     b.addEventListener('click', function () {
       choose(b.getAttribute('data-theme-choice'));
+      setOpen(false);
+      btn.focus();
     });
+    b.addEventListener('keydown', function (e) {
+      var to = null;
+      if (e.key === 'ArrowDown') to = items[(i + 1) % items.length];
+      else if (e.key === 'ArrowUp') to = items[(i - 1 + items.length) % items.length];
+      else if (e.key === 'Home') to = items[0];
+      else if (e.key === 'End') to = items[items.length - 1];
+      else if (e.key === 'Escape') {
+        e.preventDefault();
+        setOpen(false);
+        btn.focus();
+        return;
+      } else if (e.key === 'Tab') {
+        setOpen(false);
+        return;
+      }
+      if (to) {
+        e.preventDefault();
+        to.focus();
+      }
+    });
+  });
+  document.addEventListener('click', function (e) {
+    if (!menu.hidden && !wrap.contains(e.target)) setOpen(false);
   });
   if (media && media.addEventListener) {
     media.addEventListener('change', function () {

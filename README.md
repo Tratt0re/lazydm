@@ -19,7 +19,7 @@ python3 -m http.server 8123   # then open http://127.0.0.1:8123/
 | `site/index.html` | the page: one long LazyDM note |
 | `site/assets/css/styles.css` | tokens, fonts and ornaments copied from the app (`src/styles.css`) |
 | `site/assets/js/theme-init.js` | sets the theme before first paint (same `localStorage.theme` key as the app) |
-| `site/assets/js/site.js` | theme switch and the code map (a port of the app's `code-map.ts`) |
+| `site/assets/js/site.js` | the theme menu (System, Light, Dark) and the code map (a port of the app's `code-map.ts`) |
 | `site/assets/img/shots/` | screenshots of the real app, one dark and one light each (see below) |
 | `site/assets/fonts/` | Barlow Condensed, IBM Plex Sans and Mono, from the app |
 | `PRODUCT.md` | who the site is for and which claims are settled (read before editing copy) |
@@ -44,4 +44,4 @@ Asset paths are relative, so the site works from `/lazydm/` or a custom domain.
 
 ## Retaking the screenshots
 
-Start the app's dev server (`npx ng serve` in the app repo), load `/campaigns/lost-mine` with a fake `window.electronAPI` (the app repo has `.claude/plans/mock-electron-rich.js` as a starting point), and capture the encounter, the map and a note in both themes at 1440x900.
+Start the app's dev server (`npx ng serve` in the app repo), load `/campaigns/lost-mine` with a fake `window.electronAPI` (the app repo has `.claude/plans/mock-electron-rich.js` as a starting point), and capture the encounter, the map, a note and the split screen (open `/campaigns/lost-mine` with `window.__workspace` set to a left tab and a right tab) in both themes at 1440x900.
