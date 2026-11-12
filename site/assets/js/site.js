@@ -161,7 +161,7 @@
       list.forEach(function (row) {
         var top = row.getBoundingClientRect().top;
         // 0 while the row's top is in the lower part of the screen, 1 once it has risen to about a third of the way up.
-        var p = (vh * 0.85 - top) / (vh * 0.5);
+        var p = (vh * 0.95 - top) / (vh * 0.4);
         row.style.setProperty('--p', String(Math.max(0, Math.min(1, p))));
       });
     }

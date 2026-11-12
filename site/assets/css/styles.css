@@ -839,13 +839,13 @@ h3 { font: 700 1.75rem / 1.1 var(--font-display); }
     border: 1px solid var(--border-subtle);
   }
   .row .shot {
-    grid-column: 7 / 13;
+    grid-column: 6 / 13;
     grid-row: 1;
     z-index: 1;
-    margin: 0;
+    margin: 0 0 0 1.5rem;
   }
   .row.flip .row-text { grid-column: 8 / 13; }
-  .row.flip .shot { grid-column: 1 / 7; }
+  .row.flip .shot { grid-column: 1 / 8; margin: 0 1.5rem 0 0; }
 
   /* JS sets, per row, --p (0 = start, 1 = settled) and --tx / --sx (px that bring the text and the screen to the row's centre).
      Without JS both are in their final places. */
@@ -867,6 +867,42 @@ h3 { font: 700 1.75rem / 1.1 var(--font-display); }
   }
 }
 
+/* Facts line under the actions, and the phone jump row. */
+.meta { margin: -1rem 0 2rem; font: 500 0.8125rem var(--font-mono); letter-spacing: 0.04em; color: var(--muted-foreground); }
+.jump {
+  display: flex;
+  gap: 0.5rem;
+  overflow-x: auto;
+  padding: 0.5rem var(--gutter);
+  background: var(--recessed);
+  border-bottom: 1px solid var(--border-subtle);
+  position: sticky;
+  top: 48px;
+  z-index: 19;
+  scrollbar-width: none;
+}
+.jump::-webkit-scrollbar { display: none; }
+.jump a {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0 0.9rem;
+  border: 1px solid var(--border);
+  color: var(--foreground-secondary);
+  font: 500 0.8125rem var(--font-mono);
+  text-decoration: none;
+}
+.jump a:hover { color: var(--primary); background: var(--accent); }
+@media (min-width: 820px) { .jump { display: none; } }
+
+/* Touch targets of at least 44px where the pointer is coarse. */
+@media (pointer: coarse) {
+  .crumb, .topnav a.link, .theme-btn, .props summary, .skip { min-height: 44px; }
+  .theme-btn { height: 44px; }
+  .props summary { display: flex; align-items: center; }
+}
+
 /* ---------- "One more thing": a card with the app's corner brackets and ornamental rule ---------- */
 
 .more {
@@ -881,22 +917,14 @@ h3 { font: 700 1.75rem / 1.1 var(--font-display); }
 .more .arc-ornament-rule { margin-bottom: 1.5rem; }
 .more .more-lede { max-width: none; font-size: 1.125rem; line-height: 1.5; color: var(--foreground-strong); }
 .more .defs { margin-top: 1.5rem; }
-.more .defs > div { grid-template-columns: 11rem minmax(0, 1fr); gap: 0.5rem 1.5rem; padding: 1rem 0; }
+.more .defs > div { grid-template-columns: 11rem minmax(0, 1fr); gap: 0.5rem 1.5rem; padding: 0.75rem 0; }
+.more .defs dt { font-size: 1.25rem; }
 .more .defs dd { max-width: none; }
 .more .more-safe {
   max-width: none;
   margin: 1.5rem 0 0;
   font-size: 0.9375rem;
   color: var(--foreground-secondary);
-}
-.more .more-soon {
-  max-width: none;
-  margin: 1.5rem 0 0;
-  padding-top: 1rem;
-  border-top: 1px solid var(--border-subtle);
-  font: 500 0.8125rem var(--font-mono);
-  letter-spacing: 0.04em;
-  color: var(--muted-foreground);
 }
 @media (max-width: 599px) {
   .more { padding: 1.5rem 1rem 1.25rem; }

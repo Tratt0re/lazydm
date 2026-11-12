@@ -20,6 +20,7 @@
       content="The desktop app for Dungeon Masters. Plain Markdown you own, plus the tracker and maps for the table."
     />
     <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary" />
     <link rel="icon" type="image/png" href="assets/img/favicon.png" />
     <link rel="preload" href="assets/fonts/barlow-condensed-latin-700-normal.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="preload" href="assets/fonts/ibm-plex-sans-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin />
@@ -39,7 +40,7 @@
     <a class="skip" href="#top">Skip to the note</a>
 
     <header class="topbar">
-      <a class="crumb" href="#top" aria-label="LazyDM, back to the top">
+      <a class="crumb" href="#top" aria-label="LazyDM. Back to the top">
         <svg class="franco" viewBox="0 0 24 24" aria-hidden="true"><use href="#franco" /></svg>
         <b>LazyDM<span class="dot" aria-hidden="true">.</span></b>
         <span class="path" aria-hidden="true">/ index.md</span>
@@ -60,6 +61,10 @@
         </div>
       </nav>
     </header>
+
+    <nav class="jump" aria-label="Sections">
+      <a href="#prep">Prep</a><a href="#table">Table</a><a href="#maps">Maps</a><a href="#split">Side by side</a><a href="#sync">Sync</a><a href="#ai">AI</a>
+    </nav>
 
     <div class="codemap" id="codemap" aria-hidden="true"></div>
 
@@ -84,17 +89,18 @@
         <div class="arc-ornament-rule" aria-hidden="true"><span>&#9671;</span><span>&#10019;</span><span>&#9671;</span></div>
       </header>
       <p class="lede">
-        Prep your campaign once, then run the table without hunting for anything. Every note is a plain Markdown file in a
-        folder you own.
+        A desktop app for Dungeon Masters. Prep your campaign once, then run the table without hunting for anything.
+        Every note is a plain Markdown file in a folder you own, called the Codex.
       </p>
 
       <div class="actions">
         <a class="btn lg" href="https://github.com/Tratt0re/lazydm"><svg class="i" viewBox="0 0 16 16" aria-hidden="true"><use href="#github" /></svg>Follow on GitHub</a>
         <span class="status">Download: coming soon</span>
       </div>
+      <p class="meta">macOS &middot; Windows &middot; Linux &middot; pre-1.0</p>
 
       <div class="infobox">
-        <strong>Info box</strong>
+        <strong>Status</strong>
         <p>LazyDM is not released yet. It is made by a Dungeon Master, for Dungeon Masters, and heading to 1.0.</p>
       </div>
 
@@ -118,6 +124,10 @@
           <div>
             <dt>Rebuildable index</dt>
             <dd>Search and links run from a local index. Delete it and it grows back from your files.</dd>
+          </div>
+          <div>
+            <dt>Light and dark</dt>
+            <dd>Both themes, in English, Italian, German, Spanish, French, Ukrainian and Chinese.</dd>
           </div>
         </dl>
       </section>
@@ -146,8 +156,8 @@
             <div class="shot-bar"><span class="shot-path">lost-mine / scenes / ambush-at-the-fort.md</span><span class="bdg">Note</span></div>
             <div class="arc-ornament-rule" aria-hidden="true"><span>&#9671;</span><span>&#10019;</span><span>&#9671;</span></div>
             <div class="shot-media">
-              <img class="theme-light" src="assets/img/shots/note-light.webp" width="1920" height="1200" loading="lazy" decoding="async" alt="A LazyDM note in Live preview: a title, two resolved links, an Info box and an encounter embed, with the code map on the right." />
-              <img class="theme-dark" src="assets/img/shots/note-dark.webp" width="1920" height="1200" loading="lazy" decoding="async" alt="A LazyDM note in Live preview: a title, two resolved links, an Info box and an encounter embed, with the code map on the right." />
+              <img class="theme-light" src="assets/img/shots/note-light-960.webp" srcset="assets/img/shots/note-light-960.webp 960w, assets/img/shots/note-light.webp 1920w" sizes="(min-width: 900px) 36rem, 100vw" width="1920" height="1200" loading="lazy" decoding="async" alt="A LazyDM note in Live preview: a title, two resolved links, an Info box and an encounter embed, with the code map on the right." />
+              <img class="theme-dark" src="assets/img/shots/note-dark-960.webp" srcset="assets/img/shots/note-dark-960.webp 960w, assets/img/shots/note-dark.webp 1920w" sizes="(min-width: 900px) 36rem, 100vw" width="1920" height="1200" loading="lazy" decoding="async" alt="A LazyDM note in Live preview: a title, two resolved links, an Info box and an encounter embed, with the code map on the right." />
             </div>
           </div>
           <figcaption>A note in Live preview, on a made-up scene. Links resolve, the Info box and the encounter row render as you type.</figcaption>
@@ -175,8 +185,8 @@
             <div class="shot-bar"><span class="shot-path">lost-mine / encounters / ambush.json</span><span class="bdg">Encounter</span></div>
             <div class="arc-ornament-rule" aria-hidden="true"><span>&#9671;</span><span>&#10019;</span><span>&#9671;</span></div>
             <div class="shot-media">
-              <img class="theme-light" src="assets/img/shots/tracker-light.webp" width="1920" height="1200" loading="lazy" decoding="async" alt="The LazyDM encounter page: a battle bar with round 01 and the turn of Brenna, then four combatants in initiative order with HP bars, AC and statuses." />
-              <img class="theme-dark" src="assets/img/shots/tracker-dark.webp" width="1920" height="1200" loading="lazy" decoding="async" alt="The LazyDM encounter page: a battle bar with round 01 and the turn of Brenna, then four combatants in initiative order with HP bars, AC and statuses." />
+              <img class="theme-light" src="assets/img/shots/tracker-light-960.webp" srcset="assets/img/shots/tracker-light-960.webp 960w, assets/img/shots/tracker-light.webp 1920w" sizes="(min-width: 900px) 36rem, 100vw" width="1920" height="1200" loading="lazy" decoding="async" alt="The LazyDM encounter page: a battle bar with round 01 and the turn of Brenna, then four combatants in initiative order with HP bars, AC and statuses." />
+              <img class="theme-dark" src="assets/img/shots/tracker-dark-960.webp" srcset="assets/img/shots/tracker-dark-960.webp 960w, assets/img/shots/tracker-dark.webp 1920w" sizes="(min-width: 900px) 36rem, 100vw" width="1920" height="1200" loading="lazy" decoding="async" alt="The LazyDM encounter page: a battle bar with round 01 and the turn of Brenna, then four combatants in initiative order with HP bars, AC and statuses." />
             </div>
           </div>
           <figcaption>An encounter mid-battle, on made-up combatants: the round and whose turn it is stay pinned above the initiative order.</figcaption>
@@ -199,8 +209,8 @@
             <div class="shot-bar"><span class="shot-path">lost-mine / maps / the-sunken-halls.json</span><span class="bdg">Map</span></div>
             <div class="arc-ornament-rule" aria-hidden="true"><span>&#9671;</span><span>&#10019;</span><span>&#9671;</span></div>
             <div class="shot-media">
-              <img class="theme-light" src="assets/img/shots/map-light.webp" width="1920" height="1200" loading="lazy" decoding="async" alt="The LazyDM map page: a hand-drawn dungeon map with six pins, a route and a note, and an On this map list on the right." />
-              <img class="theme-dark" src="assets/img/shots/map-dark.webp" width="1920" height="1200" loading="lazy" decoding="async" alt="The LazyDM map page: a hand-drawn dungeon map with six pins, a route and a note, and an On this map list on the right." />
+              <img class="theme-light" src="assets/img/shots/map-light-960.webp" srcset="assets/img/shots/map-light-960.webp 960w, assets/img/shots/map-light.webp 1920w" sizes="(min-width: 900px) 36rem, 100vw" width="1920" height="1200" loading="lazy" decoding="async" alt="The LazyDM map page: a hand-drawn dungeon map with six pins, a route and a note, and an On this map list on the right." />
+              <img class="theme-dark" src="assets/img/shots/map-dark-960.webp" srcset="assets/img/shots/map-dark-960.webp 960w, assets/img/shots/map-dark.webp 1920w" sizes="(min-width: 900px) 36rem, 100vw" width="1920" height="1200" loading="lazy" decoding="async" alt="The LazyDM map page: a hand-drawn dungeon map with six pins, a route and a note, and an On this map list on the right." />
             </div>
           </div>
           <figcaption>A map with pins, a route and a note, on a hand-drawn dungeon. The list on the right is everything on the map.</figcaption>
@@ -223,8 +233,8 @@
             <div class="shot-bar"><span class="shot-path">ambush-at-the-fort.md + the-sunken-halls.json</span><span class="bdg">Split screen</span></div>
             <div class="arc-ornament-rule" aria-hidden="true"><span>&#9671;</span><span>&#10019;</span><span>&#9671;</span></div>
             <div class="shot-media">
-              <img class="theme-light" src="assets/img/shots/split-light.webp" width="1920" height="1200" loading="lazy" decoding="async" alt="LazyDM split screen: the ambush scene on the left, with two more tabs open behind it, and the sunken halls map with its pins and route on the right." />
-              <img class="theme-dark" src="assets/img/shots/split-dark.webp" width="1920" height="1200" loading="lazy" decoding="async" alt="LazyDM split screen: the ambush scene on the left, with two more tabs open behind it, and the sunken halls map with its pins and route on the right." />
+              <img class="theme-light" src="assets/img/shots/split-light-960.webp" srcset="assets/img/shots/split-light-960.webp 960w, assets/img/shots/split-light.webp 1920w" sizes="(min-width: 900px) 36rem, 100vw" width="1920" height="1200" loading="lazy" decoding="async" alt="LazyDM split screen: the ambush scene on the left, with two more tabs open behind it, and the sunken halls map with its pins and route on the right." />
+              <img class="theme-dark" src="assets/img/shots/split-dark-960.webp" srcset="assets/img/shots/split-dark-960.webp 960w, assets/img/shots/split-dark.webp 1920w" sizes="(min-width: 900px) 36rem, 100vw" width="1920" height="1200" loading="lazy" decoding="async" alt="LazyDM split screen: the ambush scene on the left, with two more tabs open behind it, and the sunken halls map with its pins and route on the right." />
             </div>
           </div>
           <figcaption>Two pages side by side: the scene on the left, the map on the right, each side with its own tabs. Drag a tab across to move it.</figcaption>
@@ -240,12 +250,6 @@
           does the syncing. LazyDM waits for files that are still downloading and warns you when two devices changed the
           same note.
         </p>
-        <dl class="defs">
-          <div>
-            <dt>Light and dark</dt>
-            <dd>Both themes, in English, Italian, German, Spanish, French, Ukrainian and Chinese.</dd>
-          </div>
-        </dl>
       </section>
 
       <div class="arc-engraved-divider" aria-hidden="true"><span></span></div>
@@ -276,16 +280,16 @@
           It is an MCP server, off until you switch it on. It listens only on your own computer and asks for a token.
           Writing is a separate switch, and so is deleting; both start off.
         </p>
-        <p class="more-soon">More to come&hellip;</p>
       </section>
 
       <div class="arc-engraved-divider" aria-hidden="true"><span></span></div>
 
       <section aria-labelledby="close-h">
         <h2 class="section" id="close-h">See it grow<span class="dot" aria-hidden="true">.</span></h2>
-        <p>There is no download yet. Follow the project on GitHub to see it take shape.</p>
+        <p>There is no download yet. Follow the project on GitHub, or read the issues to see what is being built next.</p>
         <div class="actions">
           <a class="btn lg" href="https://github.com/Tratt0re/lazydm"><svg class="i" viewBox="0 0 16 16" aria-hidden="true"><use href="#github" /></svg>Follow on GitHub</a>
+          <a class="btn ghost lg" href="https://github.com/Tratt0re/lazydm/issues">Read the issues</a>
           <span class="status">Download: coming soon</span>
         </div>
       </section>
