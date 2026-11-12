@@ -1745,19 +1745,19 @@
   "onboarding": {
     "step": "Schritt {{current}} von {{total}}",
     "welcome": {
-      "lead": "Von einem Spielleiter für Spielleiter gemacht, mit Absicht faul: weniger Vorbereitung, und alles griffbereit, wenn die Sitzung beginnt.",
+      "lead": "Bereite deine Kampagne vor und spiele sie am Tisch in derselben Desktop-App. Mit Absicht faul: sinnvolle Voreinstellungen und kurze Wege halten die Vorbereitung in Fluss und die Werkzeuge für den Tisch griffbereit.",
       "points": {
         "prepare": {
-          "title": "Einmal vorbereiten",
-          "text": "Szenen, Gegner, Orte und Karten liegen zusammen und verweisen aufeinander."
+          "title": "Am Schreibtisch vorbereiten",
+          "text": "Schreibe Szenen, Gegner, Orte und Karten als verknüpfte Notizen. Benennst du eine Notiz um, aktualisiert LazyDM die Verweise darauf."
         },
         "session": {
           "title": "Am Tisch spielen",
-          "text": "Initiative, TP und Karten liegen neben deinen Notizen, damit du das Spiel nie verlassen musst, um etwas nachzuschlagen."
+          "text": "Wenn das Spiel beginnt, liegt die Kampagne schon vor dir: Initiative, TP und Karten liegen neben deinen Notizen."
         },
         "files": {
-          "title": "Einfache Dateien, deine",
-          "text": "Alles ist Markdown in einem Ordner deiner Wahl. Kein Konto, keine Bindung."
+          "title": "Die Kampagne bleibt deine",
+          "text": "Alles ist Markdown in einem Ordner deiner Wahl und mit anderen Werkzeugen kompatibel. Kein Konto, keine Bindung."
         }
       },
       "continue": "Weiter"

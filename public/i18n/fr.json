@@ -1745,19 +1745,19 @@
   "onboarding": {
     "step": "Étape {{current}} sur {{total}}",
     "welcome": {
-      "lead": "Fait par un Maître du Donjon pour des Maîtres du Donjon, paresseux par conception : moins de préparation, et tout sous la main quand la séance commence.",
+      "lead": "Prépare ta campagne et joue-la à la table dans la même application de bureau. Paresseux par conception : des réglages par défaut sensés et des chemins courts gardent la préparation fluide et les outils de table sous la main.",
       "points": {
         "prepare": {
-          "title": "Prépare une fois",
-          "text": "Scènes, ennemis, lieux et cartes vivent ensemble et se lient entre eux."
+          "title": "Prépare à ton bureau",
+          "text": "Écris scènes, ennemis, lieux et cartes sous forme de notes liées. Renomme une note et LazyDM met à jour les liens qui y mènent."
         },
         "session": {
           "title": "Joue à la table",
-          "text": "Initiative, PV et cartes sont à côté de tes notes, donc tu ne quittes jamais la partie pour chercher quelque chose."
+          "text": "Quand le jeu commence, la campagne est déjà devant toi : initiative, PV et cartes sont à côté de tes notes."
         },
         "files": {
-          "title": "Des fichiers simples, à toi",
-          "text": "Tout est en Markdown dans un dossier de ton choix. Pas de compte, pas d’enfermement."
+          "title": "La campagne reste à toi",
+          "text": "Tout est en Markdown dans un dossier de ton choix, compatible avec d’autres outils. Pas de compte, pas d’enfermement."
         }
       },
       "continue": "Continuer"

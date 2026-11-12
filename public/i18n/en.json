@@ -1745,19 +1745,19 @@
   "onboarding": {
     "step": "Step {{current}} of {{total}}",
     "welcome": {
-      "lead": "Made by a Dungeon Master for Dungeon Masters, lazy by design: less prep, and everything at hand when the session starts.",
+      "lead": "Prepare your campaign and run it at the table from the same desktop app. Lazy by design: sensible defaults and short paths keep preparation moving and table tools close.",
       "points": {
         "prepare": {
-          "title": "Prepare once",
-          "text": "Scenes, enemies, places and maps live together and link to each other."
+          "title": "Prepare at your desk",
+          "text": "Write scenes, enemies, places and maps as linked notes. Rename a note and LazyDM updates the links to it."
         },
         "session": {
-          "title": "Run it at the table",
-          "text": "Initiative, HP and maps sit next to your notes, so you never leave the game to look something up."
+          "title": "Run at the table",
+          "text": "When play begins, the campaign is already in front of you: initiative, hit points and maps sit next to your notes."
         },
         "files": {
-          "title": "Plain files you own",
-          "text": "Everything is Markdown in a folder of your choice. No account, no lock-in."
+          "title": "The campaign stays yours",
+          "text": "Everything is Markdown in a folder of your choice, compatible with other tools. No account, no lock-in."
         }
       },
       "continue": "Continue"

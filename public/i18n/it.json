@@ -1745,19 +1745,19 @@
   "onboarding": {
     "step": "Passo {{current}} di {{total}}",
     "welcome": {
-      "lead": "Fatto da un Dungeon Master per i Dungeon Master, pigro per scelta: meno preparazione, e tutto a portata di mano quando inizia la sessione.",
+      "lead": "Prepara la campagna e giocala al tavolo con la stessa app desktop. Pigro per scelta: impostazioni sensate e percorsi brevi mantengono fluida la preparazione e gli strumenti del tavolo a portata di mano.",
       "points": {
         "prepare": {
-          "title": "Prepara una volta",
-          "text": "Scene, nemici, luoghi e mappe stanno insieme e si collegano tra loro."
+          "title": "Prepara alla scrivania",
+          "text": "Scrivi scene, nemici, luoghi e mappe come note collegate. Rinomina una nota e LazyDM aggiorna i collegamenti che la riguardano."
         },
         "session": {
-          "title": "Giocala al tavolo",
-          "text": "Iniziativa, PF e mappe stanno accanto alle tue note, così non lasci mai la partita per cercare qualcosa."
+          "title": "Gioca al tavolo",
+          "text": "Quando inizia il gioco, la campagna è già davanti a te: iniziativa, PF e mappe stanno accanto alle tue note."
         },
         "files": {
-          "title": "File semplici, tuoi",
-          "text": "Tutto è Markdown in una cartella a tua scelta. Nessun account, nessun vincolo."
+          "title": "La campagna resta tua",
+          "text": "Tutto è Markdown in una cartella a tua scelta, compatibile con altri strumenti. Nessun account, nessun vincolo."
         }
       },
       "continue": "Continua"

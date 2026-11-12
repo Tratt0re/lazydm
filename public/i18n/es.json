@@ -1745,19 +1745,19 @@
   "onboarding": {
     "step": "Paso {{current}} de {{total}}",
     "welcome": {
-      "lead": "Hecho por un Dungeon Master para Dungeon Masters, perezoso a propósito: menos preparación y todo a mano cuando empieza la sesión.",
+      "lead": "Prepara tu campaña y juégala en la mesa desde la misma aplicación de escritorio. Perezoso a propósito: los valores por defecto sensatos y los caminos cortos mantienen ágil la preparación y las herramientas de la mesa a mano.",
       "points": {
         "prepare": {
-          "title": "Prepara una vez",
-          "text": "Escenas, enemigos, lugares y mapas viven juntos y se enlazan entre sí."
+          "title": "Prepara en tu escritorio",
+          "text": "Escribe escenas, enemigos, lugares y mapas como notas enlazadas. Si renombras una nota, LazyDM actualiza los enlaces que apuntan a ella."
         },
         "session": {
-          "title": "Juégala en la mesa",
-          "text": "Iniciativa, PG y mapas están junto a tus notas, así nunca sales de la partida para buscar algo."
+          "title": "Juega en la mesa",
+          "text": "Cuando empieza el juego, la campaña ya está delante de ti: iniciativa, PG y mapas están junto a tus notas."
         },
         "files": {
-          "title": "Archivos simples, tuyos",
-          "text": "Todo es Markdown en una carpeta que eliges. Sin cuenta, sin ataduras."
+          "title": "La campaña sigue siendo tuya",
+          "text": "Todo es Markdown en una carpeta que eliges, compatible con otras herramientas. Sin cuenta, sin ataduras."
         }
       },
       "continue": "Continuar"
