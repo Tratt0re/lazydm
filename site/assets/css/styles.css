@@ -517,14 +517,14 @@ p code, li code, dd code {
 /* Franco beside the title, on the right: the title and the ornamental rule keep the left column. */
 .hero {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-columns: auto minmax(0, 1fr);
   align-items: center;
   column-gap: 1.5rem;
   row-gap: calc(0.5rem + 1px);
   margin-bottom: 1.5rem;
 }
 .hero .franco {
-  grid-column: 2;
+  grid-column: 1;
   grid-row: 1 / span 2;
   width: 5rem;
   height: 5rem;
@@ -533,8 +533,8 @@ p code, li code, dd code {
 @media (min-width: 640px) {
   .hero .franco { width: 9rem; height: 9rem; }
 }
-.hero h1.title { grid-column: 1; grid-row: 1; }
-.hero .arc-ornament-rule { grid-column: 1; grid-row: 2; align-self: start; }
+.hero h1.title { grid-column: 2; grid-row: 1; }
+.hero .arc-ornament-rule { grid-column: 2; grid-row: 2; align-self: start; }
 
 h1.title {
   align-self: end;
