@@ -134,6 +134,48 @@
   }
   paint(currentChoice());
 
+  /* ---------- rows: the screen starts tilted and half under its text, and flattens out to its side as the row scrolls in ---------- */
+
+  (function rows() {
+    var list = Array.prototype.slice.call(document.querySelectorAll('.row'));
+    if (!list.length || !window.matchMedia) return;
+    var wide = window.matchMedia('(min-width: 900px)');
+    var live = false;
+    var queued = false;
+
+    function update() {
+      queued = false;
+      var vh = window.innerHeight || 800;
+      list.forEach(function (row) {
+        var shot = row.querySelector('.shot');
+        if (!shot) return;
+        var top = row.getBoundingClientRect().top;
+        // 0 while the row's top is in the lower part of the screen, 1 once it has risen to about a third of the way up.
+        var p = (vh * 0.85 - top) / (vh * 0.5);
+        shot.style.setProperty('--p', String(Math.max(0, Math.min(1, p))));
+      });
+    }
+
+    function soon() {
+      if (queued) return;
+      queued = true;
+      window.requestAnimationFrame(update);
+    }
+
+    function sync() {
+      var on = wide.matches && !reduceMotion;
+      if (on === live) return;
+      live = on;
+      html.classList.toggle('rows-live', on);
+      if (on) update();
+    }
+
+    window.addEventListener('scroll', function () { if (live) soon(); }, { passive: true });
+    window.addEventListener('resize', function () { if (live) soon(); });
+    if (wide.addEventListener) wide.addEventListener('change', sync);
+    sync();
+  })();
+
   /* ---------- code map (the app's code-map.ts: the whole note at a small scale, headings as labels) ---------- */
 
   (function codeMap() {

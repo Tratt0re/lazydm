@@ -124,7 +124,8 @@
 
       <div class="arc-engraved-divider" aria-hidden="true"><span></span></div>
 
-      <section id="prep" aria-labelledby="prep-h">
+      <section id="prep" class="row" aria-labelledby="prep-h">
+        <div class="row-text">
         <h2 class="section" id="prep-h">Prep once<span class="dot" aria-hidden="true">.</span></h2>
         <p>
           Write scenes, characters and enemies as notes and tie them together with <code>[[links]]</code>. Rename a note
@@ -132,7 +133,14 @@
           say so.
         </p>
 
-        <figure class="shot wide">
+        <ul class="checks">
+          <li><b>Templates</b> per kind of note and per campaign, with a built-in one for each.</li>
+          <li><b>Links panel</b> shows what links to a note and what it links to.</li>
+          <li><b>Compendium</b> keeps shared systems you copy into any campaign. The original stays put.</li>
+          <li><b>Assets</b>: paste or drop images, audio and PDFs straight into a note.</li>
+        </ul>
+        </div>
+        <figure class="shot">
           <div class="shot-frame">
             <span class="arc-card-corner arc-card-corner-tl" aria-hidden="true"></span><span class="arc-card-corner arc-card-corner-tr" aria-hidden="true"></span><span class="arc-card-corner arc-card-corner-bl" aria-hidden="true"></span><span class="arc-card-corner arc-card-corner-br" aria-hidden="true"></span>
             <div class="shot-bar"><span class="shot-path">lost-mine / scenes / ambush-at-the-fort.md</span><span class="bdg">Note</span></div>
@@ -144,18 +152,12 @@
           </div>
           <figcaption>A note in Live preview, on a made-up scene. Links resolve, the Info box and the encounter row render as you type.</figcaption>
         </figure>
-
-        <ul class="checks">
-          <li><b>Templates</b> per kind of note and per campaign, with a built-in one for each.</li>
-          <li><b>Links panel</b> shows what links to a note and what it links to.</li>
-          <li><b>Compendium</b> keeps shared systems you copy into any campaign. The original stays put.</li>
-          <li><b>Assets</b>: paste or drop images, audio and PDFs straight into a note.</li>
-        </ul>
       </section>
 
       <div class="arc-engraved-divider" aria-hidden="true"><span></span></div>
 
-      <section id="table" aria-labelledby="table-h">
+      <section id="table" class="row flip" aria-labelledby="table-h">
+        <div class="row-text">
         <h2 class="section" id="table-h">Run the table<span class="dot" aria-hidden="true">.</span></h2>
         <p>
           An encounter is a file you link like any note. Add combatants, roll initiative, then step through the turns.
@@ -163,7 +165,11 @@
           you can recover from.
         </p>
 
-        <figure class="shot wide">
+        <p>
+          Each row follows a Tracker layout you can change, with a dice formula for initiative if you want one.
+        </p>
+        </div>
+        <figure class="shot">
           <div class="shot-frame">
             <span class="arc-card-corner arc-card-corner-tl" aria-hidden="true"></span><span class="arc-card-corner arc-card-corner-tr" aria-hidden="true"></span><span class="arc-card-corner arc-card-corner-bl" aria-hidden="true"></span><span class="arc-card-corner arc-card-corner-br" aria-hidden="true"></span>
             <div class="shot-bar"><span class="shot-path">lost-mine / encounters / ambush.json</span><span class="bdg">Encounter</span></div>
@@ -175,22 +181,19 @@
           </div>
           <figcaption>An encounter mid-battle, on made-up combatants: the round and whose turn it is stay pinned above the initiative order.</figcaption>
         </figure>
-
-        <p>
-          Each row follows a Tracker layout you can change, with a dice formula for initiative if you want one.
-        </p>
       </section>
 
       <div class="arc-engraved-divider" aria-hidden="true"><span></span></div>
 
-      <section id="maps" aria-labelledby="maps-h">
+      <section id="maps" class="row" aria-labelledby="maps-h">
+        <div class="row-text">
         <h2 class="section" id="maps-h">Pin the place<span class="dot" aria-hidden="true">.</span></h2>
         <p>
           Drop any image of a map into your assets and mark it up. Pins can open a note, so the guard post opens the guard
           post. Draw a path for the party&rsquo;s route, close one into an area, and leave a note where the floor is slick.
         </p>
-
-        <figure class="shot wide">
+        </div>
+        <figure class="shot">
           <div class="shot-frame">
             <span class="arc-card-corner arc-card-corner-tl" aria-hidden="true"></span><span class="arc-card-corner arc-card-corner-tr" aria-hidden="true"></span><span class="arc-card-corner arc-card-corner-bl" aria-hidden="true"></span><span class="arc-card-corner arc-card-corner-br" aria-hidden="true"></span>
             <div class="shot-bar"><span class="shot-path">lost-mine / maps / the-sunken-halls.json</span><span class="bdg">Map</span></div>
@@ -204,14 +207,15 @@
         </figure>
       </section>
 
-      <section id="split" aria-labelledby="split-h">
+      <section id="split" class="row flip" aria-labelledby="split-h">
+        <div class="row-text">
         <h2 class="section" id="split-h">Side by side<span class="dot" aria-hidden="true">.</span></h2>
         <p>
           Open any note, map or encounter beside another, each side with its own tabs. Keep the map on one side while you
           run the encounter on the other. The same note on both sides is one live document.
         </p>
-
-        <figure class="shot wide">
+        </div>
+        <figure class="shot">
           <div class="shot-frame">
             <span class="arc-card-corner arc-card-corner-tl" aria-hidden="true"></span><span class="arc-card-corner arc-card-corner-tr" aria-hidden="true"></span><span class="arc-card-corner arc-card-corner-bl" aria-hidden="true"></span><span class="arc-card-corner arc-card-corner-br" aria-hidden="true"></span>
             <div class="shot-bar"><span class="shot-path">ambush-at-the-fort.md + the-sunken-halls.json</span><span class="bdg">Split screen</span></div>

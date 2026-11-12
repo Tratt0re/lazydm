@@ -19,7 +19,7 @@ python3 -m http.server 8123   # then open http://127.0.0.1:8123/
 | `site/index.html` | the page: one long LazyDM note |
 | `site/assets/css/styles.css` | tokens, fonts and ornaments copied from the app (`src/styles.css`) |
 | `site/assets/js/theme-init.js` | sets the theme before first paint (same `localStorage.theme` key as the app) |
-| `site/assets/js/site.js` | the theme menu (System, Light, Dark) and the code map (a port of the app's `code-map.ts`) |
+| `site/assets/js/site.js` | the theme menu (System, Light, Dark), the scroll-driven tilt of the screens and the code map (a port of the app's `code-map.ts`) |
 | `site/assets/img/shots/` | screenshots of the real app, one dark and one light each (see below) |
 | `site/assets/fonts/` | Barlow Condensed, IBM Plex Sans and Mono, from the app |
 | `PRODUCT.md` | who the site is for and which claims are settled (read before editing copy) |

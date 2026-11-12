@@ -273,7 +273,7 @@ p code, li code, dd code {
   left: 50%;
   width: var(--small);
   height: var(--small);
-  margin: calc(var(--small) / -2 - 1px) 0 0 calc(var(--small) / -2 - 1px);
+  margin: calc(var(--small) / -2) 0 0 calc(var(--small) / -2);
   border: 1px solid var(--primary);
 }
 .arc-engraved-divider > span::before { transform: translate(calc(var(--side) * -0.7071), calc(var(--side) * 0.7071)); }
@@ -289,7 +289,7 @@ p code, li code, dd code {
 .arc-ornament-rule::before {
   content: '';
   flex: none;
-  width: 64px;
+  width: 63px;
   height: 5px;
   background: var(--primary);
 }
@@ -803,4 +803,52 @@ h3 { font: 700 1.75rem / 1.1 var(--font-display); }
   letter-spacing: 0.05em;
   text-transform: uppercase;
   white-space: nowrap;
+}
+
+/* ---------- alternating rows: text over a tilted screen that flattens and slides out as the row scrolls in ---------- */
+
+.row { margin-block: 0; }
+.row-text > :last-child { margin-bottom: 0; }
+.row .shot { margin: 1.5rem 0 0; }
+
+@media (min-width: 900px) {
+  .row {
+    --dir: 1;
+    position: relative;
+    left: 50%;
+    width: var(--wide-w);
+    transform: translateX(-50%);
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    align-items: center;
+    column-gap: 0;
+  }
+  .row.flip { --dir: -1; }
+  .row-text {
+    position: relative;
+    z-index: 2;
+    grid-column: 1 / 6;
+    grid-row: 1;
+    padding: 1.75rem 1.75rem 1.5rem;
+    background: var(--card);
+    border: 1px solid var(--border-subtle);
+  }
+  .row .shot {
+    grid-column: 6 / 13;
+    grid-row: 1;
+    z-index: 1;
+    margin: 0;
+  }
+  .row.flip .row-text { grid-column: 8 / 13; }
+  .row.flip .shot { grid-column: 1 / 8; }
+
+  /* JS drives --p from 0 (tilted, half under the text) to 1 (flat, aligned to its side). Without JS the shot is flat. */
+  .rows-live .row .shot {
+    --p: 0;
+    transform:
+      perspective(1500px)
+      translateX(calc((1 - var(--p)) * var(--dir) * -34%))
+      rotateY(calc((1 - var(--p)) * var(--dir) * -30deg));
+    will-change: transform;
+  }
 }
