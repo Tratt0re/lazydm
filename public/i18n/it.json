@@ -1505,7 +1505,30 @@
       "unconfirmed": "Non ancora applicato",
       "resize": "Ridimensiona {{name}}"
     },
-    "builtInSystem": "Integrato · {{system}}"
+    "builtInSystem": "Integrato · {{system}}",
+    "settings": {
+      "saved": "Layout del tracker salvato",
+      "saveError": "Impossibile salvare il layout del tracker",
+      "noCampaign": "Nessuna campagna",
+      "noCampaignHint": "Crea una campagna, poi scegli qui il layout del tracker dei suoi incontri.",
+      "layout": "Layout del tracker",
+      "layoutHint": "Cosa mostra la riga di un combattente. Appartiene alla campagna, quindi ogni dispositivo e i tuoi agenti AI lo seguono.",
+      "campaign": "Campagna",
+      "densityHint": "Quanto di ogni riga viene mostrato. Resta su questo dispositivo.",
+      "followTurnHint": "Apre come Esteso la riga di chi ha il turno e la sposta con Turno successivo. Resta su questo dispositivo.",
+      "preview": "Anteprima",
+      "previewHint": "Combattenti di prova, con questo layout e questa dimensione. Nulla qui viene salvato nel tuo Codex.",
+      "mock": {
+        "hero": "Mira",
+        "goblin": "Goblin",
+        "ogre": "Orco",
+        "stunned": "stordito",
+        "prone": "prono",
+        "heroSenses": "Percezione passiva 14",
+        "goblinSenses": "Scurovisione 18 m",
+        "ogreSenses": "Scurovisione 18 m"
+      }
+    }
   },
   "breadcrumb": {
     "ariaLabel": "Percorso"

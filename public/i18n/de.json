@@ -1505,7 +1505,30 @@
       "unconfirmed": "Noch nicht übernommen",
       "resize": "{{name}} anpassen"
     },
-    "builtInSystem": "Integriert · {{system}}"
+    "builtInSystem": "Integriert · {{system}}",
+    "settings": {
+      "saved": "Tracker-Layout gespeichert",
+      "saveError": "Das Tracker-Layout konnte nicht gespeichert werden",
+      "noCampaign": "Noch keine Kampagne",
+      "noCampaignHint": "Lege eine Kampagne an und wähle hier das Tracker-Layout ihrer Begegnungen.",
+      "layout": "Tracker-Layout",
+      "layoutHint": "Was die Zeile eines Kämpfers zeigt. Es gehört zur Kampagne, daher folgen ihm alle Geräte und deine KI-Agenten.",
+      "campaign": "Kampagne",
+      "densityHint": "Wie viel jeder Zeile gezeigt wird. Bleibt auf diesem Gerät.",
+      "followTurnHint": "Öffnet die Zeile des Kämpfers am Zug als Erweitert und wandert mit Nächster Zug mit. Bleibt auf diesem Gerät.",
+      "preview": "Vorschau",
+      "previewHint": "Beispiel-Kämpfer mit diesem Layout und dieser Zeilengröße. Nichts davon wird in deinem Codex gespeichert.",
+      "mock": {
+        "hero": "Mira",
+        "goblin": "Goblin",
+        "ogre": "Oger",
+        "stunned": "betäubt",
+        "prone": "liegend",
+        "heroSenses": "Passive Wahrnehmung 14",
+        "goblinSenses": "Dunkelsicht 18 m",
+        "ogreSenses": "Dunkelsicht 18 m"
+      }
+    }
   },
   "breadcrumb": {
     "ariaLabel": "Brotkrumennavigation"

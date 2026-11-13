@@ -1505,7 +1505,30 @@
       "unconfirmed": "Aún sin aplicar",
       "resize": "Redimensionar {{name}}"
     },
-    "builtInSystem": "Integrado · {{system}}"
+    "builtInSystem": "Integrado · {{system}}",
+    "settings": {
+      "saved": "Diseño del tracker guardado",
+      "saveError": "No se pudo guardar el diseño del tracker",
+      "noCampaign": "Aún no hay campañas",
+      "noCampaignHint": "Crea una campaña y elige aquí el diseño del tracker de sus encuentros.",
+      "layout": "Diseño del tracker",
+      "layoutHint": "Lo que muestra la fila de un combatiente. Pertenece a la campaña, así que lo siguen todos los dispositivos y tus agentes de IA.",
+      "campaign": "Campaña",
+      "densityHint": "Cuánto se muestra de cada fila. Se queda en este dispositivo.",
+      "followTurnHint": "Abre como Ampliada la fila de quien tiene el turno y la mueve con Siguiente turno. Se queda en este dispositivo.",
+      "preview": "Vista previa",
+      "previewHint": "Combatientes de ejemplo, con este diseño y este tamaño de fila. Nada de esto se guarda en tu Codex.",
+      "mock": {
+        "hero": "Mira",
+        "goblin": "Goblin",
+        "ogre": "Ogro",
+        "stunned": "aturdido",
+        "prone": "derribado",
+        "heroSenses": "Percepción pasiva 14",
+        "goblinSenses": "Visión en la oscuridad 18 m",
+        "ogreSenses": "Visión en la oscuridad 18 m"
+      }
+    }
   },
   "breadcrumb": {
     "ariaLabel": "Ruta de navegación"

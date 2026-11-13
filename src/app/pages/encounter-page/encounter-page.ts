@@ -78,9 +78,7 @@ import {
   type ArcTechInlineMove,
   type ArcTechInlineValue,
 } from '@/shared/components/inline-value';
-import { ArcTechSegmentedComponent, ArcTechSegmentedItemComponent } from '@/shared/components/segmented';
 import { ArcTechSelectImports } from '@/shared/components/select';
-import { ArcTechSwitchComponent } from '@/shared/components/switch';
 import { ArcTechButtonComponent } from '@/shared/components/button';
 import { ArcTechEmptyComponent } from '@/shared/components/empty';
 import { ArcTechIconComponent, type ArcTechIcon } from '@/shared/components/icon';
@@ -113,9 +111,6 @@ const ENTITY_QUANTITY_MAX = 15;
     ArcTechEmptyComponent,
     ArcTechIconComponent,
     ArcTechMenuImports,
-    ArcTechSegmentedComponent,
-    ArcTechSegmentedItemComponent,
-    ArcTechSwitchComponent,
     ...ArcTechSelectImports,
     ArcTechTooltipImports,
   ],
@@ -187,21 +182,10 @@ export class EncounterPage {
   /** A file that is not valid JSON opens empty; editing would replace it, so it stays read-only. */
   protected readonly isEditable = computed(() => this.encounter() !== null && !this.parseError());
 
-  /** The density switch of the battle bar (per device): one line, two lines or the stat-block row. */
+  /** The row size (per device, set in the *Tracker layouts* settings): one line, two lines or the stat-block row. */
   protected readonly density = this.localPreferences.trackerRowDensity;
-  protected readonly densities: readonly TrackerRowDensity[] = ['compact', 'card', 'expanded'];
   /** *Follow the turn*: the combatant whose turn it is opens as the Expanded row. */
   protected readonly followTurn = this.localPreferences.trackerFollowTurn;
-
-  protected setDensity(value: string): void {
-    if ((this.densities as readonly string[]).includes(value)) {
-      this.localPreferences.setTrackerRowDensity(value as TrackerRowDensity);
-    }
-  }
-
-  protected setFollowTurn(follow: boolean): void {
-    this.localPreferences.setTrackerFollowTurn(follow);
-  }
 
   /** The size of one combatant's row: the chosen density, or Expanded for whoever has the turn when it follows it. */
   protected densityOf(entity: EncounterEntityDto): TrackerRowDensity {

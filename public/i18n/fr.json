@@ -1505,7 +1505,30 @@
       "unconfirmed": "Pas encore appliqué",
       "resize": "Redimensionner {{name}}"
     },
-    "builtInSystem": "Intégré · {{system}}"
+    "builtInSystem": "Intégré · {{system}}",
+    "settings": {
+      "saved": "Disposition du tracker enregistrée",
+      "saveError": "Impossible d'enregistrer la disposition du tracker",
+      "noCampaign": "Aucune campagne pour l'instant",
+      "noCampaignHint": "Crée une campagne, puis choisis ici la disposition du tracker de ses rencontres.",
+      "layout": "Disposition du tracker",
+      "layoutHint": "Ce que montre la ligne d'un combattant. Elle appartient à la campagne : tous les appareils et tes agents IA la suivent.",
+      "campaign": "Campagne",
+      "densityHint": "Quelle part de chaque ligne s'affiche. Reste sur cet appareil.",
+      "followTurnHint": "Ouvre en Étendue la ligne de celui qui a le tour et la déplace avec Tour suivant. Reste sur cet appareil.",
+      "preview": "Aperçu",
+      "previewHint": "Combattants fictifs, avec cette disposition et cette taille de ligne. Rien ici n'est enregistré dans ton Codex.",
+      "mock": {
+        "hero": "Mira",
+        "goblin": "Gobelin",
+        "ogre": "Ogre",
+        "stunned": "étourdi",
+        "prone": "à terre",
+        "heroSenses": "Perception passive 14",
+        "goblinSenses": "Vision dans le noir 18 m",
+        "ogreSenses": "Vision dans le noir 18 m"
+      }
+    }
   },
   "breadcrumb": {
     "ariaLabel": "Fil d'Ariane"

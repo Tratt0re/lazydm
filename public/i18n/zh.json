@@ -1505,7 +1505,30 @@
       "unconfirmed": "尚未应用",
       "resize": "调整 {{name}} 大小"
     },
-    "builtInSystem": "内置 · {{system}}"
+    "builtInSystem": "内置 · {{system}}",
+    "settings": {
+      "saved": "追踪器布局已保存",
+      "saveError": "无法保存追踪器布局",
+      "noCampaign": "还没有战役",
+      "noCampaignHint": "先创建战役，再在此选择其遭遇的追踪器布局。",
+      "layout": "追踪器布局",
+      "layoutHint": "战斗者一行显示的内容。它属于战役，因此所有设备和你的 AI 助手都会遵循它。",
+      "campaign": "战役",
+      "densityHint": "每一行显示多少内容。仅保存在此设备上。",
+      "followTurnHint": "将当前回合者的行展开为“展开”，并随“下一回合”移动。仅保存在此设备上。",
+      "preview": "预览",
+      "previewHint": "使用此布局和行大小的示例战斗者。这里的内容不会保存到你的 Codex。",
+      "mock": {
+        "hero": "米拉",
+        "goblin": "地精",
+        "ogre": "食人魔",
+        "stunned": "震慑",
+        "prone": "倒地",
+        "heroSenses": "被动察觉 14",
+        "goblinSenses": "黑暗视觉 18 米",
+        "ogreSenses": "黑暗视觉 18 米"
+      }
+    }
   },
   "breadcrumb": {
     "ariaLabel": "面包屑导航"

@@ -77,13 +77,14 @@ interface RowCell {
     @if (showRail()) {
     <!-- Left rail: the two things you do to many rows at once (drag to reorder, pick for the roll). -->
     <div
-      class="flex shrink-0 flex-col items-center gap-1 border-r border-border-subtle px-1 py-2"
+      class="flex min-w-8 shrink-0 flex-col items-center gap-1 border-r border-border-subtle px-1 py-2"
       [class]="sideTint(side())"
     >
       @if (side(); as sideValue) {
         <!-- The tint says it too; the word makes it not rely on colour. -->
         <span class="sr-only">{{ sideLabel(sideValue) }}</span>
       }
+      @if (isEditable()) {
       <span
         cdkDragHandle
         class="flex size-6 shrink-0 cursor-grab items-center justify-center text-muted-foreground"
@@ -92,6 +93,7 @@ interface RowCell {
       >
         <arc-icon arcType="grip-vertical" class="size-4" aria-hidden="true" />
       </span>
+      }
       @if (canRoll()) {
         <arc-checkbox
           [arcChecked]="selected()"

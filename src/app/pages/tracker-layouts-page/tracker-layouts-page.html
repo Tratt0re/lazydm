@@ -1,0 +1,106 @@
+<section class="mx-auto flex w-full max-w-5xl flex-col gap-6 p-6">
+  @if (campaigns().length === 0) {
+    <arc-empty
+      class="border border-dashed border-border bg-card/60"
+      arcIcon="swords"
+      [arcTitle]="'battleRules.settings.noCampaign' | translate"
+      [arcDescription]="'battleRules.settings.noCampaignHint' | translate"
+    />
+  } @else {
+    <div class="grid gap-6 border border-border bg-card p-4 md:grid-cols-2">
+      <!-- The layout belongs to a campaign: it is stored with it, so every device and the MCP follow it. -->
+      <div class="flex flex-col gap-1.5">
+        <span class="font-mono text-[11px] tracking-[0.1em] text-muted-foreground uppercase" id="tl-layout-label">
+          {{ 'battleRules.settings.layout' | translate }}
+        </span>
+        <arc-select
+          [arcValue]="layout()"
+          [attr.aria-labelledby]="'tl-layout-label'"
+          (arcSelectionChange)="selectLayout($any($event))"
+        >
+          @for (option of layoutOptions(); track option.value) {
+            <arc-select-item [arcValue]="option.value" [arcLabel]="option.label" />
+          }
+        </arc-select>
+        <p class="text-xs text-muted-foreground">{{ 'battleRules.settings.layoutHint' | translate }}</p>
+      </div>
+
+      @if (campaigns().length > 1) {
+        <div class="flex flex-col gap-1.5">
+          <span class="font-mono text-[11px] tracking-[0.1em] text-muted-foreground uppercase" id="tl-campaign-label">
+            {{ 'battleRules.settings.campaign' | translate }}
+          </span>
+          <arc-select
+            [arcValue]="campaign() ?? ''"
+            [attr.aria-labelledby]="'tl-campaign-label'"
+            (arcSelectionChange)="selectCampaign($any($event))"
+          >
+            @for (item of campaigns(); track item.slug) {
+              <arc-select-item [arcValue]="item.slug" [arcLabel]="item.name" />
+            }
+          </arc-select>
+        </div>
+      }
+
+      <div class="flex flex-col gap-1.5">
+        <span class="font-mono text-[11px] tracking-[0.1em] text-muted-foreground uppercase">
+          {{ 'encounters.density.label' | translate }}
+        </span>
+        <arc-segmented
+          arcSize="sm"
+          class="self-start [&_span.bg-primary]:border-b-2 [&_span.bg-primary]:border-primary [&_span.bg-primary]:bg-raised [&_button[aria-pressed=true]]:text-primary"
+          [arcDefaultValue]="density()"
+          [arcAriaLabel]="'encounters.density.label' | translate"
+          (arcChange)="setDensity($event)"
+        >
+          @for (option of densities; track option) {
+            <arc-segmented-item [value]="option" [label]="'encounters.density.' + option | translate" />
+          }
+        </arc-segmented>
+        <p class="text-xs text-muted-foreground">{{ 'battleRules.settings.densityHint' | translate }}</p>
+      </div>
+
+      <div class="flex flex-col gap-1.5">
+        <span class="font-mono text-[11px] tracking-[0.1em] text-muted-foreground uppercase">
+          {{ 'encounters.density.followTurn' | translate }}
+        </span>
+        <label class="flex cursor-pointer items-center gap-2 text-sm">
+          <arc-switch
+            arcSize="sm"
+            [arcChecked]="followTurn()"
+            [arcAriaLabel]="'encounters.density.followTurn' | translate"
+            (arcCheckedChange)="setFollowTurn($event)"
+          />
+          {{ 'encounters.density.followTurn' | translate }}
+        </label>
+        <p class="text-xs text-muted-foreground">{{ 'battleRules.settings.followTurnHint' | translate }}</p>
+      </div>
+    </div>
+
+    <div class="flex flex-col gap-2">
+      <h2 class="font-display text-xl font-semibold tracking-wide uppercase">
+        {{ 'battleRules.settings.preview' | translate }}<span class="text-primary" aria-hidden="true">.</span>
+      </h2>
+      <p class="text-xs text-muted-foreground">{{ 'battleRules.settings.previewHint' | translate }}</p>
+      @if (rule(); as currentRule) {
+        <ul class="flex flex-col border border-border bg-card">
+          @for (entity of previewEntities(); track entity.id) {
+            <li
+              class="relative flex items-stretch border-b border-l-4 border-b-border bg-card last:border-b-0"
+              [class]="entity.id === turnId ? 'border-l-primary bg-accent' : 'border-l-transparent'"
+            >
+              <app-encounter-row
+                [entity]="entity"
+                [rule]="currentRule"
+                [density]="densityOf(entity)"
+                [isEditable]="false"
+                [isTurn]="entity.id === turnId"
+                [showActions]="false"
+              />
+            </li>
+          }
+        </ul>
+      }
+    </div>
+  }
+</section>

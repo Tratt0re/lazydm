@@ -1505,7 +1505,30 @@
       "unconfirmed": "Not applied yet",
       "resize": "Resize {{name}}"
     },
-    "builtInSystem": "Built-in · {{system}}"
+    "builtInSystem": "Built-in · {{system}}",
+    "settings": {
+      "saved": "Tracker layout saved",
+      "saveError": "Couldn't save the tracker layout",
+      "noCampaign": "No campaign yet",
+      "noCampaignHint": "Create a campaign, then pick the tracker layout of its encounters here.",
+      "layout": "Tracker layout",
+      "layoutHint": "What a combatant row shows. It belongs to the campaign, so every device and your AI agents follow it.",
+      "campaign": "Campaign",
+      "densityHint": "How much of each row shows. Kept on this device.",
+      "followTurnHint": "Opens the row of whoever has the turn as Expanded, and moves along with Next turn. Kept on this device.",
+      "preview": "Preview",
+      "previewHint": "Mock combatants, with this layout and row size. Nothing here is saved to your Codex.",
+      "mock": {
+        "hero": "Mira",
+        "goblin": "Goblin",
+        "ogre": "Ogre",
+        "stunned": "stunned",
+        "prone": "prone",
+        "heroSenses": "Passive Perception 14",
+        "goblinSenses": "Darkvision 60 ft.",
+        "ogreSenses": "Darkvision 60 ft."
+      }
+    }
   },
   "breadcrumb": {
     "ariaLabel": "Breadcrumb"

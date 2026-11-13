@@ -130,6 +130,6 @@ export const LOCAL_PREFERENCE_DEFAULTS: Readonly<LocalPreferences> = Object.free
   noteAudioVolume: 1,
   showFileSizes: false,
   openLastCampaign: false,
-  trackerRowDensity: 'card',
+  trackerRowDensity: 'compact',
   trackerFollowTurn: false,
 });

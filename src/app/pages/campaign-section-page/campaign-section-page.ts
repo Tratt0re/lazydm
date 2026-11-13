@@ -22,7 +22,6 @@ import {
   toInAppNoteRoute,
 } from '@/components/document-preview/document-preview.markdown';
 import type {
-  BattleRuleRowDto,
   DocumentFileListItemDto,
   DocumentFolderDto,
   TemplateDto,
@@ -41,7 +40,6 @@ import { AssetService } from '@/services/asset.service';
 import { getNoteScopeKind, NoteScopeService } from '@/services/note-scope.service';
 import { CopyToService } from '@/services/copy-to.service';
 import { DocumentService } from '@/services/document.service';
-import { BattleRuleService, DEFAULT_BATTLE_RULE_CHOICE } from '@/services/battle-rule.service';
 import { PARTY_FILE_NAME } from '@/services/encounter.service';
 import { FileActionsService } from '@/services/file-actions.service';
 import { FileMoveService, type MoveSection } from '@/services/file-move.service';
@@ -115,7 +113,6 @@ export class CampaignSectionPage {
   private readonly translateService = inject(TranslateService);
   private readonly toolbarContext = inject(ToolbarContextService);
   private readonly templateService = inject(TemplateService);
-  private readonly battleRuleService = inject(BattleRuleService);
   private readonly appSheetService = inject(AppSheetService);
   protected readonly copyTo = inject(CopyToService);
 
@@ -123,9 +120,6 @@ export class CampaignSectionPage {
   private readonly templates = signal<readonly TemplateDto[]>([]);
   private readonly templateTypes = signal<readonly string[]>([]);
   private readonly templateRules = signal<TemplateRulesDto>({});
-  /** Battle rules and the campaign's choice, for the select of the Encounters section (campaigns only). */
-  private readonly battleRules = signal<readonly BattleRuleRowDto[]>([]);
-  private readonly battleRuleChoice = signal<string | null>(null);
 
   private readonly sectionKey = toSignal(
     this.route.paramMap.pipe(map((params) => params.get(CAMPAIGN_SECTION_PARAM) ?? '')),
@@ -290,7 +284,6 @@ export class CampaignSectionPage {
       const scope = this.scope();
       if (scope?.kind === 'campaign' && this.appSheetService.activeKind() === null) {
         void this.loadTemplates(scope.rootPath);
-        void this.loadBattleRules(scope.rootPath);
       }
     });
   }
@@ -321,25 +314,6 @@ export class CampaignSectionPage {
           this.templateTypes().includes(noteType),
         ),
         change: (value) => this.setTemplateRule(campaign, noteType, value),
-      });
-    }
-
-    if (section?.key === ENCOUNTERS_SECTION_KEY && scope?.kind === 'campaign') {
-      const campaign = scope.rootPath;
-      actions.push({
-        id: 'section-battle-rule',
-        type: 'select',
-        label: 'encounters.rule.label',
-        ariaLabel: this.translateService.instant('encounters.rule.campaignAriaLabel'),
-        class: 'w-56',
-        value: () => this.battleRuleChoice() ?? DEFAULT_BATTLE_RULE_CHOICE,
-        options: this.battleRuleService.getOptions(
-          this.battleRules(),
-          campaign,
-          this.battleRuleChoice(),
-          this.translateService.instant('encounters.rule.builtInDefault'),
-        ),
-        change: (value) => this.setBattleRuleChoice(campaign, value),
       });
     }
 
@@ -466,35 +440,6 @@ export class CampaignSectionPage {
       toast.error(this.translateService.instant('settings.templates.rules.saveError'), {
         description: error instanceof Error ? error.message : String(error),
       });
-    }
-  }
-
-  private async setBattleRuleChoice(campaign: string, value: string): Promise<void> {
-    const rule = value === DEFAULT_BATTLE_RULE_CHOICE ? null : value;
-    if (rule === this.battleRuleChoice()) {
-      return;
-    }
-
-    try {
-      this.battleRuleChoice.set(await this.battleRuleService.setChoice(campaign, rule));
-      toast.success(this.translateService.instant('encounters.rule.saved'));
-    } catch (error) {
-      toast.error(this.translateService.instant('encounters.rule.saveError'), {
-        description: error instanceof Error ? error.message : String(error),
-      });
-    }
-  }
-
-  private async loadBattleRules(campaign: string): Promise<void> {
-    try {
-      const [library, choice] = await Promise.all([
-        this.battleRuleService.list(),
-        this.battleRuleService.getChoice(campaign),
-      ]);
-      this.battleRules.set(library.rows);
-      this.battleRuleChoice.set(choice);
-    } catch (error) {
-      console.warn('[app] Failed to load the battle rules:', campaign, error);
     }
   }
 

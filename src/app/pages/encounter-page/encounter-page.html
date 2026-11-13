@@ -73,31 +73,6 @@
 
 
       <div class="ml-auto flex flex-wrap items-center gap-2">
-        @if (entities().length > 0) {
-          <!-- How much of each row shows. A device preference; the layout still decides which fields exist. -->
-          <arc-segmented
-            arcSize="sm"
-            class="[&_span.bg-primary]:border-b-2 [&_span.bg-primary]:border-primary [&_span.bg-primary]:bg-raised [&_button[aria-pressed=true]]:text-primary"
-            [arcDefaultValue]="density()"
-            [arcAriaLabel]="'encounters.density.label' | translate"
-            (arcChange)="setDensity($event)"
-          >
-            @for (option of densities; track option) {
-              <arc-segmented-item [value]="option" [label]="'encounters.density.' + option | translate" />
-            }
-          </arc-segmented>
-          @if (!isParty()) {
-            <label class="flex cursor-pointer items-center gap-2 font-mono text-xs text-muted-foreground">
-              <arc-switch
-                arcSize="sm"
-                [arcChecked]="followTurn()"
-                [arcAriaLabel]="'encounters.density.followTurn' | translate"
-                (arcCheckedChange)="setFollowTurn($event)"
-              />
-              {{ 'encounters.density.followTurn' | translate }}
-            </label>
-          }
-        }
         @if (canRoll()) {
           <button
             type="button"

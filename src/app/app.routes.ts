@@ -242,8 +242,8 @@ export const routes: Routes = [
       {
         path: '',
         loadComponent: () =>
-          import('./pages/battle-rule-library-page/battle-rule-library-page').then(
-            (m) => m.BattleRuleLibraryPage,
+          import('./pages/tracker-layouts-page/tracker-layouts-page').then(
+            (m) => m.TrackerLayoutsPage,
           ),
       },
     ],
