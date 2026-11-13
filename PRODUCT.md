@@ -39,9 +39,11 @@ conflict copies, but the cloud app does the syncing. SQLite is only a local, reb
 Confirmed features (from README / DESIGN_PRINCIPLES): campaigns with per-campaign sections; a Markdown editor with
 Live preview, Source and Reading; `[[wikilinks]]`, a Links panel, rename with link refactoring, Review (broken links);
 templates; Compendium (shared systems copied to and from campaigns); assets (images, audio, PDF); encounter manager
-(combatants, initiative, health bar with temporary HP, statuses with rounds, cemetery, party roster, Tracker layouts,
-battle bar); interactive maps with pins linked to notes; tabs and split screen; dark and light themes; seven app
-languages; an opt-in local MCP server for AI assistants on the same computer.
+(Combatants, initiative, health bar with temporary HP, statuses with rounds, cemetery, party roster, battle bar);
+built-in Tracker layouts for Generic, D&D 5e and Pathfinder 2e; Compact, Card and Expanded row sizes; inline encounter
+editing that overrides a linked note only for that fight; campaign game systems that drive the default Tracker layout
+and note templates; interactive maps with pins linked to notes; tabs and split screen; dark and light themes; seven
+app languages; an opt-in local MCP server for AI assistants on the same computer.
 
 Terminology (DESIGN_PRINCIPLES §1b): say *Codex* (not vault), *Combatant*, *Tracker layout*, *Links*, *Review*,
 *Info box*. *OpenAI Codex* is always written in full, never "Codex" alone. The app is heading to 1.0; it is not
