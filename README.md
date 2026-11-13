@@ -11,7 +11,10 @@ Live at [lazydm.com](https://lazydm.com) · App repository: [Tratt0re/lazydm](ht
 > This is the `website` branch. It is an orphan branch with no shared history with the app, which lives on `main` and
 > `develop`. Every push here publishes the site; nothing on this branch is part of the app.
 
-<img src="docs/social-card.png" alt="LazyDM. Prep at your desk. Run at the table." />
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/social-card-dark.png" />
+  <img src="docs/social-card-light.png" alt="LazyDM. Prep at your desk. Run at the table." />
+</picture>
 
 ## What it is
 
@@ -41,7 +44,7 @@ python3 -m http.server 8123   # then open http://127.0.0.1:8123/
 | `site/assets/img/og.png` | The share image used by Open Graph and Twitter cards |
 | `site/assets/fonts/` | Barlow Condensed, IBM Plex Sans and Mono, from the app |
 | `site/CNAME`, `robots.txt`, `sitemap.xml` | Domain and search files |
-| `docs/social-card.png` | The 1280x640 social preview card, also shown at the top of this README |
+| `docs/social-card-light.png`, `docs/social-card-dark.png` | The themed 1280x640 social preview cards shown above |
 | `PRODUCT.md` | Who the site is for and which claims are settled (read before editing copy) |
 | `.github/workflows/deploy.yml` | Publishes `site/` to the `gh-pages` branch |
 

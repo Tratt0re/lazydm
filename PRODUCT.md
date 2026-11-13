@@ -59,8 +59,6 @@ licence allows personal use but not commercialisation, because paid features may
 - No licence name appears on the landing page itself; the README and the repository carry it.
 
 Other undecided facts, so the copy must not claim them:
-- **Repository.** `package.json` `repository.url` is a placeholder. The real repo is
-  `https://github.com/Tratt0re/lazydm`; whether it is public is unconfirmed.
 - **Downloads.** No public releases exist. The primary call to action is "Coming soon" next to a GitHub link.
 - **Hosting.** GitHub Pages (user decision). Asset paths must work from a sub-path (`/lazydm/`) or a custom domain.
 
@@ -74,9 +72,8 @@ similar in structure to obsidian.md.
 
 ## Evidence on Hand
 
-- The app itself, README and DESIGN_PRINCIPLES.md in the `main` branch of the app repository.
-- Real app screenshots: **to be supplied by the user**, in dark and light. None exist on this branch yet; do not
-  fabricate screenshots, or imply the page shows the real app where it shows placeholders.
+- The app itself, README and `docs/design-principles.md` in the `develop` branch of the app repository.
+- Real app screenshots in `site/assets/img/shots/`, in dark and light and at both supported sizes.
 - Absent, and not to be invented: testimonials, user counts, customer logos, ratings, benchmarks, press, pricing
   figures, download counts, release dates.
 
