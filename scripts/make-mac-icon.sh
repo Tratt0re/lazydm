@@ -1,7 +1,7 @@
 #!/bin/bash
 # Builds the app icons from the artwork (src/assets/icon/APP_ICON.png, the source of everything else): the
-# rounded square with margin and shadow is saved as the default icon of the app (lazydm_ico_1024.png: window,
-# Windows and Linux builds), the favicon is scaled from it, and every iconset size goes into build/icon.icns
+# rounded square with margin and shadow is saved as the default icon of the app (lazydm_ico_1024.png: window),
+# the same square edge to edge is saved for Windows and Linux (lazydm_ico_win.png), the favicon is scaled from it, and every iconset size goes into build/icon.icns
 # (macOS). Needs macOS (swift, sips, iconutil). Usage: npm run icons:mac
 set -euo pipefail
 cd "$(dirname "$0")/.."
@@ -13,6 +13,7 @@ WORK="$(mktemp -d)"
 trap 'rm -rf "$WORK"' EXIT
 
 swift scripts/make-mac-icon.swift "$ARTWORK" "$DEFAULT_ICON"
+swift scripts/make-mac-icon.swift "$ARTWORK" "$ICON_DIR/lazydm_ico_win.png" full
 cp "$DEFAULT_ICON" "$WORK/icon-1024.png"
 sips -z 128 128 "$DEFAULT_ICON" --out "$ICON_DIR/lazydm_ico_short.png" >/dev/null
 mkdir -p build "$WORK/icon.iconset"
@@ -30,4 +31,4 @@ cp "$WORK/icon-512.png" "$WORK/icon.iconset/icon_256x256@2x.png"
 cp "$WORK/icon-512.png" "$WORK/icon.iconset/icon_512x512.png"
 cp "$WORK/icon-1024.png" "$WORK/icon.iconset/icon_512x512@2x.png"
 iconutil -c icns "$WORK/icon.iconset" -o build/icon.icns
-echo "$DEFAULT_ICON, $ICON_DIR/lazydm_ico_short.png and build/icon.icns written"
+echo "$DEFAULT_ICON, $ICON_DIR/lazydm_ico_win.png, $ICON_DIR/lazydm_ico_short.png and build/icon.icns written"

@@ -31,13 +31,16 @@ function resolvePreloadPath() {
   return preloadPath;
 }
 
+// macOS shows the icon with Apple's margin and shadow; Windows and Linux show it edge to edge.
+const APP_ICON_FILE = process.platform === 'darwin' ? 'lazydm_ico_1024.png' : 'lazydm_ico_win.png';
+
 function resolveAppIconPath(isDev) {
   const candidates = isDev
     ? [
-        resolveAppPath('src', 'assets', 'icon', 'lazydm_ico_1024.png'),
-        resolveAppPath(...RENDERER_BUILD_SEGMENTS, 'assets', 'icon', 'lazydm_ico_1024.png'),
+        resolveAppPath('src', 'assets', 'icon', APP_ICON_FILE),
+        resolveAppPath(...RENDERER_BUILD_SEGMENTS, 'assets', 'icon', APP_ICON_FILE),
       ]
-    : [resolveAppPath(...RENDERER_BUILD_SEGMENTS, 'assets', 'icon', 'lazydm_ico_1024.png')];
+    : [resolveAppPath(...RENDERER_BUILD_SEGMENTS, 'assets', 'icon', APP_ICON_FILE)];
 
   for (const iconPath of candidates) {
     if (fs.existsSync(iconPath)) {

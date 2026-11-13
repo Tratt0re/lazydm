@@ -77,7 +77,7 @@
       "category": "public.app-category.utilities"
     },
     "win": {
-      "icon": "src/assets/icon/lazydm_ico_1024.png",
+      "icon": "src/assets/icon/lazydm_ico_win.png",
       "target": [
         "nsis",
         "portable"
@@ -90,7 +90,7 @@
       "artifactName": "lazydm-portable-${version}-${arch}.${ext}"
     },
     "linux": {
-      "icon": "src/assets/icon/lazydm_ico_1024.png",
+      "icon": "src/assets/icon/lazydm_ico_win.png",
       "target": [
         "AppImage"
       ],

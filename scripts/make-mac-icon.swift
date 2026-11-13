@@ -2,17 +2,21 @@
 // soft shadow of Apple's icon template (824 x 824 shape in a 1024 x 1024 canvas). macOS does not round
 // an .icns icon itself, so the rounding has to be part of the image.
 //
-// Usage: swift scripts/make-mac-icon.swift <artwork.png> <output.png>
+// With a third argument "full" the rounded square fills the whole canvas, with no margin and no shadow
+// (Windows and Linux show icons edge to edge, so the Apple margin would make them look smaller).
+//
+// Usage: swift scripts/make-mac-icon.swift <artwork.png> <output.png> [full]
 import CoreGraphics
 import Foundation
 import ImageIO
 import UniformTypeIdentifiers
 
 let canvas: CGFloat = 1024
-let shape: CGFloat = 824
-let cornerRadius: CGFloat = 185
+let full = CommandLine.arguments.count == 4 && CommandLine.arguments[3] == "full"
+let shape: CGFloat = full ? 1008 : 824
+let cornerRadius: CGFloat = shape * 185 / 824
 
-guard CommandLine.arguments.count == 3,
+guard CommandLine.arguments.count == 3 || CommandLine.arguments.count == 4,
   let source = CGImageSourceCreateWithURL(URL(fileURLWithPath: CommandLine.arguments[1]) as CFURL, nil),
   let artwork = CGImageSourceCreateImageAtIndex(source, 0, nil),
   let context = CGContext(
@@ -27,12 +31,14 @@ else {
 let rect = CGRect(x: (canvas - shape) / 2, y: (canvas - shape) / 2, width: shape, height: shape)
 let path = CGPath(roundedRect: rect, cornerWidth: cornerRadius, cornerHeight: cornerRadius, transform: nil)
 
-context.saveGState()
-context.setShadow(offset: CGSize(width: 0, height: -12), blur: 24, color: CGColor(gray: 0, alpha: 0.3))
-context.addPath(path)
-context.setFillColor(CGColor(gray: 0.5, alpha: 1))
-context.fillPath()
-context.restoreGState()
+if !full {
+  context.saveGState()
+  context.setShadow(offset: CGSize(width: 0, height: -12), blur: 24, color: CGColor(gray: 0, alpha: 0.3))
+  context.addPath(path)
+  context.setFillColor(CGColor(gray: 0.5, alpha: 1))
+  context.fillPath()
+  context.restoreGState()
+}
 
 context.saveGState()
 context.addPath(path)
