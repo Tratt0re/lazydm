@@ -35,11 +35,18 @@ import {
               [class]="fillClass()"
               [style.width.%]="currentPercent()"
             ></div>
-            <div
-              class="absolute inset-y-0 bg-info transition-[width,left] duration-500 ease-out motion-reduce:transition-none"
-              [style.left.%]="currentPercent()"
-              [style.width.%]="tempPercent()"
-            ></div>
+            <!-- Temporary HP: a blue strip along the top edge of the bar (no layout change when it appears). -->
+            @if (temp() > 0) {
+              <div
+                class="absolute inset-x-0 top-0 z-1 h-1"
+                aria-hidden="true"
+              >
+                <div
+                  class="h-full bg-info transition-[width] duration-500 ease-out motion-reduce:transition-none"
+                  [style.width.%]="tempPercent()"
+                ></div>
+              </div>
+            }
           }
           <span
             class="relative z-1 ml-1 truncate bg-recessed px-1 font-mono text-[11px] font-semibold tracking-[0.11em] text-foreground-strong uppercase"
@@ -69,7 +76,7 @@ import {
               >
                 <span
                   class="px-0.5"
-                  [class]="temp() > 0 ? 'bg-info text-primary-foreground' : 'text-muted-foreground'"
+                  [class]="temp() > 0 ? 'text-info' : 'text-muted-foreground'"
                   >+{{ temp() > 0 ? temp() : 0 }}</span
                 >
               </arc-inline-value>
@@ -109,7 +116,7 @@ import {
               [class]="isLarge() ? 'font-display text-2xl leading-none' : 'font-mono text-xs'"
             >
               @if (temp() > 0) {
-                <span class="mr-2">+{{ temp() }}</span>
+                <span class="mr-2 text-info">+{{ temp() }}</span>
               }
               {{ current() ?? '–' }} / {{ max() ?? '–' }}
             </strong>
