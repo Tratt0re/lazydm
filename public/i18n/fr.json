@@ -1310,7 +1310,10 @@
       "ac": "CA",
       "hp": "PV",
       "statuses": "États",
-      "note": "Note"
+      "note": "Note",
+      "fortitude": "Vig",
+      "reflex": "Réf",
+      "will": "Vol"
     },
     "saveError": "Impossible d'enregistrer la rencontre. Vérifiez que le dossier du Codex est disponible, puis réessayez.",
     "conflict": {

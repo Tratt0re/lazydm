@@ -142,3 +142,19 @@ describe('battle rule choices', () => {
     expect(file.rule.template).toBe('builtin:enemy');
   });
 });
+
+describe('built-in rule labels', () => {
+  const LANGUAGES = ['en', 'it', 'de', 'es', 'fr', 'uk', 'zh'];
+  const lookup = (messages, key) => key.split('.').reduce((node, part) => node?.[part], messages);
+
+  it.each(LANGUAGES)('has a %s translation for every label of every built-in rule', (language) => {
+    const messages = JSON.parse(
+      fs.readFileSync(path.join(__dirname, '..', '..', 'public', 'i18n', `${language}.json`), 'utf8'),
+    );
+    const missing = Object.values(BUILT_IN_RULES)
+      .flatMap((rule) => rule.fields.map((field) => field.label))
+      .filter((label) => label.startsWith('encounters.') && typeof lookup(messages, label) !== 'string');
+
+    expect(missing).toEqual([]);
+  });
+});

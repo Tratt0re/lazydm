@@ -1310,7 +1310,10 @@
       "ac": "AC",
       "hp": "生命值",
       "statuses": "状态",
-      "note": "笔记"
+      "note": "笔记",
+      "fortitude": "强韧",
+      "reflex": "反射",
+      "will": "意志"
     },
     "saveError": "无法保存遭遇。请确认 Codex 文件夹可用，然后重试。",
     "conflict": {

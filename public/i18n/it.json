@@ -1310,7 +1310,10 @@
       "ac": "CA",
       "hp": "PF",
       "statuses": "Stati",
-      "note": "Nota"
+      "note": "Nota",
+      "fortitude": "Temp",
+      "reflex": "Rifl",
+      "will": "Vol"
     },
     "saveError": "Impossibile salvare l'incontro. Controlla che la cartella del Codex sia disponibile, poi riprova.",
     "conflict": {

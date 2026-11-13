@@ -1310,7 +1310,10 @@
       "ac": "RK",
       "hp": "TP",
       "statuses": "Zustände",
-      "note": "Notiz"
+      "note": "Notiz",
+      "fortitude": "Zäh",
+      "reflex": "Ref",
+      "will": "Wil"
     },
     "saveError": "Die Begegnung konnte nicht gespeichert werden. Prüfe, ob der Codex-Ordner verfügbar ist, und versuche es erneut.",
     "conflict": {

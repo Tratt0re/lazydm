@@ -1310,7 +1310,10 @@
       "ac": "AC",
       "hp": "HP",
       "statuses": "Statuses",
-      "note": "Note"
+      "note": "Note",
+      "fortitude": "Fort",
+      "reflex": "Ref",
+      "will": "Will"
     },
     "saveError": "Couldn't save the encounter. Check that the Codex folder is available, then try again.",
     "conflict": {

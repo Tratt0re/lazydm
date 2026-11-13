@@ -94,6 +94,13 @@ A template is a normal note with placeholders: `{{title}}`, `{{date}}` (YYYY-MM-
 per note type (set_section_template). Without a choice: the system's, then the vault's `_templates/<type>.md`,
 then the built-in, then a minimal frontmatter.
 
+**Game systems.** The built-in enemy, character (NPC) and spell templates come in a *Generic* version and in
+*D&D 5e* (`dnd5e`) and *Pathfinder 2e* (`pf2e`) versions whose frontmatter has the numbers to play with (AC, HP,
+initiative modifier, ability scores, spell level or rank...). list_templates shows under `systems` which note types
+have a variant. To use one, create_template with `type` and `system`, then set_section_template with the new file.
+The tracker layout of a campaign can be a system's too: get_encounter_rule says which one applies and which keys
+its notes should have. Keep a template's keys: the tracker reads them (`ac`, `hp`, `initiative_mod`...).
+
 ## Do and don't
 
 - Do read before you write, write complete notes, keep the user's language and tone, link related notes.

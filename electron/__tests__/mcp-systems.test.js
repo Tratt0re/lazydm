@@ -264,3 +264,19 @@ describe('adding the keys a layout reads to its template', () => {
     );
   });
 });
+
+describe('what an agent is told about systems', () => {
+  it('has list_templates and create_template say what the systems are', async () => {
+    const tools = (await client.listTools()).tools;
+    const byName = (name) => tools.find((tool) => tool.name === name);
+
+    expect(byName('list_templates').description).toMatch(/systems/);
+    expect(JSON.stringify(byName('create_template').inputSchema)).toMatch(/dnd5e/);
+  });
+
+  it('documents the systems in the syntax guide', async () => {
+    const { data } = await call('get_syntax_guide');
+    expect(String(data)).toMatch(/Game systems/);
+    expect(String(data)).toMatch(/pf2e/);
+  });
+});

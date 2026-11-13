@@ -1310,7 +1310,10 @@
       "ac": "CA",
       "hp": "PG",
       "statuses": "Estados",
-      "note": "Nota"
+      "note": "Nota",
+      "fortitude": "Fort",
+      "reflex": "Ref",
+      "will": "Vol"
     },
     "saveError": "No se pudo guardar el encuentro. Comprueba que la carpeta del Codex esté disponible y vuelve a intentarlo.",
     "conflict": {

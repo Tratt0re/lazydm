@@ -296,8 +296,10 @@ function registerReadTools(server, scope, c) {
     'list_templates',
     {
       description:
-        'Templates (.md files of a _templates folder) of the vault, systems and campaigns, and the note types ' +
-        'that have a built-in. With the campaign limit on, only templates inside the allowed campaigns.',
+        'Templates (.md files of a _templates folder) of the vault, systems and campaigns, the note types ' +
+        'that have a built-in (types), and for each of them the game systems with their own built-in variant ' +
+        '(systems: "dnd5e", "pf2e"; the default is generic). With the campaign limit on, only templates inside ' +
+        'the allowed campaigns.',
       annotations: READ_ONLY,
     },
     run(async () => {
@@ -574,7 +576,8 @@ function registerWriteTools(server, scope, c) {
     'create_template',
     {
       description:
-        'Creates a vault-wide template (_templates/<name>.md), empty or started from the built-in of a note type. ' +
+        'Creates a vault-wide template (_templates/<name>.md), empty or started from the built-in of a note type ' +
+        '(for a game: type + system, e.g. an "enemy" for "dnd5e"). ' +
         'Fill it with update_note using {{title}}, {{date}} and the other placeholders from get_syntax_guide. ' +
         'Link it to a section with set_section_template. Not available while MCP is limited to some campaigns.',
       inputSchema: {
