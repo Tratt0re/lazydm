@@ -1,6 +1,9 @@
 import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
 
-import { ArcTechInlineValueComponent, type ArcTechInlineValue } from '@/shared/components/inline-value';
+import {
+  ArcTechInlineValueComponent,
+  type ArcTechInlineValue,
+} from '@/shared/components/inline-value';
 
 /**
  * Health bar of an entity: current HP over maximum HP, with temporary HP as a second segment. Everything is
@@ -27,10 +30,21 @@ import { ArcTechInlineValueComponent, type ArcTechInlineValue } from '@/shared/c
           [attr.aria-valuetext]="valueText()"
         >
           @if (scale() > 0) {
-            <div class="absolute inset-y-0 left-0 transition-[width,background-color] duration-500 ease-out motion-reduce:transition-none" [class]="fillClass()" [style.width.%]="currentPercent()"></div>
-            <div class="absolute inset-y-0 bg-info transition-[width,left] duration-500 ease-out motion-reduce:transition-none" [style.left.%]="currentPercent()" [style.width.%]="tempPercent()"></div>
+            <div
+              class="absolute inset-y-0 left-0 transition-[width,background-color] duration-500 ease-out motion-reduce:transition-none"
+              [class]="fillClass()"
+              [style.width.%]="currentPercent()"
+            ></div>
+            <div
+              class="absolute inset-y-0 bg-info transition-[width,left] duration-500 ease-out motion-reduce:transition-none"
+              [style.left.%]="currentPercent()"
+              [style.width.%]="tempPercent()"
+            ></div>
           }
-          <span class="relative z-1 ml-1 truncate bg-recessed px-1 font-mono text-[11px] font-semibold tracking-[0.11em] text-foreground-strong uppercase">{{ label() }}</span>
+          <span
+            class="relative z-1 ml-1 truncate bg-recessed px-1 font-mono text-[11px] font-semibold tracking-[0.11em] text-foreground-strong uppercase"
+            >{{ label() }}</span
+          >
           @if (editable()) {
             <span
               class="group relative z-1 mr-1 ml-auto flex shrink-0 items-center gap-0.5 bg-recessed px-1 font-bold text-foreground-strong"
@@ -39,17 +53,33 @@ import { ArcTechInlineValueComponent, type ArcTechInlineValue } from '@/shared/c
               <!-- Temporary HP are rare: the slot shows when there are some, or when the row is hovered or focused. -->
               <arc-inline-value
                 arcType="number"
-                [arcInputClass]="isLarge() ? 'h-7 w-14 px-1 text-center font-display text-xl' : 'h-5 w-11 px-1 text-center font-mono text-xs'"
-                [class]="temp() > 0 ? '' : 'opacity-0 transition-opacity focus-within:opacity-100 group-hover:opacity-100'"
+                [arcInputClass]="
+                  isLarge()
+                    ? 'h-7 w-14 px-1 text-center font-display text-xl'
+                    : 'h-5 w-11 px-1 text-center font-mono text-xs'
+                "
+                [class]="
+                  temp() > 0
+                    ? ''
+                    : 'opacity-0 transition-opacity focus-within:opacity-100 group-hover:opacity-100'
+                "
                 [arcLabel]="tempLabel()"
                 [arcValue]="temp() > 0 ? temp() : null"
                 (arcCommit)="tempChange.emit($event)"
               >
-                <span class="px-0.5" [class]="temp() > 0 ? 'bg-info text-primary-foreground' : 'text-muted-foreground'">+{{ temp() > 0 ? temp() : 0 }}</span>
+                <span
+                  class="px-0.5"
+                  [class]="temp() > 0 ? 'bg-info text-primary-foreground' : 'text-muted-foreground'"
+                  >+{{ temp() > 0 ? temp() : 0 }}</span
+                >
               </arc-inline-value>
               <arc-inline-value
                 arcType="number"
-                [arcInputClass]="isLarge() ? 'h-7 w-14 px-1 text-center font-display text-xl' : 'h-5 w-11 px-1 text-center font-mono text-xs'"
+                [arcInputClass]="
+                  isLarge()
+                    ? 'h-7 w-14 px-1 text-center font-display text-xl'
+                    : 'h-5 w-11 px-1 text-center font-mono text-xs'
+                "
                 [arcLabel]="currentLabel()"
                 [arcValue]="current()"
                 [arcOverridden]="overridden()"
@@ -61,7 +91,11 @@ import { ArcTechInlineValueComponent, type ArcTechInlineValue } from '@/shared/c
               <span aria-hidden="true">/</span>
               <arc-inline-value
                 arcType="number"
-                [arcInputClass]="isLarge() ? 'h-7 w-14 px-1 text-center font-display text-xl' : 'h-5 w-11 px-1 text-center font-mono text-xs'"
+                [arcInputClass]="
+                  isLarge()
+                    ? 'h-7 w-14 px-1 text-center font-display text-xl'
+                    : 'h-5 w-11 px-1 text-center font-mono text-xs'
+                "
                 [arcLabel]="maxLabel()"
                 [arcValue]="max()"
                 (arcCommit)="maxChange.emit($event)"
@@ -70,10 +104,14 @@ import { ArcTechInlineValueComponent, type ArcTechInlineValue } from '@/shared/c
               </arc-inline-value>
             </span>
           } @else {
-            <strong class="relative z-1 mr-1 ml-auto shrink-0 bg-recessed px-1 text-foreground-strong" [class]="isLarge() ? 'font-display text-2xl leading-none' : 'font-mono text-xs'">
+            <strong
+              class="relative z-1 mr-1 ml-auto shrink-0 bg-recessed px-1 text-foreground-strong"
+              [class]="isLarge() ? 'font-display text-2xl leading-none' : 'font-mono text-xs'"
+            >
               @if (temp() > 0) {
                 <span class="mr-2">+{{ temp() }}</span>
-              }{{ current() ?? '–' }} / {{ max() ?? '–' }}
+              }
+              {{ current() ?? '–' }} / {{ max() ?? '–' }}
             </strong>
           }
         </div>
@@ -110,11 +148,10 @@ export class AppEncounterHealthBarComponent {
   protected readonly currentPercent = computed(
     () => (Math.max(this.current() ?? 0, 0) / this.scale()) * 100,
   );
-  protected readonly tempPercent = computed(
-    () => (Math.max(this.temp(), 0) / this.scale()) * 100,
-  );
+  protected readonly tempPercent = computed(() => (Math.max(this.temp(), 0) / this.scale()) * 100);
   protected readonly valueText = computed(
-    () => `${this.current() ?? '–'} / ${this.max() ?? '–'}${this.temp() > 0 ? ` +${this.temp()}` : ''}`,
+    () =>
+      `${this.current() ?? '–'} / ${this.max() ?? '–'}${this.temp() > 0 ? ` +${this.temp()}` : ''}`,
   );
   protected readonly fillClass = computed(() => {
     const ratio = (this.current() ?? 0) / (this.max() || 1);

@@ -14,7 +14,6 @@ import {
 import {
   CdkDrag,
   type CdkDragDrop,
-  CdkDragHandle,
   CdkDropList,
   moveItemInArray,
 } from '@angular/cdk/drag-drop';
@@ -24,7 +23,7 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { toast } from 'ngx-sonner';
 
 import { AppEncounterCemeteryComponent } from '@/components/encounter-cemetery/encounter-cemetery.component';
-import { AppEncounterHealthBarComponent } from '@/components/encounter-health-bar/encounter-health-bar.component';
+import { AppEncounterRowComponent, type HpChangeMode } from '@/components/encounter-row/encounter-row.component';
 import {
   ENCOUNTER_EXTENSION_PATTERN,
   toInAppEncounterRoute,
@@ -53,6 +52,20 @@ import { onIndexUpdated } from '@/services/ipc-events';
 import { FileActionsService } from '@/services/file-actions.service';
 import type { TrackerRowDensity } from '@/config/local-preferences.config';
 import { noteExcerpt } from '@/pages/encounter-page/note-excerpt';
+import {
+  type HealthValue,
+  type NoteContext,
+  type StatusValue,
+  healthOf,
+  isOverridden,
+  isRecord,
+  noteKeyOf,
+  noteOf,
+  noteValueOf,
+  parseNumber,
+  textOf,
+  toNumber,
+} from '@/pages/encounter-page/encounter-values';
 import { LocalPreferencesService } from '@/services/local-preferences.service';
 import { getNoteScopeKind, NoteScopeService } from '@/services/note-scope.service';
 import { SectionService, toSubfolderLabel } from '@/services/section.service';
@@ -60,13 +73,11 @@ import { ToolbarContextService } from '@/services/toolbar-context.service';
 import { type SharedFile, SharedFileService } from '@/services/shared-file.service';
 import { WorkspaceService } from '@/services/workspace.service';
 import { ArcTechAlertComponent } from '@/shared/components/alert';
-import { ArcTechBadgeComponent } from '@/shared/components/badge';
 import {
   ArcTechInlineValueComponent,
   type ArcTechInlineMove,
   type ArcTechInlineValue,
 } from '@/shared/components/inline-value';
-import { ArcTechInputDirective } from '@/shared/components/input';
 import { ArcTechSegmentedComponent, ArcTechSegmentedItemComponent } from '@/shared/components/segmented';
 import { ArcTechSelectImports } from '@/shared/components/select';
 import { ArcTechSwitchComponent } from '@/shared/components/switch';
@@ -75,49 +86,13 @@ import { ArcTechEmptyComponent } from '@/shared/components/empty';
 import { ArcTechIconComponent, type ArcTechIcon } from '@/shared/components/icon';
 import { ArcTechAlertDialogService } from '@/shared/components/alert-dialog';
 import { ArcTechDialogService } from '@/shared/components/dialog';
-import { ArcTechCheckboxComponent } from '@/shared/components/checkbox';
 import { ArcTechMenuImports } from '@/shared/components/menu';
 import { ArcTechTooltipImports } from '@/shared/components/tooltip';
 import { rollDice } from '@/shared/utils/dice';
 import { toDisplayPath } from '@/shared/utils/vault-path';
 
-/** Health points of an entity (`values[<healthbar field key>]`); each part is optional. */
-interface HealthValue {
-  readonly current?: number;
-  readonly max?: number;
-  readonly temp?: number;
-}
-
-type HpChangeMode = 'damage' | 'heal' | 'temp';
 /** Most copies one add inserts at once (more is unrealistic at a table). */
 const ENTITY_QUANTITY_MAX = 15;
-
-/** An element of the entity row and the grid cells it takes (the name has no field). */
-interface RowCell {
-  readonly id: string;
-  readonly field: BattleRuleFieldDto | null;
-  readonly area: BattleRuleAreaDto;
-}
-
-/** A status: a free tag the user types on an entity, with an optional number of rounds left. */
-interface StatusValue {
-  readonly name: string;
-  readonly rounds?: number;
-}
-
-function isRecord(value: unknown): value is Record<string, unknown> {
-  return typeof value === 'object' && value !== null && !Array.isArray(value);
-}
-
-function toNumber(value: unknown): number | null {
-  return typeof value === 'number' && Number.isFinite(value) ? value : null;
-}
-
-/** Whole number from a form field; null when empty or not a number. */
-function parseNumber(value: unknown): number | null {
-  const text = String(value ?? '').trim();
-  return text.length > 0 && Number.isFinite(Number(text)) ? Math.trunc(Number(text)) : null;
-}
 
 /**
  * An encounter on its own page: its initiative list, shown as its battle rule says. Every field of an entity
@@ -129,19 +104,14 @@ function parseNumber(value: unknown): number | null {
   selector: 'app-encounter-page',
   imports: [
     CdkDrag,
-    CdkDragHandle,
     CdkDropList,
     TranslatePipe,
     AppEncounterCemeteryComponent,
-    AppEncounterHealthBarComponent,
+    AppEncounterRowComponent,
     ArcTechAlertComponent,
-    ArcTechBadgeComponent,
     ArcTechButtonComponent,
-    ArcTechCheckboxComponent,
     ArcTechEmptyComponent,
     ArcTechIconComponent,
-    ArcTechInlineValueComponent,
-    ArcTechInputDirective,
     ArcTechMenuImports,
     ArcTechSegmentedComponent,
     ArcTechSegmentedItemComponent,
@@ -217,27 +187,6 @@ export class EncounterPage {
   /** A file that is not valid JSON opens empty; editing would replace it, so it stays read-only. */
   protected readonly isEditable = computed(() => this.encounter() !== null && !this.parseError());
 
-  /**
-   * What the row shows, each element in its place of the rule's grid (12 columns): the name, then every field the
-   * rule shows in the row. A rule written before the grid existed gets places from the model.
-   */
-  protected readonly rowCells = computed<readonly RowCell[]>(() => {
-    const rule = this.rule();
-    if (!rule) {
-      return [];
-    }
-
-    return [
-      { id: '$name', field: null, area: rule.nameArea ?? { row: 1, column: 2, span: 3 } },
-      ...rule.fields
-        .filter((field) => field.showInRow)
-        .map((field) => ({
-          id: field.key,
-          field,
-          area: field.area ?? { row: 1, column: 1, span: 1 },
-        })),
-    ];
-  });
   /** The density switch of the battle bar (per device): one line, two lines or the stat-block row. */
   protected readonly density = this.localPreferences.trackerRowDensity;
   protected readonly densities: readonly TrackerRowDensity[] = ['compact', 'card', 'expanded'];
@@ -261,103 +210,12 @@ export class EncounterPage {
       : this.density();
   }
 
-  /**
-   * The cells of the row at a density: a field that asks for a bigger one stays out of the smaller rows. Compact is
-   * one line, so it reads left to right by kind (initiative, name, side, health, defences, conditions, note) instead
-   * of following the layout's grid; Card and Expanded keep the grid.
-   */
-  protected cellsOf(density: TrackerRowDensity): readonly RowCell[] {
-    const rank: Record<TrackerRowDensity, number> = { compact: 0, card: 1, expanded: 2 };
-    // The linked note's button is not a cell: it sits under the "…" menu button of the row.
-    const cells = this.rowCells().filter(
-      (cell) =>
-        cell.field?.component !== 'note-link' &&
-        (!cell.field?.density || rank[cell.field.density] <= rank[density]),
-    );
-    // Compact is one line, so it reads by kind instead of following the grid; the other sizes keep the grid
-    // while the row is wide enough and read by kind (see `kindOf`, an `order` below `@2xl`) once it wraps.
-    return density === 'compact'
-      ? [...cells].sort((left, right) => this.kindOf(left) - this.kindOf(right))
-      : cells;
-  }
-
-  /** Where a cell reads in a row that flows instead of following the grid: initiative, name, side, health, defences… */
-  protected kindOf(cell: RowCell): number {
-    const order: Record<string, number> = {
-      initiative: 0,
-      name: 1,
-      side: 2,
-      healthbar: 3,
-      number: 4,
-      text: 5,
-      statuses: 6,
-      'note-link': 7,
-    };
-    return order[cell.field?.component ?? 'name'] ?? 8;
-  }
-
-  /** Classes of the row's grid (it is a plain flow in Compact). */
-  protected gridClasses(density: TrackerRowDensity): string {
-    const flow = 'flex flex-wrap items-center gap-x-3';
-    switch (density) {
-      case 'compact':
-        return `${flow} gap-y-1 p-1.5`;
-      case 'expanded':
-        return `${flow} @2xl:grid @2xl:grid-cols-12 gap-y-3 p-4`;
-      default:
-        return `${flow} @2xl:grid @2xl:grid-cols-12 gap-y-2 p-3`;
-    }
-  }
-
-  /** The initiative tile grows with the row. */
-  protected initiativeClasses(density: TrackerRowDensity): string {
-    return { compact: 'size-8 text-lg', card: 'size-10 text-xl', expanded: 'size-14 text-3xl' }[density];
-  }
-
-  /** The number tiles (AC, saves) grow with the row too; their label stays at the 11px floor. */
-  protected tileClasses(density: TrackerRowDensity): { box: string; value: string } {
-    return {
-      compact: { box: 'min-w-8', value: 'py-1 text-sm' },
-      card: { box: 'min-w-10', value: 'py-1.5 text-lg' },
-      expanded: { box: 'min-w-12', value: 'py-2 text-2xl' },
-    }[density];
-  }
-
   /** The one-line excerpt of the combatant's linked note (the Expanded row), once the note has been read. */
   protected excerptOf(entity: EncounterEntityDto): string | null {
     const notePath = this.noteOf(entity);
     return notePath ? (this.noteExcerpts().get(notePath) ?? null) : null;
   }
 
-  /** The quick HP buttons: damage, heal, temporary HP (icon only; the name is the tooltip and the accessible name). */
-  protected readonly hpModes: readonly { readonly mode: HpChangeMode; readonly icon: ArcTechIcon }[] = [
-    { mode: 'damage', icon: 'swords' },
-    { mode: 'heal', icon: 'heart-plus' },
-    { mode: 'temp', icon: 'shield-plus' },
-  ];
-
-  /**
-   * The quick HP of a row: the number typed beside the buttons is the amount of damage (temporary HP first), healing
-   * (up to the maximum) or temporary HP. An empty field or one that is not a whole number does nothing.
-   */
-  protected applyHp(
-    entity: EncounterEntityDto,
-    field: BattleRuleFieldDto,
-    mode: HpChangeMode,
-    amountField: HTMLInputElement,
-  ): void {
-    const amount = parseNumber(amountField.value);
-    if (amount === null || amount < 0) {
-      amountField.focus();
-      return;
-    }
-
-    this.changeHp(entity.id, field.key, mode, amount);
-    // The field is emptied through an input event too: the input directive keeps its own copy of the value, and one
-    // that is not told would show the amount again, ready to be applied a second time.
-    amountField.value = '';
-    amountField.dispatchEvent(new Event('input'));
-  }
   /** Whether the rule shows a statuses field in the row (the how-to line is written once above the list). */
   protected readonly hasStatuses = computed(
     () =>
@@ -530,90 +388,31 @@ export class EncounterPage {
   }
 
   /** Key of the rule's note-link field (null when the rule has none). */
-  private readonly noteKey = computed(
-    () => this.rule()?.fields.find((field) => field.component === 'note-link')?.key ?? null,
-  );
+  private readonly noteKey = computed(() => noteKeyOf(this.rule()));
+  private readonly noteContext = computed<NoteContext>(() => ({
+    noteKey: this.noteKey(),
+    frontmatter: this.noteFrontmatter(),
+  }));
 
-  /** Vault path of the note an entity is linked to. */
   protected noteOf(entity: EncounterEntityDto): string | null {
-    const key = this.noteKey();
-    return key ? this.textOf(entity, { key }) : null;
+    return noteOf(entity, this.noteContext());
   }
 
-  /**
-   * Value of a field read from the entity's linked note: the frontmatter key of a `frontmatter:<key>` source.
-   * It only fills in what the entity has no value of its own for; nothing is copied into the file.
-   */
   private noteValue(entity: EncounterEntityDto, field: { readonly source?: string }): unknown {
-    const prefix = 'frontmatter:';
-    const notePath = this.noteOf(entity);
-    return notePath && field.source?.startsWith(prefix)
-      ? this.noteFrontmatter().get(notePath)?.[field.source.slice(prefix.length)]
-      : undefined;
+    return noteValueOf(entity, field, this.noteContext());
   }
 
-  protected numberOf(entity: EncounterEntityDto, field: BattleRuleFieldDto): number | null {
-    return toNumber(entity.values[field.key]) ?? toNumber(this.noteValue(entity, field));
-  }
 
-  /** Text of a field: the combatant's own, else (for a field that reads from a note) what its note says. */
   protected textOf(
     entity: EncounterEntityDto,
     field: { readonly key: string; readonly source?: string },
   ): string | null {
-    const value = entity.values[field.key];
-    if (typeof value === 'string' && value.length > 0) {
-      return value;
-    }
-
-    const fromNote = this.noteValue(entity, field);
-    if (typeof fromNote === 'string' && fromNote.trim().length > 0) {
-      return fromNote.trim();
-    }
-
-    return typeof fromNote === 'number' ? String(fromNote) : null;
+    return textOf(entity, field, this.noteContext());
   }
 
-  /** Statuses of an entity (`values[<statuses field key>]`); anything that is not a tag with a name is ignored. */
-  protected statusesOf(
-    entity: EncounterEntityDto,
-    field: BattleRuleFieldDto,
-  ): readonly StatusValue[] {
-    const value = entity.values[field.key];
-    return Array.isArray(value)
-      ? value.filter(
-          (status): status is StatusValue => isRecord(status) && typeof status['name'] === 'string',
-        )
-      : [];
-  }
 
   protected healthOf(entity: EncounterEntityDto, field: BattleRuleFieldDto): HealthValue {
-    const value = entity.values[field.key];
-    if (isRecord(value)) {
-      return {
-        current: toNumber(value['current']) ?? undefined,
-        max: toNumber(value['max']) ?? undefined,
-        temp: toNumber(value['temp']) ?? undefined,
-      };
-    }
-
-    // Nothing of its own: a note that gives a number (`hp: 11`) is a full health bar.
-    const fromNote = toNumber(this.noteValue(entity, field));
-    return fromNote === null ? {} : { current: fromNote, max: fromNote };
-  }
-
-  /** Colour of the square before a side (a marker next to the text, which always says the side too). */
-  protected sideColor(side: string | null): string {
-    switch (side) {
-      case 'enemy':
-        return 'bg-destructive';
-      case 'player':
-        return 'bg-success';
-      case 'ally':
-        return 'bg-mana';
-      default:
-        return 'bg-muted-foreground';
-    }
+    return healthOf(entity, field, this.noteContext());
   }
 
   /** Label of a side: its translation when the rule's option has one (`enemy`, `player`, `ally`), else as written. */
@@ -621,51 +420,6 @@ export class EncounterPage {
     const key = `encounters.sides.${side}`;
     const label = this.translateService.instant(key);
     return label === key ? side : label;
-  }
-
-  /**
-   * Size of an element while the row is too narrow for the grid and its elements wrap: small ones keep the
-   * room they need, the others share the line, and statuses take a line of their own.
-   */
-  protected cellSizing(cell: RowCell, density: TrackerRowDensity): string {
-    // The one-line row keeps its columns where they are from row to row (a DM scans down a column): every cell
-    // that varies in width gets a fixed one, and the conditions take what is left.
-    if (density === 'compact') {
-      switch (cell.field?.component) {
-        case undefined:
-        case null:
-          return 'w-36 shrink-0';
-        case 'side':
-          return 'w-40 shrink-0';
-        case 'healthbar':
-          return 'w-60 shrink-0';
-        case 'statuses':
-          return 'min-w-64 flex-1';
-        case 'text':
-          return 'w-40 shrink-0';
-        default:
-          return 'shrink-0';
-      }
-    }
-
-    switch (cell.field?.component) {
-      case undefined:
-      case null:
-        return 'min-w-28 flex-1 @2xl:min-w-0';
-      case 'healthbar':
-        // The quick HP (an amount and three icon buttons) is as wide as the bar needs: no line of its own.
-        return 'min-w-44 flex-1 @2xl:min-w-0';
-      case 'statuses':
-        return 'basis-full @2xl:basis-auto';
-      case 'text':
-        return 'min-w-28 flex-1 @2xl:min-w-0';
-      default:
-        return 'shrink-0';
-    }
-  }
-
-  protected fieldLabel(field: BattleRuleFieldDto): string {
-    return this.translateService.instant(field.label);
   }
 
   // --- Editing -----------------------------------------------------------------------------------------
@@ -681,25 +435,6 @@ export class EncounterPage {
     return entity.values[field.key] !== undefined;
   }
 
-  /**
-   * The entity's own value differs from a value its note gives: the mark and *Reset to note value* show only
-   * then. A value typed where the note says nothing overrides nothing, and neither does the current HP of a
-   * damaged monster (it changes all fight long): for a health bar only the maximum counts.
-   */
-  protected isOverridden(entity: EncounterEntityDto, field: BattleRuleFieldDto): boolean {
-    if (!field.source.startsWith('frontmatter:') || !this.hasOwnValue(entity, field)) {
-      return false;
-    }
-
-    const note = toNumber(this.noteValue(entity, field));
-    if (note === null) {
-      return false;
-    }
-
-    return field.component === 'healthbar'
-      ? this.healthOf(entity, field).max !== note
-      : toNumber(entity.values[field.key]) !== note;
-  }
 
   protected setName(entity: EncounterEntityDto, value: ArcTechInlineValue): void {
     this.updateEntity(entity.id, (candidate) => ({
@@ -1601,67 +1336,14 @@ export class EncounterPage {
     }
   }
 
-  /**
-   * The status field is typed in place: `name`, space, `rounds`, space makes a tag; a second space right after the
-   * name makes it without rounds. Enter and leaving the field make one too; Backspace on an empty field removes the
-   * last tag and Escape clears the field.
-   */
-  protected onStatusKeydown(
-    event: KeyboardEvent,
+  /** A tag typed in a row's statuses field (`rounds` 0 is a tag without rounds). */
+  protected addStatus(
     entity: EncounterEntityDto,
-    field: BattleRuleFieldDto,
+    tag: { field: BattleRuleFieldDto; name: string; rounds: number },
   ): void {
-    const input = event.target as HTMLInputElement;
-    if (event.isComposing) {
-      return;
-    }
-
-    if (event.key === 'Enter') {
-      event.preventDefault();
-      this.commitStatusInput(input, entity, field);
-    } else if (event.key === 'Escape') {
-      input.value = '';
-    } else if (event.key === 'Backspace' && input.value === '') {
-      const count = this.statusesOf(entity, field).length;
-      if (count > 0) {
-        event.preventDefault();
-        this.removeStatus(entity, field, count - 1);
-      }
-    } else if (event.key === ' ') {
-      const [name, rounds] = input.value.trim().split(/\s+/);
-      event.preventDefault();
-      if (!name) {
-        return;
-      }
-
-      if (rounds === undefined && !input.value.endsWith(' ')) {
-        input.value = `${name} `; // the number of rounds comes next; another space means none
-      } else if (rounds !== undefined && !/^\d+$/.test(rounds)) {
-        this.commitStatusInput(input, entity, field, name);
-        input.value = rounds;
-      } else {
-        this.commitStatusInput(input, entity, field);
-      }
-    }
-  }
-
-  /** Turns the text of the status field (`name` or `name rounds`) into a tag, then empties the field. */
-  protected commitStatusInput(
-    input: HTMLInputElement,
-    entity: EncounterEntityDto,
-    field: BattleRuleFieldDto,
-    text = input.value,
-  ): void {
-    const [name, rounds] = text.trim().split(/\s+/);
-    input.value = '';
-    if (!name) {
-      return;
-    }
-
-    const count = rounds !== undefined && /^\d+$/.test(rounds) ? Number(rounds) : 0;
-    this.setStatuses(entity.id, field.key, (statuses) => [
+    this.setStatuses(entity.id, tag.field.key, (statuses) => [
       ...statuses,
-      { name, ...(count > 0 ? { rounds: count } : {}) },
+      { name: tag.name, ...(tag.rounds > 0 ? { rounds: tag.rounds } : {}) },
     ]);
   }
 
@@ -1708,7 +1390,7 @@ export class EncounterPage {
 
   // --- Hit points --------------------------------------------------------------------------------------
 
-  private changeHp(entityId: string, key: string, mode: HpChangeMode, amount: number): void {
+  protected changeHp(entityId: string, key: string, mode: HpChangeMode, amount: number): void {
     const entity = this.encounter()?.entities.find((candidate) => candidate.id === entityId);
     if (!entity) {
       return;
