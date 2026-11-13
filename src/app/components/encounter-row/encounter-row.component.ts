@@ -679,9 +679,10 @@ export class AppEncounterRowComponent {
         case 'side':
           return 'w-40 shrink-0';
         case 'healthbar':
-          return 'w-60 shrink-0';
+          // Takes whatever the line has left; the conditions keep a fixed share beside it once the row is wide.
+          return 'min-w-60 flex-1';
         case 'statuses':
-          return 'min-w-64 flex-1';
+          return 'min-w-64 flex-1 @2xl:w-72 @2xl:flex-none';
         case 'text':
           return 'w-40 shrink-0';
         default:
