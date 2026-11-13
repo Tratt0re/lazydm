@@ -3,10 +3,10 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>LazyDM. Prep at your desk. Run at the table.</title>
+    <title>LazyDM — Campaign Manager &amp; Encounter Tracker for DMs</title>
     <meta
       name="description"
-      content="LazyDM keeps campaign preparation and play in one desktop app, with Markdown notes you own and encounters, maps and links ready at the table."
+      content="LazyDM is a desktop campaign manager and encounter tracker for Dungeon Masters. Prepare Markdown notes, maps and encounters, then run the session at the table."
     />
     <meta
       http-equiv="Content-Security-Policy"
@@ -14,10 +14,10 @@
     />
     <meta name="theme-color" content="#101114" media="(prefers-color-scheme: dark)" />
     <meta name="theme-color" content="#e9eae7" media="(prefers-color-scheme: light)" />
-    <meta property="og:title" content="LazyDM. Prep at your desk. Run at the table." />
+    <meta property="og:title" content="LazyDM — Campaign Manager &amp; Encounter Tracker for DMs" />
     <meta
       property="og:description"
-      content="Prepare the campaign and run the session from one desktop app. Your notes stay plain Markdown in a folder you own."
+      content="LazyDM is a desktop campaign manager and encounter tracker for Dungeon Masters. Prepare Markdown notes, maps and encounters, then run the session at the table."
     />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://lazydm.com/" />
@@ -30,7 +30,29 @@
     <meta name="twitter:image" content="https://lazydm.com/assets/img/og.png" />
     <link rel="canonical" href="https://lazydm.com/" />
     <script type="application/ld+json">
-      {"@context":"https://schema.org","@type":"SoftwareApplication","name":"LazyDM","applicationCategory":"GameApplication","operatingSystem":"macOS, Windows, Linux","description":"A desktop app for Dungeon Masters that keeps campaign preparation and play together, with Markdown notes you own.","url":"https://lazydm.com/","image":"https://lazydm.com/assets/img/og.png","sameAs":["https://github.com/Tratt0re/lazydm"]}
+      {
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "WebSite",
+            "@id": "https://lazydm.com/#website",
+            "name": "LazyDM",
+            "url": "https://lazydm.com/"
+          },
+          {
+            "@type": "SoftwareApplication",
+            "@id": "https://lazydm.com/#app",
+            "name": "LazyDM",
+            "applicationCategory": "GameApplication",
+            "operatingSystem": "macOS, Windows, Linux",
+            "description": "A desktop campaign manager and encounter tracker for Dungeon Masters.",
+            "url": "https://lazydm.com/",
+            "image": "https://lazydm.com/assets/img/og.png",
+            "sameAs": ["https://github.com/Tratt0re/lazydm"],
+            "isPartOf": { "@id": "https://lazydm.com/#website" }
+          }
+        ]
+      }
     </script>
     <link rel="icon" type="image/png" href="assets/img/favicon.png" />
     <link rel="preload" href="assets/fonts/barlow-condensed-latin-700-normal.woff2" as="font" type="font/woff2" crossorigin />
@@ -100,8 +122,8 @@
         <div class="arc-ornament-rule" aria-hidden="true"><span>&#9671;</span><span>&#10019;</span><span>&#9671;</span></div>
       </header>
       <p class="lede">
-        Prepare your campaign and run it at the table from the same desktop app. Your notes stay plain Markdown in a
-        folder you own, while encounters, maps and links stay close when play begins.
+        LazyDM is a desktop campaign manager and encounter tracker for Dungeon Masters. Prepare your campaign, keep its
+        notes as plain Markdown in a folder you own, then run the session with maps and links close at hand.
       </p>
 
       <div class="actions">
