@@ -148,8 +148,7 @@ their technical names; only the text the user sees changes. Add to this table be
     *New folder* (one level only). The same modals as the section toolbar; a new note opens right away.
 - **Special sections**: *Assets* (any non-`.md` file), *Encounters* (`.json` files, see §6d) and *Maps* (`.json`
   files, see §6e) hold no plain notes —
-  they offer *New folder* and *Import* but no *New note* (*Encounters* offers *New encounter*, *Party roster* and a
-  *Battle rule* select instead; *Maps* offers *New map*); their sub-folders only organise files, and the
+  they offer *New folder* and *Import* but no *New note* (*Encounters* offers *New encounter*, and *Party roster* instead; *Maps* offers *New map*); their sub-folders only organise files, and the
   Review page does not check them. *Assets* also offers **Import from disk** (toolbar, empty-state button and the
   sidebar **+**): a modal with *Select files* (the system file dialog), a drop zone and a paste target
   (Cmd/Ctrl+V); media files can also be dropped or pasted straight on the section page (or on one of its
@@ -424,10 +423,10 @@ Planned Electron modules: `vault`, `cloud-readiness`, `campaign`, `document`, `i
     and nowhere else, *Delete forever* last after a separator, asking before it deletes. The **side** (enemy, player, ally) is not in the row: it is set from the row's "…" menu and tints the **left rail** (the drag-handle column). The current turn has a bronze left marker plus a *Turn* label
     (never colour alone). The statuses help text is shown once for the whole list, not on every row. The rule's grid
     is the row's body.
-  - **Density**: a setting (today a switch in the battle bar, moving to the *Tracker layouts* settings page) sets how much of a row shows — *Compact* (one line, about 50px, for
-    hordes and for the whole order next to a note), *Card* (two lines, the default, the layout's grid) or *Expanded*
-    (the stat-block row: quick damage / heal / temporary HP buttons under the bar, the fields the layout marks
-    *Expanded*, and the first line of the linked note). *Follow the turn* (off by default) opens whoever has the
+  - **Density**: a setting in *Tracker layouts* (device-local) sets how much of a row shows — *Compact* (the
+    default; one line of about 70px with the quick HP controls under the bar, for hordes and for the whole order next to a
+    note), *Card* (the layout's grid, about 140px) or *Expanded* (the stat-block row: the fields the layout marks
+    *Expanded*, and the first line of the linked note). The quick damage / heal / temporary HP buttons show in **every** size. *Follow the turn* (off by default) opens whoever has the
     turn as Expanded, whatever the switch says, and moves along with *Next turn*. Both are device-local and never
     stored in the Codex. A layout field may ask for a **density** (`card` or `expanded`, the smallest row size that
     shows it; none = every size): Compact reads left to right by kind (initiative, name, side, health, defences,
@@ -452,7 +451,7 @@ Planned Electron modules: `vault`, `cloud-readiness`, `campaign`, `document`, `i
     value of the row above or below. Built with the shared `arc-inline-value`. The modal stays for *Insert many* and
     picking the note.
 - **Party roster**: a hidden `encounters/_party.json` per campaign (the same file format and page, without the
-  battle), reached from the labelled *Party roster* button in the toolbar of the Encounters page (a section of its own) — it is not listed or offered as a link. It has the *Battle rule* select too (default: the campaign's), so what its rows show is never implicit.
+  battle), reached from the labelled *Party roster* button in the toolbar of the Encounters page (a section of its own) — it is not listed or offered as a link. Its rows follow the campaign's tracker layout.
   *Add party* copies its entities into an encounter (also a running one), skipping a member whose name is already
   there.
 - **In notes**: `![[ambush.json]]` is a row with the battle (swords) icon and the file name, in Live preview and

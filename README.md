@@ -64,8 +64,8 @@ through the turns while hit points, temporary hit points and timed statuses stay
 </picture>
 
 - **Encounters** are `.json` files you link like any note (`![[ambush.json]]`).
-- **Tracker layouts** decide the details each Combatant row shows. Use the built-in Default, customise it, or write your
-  own with a dice formula for initiative.
+- **Tracker layouts** decide the details each Combatant row shows. Pick the built-in one for your game (Generic, D&D 5e,
+  Pathfinder 2e) and the row size, and see it on mock Combatants before the session.
 - **Battle bar** with Start battle, Stop battle and next turn, and the round and whose turn it is always visible.
 - **Cemetery** keeps defeated enemies in case they return, and a **party roster** can be added to any encounter.
 

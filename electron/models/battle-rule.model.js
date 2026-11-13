@@ -67,7 +67,7 @@ function entityField(key, component, extra = {}) {
 
 /**
  * Rule shipped with the app: system-neutral layout (initiative, linked note, name, AC, HP bar, statuses) that
- * rolls `1d20 + {initiative_mod}` (the enemy template's key). Read-only; *Customize* copies it out.
+ * rolls `1d20 + {initiative_mod}` (the enemy template's key). Read-only: the layouts are the built-in ones only.
  */
 const DEFAULT_BATTLE_RULE = Object.freeze({
   version: BATTLE_RULE_VERSION,
@@ -115,7 +115,7 @@ function noteText(key, place) {
 /**
  * Rules shipped with the app, by reference: `builtin` (Generic, above) and one per game system. They are data:
  * the battle code never names a game, it only reads fields and areas. Each reads the keys of the enemy template
- * of its system (`builtin:enemy@<system>`). Read-only; *Customize* copies one out.
+ * of its system (`builtin:enemy@<system>`). Read-only.
  */
 const SYSTEM_BATTLE_RULES = Object.freeze({
   dnd5e: Object.freeze({

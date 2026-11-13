@@ -10,6 +10,7 @@ import type {
 } from '@/components/sheet-form/sheet-form.types';
 import { buildIconPickerField, DEFAULT_CAMPAIGN_ICON } from '@/config/icon-picker.config';
 import type { CampaignDto } from '@/dtos';
+import { BattleRuleService } from '@/services/battle-rule.service';
 import { CampaignService } from '@/services/campaign.service';
 import { CUSTOM_SECTION_ICONS } from '@/services/section.service';
 
@@ -64,6 +65,7 @@ export function toStoredCampaignIcon(value: unknown): string | null {
 @Injectable({ providedIn: 'root' })
 export class CampaignActionsService {
   private readonly campaignService = inject(CampaignService);
+  private readonly battleRuleService = inject(BattleRuleService);
   private readonly dialogFormService = inject(AppDialogFormService);
   private readonly translateService = inject(TranslateService);
   private readonly router = inject(Router);
@@ -167,6 +169,7 @@ export class CampaignActionsService {
     system: string | null,
   ): Promise<CampaignDto | null> {
     try {
+      const previousSystem = this.campaignService.campaigns().find((item) => item.slug === slug)?.system ?? null;
       const updated = await this.campaignService.update({
         slug,
         name: name.trim(),
@@ -175,6 +178,10 @@ export class CampaignActionsService {
         // Always sent from the edit form: null (generic) clears it.
         system: system ?? 'generic',
       });
+      // A new system resets the campaign's layout choice: open encounters must read their layout again.
+      if ((updated.system ?? null) !== previousSystem) {
+        this.battleRuleService.notifyChanged();
+      }
       toast.success(this.translateService.instant('campaigns.edit.done', { name: updated.name }));
       return updated;
     } catch (error) {

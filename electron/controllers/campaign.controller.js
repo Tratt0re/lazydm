@@ -125,13 +125,16 @@ async function update(payload) {
     normalizeOptionalString(body.icon, 'payload.icon', { allowEmpty: true, maxLength: 40 }) || null;
 
   const system = readSystem(body.system);
+  // Only a real change of system resets the layout choice: the edit form sends the system on every save.
+  const before = system === undefined ? null : await campaignModel.readCampaign(vaultPath, slug);
+  const systemChanged = system !== undefined && (before?.system ?? null) !== system;
   const campaign = await campaignModel.updateCampaign(vaultPath, slug, {
     name,
     description,
     icon,
     system,
   });
-  if (system !== undefined) {
+  if (systemChanged) {
     applySystemChoice(vaultPath, slug);
   }
   if (indexerController.isOpen()) {

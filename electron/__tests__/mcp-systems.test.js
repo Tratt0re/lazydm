@@ -265,6 +265,13 @@ describe('a campaign with a game system', () => {
     expect(Object.keys(data.frontmatter)).not.toContain('hit_dice');
   });
 
+  it('keeps the layout the user picked when the system is sent again unchanged (every edit does)', async () => {
+    await campaignController().create({ name: 'Crypt', system: 'pf2e' });
+    await ruleController.setChoice({ campaign: 'crypt', rule: 'builtin:dnd5e' });
+    await campaignController().update({ slug: 'crypt', name: 'Crypt of Ash', system: 'pf2e' });
+    expect((await ruleOf('crypt')).ruleName).toBe('D&D 5e');
+  });
+
   it('changes the system of an existing campaign and drops its old layout choice', async () => {
     await campaignController().create({ name: 'Crypt', system: 'dnd5e' });
     await ruleController.setChoice({ campaign: 'crypt', rule: 'builtin:dnd5e' });

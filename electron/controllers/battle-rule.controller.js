@@ -11,10 +11,9 @@ async function requireCampaign(vaultPath, value) {
   return slug;
 }
 
-/** The built-in rules (`builtIn` is the default). `rows` (rule files) stays empty: files are no longer read. */
+/** The built-in rules (`builtIn` is the default). Rule files are no longer read, so there are no other rows. */
 async function list() {
   return {
-    rows: [],
     builtIn: battleRuleModel.DEFAULT_BATTLE_RULE,
     builtIns: Object.entries(battleRuleModel.BUILT_IN_RULES).map(([ref, rule]) => ({ ref, rule })),
   };

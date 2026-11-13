@@ -21,7 +21,8 @@ export class BattleRuleService extends BaseIpcService<APIChannel.BATTLE_RULES> {
     return this.ipcClient.list();
   }
 
-  private notifyChanged(): void {
+  /** A campaign's layout changed outside the layout page (its system was changed): open encounters re-read theirs. */
+  notifyChanged(): void {
     this.changesSignal.update((count) => count + 1);
   }
 

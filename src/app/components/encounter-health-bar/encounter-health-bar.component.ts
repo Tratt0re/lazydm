@@ -22,13 +22,18 @@ import {
         <div
           class="relative flex w-full items-center overflow-hidden border border-border bg-recessed"
           [class]="isLarge() ? 'h-9' : 'h-6'"
-          role="meter"
-          [attr.aria-label]="label()"
-          aria-valuemin="0"
-          [attr.aria-valuemax]="scale() > 0 ? scale() : null"
-          [attr.aria-valuenow]="current() ?? 0"
-          [attr.aria-valuetext]="valueText()"
         >
+          <!-- The meter is the track alone: the numbers over it are controls, and a meter's children are not
+               exposed to assistive technology. -->
+          <div
+            class="absolute inset-0"
+            role="meter"
+            [attr.aria-label]="label()"
+            aria-valuemin="0"
+            [attr.aria-valuemax]="scale() > 0 ? scale() : null"
+            [attr.aria-valuenow]="current() ?? 0"
+            [attr.aria-valuetext]="valueText()"
+          >
           @if (scale() > 0) {
             <div
               class="absolute inset-y-0 left-0 transition-[width,background-color] duration-500 ease-out motion-reduce:transition-none"
@@ -48,6 +53,7 @@ import {
               </div>
             }
           }
+          </div>
           <span
             class="relative z-1 ml-1 truncate bg-recessed px-1 font-mono text-[11px] font-semibold tracking-[0.11em] text-foreground-strong uppercase"
             >{{ label() }}</span

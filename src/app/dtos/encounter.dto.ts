@@ -44,8 +44,6 @@ export interface BattleRuleDto {
 }
 
 export interface BattleRuleListDto {
-  /** Always empty: rule files are no longer read (kept so older callers still type-check). */
-  readonly rows: readonly never[];
   /** The default built-in rule (`builtin`). */
   readonly builtIn: BattleRuleDto;
   /** Every built-in rule by reference (`builtin`, `builtin:dnd5e`…), the default first. */

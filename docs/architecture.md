@@ -80,7 +80,8 @@ Current work: UI polish for 1.0 (plans in `.claude/plans/`). The phase-by-phase 
 | `/campaigns` | Campaign list |
 | `/campaigns/:slug` | Campaign overview, `review`, and `:section` pages with their notes, encounters and maps |
 | `/compendium` | Systems and shared content |
-| `/templates`, `/battle-rules` | Template and tracker layout libraries |
+| `/templates` | Template library |
+| `/battle-rules` | *Tracker layouts* settings: pick the layout, row size and Follow the turn, with a live preview |
 | `/settings/:section` | Settings |
 
 ## Adding a feature

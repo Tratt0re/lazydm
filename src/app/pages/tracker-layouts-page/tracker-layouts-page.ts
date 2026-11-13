@@ -75,7 +75,6 @@ export class TrackerLayoutsPage implements OnInit {
   protected readonly previewEntities = computed(() => this.buildPreview());
   /** The combatant whose turn it is in the preview: the one the *Follow the turn* switch opens up. */
   protected readonly turnId = 'preview-goblin';
-  protected readonly isFollowing = this.followTurn;
 
   async ngOnInit(): Promise<void> {
     try {
@@ -98,6 +97,10 @@ export class TrackerLayoutsPage implements OnInit {
     this.campaign.set(slug);
     try {
       const { rule, system } = await this.battleRuleService.getChoice(slug);
+      // A slower answer for a campaign the user already left must not overwrite the one now shown.
+      if (this.campaign() !== slug) {
+        return;
+      }
       // No choice of its own: the layout of the campaign's game system applies.
       this.layout.set(rule ?? (system ? `builtin:${system}` : DEFAULT_LAYOUT));
     } catch (error) {

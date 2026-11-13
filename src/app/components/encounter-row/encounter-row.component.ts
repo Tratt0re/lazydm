@@ -77,12 +77,18 @@ interface RowCell {
     @if (showRail()) {
     <!-- Left rail: the two things you do to many rows at once (drag to reorder, pick for the roll). -->
     <div
-      class="flex min-w-8 shrink-0 flex-col items-center gap-1 border-r border-border-subtle px-1 py-2"
+      class="flex min-w-9 shrink-0 flex-col items-center gap-1 border-r border-border-subtle px-0.5 py-2"
       [class]="sideTint(side())"
     >
       @if (side(); as sideValue) {
-        <!-- The tint says it too; the word makes it not rely on colour. -->
-        <span class="sr-only">{{ sideLabel(sideValue) }}</span>
+        <!-- The tint is not the only cue: the side is also written, a short word at the 11px floor (the full one
+             is the tooltip and the accessible name). -->
+        <span
+          class="font-mono text-[11px] leading-none font-semibold tracking-[0.04em] text-foreground-secondary uppercase"
+          [attr.aria-label]="sideLabel(sideValue)"
+          [arcTooltip]="sideLabel(sideValue)"
+          >{{ sideShort(sideValue) }}</span
+        >
       }
       @if (isEditable()) {
       <span
@@ -666,6 +672,11 @@ export class AppEncounterRowComponent {
       default:
         return 'bg-muted-foreground';
     }
+  }
+
+  /** The first letters of a side, enough to tell them apart in the narrow rail ("Enemy" → "ENE"). */
+  protected sideShort(side: string): string {
+    return Array.from(this.sideLabel(side)).slice(0, 3).join('');
   }
 
   /** Label of a side: its translation when the rule's option has one (`enemy`, `player`, `ally`), else as written. */
