@@ -13,6 +13,11 @@ import { BaseIpcService } from '@/services/base-ipc.service';
 
 /** Rule value of a campaign or an encounter that uses the built-in rule. */
 export const BUILT_IN_BATTLE_RULE = 'builtin';
+/** Built-in rules of a game system: reference → the system's name key (`settings.templates.systems.<key>`). */
+export const SYSTEM_BATTLE_RULES: Readonly<Record<string, string>> = {
+  'builtin:dnd5e': 'dnd5e',
+  'builtin:pf2e': 'pf2e',
+};
 /** Select value for "no choice" (never stored): the campaign's rule, else the built-in. */
 export const DEFAULT_BATTLE_RULE_CHOICE = 'default';
 
@@ -63,6 +68,12 @@ export class BattleRuleService extends BaseIpcService<APIChannel.BATTLE_RULES> {
         value: BUILT_IN_BATTLE_RULE,
         label: this.translateService.instant('settings.templates.sources.builtin'),
       },
+      ...Object.entries(SYSTEM_BATTLE_RULES).map(([value, system]) => ({
+        value,
+        label: this.translateService.instant('battleRules.builtInSystem', {
+          system: this.translateService.instant(`settings.templates.systems.${system}`),
+        }),
+      })),
       ...this.getCampaignRules(rows, campaign).map((row) => ({
         value: row.path,
         label: this.getRuleLabel(row),
@@ -97,8 +108,9 @@ export class BattleRuleService extends BaseIpcService<APIChannel.BATTLE_RULES> {
     return result;
   }
 
-  async create(name: string): Promise<string> {
-    const { path } = await this.ipcClient.create({ name });
+  /** A new rule file, started from a built-in one (`from`: its reference; the default one when missing). */
+  async create(name: string, from?: string): Promise<string> {
+    const { path } = await this.ipcClient.create({ name, from });
     this.notifyChanged();
     return path;
   }

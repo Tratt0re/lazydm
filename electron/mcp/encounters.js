@@ -42,7 +42,8 @@ async function loadRule(c, root, encounterPath = null) {
   const choice = root.includes('/')
     ? null
     : (await c.battleRule.getChoice({ campaign: root })).rule;
-  if (choice && choice !== 'builtin') {
+  // A built-in reference is `builtin` or `builtin:<system>`; a rule file is a path (it has a `/`).
+  if (choice?.includes('/')) {
     return {
       rule: (await c.battleRule.read({ path: choice })).rule,
       rulePath: choice,
@@ -50,11 +51,12 @@ async function loadRule(c, root, encounterPath = null) {
     };
   }
 
-  const { builtIn } = await c.battleRule.list();
+  const { builtIn, builtIns } = await c.battleRule.list();
+  const chosen = choice ? builtIns.find((item) => item.ref === choice) : null;
   return {
-    rule: builtIn,
+    rule: chosen?.rule ?? builtIn,
     rulePath: null,
-    source: choice === 'builtin' ? 'the campaign (built-in)' : 'the built-in default',
+    source: chosen ? `the campaign (built-in ${chosen.rule.name})` : 'the built-in default',
   };
 }
 

@@ -1497,7 +1497,8 @@
       "discard": "Annulla",
       "unconfirmed": "Non ancora applicato",
       "resize": "Ridimensiona {{name}}"
-    }
+    },
+    "builtInSystem": "Integrato · {{system}}"
   },
   "breadcrumb": {
     "ariaLabel": "Percorso"

@@ -1497,7 +1497,8 @@
       "discard": "Verwerfen",
       "unconfirmed": "Noch nicht übernommen",
       "resize": "{{name}} anpassen"
-    }
+    },
+    "builtInSystem": "Integriert · {{system}}"
   },
   "breadcrumb": {
     "ariaLabel": "Brotkrumennavigation"

@@ -20,7 +20,7 @@ import {
   type RowLayout,
 } from '@/components/battle-rule-row-editor/battle-rule-row-editor.component';
 import type { BattleRuleDto, BattleRuleRowDto } from '@/dtos';
-import { BattleRuleService } from '@/services/battle-rule.service';
+import { BattleRuleService, SYSTEM_BATTLE_RULES } from '@/services/battle-rule.service';
 import { onIndexUpdated, onVaultConfigChanged } from '@/services/ipc-events';
 import { TemplateService } from '@/services/template.service';
 import { ArcTechAlertDialogService } from '@/shared/components/alert-dialog';
@@ -32,6 +32,7 @@ import { ArcTechSelectImports } from '@/shared/components/select';
 import { ArcTechTooltipImports } from '@/shared/components/tooltip';
 import { getDiceFormulaError } from '@/shared/utils/dice';
 
+/** Key of the default built-in rule; the others are `builtin:<system>` (the rule's own reference). */
 const BUILT_IN_KEY = 'builtin';
 const GROUP_KEY_PREFIX = 'group:';
 const BUILT_IN_REF_PREFIX = 'builtin:';
@@ -41,7 +42,7 @@ const SOURCE_ICONS: Record<BattleRuleRowDto['source'], ArcTechIcon> = {
   campaign: 'scroll-text',
 };
 interface SelectedRule {
-  /** Rule path, or `builtin` for the read-only built-in. */
+  /** Rule path, or a built-in reference (`builtin`, `builtin:dnd5e`…) for a read-only one. */
   readonly key: string;
   readonly contentHash: string | null;
 }
@@ -79,7 +80,8 @@ export class BattleRuleLibraryPage implements OnInit {
   private readonly translateService = inject(TranslateService);
 
   protected readonly rows = signal<readonly BattleRuleRowDto[]>([]);
-  protected readonly builtIn = signal<BattleRuleDto | null>(null);
+  /** The built-in rules by reference. */
+  protected readonly builtIns = signal<ReadonlyMap<string, BattleRuleDto>>(new Map());
   protected readonly selected = signal<SelectedRule | null>(null);
   /** The rule being edited (a copy of the file; the built-in is read-only). */
   protected readonly rule = signal<BattleRuleDto | null>(null);
@@ -90,7 +92,10 @@ export class BattleRuleLibraryPage implements OnInit {
   protected readonly templateOptions = signal<readonly { value: string; label: string }[]>([]);
   protected readonly attributeKeys = signal<readonly string[]>([]);
 
-  protected readonly isBuiltIn = computed(() => this.selected()?.key === BUILT_IN_KEY);
+  protected readonly isBuiltIn = computed(() => {
+    const key = this.selected()?.key ?? '';
+    return key === BUILT_IN_KEY || key.startsWith(BUILT_IN_REF_PREFIX);
+  });
   protected readonly isDirty = computed(
     () =>
       !this.isBuiltIn() &&
@@ -131,6 +136,9 @@ export class BattleRuleLibraryPage implements OnInit {
           label: this.translateService.instant('battleRules.builtInName'),
           translate: false,
         },
+        ...[...this.builtIns().keys()]
+          .filter((ref) => ref !== BUILT_IN_KEY)
+          .map((ref) => ({ key: ref, label: this.builtInLabel(ref), translate: false })),
       ],
     };
 
@@ -270,9 +278,18 @@ export class BattleRuleLibraryPage implements OnInit {
     });
   }
 
-  /** Copies the built-in into `_battle-rules/` so it can be edited, and opens the copy. */
+  /** Name of a built-in rule: *Default*, or the system's (`D&D 5e`). */
+  protected builtInLabel(ref: string): string {
+    const system = SYSTEM_BATTLE_RULES[ref];
+    return system
+      ? this.translateService.instant(`settings.templates.systems.${system}`)
+      : this.translateService.instant('battleRules.builtInName');
+  }
+
+  /** Copies the selected built-in into `_battle-rules/` so it can be edited, and opens the copy. */
   protected async customize(): Promise<void> {
-    await this.create(`${this.translateService.instant('battleRules.builtInName')} copy`);
+    const ref = this.selected()?.key ?? BUILT_IN_KEY;
+    await this.create(`${this.builtInLabel(ref)} copy`, ref);
   }
 
   protected confirmDelete(): void {
@@ -337,9 +354,9 @@ export class BattleRuleLibraryPage implements OnInit {
     }
   }
 
-  private async create(name: string): Promise<boolean> {
+  private async create(name: string, from?: string): Promise<boolean> {
     try {
-      const path = await this.battleRuleService.create(name);
+      const path = await this.battleRuleService.create(name, from);
       await this.load();
       await this.select(path);
       return true;
@@ -365,8 +382,9 @@ export class BattleRuleLibraryPage implements OnInit {
     try {
       let rule: BattleRuleDto;
       let contentHash: string | null = null;
-      if (key === BUILT_IN_KEY) {
-        rule = this.builtIn() ?? (await this.battleRuleService.list()).builtIn;
+      if (key === BUILT_IN_KEY || key.startsWith(BUILT_IN_REF_PREFIX)) {
+        const builtIns = this.builtIns().size > 0 ? this.builtIns() : await this.loadBuiltIns();
+        rule = builtIns.get(key) ?? builtIns.get(BUILT_IN_KEY)!;
       } else {
         const file = await this.battleRuleService.read(key);
         rule = file.rule;
@@ -382,12 +400,19 @@ export class BattleRuleLibraryPage implements OnInit {
     }
   }
 
+  private async loadBuiltIns(): Promise<ReadonlyMap<string, BattleRuleDto>> {
+    const library = await this.battleRuleService.list();
+    const builtIns = new Map(library.builtIns.map((item) => [item.ref, item.rule]));
+    this.builtIns.set(builtIns);
+    return builtIns;
+  }
+
   private async load(): Promise<void> {
     this.errorMessage.set(null);
     try {
       const library = await this.battleRuleService.list();
       this.rows.set(library.rows);
-      this.builtIn.set(library.builtIn);
+      this.builtIns.set(new Map(library.builtIns.map((item) => [item.ref, item.rule])));
     } catch (error) {
       this.errorMessage.set(error instanceof Error ? error.message : String(error));
     }

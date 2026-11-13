@@ -42,7 +42,11 @@ describe('built-in templates by system', () => {
     // D&D 5e keeps every key of the default system. Pathfinder keeps the ones its game shares: its enemies have a
     // level where the default has a challenge rating, and its spells a rank, `cast`... where the default has
     // `level`, `casting_time`...
-    const renamedInPathfinder = { enemy: ['cr'], character: [], spell: ['level', 'school', 'casting_time'] };
+    const renamedInPathfinder = {
+      enemy: ['cr'],
+      character: [],
+      spell: ['level', 'school', 'casting_time'],
+    };
     for (const type of GAME_TYPES) {
       const base = keysOf(type, DEFAULT_SYSTEM);
       expect(keysOf(type, 'dnd5e'), `dnd5e/${type}`).toEqual(expect.arrayContaining(base));
@@ -54,7 +58,16 @@ describe('built-in templates by system', () => {
 
   it('makes D&D 5e enemies, NPCs and spells playable', () => {
     expect(keysOf('enemy', 'dnd5e')).toEqual(
-      expect.arrayContaining(['ac', 'hp', 'hit_dice', 'speed', 'initiative_mod', 'str', 'dex', 'cha']),
+      expect.arrayContaining([
+        'ac',
+        'hp',
+        'hit_dice',
+        'speed',
+        'initiative_mod',
+        'str',
+        'dex',
+        'cha',
+      ]),
     );
     expect(keysOf('character', 'dnd5e')).toEqual(
       expect.arrayContaining(['ac', 'hp', 'initiative_mod', 'con', 'wis']),

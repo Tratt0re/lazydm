@@ -1497,7 +1497,8 @@
       "discard": "Descartar",
       "unconfirmed": "Aún sin aplicar",
       "resize": "Redimensionar {{name}}"
-    }
+    },
+    "builtInSystem": "Integrado · {{system}}"
   },
   "breadcrumb": {
     "ariaLabel": "Ruta de navegación"

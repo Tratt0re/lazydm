@@ -1497,7 +1497,8 @@
       "discard": "Annuler",
       "unconfirmed": "Pas encore appliqué",
       "resize": "Redimensionner {{name}}"
-    }
+    },
+    "builtInSystem": "Intégré · {{system}}"
   },
   "breadcrumb": {
     "ariaLabel": "Fil d'Ariane"

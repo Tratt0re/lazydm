@@ -100,6 +100,76 @@ const DEFAULT_BATTLE_RULE = Object.freeze({
   ]),
 });
 
+const BUILT_IN_RULE_PREFIX = 'builtin:';
+
+/** A number tile read from the entity's note (`ac`, `fortitude`…). */
+function noteNumber(key, place) {
+  return entityField(key, 'number', { source: `${FRONTMATTER_SOURCE_PREFIX}${key}`, area: place });
+}
+
+/**
+ * Rules shipped with the app, by reference: `builtin` (Generic, above) and one per game system. They are data:
+ * the battle code never names a game, it only reads fields and areas. Each reads the keys of the enemy template
+ * of its system (`builtin:enemy@<system>`). Read-only; *Customize* copies one out.
+ */
+const SYSTEM_BATTLE_RULES = Object.freeze({
+  dnd5e: Object.freeze({
+    version: BATTLE_RULE_VERSION,
+    name: 'D&D 5e',
+    template: 'builtin:enemy@dnd5e',
+    initiative: Object.freeze({ roll: '1d20 + {initiative_mod}' }),
+    nameArea: area(1, 2, 4),
+    fields: Object.freeze([
+      entityField('initiative', 'initiative', { area: area(1, 1, 1) }),
+      entityField('side', 'side', { area: area(1, 6, 2) }),
+      entityField('hp', 'healthbar', { source: `${FRONTMATTER_SOURCE_PREFIX}hp`, area: area(1, 8, 5) }),
+      noteNumber('ac', area(2, 1, 1)),
+      entityField('statuses', 'statuses', { area: area(2, 2, 10) }),
+      entityField('note', 'note-link', { area: area(2, 12, 1) }),
+    ]),
+  }),
+  pf2e: Object.freeze({
+    version: BATTLE_RULE_VERSION,
+    name: 'Pathfinder 2e',
+    template: 'builtin:enemy@pf2e',
+    // Initiative is a Perception check.
+    initiative: Object.freeze({ roll: '1d20 + {perception}' }),
+    nameArea: area(1, 2, 4),
+    fields: Object.freeze([
+      entityField('initiative', 'initiative', { area: area(1, 1, 1) }),
+      entityField('side', 'side', { area: area(1, 6, 2) }),
+      entityField('hp', 'healthbar', { source: `${FRONTMATTER_SOURCE_PREFIX}hp`, area: area(1, 8, 5) }),
+      noteNumber('ac', area(2, 1, 1)),
+      noteNumber('fortitude', area(2, 2, 1)),
+      noteNumber('reflex', area(2, 3, 1)),
+      noteNumber('will', area(2, 4, 1)),
+      entityField('statuses', 'statuses', { area: area(2, 5, 7) }),
+      entityField('note', 'note-link', { area: area(2, 12, 1) }),
+    ]),
+  }),
+});
+
+/** Every built-in rule by reference, the default (`builtin`) first. */
+const BUILT_IN_RULES = Object.freeze({
+  [BUILT_IN_RULE]: DEFAULT_BATTLE_RULE,
+  ...Object.fromEntries(
+    Object.entries(SYSTEM_BATTLE_RULES).map(([system, rule]) => [
+      `${BUILT_IN_RULE_PREFIX}${system}`,
+      rule,
+    ]),
+  ),
+});
+
+/** Whether `value` names a built-in rule (`builtin`, `builtin:dnd5e`…). */
+function isBuiltInRuleRef(value) {
+  return typeof value === 'string' && Object.hasOwn(BUILT_IN_RULES, value);
+}
+
+/** The built-in rule a reference names; the default one for anything else. */
+function getBuiltInRule(ref) {
+  return isBuiltInRuleRef(ref) ? BUILT_IN_RULES[ref] : DEFAULT_BATTLE_RULE;
+}
+
 /** `key`, or `key_2`, `key_3`… when the rule already uses it. */
 function pickFreeKey(taken, key) {
   for (let index = 1; ; index++) {
@@ -452,11 +522,12 @@ function getFreeRulePath(rootPath, slug) {
 }
 
 /** Writes a new vault-level rule (a copy of the built-in under `name`) and returns its path. */
-async function createBattleRuleFile(rootPath, slug, name) {
+/** A new rule file, started from a built-in one (`from`: a reference, the default when missing). */
+async function createBattleRuleFile(rootPath, slug, name, from = BUILT_IN_RULE) {
   const rulePath = getFreeRulePath(rootPath, slug);
   safeWriteFileAtomic(
     resolveInsideVault(rootPath, rulePath),
-    serialize({ ...DEFAULT_BATTLE_RULE, name }),
+    serialize({ ...getBuiltInRule(from), name }),
   );
   return rulePath;
 }
@@ -465,10 +536,10 @@ function battleRuleExists(rootPath, rulePath) {
   return isBattleRulePath(rulePath) && fs.existsSync(resolveInsideVault(rootPath, rulePath));
 }
 
-/** Rule choices of the campaigns (`.lazydm/vault.json` → `battleRules.campaigns.<slug>`): a rule path or `builtin`. */
+/** Rule choices of the campaigns (`.lazydm/vault.json` → `battleRules.campaigns.<slug>`): a rule path or a built-in reference. */
 function readCampaignChoice(rootPath, campaignSlug) {
   const value = readVaultConfig(rootPath)?.battleRules?.campaigns?.[campaignSlug];
-  return value === BUILT_IN_RULE || battleRuleExists(rootPath, value) ? value : null;
+  return isBuiltInRuleRef(value) || battleRuleExists(rootPath, value) ? value : null;
 }
 
 function updateCampaignChoices(rootPath, update) {
@@ -507,7 +578,7 @@ async function deleteBattleRuleFile(rootPath, rulePath) {
 }
 
 /**
- * The rule an encounter uses: its own choice (`selection`: a rule path or `builtin`), else its campaign's, else
+ * The rule an encounter uses: its own choice (`selection`: a rule path or a built-in reference), else its campaign's, else
  * the built-in. A choice whose file is gone falls through to the next.
  */
 async function resolveBattleRule(rootPath, encounterPath, selection) {
@@ -517,8 +588,8 @@ async function resolveBattleRule(rootPath, encounterPath, selection) {
     scope === COMPENDIUM_DIR_NAME ? null : readCampaignChoice(rootPath, scope),
   ];
   for (const choice of choices) {
-    if (choice === BUILT_IN_RULE) {
-      return DEFAULT_BATTLE_RULE;
+    if (isBuiltInRuleRef(choice)) {
+      return getBuiltInRule(choice);
     }
 
     if (choice && battleRuleExists(rootPath, choice)) {
@@ -536,6 +607,7 @@ module.exports = {
   BATTLE_RULES_DIR_NAME,
   BATTLE_RULE_VERSION,
   BUILT_IN_RULE,
+  BUILT_IN_RULES,
   DEFAULT_BATTLE_RULE,
   DEFAULT_SIDES,
   FIELD_COMPONENTS,
@@ -543,6 +615,8 @@ module.exports = {
   battleRuleExists,
   createBattleRuleFile,
   deleteBattleRuleFile,
+  getBuiltInRule,
+  isBuiltInRuleRef,
   isBattleRulePath,
   listBattleRules,
   normalizeBattleRule,

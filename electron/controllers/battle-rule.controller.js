@@ -23,11 +23,12 @@ function requireRulePath(vaultPath, value, label = 'payload.path') {
   return rulePath;
 }
 
-/** Rule files of the vault, its systems and campaigns, plus the built-in. */
+/** Rule files of the vault, its systems and campaigns, plus the built-in ones (`builtIn` is the default). */
 async function list() {
   return {
     rows: await battleRuleModel.listBattleRules(vaultController.getReadyVaultPath()),
     builtIn: battleRuleModel.DEFAULT_BATTLE_RULE,
+    builtIns: Object.entries(battleRuleModel.BUILT_IN_RULES).map(([ref, rule]) => ({ ref, rule })),
   };
 }
 
@@ -50,7 +51,7 @@ function write(payload) {
   );
 }
 
-/** New vault-level rule, started from the built-in (also how *Customize* copies the built-in out). */
+/** New vault-level rule, started from a built-in (also how *Customize* copies one out). */
 async function create(payload) {
   const body = ensurePlainObject(payload, 'payload');
   const name = requireString(body.name, 'payload.name', { maxLength: BATTLE_RULE_NAME_MAX_LENGTH });
@@ -59,10 +60,16 @@ async function create(payload) {
     throw new Error('payload.name must contain at least one letter or number.');
   }
 
+  const from = normalizeOptionalString(body.from, 'payload.from', { allowNull: true }) ?? undefined;
+  if (from !== undefined && !battleRuleModel.isBuiltInRuleRef(from)) {
+    throw new Error(`payload.from is not a built-in rule: ${from}`);
+  }
+
   const path = await battleRuleModel.createBattleRuleFile(
     vaultController.getReadyVaultPath(),
     slug,
     name,
+    from,
   );
   return { path };
 }
@@ -83,14 +90,14 @@ async function getChoice(payload) {
   return { rule: battleRuleModel.readCampaignChoice(vaultPath, campaign) };
 }
 
-/** Rule a campaign's encounters follow by default: a rule path, `builtin`, or null for the built-in. */
+/** Rule a campaign's encounters follow by default: a rule path, a built-in reference (`builtin`, `builtin:dnd5e`…), or null for the default. */
 async function setChoice(payload) {
   const body = ensurePlainObject(payload, 'payload');
   const vaultPath = vaultController.getReadyVaultPath();
   const campaign = await requireCampaign(vaultPath, body.campaign);
   const rule = normalizeOptionalString(body.rule, 'payload.rule', { allowNull: true }) ?? null;
   const value =
-    rule === null || rule === battleRuleModel.BUILT_IN_RULE
+    rule === null || battleRuleModel.isBuiltInRuleRef(rule)
       ? rule
       : requireRulePath(vaultPath, rule, 'payload.rule');
   return { rule: battleRuleModel.setCampaignChoice(vaultPath, campaign, value) };

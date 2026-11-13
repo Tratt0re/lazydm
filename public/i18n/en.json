@@ -1497,7 +1497,8 @@
       "discard": "Discard",
       "unconfirmed": "Not applied yet",
       "resize": "Resize {{name}}"
-    }
+    },
+    "builtInSystem": "Built-in · {{system}}"
   },
   "breadcrumb": {
     "ariaLabel": "Breadcrumb"

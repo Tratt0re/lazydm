@@ -1497,7 +1497,8 @@
       "discard": "放弃",
       "unconfirmed": "尚未应用",
       "resize": "调整 {{name}} 大小"
-    }
+    },
+    "builtInSystem": "内置 · {{system}}"
   },
   "breadcrumb": {
     "ariaLabel": "面包屑导航"

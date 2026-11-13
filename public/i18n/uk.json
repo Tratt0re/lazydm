@@ -1497,7 +1497,8 @@
       "discard": "Скасувати",
       "unconfirmed": "Ще не застосовано",
       "resize": "Змінити розмір {{name}}"
-    }
+    },
+    "builtInSystem": "Вбудована · {{system}}"
   },
   "breadcrumb": {
     "ariaLabel": "Навігаційний ланцюжок"

@@ -55,7 +55,7 @@ export interface ElectronIpcClient {
       { path: string; rule: DTO.BattleRuleDto; expectedHash: string | null },
       DTO.WriteBattleRuleResultDto
     >;
-    readonly create: IpcRequest<{ name: string }, { path: string }>;
+    readonly create: IpcRequest<{ name: string; from?: string }, { path: string }>;
     readonly remove: IpcRequest<{ path: string }, { path: string }>;
     readonly getChoice: IpcRequest<{ campaign: string }, { rule: string | null }>;
     readonly setChoice: IpcRequest<

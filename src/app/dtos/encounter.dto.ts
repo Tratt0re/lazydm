@@ -49,7 +49,10 @@ export interface BattleRuleRowDto {
 
 export interface BattleRuleListDto {
   readonly rows: readonly BattleRuleRowDto[];
+  /** The default built-in rule (`builtin`). */
   readonly builtIn: BattleRuleDto;
+  /** Every built-in rule by reference (`builtin`, `builtin:dnd5e`…), the default first. */
+  readonly builtIns: readonly { readonly ref: string; readonly rule: BattleRuleDto }[];
 }
 
 export interface BattleRuleFileDto {
