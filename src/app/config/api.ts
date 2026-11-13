@@ -57,7 +57,7 @@ export interface ElectronIpcClient {
     >;
     readonly create: IpcRequest<{ name: string; from?: string }, { path: string }>;
     readonly remove: IpcRequest<{ path: string }, { path: string }>;
-    readonly getChoice: IpcRequest<{ campaign: string }, { rule: string | null }>;
+    readonly getChoice: IpcRequest<{ campaign: string }, { rule: string | null; system: string | null }>;
     readonly setChoice: IpcRequest<
       { campaign: string; rule: string | null },
       { rule: string | null }

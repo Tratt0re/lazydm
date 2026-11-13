@@ -2,6 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { toast } from 'ngx-sonner';
 
+import { CampaignService } from '@/services/campaign.service';
 import { DocumentService } from '@/services/document.service';
 import { FileActionsService } from '@/services/file-actions.service';
 import { AppDialogFormService } from '@/components/sheet-form/dialog-form.service';
@@ -24,6 +25,7 @@ import { AUTOMATIC_TEMPLATE_RULE, TemplateService } from '@/services/template.se
 export class SectionActionsService {
   private readonly sectionService = inject(SectionService);
   private readonly templateService = inject(TemplateService);
+  private readonly campaignService = inject(CampaignService);
   private readonly documentService = inject(DocumentService);
   private readonly fileActions = inject(FileActionsService);
   private readonly dialogFormService = inject(AppDialogFormService);
@@ -88,7 +90,10 @@ export class SectionActionsService {
               library.rows,
               campaign,
               currentRule,
-              section?.type ? library.types.includes(section.type) : false,
+              section?.type && library.types.includes(section.type)
+                ? (library.systems[section.type] ?? [])
+                : null,
+              this.campaignService.campaigns().find((item) => item.slug === campaign)?.system ?? null,
             )
             .map((option) => ({ ...option, translate: false })),
         },

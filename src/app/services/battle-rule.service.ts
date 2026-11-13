@@ -124,8 +124,9 @@ export class BattleRuleService extends BaseIpcService<APIChannel.BATTLE_RULES> {
     this.changesSignal.update((count) => count + 1);
   }
 
-  async getChoice(campaign: string): Promise<string | null> {
-    return (await this.ipcClient.getChoice({ campaign })).rule;
+  /** The campaign's own choice (null: none) and its game system, whose layout applies while it has no choice. */
+  async getChoice(campaign: string): Promise<{ rule: string | null; system: string | null }> {
+    return this.ipcClient.getChoice({ campaign });
   }
 
   async setChoice(campaign: string, rule: string | null): Promise<string | null> {

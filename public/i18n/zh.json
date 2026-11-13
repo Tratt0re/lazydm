@@ -129,13 +129,15 @@
       },
       "rules": {
         "title": "本战役的模板",
-        "description": "{{campaign}} 中的新笔记以这些模板开始。“自动”会在 _templates/<类型>.md 存在时使用它，否则使用内置模板。",
+        "description": "{{campaign}} 中的新笔记从这些模板开始。“自动”在 _templates/<类型>.md 存在时使用它，否则使用战役游戏系统的内置模板。",
         "automatic": "自动",
         "missing": "缺失：{{path}}",
         "noCampaignTitle": "未打开战役",
         "noCampaignDescription": "请先打开一个战役，再回到这里为每种笔记类型选择模板。",
         "saved": "模板选择已保存",
-        "saveError": "无法保存模板选择"
+        "saveError": "无法保存模板选择",
+        "automaticFor": "自动 · {{system}}",
+        "builtInOf": "{{system}}（内置）"
       },
       "library": {
         "empty": "选择一个模板以查看或编辑。"
@@ -560,7 +562,9 @@
       "error": "无法创建战役",
       "presetsLabel": "起始分区",
       "presetsDescription": "资源和遭遇始终包含在内。之后可以添加、修改或删除分区。",
-      "iconLabel": "图标"
+      "iconLabel": "图标",
+      "systemLabel": "游戏系统",
+      "systemDescription": "决定战役所用的追踪器布局和起始模板。之后可以更改。"
     },
     "sections": {
       "emptyTitle": "{{section}}中还没有内容",
@@ -688,7 +692,8 @@
       "nameDescription": "文件夹名称不变，链接和文件不受影响。",
       "submit": "保存",
       "done": "已保存 {{name}}",
-      "error": "无法保存战役"
+      "error": "无法保存战役",
+      "systemDescription": "更改会将此战役的追踪器布局重置为该系统的布局。已写好的笔记不受影响。"
     },
     "remove": {
       "title": "删除 {{name}}？",

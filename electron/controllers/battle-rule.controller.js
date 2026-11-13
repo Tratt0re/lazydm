@@ -24,7 +24,9 @@ async function getChoice(payload) {
   const body = ensurePlainObject(payload, 'payload');
   const vaultPath = vaultController.getReadyVaultPath();
   const campaign = await requireCampaign(vaultPath, body.campaign);
-  return { rule: battleRuleModel.readCampaignChoice(vaultPath, campaign) };
+  // `system`: the campaign's game system, whose layout applies while it has no choice of its own.
+  const system = (await campaignModel.readCampaign(vaultPath, campaign))?.system ?? null;
+  return { rule: battleRuleModel.readCampaignChoice(vaultPath, campaign), system };
 }
 
 /** Rule a campaign's encounters follow by default: a built-in reference (`builtin`, `builtin:dnd5e`…), or null for the default. */

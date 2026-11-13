@@ -129,13 +129,15 @@
       },
       "rules": {
         "title": "Templates for this campaign",
-        "description": "New notes in {{campaign}} start from these templates. Automatic uses _templates/<type>.md when it exists, otherwise the built-in.",
+        "description": "New notes in {{campaign}} start from these templates. Automatic uses _templates/<type>.md when it exists, otherwise the built-in of the campaign's game system.",
         "automatic": "Automatic",
         "missing": "Missing: {{path}}",
         "noCampaignTitle": "No campaign open",
         "noCampaignDescription": "Open a campaign, then come back here to choose which template each note type uses.",
         "saved": "Template choice saved",
-        "saveError": "Could not save the template choice"
+        "saveError": "Could not save the template choice",
+        "automaticFor": "Automatic · {{system}}",
+        "builtInOf": "{{system}} (built-in)"
       },
       "library": {
         "empty": "Select a template to view or edit it."
@@ -560,7 +562,9 @@
       "error": "Couldn't create the campaign",
       "presetsLabel": "Starting sections",
       "presetsDescription": "Assets and Encounters are always included. You can add, change or delete sections later.",
-      "iconLabel": "Icon"
+      "iconLabel": "Icon",
+      "systemLabel": "Game system",
+      "systemDescription": "Picks the tracker layout and the templates the campaign starts from. You can change it later."
     },
     "sections": {
       "emptyTitle": "No {{section}} yet",
@@ -688,7 +692,8 @@
       "nameDescription": "The folder keeps its name, so links and files are not affected.",
       "submit": "Save",
       "done": "{{name}} saved",
-      "error": "Couldn't save the campaign"
+      "error": "Couldn't save the campaign",
+      "systemDescription": "Changing it resets the tracker layout of this campaign to the system's. Notes already written are not touched."
     },
     "remove": {
       "title": "Delete {{name}}?",

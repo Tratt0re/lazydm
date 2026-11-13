@@ -129,13 +129,15 @@
       },
       "rules": {
         "title": "Vorlagen dieser Kampagne",
-        "description": "Neue Notizen in {{campaign}} beginnen mit diesen Vorlagen. Automatisch nutzt _templates/<typ>.md, falls vorhanden, sonst die integrierte.",
+        "description": "Neue Notizen in {{campaign}} starten mit diesen Vorlagen. Automatisch nutzt _templates/<Typ>.md, wenn es existiert, sonst die integrierte Vorlage des Spielsystems der Kampagne.",
         "automatic": "Automatisch",
         "missing": "Fehlt: {{path}}",
         "noCampaignTitle": "Keine Kampagne geöffnet",
         "noCampaignDescription": "Öffne eine Kampagne und komm dann hierher zurück, um die Vorlage für jeden Notiztyp zu wählen.",
         "saved": "Vorlagenwahl gespeichert",
-        "saveError": "Vorlagenwahl konnte nicht gespeichert werden"
+        "saveError": "Vorlagenwahl konnte nicht gespeichert werden",
+        "automaticFor": "Automatisch · {{system}}",
+        "builtInOf": "{{system}} (integriert)"
       },
       "library": {
         "empty": "Wähle eine Vorlage, um sie anzusehen oder zu bearbeiten."
@@ -560,7 +562,9 @@
       "error": "Kampagne konnte nicht erstellt werden",
       "presetsLabel": "Start-Abschnitte",
       "presetsDescription": "Assets und Begegnungen sind immer dabei. Abschnitte kannst du später hinzufügen, ändern oder löschen.",
-      "iconLabel": "Symbol"
+      "iconLabel": "Symbol",
+      "systemLabel": "Spielsystem",
+      "systemDescription": "Legt das Tracker-Layout und die Vorlagen fest, mit denen die Kampagne startet. Du kannst es später ändern."
     },
     "sections": {
       "emptyTitle": "Noch keine Einträge in {{section}}",
@@ -688,7 +692,8 @@
       "nameDescription": "Der Ordner behält seinen Namen, Links und Dateien bleiben unberührt.",
       "submit": "Speichern",
       "done": "{{name}} gespeichert",
-      "error": "Die Kampagne konnte nicht gespeichert werden"
+      "error": "Die Kampagne konnte nicht gespeichert werden",
+      "systemDescription": "Eine Änderung setzt das Tracker-Layout dieser Kampagne auf das des Systems zurück. Bereits geschriebene Notizen bleiben unberührt."
     },
     "remove": {
       "title": "{{name}} löschen?",

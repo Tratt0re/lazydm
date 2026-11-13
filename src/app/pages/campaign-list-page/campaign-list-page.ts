@@ -17,8 +17,10 @@ import { Toolbar } from '@/layout/toolbar/toolbar';
 import type { CampaignDto } from '@/dtos';
 import {
   buildCampaignIconField,
+  buildCampaignSystemField,
   CampaignActionsService,
   toStoredCampaignIcon,
+  toStoredCampaignSystem,
 } from '@/services/campaign-actions.service';
 import { CampaignService } from '@/services/campaign.service';
 import { SectionService } from '@/services/section.service';
@@ -122,6 +124,7 @@ export class CampaignListPage implements OnInit {
       fields: [
         ...CREATE_CAMPAIGN_FIELDS,
         buildCampaignIconField(null),
+        buildCampaignSystemField(null),
         {
           id: 'presets',
           type: 'select',
@@ -148,6 +151,7 @@ export class CampaignListPage implements OnInit {
             String(values['description'] ?? ''),
             toStoredCampaignIcon(values['icon']),
             Array.isArray(chosen) ? chosen.map(String) : [],
+            toStoredCampaignSystem(values['system']),
           ).then((created) => {
             isSubmitting = false;
             if (created) {
@@ -167,9 +171,10 @@ export class CampaignListPage implements OnInit {
     description: string,
     icon: string | null,
     presets: readonly string[],
+    system: string | null,
   ): Promise<boolean> {
     try {
-      const campaign = await this.campaignService.create({ name, description, icon, presets });
+      const campaign = await this.campaignService.create({ name, description, icon, presets, system });
       await this.router.navigate(['/campaigns', campaign.slug]);
       return true;
     } catch (error) {

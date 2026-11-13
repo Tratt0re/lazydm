@@ -45,6 +45,13 @@ function toOptionalIcon(value) {
   return typeof value === 'string' && /^[a-z0-9-]{1,40}$/.test(value) ? value : null;
 }
 
+/** A system id (`dnd5e`, `pf2e`…) from the frontmatter, or null (generic) when absent or not a plain id. */
+function toOptionalSystem(value) {
+  return typeof value === 'string' && /^[a-z0-9]{1,20}$/.test(value) && value !== 'generic'
+    ? value
+    : null;
+}
+
 function toCampaign(slug, document) {
   return {
     slug,
@@ -53,6 +60,9 @@ function toCampaign(slug, document) {
     icon: toOptionalIcon(document.frontmatter.icon),
     created: toOptionalString(document.frontmatter.created),
     cover: toOptionalString(document.frontmatter.cover),
+    // The game system (`dnd5e`, `pf2e`…): picks the tracker layout and the templates the campaign starts from.
+    // Absent = generic. Whether it is a system the app ships is checked where it is written.
+    system: toOptionalSystem(document.frontmatter.system),
   };
 }
 
@@ -116,11 +126,12 @@ function campaignFolderExists(rootPath, slug) {
   return fs.existsSync(resolveInsideVault(rootPath, slug));
 }
 
-function buildCampaignNote({ name, description, icon }) {
+function buildCampaignNote({ name, description, icon, system }) {
   const frontmatter = {
     title: name,
     ...(description ? { description } : {}),
     ...(icon ? { icon } : {}),
+    ...(system ? { system } : {}),
     created: new Date().toISOString().slice(0, 10),
   };
   const body = description ? `# ${name}\n\n${description}\n` : `# ${name}\n`;
@@ -132,12 +143,12 @@ function buildCampaignNote({ name, description, icon }) {
  * Creates the campaign folder with its `campaign.md` note. Section folders appear with their first file
  * (folders on demand), so an unused section leaves nothing on disk.
  */
-async function createCampaign(rootPath, { slug, name, description, icon }) {
+async function createCampaign(rootPath, { slug, name, description, icon, system = null }) {
   await fs.promises.mkdir(resolveInsideVault(rootPath, slug));
 
   safeWriteFileAtomic(
     getCampaignFilePath(rootPath, slug),
-    buildCampaignNote({ name, description, icon }),
+    buildCampaignNote({ name, description, icon, system }),
   );
   return readCampaign(rootPath, slug);
 }
@@ -146,7 +157,7 @@ async function createCampaign(rootPath, { slug, name, description, icon }) {
  * Changes the name and description of a campaign in its `campaign.md` (frontmatter `title` / `description` and
  * the `# Heading`). The folder keeps its name: the readable name lives in the content, never in the folder.
  */
-async function updateCampaign(rootPath, slug, { name, description, icon }) {
+async function updateCampaign(rootPath, slug, { name, description, icon, system }) {
   const filePath = getCampaignFilePath(rootPath, slug);
   const original = await fs.promises.readFile(filePath, 'utf8');
   const oldTitle =
@@ -162,6 +173,12 @@ async function updateCampaign(rootPath, slug, { name, description, icon }) {
   content = icon
     ? setFrontmatterField(content, 'icon', icon)
     : removeFrontmatterField(content, 'icon');
+  // `system` undefined leaves it as it is; null (generic) removes it.
+  if (system !== undefined) {
+    content = system
+      ? setFrontmatterField(content, 'system', system)
+      : removeFrontmatterField(content, 'system');
+  }
   if (content !== original) {
     safeWriteFileAtomic(filePath, content);
   }

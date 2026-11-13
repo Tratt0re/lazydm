@@ -97,7 +97,9 @@ export class TrackerLayoutsPage implements OnInit {
   protected async selectCampaign(slug: string): Promise<void> {
     this.campaign.set(slug);
     try {
-      this.layout.set((await this.battleRuleService.getChoice(slug)) ?? DEFAULT_LAYOUT);
+      const { rule, system } = await this.battleRuleService.getChoice(slug);
+      // No choice of its own: the layout of the campaign's game system applies.
+      this.layout.set(rule ?? (system ? `builtin:${system}` : DEFAULT_LAYOUT));
     } catch (error) {
       console.warn('[app] Failed to read the tracker layout of a campaign:', slug, error);
       this.layout.set(DEFAULT_LAYOUT);

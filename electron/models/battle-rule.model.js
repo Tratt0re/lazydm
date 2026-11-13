@@ -3,6 +3,7 @@
  * list). A rule lists the fields of a row in order; the encounter stores each entity's values by field key.
  */
 
+const { readCampaign } = require('./campaign.model');
 const { COMPENDIUM_DIR_NAME } = require('./compendium.model');
 const { readVaultConfig, writeVaultConfig } = require('./vault.model');
 
@@ -421,7 +422,10 @@ async function resolveBattleRule(rootPath, encounterPath, selection) {
     }
   }
 
-  return DEFAULT_BATTLE_RULE;
+  // No choice anywhere: the campaign's game system (`campaign.md` → `system`) picks its own layout.
+  const system = scope === COMPENDIUM_DIR_NAME ? null : (await readCampaign(rootPath, scope))?.system;
+  const systemRef = system ? `${BUILT_IN_RULE_PREFIX}${system}` : null;
+  return isBuiltInRuleRef(systemRef) ? getBuiltInRule(systemRef) : DEFAULT_BATTLE_RULE;
 }
 
 module.exports = {

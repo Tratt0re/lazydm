@@ -38,10 +38,12 @@ async function loadRule(c, root, encounterPath = null) {
     };
   }
 
-  // Only campaigns can choose a rule; a compendium system always uses the built-in one.
-  const choice = root.includes('/')
-    ? null
-    : (await c.battleRule.getChoice({ campaign: root })).rule;
+  // Only campaigns can choose a rule; a compendium system always uses the built-in one. A campaign with no choice
+  // follows its game system (`campaign.md` → `system`).
+  const { rule: explicit, system } = root.includes('/')
+    ? { rule: null, system: null }
+    : await c.battleRule.getChoice({ campaign: root });
+  const choice = explicit ?? (system ? `builtin:${system}` : null);
   // A choice is a built-in reference (`builtin`, `builtin:<system>`). One that is anything else (a rule file of an
   // older vault) is not read: the campaign falls back to the built-in default.
   const { builtIn, builtIns } = await c.battleRule.list();
@@ -49,7 +51,9 @@ async function loadRule(c, root, encounterPath = null) {
   return {
     rule: chosen?.rule ?? builtIn,
     rulePath: null,
-    source: chosen ? `the campaign (built-in ${chosen.rule.name})` : 'the built-in default',
+    source: chosen
+      ? `the campaign (${explicit ? 'its choice' : 'its game system'}: ${chosen.rule.name})`
+      : 'the built-in default',
   };
 }
 

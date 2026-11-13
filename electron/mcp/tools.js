@@ -128,7 +128,9 @@ function registerReadTools(server, scope, c) {
     'list_campaigns',
     {
       description:
-        'Lists the campaigns of the open LazyDM vault (slug, name, description, note count, hasAgentRules). ' +
+        'Lists the campaigns of the open LazyDM vault (slug, name, description, system, note count, hasAgentRules). ' +
+        'system is the campaign\'s game system ("dnd5e", "pf2e"; null = generic): new notes, templates and the ' +
+        'tracker layout follow it. ' +
         'When hasAgentRules is true, read them with get_agent_rules before writing notes.',
       annotations: READ_ONLY,
     },
@@ -312,7 +314,8 @@ function registerReadTools(server, scope, c) {
     'get_section_templates',
     {
       description:
-        'The template a campaign uses for each note type: a template path, "builtin", or null for automatic.',
+        'The template a campaign uses for each note type: a template path, "builtin" or "builtin@<system>" (e.g. "builtin@dnd5e"), ' +
+        "or null for automatic (the built-in of the campaign's game system, unless the vault has its own _templates file).",
       inputSchema: { campaign: z.string().describe('Campaign slug.') },
       annotations: READ_ONLY,
     },
@@ -607,18 +610,20 @@ function registerWriteTools(server, scope, c) {
     {
       description:
         'Links a template to a note type (a section) of a campaign: every new note of that type uses it. ' +
-        'template is a path from list_templates, "builtin", or null to go back to automatic.',
+        'template is a path from list_templates, "builtin" (generic), "builtin@dnd5e" / "builtin@pf2e", or null to go back to automatic.',
       inputSchema: {
         campaign: z.string().describe('Campaign slug.'),
         type: z.string().describe('Note type of the section, e.g. "enemy".'),
-        template: z.string().nullable().describe('Template path, "builtin", or null.'),
+        template: z.string().nullable().describe('Template path, "builtin", "builtin@<system>", or null.'),
       },
       annotations: { ...WRITES, idempotentHint: true },
     },
     run(({ campaign, type, template }) => {
-      // A template path must be inside the allowed campaigns too; "builtin" and null touch no file.
+      // A template path must be inside the allowed campaigns too; the built-in choices and null touch no file.
       const templatePath =
-        template === null || template === 'builtin' ? template : scope.resolveWritable(template);
+        template === null || /^builtin(@[a-z0-9]+)?$/.test(template)
+          ? template
+          : scope.resolveWritable(template);
       return c.template.setRule({
         campaign: scope.resolveWritable(campaign),
         type,

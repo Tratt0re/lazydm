@@ -82,7 +82,7 @@ async function getRules(payload) {
   return { rules: templateModel.readCampaignRules(vaultPath, campaign) };
 }
 
-/** Template a campaign uses for a note type: a template path, `builtin`, or null for automatic. */
+/** Template a campaign uses for a note type: a template path, `builtin` / `builtin@<system>`, or null for automatic (the campaign's system). */
 async function setRule(payload) {
   const body = ensurePlainObject(payload, 'payload');
   const vaultPath = vaultController.getReadyVaultPath();
@@ -91,7 +91,7 @@ async function setRule(payload) {
   const template =
     normalizeOptionalString(body.template, 'payload.template', { allowNull: true }) ?? null;
   const value =
-    template === null || template === templateModel.BUILT_IN_RULE
+    template === null || templateModel.isBuiltInTemplateChoice(template)
       ? template
       : requireTemplatePath(vaultPath, template);
 

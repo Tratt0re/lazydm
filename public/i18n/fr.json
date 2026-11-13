@@ -129,13 +129,15 @@
       },
       "rules": {
         "title": "Modèles de cette campagne",
-        "description": "Les nouvelles notes de {{campaign}} partent de ces modèles. Automatique utilise _templates/<type>.md s’il existe, sinon le modèle intégré.",
+        "description": "Les nouvelles notes de {{campaign}} partent de ces modèles. Automatique utilise _templates/<type>.md s'il existe, sinon celui, intégré, du système de jeu de la campagne.",
         "automatic": "Automatique",
         "missing": "Manquant : {{path}}",
         "noCampaignTitle": "Aucune campagne ouverte",
         "noCampaignDescription": "Ouvrez une campagne, puis revenez ici pour choisir le modèle de chaque type de note.",
         "saved": "Choix du modèle enregistré",
-        "saveError": "Impossible d’enregistrer le choix du modèle"
+        "saveError": "Impossible d’enregistrer le choix du modèle",
+        "automaticFor": "Automatique · {{system}}",
+        "builtInOf": "{{system}} (intégré)"
       },
       "library": {
         "empty": "Sélectionnez un modèle pour le voir ou le modifier."
@@ -560,7 +562,9 @@
       "error": "Impossible de créer la campagne",
       "presetsLabel": "Sections de départ",
       "presetsDescription": "Ressources et Rencontres sont toujours incluses. Vous pourrez ajouter, modifier ou supprimer des sections ensuite.",
-      "iconLabel": "Icône"
+      "iconLabel": "Icône",
+      "systemLabel": "Système de jeu",
+      "systemDescription": "Choisit la disposition du tracker et les modèles dont la campagne part. Tu peux le changer plus tard."
     },
     "sections": {
       "emptyTitle": "Aucun élément dans {{section}}",
@@ -688,7 +692,8 @@
       "nameDescription": "Le dossier garde son nom : les liens et les fichiers ne changent pas.",
       "submit": "Enregistrer",
       "done": "{{name}} enregistrée",
-      "error": "Impossible d'enregistrer la campagne"
+      "error": "Impossible d'enregistrer la campagne",
+      "systemDescription": "Le changer rétablit la disposition du tracker de cette campagne sur celle du système. Les notes déjà écrites ne sont pas touchées."
     },
     "remove": {
       "title": "Supprimer {{name}} ?",

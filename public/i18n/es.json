@@ -129,13 +129,15 @@
       },
       "rules": {
         "title": "Plantillas de esta campaña",
-        "description": "Las notas nuevas de {{campaign}} parten de estas plantillas. Automático usa _templates/<tipo>.md si existe; si no, la integrada.",
+        "description": "Las notas nuevas de {{campaign}} parten de estas plantillas. Automático usa _templates/<tipo>.md si existe; si no, la integrada del sistema de juego de la campaña.",
         "automatic": "Automático",
         "missing": "Falta: {{path}}",
         "noCampaignTitle": "Ninguna campaña abierta",
         "noCampaignDescription": "Abre una campaña y vuelve aquí para elegir qué plantilla usa cada tipo de nota.",
         "saved": "Elección de plantilla guardada",
-        "saveError": "No se pudo guardar la elección de plantilla"
+        "saveError": "No se pudo guardar la elección de plantilla",
+        "automaticFor": "Automático · {{system}}",
+        "builtInOf": "{{system}} (integrada)"
       },
       "library": {
         "empty": "Selecciona una plantilla para verla o editarla."
@@ -560,7 +562,9 @@
       "error": "No se pudo crear la campaña",
       "presetsLabel": "Secciones iniciales",
       "presetsDescription": "Recursos y Encuentros siempre se incluyen. Podrás añadir, cambiar o eliminar secciones después.",
-      "iconLabel": "Icono"
+      "iconLabel": "Icono",
+      "systemLabel": "Sistema de juego",
+      "systemDescription": "Elige el diseño del tracker y las plantillas con las que empieza la campaña. Puedes cambiarlo después."
     },
     "sections": {
       "emptyTitle": "Aún no hay {{section}}",
@@ -688,7 +692,8 @@
       "nameDescription": "La carpeta mantiene su nombre, así que los enlaces y archivos no cambian.",
       "submit": "Guardar",
       "done": "{{name}} guardada",
-      "error": "No se pudo guardar la campaña"
+      "error": "No se pudo guardar la campaña",
+      "systemDescription": "Cambiarlo restablece el diseño del tracker de esta campaña al del sistema. Las notas ya escritas no se tocan."
     },
     "remove": {
       "title": "¿Eliminar {{name}}?",

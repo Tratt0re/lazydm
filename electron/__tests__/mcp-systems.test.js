@@ -220,3 +220,60 @@ describe('what an agent is told about systems', () => {
     expect(String(data)).toMatch(/pf2e/);
   });
 });
+
+describe('a campaign with a game system', () => {
+  const campaignController = () => require('../controllers/campaign.controller');
+  const ruleOf = async (scope) => (await call('get_encounter_rule', { scope })).data;
+
+  it('stores the system in campaign.md and lists it', async () => {
+    await campaignController().create({ name: 'Crypt', system: 'pf2e' });
+    const text = fs.readFileSync(path.join(vault, 'crypt', 'campaign.md'), 'utf8');
+    expect(text).toMatch(/^system: pf2e$/m);
+
+    const { data } = await call('list_campaigns');
+    expect(data.rows.find((row) => row.slug === 'crypt').system).toBe('pf2e');
+    expect(data.rows.find((row) => row.slug === 'lost-mine').system).toBeNull();
+  });
+
+  it('refuses a system the app does not ship', async () => {
+    await expect(campaignController().create({ name: 'Bad', system: '../x' })).rejects.toThrow(
+      /not a built-in system/,
+    );
+  });
+
+  it('follows its system for the tracker layout until a layout is chosen', async () => {
+    await campaignController().create({ name: 'Crypt', system: 'pf2e' });
+    expect((await ruleOf('crypt')).ruleName).toBe('Pathfinder 2e');
+    expect((await ruleOf('crypt')).ruleChosenBy).toMatch(/game system/);
+
+    await ruleController.setChoice({ campaign: 'crypt', rule: 'builtin:dnd5e' });
+    expect((await ruleOf('crypt')).ruleName).toBe('D&D 5e');
+    expect((await ruleOf('crypt')).ruleChosenBy).toMatch(/its choice/);
+  });
+
+  it('gives new notes the template of its system, and "automatic" is that one', async () => {
+    await campaignController().create({ name: 'Crypt', system: 'dnd5e' });
+    const { data } = await call('create_note', { folder: 'crypt/enemies', title: 'Ghoul', type: 'enemy' });
+    expect(Object.keys(data.frontmatter)).toEqual(expect.arrayContaining(['hit_dice', 'legendary']));
+  });
+
+  it('lets a section pick the built-in of another system', async () => {
+    await campaignController().create({ name: 'Crypt', system: 'dnd5e' });
+    await call('set_section_template', { campaign: 'crypt', type: 'enemy', template: 'builtin@pf2e' });
+    const { data } = await call('create_note', { folder: 'crypt/enemies', title: 'Ghoul', type: 'enemy' });
+    expect(Object.keys(data.frontmatter)).toEqual(expect.arrayContaining(['fortitude', 'reflex']));
+    expect(Object.keys(data.frontmatter)).not.toContain('hit_dice');
+  });
+
+  it('changes the system of an existing campaign and drops its old layout choice', async () => {
+    await campaignController().create({ name: 'Crypt', system: 'dnd5e' });
+    await ruleController.setChoice({ campaign: 'crypt', rule: 'builtin:dnd5e' });
+    await campaignController().update({ slug: 'crypt', name: 'Crypt', system: 'pf2e' });
+
+    expect((await ruleOf('crypt')).ruleName).toBe('Pathfinder 2e');
+    await campaignController().update({ slug: 'crypt', name: 'Crypt' });
+    expect((await ruleOf('crypt')).ruleName).toBe('Pathfinder 2e');
+    await campaignController().update({ slug: 'crypt', name: 'Crypt', system: 'generic' });
+    expect(fs.readFileSync(path.join(vault, 'crypt', 'campaign.md'), 'utf8')).not.toMatch(/^system:/m);
+  });
+});

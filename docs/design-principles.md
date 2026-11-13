@@ -347,13 +347,18 @@ Planned Electron modules: `vault`, `cloud-readiness`, `campaign`, `document`, `i
     (armour class, hit points, initiative modifier, ability scores, spell level and components…), empty and ready to
     fill. Existing keys (`hp`, `ac`, `cr`, `initiative_mod`) keep their names in *D&D 5e*, so notes already written keep working; *Pathfinder 2e* uses its own terms where the game differs (a level and a rank instead of a challenge rating and a spell level).
     The keys are data: nothing outside the preset tables knows a game.
+  - **A campaign's game system** is one frontmatter key of its `campaign.md` (`system: dnd5e`; none = Generic). It is
+    picked in the *New campaign* modal (and in *Edit campaign*) and is **the single source** for what a campaign
+    starts from: *Automatic* templates are the built-ins of that system, and the campaign's tracker layout (§6d) is
+    the system's until a layout is picked in *Tracker layouts*. Changing it later resets the layout choice; notes
+    already written keep their keys. Only systems the app ships are accepted (`generic`, `dnd5e`, `pf2e`).
 - **Per-campaign choice per note type**, saved in `.lazydm/vault.json` → `templates.campaigns.<slug>.<type>` (a
-  template path or `builtin`; no entry = automatic). Deleting a template removes the choices pointing at it.
+  template path, `builtin` (Generic) or `builtin@<system>`; no entry = automatic). Deleting a template removes the choices pointing at it.
 - **Which template a new note gets** (also for *Create note…* from a broken link):
   1. the campaign's choice for the type;
   2. a compendium system's own `_templates/<type>.md` (system notes only);
   3. the vault's `_templates/<type>.md`;
-  4. the built-in; types without one (the user's own sections) get a minimal frontmatter.
+  4. the built-in of the campaign's game system (Generic when it has none); types without one (the user's own sections) get a minimal frontmatter.
   A choice whose file is gone falls through to 3–4.
 - **Placeholders**: `{{title}}`, `{{date}}` (YYYY-MM-DD), `{{time}}` (HH:MM), `{{campaign}}` (campaign or system
   name), `{{section}}` (folder display name, in the UI language), `{{type}}`. Unknown placeholders stay as written;
@@ -365,8 +370,9 @@ Planned Electron modules: `vault`, `cloud-readiness`, `campaign`, `document`, `i
     (empty or from a built-in), Delete (confirmed) and Customize. It only creates and edits templates; it does not
     link them. Unsaved edits are saved when another template is selected or the sheet is left, like notes.
   - There is no *Settings → Templates*: choosing a template happens in one place only, the section page.
-  - **Campaign section pages**: a *Template* select in the toolbar for the section's note type (Automatic, Built-in,
-    the vault's, the systems' and the campaign's own templates). This is how a template is linked to a section;
+  - **Campaign section pages**: a *Template* select in the toolbar for the section's note type: *Automatic · <system>* (it says which
+    system it follows), one *<System> (built-in)* per system that has its own variant of the type, then the vault's,
+    the systems' and the campaign's own templates. This is how a template is linked to a section;
     the *New section* modal offers the same select.
 - **Section pages keep their actions in the toolbar** (template select, *Import*, *New note*), never in a button
   row above the list — the same rule as every other page.
@@ -468,7 +474,8 @@ Planned Electron modules: `vault`, `cloud-readiness`, `campaign`, `document`, `i
     or `frontmatter:<key>`. The name and the initiative are in every rule. The system is not assumed: nothing in the
     battle code names a game's fields.
   - **Which layout applies**: the encounter's own choice, else its campaign's (`.lazydm/vault.json` →
-    `battleRules.campaigns.<slug>`, always a built-in reference), else the built-in default; anything else falls
+    `battleRules.campaigns.<slug>`, always a built-in reference), else the layout of the campaign's game system (§6c),
+    else the built-in default; anything else falls
     through to the next. The campaign's layout is picked in the *Tracker layouts* settings page (and set with the
     campaign's system when it is created).
   - **Dice formula**: `1d20`, `1d100`, `2d6 + 3`, `1d20 + {dex_mod}`. Terms are dice, whole numbers and `{key}`

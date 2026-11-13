@@ -129,13 +129,15 @@
       },
       "rules": {
         "title": "Modelli di questa campagna",
-        "description": "Le nuove note di {{campaign}} partono da questi modelli. Automatico usa _templates/<tipo>.md se esiste, altrimenti il predefinito.",
+        "description": "Le nuove note in {{campaign}} partono da questi modelli. Automatico usa _templates/<tipo>.md se esiste, altrimenti quello integrato del sistema di gioco della campagna.",
         "automatic": "Automatico",
         "missing": "Mancante: {{path}}",
         "noCampaignTitle": "Nessuna campagna aperta",
         "noCampaignDescription": "Apri una campagna, poi torna qui per scegliere quale modello usa ogni tipo di nota.",
         "saved": "Scelta del modello salvata",
-        "saveError": "Impossibile salvare la scelta del modello"
+        "saveError": "Impossibile salvare la scelta del modello",
+        "automaticFor": "Automatico · {{system}}",
+        "builtInOf": "{{system}} (integrato)"
       },
       "library": {
         "empty": "Seleziona un modello per vederlo o modificarlo."
@@ -560,7 +562,9 @@
       "error": "Impossibile creare la campagna",
       "presetsLabel": "Sezioni iniziali",
       "presetsDescription": "Asset e Incontri sono sempre inclusi. Potrai aggiungere, modificare o eliminare le sezioni in seguito.",
-      "iconLabel": "Icona"
+      "iconLabel": "Icona",
+      "systemLabel": "Sistema di gioco",
+      "systemDescription": "Sceglie il layout del tracker e i modelli da cui parte la campagna. Puoi cambiarlo dopo."
     },
     "sections": {
       "emptyTitle": "Ancora nessun elemento in {{section}}",
@@ -688,7 +692,8 @@
       "nameDescription": "La cartella mantiene il suo nome, quindi link e file non cambiano.",
       "submit": "Salva",
       "done": "{{name}} salvata",
-      "error": "Impossibile salvare la campagna"
+      "error": "Impossibile salvare la campagna",
+      "systemDescription": "Cambiarlo riporta il layout del tracker di questa campagna a quello del sistema. Le note già scritte non vengono toccate."
     },
     "remove": {
       "title": "Eliminare {{name}}?",

@@ -1,4 +1,11 @@
-const { campaignModel, sectionModel, vaultIndexModel, workspaceModel } = require('../models');
+const {
+  battleRuleModel,
+  campaignModel,
+  sectionModel,
+  templateModel,
+  vaultIndexModel,
+  workspaceModel,
+} = require('../models');
 const { toSlug } = require('../utils/string-sanitize');
 const indexerController = require('./indexer.controller');
 const vaultController = require('./vault.controller');
@@ -31,6 +38,26 @@ async function get(payload) {
   return campaign;
 }
 
+/** A system of the payload: a built-in one (`dnd5e`…), `generic`/null for none; undefined when not given. */
+function readSystem(value) {
+  if (value === undefined) {
+    return undefined;
+  }
+  if (value === null || value === 'generic') {
+    return null;
+  }
+  if (typeof value !== 'string' || !templateModel.isBuiltInSystem(value)) {
+    throw new Error(`payload.system is not a built-in system: ${String(value)}`);
+  }
+
+  return value;
+}
+
+/** A new campaign's system sets its tracker layout and templates; any older layout choice no longer applies. */
+function applySystemChoice(vaultPath, slug) {
+  battleRuleModel.setCampaignChoice(vaultPath, slug, null);
+}
+
 async function create(payload) {
   const body = ensurePlainObject(payload, 'payload');
   const name = requireString(body.name, 'payload.name', { maxLength: CAMPAIGN_NAME_MAX_LENGTH });
@@ -53,7 +80,14 @@ async function create(payload) {
   const icon =
     normalizeOptionalString(body.icon, 'payload.icon', { allowEmpty: true, maxLength: 40 }) || null;
 
-  const campaign = await campaignModel.createCampaign(vaultPath, { slug, name, description, icon });
+  const system = readSystem(body.system) ?? null;
+  const campaign = await campaignModel.createCampaign(vaultPath, {
+    slug,
+    name,
+    description,
+    icon,
+    system,
+  });
   // Starting sections: the chosen presets (no list = all of them, like campaigns before presets).
   if (Array.isArray(body.presets)) {
     sectionModel.initCampaignSections(vaultPath, slug, body.presets);
@@ -90,7 +124,16 @@ async function update(payload) {
   const icon =
     normalizeOptionalString(body.icon, 'payload.icon', { allowEmpty: true, maxLength: 40 }) || null;
 
-  const campaign = await campaignModel.updateCampaign(vaultPath, slug, { name, description, icon });
+  const system = readSystem(body.system);
+  const campaign = await campaignModel.updateCampaign(vaultPath, slug, {
+    name,
+    description,
+    icon,
+    system,
+  });
+  if (system !== undefined) {
+    applySystemChoice(vaultPath, slug);
+  }
   if (indexerController.isOpen()) {
     await indexerController.reindexPaths([`${slug}/campaign.md`]);
   }

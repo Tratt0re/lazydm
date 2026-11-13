@@ -39,6 +39,7 @@ import { AppSheetService } from '@/services/app-sheet.service';
 import { AssetService } from '@/services/asset.service';
 import { getNoteScopeKind, NoteScopeService } from '@/services/note-scope.service';
 import { CopyToService } from '@/services/copy-to.service';
+import { CampaignService } from '@/services/campaign.service';
 import { DocumentService } from '@/services/document.service';
 import { PARTY_FILE_NAME } from '@/services/encounter.service';
 import { FileActionsService } from '@/services/file-actions.service';
@@ -113,12 +114,24 @@ export class CampaignSectionPage {
   private readonly translateService = inject(TranslateService);
   private readonly toolbarContext = inject(ToolbarContextService);
   private readonly templateService = inject(TemplateService);
+  private readonly campaignService = inject(CampaignService);
   private readonly appSheetService = inject(AppSheetService);
   protected readonly copyTo = inject(CopyToService);
 
   /** Templates and the campaign's choices, for the template select of the toolbar (campaigns only). */
   private readonly templates = signal<readonly TemplateDto[]>([]);
   private readonly templateTypes = signal<readonly string[]>([]);
+  /** Game systems that have their own built-in variant of each note type (`enemy` → dnd5e, pf2e). */
+  private readonly templateSystems = signal<Readonly<Record<string, readonly string[]>>>({});
+  /** The campaign's game system (`campaign.md`), which "Automatic" follows. */
+  protected readonly campaignSystem = computed(
+    () => {
+      const scope = this.scope();
+      return scope?.kind === 'campaign'
+        ? (this.campaignService.campaigns().find((item) => item.slug === scope.rootPath)?.system ?? null)
+        : null;
+    },
+  );
   private readonly templateRules = signal<TemplateRulesDto>({});
 
   private readonly sectionKey = toSignal(
@@ -311,7 +324,8 @@ export class CampaignSectionPage {
           this.templates(),
           campaign,
           this.templateRules()[noteType],
-          this.templateTypes().includes(noteType),
+          this.templateTypes().includes(noteType) ? (this.templateSystems()[noteType] ?? []) : null,
+          this.campaignSystem(),
         ),
         change: (value) => this.setTemplateRule(campaign, noteType, value),
       });
@@ -451,6 +465,7 @@ export class CampaignSectionPage {
       ]);
       this.templates.set(library.rows);
       this.templateTypes.set(library.types);
+      this.templateSystems.set(library.systems);
       this.templateRules.set(rules);
     } catch (error) {
       console.warn('[app] Failed to load the templates:', campaign, error);

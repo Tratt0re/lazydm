@@ -4,7 +4,10 @@ import { TranslateService } from '@ngx-translate/core';
 import { toast } from 'ngx-sonner';
 
 import { AppDialogFormService } from '@/components/sheet-form/dialog-form.service';
-import type { AppSheetComboboxField } from '@/components/sheet-form/sheet-form.types';
+import type {
+  AppSheetComboboxField,
+  AppSheetSelectField,
+} from '@/components/sheet-form/sheet-form.types';
 import { buildIconPickerField, DEFAULT_CAMPAIGN_ICON } from '@/config/icon-picker.config';
 import type { CampaignDto } from '@/dtos';
 import { CampaignService } from '@/services/campaign.service';
@@ -19,6 +22,36 @@ export function buildCampaignIconField(current: string | null): AppSheetCombobox
     curated: [DEFAULT_CAMPAIGN_ICON, ...CUSTOM_SECTION_ICONS],
     labelPrefix: 'settings.campaignSections.icons',
   });
+}
+
+/** Game systems a campaign can be set to, generic first. */
+export const CAMPAIGN_SYSTEMS: readonly string[] = ['generic', 'dnd5e', 'pf2e'];
+
+/** System field of the new / edit campaign forms: it picks the tracker layout and the templates the campaign uses. */
+export function buildCampaignSystemField(
+  current: string | null,
+  description = 'campaigns.create.systemDescription',
+): AppSheetSelectField {
+  return {
+    id: 'system',
+    type: 'select',
+    label: 'campaigns.create.systemLabel',
+    description,
+    value: current ?? 'generic',
+    translate: true,
+    options: CAMPAIGN_SYSTEMS.map((system) => ({
+      value: system,
+      label: `settings.templates.systems.${system}`,
+      translate: true,
+    })),
+  };
+}
+
+/** What goes into `campaign.md`: nothing (generic) unless a system was picked. */
+export function toStoredCampaignSystem(value: unknown): string | null {
+  return typeof value === 'string' && value !== 'generic' && CAMPAIGN_SYSTEMS.includes(value)
+    ? value
+    : null;
 }
 
 /** What goes into `campaign.md`: nothing for the default icon, so campaigns without a choice stay untouched. */
@@ -63,6 +96,7 @@ export class CampaignActionsService {
           translate: true,
         },
         buildCampaignIconField(campaign.icon),
+        buildCampaignSystemField(campaign.system, 'campaigns.edit.systemDescription'),
       ],
       onSubmit: (form) => {
         if (!isSubmitting) {
@@ -73,6 +107,7 @@ export class CampaignActionsService {
             String(values['name'] ?? ''),
             String(values['description'] ?? ''),
             toStoredCampaignIcon(values['icon']),
+            toStoredCampaignSystem(values['system']),
           ).then((updated) => {
             isSubmitting = false;
             if (updated) {
@@ -129,6 +164,7 @@ export class CampaignActionsService {
     name: string,
     description: string,
     icon: string | null,
+    system: string | null,
   ): Promise<CampaignDto | null> {
     try {
       const updated = await this.campaignService.update({
@@ -136,6 +172,8 @@ export class CampaignActionsService {
         name: name.trim(),
         description: description.trim() || null,
         icon,
+        // Always sent from the edit form: null (generic) clears it.
+        system: system ?? 'generic',
       });
       toast.success(this.translateService.instant('campaigns.edit.done', { name: updated.name }));
       return updated;

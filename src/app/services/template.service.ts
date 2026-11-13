@@ -5,8 +5,10 @@ import { APIChannel } from '@/config/api';
 import type { CreateTemplatePayload, TemplateDto, TemplateListDto, TemplateRulesDto } from '@/dtos';
 import { BaseIpcService } from '@/services/base-ipc.service';
 
-/** Rule value of a campaign that picked the built-in template of a note type. */
+/** Rule value of a campaign that picked the generic built-in template of a note type (`builtin@<system>` for a system's). */
 export const BUILT_IN_TEMPLATE_RULE = 'builtin';
+/** Game systems whose built-in templates a campaign can pick, in order: id → the key of its name (generic first). */
+export const SYSTEMS: readonly string[] = ['generic', 'dnd5e', 'pf2e'];
 /** Select value for "no choice" (never stored): the vault's `_templates/<type>.md`, else the built-in. */
 export const AUTOMATIC_TEMPLATE_RULE = 'auto';
 
@@ -39,31 +41,43 @@ export class TemplateService extends BaseIpcService<APIChannel.TEMPLATES> {
     return `${template.name} · ${source}`;
   }
 
+  /** Name of a game system (`dnd5e` → D&D 5e); the generic one is "Generic". */
+  getSystemLabel(system: string | null): string {
+    return this.translateService.instant(`settings.templates.systems.${system ?? 'generic'}`);
+  }
+
   /**
-   * Choices of a campaign's template select for a note type: Automatic, Built-in (only for the types that ship
-   * one: a custom section starts on Automatic), its templates, and the current choice when its file is gone
-   * (so the select is never blank).
+   * Choices of a campaign's template select for a note type. *Automatic* says what it will use: the vault's own
+   * `_templates/<type>.md` when there is one, else the built-in of the campaign's game system. Then one built-in per
+   * system that has its own variant of the type (only for the types that ship one: a custom section starts on
+   * Automatic), the campaign's templates, and the current choice when its file is gone (so the select is never blank).
    */
   getRuleOptions(
     templates: readonly TemplateDto[],
     campaign: string,
     currentRule: string | undefined,
-    hasBuiltIn = true,
+    builtInSystems: readonly string[] | null = [],
+    campaignSystem: string | null = null,
   ): readonly TemplateRuleOption[] {
     const campaignTemplates = this.getCampaignTemplates(templates, campaign);
+    const systemLabel = this.getSystemLabel(
+      campaignSystem && builtInSystems?.includes(campaignSystem) ? campaignSystem : null,
+    );
     const options: TemplateRuleOption[] = [
       {
         value: AUTOMATIC_TEMPLATE_RULE,
-        label: this.translateService.instant('settings.templates.rules.automatic'),
+        label: this.translateService.instant('settings.templates.rules.automaticFor', {
+          system: systemLabel,
+        }),
       },
-      ...(hasBuiltIn
-        ? [
-            {
-              value: BUILT_IN_TEMPLATE_RULE,
-              label: this.translateService.instant('settings.templates.sources.builtin'),
-            },
-          ]
-        : []),
+      ...(builtInSystems === null
+        ? []
+        : ['generic', ...builtInSystems].map((system) => ({
+            value: system === 'generic' ? BUILT_IN_TEMPLATE_RULE : `${BUILT_IN_TEMPLATE_RULE}@${system}`,
+            label: this.translateService.instant('settings.templates.rules.builtInOf', {
+              system: this.getSystemLabel(system),
+            }),
+          }))),
       ...campaignTemplates.map((template) => ({
         value: template.path,
         label: this.getTemplateLabel(template),
@@ -104,9 +118,9 @@ export class TemplateService extends BaseIpcService<APIChannel.TEMPLATES> {
     return (await this.ipcClient.customize({ type, system })).path;
   }
 
-  /** Adds frontmatter keys to a template file as empty `key:` lines; returns the ones it added. */
-  async addKeys(path: string, keys: readonly string[]): Promise<readonly string[]> {
-    return (await this.ipcClient.addKeys({ path, keys })).added;
+  /** @deprecated The channel is gone; only the old layout editor page calls this, and it is deleted with it. */
+  async addKeys(_path: string, _keys: readonly string[]): Promise<readonly string[]> {
+    return [];
   }
 
   async remove(path: string): Promise<void> {

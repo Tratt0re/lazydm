@@ -380,6 +380,24 @@ async function listTemplates(rootPath) {
   return rows;
 }
 
+/** A built-in choice: `builtin` (generic) or `builtin@<system>` of a system the app ships. */
+function isBuiltInTemplateChoice(value) {
+  if (value === BUILT_IN_RULE) {
+    return true;
+  }
+
+  return (
+    typeof value === 'string' &&
+    value.startsWith(`${BUILT_IN_RULE}@`) &&
+    isBuiltInSystem(value.slice(BUILT_IN_RULE.length + 1))
+  );
+}
+
+/** The system of a built-in choice (`builtin@dnd5e` → `dnd5e`, `builtin` → generic). */
+function systemOfBuiltInChoice(value) {
+  return value.includes('@') ? value.slice(value.indexOf('@') + 1) : DEFAULT_SYSTEM;
+}
+
 /** Template choices of a campaign (`.lazydm/vault.json` → `templates.campaigns.<slug>`): type → path or `builtin`. */
 function readCampaignRules(rootPath, campaignSlug) {
   const rules = readVaultConfig(rootPath)?.templates?.campaigns?.[campaignSlug];
@@ -393,7 +411,7 @@ function readCampaignRules(rootPath, campaignSlug) {
   ]);
   return Object.fromEntries(
     Object.entries(rules).filter(
-      ([type, value]) => types.has(type) && (value === BUILT_IN_RULE || isTemplatePath(value)),
+      ([type, value]) => types.has(type) && (isBuiltInTemplateChoice(value) || isTemplatePath(value)),
     ),
   );
 }
@@ -463,7 +481,8 @@ function getScopeOfFolder(folderPath) {
 
 /**
  * Template text for a new note in `folderPath`: the campaign's choice for the type, else the scope's own
- * `_templates/<type>.md` (compendium systems), else the vault's `_templates/<type>.md`, else the built-in.
+ * `_templates/<type>.md` (compendium systems), else the vault's `_templates/<type>.md`, else the built-in of the
+ * campaign's game system.
  * Null when the type has no template at all.
  */
 async function resolveTemplate(rootPath, { folderPath, type }) {
@@ -472,8 +491,8 @@ async function resolveTemplate(rootPath, { folderPath, type }) {
 
   if (scope?.kind === 'campaign') {
     const rule = readCampaignRules(rootPath, scope.slug)[type];
-    if (rule === BUILT_IN_RULE) {
-      return getBuiltInTemplate(type);
+    if (isBuiltInTemplateChoice(rule)) {
+      return getBuiltInTemplate(type, systemOfBuiltInChoice(rule));
     }
 
     if (rule) {
@@ -490,7 +509,14 @@ async function resolveTemplate(rootPath, { folderPath, type }) {
     }
   }
 
-  return BUILT_IN_TEMPLATES[type] ?? null;
+  // Automatic: the built-in of the campaign's game system (`campaign.md` → `system`), else the generic one.
+  const system =
+    scope?.kind === 'campaign' ? ((await readCampaign(rootPath, scope.slug))?.system ?? null) : null;
+  return (
+    (system && isBuiltInSystem(system) ? getBuiltInTemplate(type, system) : null) ??
+    BUILT_IN_TEMPLATES[type] ??
+    null
+  );
 }
 
 const BUILT_IN_REF_PREFIX = 'builtin:';
@@ -618,6 +644,7 @@ async function deleteTemplate(rootPath, templatePath) {
 
 module.exports = {
   BUILT_IN_RULE,
+  isBuiltInTemplateChoice,
   BUILT_IN_SYSTEMS,
   BUILT_IN_TEMPLATES,
   DEFAULT_SYSTEM,
