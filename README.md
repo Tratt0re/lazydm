@@ -14,7 +14,10 @@ stay plain Markdown in a folder you own.
 > **Status:** LazyDM is heading toward 1.0 and is not available to download yet. You can follow the project here, or
 > build it yourself (see [Build from source](#build-from-source)).
 
-<img src="docs/images/social-card.png" alt="LazyDM. Prep at your desk. Run at the table." />
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/images/social-card-dark.png" />
+  <img src="docs/images/social-card-light.png" alt="LazyDM. Prep at your desk. Run at the table." />
+</picture>
 
 <sub>All screenshots use made-up campaign data.</sub>
 
