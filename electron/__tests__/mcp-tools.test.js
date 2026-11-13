@@ -430,6 +430,17 @@ describe('create_encounter', () => {
     expect(unknownField.text).toMatch(/no field "trait"/);
   });
 
+  it('needs a name for every combatant, and nothing else', async () => {
+    await connect({ allowWrite: true });
+
+    const blank = await call('create_encounter', { folder, name: 'Empty', entities: [{ name: '   ' }] });
+    expect(blank.isError).toBe(true);
+    expect(blank.text).toMatch(/needs a name/);
+
+    const onlyName = await call('create_encounter', { folder, name: 'Lone', entities: [{ name: 'Goblin' }] });
+    expect(onlyName.isError).toBe(false);
+  });
+
   it('checks every value before creating anything', async () => {
     const controllers = await connect({ allowWrite: true });
     const bad = (values) =>

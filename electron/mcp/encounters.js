@@ -212,6 +212,9 @@ function buildEntities(rule, input, scope, root) {
   const fields = new Map(rule.fields.map((field) => [field.key, field]));
   const entities = [];
   for (const entry of input) {
+    if (typeof entry.name !== 'string' || entry.name.trim().length === 0) {
+      throw new Error('Every entity needs a name (it may have nothing else).');
+    }
     const quantity = entry.quantity ?? 1;
     const values = {};
     for (const [key, raw] of Object.entries(entry.values ?? {})) {

@@ -421,10 +421,13 @@ export class EncounterPage {
 
 
   protected setName(entity: EncounterEntityDto, value: ArcTechInlineValue): void {
-    this.updateEntity(entity.id, (candidate) => ({
-      ...candidate,
-      name: typeof value === 'string' && value.length > 0 ? value : null,
-    }));
+    // A combatant needs its name: emptying the field keeps the old one (a file written by hand may have none).
+    const name = typeof value === 'string' ? value.trim() : '';
+    if (name.length === 0 && entity.name !== null) {
+      return;
+    }
+
+    this.updateEntity(entity.id, (candidate) => ({ ...candidate, name: name.length > 0 ? name : null }));
   }
 
   /** A number or text field typed in place. Emptied, the entity goes back to what its note says (or to nothing). */
@@ -580,7 +583,7 @@ export class EncounterPage {
 
   /**
    * *Add entity* (`entity` null) or *Edit* one: its name and a field for each value the rule shows in the row.
-   * Empty fields are simply not stored, so the smallest entity is a name — or nothing at all.
+   * Empty fields are simply not stored, so the smallest combatant is a name (the one thing the form requires).
    */
   protected openEntitySheet(entity: EncounterEntityDto | null): void {
     const rule = this.rule();
@@ -656,6 +659,8 @@ export class EncounterPage {
       label: 'encounters.entity.name',
       placeholder: 'encounters.entity.namePlaceholder',
       value: entity?.name ?? '',
+      // A combatant may have nothing but a name, but it needs that: an empty row tells the table nothing.
+      required: true,
       translate: true,
     });
 

@@ -385,8 +385,9 @@ Planned Electron modules: `vault`, `cloud-readiness`, `campaign`, `document`, `i
   (`![[ambush.json]]`, `[[ambush.json]]`).
 - **File format** (`version: 1`): `name`, `notes`, `rule` (the encounter's own tracker layout: a built-in
   reference, `builtin`, `builtin:dnd5e`… ; null follows the campaign), `battle` (`status` idle | running, `round`, `turnId`) and `entities`.
-  An entity is `{ id, name, values, isDead }`. **Everything but `id` is optional** and a missing or wrong field
-  never breaks the page: the file is normalised when read, so a hand-edited or minimal one opens. A file that is
+  An entity is `{ id, name, values, isDead }`. **Everything but `id` is optional when a file is read** and a missing or
+  wrong field never breaks the page (a hand-written file may hold nameless combatants); **the app asks for a name** when a
+  combatant is added or renamed (the name is the only required field, MCP `create_encounter` included): the file is normalised when read, so a hand-edited or minimal one opens. A file that is
   not valid JSON opens empty and read-only (it would be replaced by a save). Saves are atomic and
   **conflict-checked by content hash**, like a note save (*Keep my version* / *Load the other version*).
 - **Values** are stored by the key of the battle-rule field that shows them (`initiative`, `ac`, `hp` =
