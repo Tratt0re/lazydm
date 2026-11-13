@@ -255,13 +255,13 @@ interface RowCell {
                 >
                   @if (!isParty()) {
                     <!-- Quick HP, in every row: type an amount, then damage, heal or temporary HP (icon buttons). -->
-                    <div class="mt-0.5 flex items-center gap-1" role="group" [attr.aria-label]="'encounters.hp.manage' | translate">
+                    <div class="mt-0.5 flex items-center justify-end gap-1" role="group" [attr.aria-label]="'encounters.hp.manage' | translate">
                       <input
                         #hpAmount
                         arc-input
                         type="text"
                         inputmode="numeric"
-                        class="h-7 w-14 px-1 text-center font-mono text-xs"
+                        class="h-6 w-12 px-1 text-center font-mono text-xs"
                         placeholder="–"
                         [disabled]="!isEditable()"
                         [attr.aria-label]="'encounters.hp.amount' | translate"
@@ -273,13 +273,13 @@ interface RowCell {
                           arc-button
                           arcType="outline"
                           arcSize="sm"
-                          class="size-7! shrink-0 p-0!"
+                          class="size-6! shrink-0 p-0!"
                           [arcDisabled]="!isEditable()"
                           [attr.aria-label]="'encounters.hp.modes.' + mode.mode | translate"
                           [arcTooltip]="'encounters.hp.modes.' + mode.mode | translate"
                           (click)="applyHp(field, mode.mode, hpAmount)"
                         >
-                          <arc-icon [arcType]="mode.icon" class="size-4" />
+                          <arc-icon [arcType]="mode.icon" class="size-3.5" />
                         </button>
                       }
                     </div>
@@ -367,6 +367,8 @@ interface RowCell {
           }
         </div>
       }
+        <!-- Narrow rows: initiative and name on the first line, defences and health bar on the next. -->
+        <div class="order-2 h-0 basis-full @2xl:hidden" aria-hidden="true"></div>
       </div>
       @if (rowDensity === 'expanded') {
         @if (excerpt(); as excerpt) {
@@ -624,9 +626,16 @@ export class AppEncounterRowComponent {
     }[density];
   }
 
-  /** Where a cell reads once the row wraps below the grid's width: the defences come before the health bar. */
+  /** Where a cell reads once the row wraps below the grid's width: initiative and name, then (after a line break) the defences under the initiative and the health bar beside them. */
   protected flowKindOf(cell: RowCell): number {
-    return cell.field?.component === 'number' ? 2 : this.kindOf(cell);
+    switch (cell.field?.component) {
+      case 'number':
+        return 3;
+      case 'healthbar':
+        return 4;
+      default:
+        return this.kindOf(cell);
+    }
   }
 
   /** The soft tint of the left rail: the side of the combatant, at a glance. */
@@ -682,7 +691,7 @@ export class AppEncounterRowComponent {
           // Takes whatever the line has left; the conditions keep a fixed share beside it once the row is wide.
           return 'min-w-60 flex-1';
         case 'statuses':
-          return 'min-w-64 flex-1 @2xl:w-72 @2xl:flex-none';
+          return 'basis-full @2xl:w-72 @2xl:flex-none @2xl:basis-auto';
         case 'text':
           return 'w-40 shrink-0';
         default:
