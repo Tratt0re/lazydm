@@ -24,11 +24,11 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { toast } from 'ngx-sonner';
 
 import { AppEncounterCemeteryComponent } from '@/components/encounter-cemetery/encounter-cemetery.component';
-import { AppEncounterNotePanelComponent } from '@/components/encounter-note-panel/encounter-note-panel.component';
 import { AppEncounterHealthBarComponent } from '@/components/encounter-health-bar/encounter-health-bar.component';
 import {
   ENCOUNTER_EXTENSION_PATTERN,
   toInAppEncounterRoute,
+  toInAppNoteRoute,
 } from '@/components/document-preview/document-preview.markdown';
 import type { AppSheetFormComponent } from '@/components/sheet-form/sheet-form.component';
 import { AppDialogFormService } from '@/components/sheet-form/dialog-form.service';
@@ -64,7 +64,6 @@ import { ArcTechEmptyComponent } from '@/shared/components/empty';
 import { ArcTechIconComponent } from '@/shared/components/icon';
 import { ArcTechAlertDialogService } from '@/shared/components/alert-dialog';
 import { ArcTechDialogService } from '@/shared/components/dialog';
-import { ArcTechSheetService, type ArcTechSheetRef } from '@/shared/components/sheet';
 import { ArcTechCheckboxComponent } from '@/shared/components/checkbox';
 import { ArcTechMenuImports } from '@/shared/components/menu';
 import { ArcTechTooltipImports } from '@/shared/components/tooltip';
@@ -154,13 +153,10 @@ export class EncounterPage {
   private readonly documentService = inject(DocumentService);
   private readonly battleRuleService = inject(BattleRuleService);
   private readonly dialogFormService = inject(AppDialogFormService);
-  private readonly sheetService = inject(ArcTechSheetService);
   private readonly workspace = inject(WorkspaceService);
   private readonly sharedFiles = inject(SharedFileService);
   /** Path of the file whose live state this page has joined. */
   private joinedPath: string | null = null;
-  /** The linked-note side panel while it is open (it closes when the second pane appears). */
-  private noteSheet: ArcTechSheetRef<AppEncounterNotePanelComponent> | null = null;
   private readonly dialogService = inject(ArcTechDialogService);
   private readonly alertDialogService = inject(ArcTechAlertDialogService);
   private readonly localPreferences = inject(LocalPreferencesService);
@@ -285,15 +281,13 @@ export class EncounterPage {
       this.sharedFiles.leave('', this);
     });
 
-    // Opening the second pane closes the cemetery and the linked-note panel, to leave each side its room.
+    // Opening the second pane closes the cemetery, to leave each side its room.
     let seenSplitOpens = this.workspace.splitOpenCount();
     effect(() => {
       const opens = this.workspace.splitOpenCount();
       if (opens !== seenSplitOpens) {
         seenSplitOpens = opens;
         this.isCemeteryOpen.set(false);
-        this.noteSheet?.close();
-        this.noteSheet = null;
       }
     });
 
@@ -1256,27 +1250,18 @@ export class EncounterPage {
 
   // --- Statuses ----------------------------------------------------------------------------------------
 
-  /** Opens the linked note of an entity in the side panel (the cemetery gives way to it). */
+  /** Opens the linked note of an entity as a tab of the other side (focused when a tab already shows it). */
   protected openNote(entity: EncounterEntityDto): void {
     const notePath = this.noteOf(entity);
     if (!notePath) {
       return;
     }
 
-    // The same side sheet as the editor reference: read-only, rendered as in Reading, with a link to open it.
-    const title =
-      this.scopeNotes().find((note) => note.path === notePath)?.title ??
-      notePath.split('/').pop()?.replace(/\.md$/i, '') ??
-      notePath;
-    // Information only: no footer buttons (the close button is in the header; a link inside opens its note).
-    this.noteSheet = this.sheetService.create<AppEncounterNotePanelComponent, { path: string }>({
-      arcTitle: title,
-      arcContent: AppEncounterNotePanelComponent,
-      arcData: { path: notePath },
-      arcSide: 'right',
-      arcWidth: 'min(860px, 92vw)',
-      arcHideFooter: true,
-    });
+    // A tab of the other side of the split screen; a note already open in any tab is focused, not duplicated.
+    const route = toInAppNoteRoute(notePath);
+    if (route && this.workspace.isCampaignUrl(route)) {
+      void this.workspace.openOrFocusToSide(route);
+    }
   }
 
   /**
