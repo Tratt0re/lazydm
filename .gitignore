@@ -3,3 +3,6 @@
 .impeccable/review/
 .impeccable/build/
 .impeccable/live/
+
+# Impeccable tool state (local only)
+.impeccable/
