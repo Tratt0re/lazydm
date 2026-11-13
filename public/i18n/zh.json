@@ -179,7 +179,13 @@
         "done": "{{name}} 已删除",
         "error": "无法删除模板"
       },
-      "placeholders": "占位符"
+      "placeholders": "占位符",
+      "systemVariant": "{{section}} · {{system}}",
+      "systems": {
+        "generic": "通用",
+        "dnd5e": "D&D 5e",
+        "pf2e": "Pathfinder 2e"
+      }
     },
     "campaignSections": {
       "title": "此战役的分区",

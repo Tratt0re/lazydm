@@ -23,6 +23,8 @@ import { ArcTechIconComponent, type ArcTechIcon } from '@/shared/components/icon
 import { ArcTechTooltipImports } from '@/shared/components/tooltip';
 
 const BUILT_IN_KEY_PREFIX = 'builtin:';
+/** Separates the note type from the system in a built-in key (`builtin:enemy@dnd5e`). */
+const SYSTEM_SEPARATOR = '@';
 const GROUP_KEY_PREFIX = 'group:';
 const PLACEHOLDERS = ['title', 'date', 'time', 'campaign', 'section', 'type'] as const;
 /** "Start from" value of an empty new template. */
@@ -89,6 +91,8 @@ export class TemplateLibraryPage implements OnInit {
 
   protected readonly templates = signal<readonly TemplateDto[]>([]);
   protected readonly types = signal<readonly string[]>([]);
+  /** Systems with their own variant of a note type's template. */
+  private readonly systems = signal<Readonly<Record<string, readonly string[]>>>({});
   protected readonly selected = signal<SelectedTemplate | null>(null);
   protected readonly editedContent = signal('');
   protected readonly editorMode = signal<CodeEditorMode>('source');
@@ -115,11 +119,17 @@ export class TemplateLibraryPage implements OnInit {
       key: `${GROUP_KEY_PREFIX}builtin`,
       label: 'settings.templates.sources.builtin',
       icon: 'lock',
-      children: this.noteTypes().map((row) => ({
-        key: `${BUILT_IN_KEY_PREFIX}${row.type}`,
-        label: row.label,
-        translate: false,
-      })),
+      children: this.noteTypes().flatMap((row) => [
+        { key: `${BUILT_IN_KEY_PREFIX}${row.type}`, label: row.label, translate: false },
+        ...(this.systems()[row.type] ?? []).map((system) => ({
+          key: `${BUILT_IN_KEY_PREFIX}${row.type}${SYSTEM_SEPARATOR}${system}`,
+          label: this.translateService.instant('settings.templates.systemVariant', {
+            section: row.label,
+            system: this.translateService.instant(`settings.templates.systems.${system}`),
+          }),
+          translate: false,
+        })),
+      ]),
     };
 
     const groups = new Map<
@@ -155,17 +165,30 @@ export class TemplateLibraryPage implements OnInit {
     ];
   });
 
-  protected readonly selectedBuiltInType = computed(() => {
+  /** The selected built-in as `{ type, system }` (`system` is undefined for the default one); null for a file. */
+  private readonly selectedBuiltIn = computed(() => {
     const key = this.selected()?.key ?? '';
-    return key.startsWith(BUILT_IN_KEY_PREFIX) ? key.slice(BUILT_IN_KEY_PREFIX.length) : null;
+    if (!key.startsWith(BUILT_IN_KEY_PREFIX)) {
+      return null;
+    }
+
+    const [type, system] = key.slice(BUILT_IN_KEY_PREFIX.length).split(SYSTEM_SEPARATOR);
+    return { type, system };
   });
+  protected readonly selectedBuiltInType = computed(() => this.selectedBuiltIn()?.type ?? null);
   protected readonly selectedTemplate = computed(
     () => this.templates().find((template) => template.path === this.selected()?.key) ?? null,
   );
   protected readonly selectedTitle = computed(() => {
-    const type = this.selectedBuiltInType();
-    if (type) {
-      return this.noteTypes().find((row) => row.type === type)?.label ?? type;
+    const builtIn = this.selectedBuiltIn();
+    if (builtIn) {
+      const label = this.noteTypes().find((row) => row.type === builtIn.type)?.label ?? builtIn.type;
+      return builtIn.system
+        ? this.translateService.instant('settings.templates.systemVariant', {
+            section: label,
+            system: this.translateService.instant(`settings.templates.systems.${builtIn.system}`),
+          })
+        : label;
     }
 
     return this.selectedTemplate()?.name ?? '';
@@ -273,12 +296,23 @@ export class TemplateLibraryPage implements OnInit {
               value: EMPTY_START,
               label: this.translateService.instant('settings.templates.create.empty'),
             },
-            ...this.noteTypes().map((row) => ({
-              value: row.type,
-              label: this.translateService.instant('settings.templates.create.fromBuiltIn', {
-                section: row.label,
-              }),
-            })),
+            ...this.noteTypes().flatMap((row) => [
+              {
+                value: row.type,
+                label: this.translateService.instant('settings.templates.create.fromBuiltIn', {
+                  section: row.label,
+                }),
+              },
+              ...(this.systems()[row.type] ?? []).map((system) => ({
+                value: `${row.type}${SYSTEM_SEPARATOR}${system}`,
+                label: this.translateService.instant('settings.templates.create.fromBuiltIn', {
+                  section: this.translateService.instant('settings.templates.systemVariant', {
+                    section: row.label,
+                    system: this.translateService.instant(`settings.templates.systems.${system}`),
+                  }),
+                }),
+              })),
+            ]),
           ],
         },
       ],
@@ -287,8 +321,9 @@ export class TemplateLibraryPage implements OnInit {
           isSubmitting = true;
           const values = form.getValues();
           const startFrom = String(values['startFrom'] ?? EMPTY_START);
-          const type = startFrom === EMPTY_START ? null : startFrom;
-          void this.create(String(values['name'] ?? ''), type).then((isDone) => {
+          const [type, system] =
+            startFrom === EMPTY_START ? [null, undefined] : startFrom.split(SYSTEM_SEPARATOR);
+          void this.create(String(values['name'] ?? ''), type, system).then((isDone) => {
             isSubmitting = false;
             if (isDone) {
               dialogRef.close();
@@ -303,13 +338,13 @@ export class TemplateLibraryPage implements OnInit {
 
   /** Copies the selected built-in into `_templates/` and opens the copy. */
   protected async customize(): Promise<void> {
-    const type = this.selectedBuiltInType();
-    if (!type) {
+    const builtIn = this.selectedBuiltIn();
+    if (!builtIn) {
       return;
     }
 
     try {
-      const path = await this.templateService.customize(type);
+      const path = await this.templateService.customize(builtIn.type, builtIn.system);
       await this.load();
       await this.select(path);
       toast.success(this.translateService.instant('settings.templates.customized', { path }));
@@ -340,9 +375,9 @@ export class TemplateLibraryPage implements OnInit {
     });
   }
 
-  private async create(name: string, type: string | null): Promise<boolean> {
+  private async create(name: string, type: string | null, system?: string): Promise<boolean> {
     try {
-      const path = await this.templateService.create({ name, type });
+      const path = await this.templateService.create({ name, type, system });
       await this.load();
       await this.select(path);
       return true;
@@ -368,9 +403,8 @@ export class TemplateLibraryPage implements OnInit {
   private async select(key: string): Promise<void> {
     try {
       if (key.startsWith(BUILT_IN_KEY_PREFIX)) {
-        const content = await this.templateService.getBuiltIn(
-          key.slice(BUILT_IN_KEY_PREFIX.length),
-        );
+        const [type, system] = key.slice(BUILT_IN_KEY_PREFIX.length).split(SYSTEM_SEPARATOR);
+        const content = await this.templateService.getBuiltIn(type, system);
         this.editedContent.set(content);
         this.selected.set({ key, content, contentHash: null });
         return;
@@ -390,6 +424,7 @@ export class TemplateLibraryPage implements OnInit {
       const library = await this.templateService.list();
       this.templates.set(library.rows);
       this.types.set(library.types);
+      this.systems.set(library.systems);
     } catch (error) {
       this.errorMessage.set(error instanceof Error ? error.message : String(error));
     }

@@ -179,7 +179,13 @@
         "done": "{{name}} gelöscht",
         "error": "Vorlage konnte nicht gelöscht werden"
       },
-      "placeholders": "Platzhalter"
+      "placeholders": "Platzhalter",
+      "systemVariant": "{{section}} · {{system}}",
+      "systems": {
+        "generic": "Allgemein",
+        "dnd5e": "D&D 5e",
+        "pf2e": "Pathfinder 2e"
+      }
     },
     "campaignSections": {
       "title": "Bereiche dieser Kampagne",

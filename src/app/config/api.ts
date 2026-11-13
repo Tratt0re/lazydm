@@ -158,11 +158,14 @@ export interface ElectronIpcClient {
   };
   readonly templates: {
     readonly list: OptionalIpcRequest<void, DTO.TemplateListDto>;
-    readonly builtIn: IpcRequest<{ type: string }, { type: string; content: string }>;
+    readonly builtIn: IpcRequest<
+      { type: string; system?: string },
+      { type: string; system: string; content: string }
+    >;
     readonly getRules: IpcRequest<{ campaign: string }, { rules: DTO.TemplateRulesDto }>;
     readonly setRule: IpcRequest<DTO.SetTemplateRulePayload, { rules: DTO.TemplateRulesDto }>;
     readonly create: IpcRequest<DTO.CreateTemplatePayload, { path: string }>;
-    readonly customize: IpcRequest<{ type: string }, { path: string }>;
+    readonly customize: IpcRequest<{ type: string; system?: string }, { path: string }>;
     readonly remove: IpcRequest<{ path: string }, { path: string }>;
   };
   readonly vault: {

@@ -399,10 +399,21 @@ export class BattleRuleLibraryPage implements OnInit {
       const library = await this.templateService.list();
       this.templateOptions.set([
         { value: '', label: this.translateService.instant('battleRules.editor.noTemplate') },
-        ...library.types.map((type) => ({
-          value: `${BUILT_IN_REF_PREFIX}${type}`,
-          label: this.translateService.instant('battleRules.editor.builtInTemplate', { type }),
-        })),
+        ...library.types.flatMap((type) => [
+          {
+            value: `${BUILT_IN_REF_PREFIX}${type}`,
+            label: this.translateService.instant('battleRules.editor.builtInTemplate', { type }),
+          },
+          ...(library.systems[type] ?? []).map((system) => ({
+            value: `${BUILT_IN_REF_PREFIX}${type}@${system}`,
+            label: this.translateService.instant('battleRules.editor.builtInTemplate', {
+              type: this.translateService.instant('settings.templates.systemVariant', {
+                section: type,
+                system: this.translateService.instant(`settings.templates.systems.${system}`),
+              }),
+            }),
+          })),
+        ]),
         ...library.rows.map((template) => ({
           value: template.path,
           label: this.templateService.getTemplateLabel(template),

@@ -15,6 +15,8 @@ export interface TemplateListDto {
   readonly rows: readonly TemplateDto[];
   /** Note types that have a built-in template (every note type but encounters). */
   readonly types: readonly string[];
+  /** Built-in systems that have their own variant of a note type's template (the default one is not listed). */
+  readonly systems: Readonly<Record<string, readonly string[]>>;
 }
 
 /** Template choice of a campaign for a note type: a template path or `builtin`; missing means automatic. */
@@ -31,4 +33,6 @@ export interface CreateTemplatePayload {
   readonly name: string;
   /** Start from the built-in of this note type (empty template when missing). */
   readonly type?: string | null;
+  /** System of the built-in to start from (the default one when missing). */
+  readonly system?: string;
 }

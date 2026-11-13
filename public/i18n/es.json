@@ -179,7 +179,13 @@
         "done": "{{name}} eliminada",
         "error": "No se pudo eliminar la plantilla"
       },
-      "placeholders": "Marcadores"
+      "placeholders": "Marcadores",
+      "systemVariant": "{{section}} · {{system}}",
+      "systems": {
+        "generic": "Genérico",
+        "dnd5e": "D&D 5e",
+        "pf2e": "Pathfinder 2e"
+      }
     },
     "campaignSections": {
       "title": "Secciones de esta campaña",

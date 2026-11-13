@@ -179,7 +179,13 @@
         "done": "{{name}} deleted",
         "error": "Could not delete the template"
       },
-      "placeholders": "Placeholders"
+      "placeholders": "Placeholders",
+      "systemVariant": "{{section}} · {{system}}",
+      "systems": {
+        "generic": "Generic",
+        "dnd5e": "D&D 5e",
+        "pf2e": "Pathfinder 2e"
+      }
     },
     "campaignSections": {
       "title": "Sections of this campaign",

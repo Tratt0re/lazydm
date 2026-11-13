@@ -179,7 +179,13 @@
         "done": "{{name}} eliminato",
         "error": "Impossibile eliminare il modello"
       },
-      "placeholders": "Segnaposto"
+      "placeholders": "Segnaposto",
+      "systemVariant": "{{section}} · {{system}}",
+      "systems": {
+        "generic": "Generico",
+        "dnd5e": "D&D 5e",
+        "pf2e": "Pathfinder 2e"
+      }
     },
     "campaignSections": {
       "title": "Sezioni di questa campagna",

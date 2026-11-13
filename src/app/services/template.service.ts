@@ -84,8 +84,8 @@ export class TemplateService extends BaseIpcService<APIChannel.TEMPLATES> {
     return this.ipcClient.list();
   }
 
-  async getBuiltIn(type: string): Promise<string> {
-    return (await this.ipcClient.builtIn({ type })).content;
+  async getBuiltIn(type: string, system?: string): Promise<string> {
+    return (await this.ipcClient.builtIn({ type, system })).content;
   }
 
   async getRules(campaign: string): Promise<TemplateRulesDto> {
@@ -100,8 +100,8 @@ export class TemplateService extends BaseIpcService<APIChannel.TEMPLATES> {
     return (await this.ipcClient.create(payload)).path;
   }
 
-  async customize(type: string): Promise<string> {
-    return (await this.ipcClient.customize({ type })).path;
+  async customize(type: string, system?: string): Promise<string> {
+    return (await this.ipcClient.customize({ type, system })).path;
   }
 
   async remove(path: string): Promise<void> {

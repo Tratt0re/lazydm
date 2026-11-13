@@ -18,6 +18,20 @@ function requireNoteType(value, label = 'payload.type') {
   return type;
 }
 
+/** A built-in system (`generic`, `dnd5e`, `pf2e`); missing means the default one. */
+function requireSystem(value) {
+  if (value == null) {
+    return templateModel.DEFAULT_SYSTEM;
+  }
+
+  const system = requireString(value, 'payload.system');
+  if (!templateModel.isBuiltInSystem(system)) {
+    throw new Error(`payload.system is not a built-in system: ${system}`);
+  }
+
+  return system;
+}
+
 async function requireCampaign(vaultPath, value) {
   const slug = requireString(value, 'payload.campaign');
   if (slug.includes('/') || !(await campaignModel.readCampaign(vaultPath, slug))) {
@@ -47,6 +61,9 @@ async function list() {
   return {
     rows: await templateModel.listTemplates(vaultController.getReadyVaultPath()),
     types: templateModel.TEMPLATE_NOTE_TYPES,
+    systems: Object.fromEntries(
+      templateModel.TEMPLATE_NOTE_TYPES.map((type) => [type, templateModel.listSystemsOfType(type)]),
+    ),
   };
 }
 
@@ -54,7 +71,8 @@ async function list() {
 function builtIn(payload) {
   const body = ensurePlainObject(payload, 'payload');
   const type = requireNoteType(body.type);
-  return { type, content: templateModel.getBuiltInTemplate(type) };
+  const system = requireSystem(body.system);
+  return { type, system, content: templateModel.getBuiltInTemplate(type, system) };
 }
 
 async function getRules(payload) {
@@ -90,7 +108,8 @@ async function create(payload) {
   }
 
   const type = body.type == null ? null : requireNoteType(body.type);
-  const content = type ? templateModel.getBuiltInTemplate(type) : EMPTY_TEMPLATE;
+  const system = requireSystem(body.system);
+  const content = type ? templateModel.getBuiltInTemplate(type, system) : EMPTY_TEMPLATE;
   const templatePath = await templateModel.createTemplate(
     vaultController.getReadyVaultPath(),
     slug,
@@ -104,10 +123,13 @@ async function create(payload) {
 async function customize(payload) {
   const body = ensurePlainObject(payload, 'payload');
   const type = requireNoteType(body.type);
+  const system = requireSystem(body.system);
+  // A system variant gets its own file name, so it never takes the place of the default one.
+  const slug = system === templateModel.DEFAULT_SYSTEM ? type : `${type}-${system}`;
   const templatePath = await templateModel.createTemplate(
     vaultController.getReadyVaultPath(),
-    type,
-    templateModel.getBuiltInTemplate(type),
+    slug,
+    templateModel.getBuiltInTemplate(type, system),
   );
   await reindex([templatePath]);
   return { path: templatePath };

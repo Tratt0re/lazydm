@@ -106,9 +106,186 @@ number:
 `,
 });
 
-/** Built-in text of a note type; types without one (custom sections) get the bare frontmatter. */
-function getBuiltInTemplate(type) {
-  return BUILT_IN_TEMPLATES[type] ?? frontmatter();
+/** The system of the base templates above; the others only vary the types a game needs (enemy, NPC, spell). */
+const DEFAULT_SYSTEM = 'generic';
+const ABILITY_SCORES = ['str', 'dex', 'con', 'int', 'wis', 'cha'];
+
+/**
+ * Per-system variants of the built-in templates. Keys are empty and ready to fill; the ones the base templates
+ * already had (`hp`, `ac`, `cr`, `initiative_mod`…) keep their names, so notes written before keep working.
+ * A type a system has no variant of uses the base template. Data only: nothing outside this table knows a game.
+ */
+const SYSTEM_TEMPLATES = Object.freeze({
+  dnd5e: Object.freeze({
+    enemy: `${frontmatter([
+      'cr',
+      'size',
+      'creature_type',
+      'alignment',
+      'ac',
+      'hp',
+      'hit_dice',
+      'speed',
+      'initiative_mod',
+      ...ABILITY_SCORES,
+      'saves',
+      'skills',
+      'senses',
+      'languages',
+      'resistances',
+      'immunities',
+      'vulnerabilities',
+      'condition_immunities',
+      'legendary',
+    ])}
+## Description
+
+## Traits
+
+## Actions
+
+## Reactions
+
+## Legendary actions
+
+## Tactics
+`,
+    character: `${frontmatter([
+      'race',
+      'class',
+      'role',
+      'affiliation',
+      'status',
+      'attitude',
+      'ac',
+      'hp',
+      'initiative_mod',
+      ...ABILITY_SCORES,
+    ])}
+## Appearance
+
+## Personality
+
+## Goals
+
+## Secrets
+
+## Stat block
+`,
+    spell: `${frontmatter([
+      'level',
+      'school',
+      'casting_time',
+      'range',
+      'duration',
+      'components',
+      'concentration',
+      'ritual',
+      'classes',
+      'damage',
+      'save',
+      'attack',
+    ])}
+## Description
+
+## At higher levels
+`,
+  }),
+  pf2e: Object.freeze({
+    enemy: `${frontmatter([
+      'level',
+      'rarity',
+      'size',
+      'creature_type',
+      'traits',
+      'ac',
+      'hp',
+      'speed',
+      'initiative_mod',
+      'perception',
+      'fortitude',
+      'reflex',
+      'will',
+      ...ABILITY_SCORES,
+      'skills',
+      'senses',
+      'languages',
+      'resistances',
+      'immunities',
+      'weaknesses',
+    ])}
+## Description
+
+## Abilities
+
+## Actions
+
+## Reactions
+
+## Tactics
+`,
+    character: `${frontmatter([
+      'ancestry',
+      'class',
+      'level',
+      'role',
+      'affiliation',
+      'status',
+      'attitude',
+      'ac',
+      'hp',
+      'initiative_mod',
+      'perception',
+      'fortitude',
+      'reflex',
+      'will',
+    ])}
+## Appearance
+
+## Personality
+
+## Goals
+
+## Secrets
+
+## Stat block
+`,
+    spell: `${frontmatter([
+      'rank',
+      'traditions',
+      'traits',
+      'cast',
+      'range',
+      'area',
+      'targets',
+      'defense',
+      'duration',
+    ])}
+## Description
+
+## Heightened
+`,
+  }),
+});
+
+/** The built-in systems, the default first. */
+const BUILT_IN_SYSTEMS = Object.freeze([DEFAULT_SYSTEM, ...Object.keys(SYSTEM_TEMPLATES)]);
+
+function isBuiltInSystem(system) {
+  return BUILT_IN_SYSTEMS.includes(system);
+}
+
+/** The systems with their own variant of a note type's template (the default is not listed). */
+function listSystemsOfType(type) {
+  return Object.keys(SYSTEM_TEMPLATES).filter((system) => type in SYSTEM_TEMPLATES[system]);
+}
+
+/**
+ * Built-in text of a note type in a system. A system without its own variant of the type (or an unknown one) gives
+ * the base template; types without one (custom sections) get the bare frontmatter.
+ */
+function getBuiltInTemplate(type, system = DEFAULT_SYSTEM) {
+  return SYSTEM_TEMPLATES[system]?.[type] ?? BUILT_IN_TEMPLATES[type] ?? frontmatter();
 }
 
 /** Note types a campaign can pick a template for: its sections' types (custom ones included). */
@@ -318,6 +495,12 @@ async function resolveTemplate(rootPath, { folderPath, type }) {
 
 const BUILT_IN_REF_PREFIX = 'builtin:';
 
+/** `builtin:<type>` (the default system) or `builtin:<type>@<system>` → `{ type, system }`. */
+function parseBuiltInRef(ref) {
+  const [type, system] = ref.slice(BUILT_IN_REF_PREFIX.length).split('@');
+  return { type, system: system || DEFAULT_SYSTEM };
+}
+
 /**
  * The frontmatter keys a template declares (`ac`, `hp`, `cr`…), except the ones every note has. `template` is a
  * template path or `builtin:<type>`. These are the attributes a battle rule can read from an entity's note.
@@ -325,7 +508,8 @@ const BUILT_IN_REF_PREFIX = 'builtin:';
 async function readTemplateKeys(rootPath, template) {
   let content;
   if (template.startsWith(BUILT_IN_REF_PREFIX)) {
-    content = getBuiltInTemplate(template.slice(BUILT_IN_REF_PREFIX.length));
+    const { type, system } = parseBuiltInRef(template);
+    content = getBuiltInTemplate(type, system);
   } else if (templateExists(rootPath, template)) {
     content = await fs.promises.readFile(resolveInsideVault(rootPath, template), 'utf8');
   } else {
@@ -416,7 +600,9 @@ async function deleteTemplate(rootPath, templatePath) {
 
 module.exports = {
   BUILT_IN_RULE,
+  BUILT_IN_SYSTEMS,
   BUILT_IN_TEMPLATES,
+  DEFAULT_SYSTEM,
   NON_TEMPLATE_NOTE_TYPES,
   TEMPLATE_NOTE_TYPES,
   TEMPLATES_DIR_NAME,
@@ -424,8 +610,11 @@ module.exports = {
   createTemplate,
   deleteTemplate,
   getBuiltInTemplate,
+  isBuiltInSystem,
   isTemplatePath,
+  listSystemsOfType,
   listTemplates,
+  parseBuiltInRef,
   readCampaignRules,
   readScopeName,
   readTemplateKeys,
