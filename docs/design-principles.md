@@ -430,8 +430,13 @@ Planned Electron modules: `vault`, `cloud-readiness`, `campaign`, `document`, `i
     numbers, text, side, health values; statuses already are). Enter or leaving the field saves, Escape cancels, and a
     value that is not valid keeps the old one. The edit goes into the **entity** (`values`), never into the note: a
     field that reads from the note (`frontmatter:<key>`) shows the note's value until the entity has its own, and a
-    value of the entity's own that overrides the note's is marked, with *Reset to note value* to drop it. The modal
-    stays for *Insert many* and picking the note.
+    value of the entity's own that differs from the note's is marked (a small square on the value, plus a text for
+    screen readers) and gets *Reset to note value*. A value typed where the note says nothing, or the same as the
+    note's, overrides nothing. For a health bar only the **maximum** counts as an override (the current HP changes all
+    fight long), and the reset gives the note's maximum back while the damage stays. Outside a battle a new initiative
+    moves the combatant to its place; in a running battle the order stays. Arrow up / down saves and moves to the same
+    value of the row above or below. Built with the shared `arc-inline-value`. The modal stays for *Insert many* and
+    picking the note.
 - **Party roster**: a hidden `encounters/_party.json` per campaign (the same file format and page, without the
   battle), reached from the labelled *Party roster* button in the toolbar of the Encounters page (a section of its own) — it is not listed or offered as a link. It has the *Battle rule* select too (default: the campaign's), so what its rows show is never implicit.
   *Add party* copies its entities into an encounter (also a running one), skipping a member whose name is already

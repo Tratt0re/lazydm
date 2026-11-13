@@ -61,6 +61,12 @@ describe('built-in battle rules', () => {
     },
   );
 
+  it.each(Object.entries(BUILT_IN_RULES))('%s gives every side field its choices', (_ref, rule) => {
+    for (const field of rule.fields.filter((item) => item.component === 'side')) {
+      expect(field.options, field.key).toEqual(['enemy', 'player', 'ally']);
+    }
+  });
+
   it.each(Object.entries(BUILT_IN_RULES))('%s has no overlapping places', (_ref, rule) => {
     const places = [
       ...rule.fields.filter((field) => field.showInRow).map((field) => field.area),

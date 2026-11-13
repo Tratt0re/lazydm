@@ -1418,6 +1418,10 @@
     "header": {
       "label": "Aktionen der Begegnung",
       "count": "{{count}} in der Reihenfolge"
+    },
+    "inline": {
+      "overridden": "Weicht von der Notiz ab",
+      "reset": "Auf den Wert der Notiz zurücksetzen"
     }
   },
   "battleRules": {

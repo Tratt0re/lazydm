@@ -1418,6 +1418,10 @@
     "header": {
       "label": "Acciones del encuentro",
       "count": "{{count}} en el orden"
+    },
+    "inline": {
+      "overridden": "Distinto de la nota",
+      "reset": "Restablecer al valor de la nota"
     }
   },
   "battleRules": {

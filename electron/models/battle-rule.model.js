@@ -121,7 +121,7 @@ const SYSTEM_BATTLE_RULES = Object.freeze({
     nameArea: area(1, 2, 4),
     fields: Object.freeze([
       entityField('initiative', 'initiative', { area: area(1, 1, 1) }),
-      entityField('side', 'side', { area: area(1, 6, 2) }),
+      entityField('side', 'side', { area: area(1, 6, 2), options: DEFAULT_SIDES }),
       entityField('hp', 'healthbar', { source: `${FRONTMATTER_SOURCE_PREFIX}hp`, area: area(1, 8, 5) }),
       noteNumber('ac', area(2, 1, 1)),
       entityField('statuses', 'statuses', { area: area(2, 2, 10) }),
@@ -137,7 +137,7 @@ const SYSTEM_BATTLE_RULES = Object.freeze({
     nameArea: area(1, 2, 4),
     fields: Object.freeze([
       entityField('initiative', 'initiative', { area: area(1, 1, 1) }),
-      entityField('side', 'side', { area: area(1, 6, 2) }),
+      entityField('side', 'side', { area: area(1, 6, 2), options: DEFAULT_SIDES }),
       entityField('hp', 'healthbar', { source: `${FRONTMATTER_SOURCE_PREFIX}hp`, area: area(1, 8, 5) }),
       noteNumber('ac', area(2, 1, 1)),
       noteNumber('fortitude', area(2, 2, 1)),

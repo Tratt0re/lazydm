@@ -59,6 +59,12 @@ import { type SharedFile, SharedFileService } from '@/services/shared-file.servi
 import { WorkspaceService } from '@/services/workspace.service';
 import { ArcTechAlertComponent } from '@/shared/components/alert';
 import { ArcTechBadgeComponent } from '@/shared/components/badge';
+import {
+  ArcTechInlineValueComponent,
+  type ArcTechInlineMove,
+  type ArcTechInlineValue,
+} from '@/shared/components/inline-value';
+import { ArcTechSelectImports } from '@/shared/components/select';
 import { ArcTechButtonComponent } from '@/shared/components/button';
 import { ArcTechEmptyComponent } from '@/shared/components/empty';
 import { ArcTechIconComponent } from '@/shared/components/icon';
@@ -130,7 +136,9 @@ function parseNumber(value: unknown): number | null {
     ArcTechCheckboxComponent,
     ArcTechEmptyComponent,
     ArcTechIconComponent,
+    ArcTechInlineValueComponent,
     ArcTechMenuImports,
+    ...ArcTechSelectImports,
     ArcTechTooltipImports,
   ],
   templateUrl: './encounter-page.html',
@@ -487,6 +495,146 @@ export class EncounterPage {
   }
 
   // --- Editing -----------------------------------------------------------------------------------------
+
+  /**
+   * Edits of the row, in place. They go into the entity's own `values`, never into its note: a field that reads
+   * from the note shows the note's value until the entity has one of its own, and the entity's own value drops
+   * the key again with *Reset to note value*.
+   */
+
+  /** A value the entity holds itself (not the one its note supplies). */
+  protected hasOwnValue(entity: EncounterEntityDto, field: { readonly key: string }): boolean {
+    return entity.values[field.key] !== undefined;
+  }
+
+  /**
+   * The entity's own value differs from a value its note gives: the mark and *Reset to note value* show only
+   * then. A value typed where the note says nothing overrides nothing, and neither does the current HP of a
+   * damaged monster (it changes all fight long): for a health bar only the maximum counts.
+   */
+  protected isOverridden(entity: EncounterEntityDto, field: BattleRuleFieldDto): boolean {
+    if (!field.source.startsWith('frontmatter:') || !this.hasOwnValue(entity, field)) {
+      return false;
+    }
+
+    const note = toNumber(this.noteValue(entity, field));
+    if (note === null) {
+      return false;
+    }
+
+    return field.component === 'healthbar'
+      ? this.healthOf(entity, field).max !== note
+      : toNumber(entity.values[field.key]) !== note;
+  }
+
+  protected setName(entity: EncounterEntityDto, value: ArcTechInlineValue): void {
+    this.updateEntity(entity.id, (candidate) => ({
+      ...candidate,
+      name: typeof value === 'string' && value.length > 0 ? value : null,
+    }));
+  }
+
+  /** A number or text field typed in place. Emptied, the entity goes back to what its note says (or to nothing). */
+  protected setValue(
+    entity: EncounterEntityDto,
+    field: BattleRuleFieldDto,
+    value: ArcTechInlineValue,
+  ): void {
+    const isInitiative = field.component === 'initiative';
+    const next = typeof value === 'string' && value.length === 0 ? null : value;
+    if (isInitiative && !this.isRunning()) {
+      // Outside a battle the list is the order: a new initiative moves the entity to its place.
+      const edited = this.withValue(entity, field.key, next);
+      this.updateEncounter((encounter) => ({
+        ...encounter,
+        entities: this.insertByInitiative(
+          encounter.entities.filter((candidate) => candidate.id !== entity.id),
+          edited,
+        ),
+      }));
+      return;
+    }
+
+    this.updateEntity(entity.id, (candidate) => this.withValue(candidate, field.key, next));
+  }
+
+  /** Current, maximum or temporary HP typed in place; the others of the bar stay as they are. */
+  protected setHealth(
+    entity: EncounterEntityDto,
+    field: BattleRuleFieldDto,
+    part: 'current' | 'max' | 'temp',
+    value: ArcTechInlineValue,
+  ): void {
+    // What the bar shows now (the note's number included) becomes the entity's own the moment it is edited.
+    const shown = this.healthOf(entity, field);
+    const typed = typeof value === 'number' ? value : undefined;
+    // A fresh monster whose maximum is typed starts full.
+    const startsFull = part === 'max' && shown.current === undefined && typed !== undefined;
+    const next: HealthValue = {
+      ...shown,
+      ...(startsFull ? { current: typed } : {}),
+      [part]: typed,
+    };
+    const cleaned = Object.fromEntries(
+      Object.entries(next).filter(([key, held]) => held !== undefined && !(key === 'temp' && held === 0)),
+    );
+    this.updateEntity(entity.id, (candidate) =>
+      this.withValue(candidate, field.key, Object.keys(cleaned).length > 0 ? cleaned : null),
+    );
+  }
+
+  protected setSide(entity: EncounterEntityDto, field: BattleRuleFieldDto, value: unknown): void {
+    const side = typeof value === 'string' && value.length > 0 ? value : null;
+    this.updateEntity(entity.id, (candidate) => this.withValue(candidate, field.key, side));
+  }
+
+  /**
+   * *Reset to note value*: the entity drops its own value and shows the note's again. A health bar only takes the
+   * note's maximum back: the damage it has taken stays.
+   */
+  protected resetToNote(entity: EncounterEntityDto, field: BattleRuleFieldDto): void {
+    if (field.component === 'healthbar') {
+      const max = toNumber(this.noteValue(entity, field));
+      if (max !== null) {
+        this.setHealth(entity, field, 'max', max);
+      }
+
+      return;
+    }
+
+    this.updateEntity(entity.id, (candidate) => this.withValue(candidate, field.key, null));
+  }
+
+  /** The editable fields of every row stay in the keyboard's reach: Arrow up / down goes to the same one nearby. */
+  protected moveInColumn(
+    event: ArcTechInlineMove,
+    entity: EncounterEntityDto,
+    key: string,
+  ): void {
+    const list = this.entities();
+    const at = list.findIndex((candidate) => candidate.id === entity.id);
+    const target = list[at + (event === 'up' ? -1 : 1)];
+    if (!target) {
+      return;
+    }
+
+    afterNextRender(
+      () => {
+        const row = this.host.nativeElement.querySelector<HTMLElement>(
+          `[data-inline-row="${CSS.escape(target.id)}"][data-inline-key="${CSS.escape(key)}"] button`,
+        );
+        row?.focus();
+        row?.click();
+      },
+      { injector: this.injector },
+    );
+  }
+
+  private withValue(entity: EncounterEntityDto, key: string, value: unknown): EncounterEntityDto {
+    const values = { ...entity.values };
+    this.setOrClear(values, key, value);
+    return { ...entity, values };
+  }
 
   /** Replaces the entity with `change(entity)`, then saves. */
   private updateEntity(

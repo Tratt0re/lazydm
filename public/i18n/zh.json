@@ -1418,6 +1418,10 @@
     "header": {
       "label": "遭遇操作",
       "count": "顺序中有 {{count}} 个"
+    },
+    "inline": {
+      "overridden": "与笔记不同",
+      "reset": "恢复为笔记中的值"
     }
   },
   "battleRules": {

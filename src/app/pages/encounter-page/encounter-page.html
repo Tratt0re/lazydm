@@ -225,12 +225,24 @@
                     [style.--column]="cell.area.column + ' / span ' + cell.area.span"
                   >
                   @if (cell.field === null) {
-                    <span
-                      class="min-w-0 truncate text-sm font-semibold"
-                      [class.text-muted-foreground]="entity.name === null"
+                    <arc-inline-value
+                      class="min-w-0"
+                      arcKey="$name"
+                      [arcRow]="entity.id"
+                      [arcLabel]="'encounters.entity.name' | translate"
+                      [arcValue]="entity.name"
+                      [arcPlaceholder]="'encounters.entity.namePlaceholder' | translate"
+                      [arcDisabled]="!isEditable()"
+                      (arcCommit)="setName(entity, $event)"
+                      (arcMove)="moveInColumn($event, entity, '$name')"
                     >
-                      {{ entityName(entity.name) }}
-                    </span>
+                      <span
+                        class="min-w-0 truncate text-sm font-semibold"
+                        [class.text-muted-foreground]="entity.name === null"
+                      >
+                        {{ entityName(entity.name) }}
+                      </span>
+                    </arc-inline-value>
                     @if (isRunning() && entity.id === turnId()) {
                       <!-- The bar and the tint say it too; the word makes it not rely on colour. -->
                       <arc-badge arcType="outline" class="shrink-0 border-primary text-primary">
@@ -242,37 +254,95 @@
                     @switch (field.component) {
                       @case ('initiative') {
                         @let initiative = numberOf(entity, field);
-                        <span
-                          class="flex shrink-0 items-center justify-center border border-border bg-recessed font-display font-extrabold"
-                          [class]="isCompact() ? 'size-8 text-lg' : 'size-10 text-xl'"
-                          [class.text-muted-foreground]="initiative === null"
-                          [attr.title]="fieldLabel(field)"
+                        <arc-inline-value
+                          class="shrink-0"
+                          arcType="number"
+                          [arcKey]="field.key"
+                          [arcRow]="entity.id"
+                          [arcLabel]="fieldLabel(field)"
+                          [arcValue]="initiative"
+                          [arcDisabled]="!isEditable()"
+                          arcInputClass="w-14 text-center font-display text-lg font-extrabold"
+                          (arcCommit)="setValue(entity, field, $event)"
+                          (arcMove)="moveInColumn($event, entity, field.key)"
                         >
-                          {{ initiative ?? '–' }}
-                        </span>
+                          <span
+                            class="flex shrink-0 items-center justify-center border border-border bg-recessed font-display font-extrabold"
+                            [class]="isCompact() ? 'size-8 text-lg' : 'size-10 text-xl'"
+                            [class.text-muted-foreground]="initiative === null"
+                            [attr.title]="fieldLabel(field)"
+                          >
+                            {{ initiative ?? '–' }}
+                          </span>
+                        </arc-inline-value>
                       }
                       @case ('side') {
-                        @if (textOf(entity, field); as side) {
+                        @if (isEditable()) {
+                          <arc-select
+                            class="w-28 shrink-0"
+                            arcSize="sm"
+                            [attr.aria-label]="fieldLabel(field)"
+                            [arcPlaceholder]="'encounters.sides.none' | translate"
+                            [arcValue]="textOf(entity, field) ?? ''"
+                            (arcSelectionChange)="setSide(entity, field, $any($event))"
+                          >
+                            <arc-select-item arcValue="" [arcLabel]="'encounters.sides.none' | translate" />
+                            @for (option of field.options ?? []; track option) {
+                              <arc-select-item [arcValue]="option" [arcLabel]="sideLabel(option)" />
+                            }
+                          </arc-select>
+                        } @else if (textOf(entity, field); as side) {
                           <arc-badge arcType="secondary">{{ sideLabel(side) }}</arc-badge>
                         }
                       }
                       @case ('number') {
-                        @if (numberOf(entity, field); as value) {
-                          <!-- A tile like the initiative box: the value, a rule, the label under it. -->
-                          <span
-                            class="flex shrink-0 flex-col items-stretch border border-border bg-recessed text-center"
-                            [class]="isCompact() ? 'min-w-8' : 'min-w-10'"
+                        @let value = numberOf(entity, field);
+                        @if (value !== null || isEditable()) {
+                          <arc-inline-value
+                            class="shrink-0"
+                            arcType="number"
+                            [arcKey]="field.key"
+                            [arcRow]="entity.id"
+                            [arcLabel]="fieldLabel(field)"
+                            [arcValue]="value"
+                            [arcDisabled]="!isEditable()"
+                            [arcOverridden]="isOverridden(entity, field)"
+                            [arcOverriddenLabel]="'encounters.inline.overridden' | translate"
+                            arcInputClass="w-14 text-center"
+                            (arcCommit)="setValue(entity, field, $event)"
+                            (arcMove)="moveInColumn($event, entity, field.key)"
                           >
+                            <!-- A tile like the initiative box: the value, a rule, the label under it. -->
                             <span
-                              class="px-1 font-display leading-none font-semibold"
-                              [class]="isCompact() ? 'py-1 text-sm' : 'py-1.5 text-lg'"
-                              >{{ value }}</span
+                              class="flex shrink-0 flex-col items-stretch border border-border bg-recessed text-center"
+                              [class]="isCompact() ? 'min-w-8' : 'min-w-10'"
                             >
-                            <span
-                              class="border-t border-border px-1 py-0.5 font-mono text-[10px] leading-none tracking-[0.1em] text-muted-foreground uppercase"
-                              >{{ fieldLabel(field) }}</span
+                              <span
+                                class="px-1 font-display leading-none font-semibold"
+                                [class]="isCompact() ? 'py-1 text-sm' : 'py-1.5 text-lg'"
+                                [class.text-muted-foreground]="value === null"
+                                >{{ value ?? '–' }}</span
+                              >
+                              <span
+                                class="border-t border-border px-1 py-0.5 font-mono text-[10px] leading-none tracking-[0.1em] text-muted-foreground uppercase"
+                                >{{ fieldLabel(field) }}</span
+                              >
+                            </span>
+                          </arc-inline-value>
+                          @if (isOverridden(entity, field) && isEditable()) {
+                            <button
+                              type="button"
+                              arc-button
+                              arcType="ghost"
+                              arcSize="sm"
+                              class="size-6! shrink-0 p-0!"
+                              [attr.aria-label]="'encounters.inline.reset' | translate"
+                              [arcTooltip]="'encounters.inline.reset' | translate"
+                              (click)="resetToNote(entity, field)"
                             >
-                          </span>
+                              <arc-icon arcType="rotate-ccw" class="size-3.5" />
+                            </button>
+                          }
                         }
                       }
                       @case ('healthbar') {
@@ -283,7 +353,30 @@
                           [max]="health.max ?? null"
                           [temp]="health.temp ?? 0"
                           [label]="fieldLabel(field)"
+                          [editable]="isEditable()"
+                          [overridden]="isOverridden(entity, field)"
+                          [overriddenLabel]="'encounters.inline.overridden' | translate"
+                          [currentLabel]="('encounters.hp.current' | translate)"
+                          [maxLabel]="('encounters.hp.max' | translate)"
+                          [tempLabel]="('encounters.hp.modes.temp' | translate)"
+                          (currentChange)="setHealth(entity, field, 'current', $event)"
+                          (maxChange)="setHealth(entity, field, 'max', $event)"
+                          (tempChange)="setHealth(entity, field, 'temp', $event)"
                         />
+                        @if (isOverridden(entity, field) && isEditable()) {
+                          <button
+                            type="button"
+                            arc-button
+                            arcType="ghost"
+                            arcSize="sm"
+                            class="size-6! shrink-0 p-0!"
+                            [attr.aria-label]="'encounters.inline.reset' | translate"
+                            [arcTooltip]="'encounters.inline.reset' | translate"
+                            (click)="resetToNote(entity, field)"
+                          >
+                            <arc-icon arcType="rotate-ccw" class="size-3.5" />
+                          </button>
+                        }
                         @if (!isParty()) {
                           <button
                             type="button"
@@ -338,8 +431,24 @@
                         </div>
                       }
                       @case ('text') {
-                        @if (textOf(entity, field); as text) {
-                          <span class="truncate text-xs text-muted-foreground">{{ text }}</span>
+                        @if (textOf(entity, field) !== null || isEditable()) {
+                          <arc-inline-value
+                            class="min-w-0"
+                            [arcKey]="field.key"
+                            [arcRow]="entity.id"
+                            [arcLabel]="fieldLabel(field)"
+                            [arcValue]="textOf(entity, field)"
+                            [arcPlaceholder]="fieldLabel(field)"
+                            [arcDisabled]="!isEditable()"
+                            (arcCommit)="setValue(entity, field, $event)"
+                            (arcMove)="moveInColumn($event, entity, field.key)"
+                          >
+                            <span
+                              class="truncate text-xs text-muted-foreground"
+                              [class.italic]="textOf(entity, field) === null"
+                              >{{ textOf(entity, field) ?? fieldLabel(field) }}</span
+                            >
+                          </arc-inline-value>
                         }
                       }
                       @case ('note-link') {

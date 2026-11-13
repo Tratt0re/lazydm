@@ -1418,6 +1418,10 @@
     "header": {
       "label": "Encounter actions",
       "count": "{{count}} in the order"
+    },
+    "inline": {
+      "overridden": "Differs from the note",
+      "reset": "Reset to note value"
     }
   },
   "battleRules": {

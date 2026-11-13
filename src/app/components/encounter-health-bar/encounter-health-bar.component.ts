@@ -1,24 +1,64 @@
-import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
+
+import { ArcTechInlineValueComponent, type ArcTechInlineValue } from '@/shared/components/inline-value';
 
 /**
  * Health bar of an entity: current HP over maximum HP, with temporary HP as a second segment. Everything is
  * optional: with no maximum only the numbers show, with no HP at all nothing does. The numbers are always
  * written above the bar (label left, numbers right), so the state never relies on colour alone. The bar slides
- * when it goes down or up.
+ * when it goes down or up. When `editable`, each number is typed in place (current, maximum, temporary).
  */
 @Component({
   selector: 'app-encounter-health-bar',
+  imports: [ArcTechInlineValueComponent],
   template: `
-    @if (current() !== null || max() !== null) {
+    @if (current() !== null || max() !== null || editable()) {
       <!-- Field instrument: label on the left, "+temp  hp / max" on the right, the meter under them. -->
       <div class="flex w-full min-w-40 flex-col gap-1">
         <div class="flex items-baseline justify-between gap-3">
           <span class="truncate font-mono text-[10px] font-semibold tracking-[0.11em] text-muted-foreground uppercase">{{ label() }}</span>
-          <strong class="shrink-0 font-mono text-xs">
-            @if (temp() > 0) {
-              <span class="mr-2 text-info">+{{ temp() }}</span>
-            }{{ current() ?? '–' }} / {{ max() ?? '–' }}
-          </strong>
+          @if (editable()) {
+            <span class="group flex shrink-0 items-center gap-1 font-mono text-xs font-bold">
+              <!-- Temporary HP are rare: the slot shows when there are some, or when the row is hovered or focused. -->
+              <arc-inline-value
+                arcType="number"
+                arcInputClass="h-6 w-12 px-1 text-center font-mono text-xs"
+                [class]="temp() > 0 ? '' : 'opacity-0 transition-opacity focus-within:opacity-100 group-hover:opacity-100'"
+                [arcLabel]="tempLabel()"
+                [arcValue]="temp() > 0 ? temp() : null"
+                (arcCommit)="tempChange.emit($event)"
+              >
+                <span [class]="temp() > 0 ? 'text-info' : 'text-muted-foreground'">+{{ temp() > 0 ? temp() : 0 }}</span>
+              </arc-inline-value>
+              <arc-inline-value
+                arcType="number"
+                arcInputClass="h-6 w-12 px-1 text-center font-mono text-xs"
+                [arcLabel]="currentLabel()"
+                [arcValue]="current()"
+                [arcOverridden]="overridden()"
+                [arcOverriddenLabel]="overriddenLabel()"
+                (arcCommit)="currentChange.emit($event)"
+              >
+                <span>{{ current() ?? '–' }}</span>
+              </arc-inline-value>
+              <span aria-hidden="true">/</span>
+              <arc-inline-value
+                arcType="number"
+                arcInputClass="h-6 w-12 px-1 text-center font-mono text-xs"
+                [arcLabel]="maxLabel()"
+                [arcValue]="max()"
+                (arcCommit)="maxChange.emit($event)"
+              >
+                <span>{{ max() ?? '–' }}</span>
+              </arc-inline-value>
+            </span>
+          } @else {
+            <strong class="shrink-0 font-mono text-xs">
+              @if (temp() > 0) {
+                <span class="mr-2 text-info">+{{ temp() }}</span>
+              }{{ current() ?? '–' }} / {{ max() ?? '–' }}
+            </strong>
+          }
         </div>
         <div
           class="flex h-3 w-full overflow-hidden border border-border bg-recessed"
@@ -44,6 +84,17 @@ export class AppEncounterHealthBarComponent {
   readonly max = input<number | null>(null);
   readonly temp = input(0);
   readonly label = input('');
+  /** The numbers are typed in place; each commit says its new value (null: emptied). */
+  readonly editable = input(false);
+  /** The entity's own numbers differ from its note's: a mark on the current HP. */
+  readonly overridden = input(false);
+  readonly overriddenLabel = input('');
+  readonly currentLabel = input('');
+  readonly maxLabel = input('');
+  readonly tempLabel = input('');
+  readonly currentChange = output<ArcTechInlineValue>();
+  readonly maxChange = output<ArcTechInlineValue>();
+  readonly tempChange = output<ArcTechInlineValue>();
 
   /** What the full bar stands for: the maximum, or more when current + temporary HP go past it. */
   protected readonly scale = computed(() => {
