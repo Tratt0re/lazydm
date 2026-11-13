@@ -76,7 +76,14 @@ interface RowCell {
   template: `
     @if (showRail()) {
     <!-- Left rail: the two things you do to many rows at once (drag to reorder, pick for the roll). -->
-    <div class="flex shrink-0 flex-col items-center gap-1 border-r border-border-subtle px-1 py-2">
+    <div
+      class="flex shrink-0 flex-col items-center gap-1 border-r border-border-subtle px-1 py-2"
+      [class]="sideTint(side())"
+    >
+      @if (side(); as sideValue) {
+        <!-- The tint says it too; the word makes it not rely on colour. -->
+        <span class="sr-only">{{ sideLabel(sideValue) }}</span>
+      }
       <span
         cdkDragHandle
         class="flex size-6 shrink-0 cursor-grab items-center justify-center text-muted-foreground"
@@ -104,7 +111,7 @@ interface RowCell {
           <div
             class="flex items-center gap-1 [order:var(--kind)] @2xl:min-w-0 @2xl:[order:0] @2xl:[grid-column:var(--column)] @2xl:[grid-row:var(--row)]"
             [class]="cellSizing(cell, rowDensity)"
-            [style.--kind]="kindOf(cell)"
+            [style.--kind]="flowKindOf(cell)"
             [style.--row]="cell.area.row"
             [style.--column]="cell.area.column + ' / span ' + cell.area.span"
           >
@@ -176,28 +183,6 @@ interface RowCell {
                     {{ initiative ?? '–' }}
                   </span>
                 </arc-inline-value>
-              }
-              @case ('side') {
-                @if (isEditable()) {
-                  <span class="size-2 shrink-0" [class]="sideColor(textOf(field))" aria-hidden="true"></span>
-                  <arc-select
-                    class="w-32 shrink-0 [&_button]:min-h-8 [&_button]:border-transparent [&_button]:bg-transparent [&_button]:px-1.5 [&_button]:py-1 [&_button]:font-mono [&_button]:text-[11px] [&_button]:tracking-[0.06em] [&_button]:uppercase [&_button]:hover:border-input"
-                    arcSize="sm"
-                    arcChevronClass="size-3 opacity-40"
-                    [attr.aria-label]="fieldLabel(field)"
-                    [arcPlaceholder]="'encounters.sides.none' | translate"
-                    [arcValue]="textOf(field) ?? ''"
-                    (arcSelectionChange)="sideChange.emit({ field, value: $any($event) })"
-                  >
-                    <arc-select-item arcValue="" [arcLabel]="'encounters.sides.none' | translate" />
-                    @for (option of field.options ?? []; track option) {
-                      <arc-select-item [arcValue]="option" [arcLabel]="sideLabel(option)" />
-                    }
-                  </arc-select>
-                } @else if (textOf(field); as side) {
-                  <span class="size-2 shrink-0" [class]="sideColor(side)" aria-hidden="true"></span>
-                  <arc-badge arcType="secondary">{{ sideLabel(side) }}</arc-badge>
-                }
               }
               @case ('number') {
                 @let value = numberOf(field);
@@ -439,6 +424,19 @@ interface RowCell {
               {{ 'encounters.entity.remove' | translate }}
             </button>
           }
+          @if (sideField(); as sideRule) {
+            <div class="-mx-1 my-1 h-px bg-border-subtle" role="separator"></div>
+            <div arc-menu-label>{{ fieldLabel(sideRule) }}</div>
+            @for (option of sideOptions(); track option) {
+              <button type="button" arc-menu-item (click)="sideChange.emit({ field: sideRule, value: option })">
+                <span class="size-2 shrink-0" [class]="sideColor(option || null)" aria-hidden="true"></span>
+                {{ option ? sideLabel(option) : ('encounters.sides.none' | translate) }}
+                @if ((side() ?? '') === option) {
+                  <arc-icon arcType="check" class="ml-auto size-3.5" />
+                }
+              </button>
+            }
+          }
           <div class="-mx-1 my-1 h-px bg-border-subtle" role="separator"></div>
           <button type="button" arc-menu-item arcType="destructive" (click)="deleteEntity.emit()">
             <arc-icon arcType="trash" />
@@ -507,6 +505,16 @@ export class AppEncounterRowComponent {
     noteKey: noteKeyOf(this.rule()),
     frontmatter: this.noteFrontmatter(),
   }));
+  /** The rule's side field (null when it has none) and the side this combatant is on. */
+  protected readonly sideField = computed(
+    () => this.rule().fields.find((field) => field.component === 'side') ?? null,
+  );
+  protected readonly side = computed(() => {
+    const field = this.sideField();
+    return field ? this.textOf(field) : null;
+  });
+  /** The choices of the menu: no side first, then the rule's own. */
+  protected readonly sideOptions = computed(() => ['', ...(this.sideField()?.options ?? [])]);
   protected readonly note = computed(() => noteOf(this.entity(), this.context()));
   protected readonly displayName = computed(
     () => this.entity().name ?? this.translateService.instant('encounters.entity.unnamed'),
@@ -538,10 +546,11 @@ export class AppEncounterRowComponent {
   protected readonly cells = computed<readonly RowCell[]>(() => {
     const density = this.density();
     const rank: Record<TrackerRowDensity, number> = { compact: 0, card: 1, expanded: 2 };
-    // The linked note's button is not a cell: it sits under the "…" menu button of the row.
+    // The linked note's button and the side are not cells: the button sits under the "…" menu, the side tints the rail and is set from the menu.
     const cells = this.rowCells().filter(
       (cell) =>
         cell.field?.component !== 'note-link' &&
+        cell.field?.component !== 'side' &&
         (!cell.field?.density || rank[cell.field.density] <= rank[density]),
     );
     return density === 'compact'
@@ -613,6 +622,25 @@ export class AppEncounterRowComponent {
       card: { box: 'min-w-10', value: 'py-1.5 text-lg' },
       expanded: { box: 'min-w-12', value: 'py-2 text-2xl' },
     }[density];
+  }
+
+  /** Where a cell reads once the row wraps below the grid's width: the defences come before the health bar. */
+  protected flowKindOf(cell: RowCell): number {
+    return cell.field?.component === 'number' ? 2 : this.kindOf(cell);
+  }
+
+  /** The soft tint of the left rail: the side of the combatant, at a glance. */
+  protected sideTint(side: string | null): string {
+    switch (side) {
+      case 'enemy':
+        return 'bg-destructive/40';
+      case 'player':
+        return 'bg-success/40';
+      case 'ally':
+        return 'bg-mana/40';
+      default:
+        return side ? 'bg-muted' : '';
+    }
   }
 
   /** Colour of the square before a side (a marker next to the text, which always says the side too). */
