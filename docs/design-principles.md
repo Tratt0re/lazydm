@@ -342,6 +342,12 @@ Planned Electron modules: `vault`, `cloud-readiness`, `campaign`, `document`, `i
   puts copied templates). Obsidian can use them as they are.
 - **Built-in templates** ship with the app, one per preset section's note type (encounters and maps excluded, they are not `.md` notes); sections the user creates have none. They are read-only and never
   written to the vault unasked; *Customize* copies one into `_templates/` to edit it.
+  - **Systems**: the types a game needs (enemy, NPC, spell) come in one variant per **system preset** — *Generic*
+    (the default, today's keys), *D&D 5e* and *Pathfinder 2e*; the other types are the same in every system. A
+    reference is `builtin:<type>` (Generic) or `builtin:<type>@<system>`. The variants carry **playable frontmatter**
+    (armour class, hit points, initiative modifier, ability scores, spell level and components…), empty and ready to
+    fill. Existing keys (`hp`, `ac`, `cr`, `initiative_mod`) keep their names in *D&D 5e*, so notes already written keep working; *Pathfinder 2e* uses its own terms where the game differs (a level and a rank instead of a challenge rating and a spell level).
+    The keys are data: nothing outside the preset tables knows a game.
 - **Per-campaign choice per note type**, saved in `.lazydm/vault.json` → `templates.campaigns.<slug>.<type>` (a
   template path or `builtin`; no entry = automatic). Deleting a template removes the choices pointing at it.
 - **Which template a new note gets** (also for *Create note…* from a broken link):
@@ -416,9 +422,16 @@ Planned Electron modules: `vault`, `cloud-readiness`, `campaign`, `document`, `i
     choice is device-local and never stored in the Codex.
   - **Cemetery**: *Remove* sends an entity to a side panel (it leaves the order; if it had the turn, the turn
     passes on); *Recover* puts it back by initiative; *Delete forever* (confirmed) removes it from the file for
-    good. An entity's **linked note** opens read-only, as in Reading, in a **right-hand sheet** like the editor
-    reference, rendered by the Reading view (links open their note, embeds and previews work). An encounter is
-    always shown by its **name**, never by the `.json` file name (the index stores it as the title).
+    good. An entity's **linked note** opens as a **tab of the other side of the split screen** (the second side
+    appears if needed): a note already open in any tab of either side is **focused** instead, in the background
+    too, never duplicated. An encounter is always shown by its **name**, never by the `.json` file name (the index
+    stores it as the title).
+  - **Inline editing**: every field of the row is edited **in place**, without the edit modal (name, initiative,
+    numbers, text, side, health values; statuses already are). Enter or leaving the field saves, Escape cancels, and a
+    value that is not valid keeps the old one. The edit goes into the **entity** (`values`), never into the note: a
+    field that reads from the note (`frontmatter:<key>`) shows the note's value until the entity has its own, and a
+    value of the entity's own that overrides the note's is marked, with *Reset to note value* to drop it. The modal
+    stays for *Insert many* and picking the note.
 - **Party roster**: a hidden `encounters/_party.json` per campaign (the same file format and page, without the
   battle), reached from the labelled *Party roster* button in the toolbar of the Encounters page (a section of its own) — it is not listed or offered as a link. It has the *Battle rule* select too (default: the campaign's), so what its rows show is never implicit.
   *Add party* copies its entities into an encounter (also a running one), skipping a member whose name is already
@@ -428,8 +441,10 @@ Planned Electron modules: `vault`, `cloud-readiness`, `campaign`, `document`, `i
   other assets.
 - **Battle rules** configure the entity row; they are the encounter's equivalent of note templates:
   - A rule is a **JSON file** `_battle-rules/<name>.json` at the vault root, in a compendium system or in a
-    campaign. The **built-in rule** (*Generic*: initiative, AC, HP bar, statuses, linked note; it rolls `1d20 + {initiative_mod}`, a key of the built-in enemy template) is read-only and
-    *Customize* copies it out. Unknown or duplicate fields are dropped on read, and a rule always has an initiative.
+    campaign. The **built-in rules** are **system presets**, like the built-in templates: *Generic* (`builtin`: initiative, AC,
+    HP bar, statuses, linked note; it rolls `1d20 + {initiative_mod}`, a key of the built-in enemy template), *D&D 5e*
+    (`builtin:dnd5e`) and *Pathfinder 2e* (`builtin:pf2e`), each tied to the enemy template of its system. They are
+    read-only and *Customize* copies one out. A preset is data (fields, areas, formula); no battle code names a game. Unknown or duplicate fields are dropped on read, and a rule always has an initiative.
   - A rule has a `name`, a `template` (a template path or `builtin:<type>`) whose **frontmatter keys** are the
     attributes it may read from an entity's note, an `initiative` (`roll`: null when typed by hand, or a dice
     formula) and an ordered list of `fields`: `{ key, component, label, source, showInRow, area, options? }`. The row is a
@@ -662,7 +677,7 @@ Codex. It is **off by default** and lives in the Electron main process (`electro
   Cmd/Ctrl+W, or the same title-bar button) brings it back. Each sheet reopens where it was left. Links to
   `/compendium/...` or `/settings/...` open in the sheet. Inside, a system has its own toolbar and appears in the sheet's cascading sidebar; sheet
   pages have their own toolbar context, so they never touch the campaign toolbar or tab titles.
-- **Sheet or modal**: a **side sheet shows information** (the entity's linked note, the editor reference) and the
+- **Sheet or modal**: a **side sheet shows information** (the editor reference) and the
   **full-page sheets** (Compendium, Templates, Battle rules, Settings) are libraries and big
   editors. Anything that **creates, edits or deletes** — a form, a confirmation, a conflict, an import — is a **modal**. A flow of several steps (the *New note* picker and its form) is **one** modal with a *Back* button (`AppDialogFormService.openWizard`), never a modal closed and reopened
   (`AppDialogFormService` for forms, `ArcTechAlertDialogService` for confirmations). A form never opens in a side sheet.
@@ -737,8 +752,8 @@ Codex. It is **off by default** and lives in the Electron main process (`electro
   - **One document, however many sides show it**: the same note, map or encounter in both sides is one live document.
     A change on one side shows at once on the other (the editors keep their own cursor, scroll, view and undo
     history), it is saved once, and a conflict opens one modal. Leaving a side never saves a note the other side still
-    shows. Opening the second side closes the side panels (Links, *On this map*, the cemetery and the linked-note
-    panel) to leave each side its room.
+    shows. Opening the second side closes the side panels (Links, *On this map* and the cemetery) to leave each side
+    its room.
 - **Breadcrumb**: section and note pages show the path (`CAMPAIGN / SECTION /`, mono, linked) above the page title
   in the toolbar, so a restored tab always tells where it points.
 - **Leaving a note with unsaved edits autosaves it** (tab switch, link, sidebar). If the save hits a conflict or an
@@ -946,6 +961,10 @@ Component behaviour, variant keys and configuration stay as they are.
 | 18.1 | MCP server (§6f): opt-in *Settings → MCP* tab, `MCP` + green/red dot in the title bar, loopback HTTP with bearer token, read tools and (opt-in) create / update / append tools reusing the controllers |
 | 18.2 | MCP: rename tools, trash tools behind *Allow deleting*, import of an Obsidian-like folder as a new campaign (`scan_import_source`, `import_campaign`) |
 | 18.3 | MCP: `get_encounter_rule`, `create_encounter` (values checked against the campaign's battle rule), `create_map`, `read_map` |
+| 19.1 | System presets: built-in templates and tracker layouts for Generic, D&D 5e and Pathfinder 2e, with playable frontmatter (plan in `.claude/plans/dnd-tracker-revamp.plan.md`) |
+| 19.2 | An entity's linked note opens as a tab of the other side of the split screen (focused when already open) |
+| 19.3 | Tracker rows edited in place (name, initiative, numbers, text, side, health), edits kept in the entity with *Reset to note value* |
+| 19.4 | Tracker row redesign: card appearance and density modes |
 
 ## 12. Open decisions
 

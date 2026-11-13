@@ -147,6 +147,47 @@ describe('WorkspaceService', () => {
     expect(router.url).toBe(`${GOBLIN}${split(BOB)}`);
   });
 
+  describe('opening a page to the side without duplicating it', () => {
+    it('opens a new tab on the other side when no tab shows the page', async () => {
+      const { service } = await open(null, GOBLIN);
+
+      await service.openOrFocusToSide(BOB);
+
+      expect(service.tabsOf('right').map((item) => item.history[0])).toEqual([BOB]);
+    });
+
+    it('focuses the background tab that already has the page', async () => {
+      const { service, router } = await open(TWO_PANES, TWO_PANES_URL);
+
+      await service.openOrFocusToSide(ALICE);
+
+      expect(service.tabs()).toHaveLength(3);
+      expect(service.activeTabIdOf('left')).toBe('l2');
+      expect(service.focusedPane()).toBe('left');
+      expect(router.url).toBe(`${ALICE}${split(BOB)}`);
+    });
+
+    it('focuses the tab of the other side that shows the page', async () => {
+      const { service } = await open(TWO_PANES, TWO_PANES_URL);
+      await service.activateTab('l1');
+
+      await service.openOrFocusToSide(BOB);
+
+      expect(service.tabs()).toHaveLength(3);
+      expect(service.focusedPane()).toBe('right');
+      expect(service.activeTabIdOf('right')).toBe('r1');
+    });
+
+    it('ignores the query and the fragment when it looks for the page', async () => {
+      const { service } = await open(TWO_PANES, TWO_PANES_URL);
+
+      await service.openOrFocusToSide(`${ALICE}?folder=allies#top`);
+
+      expect(service.tabs()).toHaveLength(3);
+      expect(service.activeTabIdOf('left')).toBe('l2');
+    });
+  });
+
   it('keeps each side on its own page when the other side switches tab', async () => {
     const { service, router } = await open(TWO_PANES, TWO_PANES_URL);
 

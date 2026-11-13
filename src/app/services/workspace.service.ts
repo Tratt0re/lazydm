@@ -384,6 +384,21 @@ export class WorkspaceService extends BaseIpcService<APIChannel.WORKSPACE> {
   }
 
   /**
+   * Shows a page on the other side without duplicating it: a tab already on that page (either side, active or in
+   * the background) is focused, otherwise it opens in a new tab of the other side.
+   */
+  async openOrFocusToSide(url: string): Promise<void> {
+    const path = toPath(url);
+    const existing = this.tabsSignal().find((tab) => toPath(getTabPath(tab)) === path);
+    if (existing) {
+      await this.activateTab(existing.id);
+      return;
+    }
+
+    await this.openToSide(url);
+  }
+
+  /**
    * Moves a tab to the other pane at a position of its bar (dragging it from one bar to the other), where it
    * becomes the active tab.
    */
