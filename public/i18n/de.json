@@ -1317,9 +1317,6 @@
     },
     "hp": {
       "manage": "TP verwalten",
-      "title": "TP verwalten · {{name}}",
-      "apply": "Anwenden",
-      "mode": "Änderung",
       "amount": "Menge",
       "current": "aktuell",
       "max": "max.",
@@ -1327,8 +1324,7 @@
         "damage": "Schaden",
         "heal": "Heilung",
         "temp": "Temporäre TP setzen"
-      },
-      "tempShort": "Temp. TP"
+      }
     },
     "sides": {
       "none": "Keine Seite",

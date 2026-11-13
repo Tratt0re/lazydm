@@ -408,29 +408,35 @@
                           (maxChange)="setHealth(entity, field, 'max', $event)"
                           (tempChange)="setHealth(entity, field, 'temp', $event)"
                         >
-                          @if (!isParty() && rowDensity === 'expanded') {
-                            <!-- The quick HP of the Expanded row: type an amount, then damage, heal or temporary HP. -->
-                            <div class="mt-1 flex flex-wrap items-center gap-1" role="group" [attr.aria-label]="'encounters.hp.manage' | translate">
+                          @if (!isParty()) {
+                            <!-- Quick HP, in every row: type an amount, then damage, heal or temporary HP (icon buttons). -->
+                            <div class="mt-0.5 flex items-center gap-1" role="group" [attr.aria-label]="'encounters.hp.manage' | translate">
                               <input
                                 #hpAmount
                                 arc-input
                                 type="text"
                                 inputmode="numeric"
-                                class="h-8 w-16 text-center font-mono text-sm"
+                                class="h-7 w-14 px-1 text-center font-mono text-xs"
                                 placeholder="–"
                                 [disabled]="!isEditable()"
                                 [attr.aria-label]="'encounters.hp.amount' | translate"
                                 (keydown.enter)="applyHp(entity, field, 'damage', hpAmount)"
                               />
-                              <button type="button" arc-button arcType="outline" arcSize="sm" [arcDisabled]="!isEditable()" (click)="applyHp(entity, field, 'damage', hpAmount)">
-                                {{ 'encounters.hp.modes.damage' | translate }}
-                              </button>
-                              <button type="button" arc-button arcType="outline" arcSize="sm" [arcDisabled]="!isEditable()" (click)="applyHp(entity, field, 'heal', hpAmount)">
-                                {{ 'encounters.hp.modes.heal' | translate }}
-                              </button>
-                              <button type="button" arc-button arcType="outline" arcSize="sm" [arcDisabled]="!isEditable()" (click)="applyHp(entity, field, 'temp', hpAmount)">
-                                {{ 'encounters.hp.tempShort' | translate }}
-                              </button>
+                              @for (mode of hpModes; track mode.mode) {
+                                <button
+                                  type="button"
+                                  arc-button
+                                  arcType="outline"
+                                  arcSize="sm"
+                                  class="size-7! shrink-0 p-0!"
+                                  [arcDisabled]="!isEditable()"
+                                  [attr.aria-label]="'encounters.hp.modes.' + mode.mode | translate"
+                                  [arcTooltip]="'encounters.hp.modes.' + mode.mode | translate"
+                                  (click)="applyHp(entity, field, mode.mode, hpAmount)"
+                                >
+                                  <arc-icon [arcType]="mode.icon" class="size-4" />
+                                </button>
+                              }
                             </div>
                           }
                         </app-encounter-health-bar>
@@ -446,21 +452,6 @@
                             (click)="resetToNote(entity, field)"
                           >
                             <arc-icon arcType="rotate-ccw" class="size-3.5" />
-                          </button>
-                        }
-                        @if (!isParty()) {
-                          <button
-                            type="button"
-                            arc-button
-                            arcType="outline"
-                            arcSize="sm"
-                            class="size-8! shrink-0 p-0!"
-                            [arcDisabled]="!isEditable()"
-                            [attr.aria-label]="'encounters.hp.manage' | translate"
-                            [arcTooltip]="'encounters.hp.manage' | translate"
-                            (click)="openHpSheet(entity, field)"
-                          >
-                            <arc-icon arcType="heart" />
                           </button>
                         }
                       }
@@ -527,22 +518,6 @@
                           }
                         }
                       }
-                      @case ('note-link') {
-                        @if (textOf(entity, field); as note) {
-                          <button
-                            type="button"
-                            arc-button
-                            arcType="ghost"
-                            arcSize="sm"
-                            class="size-8 shrink-0"
-                            [attr.aria-label]="'encounters.note.show' | translate"
-                            [arcTooltip]="'encounters.note.show' | translate"
-                            (click)="openNote(entity)"
-                          >
-                            <arc-icon arcType="file-text" />
-                          </button>
-                        }
-                      }
                     }
                   }
                 </div>
@@ -556,7 +531,7 @@
             </div>
 
             <!-- Actions: one "…" menu with all of them (Delete last). -->
-            <div class="flex shrink-0 items-start gap-0.5 px-1 py-2">
+            <div class="flex shrink-0 flex-col items-center gap-0.5 px-1 py-1.5">
               <button
                 type="button"
                 arc-button
@@ -571,6 +546,21 @@
               >
                 <arc-icon arcType="ellipsis" />
               </button>
+              @if (noteOf(entity)) {
+                <!-- The linked note sits under the menu button: that column had room to spare. -->
+                <button
+                  type="button"
+                  arc-button
+                  arcType="ghost"
+                  arcSize="sm"
+                  class="size-7! shrink-0 p-0!"
+                  [attr.aria-label]="'encounters.note.show' | translate"
+                  [arcTooltip]="'encounters.note.show' | translate"
+                  (click)="openNote(entity)"
+                >
+                  <arc-icon arcType="file-text" />
+                </button>
+              }
 
               <ng-template #entityMenu>
                 <div arc-menu-content class="w-56">

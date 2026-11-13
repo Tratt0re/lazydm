@@ -1317,9 +1317,6 @@
     },
     "hp": {
       "manage": "Gestionar PG",
-      "title": "Gestionar PG · {{name}}",
-      "apply": "Aplicar",
-      "mode": "Cambio",
       "amount": "Cantidad",
       "current": "actuales",
       "max": "máx.",
@@ -1327,8 +1324,7 @@
         "damage": "Daño",
         "heal": "Curación",
         "temp": "Fijar PG temporales"
-      },
-      "tempShort": "PG temp."
+      }
     },
     "sides": {
       "none": "Sin bando",

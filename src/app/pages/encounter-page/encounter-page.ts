@@ -72,7 +72,7 @@ import { ArcTechSelectImports } from '@/shared/components/select';
 import { ArcTechSwitchComponent } from '@/shared/components/switch';
 import { ArcTechButtonComponent } from '@/shared/components/button';
 import { ArcTechEmptyComponent } from '@/shared/components/empty';
-import { ArcTechIconComponent } from '@/shared/components/icon';
+import { ArcTechIconComponent, type ArcTechIcon } from '@/shared/components/icon';
 import { ArcTechAlertDialogService } from '@/shared/components/alert-dialog';
 import { ArcTechDialogService } from '@/shared/components/dialog';
 import { ArcTechCheckboxComponent } from '@/shared/components/checkbox';
@@ -89,7 +89,6 @@ interface HealthValue {
 }
 
 type HpChangeMode = 'damage' | 'heal' | 'temp';
-const HP_CHANGE_MODES: readonly HpChangeMode[] = ['damage', 'heal', 'temp'];
 /** Most copies one add inserts at once (more is unrealistic at a table). */
 const ENTITY_QUANTITY_MAX = 15;
 
@@ -269,8 +268,11 @@ export class EncounterPage {
    */
   protected cellsOf(density: TrackerRowDensity): readonly RowCell[] {
     const rank: Record<TrackerRowDensity, number> = { compact: 0, card: 1, expanded: 2 };
+    // The linked note's button is not a cell: it sits under the "…" menu button of the row.
     const cells = this.rowCells().filter(
-      (cell) => !cell.field?.density || rank[cell.field.density] <= rank[density],
+      (cell) =>
+        cell.field?.component !== 'note-link' &&
+        (!cell.field?.density || rank[cell.field.density] <= rank[density]),
     );
     // Compact is one line, so it reads by kind instead of following the grid; the other sizes keep the grid
     // while the row is wide enough and read by kind (see `kindOf`, an `order` below `@2xl`) once it wraps.
@@ -327,9 +329,16 @@ export class EncounterPage {
     return notePath ? (this.noteExcerpts().get(notePath) ?? null) : null;
   }
 
+  /** The quick HP buttons: damage, heal, temporary HP (icon only; the name is the tooltip and the accessible name). */
+  protected readonly hpModes: readonly { readonly mode: HpChangeMode; readonly icon: ArcTechIcon }[] = [
+    { mode: 'damage', icon: 'swords' },
+    { mode: 'heal', icon: 'heart-plus' },
+    { mode: 'temp', icon: 'shield-plus' },
+  ];
+
   /**
-   * The quick HP buttons of the Expanded row: the number typed beside them is the amount of damage, healing or
-   * temporary HP, applied the way the HP dialog applies it. A field that is empty or not a whole number does nothing.
+   * The quick HP of a row: the number typed beside the buttons is the amount of damage (temporary HP first), healing
+   * (up to the maximum) or temporary HP. An empty field or one that is not a whole number does nothing.
    */
   protected applyHp(
     entity: EncounterEntityDto,
@@ -644,10 +653,8 @@ export class EncounterPage {
       case null:
         return 'min-w-28 flex-1 @2xl:min-w-0';
       case 'healthbar':
-        // The quick HP buttons of the Expanded row need a line of their own once the row wraps.
-        return density === 'expanded'
-          ? 'basis-full min-w-44 flex-1 @2xl:basis-auto @2xl:min-w-0'
-          : 'min-w-44 flex-1 @2xl:min-w-0';
+        // The quick HP (an amount and three icon buttons) is as wide as the bar needs: no line of its own.
+        return 'min-w-44 flex-1 @2xl:min-w-0';
       case 'statuses':
         return 'basis-full @2xl:basis-auto';
       case 'text':
@@ -1700,52 +1707,6 @@ export class EncounterPage {
   }
 
   // --- Hit points --------------------------------------------------------------------------------------
-
-  /** *Manage HP*: damage (temporary HP first), healing (up to the maximum) or setting the temporary HP. */
-  protected openHpSheet(entity: EncounterEntityDto, field: BattleRuleFieldDto): void {
-    let isDone = false;
-    const dialogRef = this.dialogFormService.open({
-      arcTitle: this.translateService.instant('encounters.hp.title', {
-        name: this.entityName(entity.name),
-      }),
-      arcOkText: this.translateService.instant('encounters.hp.apply'),
-      arcCancelText: this.translateService.instant('campaigns.sections.newNote.cancel'),
-      fields: [
-        {
-          id: 'mode',
-          type: 'select',
-          label: 'encounters.hp.mode',
-          value: 'damage',
-          translate: true,
-          options: HP_CHANGE_MODES.map((mode) => ({
-            value: mode,
-            label: `encounters.hp.modes.${mode}`,
-            translate: true,
-          })),
-        },
-        {
-          id: 'amount',
-          type: 'input',
-          inputType: 'number',
-          label: 'encounters.hp.amount',
-          placeholder: '0',
-          required: true,
-          translate: true,
-        },
-      ],
-      onSubmit: (form) => {
-        const values = form.getValues();
-        const amount = parseNumber(values['amount']);
-        if (!isDone && amount !== null && amount >= 0) {
-          isDone = true;
-          this.changeHp(entity.id, field.key, String(values['mode']) as HpChangeMode, amount);
-          dialogRef.close();
-        }
-
-        return false;
-      },
-    });
-  }
 
   private changeHp(entityId: string, key: string, mode: HpChangeMode, amount: number): void {
     const entity = this.encounter()?.entities.find((candidate) => candidate.id === entityId);

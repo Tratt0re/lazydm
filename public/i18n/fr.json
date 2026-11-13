@@ -1317,9 +1317,6 @@
     },
     "hp": {
       "manage": "Gérer les PV",
-      "title": "Gérer les PV · {{name}}",
-      "apply": "Appliquer",
-      "mode": "Changement",
       "amount": "Quantité",
       "current": "actuels",
       "max": "max.",
@@ -1327,8 +1324,7 @@
         "damage": "Dégâts",
         "heal": "Soins",
         "temp": "Définir les PV temporaires"
-      },
-      "tempShort": "PV temp."
+      }
     },
     "sides": {
       "none": "Aucun camp",

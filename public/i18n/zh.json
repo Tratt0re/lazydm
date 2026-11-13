@@ -1317,9 +1317,6 @@
     },
     "hp": {
       "manage": "管理生命值",
-      "title": "管理生命值 · {{name}}",
-      "apply": "应用",
-      "mode": "变更",
       "amount": "数值",
       "current": "当前",
       "max": "最大",
@@ -1327,8 +1324,7 @@
         "damage": "伤害",
         "heal": "治疗",
         "temp": "设置临时生命值"
-      },
-      "tempShort": "临时HP"
+      }
     },
     "sides": {
       "none": "无阵营",

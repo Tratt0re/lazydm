@@ -13,26 +13,43 @@ import { ArcTechInlineValueComponent, type ArcTechInlineValue } from '@/shared/c
   imports: [ArcTechInlineValueComponent],
   template: `
     @if (current() !== null || max() !== null || editable()) {
-      <!-- Field instrument: label on the left, "+temp  hp / max" on the right, the meter under them. -->
+      <!-- The numbers sit ON the bar (label at one end, temporary + current / max at the other); under it the
+           projected content holds the quick HP controls. -->
       <div class="flex w-full min-w-40 flex-col gap-1">
-        <div class="flex items-baseline justify-between gap-3">
-          <span class="truncate font-mono text-[11px] font-semibold tracking-[0.11em] text-muted-foreground uppercase">{{ label() }}</span>
+        <div
+          class="relative flex w-full items-center overflow-hidden border border-border bg-recessed"
+          [class]="isLarge() ? 'h-9' : 'h-6'"
+          role="meter"
+          [attr.aria-label]="label()"
+          aria-valuemin="0"
+          [attr.aria-valuemax]="scale() > 0 ? scale() : null"
+          [attr.aria-valuenow]="current() ?? 0"
+          [attr.aria-valuetext]="valueText()"
+        >
+          @if (scale() > 0) {
+            <div class="absolute inset-y-0 left-0 transition-[width,background-color] duration-500 ease-out motion-reduce:transition-none" [class]="fillClass()" [style.width.%]="currentPercent()"></div>
+            <div class="absolute inset-y-0 bg-info transition-[width,left] duration-500 ease-out motion-reduce:transition-none" [style.left.%]="currentPercent()" [style.width.%]="tempPercent()"></div>
+          }
+          <span class="relative z-1 ml-1 truncate bg-recessed px-1 font-mono text-[11px] font-semibold tracking-[0.11em] text-foreground-strong uppercase">{{ label() }}</span>
           @if (editable()) {
-            <span class="group flex shrink-0 items-center gap-1 font-bold" [class]="isLarge() ? 'font-display text-2xl leading-none' : 'font-mono text-xs'">
+            <span
+              class="group relative z-1 mr-1 ml-auto flex shrink-0 items-center gap-0.5 bg-recessed px-1 font-bold text-foreground-strong"
+              [class]="isLarge() ? 'font-display text-2xl leading-none' : 'font-mono text-xs'"
+            >
               <!-- Temporary HP are rare: the slot shows when there are some, or when the row is hovered or focused. -->
               <arc-inline-value
                 arcType="number"
-                [arcInputClass]="isLarge() ? 'h-8 w-14 px-1 text-center font-display text-xl' : 'h-6 w-12 px-1 text-center font-mono text-xs'"
+                [arcInputClass]="isLarge() ? 'h-7 w-14 px-1 text-center font-display text-xl' : 'h-5 w-11 px-1 text-center font-mono text-xs'"
                 [class]="temp() > 0 ? '' : 'opacity-0 transition-opacity focus-within:opacity-100 group-hover:opacity-100'"
                 [arcLabel]="tempLabel()"
                 [arcValue]="temp() > 0 ? temp() : null"
                 (arcCommit)="tempChange.emit($event)"
               >
-                <span [class]="temp() > 0 ? 'text-info' : 'text-muted-foreground'">+{{ temp() > 0 ? temp() : 0 }}</span>
+                <span class="px-0.5" [class]="temp() > 0 ? 'bg-info text-primary-foreground' : 'text-muted-foreground'">+{{ temp() > 0 ? temp() : 0 }}</span>
               </arc-inline-value>
               <arc-inline-value
                 arcType="number"
-                [arcInputClass]="isLarge() ? 'h-8 w-14 px-1 text-center font-display text-xl' : 'h-6 w-12 px-1 text-center font-mono text-xs'"
+                [arcInputClass]="isLarge() ? 'h-7 w-14 px-1 text-center font-display text-xl' : 'h-5 w-11 px-1 text-center font-mono text-xs'"
                 [arcLabel]="currentLabel()"
                 [arcValue]="current()"
                 [arcOverridden]="overridden()"
@@ -44,7 +61,7 @@ import { ArcTechInlineValueComponent, type ArcTechInlineValue } from '@/shared/c
               <span aria-hidden="true">/</span>
               <arc-inline-value
                 arcType="number"
-                [arcInputClass]="isLarge() ? 'h-8 w-14 px-1 text-center font-display text-xl' : 'h-6 w-12 px-1 text-center font-mono text-xs'"
+                [arcInputClass]="isLarge() ? 'h-7 w-14 px-1 text-center font-display text-xl' : 'h-5 w-11 px-1 text-center font-mono text-xs'"
                 [arcLabel]="maxLabel()"
                 [arcValue]="max()"
                 (arcCommit)="maxChange.emit($event)"
@@ -53,25 +70,11 @@ import { ArcTechInlineValueComponent, type ArcTechInlineValue } from '@/shared/c
               </arc-inline-value>
             </span>
           } @else {
-            <strong class="shrink-0" [class]="isLarge() ? 'font-display text-2xl leading-none' : 'font-mono text-xs'">
+            <strong class="relative z-1 mr-1 ml-auto shrink-0 bg-recessed px-1 text-foreground-strong" [class]="isLarge() ? 'font-display text-2xl leading-none' : 'font-mono text-xs'">
               @if (temp() > 0) {
-                <span class="mr-2 text-info">+{{ temp() }}</span>
+                <span class="mr-2">+{{ temp() }}</span>
               }{{ current() ?? '–' }} / {{ max() ?? '–' }}
             </strong>
-          }
-        </div>
-        <div
-          class="flex h-3 w-full overflow-hidden border border-border bg-recessed"
-          role="meter"
-          [attr.aria-label]="label()"
-          aria-valuemin="0"
-          [attr.aria-valuemax]="scale() > 0 ? scale() : null"
-          [attr.aria-valuenow]="current() ?? 0"
-          [attr.aria-valuetext]="valueText()"
-        >
-          @if (scale() > 0) {
-            <div class="h-full transition-[width,background-color] duration-500 ease-out motion-reduce:transition-none" [class]="fillClass()" [style.width.%]="currentPercent()"></div>
-            <div class="h-full bg-info transition-[width] duration-500 ease-out motion-reduce:transition-none" [style.width.%]="tempPercent()"></div>
           }
         </div>
         <ng-content />

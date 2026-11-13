@@ -1317,9 +1317,6 @@
     },
     "hp": {
       "manage": "Manage HP",
-      "title": "Manage HP · {{name}}",
-      "apply": "Apply",
-      "mode": "Change",
       "amount": "Amount",
       "current": "current",
       "max": "max",
@@ -1327,8 +1324,7 @@
         "damage": "Damage",
         "heal": "Heal",
         "temp": "Set temporary HP"
-      },
-      "tempShort": "Temp HP"
+      }
     },
     "sides": {
       "none": "No side",

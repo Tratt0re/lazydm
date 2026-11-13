@@ -1317,9 +1317,6 @@
     },
     "hp": {
       "manage": "Gestisci PF",
-      "title": "Gestisci PF · {{name}}",
-      "apply": "Applica",
-      "mode": "Modifica",
       "amount": "Quantità",
       "current": "attuali",
       "max": "massimi",
@@ -1327,8 +1324,7 @@
         "damage": "Danno",
         "heal": "Cura",
         "temp": "Imposta PF temporanei"
-      },
-      "tempShort": "PF temp."
+      }
     },
     "sides": {
       "none": "Nessuna fazione",
