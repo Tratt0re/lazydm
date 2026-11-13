@@ -120,6 +120,9 @@ async function describeEncounterRule(c, scope, input) {
       label: field.label.startsWith(BUILT_IN_LABEL_PREFIX) ? field.key : field.label,
       source: field.source,
       shownInRow: field.showInRow,
+      // The smallest row size of the tracker that shows it (compact, card or expanded): display only, a value is
+      // stored the same whatever the size.
+      shownFrom: field.density ?? 'compact',
       valueFormat: describeValueFormat(field, rule),
     })),
     howToUse:

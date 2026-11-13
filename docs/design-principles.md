@@ -418,8 +418,14 @@ Planned Electron modules: `vault`, `cloud-readiness`, `campaign`, `document`, `i
     and nowhere else, *Delete forever* last after a separator, asking before it deletes. The current turn has a bronze left marker plus a *Turn* label
     (never colour alone). The statuses help text is shown once for the whole list, not on every row. The rule's grid
     is the row's body.
-  - **Density**: *Settings → General → Tracker rows* offers *Compact* (default) and *Roomy* (the fuller layout). The
-    choice is device-local and never stored in the Codex.
+  - **Density**: a switch in the battle bar sets how much of a row shows — *Compact* (one line, about 50px, for
+    hordes and for the whole order next to a note), *Card* (two lines, the default, the layout's grid) or *Expanded*
+    (the stat-block row: quick damage / heal / temporary HP buttons under the bar, the fields the layout marks
+    *Expanded*, and the first line of the linked note). *Follow the turn* (off by default) opens whoever has the
+    turn as Expanded, whatever the switch says, and moves along with *Next turn*. Both are device-local and never
+    stored in the Codex. A layout field may ask for a **density** (`card` or `expanded`, the smallest row size that
+    shows it; none = every size): Compact reads left to right by kind (initiative, name, side, health, defences,
+    conditions, note) instead of following the grid, and leaves out what asks for more. Labels stay at 11px or more.
   - **Cemetery**: *Remove* sends an entity to a side panel (it leaves the order; if it had the turn, the turn
     passes on); *Recover* puts it back by initiative; *Delete forever* (confirmed) removes it from the file for
     good. An entity's **linked note** opens as a **tab of the other side of the split screen** (the second side
@@ -971,7 +977,7 @@ Component behaviour, variant keys and configuration stay as they are.
 | 19.1 | System presets: built-in templates and tracker layouts for Generic, D&D 5e and Pathfinder 2e, with playable frontmatter (plan in `.claude/plans/dnd-tracker-revamp.plan.md`) |
 | 19.2 | An entity's linked note opens as a tab of the other side of the split screen (focused when already open) |
 | 19.3 | Tracker rows edited in place (name, initiative, numbers, text, side, health), edits kept in the entity with *Reset to note value* |
-| 19.4 | Tracker row redesign: card appearance and density modes |
+| 19.4 | Tracker row density: *Compact* / *Card* / *Expanded* switch and *Follow the turn* in the battle bar (device-local), per-field `density` in tracker layouts, quick HP buttons and the note's first line in the Expanded row |
 
 ## 12. Open decisions
 

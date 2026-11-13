@@ -73,6 +73,31 @@
 
 
       <div class="ml-auto flex flex-wrap items-center gap-2">
+        @if (entities().length > 0) {
+          <!-- How much of each row shows. A device preference; the layout still decides which fields exist. -->
+          <arc-segmented
+            arcSize="sm"
+            class="[&_span.bg-primary]:border-b-2 [&_span.bg-primary]:border-primary [&_span.bg-primary]:bg-raised [&_button[aria-pressed=true]]:text-primary"
+            [arcDefaultValue]="density()"
+            [arcAriaLabel]="'encounters.density.label' | translate"
+            (arcChange)="setDensity($event)"
+          >
+            @for (option of densities; track option) {
+              <arc-segmented-item [value]="option" [label]="'encounters.density.' + option | translate" />
+            }
+          </arc-segmented>
+          @if (!isParty()) {
+            <label class="flex cursor-pointer items-center gap-2 font-mono text-xs text-muted-foreground">
+              <arc-switch
+                arcSize="sm"
+                [arcChecked]="followTurn()"
+                [arcAriaLabel]="'encounters.density.followTurn' | translate"
+                (arcCheckedChange)="setFollowTurn($event)"
+              />
+              {{ 'encounters.density.followTurn' | translate }}
+            </label>
+          }
+        }
         @if (canRoll()) {
           <button
             type="button"
@@ -212,15 +237,14 @@
 
             <!-- The row is the rule's grid: each element sits where the rule put it. The grid needs room (about
                  42rem of row): in a narrower row the elements flow and wrap instead, each at the size it needs. -->
+            @let rowDensity = densityOf(entity);
             <div class="@container min-w-0 flex-1">
-              <div
-                class="flex flex-wrap items-center gap-x-3 @2xl:grid @2xl:grid-cols-12"
-                [class]="isCompact() ? 'gap-y-1 p-2' : 'gap-y-2 p-3'"
-              >
-                @for (cell of rowCells(); track cell.id) {
+              <div [class]="gridClasses(rowDensity)">
+                @for (cell of cellsOf(rowDensity); track cell.id) {
                   <div
-                    class="flex items-center gap-1 @2xl:min-w-0 @2xl:[grid-column:var(--column)] @2xl:[grid-row:var(--row)]"
-                    [class]="cellSizing(cell)"
+                    class="flex items-center gap-1 [order:var(--kind)] @2xl:min-w-0 @2xl:[order:0] @2xl:[grid-column:var(--column)] @2xl:[grid-row:var(--row)]"
+                    [class]="cellSizing(cell, rowDensity)"
+                    [style.--kind]="kindOf(cell)"
                     [style.--row]="cell.area.row"
                     [style.--column]="cell.area.column + ' / span ' + cell.area.span"
                   >
@@ -285,7 +309,7 @@
                           }
                           <span
                             class="flex shrink-0 items-center justify-center border border-border bg-recessed font-display font-extrabold"
-                            [class]="isCompact() ? 'size-8 text-lg' : 'size-10 text-xl'"
+                            [class]="initiativeClasses(rowDensity)"
                             [class.text-muted-foreground]="initiative === null"
                             [attr.title]="fieldLabel(field)"
                           >
@@ -295,9 +319,11 @@
                       }
                       @case ('side') {
                         @if (isEditable()) {
+                          <span class="size-2 shrink-0" [class]="sideColor(textOf(entity, field))" aria-hidden="true"></span>
                           <arc-select
-                            class="w-28 shrink-0"
+                            class="w-32 shrink-0 [&_button]:min-h-8 [&_button]:border-transparent [&_button]:bg-transparent [&_button]:px-1.5 [&_button]:py-1 [&_button]:font-mono [&_button]:text-[11px] [&_button]:tracking-[0.06em] [&_button]:uppercase [&_button]:hover:border-input"
                             arcSize="sm"
+                            arcChevronClass="size-3 opacity-40"
                             [attr.aria-label]="fieldLabel(field)"
                             [arcPlaceholder]="'encounters.sides.none' | translate"
                             [arcValue]="textOf(entity, field) ?? ''"
@@ -309,6 +335,7 @@
                             }
                           </arc-select>
                         } @else if (textOf(entity, field); as side) {
+                          <span class="size-2 shrink-0" [class]="sideColor(side)" aria-hidden="true"></span>
                           <arc-badge arcType="secondary">{{ sideLabel(side) }}</arc-badge>
                         }
                       }
@@ -332,16 +359,16 @@
                             <!-- A tile like the initiative box: the value, a rule, the label under it. -->
                             <span
                               class="flex shrink-0 flex-col items-stretch border border-border bg-recessed text-center"
-                              [class]="isCompact() ? 'min-w-8' : 'min-w-10'"
+                              [class]="tileClasses(rowDensity).box"
                             >
                               <span
                                 class="px-1 font-display leading-none font-semibold"
-                                [class]="isCompact() ? 'py-1 text-sm' : 'py-1.5 text-lg'"
+                                [class]="tileClasses(rowDensity).value"
                                 [class.text-muted-foreground]="value === null"
                                 >{{ value ?? '–' }}</span
                               >
                               <span
-                                class="border-t border-border px-1 py-0.5 font-mono text-[10px] leading-none tracking-[0.1em] text-muted-foreground uppercase"
+                                class="border-t border-border px-1 py-0.5 font-mono text-[11px] leading-none tracking-[0.1em] text-muted-foreground uppercase"
                                 >{{ fieldLabel(field) }}</span
                               >
                             </span>
@@ -370,6 +397,7 @@
                           [max]="health.max ?? null"
                           [temp]="health.temp ?? 0"
                           [label]="fieldLabel(field)"
+                          [isLarge]="rowDensity === 'expanded'"
                           [editable]="isEditable()"
                           [overridden]="isOverridden(entity, field)"
                           [overriddenLabel]="'encounters.inline.overridden' | translate"
@@ -379,7 +407,33 @@
                           (currentChange)="setHealth(entity, field, 'current', $event)"
                           (maxChange)="setHealth(entity, field, 'max', $event)"
                           (tempChange)="setHealth(entity, field, 'temp', $event)"
-                        />
+                        >
+                          @if (!isParty() && rowDensity === 'expanded') {
+                            <!-- The quick HP of the Expanded row: type an amount, then damage, heal or temporary HP. -->
+                            <div class="mt-1 flex flex-wrap items-center gap-1" role="group" [attr.aria-label]="'encounters.hp.manage' | translate">
+                              <input
+                                #hpAmount
+                                arc-input
+                                type="text"
+                                inputmode="numeric"
+                                class="h-8 w-16 text-center font-mono text-sm"
+                                placeholder="–"
+                                [disabled]="!isEditable()"
+                                [attr.aria-label]="'encounters.hp.amount' | translate"
+                                (keydown.enter)="applyHp(entity, field, 'damage', hpAmount)"
+                              />
+                              <button type="button" arc-button arcType="outline" arcSize="sm" [arcDisabled]="!isEditable()" (click)="applyHp(entity, field, 'damage', hpAmount)">
+                                {{ 'encounters.hp.modes.damage' | translate }}
+                              </button>
+                              <button type="button" arc-button arcType="outline" arcSize="sm" [arcDisabled]="!isEditable()" (click)="applyHp(entity, field, 'heal', hpAmount)">
+                                {{ 'encounters.hp.modes.heal' | translate }}
+                              </button>
+                              <button type="button" arc-button arcType="outline" arcSize="sm" [arcDisabled]="!isEditable()" (click)="applyHp(entity, field, 'temp', hpAmount)">
+                                {{ 'encounters.hp.tempShort' | translate }}
+                              </button>
+                            </div>
+                          }
+                        </app-encounter-health-bar>
                         @if (isOverridden(entity, field) && isEditable()) {
                           <button
                             type="button"
@@ -414,8 +468,8 @@
                         <!-- A bordered, labelled field: tags typed in place ("name", space, "rounds", space). -->
                         <div class="flex min-w-0 flex-1 flex-col gap-0.5">
                           <label
-                            class="font-mono text-[10px] tracking-[0.1em] text-muted-foreground uppercase"
-                            [class.sr-only]="isCompact()"
+                            class="font-mono text-[11px] tracking-[0.1em] text-muted-foreground uppercase"
+                            [class.sr-only]="rowDensity === 'compact'"
                             [attr.for]="'status-' + entity.id"
                           >{{ fieldLabel(field) }}</label>
                           <div
@@ -455,17 +509,22 @@
                             [arcRow]="entity.id"
                             [arcLabel]="fieldLabel(field)"
                             [arcValue]="textOf(entity, field)"
-                            [arcPlaceholder]="fieldLabel(field)"
+                            [arcPlaceholder]="rowDensity === 'expanded' ? '–' : fieldLabel(field)"
                             [arcDisabled]="!isEditable()"
                             (arcCommit)="setValue(entity, field, $event)"
                             (arcMove)="moveInColumn($event, entity, field.key)"
                           >
                             <span
-                              class="truncate text-xs text-muted-foreground"
-                              [class.italic]="textOf(entity, field) === null"
-                              >{{ textOf(entity, field) ?? fieldLabel(field) }}</span
+                              class="truncate"
+                              [class]="rowDensity === 'expanded' && textOf(entity, field) !== null ? 'text-sm text-foreground' : 'text-xs text-muted-foreground'"
+                              [class.italic]="textOf(entity, field) === null && rowDensity !== 'expanded'"
+                              >{{ textOf(entity, field) ?? (rowDensity === 'expanded' ? '–' : fieldLabel(field)) }}</span
                             >
                           </arc-inline-value>
+                          @if (rowDensity === 'expanded') {
+                            <!-- In the Expanded row a bare value needs its name ("30 ft." is Speed). -->
+                            <span class="order-first font-mono text-[11px] tracking-[0.1em] text-muted-foreground uppercase">{{ fieldLabel(field) }}</span>
+                          }
                         }
                       }
                       @case ('note-link') {
@@ -489,6 +548,11 @@
                 </div>
               }
               </div>
+              @if (rowDensity === 'expanded') {
+                @if (excerptOf(entity); as excerpt) {
+                  <p class="border-t border-border-subtle px-4 py-2 text-xs leading-5 text-foreground-secondary">{{ excerpt }}</p>
+                }
+              }
             </div>
 
             <!-- Actions: one "…" menu with all of them (Delete last). -->

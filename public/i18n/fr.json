@@ -112,15 +112,6 @@
           "description": "Affiche la taille de chaque note, rencontre et ressource dans les listes de fichiers des pages de section, sur cet appareil."
         }
       },
-      "trackerRows": {
-        "title": "Lignes du tracker",
-        "label": "Taille des lignes",
-        "description": "Compact affiche plus de combattants à l’écran ; Aéré donne plus de place à chaque ligne. Sur cet appareil.",
-        "options": {
-          "compact": "Compact",
-          "roomy": "Aéré"
-        }
-      },
       "shortcuts": {
         "title": "Raccourcis clavier",
         "description": "Tous les raccourcis de l'app, selon où ils fonctionnent.",
@@ -1313,7 +1304,9 @@
       "note": "Note",
       "fortitude": "Vig",
       "reflex": "Réf",
-      "will": "Vol"
+      "will": "Vol",
+      "speed": "Vitesse",
+      "senses": "Sens"
     },
     "saveError": "Impossible d'enregistrer la rencontre. Vérifiez que le dossier du Codex est disponible, puis réessayez.",
     "conflict": {
@@ -1334,7 +1327,8 @@
         "damage": "Dégâts",
         "heal": "Soins",
         "temp": "Définir les PV temporaires"
-      }
+      },
+      "tempShort": "PV temp."
     },
     "sides": {
       "none": "Aucun camp",
@@ -1421,6 +1415,13 @@
     "inline": {
       "overridden": "Différent de la note",
       "reset": "Revenir à la valeur de la note"
+    },
+    "density": {
+      "label": "Taille des lignes",
+      "compact": "Compacte",
+      "card": "Carte",
+      "expanded": "Étendue",
+      "followTurn": "Suivre le tour"
     }
   },
   "battleRules": {

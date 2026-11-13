@@ -164,3 +164,58 @@ describe('built-in rule labels', () => {
     expect(missing).toEqual([]);
   });
 });
+
+describe('field densities', () => {
+  const field = (rule, key) => rule.fields.find((item) => item.key === key);
+
+  it('asks for a density only in the presets that mean it', () => {
+    expect(field(DEFAULT_BATTLE_RULE, 'ac').density).toBeUndefined();
+    expect(field(BUILT_IN_RULES['builtin:dnd5e'], 'speed').density).toBe('expanded');
+    expect(field(BUILT_IN_RULES['builtin:dnd5e'], 'senses').density).toBe('expanded');
+    expect(field(BUILT_IN_RULES['builtin:pf2e'], 'fortitude').density).toBe('card');
+    // The defences a DM compares an attack roll with stay in the one-line row.
+    expect(field(BUILT_IN_RULES['builtin:dnd5e'], 'ac').density).toBeUndefined();
+    expect(field(BUILT_IN_RULES['builtin:pf2e'], 'ac').density).toBeUndefined();
+  });
+
+  it('keeps a density through normalisation, and drops one it does not know', () => {
+    const rule = battleRuleModel.normalizeBattleRule({
+      name: 'x',
+      initiative: { roll: null },
+      fields: [
+        { key: 'initiative', component: 'initiative' },
+        { key: 'a', component: 'number', density: 'expanded' },
+        { key: 'b', component: 'number', density: 'card' },
+        { key: 'c', component: 'number', density: 'compact' },
+        { key: 'd', component: 'number', density: 'huge' },
+        { key: 'e', component: 'number' },
+      ],
+    });
+
+    expect(rule.fields.map((item) => [item.key, item.density])).toEqual([
+      ['initiative', undefined],
+      ['a', 'expanded'],
+      ['b', 'card'],
+      ['c', undefined],
+      ['d', undefined],
+      ['e', undefined],
+    ]);
+  });
+
+  it('survives a trip through a rule file', async () => {
+    const root = fs.mkdtempSync(path.join(os.tmpdir(), 'lazydm-rule-density-'));
+    try {
+      const rulePath = await battleRuleModel.createBattleRuleFile(root, 'mine', 'Mine', 'builtin:dnd5e');
+      const file = await battleRuleModel.readBattleRuleFile(root, rulePath);
+      expect(file.rule.fields.find((item) => item.key === 'speed').density).toBe('expanded');
+    } finally {
+      fs.rmSync(root, { recursive: true, force: true });
+    }
+  });
+
+  it('only hides fields the row has, never the name or the initiative', () => {
+    for (const rule of Object.values(BUILT_IN_RULES)) {
+      expect(rule.fields.find((item) => item.component === 'initiative').density).toBeUndefined();
+    }
+  });
+});

@@ -142,7 +142,19 @@ describe('tracker layouts by system, through MCP', () => {
       'ac',
       'statuses',
       'note',
+      'speed',
+      'senses',
     ]);
+  });
+
+  it('says from which row size of the tracker a field shows, without changing how it is filled', async () => {
+    await ruleController.setChoice({ campaign: 'lost-mine', rule: 'builtin:pf2e' });
+    const { data } = await call('get_encounter_rule', { scope: 'lost-mine' });
+    const from = Object.fromEntries(data.fields.map((field) => [field.key, field.shownFrom]));
+
+    expect(from.ac).toBe('compact');
+    expect(from.fortitude).toBe('card');
+    expect(from.speed).toBe('expanded');
   });
 
   it('describes the Pathfinder 2e layout, which rolls Perception and shows the saves', async () => {

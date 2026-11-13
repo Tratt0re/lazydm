@@ -112,15 +112,6 @@
           "description": "Mostra la dimensione di ogni nota, incontro e risorsa negli elenchi delle pagine delle sezioni, su questo dispositivo."
         }
       },
-      "trackerRows": {
-        "title": "Righe del tracker",
-        "label": "Dimensione delle righe",
-        "description": "Compatta mostra più combattenti sullo schermo; Ampia dà più spazio a ogni riga. Su questo dispositivo.",
-        "options": {
-          "compact": "Compatta",
-          "roomy": "Ampia"
-        }
-      },
       "shortcuts": {
         "title": "Scorciatoie da tastiera",
         "description": "Tutte le scorciatoie dell'app, per dove funzionano.",
@@ -1313,7 +1304,9 @@
       "note": "Nota",
       "fortitude": "Temp",
       "reflex": "Rifl",
-      "will": "Vol"
+      "will": "Vol",
+      "speed": "Velocità",
+      "senses": "Sensi"
     },
     "saveError": "Impossibile salvare l'incontro. Controlla che la cartella del Codex sia disponibile, poi riprova.",
     "conflict": {
@@ -1334,7 +1327,8 @@
         "damage": "Danno",
         "heal": "Cura",
         "temp": "Imposta PF temporanei"
-      }
+      },
+      "tempShort": "PF temp."
     },
     "sides": {
       "none": "Nessuna fazione",
@@ -1421,6 +1415,13 @@
     "inline": {
       "overridden": "Diverso dalla nota",
       "reset": "Ripristina il valore della nota"
+    },
+    "density": {
+      "label": "Dimensione righe",
+      "compact": "Compatta",
+      "card": "Scheda",
+      "expanded": "Estesa",
+      "followTurn": "Segui il turno"
     }
   },
   "battleRules": {

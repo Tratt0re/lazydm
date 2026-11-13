@@ -51,6 +51,8 @@ import { EncounterService, PARTY_FILE_NAME } from '@/services/encounter.service'
 import { CopyToService } from '@/services/copy-to.service';
 import { onIndexUpdated } from '@/services/ipc-events';
 import { FileActionsService } from '@/services/file-actions.service';
+import type { TrackerRowDensity } from '@/config/local-preferences.config';
+import { noteExcerpt } from '@/pages/encounter-page/note-excerpt';
 import { LocalPreferencesService } from '@/services/local-preferences.service';
 import { getNoteScopeKind, NoteScopeService } from '@/services/note-scope.service';
 import { SectionService, toSubfolderLabel } from '@/services/section.service';
@@ -64,7 +66,10 @@ import {
   type ArcTechInlineMove,
   type ArcTechInlineValue,
 } from '@/shared/components/inline-value';
+import { ArcTechInputDirective } from '@/shared/components/input';
+import { ArcTechSegmentedComponent, ArcTechSegmentedItemComponent } from '@/shared/components/segmented';
 import { ArcTechSelectImports } from '@/shared/components/select';
+import { ArcTechSwitchComponent } from '@/shared/components/switch';
 import { ArcTechButtonComponent } from '@/shared/components/button';
 import { ArcTechEmptyComponent } from '@/shared/components/empty';
 import { ArcTechIconComponent } from '@/shared/components/icon';
@@ -137,7 +142,11 @@ function parseNumber(value: unknown): number | null {
     ArcTechEmptyComponent,
     ArcTechIconComponent,
     ArcTechInlineValueComponent,
+    ArcTechInputDirective,
     ArcTechMenuImports,
+    ArcTechSegmentedComponent,
+    ArcTechSegmentedItemComponent,
+    ArcTechSwitchComponent,
     ...ArcTechSelectImports,
     ArcTechTooltipImports,
   ],
@@ -230,10 +239,116 @@ export class EncounterPage {
         })),
     ];
   });
-  /** Settings → General → Tracker rows: the compact row (default) or the roomy one. */
-  protected readonly isCompact = computed(
-    () => this.localPreferences.trackerRowDensity() === 'compact',
-  );
+  /** The density switch of the battle bar (per device): one line, two lines or the stat-block row. */
+  protected readonly density = this.localPreferences.trackerRowDensity;
+  protected readonly densities: readonly TrackerRowDensity[] = ['compact', 'card', 'expanded'];
+  /** *Follow the turn*: the combatant whose turn it is opens as the Expanded row. */
+  protected readonly followTurn = this.localPreferences.trackerFollowTurn;
+
+  protected setDensity(value: string): void {
+    if ((this.densities as readonly string[]).includes(value)) {
+      this.localPreferences.setTrackerRowDensity(value as TrackerRowDensity);
+    }
+  }
+
+  protected setFollowTurn(follow: boolean): void {
+    this.localPreferences.setTrackerFollowTurn(follow);
+  }
+
+  /** The size of one combatant's row: the chosen density, or Expanded for whoever has the turn when it follows it. */
+  protected densityOf(entity: EncounterEntityDto): TrackerRowDensity {
+    return this.followTurn() && this.isRunning() && entity.id === this.turnId()
+      ? 'expanded'
+      : this.density();
+  }
+
+  /**
+   * The cells of the row at a density: a field that asks for a bigger one stays out of the smaller rows. Compact is
+   * one line, so it reads left to right by kind (initiative, name, side, health, defences, conditions, note) instead
+   * of following the layout's grid; Card and Expanded keep the grid.
+   */
+  protected cellsOf(density: TrackerRowDensity): readonly RowCell[] {
+    const rank: Record<TrackerRowDensity, number> = { compact: 0, card: 1, expanded: 2 };
+    const cells = this.rowCells().filter(
+      (cell) => !cell.field?.density || rank[cell.field.density] <= rank[density],
+    );
+    // Compact is one line, so it reads by kind instead of following the grid; the other sizes keep the grid
+    // while the row is wide enough and read by kind (see `kindOf`, an `order` below `@2xl`) once it wraps.
+    return density === 'compact'
+      ? [...cells].sort((left, right) => this.kindOf(left) - this.kindOf(right))
+      : cells;
+  }
+
+  /** Where a cell reads in a row that flows instead of following the grid: initiative, name, side, health, defences… */
+  protected kindOf(cell: RowCell): number {
+    const order: Record<string, number> = {
+      initiative: 0,
+      name: 1,
+      side: 2,
+      healthbar: 3,
+      number: 4,
+      text: 5,
+      statuses: 6,
+      'note-link': 7,
+    };
+    return order[cell.field?.component ?? 'name'] ?? 8;
+  }
+
+  /** Classes of the row's grid (it is a plain flow in Compact). */
+  protected gridClasses(density: TrackerRowDensity): string {
+    const flow = 'flex flex-wrap items-center gap-x-3';
+    switch (density) {
+      case 'compact':
+        return `${flow} gap-y-1 p-1.5`;
+      case 'expanded':
+        return `${flow} @2xl:grid @2xl:grid-cols-12 gap-y-3 p-4`;
+      default:
+        return `${flow} @2xl:grid @2xl:grid-cols-12 gap-y-2 p-3`;
+    }
+  }
+
+  /** The initiative tile grows with the row. */
+  protected initiativeClasses(density: TrackerRowDensity): string {
+    return { compact: 'size-8 text-lg', card: 'size-10 text-xl', expanded: 'size-14 text-3xl' }[density];
+  }
+
+  /** The number tiles (AC, saves) grow with the row too; their label stays at the 11px floor. */
+  protected tileClasses(density: TrackerRowDensity): { box: string; value: string } {
+    return {
+      compact: { box: 'min-w-8', value: 'py-1 text-sm' },
+      card: { box: 'min-w-10', value: 'py-1.5 text-lg' },
+      expanded: { box: 'min-w-12', value: 'py-2 text-2xl' },
+    }[density];
+  }
+
+  /** The one-line excerpt of the combatant's linked note (the Expanded row), once the note has been read. */
+  protected excerptOf(entity: EncounterEntityDto): string | null {
+    const notePath = this.noteOf(entity);
+    return notePath ? (this.noteExcerpts().get(notePath) ?? null) : null;
+  }
+
+  /**
+   * The quick HP buttons of the Expanded row: the number typed beside them is the amount of damage, healing or
+   * temporary HP, applied the way the HP dialog applies it. A field that is empty or not a whole number does nothing.
+   */
+  protected applyHp(
+    entity: EncounterEntityDto,
+    field: BattleRuleFieldDto,
+    mode: HpChangeMode,
+    amountField: HTMLInputElement,
+  ): void {
+    const amount = parseNumber(amountField.value);
+    if (amount === null || amount < 0) {
+      amountField.focus();
+      return;
+    }
+
+    this.changeHp(entity.id, field.key, mode, amount);
+    // The field is emptied through an input event too: the input directive keeps its own copy of the value, and one
+    // that is not told would show the amount again, ready to be applied a second time.
+    amountField.value = '';
+    amountField.dispatchEvent(new Event('input'));
+  }
   /** Whether the rule shows a statuses field in the row (the how-to line is written once above the list). */
   protected readonly hasStatuses = computed(
     () =>
@@ -261,6 +376,8 @@ export class EncounterPage {
   protected readonly selectedIds = signal<ReadonlySet<string>>(new Set());
   /** Notes of the scope an entity can be linked to (the picker's options), by path. */
   private readonly scopeNotes = signal<readonly LinkTargetDto[]>([]);
+  /** First line of prose of the linked notes already read, by note path (the Expanded row shows it). */
+  protected readonly noteExcerpts = signal<ReadonlyMap<string, string | null>>(new Map());
   /** Frontmatter of the linked notes already read, by note path (rule fields can read from it). */
   protected readonly noteFrontmatter = signal<
     ReadonlyMap<string, Readonly<Record<string, unknown>>>
@@ -430,9 +547,22 @@ export class EncounterPage {
     return toNumber(entity.values[field.key]) ?? toNumber(this.noteValue(entity, field));
   }
 
-  protected textOf(entity: EncounterEntityDto, field: { readonly key: string }): string | null {
+  /** Text of a field: the combatant's own, else (for a field that reads from a note) what its note says. */
+  protected textOf(
+    entity: EncounterEntityDto,
+    field: { readonly key: string; readonly source?: string },
+  ): string | null {
     const value = entity.values[field.key];
-    return typeof value === 'string' && value.length > 0 ? value : null;
+    if (typeof value === 'string' && value.length > 0) {
+      return value;
+    }
+
+    const fromNote = this.noteValue(entity, field);
+    if (typeof fromNote === 'string' && fromNote.trim().length > 0) {
+      return fromNote.trim();
+    }
+
+    return typeof fromNote === 'number' ? String(fromNote) : null;
   }
 
   /** Statuses of an entity (`values[<statuses field key>]`); anything that is not a tag with a name is ignored. */
@@ -463,6 +593,20 @@ export class EncounterPage {
     return fromNote === null ? {} : { current: fromNote, max: fromNote };
   }
 
+  /** Colour of the square before a side (a marker next to the text, which always says the side too). */
+  protected sideColor(side: string | null): string {
+    switch (side) {
+      case 'enemy':
+        return 'bg-destructive';
+      case 'player':
+        return 'bg-success';
+      case 'ally':
+        return 'bg-mana';
+      default:
+        return 'bg-muted-foreground';
+    }
+  }
+
   /** Label of a side: its translation when the rule's option has one (`enemy`, `player`, `ally`), else as written. */
   protected sideLabel(side: string): string {
     const key = `encounters.sides.${side}`;
@@ -474,13 +618,36 @@ export class EncounterPage {
    * Size of an element while the row is too narrow for the grid and its elements wrap: small ones keep the
    * room they need, the others share the line, and statuses take a line of their own.
    */
-  protected cellSizing(cell: RowCell): string {
+  protected cellSizing(cell: RowCell, density: TrackerRowDensity): string {
+    // The one-line row keeps its columns where they are from row to row (a DM scans down a column): every cell
+    // that varies in width gets a fixed one, and the conditions take what is left.
+    if (density === 'compact') {
+      switch (cell.field?.component) {
+        case undefined:
+        case null:
+          return 'w-36 shrink-0';
+        case 'side':
+          return 'w-40 shrink-0';
+        case 'healthbar':
+          return 'w-60 shrink-0';
+        case 'statuses':
+          return 'min-w-64 flex-1';
+        case 'text':
+          return 'w-40 shrink-0';
+        default:
+          return 'shrink-0';
+      }
+    }
+
     switch (cell.field?.component) {
       case undefined:
       case null:
         return 'min-w-28 flex-1 @2xl:min-w-0';
       case 'healthbar':
-        return 'min-w-44 flex-1 @2xl:min-w-0';
+        // The quick HP buttons of the Expanded row need a line of their own once the row wraps.
+        return density === 'expanded'
+          ? 'basis-full min-w-44 flex-1 @2xl:basis-auto @2xl:min-w-0'
+          : 'min-w-44 flex-1 @2xl:min-w-0';
       case 'statuses':
         return 'basis-full @2xl:basis-auto';
       case 'text':
@@ -1720,13 +1887,19 @@ export class EncounterPage {
     const loaded = await Promise.all(
       [...paths].map(async (notePath) => {
         try {
-          return [notePath, (await this.documentService.read(notePath)).frontmatter] as const;
+          const note = await this.documentService.read(notePath);
+          return { notePath, frontmatter: note.frontmatter, excerpt: noteExcerpt(note.body) };
         } catch {
-          return [notePath, {}] as const;
+          return { notePath, frontmatter: {}, excerpt: null };
         }
       }),
     );
-    this.noteFrontmatter.update((map) => new Map([...map, ...loaded]));
+    this.noteExcerpts.update(
+      (map) => new Map([...map, ...loaded.map((note) => [note.notePath, note.excerpt] as const)]),
+    );
+    this.noteFrontmatter.update(
+      (map) => new Map([...map, ...loaded.map((note) => [note.notePath, note.frontmatter] as const)]),
+    );
   }
 
   // --- Battle rule -------------------------------------------------------------------------------------

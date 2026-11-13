@@ -50,8 +50,13 @@ export class LocalPreferencesService {
   private readonly trackerRowDensitySignal = signal<TrackerRowDensity>(
     LOCAL_PREFERENCE_DEFAULTS.trackerRowDensity,
   );
-  /** Settings → General → Tracker rows: how tall a combatant row is, on this device. */
+  /** The encounter page's density switch: how much of a combatant row shows, on this device. */
   readonly trackerRowDensity = this.trackerRowDensitySignal.asReadonly();
+  private readonly trackerFollowTurnSignal = signal<boolean>(
+    LOCAL_PREFERENCE_DEFAULTS.trackerFollowTurn,
+  );
+  /** The combatant whose turn it is opens as the Expanded row, on this device. */
+  readonly trackerFollowTurn = this.trackerFollowTurnSignal.asReadonly();
   private readonly editorSettingsSignal = signal<EditorSettings>(EDITOR_SETTINGS_DEFAULTS);
   /** Settings → Editor, on this device. */
   readonly editorSettings = this.editorSettingsSignal.asReadonly();
@@ -69,6 +74,7 @@ export class LocalPreferencesService {
     this.showFileSizesSignal.set(this.getShowFileSizes());
     this.openLastCampaignSignal.set(this.getOpenLastCampaign());
     this.trackerRowDensitySignal.set(this.getTrackerRowDensity());
+    this.trackerFollowTurnSignal.set(this.getTrackerFollowTurn());
   }
 
   getTheme(): ThemePreference {
@@ -185,6 +191,15 @@ export class LocalPreferencesService {
       : LOCAL_PREFERENCE_DEFAULTS.trackerRowDensity;
     this.trackerRowDensitySignal.set(normalized);
     this.setText(LocalPreferenceKey.TRACKER_ROW_DENSITY, normalized);
+  }
+
+  getTrackerFollowTurn(): boolean {
+    return this.getText(LocalPreferenceKey.TRACKER_FOLLOW_TURN) === '1';
+  }
+
+  setTrackerFollowTurn(follow: boolean): void {
+    this.trackerFollowTurnSignal.set(follow);
+    this.setText(LocalPreferenceKey.TRACKER_FOLLOW_TURN, follow ? '1' : '0');
   }
 
   /** The assistant Settings → MCP shows lines for (per device; Claude Code by default). */

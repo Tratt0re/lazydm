@@ -112,15 +112,6 @@
           "description": "Show the size of each note, encounter and asset in the file lists of the section pages, on this device."
         }
       },
-      "trackerRows": {
-        "title": "Tracker rows",
-        "label": "Row size",
-        "description": "Compact fits more combatants on screen; Roomy gives each row more space. On this device.",
-        "options": {
-          "compact": "Compact",
-          "roomy": "Roomy"
-        }
-      },
       "shortcuts": {
         "title": "Keyboard shortcuts",
         "description": "Every shortcut of the app, by where it works.",
@@ -1313,7 +1304,9 @@
       "note": "Note",
       "fortitude": "Fort",
       "reflex": "Ref",
-      "will": "Will"
+      "will": "Will",
+      "speed": "Speed",
+      "senses": "Senses"
     },
     "saveError": "Couldn't save the encounter. Check that the Codex folder is available, then try again.",
     "conflict": {
@@ -1334,7 +1327,8 @@
         "damage": "Damage",
         "heal": "Heal",
         "temp": "Set temporary HP"
-      }
+      },
+      "tempShort": "Temp HP"
     },
     "sides": {
       "none": "No side",
@@ -1421,6 +1415,13 @@
     "inline": {
       "overridden": "Differs from the note",
       "reset": "Reset to note value"
+    },
+    "density": {
+      "label": "Row size",
+      "compact": "Compact",
+      "card": "Card",
+      "expanded": "Expanded",
+      "followTurn": "Follow the turn"
     }
   },
   "battleRules": {

@@ -15,7 +15,8 @@ export enum LocalPreferenceKey {
   OPEN_LAST_CAMPAIGN = 'open_last_campaign',
   LAST_CAMPAIGN = 'last_campaign',
   SPLIT_RATIO = 'split_ratio',
-  TRACKER_ROW_DENSITY = 'tracker_row_density',
+  TRACKER_ROW_DENSITY = 'tracker_density',
+  TRACKER_FOLLOW_TURN = 'tracker_follow_turn',
   MCP_ASSISTANT = 'mcp_assistant',
 }
 
@@ -24,10 +25,13 @@ export type McpAssistant = 'claude' | 'codex' | 'opencode';
 
 export const MCP_ASSISTANTS: readonly McpAssistant[] = ['claude', 'codex', 'opencode'];
 
-/** How tall a combatant row of the encounter page is (Settings → General → Tracker rows). */
-export type TrackerRowDensity = 'compact' | 'roomy';
+/**
+ * How much of a combatant row the encounter page shows: one line (`compact`), two (`card`) or the stat-block row
+ * (`expanded`). Stored under its own key: the old Compact / Roomy choice meant something else and is ignored.
+ */
+export type TrackerRowDensity = 'compact' | 'card' | 'expanded';
 
-export const TRACKER_ROW_DENSITIES: readonly TrackerRowDensity[] = ['compact', 'roomy'];
+export const TRACKER_ROW_DENSITIES: readonly TrackerRowDensity[] = ['compact', 'card', 'expanded'];
 
 /**
  * Where a map was left: the centre as fractions of its image and the zoom relative to the zoom that fits the
@@ -110,8 +114,10 @@ export interface LocalPreferences {
   readonly showFileSizes: boolean;
   /** Settings → General: open the last campaign at start instead of the campaign list. */
   readonly openLastCampaign: boolean;
-  /** Height of a combatant row in the encounter page. */
+  /** How much of a combatant row the encounter page shows. */
   readonly trackerRowDensity: TrackerRowDensity;
+  /** The combatant whose turn it is opens as the Expanded row, whatever the density. */
+  readonly trackerFollowTurn: boolean;
 }
 
 export const LOCAL_PREFERENCE_DEFAULTS: Readonly<LocalPreferences> = Object.freeze({
@@ -124,5 +130,6 @@ export const LOCAL_PREFERENCE_DEFAULTS: Readonly<LocalPreferences> = Object.free
   noteAudioVolume: 1,
   showFileSizes: false,
   openLastCampaign: false,
-  trackerRowDensity: 'compact',
+  trackerRowDensity: 'card',
+  trackerFollowTurn: false,
 });

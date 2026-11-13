@@ -40,6 +40,8 @@ const DEFAULT_SPANS = Object.freeze({
   statuses: 6,
 });
 const FRONTMATTER_SOURCE_PREFIX = 'frontmatter:';
+/** The densities a field can ask for (the smallest one that shows it); a field without one shows in all of them. */
+const FIELD_DENSITIES = Object.freeze(['card', 'expanded']);
 
 /** What a field shows and edits: the components the encounter page knows. */
 const FIELD_COMPONENTS = Object.freeze([
@@ -102,9 +104,22 @@ const DEFAULT_BATTLE_RULE = Object.freeze({
 
 const BUILT_IN_RULE_PREFIX = 'builtin:';
 
-/** A number tile read from the entity's note (`ac`, `fortitude`…). */
-function noteNumber(key, place) {
-  return entityField(key, 'number', { source: `${FRONTMATTER_SOURCE_PREFIX}${key}`, area: place });
+/** A number tile read from the entity's note (`ac`, `fortitude`…); `density` is the smallest one that shows it. */
+function noteNumber(key, place, density) {
+  return entityField(key, 'number', {
+    source: `${FRONTMATTER_SOURCE_PREFIX}${key}`,
+    area: place,
+    ...(density ? { density } : {}),
+  });
+}
+
+/** A line of text read from the entity's note (`speed`, `senses`…), shown in the Expanded row only. */
+function noteText(key, place) {
+  return entityField(key, 'text', {
+    source: `${FRONTMATTER_SOURCE_PREFIX}${key}`,
+    area: place,
+    density: 'expanded',
+  });
 }
 
 /**
@@ -126,6 +141,8 @@ const SYSTEM_BATTLE_RULES = Object.freeze({
       noteNumber('ac', area(2, 1, 1)),
       entityField('statuses', 'statuses', { area: area(2, 2, 10) }),
       entityField('note', 'note-link', { area: area(2, 12, 1) }),
+      noteText('speed', area(3, 1, 4)),
+      noteText('senses', area(3, 5, 8)),
     ]),
   }),
   pf2e: Object.freeze({
@@ -140,11 +157,14 @@ const SYSTEM_BATTLE_RULES = Object.freeze({
       entityField('side', 'side', { area: area(1, 6, 2), options: DEFAULT_SIDES }),
       entityField('hp', 'healthbar', { source: `${FRONTMATTER_SOURCE_PREFIX}hp`, area: area(1, 8, 5) }),
       noteNumber('ac', area(2, 1, 1)),
-      noteNumber('fortitude', area(2, 2, 1)),
-      noteNumber('reflex', area(2, 3, 1)),
-      noteNumber('will', area(2, 4, 1)),
+      // The saves are defences: they show from Card up, only the one-line Compact row leaves them out.
+      noteNumber('fortitude', area(2, 2, 1), 'card'),
+      noteNumber('reflex', area(2, 3, 1), 'card'),
+      noteNumber('will', area(2, 4, 1), 'card'),
       entityField('statuses', 'statuses', { area: area(2, 5, 7) }),
       entityField('note', 'note-link', { area: area(2, 12, 1) }),
+      noteText('speed', area(3, 1, 4)),
+      noteText('senses', area(3, 5, 8)),
     ]),
   }),
 });
@@ -224,6 +244,7 @@ function normalizeField(field) {
     label: toText(field.label, FIELD_LABEL_MAX_LENGTH) ?? key,
     source: normalizeSource(field.source),
     showInRow: field.showInRow !== false,
+    ...(FIELD_DENSITIES.includes(field.density) ? { density: field.density } : {}),
     ...(placed ? { area: placed } : {}),
     ...(options.length > 0 ? { options } : {}),
   };
@@ -611,6 +632,7 @@ module.exports = {
   DEFAULT_BATTLE_RULE,
   DEFAULT_SIDES,
   FIELD_COMPONENTS,
+  FIELD_DENSITIES,
   FRONTMATTER_SOURCE_PREFIX,
   battleRuleExists,
   createBattleRuleFile,

@@ -112,15 +112,6 @@
           "description": "Zeigt die Größe jeder Notiz, Begegnung und Ressource in den Dateilisten der Abschnittsseiten, auf diesem Gerät."
         }
       },
-      "trackerRows": {
-        "title": "Tracker-Zeilen",
-        "label": "Zeilengröße",
-        "description": "Kompakt zeigt mehr Kämpfer auf dem Bildschirm; Geräumig gibt jeder Zeile mehr Platz. Gilt für dieses Gerät.",
-        "options": {
-          "compact": "Kompakt",
-          "roomy": "Geräumig"
-        }
-      },
       "shortcuts": {
         "title": "Tastenkürzel",
         "description": "Alle Tastenkürzel der App, nach Einsatzort.",
@@ -1313,7 +1304,9 @@
       "note": "Notiz",
       "fortitude": "Zäh",
       "reflex": "Ref",
-      "will": "Wil"
+      "will": "Wil",
+      "speed": "Tempo",
+      "senses": "Sinne"
     },
     "saveError": "Die Begegnung konnte nicht gespeichert werden. Prüfe, ob der Codex-Ordner verfügbar ist, und versuche es erneut.",
     "conflict": {
@@ -1334,7 +1327,8 @@
         "damage": "Schaden",
         "heal": "Heilung",
         "temp": "Temporäre TP setzen"
-      }
+      },
+      "tempShort": "Temp. TP"
     },
     "sides": {
       "none": "Keine Seite",
@@ -1421,6 +1415,13 @@
     "inline": {
       "overridden": "Weicht von der Notiz ab",
       "reset": "Auf den Wert der Notiz zurücksetzen"
+    },
+    "density": {
+      "label": "Zeilengröße",
+      "compact": "Kompakt",
+      "card": "Karte",
+      "expanded": "Erweitert",
+      "followTurn": "Dem Zug folgen"
     }
   },
   "battleRules": {

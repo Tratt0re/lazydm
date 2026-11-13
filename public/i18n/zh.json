@@ -112,15 +112,6 @@
           "description": "在此设备上，于各分区页面的文件列表中显示每条笔记、遭遇和资源的大小。"
         }
       },
-      "trackerRows": {
-        "title": "追踪器行",
-        "label": "行大小",
-        "description": "紧凑可在屏幕上显示更多战斗者;宽松为每行留出更多空间。仅限此设备。",
-        "options": {
-          "compact": "紧凑",
-          "roomy": "宽松"
-        }
-      },
       "shortcuts": {
         "title": "键盘快捷键",
         "description": "应用的所有快捷键，按适用位置分组。",
@@ -1313,7 +1304,9 @@
       "note": "笔记",
       "fortitude": "强韧",
       "reflex": "反射",
-      "will": "意志"
+      "will": "意志",
+      "speed": "速度",
+      "senses": "感官"
     },
     "saveError": "无法保存遭遇。请确认 Codex 文件夹可用，然后重试。",
     "conflict": {
@@ -1334,7 +1327,8 @@
         "damage": "伤害",
         "heal": "治疗",
         "temp": "设置临时生命值"
-      }
+      },
+      "tempShort": "临时HP"
     },
     "sides": {
       "none": "无阵营",
@@ -1421,6 +1415,13 @@
     "inline": {
       "overridden": "与笔记不同",
       "reset": "恢复为笔记中的值"
+    },
+    "density": {
+      "label": "行大小",
+      "compact": "紧凑",
+      "card": "卡片",
+      "expanded": "展开",
+      "followTurn": "跟随回合"
     }
   },
   "battleRules": {

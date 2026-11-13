@@ -2,6 +2,9 @@
 export type BattleFieldComponent =
   'initiative' | 'text' | 'number' | 'healthbar' | 'statuses' | 'side' | 'note-link';
 
+/** How much of a row the tracker shows; a field can ask for `card` or `expanded` to appear. */
+export type BattleFieldDensity = 'card' | 'expanded';
+
 /** Where an element sits in the entity row: a grid of 12 columns and up to 4 rows. */
 export interface BattleRuleAreaDto {
   readonly row: number;
@@ -22,6 +25,8 @@ export interface BattleRuleFieldDto {
   readonly showInRow: boolean;
   /** Its place in the row grid. */
   readonly area?: BattleRuleAreaDto;
+  /** The smallest tracker density that shows it (Settings → Tracker rows); missing = every density, even Compact. */
+  readonly density?: BattleFieldDensity;
   /** Choices of a `side` field. */
   readonly options?: readonly string[];
 }
