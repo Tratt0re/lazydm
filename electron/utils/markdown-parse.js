@@ -421,6 +421,38 @@ function setFrontmatterField(text, key, value) {
   return `${bom}${lines.join(newline)}`;
 }
 
+/**
+ * Adds each of `keys` as an empty `key:` line at the end of the frontmatter, the way the built-in templates write
+ * them, skipping the ones already there. Every other line stays as written; text without frontmatter gets one.
+ */
+function addEmptyFrontmatterKeys(text, keys) {
+  const newline = detectNewline(text);
+  const [bom, content] = splitBom(text);
+  const lines = normalizeNewlines(content).split('\n');
+  const { frontmatterText, bodyStartLine } = splitFrontmatter(content);
+  if (frontmatterText === null) {
+    const entries = [...new Set(keys)].map((key) => `${key}:`);
+    return entries.length === 0
+      ? text
+      : `${bom}${[FRONTMATTER_OPEN, ...entries, FRONTMATTER_OPEN, ...lines].join(newline)}`;
+  }
+
+  const closeIndex = bodyStartLine - 2;
+  const present = new Set(
+    lines.slice(1, closeIndex).flatMap((line) => {
+      const match = /^([^\s:#][^:]*?)\s*:/.exec(line);
+      return match ? [match[1]] : [];
+    }),
+  );
+  const added = [...new Set(keys)].filter((key) => !present.has(key)).map((key) => `${key}:`);
+  if (added.length === 0) {
+    return text;
+  }
+
+  lines.splice(closeIndex, 0, ...added);
+  return `${bom}${lines.join(newline)}`;
+}
+
 /** Removes `key:` from the frontmatter (single-line values), keeping every other line as written. */
 function removeFrontmatterField(text, key) {
   const newline = detectNewline(text);
@@ -503,6 +535,7 @@ function replaceDocumentTitle(text, oldTitle, newTitle) {
 }
 
 module.exports = {
+  addEmptyFrontmatterKeys,
   getLinkPlainText,
   parseMarkdownDocument,
   removeFrontmatterField,

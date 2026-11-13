@@ -1480,7 +1480,11 @@
       "moveDown": "下移",
       "removeField": "移除字段",
       "addField": "添加字段",
-      "close": "关闭"
+      "close": "关闭",
+      "missingKeys": "该布局读取此模板尚未包含的键：{{keys}}。",
+      "addKeys": "添加缺失的键",
+      "addKeysDone": "已向 {{path}} 添加 {{count}} 个键",
+      "addKeysError": "无法向模板添加键"
     },
     "row": {
       "hint": "拖动元素可移动它（拖到另一个元素上会互换位置），拖动右边缘可调整宽度，点击齿轮打开设置，拖到下方框中可隐藏。名称和先攻始终保留。",

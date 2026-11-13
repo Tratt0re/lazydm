@@ -583,12 +583,19 @@ function registerWriteTools(server, scope, c) {
           .string()
           .optional()
           .describe('Start from the built-in template of this note type (e.g. "enemy").'),
+        system: z
+          .string()
+          .optional()
+          .describe(
+            'Game system of the built-in to start from: "generic" (default), "dnd5e" or "pf2e". ' +
+              'list_templates shows which note types have a variant per system (enemy, character, spell).',
+          ),
       },
       annotations: WRITES,
     },
-    run(async ({ name, type }) => {
+    run(async ({ name, type, system }) => {
       requireUnlimited(scope, 'Templates in _templates/');
-      return c.template.create({ name, type: type ?? null });
+      return c.template.create({ name, type: type ?? null, system });
     }),
   );
 

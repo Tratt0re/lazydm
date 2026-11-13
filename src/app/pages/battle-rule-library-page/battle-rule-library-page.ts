@@ -121,6 +121,27 @@ export class BattleRuleLibraryPage implements OnInit {
       ? this.translateService.instant('battleRules.editor.unknownVariable', { key: missing[1] })
       : error;
   });
+  /**
+   * Keys the layout reads (`frontmatter:<key>` sources and `{key}` formula variables) that its template does not
+   * declare. Only a template file can take them: the built-ins are read-only.
+   */
+  protected readonly missingKeys = computed<readonly string[]>(() => {
+    const rule = this.rule();
+    const template = rule?.template;
+    if (!rule || !template || template.startsWith(BUILT_IN_REF_PREFIX) || this.isBuiltIn()) {
+      return [];
+    }
+
+    const prefix = 'frontmatter:';
+    const read = [
+      ...rule.fields
+        .filter((field) => field.source.startsWith(prefix))
+        .map((field) => field.source.slice(prefix.length)),
+      ...[...(rule.initiative.roll ?? '').matchAll(/\{(\w+)\}/g)].map((match) => match[1]),
+    ];
+    const known = new Set(this.attributeKeys());
+    return [...new Set(read)].filter((key) => key !== '' && !known.has(key));
+  });
   protected readonly canSave = computed(
     () => this.isDirty() && !this.isSaving() && this.formulaError() === null,
   );
@@ -221,6 +242,28 @@ export class BattleRuleLibraryPage implements OnInit {
   protected async setTemplate(template: string): Promise<void> {
     this.update((rule) => ({ ...rule, template: template || null }));
     await this.loadAttributes(template || null);
+  }
+
+  /** Writes the keys the layout reads and its template lacks into the template file. */
+  protected async addMissingKeys(): Promise<void> {
+    const template = this.rule()?.template;
+    const keys = this.missingKeys();
+    if (!template || keys.length === 0) {
+      return;
+    }
+
+    try {
+      const added = await this.templateService.addKeys(template, keys);
+      await this.loadAttributes(template);
+      toast.success(
+        this.translateService.instant('battleRules.editor.addKeysDone', {
+          count: added.length,
+          path: template,
+        }),
+      );
+    } catch (error) {
+      this.showError('battleRules.editor.addKeysError', error);
+    }
   }
 
   /** The initiative is typed by hand (no formula) or rolled from one. */

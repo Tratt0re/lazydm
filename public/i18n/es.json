@@ -1480,7 +1480,11 @@
       "moveDown": "Bajar",
       "removeField": "Quitar campo",
       "addField": "Añadir un campo",
-      "close": "Cerrar"
+      "close": "Cerrar",
+      "missingKeys": "El diseño lee claves que esta plantilla aún no tiene: {{keys}}.",
+      "addKeys": "Añadir las claves que faltan",
+      "addKeysDone": "{{count}} claves añadidas a {{path}}",
+      "addKeysError": "No se pudieron añadir las claves a la plantilla"
     },
     "row": {
       "hint": "Arrastra un elemento para moverlo (sobre otro para intercambiarlos), arrastra su borde derecho para cambiar su tamaño, pulsa su engranaje para los ajustes y suéltalo en el cuadro de abajo para ocultarlo. El nombre y la iniciativa se quedan.",

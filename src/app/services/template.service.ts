@@ -104,6 +104,11 @@ export class TemplateService extends BaseIpcService<APIChannel.TEMPLATES> {
     return (await this.ipcClient.customize({ type, system })).path;
   }
 
+  /** Adds frontmatter keys to a template file as empty `key:` lines; returns the ones it added. */
+  async addKeys(path: string, keys: readonly string[]): Promise<readonly string[]> {
+    return (await this.ipcClient.addKeys({ path, keys })).added;
+  }
+
   async remove(path: string): Promise<void> {
     await this.ipcClient.remove({ path });
   }

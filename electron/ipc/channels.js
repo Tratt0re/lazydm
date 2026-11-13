@@ -105,6 +105,7 @@ const CHANNELS = Object.freeze({
     setRule: 'templates:setRule',
     create: 'templates:create',
     customize: 'templates:customize',
+    addKeys: 'templates:addKeys',
     remove: 'templates:remove',
   }),
   index: Object.freeze({

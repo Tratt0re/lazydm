@@ -1480,7 +1480,11 @@
       "moveDown": "Nach unten",
       "removeField": "Feld entfernen",
       "addField": "Feld hinzufügen",
-      "close": "Schließen"
+      "close": "Schließen",
+      "missingKeys": "Das Layout liest Schlüssel, die diese Vorlage noch nicht hat: {{keys}}.",
+      "addKeys": "Fehlende Schlüssel hinzufügen",
+      "addKeysDone": "{{count}} Schlüssel zu {{path}} hinzugefügt",
+      "addKeysError": "Die Schlüssel konnten der Vorlage nicht hinzugefügt werden"
     },
     "row": {
       "hint": "Ziehe ein Element, um es zu verschieben (auf ein anderes, um sie zu tauschen), ziehe den rechten Rand, um die Größe zu ändern, öffne mit dem Zahnrad die Einstellungen und lege es im Feld darunter ab, um es auszublenden. Name und Initiative bleiben.",

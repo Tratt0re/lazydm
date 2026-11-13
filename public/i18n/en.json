@@ -1480,7 +1480,11 @@
       "moveDown": "Move down",
       "removeField": "Remove field",
       "addField": "Add a field",
-      "close": "Close"
+      "close": "Close",
+      "missingKeys": "The layout reads keys this template does not have yet: {{keys}}.",
+      "addKeys": "Add missing keys",
+      "addKeysDone": "{{count}} keys added to {{path}}",
+      "addKeysError": "Couldn't add the keys to the template"
     },
     "row": {
       "hint": "Drag an element to move it (onto another one to swap them), drag its right edge to resize it, press its gear for its settings, and drop it on the box below to hide it. The name and the initiative stay.",

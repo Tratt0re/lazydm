@@ -1480,7 +1480,11 @@
       "moveDown": "Descendre",
       "removeField": "Retirer le champ",
       "addField": "Ajouter un champ",
-      "close": "Fermer"
+      "close": "Fermer",
+      "missingKeys": "La disposition lit des clés que ce modèle n'a pas encore : {{keys}}.",
+      "addKeys": "Ajouter les clés manquantes",
+      "addKeysDone": "{{count}} clés ajoutées à {{path}}",
+      "addKeysError": "Impossible d'ajouter les clés au modèle"
     },
     "row": {
       "hint": "Faites glisser un élément pour le déplacer (sur un autre pour les échanger), faites glisser son bord droit pour le redimensionner, appuyez sur son engrenage pour ses réglages et déposez-le dans la zone du dessous pour le masquer. Le nom et l'initiative restent.",

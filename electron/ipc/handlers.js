@@ -112,6 +112,7 @@ const IPC_HANDLERS = Object.freeze({
   [CHANNELS.templates.setRule]: templateController.setRule,
   [CHANNELS.templates.create]: templateController.create,
   [CHANNELS.templates.customize]: templateController.customize,
+  [CHANNELS.templates.addKeys]: templateController.addKeys,
   [CHANNELS.templates.remove]: templateController.remove,
 
   [CHANNELS.index.getStatus]: indexerController.getStatus,

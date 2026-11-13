@@ -166,6 +166,10 @@ export interface ElectronIpcClient {
     readonly setRule: IpcRequest<DTO.SetTemplateRulePayload, { rules: DTO.TemplateRulesDto }>;
     readonly create: IpcRequest<DTO.CreateTemplatePayload, { path: string }>;
     readonly customize: IpcRequest<{ type: string; system?: string }, { path: string }>;
+    readonly addKeys: IpcRequest<
+      { path: string; keys: readonly string[] },
+      { path: string; added: readonly string[] }
+    >;
     readonly remove: IpcRequest<{ path: string }, { path: string }>;
   };
   readonly vault: {

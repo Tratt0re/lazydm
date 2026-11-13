@@ -1480,7 +1480,11 @@
       "moveDown": "Sposta giù",
       "removeField": "Rimuovi campo",
       "addField": "Aggiungi un campo",
-      "close": "Chiudi"
+      "close": "Chiudi",
+      "missingKeys": "Il layout legge chiavi che questo modello non ha ancora: {{keys}}.",
+      "addKeys": "Aggiungi le chiavi mancanti",
+      "addKeysDone": "{{count}} chiavi aggiunte a {{path}}",
+      "addKeysError": "Impossibile aggiungere le chiavi al modello"
     },
     "row": {
       "hint": "Trascina un elemento per spostarlo (su un altro per scambiarli), trascina il suo bordo destro per ridimensionarlo, premi l'ingranaggio per le impostazioni e rilascialo nel riquadro sotto per nasconderlo. Nome e iniziativa restano.",

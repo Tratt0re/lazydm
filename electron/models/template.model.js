@@ -4,7 +4,7 @@ const { resolveInsideVault, safeWriteFileAtomic, trashVaultItem } = require('../
 const { listCampaigns, readCampaign, NOTE_TYPE_DIR_NAMES } = require('./campaign.model');
 const { COMPENDIUM_DIR_NAME, listSystems, readSystem } = require('./compendium.model');
 const { listCampaignNoteTypes } = require('./section.model');
-const { parseMarkdownDocument } = require('../utils/markdown-parse');
+const { addEmptyFrontmatterKeys, parseMarkdownDocument } = require('../utils/markdown-parse');
 const { readVaultConfig, writeVaultConfig } = require('./vault.model');
 
 const TEMPLATES_DIR_NAME = '_templates';
@@ -593,6 +593,24 @@ async function createTemplate(rootPath, slug, content) {
   return templatePath;
 }
 
+/**
+ * Adds the frontmatter keys a tracker layout reads to the template it names, as empty `key:` lines (the ones the
+ * template already has are left alone). Returns the keys it added.
+ */
+async function addTemplateKeys(rootPath, templatePath, keys) {
+  const absolutePath = resolveInsideVault(rootPath, templatePath);
+  const content = await fs.promises.readFile(absolutePath, 'utf8');
+  const before = new Set(
+    Object.keys(parseMarkdownDocument(content, { sourcePath: 'template.md' }).frontmatter ?? {}),
+  );
+  const updated = addEmptyFrontmatterKeys(content, keys);
+  if (updated !== content) {
+    safeWriteFileAtomic(absolutePath, updated);
+  }
+
+  return [...new Set(keys)].filter((key) => !before.has(key));
+}
+
 async function deleteTemplate(rootPath, templatePath) {
   await trashVaultItem(resolveInsideVault(rootPath, templatePath));
   clearRulesForTemplate(rootPath, templatePath);
@@ -606,6 +624,7 @@ module.exports = {
   NON_TEMPLATE_NOTE_TYPES,
   TEMPLATE_NOTE_TYPES,
   TEMPLATES_DIR_NAME,
+  addTemplateKeys,
   applyPlaceholders,
   createTemplate,
   deleteTemplate,
