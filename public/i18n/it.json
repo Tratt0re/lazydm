@@ -1372,7 +1372,6 @@
       "show": "Mostra la nota",
       "open": "Apri la nota",
       "close": "Chiudi",
-      "loadError": "Impossibile caricare questa nota",
       "search": "Cerca note…",
       "none": "Nessuna nota trovata"
     },

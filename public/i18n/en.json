@@ -1372,7 +1372,6 @@
       "show": "Show the note",
       "open": "Open the note",
       "close": "Close",
-      "loadError": "Couldn't load this note",
       "search": "Search notes…",
       "none": "No notes found"
     },

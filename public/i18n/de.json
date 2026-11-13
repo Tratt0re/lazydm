@@ -1372,7 +1372,6 @@
       "show": "Notiz anzeigen",
       "open": "Notiz öffnen",
       "close": "Schließen",
-      "loadError": "Diese Notiz konnte nicht geladen werden",
       "search": "Notizen suchen…",
       "none": "Keine Notizen gefunden"
     },
