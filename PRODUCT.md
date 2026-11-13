@@ -28,8 +28,8 @@ the DM to retype them.
 ## Operating Context
 
 - Mode of use: preparation at the desk, then play at the table. The encounter tracker is the session-side surface.
-- A combatant row is configured by a **tracker layout** (a 12-column grid, up to 4 rows) with built-in presets for
-  Generic, D&D 5e and Pathfinder 2e, and user-made ones. Fields: initiative, number tiles (AC, saves), health bar,
+- A combatant row is configured by a **tracker layout** (a 12-column grid, up to 4 rows) with built-in, read-only
+  presets for Generic, D&D 5e and Pathfinder 2e. Fields: initiative, number tiles (AC, saves), health bar,
   statuses, side, text, note link; the name and the initiative are in every layout.
 - Values come from the combatant's linked note until the combatant has its own; edits go into the encounter, never
   the note.
@@ -43,8 +43,8 @@ the DM to retype them.
 - Every user-facing string goes through i18n keys in all 7 languages. UI words follow the glossary in
   `docs/design-principles.md` §1b (Codex, Combatant, Tracker layout, Links, Review).
 - All fields of a row are editable in place (Enter or leaving saves, Escape cancels, arrows move between rows).
-- The tracker's density (Compact, Card, Expanded, plus a *Follow the turn* switch) is a per-device preference like
-  the existing *Tracker rows* setting; it is never written into the encounter file.
+- The tracker's density (Compact, Card, Expanded, plus a *Follow the turn* switch) is configured in *Tracker layouts*
+  as a per-device preference; it is never written into the encounter file.
 
 ## Brand Commitments
 

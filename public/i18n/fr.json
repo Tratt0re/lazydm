@@ -475,7 +475,7 @@
   "vault": {
     "setup": {
       "title": "Choisis ton Codex",
-      "description": "Un Codex est le dossier qui contient toutes tes campagnes sous forme de fichiers Markdown. LazyDM n’y ajoute qu’un petit fichier de configuration. Choisis un dossier neuf ou existant.",
+      "description": "Un Codex est le dossier qui contient toutes tes campagnes. Ses notes restent du Markdown simple et LazyDM conserve sa configuration dans un petit fichier. Choisis un dossier neuf ou existant.",
       "chooseFolder": "Choisir un dossier",
       "chooseAnother": "Choisir un autre dossier",
       "open": "Ouvrir le Codex",
@@ -1695,27 +1695,27 @@
   "onboarding": {
     "step": "Étape {{current}} sur {{total}}",
     "welcome": {
-      "tagline": "Une campagne, de la préparation au jeu.",
-      "lead": "Prépare ta campagne et joue-la à la table. Tes notes restent du Markdown simple dans un dossier qui t'appartient, et les rencontres, les cartes et les liens restent sous la main quand la partie commence.",
+      "tagline": "Ta campagne, de la préparation au jeu.",
+      "lead": "Prépare ta campagne et joue-la à la table depuis la même application de bureau.",
       "points": {
         "prepare": {
           "title": "Prépare à ton bureau",
-          "text": "Écris scènes, ennemis, lieux et cartes sous forme de notes liées. Renomme une note et LazyDM met à jour les liens qui y mènent."
+          "text": "Écris des scènes, des lieux et des ennemis sous forme de notes liées. Renomme-en une et LazyDM met ses liens à jour."
         },
         "session": {
           "title": "Joue à la table",
-          "text": "Quand le jeu commence, la campagne est déjà devant toi : initiative, PV et cartes sont à côté de tes notes. Choisis D&D 5e, Pathfinder 2e ou Générique pour une campagne et sa disposition du tracker et ses modèles s'adaptent à ton jeu."
+          "text": "Ajoute des Combattants depuis leurs notes et lance l’initiative. LazyDM lit leurs valeurs : le tracker est prêt sans les ressaisir."
         },
-        "ai": {
-          "title": "Ouvert à l'IA, selon tes règles",
-          "text": "Si tu le choisis, LazyDM peut ouvrir le Codex à un assistant IA de cet ordinateur via un serveur MCP local. Il reste désactivé tant que tu ne l'actives pas."
+        "ownership": {
+          "title": "La campagne reste à toi",
+          "text": "Ton Codex reste du Markdown simple dans un dossier qui t’appartient. Il fonctionne avec Obsidian et ne demande aucun compte."
         }
       },
       "continue": "Continuer"
     },
     "vault": {
       "back": "Retour",
-      "where": "Il peut rester sur cet appareil, ou dans un dossier cloud (iCloud Drive, Dropbox, OneDrive, Box ou Google Drive) pour l’utiliser sur plusieurs appareils.",
+      "where": "Garde ton Codex sur cet appareil ou dans un dossier cloud (iCloud Drive, Dropbox, OneDrive, Box ou Google Drive) pour l’utiliser sur plusieurs appareils.",
       "cloudNote": "Dans un dossier cloud, c’est ton application cloud qui synchronise. LazyDM attend les téléchargements en attente au démarrage et te prévient si deux appareils ont modifié la même note.",
       "local": {
         "badge": "Uniquement sur cet appareil"

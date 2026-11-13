@@ -17,7 +17,7 @@ import { ArcTechDarkMode, EDarkModes } from '@/shared/services/dark-mode';
 import { applyThemeTransition } from '@/shared/utils/theme-transition';
 
 interface WelcomePoint {
-  readonly key: 'prepare' | 'session' | 'ai';
+  readonly key: 'prepare' | 'session' | 'ownership';
   readonly icon: ArcTechIcon;
   /** The promise a DM cares about most: the card is emphasised. */
   readonly isMain: boolean;
@@ -40,7 +40,7 @@ export class WelcomePage implements AfterViewInit {
   protected readonly points: readonly WelcomePoint[] = [
     { key: 'prepare', icon: 'clapperboard', isMain: false },
     { key: 'session', icon: 'swords', isMain: true },
-    { key: 'ai', icon: 'sparkles', isMain: false },
+    { key: 'ownership', icon: 'shield', isMain: false },
   ];
   protected readonly themeOptions = [EDarkModes.SYSTEM, EDarkModes.LIGHT, EDarkModes.DARK] as const;
   protected readonly languages = this.i18nService.supportedLanguages;

@@ -475,7 +475,7 @@
   "vault": {
     "setup": {
       "title": "选择你的 Codex",
-      "description": "Codex 是存放所有战役 Markdown 文件的文件夹。LazyDM 只会添加一个很小的配置文件。请选择新的或已有的文件夹。",
+      "description": "Codex 是存放所有战役的文件夹。笔记始终是纯 Markdown，LazyDM 会把设置保存在一个很小的配置文件中。请选择新的或已有的文件夹。",
       "chooseFolder": "选择文件夹",
       "chooseAnother": "选择其他文件夹",
       "open": "打开 Codex",
@@ -1695,27 +1695,27 @@
   "onboarding": {
     "step": "第 {{current}} 步，共 {{total}} 步",
     "welcome": {
-      "tagline": "一场战役，从准备到开玩。",
-      "lead": "准备你的战役，并在牌桌上运行它。笔记始终是你自己文件夹里的纯 Markdown，遭遇、地图和链接在游戏开始时触手可及。",
+      "tagline": "你的战役，从准备到开玩。",
+      "lead": "在同一个桌面应用中准备战役，并在牌桌上运行它。",
       "points": {
         "prepare": {
           "title": "在书桌前准备",
-          "text": "把场景、敌人、地点和地图写成相互链接的笔记。重命名笔记时，LazyDM 会更新指向它的链接。"
+          "text": "把场景、地点和敌人写成相互链接的笔记。重命名笔记后，LazyDM 会更新它的链接。"
         },
         "session": {
           "title": "在牌桌上运行",
-          "text": "游戏开始时，战役已经摆在你面前：先攻、生命值和地图就在笔记旁边。为战役选择 D&D 5e、Pathfinder 2e 或通用系统，它的追踪器布局和模板就会贴合你的游戏。"
+          "text": "从笔记中添加战斗者并掷先攻。LazyDM 会读取其数值，无需重复输入，追踪器即可使用。"
         },
-        "ai": {
-          "title": "对 AI 友好，由你做主",
-          "text": "只要你选择启用，LazyDM 就能通过本地 MCP 服务器，把 Codex 开放给这台电脑上的 AI 助手。在你打开之前，它一直保持关闭。"
+        "ownership": {
+          "title": "战役始终属于你",
+          "text": "你的 Codex 是自己文件夹中的纯 Markdown，可与 Obsidian 配合使用，也无需账户。"
         }
       },
       "continue": "继续"
     },
     "vault": {
       "back": "返回",
-      "where": "可以放在这台设备上，也可以放在云端文件夹（iCloud Drive、Dropbox、OneDrive、Box 或 Google Drive）中，以便在更多设备上使用。",
+      "where": "将 Codex 保存在这台设备上，或放入云端文件夹（iCloud Drive、Dropbox、OneDrive、Box 或 Google Drive），以便在更多设备上使用。",
       "cloudNote": "在云端文件夹中，由你的云应用负责同步。LazyDM 在启动时等待尚未完成的下载，并在两台设备修改了同一条笔记时提醒你。",
       "local": {
         "badge": "仅在此设备"

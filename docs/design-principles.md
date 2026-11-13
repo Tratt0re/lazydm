@@ -683,13 +683,13 @@ Codex. It is **off by default** and lives in the Electron main process (`electro
   The vertical divider before the title only appears next to the sidebar toggle.
   macOS keeps the native traffic lights inset into it (`titleBarStyle: 'hiddenInset'`); Windows/Linux use a
   frameless window with the app's own minimize / maximize-restore / close (double-click the bar = maximize).
-- **Compendium, Templates, Battle rules and Settings are full-page sheets**, not pages of the campaign navigation: they open over the
+- **Compendium, Templates, Tracker layouts and Settings are full-page sheets**, not pages of the campaign navigation: they open over the
   current page (named router outlet `overlay`), the campaign and its tabs stay as they are, and closing (×, Escape,
   Cmd/Ctrl+W, or the same title-bar button) brings it back. Each sheet reopens where it was left. Links to
   `/compendium/...` or `/settings/...` open in the sheet. Inside, a system has its own toolbar and appears in the sheet's cascading sidebar; sheet
   pages have their own toolbar context, so they never touch the campaign toolbar or tab titles.
 - **Sheet or modal**: a **side sheet shows information** (the editor reference) and the
-  **full-page sheets** (Compendium, Templates, Battle rules, Settings) are libraries and big
+  **full-page sheets** (Compendium, Templates, Tracker layouts, Settings) are libraries and big
   editors. Anything that **creates, edits or deletes** — a form, a confirmation, a conflict, an import — is a **modal**. A flow of several steps (the *New note* picker and its form) is **one** modal with a *Back* button (`AppDialogFormService.openWizard`), never a modal closed and reopened
   (`AppDialogFormService` for forms, `ArcTechAlertDialogService` for confirmations). A form never opens in a side sheet.
 - Sheets and modals share one header: big condensed title, engraved divider, square close button.
@@ -975,7 +975,7 @@ Component behaviour, variant keys and configuration stay as they are.
 | 19.1 | System presets: built-in templates and tracker layouts for Generic, D&D 5e and Pathfinder 2e, with playable frontmatter (plan in `.claude/plans/dnd-tracker-revamp.plan.md`) |
 | 19.2 | An entity's linked note opens as a tab of the other side of the split screen (focused when already open) |
 | 19.3 | Tracker rows edited in place (name, initiative, numbers, text, side, health), edits kept in the entity with *Reset to note value* |
-| 19.4 | Tracker row density: *Compact* / *Card* / *Expanded* switch and *Follow the turn* in the battle bar (device-local), per-field `density` in tracker layouts, quick HP buttons and the note's first line in the Expanded row |
+| 19.4 | Tracker row density: *Compact* / *Card* / *Expanded* and *Follow the turn* in *Tracker layouts* (device-local), per-field `density` in tracker layouts, quick HP buttons and the note's first line in the Expanded row |
 
 ## 12. Open decisions
 
