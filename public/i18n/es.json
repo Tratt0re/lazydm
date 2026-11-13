@@ -1382,13 +1382,6 @@
         "description": "Añade aquí los personajes jugadores una sola vez. Añadir el grupo los pone en cualquier encuentro."
       }
     },
-    "rule": {
-      "label": "Diseño del tracker",
-      "builtInDefault": "Predeterminado",
-      "saved": "Diseño del tracker guardado",
-      "saveError": "No se pudo cambiar el diseño del tracker",
-      "campaignAriaLabel": "Diseño del tracker de esta campaña"
-    },
     "roll": {
       "button": "Tirar iniciativa",
       "select": "Seleccionar",
@@ -1426,91 +1419,6 @@
     }
   },
   "battleRules": {
-    "builtInName": "Predeterminado",
-    "missing": "{{path}} (falta)",
-    "createError": "No se pudo crear el diseño del tracker",
-    "loadError": "No se pudo cargar el diseño del tracker",
-    "library": {
-      "title": "Diseños del tracker",
-      "empty": "Elige un diseño del tracker a la izquierda, o crea uno."
-    },
-    "create": {
-      "button": "Nuevo diseño del tracker",
-      "title": "Nuevo diseño del tracker",
-      "description": "Crea un diseño en _battle-rules/ en la raíz del Codex, a partir del integrado.",
-      "nameLabel": "Nombre",
-      "namePlaceholder": "Fantasy 5e",
-      "submit": "Crear"
-    },
-    "delete": {
-      "title": "¿Eliminar {{name}}?",
-      "description": "{{path}} se moverá a la papelera. Las campañas y encuentros que lo usaban vuelven al diseño integrado.",
-      "done": "{{name}} eliminada",
-      "error": "No se pudo eliminar el diseño del tracker"
-    },
-    "components": {
-      "initiative": "Iniciativa",
-      "number": "Número",
-      "text": "Texto",
-      "healthbar": "Barra",
-      "statuses": "Estados",
-      "side": "Bando",
-      "note-link": "Nota vinculada"
-    },
-    "editor": {
-      "builtInHint": "Integrada, solo lectura. Personalizar crea una copia editable.",
-      "saved": "Diseño del tracker guardado",
-      "saveError": "No se pudo guardar el diseño del tracker",
-      "conflict": "El diseño del tracker cambió en el disco.",
-      "formulaInvalid": "Corrige primero la fórmula de iniciativa",
-      "name": "Nombre",
-      "template": "Atributos de",
-      "noTemplate": "Sin plantilla",
-      "builtInTemplate": "Integrada · {{type}}",
-      "templateHint": "Las claves del frontmatter de esta plantilla son lo que el diseño puede leer de la nota de un combatiente.",
-      "initiative": "Iniciativa",
-      "rolled": "Tirar la iniciativa con una fórmula",
-      "formula": "Fórmula",
-      "formulaHint": "Dados como 1d20, 1d100 o 2d6, números enteros y {clave} para un número del frontmatter de la nota. Un número negativo resta.",
-      "variables": "Añadir",
-      "unknownVariable": "{{key}} no es un atributo de la plantilla.",
-      "fields": "Fila del combatiente",
-      "fieldsHint": "Lo que muestra cada combatiente, en orden. El nombre y la iniciativa están en todo diseño.",
-      "alwaysThere": "Siempre presente",
-      "label": "Etiqueta",
-      "key": "Clave",
-      "source": "Valor de",
-      "sourceEntity": "El propio combatiente",
-      "sourceNote": "Nota · {{key}}",
-      "sides": "Bandos (separados por comas)",
-      "showInRow": "Mostrar en la fila",
-      "moveUp": "Subir",
-      "moveDown": "Bajar",
-      "removeField": "Quitar campo",
-      "addField": "Añadir un campo",
-      "close": "Cerrar",
-      "missingKeys": "El diseño lee claves que esta plantilla aún no tiene: {{keys}}.",
-      "addKeys": "Añadir las claves que faltan",
-      "addKeysDone": "{{count}} claves añadidas a {{path}}",
-      "addKeysError": "No se pudieron añadir las claves a la plantilla"
-    },
-    "row": {
-      "hint": "Arrastra un elemento para moverlo (sobre otro para intercambiarlos), arrastra su borde derecho para cambiar su tamaño, pulsa su engranaje para los ajustes y suéltalo en el cuadro de abajo para ocultarlo. El nombre y la iniciativa se quedan.",
-      "label": "Fila de ejemplo del combatiente",
-      "settings": "Ajustes de {{name}}",
-      "settingsTip": "Ajustes",
-      "overlap": "Ese lugar está ocupado o fuera de la fila.",
-      "noRoom": "Ya no queda sitio libre en la fila.",
-      "keyInvalid": "La clave necesita minúsculas, dígitos o _ y no debe estar usada.",
-      "palette": "Fuera de la fila · arrastra dentro, o haz clic",
-      "show": "Mostrar {{name}} en la fila",
-      "add": "Añadir {{name}}",
-      "apply": "Aplicar",
-      "discard": "Descartar",
-      "unconfirmed": "Aún sin aplicar",
-      "resize": "Redimensionar {{name}}"
-    },
-    "builtInSystem": "Integrado · {{system}}",
     "settings": {
       "saved": "Diseño del tracker guardado",
       "saveError": "No se pudo guardar el diseño del tracker",

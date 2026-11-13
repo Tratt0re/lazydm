@@ -1382,13 +1382,6 @@
         "description": "Füge die Spielercharaktere hier einmal hinzu. „Gruppe hinzufügen“ setzt sie in jede Begegnung."
       }
     },
-    "rule": {
-      "label": "Tracker-Layout",
-      "builtInDefault": "Standard",
-      "saved": "Tracker-Layout gespeichert",
-      "saveError": "Das Tracker-Layout konnte nicht geändert werden",
-      "campaignAriaLabel": "Tracker-Layout dieser Kampagne"
-    },
     "roll": {
       "button": "Initiative würfeln",
       "select": "Auswählen",
@@ -1426,91 +1419,6 @@
     }
   },
   "battleRules": {
-    "builtInName": "Standard",
-    "missing": "{{path}} (fehlt)",
-    "createError": "Das Tracker-Layout konnte nicht erstellt werden",
-    "loadError": "Das Tracker-Layout konnte nicht geladen werden",
-    "library": {
-      "title": "Tracker-Layouts",
-      "empty": "Wähle links ein Tracker-Layout oder erstelle eins."
-    },
-    "create": {
-      "button": "Neues Tracker-Layout",
-      "title": "Neues Tracker-Layout",
-      "description": "Erstellt ein Layout in _battle-rules/ im Codex-Stamm, ausgehend vom integrierten.",
-      "nameLabel": "Name",
-      "namePlaceholder": "Fantasy 5e",
-      "submit": "Erstellen"
-    },
-    "delete": {
-      "title": "{{name}} löschen?",
-      "description": "{{path}} wird in den Papierkorb verschoben. Kampagnen und Begegnungen, die es nutzten, wechseln zurück zum integrierten Layout.",
-      "done": "{{name}} gelöscht",
-      "error": "Das Tracker-Layout konnte nicht gelöscht werden"
-    },
-    "components": {
-      "initiative": "Initiative",
-      "number": "Zahl",
-      "text": "Text",
-      "healthbar": "Balken",
-      "statuses": "Zustände",
-      "side": "Seite",
-      "note-link": "Verknüpfte Notiz"
-    },
-    "editor": {
-      "builtInHint": "Integriert, schreibgeschützt. „Anpassen“ kopiert sie zum Bearbeiten.",
-      "saved": "Tracker-Layout gespeichert",
-      "saveError": "Das Tracker-Layout konnte nicht gespeichert werden",
-      "conflict": "Das Tracker-Layout wurde auf dem Datenträger geändert.",
-      "formulaInvalid": "Korrigiere zuerst die Initiative-Formel",
-      "name": "Name",
-      "template": "Attribute aus",
-      "noTemplate": "Keine Vorlage",
-      "builtInTemplate": "Integriert · {{type}}",
-      "templateHint": "Die Frontmatter-Schlüssel dieser Vorlage kann das Layout aus der Notiz eines Kämpfers lesen.",
-      "initiative": "Initiative",
-      "rolled": "Initiative aus einer Formel würfeln",
-      "formula": "Formel",
-      "formulaHint": "Würfel wie 1d20, 1d100 oder 2d6, ganze Zahlen und {Schlüssel} für eine Zahl aus dem Frontmatter der Notiz. Eine negative Zahl wird abgezogen.",
-      "variables": "Hinzufügen",
-      "unknownVariable": "{{key}} ist kein Attribut der Vorlage.",
-      "fields": "Kämpferzeile",
-      "fieldsHint": "Was jeder Kämpfer zeigt, in Reihenfolge. Name und Initiative sind in jedem Layout.",
-      "alwaysThere": "Immer dabei",
-      "label": "Beschriftung",
-      "key": "Schlüssel",
-      "source": "Wert aus",
-      "sourceEntity": "Der Kämpfer selbst",
-      "sourceNote": "Notiz · {{key}}",
-      "sides": "Seiten (kommagetrennt)",
-      "showInRow": "In der Zeile zeigen",
-      "moveUp": "Nach oben",
-      "moveDown": "Nach unten",
-      "removeField": "Feld entfernen",
-      "addField": "Feld hinzufügen",
-      "close": "Schließen",
-      "missingKeys": "Das Layout liest Schlüssel, die diese Vorlage noch nicht hat: {{keys}}.",
-      "addKeys": "Fehlende Schlüssel hinzufügen",
-      "addKeysDone": "{{count}} Schlüssel zu {{path}} hinzugefügt",
-      "addKeysError": "Die Schlüssel konnten der Vorlage nicht hinzugefügt werden"
-    },
-    "row": {
-      "hint": "Ziehe ein Element, um es zu verschieben (auf ein anderes, um sie zu tauschen), ziehe den rechten Rand, um die Größe zu ändern, öffne mit dem Zahnrad die Einstellungen und lege es im Feld darunter ab, um es auszublenden. Name und Initiative bleiben.",
-      "label": "Beispiel-Kämpferzeile",
-      "settings": "Einstellungen von {{name}}",
-      "settingsTip": "Einstellungen",
-      "overlap": "Dieser Platz ist belegt oder außerhalb der Zeile.",
-      "noRoom": "In der Zeile ist kein Platz mehr frei.",
-      "keyInvalid": "Der Schlüssel braucht Kleinbuchstaben, Ziffern oder _ und muss frei sein.",
-      "palette": "Nicht in der Zeile · hineinziehen oder klicken",
-      "show": "{{name}} in der Zeile zeigen",
-      "add": "{{name}} hinzufügen",
-      "apply": "Übernehmen",
-      "discard": "Verwerfen",
-      "unconfirmed": "Noch nicht übernommen",
-      "resize": "{{name}} anpassen"
-    },
-    "builtInSystem": "Integriert · {{system}}",
     "settings": {
       "saved": "Tracker-Layout gespeichert",
       "saveError": "Das Tracker-Layout konnte nicht gespeichert werden",

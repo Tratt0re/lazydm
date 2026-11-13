@@ -1382,13 +1382,6 @@
         "description": "Add the player characters here once. Add party puts them in any encounter."
       }
     },
-    "rule": {
-      "label": "Tracker layout",
-      "builtInDefault": "Default",
-      "saved": "Tracker layout saved",
-      "saveError": "Couldn't change the tracker layout",
-      "campaignAriaLabel": "Tracker layout of this campaign"
-    },
     "roll": {
       "button": "Roll initiative",
       "select": "Select",
@@ -1426,91 +1419,6 @@
     }
   },
   "battleRules": {
-    "builtInName": "Default",
-    "missing": "{{path}} (missing)",
-    "createError": "Couldn't create the tracker layout",
-    "loadError": "Couldn't load the tracker layout",
-    "library": {
-      "title": "Tracker layouts",
-      "empty": "Pick a tracker layout on the left, or create one."
-    },
-    "create": {
-      "button": "New tracker layout",
-      "title": "New tracker layout",
-      "description": "Creates a layout in _battle-rules/ at the Codex root, starting from the built-in one.",
-      "nameLabel": "Name",
-      "namePlaceholder": "Fantasy 5e",
-      "submit": "Create"
-    },
-    "delete": {
-      "title": "Delete {{name}}?",
-      "description": "{{path}} will be moved to the Trash. Campaigns and encounters that used it go back to the built-in layout.",
-      "done": "{{name}} deleted",
-      "error": "Couldn't delete the tracker layout"
-    },
-    "components": {
-      "initiative": "Initiative",
-      "number": "Number",
-      "text": "Text",
-      "healthbar": "Bar",
-      "statuses": "Statuses",
-      "side": "Side",
-      "note-link": "Linked note"
-    },
-    "editor": {
-      "builtInHint": "Built-in, read-only. Customize copies it so you can edit it.",
-      "saved": "Tracker layout saved",
-      "saveError": "Couldn't save the tracker layout",
-      "conflict": "The tracker layout changed on disk.",
-      "formulaInvalid": "Fix the initiative formula first",
-      "name": "Name",
-      "template": "Attributes from",
-      "noTemplate": "No template",
-      "builtInTemplate": "Built-in · {{type}}",
-      "templateHint": "The frontmatter keys of this template are what the layout can read from a combatant's note.",
-      "initiative": "Initiative",
-      "rolled": "Roll the initiative from a formula",
-      "formula": "Formula",
-      "formulaHint": "Dice like 1d20, 1d100 or 2d6, whole numbers, and {key} for a number from the note's frontmatter. A negative number subtracts.",
-      "variables": "Add",
-      "unknownVariable": "{{key}} is not an attribute of the template.",
-      "fields": "Combatant row",
-      "fieldsHint": "What each combatant shows, in order. The name and the initiative are in every layout.",
-      "alwaysThere": "Always there",
-      "label": "Label",
-      "key": "Key",
-      "source": "Value from",
-      "sourceEntity": "The combatant itself",
-      "sourceNote": "Note · {{key}}",
-      "sides": "Sides (comma separated)",
-      "showInRow": "Show in the row",
-      "moveUp": "Move up",
-      "moveDown": "Move down",
-      "removeField": "Remove field",
-      "addField": "Add a field",
-      "close": "Close",
-      "missingKeys": "The layout reads keys this template does not have yet: {{keys}}.",
-      "addKeys": "Add missing keys",
-      "addKeysDone": "{{count}} keys added to {{path}}",
-      "addKeysError": "Couldn't add the keys to the template"
-    },
-    "row": {
-      "hint": "Drag an element to move it (onto another one to swap them), drag its right edge to resize it, press its gear for its settings, and drop it on the box below to hide it. The name and the initiative stay.",
-      "label": "Mock combatant row",
-      "settings": "Settings of {{name}}",
-      "settingsTip": "Settings",
-      "overlap": "That place is taken or out of the row.",
-      "noRoom": "There is no free place left in the row.",
-      "keyInvalid": "The key needs lowercase letters, digits or _ and must be unused.",
-      "palette": "Not in the row · drag in, or click",
-      "show": "Show {{name}} in the row",
-      "add": "Add {{name}}",
-      "apply": "Apply",
-      "discard": "Discard",
-      "unconfirmed": "Not applied yet",
-      "resize": "Resize {{name}}"
-    },
-    "builtInSystem": "Built-in · {{system}}",
     "settings": {
       "saved": "Tracker layout saved",
       "saveError": "Couldn't save the tracker layout",

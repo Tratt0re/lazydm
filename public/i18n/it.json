@@ -1382,13 +1382,6 @@
         "description": "Aggiungi qui i personaggi giocanti una volta sola. Aggiungi il gruppo li inserisce in qualsiasi incontro."
       }
     },
-    "rule": {
-      "label": "Layout del tracker",
-      "builtInDefault": "Predefinito",
-      "saved": "Layout del tracker salvato",
-      "saveError": "Impossibile cambiare il layout del tracker",
-      "campaignAriaLabel": "Layout del tracker di questa campagna"
-    },
     "roll": {
       "button": "Tira l'iniziativa",
       "select": "Seleziona",
@@ -1426,91 +1419,6 @@
     }
   },
   "battleRules": {
-    "builtInName": "Predefinito",
-    "missing": "{{path}} (mancante)",
-    "createError": "Impossibile creare il layout del tracker",
-    "loadError": "Impossibile caricare il layout del tracker",
-    "library": {
-      "title": "Layout del tracker",
-      "empty": "Scegli un layout del tracker a sinistra, o creane uno."
-    },
-    "create": {
-      "button": "Nuovo layout del tracker",
-      "title": "Nuovo layout del tracker",
-      "description": "Crea un layout in _battle-rules/ alla radice del Codex, partendo da quello integrato.",
-      "nameLabel": "Nome",
-      "namePlaceholder": "Fantasy 5e",
-      "submit": "Crea"
-    },
-    "delete": {
-      "title": "Eliminare {{name}}?",
-      "description": "{{path}} verrà spostato nel Cestino. Le campagne e gli incontri che lo usavano tornano al layout integrato.",
-      "done": "{{name}} eliminata",
-      "error": "Impossibile eliminare il layout del tracker"
-    },
-    "components": {
-      "initiative": "Iniziativa",
-      "number": "Numero",
-      "text": "Testo",
-      "healthbar": "Barra",
-      "statuses": "Stati",
-      "side": "Fazione",
-      "note-link": "Nota collegata"
-    },
-    "editor": {
-      "builtInHint": "Integrata, sola lettura. Personalizza ne crea una copia modificabile.",
-      "saved": "Layout del tracker salvato",
-      "saveError": "Impossibile salvare il layout del tracker",
-      "conflict": "Il layout del tracker è cambiato sul disco.",
-      "formulaInvalid": "Correggi prima la formula dell'iniziativa",
-      "name": "Nome",
-      "template": "Attributi da",
-      "noTemplate": "Nessun template",
-      "builtInTemplate": "Integrato · {{type}}",
-      "templateHint": "Le chiavi del frontmatter di questo template sono ciò che il layout può leggere dalla nota di un combattente.",
-      "initiative": "Iniziativa",
-      "rolled": "Tira l'iniziativa da una formula",
-      "formula": "Formula",
-      "formulaHint": "Dadi come 1d20, 1d100 o 2d6, numeri interi e {chiave} per un numero dal frontmatter della nota. Un numero negativo sottrae.",
-      "variables": "Aggiungi",
-      "unknownVariable": "{{key}} non è un attributo del template.",
-      "fields": "Riga del combattente",
-      "fieldsHint": "Cosa mostra ogni combattente, in ordine. Il nome e l'iniziativa sono in ogni layout.",
-      "alwaysThere": "Sempre presente",
-      "label": "Etichetta",
-      "key": "Chiave",
-      "source": "Valore da",
-      "sourceEntity": "Il combattente stesso",
-      "sourceNote": "Nota · {{key}}",
-      "sides": "Fazioni (separate da virgola)",
-      "showInRow": "Mostra nella riga",
-      "moveUp": "Sposta su",
-      "moveDown": "Sposta giù",
-      "removeField": "Rimuovi campo",
-      "addField": "Aggiungi un campo",
-      "close": "Chiudi",
-      "missingKeys": "Il layout legge chiavi che questo modello non ha ancora: {{keys}}.",
-      "addKeys": "Aggiungi le chiavi mancanti",
-      "addKeysDone": "{{count}} chiavi aggiunte a {{path}}",
-      "addKeysError": "Impossibile aggiungere le chiavi al modello"
-    },
-    "row": {
-      "hint": "Trascina un elemento per spostarlo (su un altro per scambiarli), trascina il suo bordo destro per ridimensionarlo, premi l'ingranaggio per le impostazioni e rilascialo nel riquadro sotto per nasconderlo. Nome e iniziativa restano.",
-      "label": "Riga di esempio del combattente",
-      "settings": "Impostazioni di {{name}}",
-      "settingsTip": "Impostazioni",
-      "overlap": "Quel posto è occupato o fuori dalla riga.",
-      "noRoom": "Non c'è più posto libero nella riga.",
-      "keyInvalid": "La chiave richiede lettere minuscole, cifre o _ e non deve essere già usata.",
-      "palette": "Non nella riga · trascina dentro, o clicca",
-      "show": "Mostra {{name}} nella riga",
-      "add": "Aggiungi {{name}}",
-      "apply": "Applica",
-      "discard": "Annulla",
-      "unconfirmed": "Non ancora applicato",
-      "resize": "Ridimensiona {{name}}"
-    },
-    "builtInSystem": "Integrato · {{system}}",
     "settings": {
       "saved": "Layout del tracker salvato",
       "saveError": "Impossibile salvare il layout del tracker",

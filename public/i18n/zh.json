@@ -1382,13 +1382,6 @@
         "description": "在此一次性添加玩家角色。“添加队伍”可将他们加入任意遭遇。"
       }
     },
-    "rule": {
-      "label": "追踪器布局",
-      "builtInDefault": "默认",
-      "saved": "追踪器布局已保存",
-      "saveError": "无法更改追踪器布局",
-      "campaignAriaLabel": "此战役的追踪器布局"
-    },
     "roll": {
       "button": "掷先攻",
       "select": "选择",
@@ -1426,91 +1419,6 @@
     }
   },
   "battleRules": {
-    "builtInName": "默认",
-    "missing": "{{path}}（缺失）",
-    "createError": "无法创建追踪器布局",
-    "loadError": "无法加载追踪器布局",
-    "library": {
-      "title": "追踪器布局",
-      "empty": "在左侧选择一个追踪器布局，或新建一个。"
-    },
-    "create": {
-      "button": "新建追踪器布局",
-      "title": "新建追踪器布局",
-      "description": "在 Codex 根目录的 _battle-rules/ 中以内置布局为基础创建布局。",
-      "nameLabel": "名称",
-      "namePlaceholder": "Fantasy 5e",
-      "submit": "创建"
-    },
-    "delete": {
-      "title": "删除 {{name}}？",
-      "description": "{{path}} 将被移到废纸篓。使用它的战役和遭遇将恢复为内置布局。",
-      "done": "已删除 {{name}}",
-      "error": "无法删除追踪器布局"
-    },
-    "components": {
-      "initiative": "先攻",
-      "number": "数字",
-      "text": "文本",
-      "healthbar": "条",
-      "statuses": "状态",
-      "side": "阵营",
-      "note-link": "关联笔记"
-    },
-    "editor": {
-      "builtInHint": "内置，只读。“自定义”会复制一份供编辑。",
-      "saved": "追踪器布局已保存",
-      "saveError": "无法保存追踪器布局",
-      "conflict": "追踪器布局已在磁盘上更改。",
-      "formulaInvalid": "请先修正先攻公式",
-      "name": "名称",
-      "template": "属性来自",
-      "noTemplate": "无模板",
-      "builtInTemplate": "内置 · {{type}}",
-      "templateHint": "此模板的 frontmatter 键就是布局可从战斗者笔记中读取的内容。",
-      "initiative": "先攻",
-      "rolled": "用公式掷先攻",
-      "formula": "公式",
-      "formulaHint": "如 1d20、1d100 或 2d6 的骰子、整数，以及用于笔记 frontmatter 数字的 {键}。负数会相减。",
-      "variables": "添加",
-      "unknownVariable": "{{key}} 不是该模板的属性。",
-      "fields": "战斗者行",
-      "fieldsHint": "每个战斗者显示的内容，按顺序。每个布局都有名称和先攻。",
-      "alwaysThere": "始终存在",
-      "label": "标签",
-      "key": "键",
-      "source": "值来自",
-      "sourceEntity": "战斗者本身",
-      "sourceNote": "笔记 · {{key}}",
-      "sides": "阵营（用逗号分隔）",
-      "showInRow": "在行中显示",
-      "moveUp": "上移",
-      "moveDown": "下移",
-      "removeField": "移除字段",
-      "addField": "添加字段",
-      "close": "关闭",
-      "missingKeys": "该布局读取此模板尚未包含的键：{{keys}}。",
-      "addKeys": "添加缺失的键",
-      "addKeysDone": "已向 {{path}} 添加 {{count}} 个键",
-      "addKeysError": "无法向模板添加键"
-    },
-    "row": {
-      "hint": "拖动元素可移动它（拖到另一个元素上会互换位置），拖动右边缘可调整宽度，点击齿轮打开设置，拖到下方框中可隐藏。名称和先攻始终保留。",
-      "label": "战斗者行示意",
-      "settings": "{{name}} 的设置",
-      "settingsTip": "设置",
-      "overlap": "该位置已被占用或超出行范围。",
-      "noRoom": "行中已没有空位。",
-      "keyInvalid": "键需为小写字母、数字或 _，且不能重复。",
-      "palette": "不在行中 · 拖入或点击",
-      "show": "在行中显示 {{name}}",
-      "add": "添加 {{name}}",
-      "apply": "应用",
-      "discard": "放弃",
-      "unconfirmed": "尚未应用",
-      "resize": "调整 {{name}} 大小"
-    },
-    "builtInSystem": "内置 · {{system}}",
     "settings": {
       "saved": "追踪器布局已保存",
       "saveError": "无法保存追踪器布局",

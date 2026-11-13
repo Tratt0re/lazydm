@@ -50,19 +50,11 @@ export interface ElectronIpcClient {
   };
   readonly battleRules: {
     readonly list: OptionalIpcRequest<void, DTO.BattleRuleListDto>;
-    readonly read: IpcRequest<{ path: string }, DTO.BattleRuleFileDto>;
-    readonly write: IpcRequest<
-      { path: string; rule: DTO.BattleRuleDto; expectedHash: string | null },
-      DTO.WriteBattleRuleResultDto
-    >;
-    readonly create: IpcRequest<{ name: string; from?: string }, { path: string }>;
-    readonly remove: IpcRequest<{ path: string }, { path: string }>;
     readonly getChoice: IpcRequest<{ campaign: string }, { rule: string | null; system: string | null }>;
     readonly setChoice: IpcRequest<
       { campaign: string; rule: string | null },
       { rule: string | null }
     >;
-    readonly attributes: IpcRequest<{ template: string }, { keys: readonly string[] }>;
   };
   readonly campaigns: {
     readonly list: OptionalIpcRequest<void, { rows: DTO.CampaignDto[] }>;
@@ -166,10 +158,6 @@ export interface ElectronIpcClient {
     readonly setRule: IpcRequest<DTO.SetTemplateRulePayload, { rules: DTO.TemplateRulesDto }>;
     readonly create: IpcRequest<DTO.CreateTemplatePayload, { path: string }>;
     readonly customize: IpcRequest<{ type: string; system?: string }, { path: string }>;
-    readonly addKeys: IpcRequest<
-      { path: string; keys: readonly string[] },
-      { path: string; added: readonly string[] }
-    >;
     readonly remove: IpcRequest<{ path: string }, { path: string }>;
   };
   readonly vault: {

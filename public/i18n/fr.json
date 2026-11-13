@@ -1382,13 +1382,6 @@
         "description": "Ajoutez ici les personnages joueurs une seule fois. Ajouter le groupe les place dans n'importe quelle rencontre."
       }
     },
-    "rule": {
-      "label": "Disposition du suivi",
-      "builtInDefault": "Par défaut",
-      "saved": "Disposition du suivi enregistrée",
-      "saveError": "Impossible de changer la disposition du suivi",
-      "campaignAriaLabel": "Disposition du suivi de cette campagne"
-    },
     "roll": {
       "button": "Lancer l'initiative",
       "select": "Sélectionner",
@@ -1426,91 +1419,6 @@
     }
   },
   "battleRules": {
-    "builtInName": "Par défaut",
-    "missing": "{{path}} (manquante)",
-    "createError": "Impossible de créer la disposition du suivi",
-    "loadError": "Impossible de charger la disposition du suivi",
-    "library": {
-      "title": "Dispositions du suivi",
-      "empty": "Choisissez une disposition du suivi à gauche, ou créez-en une."
-    },
-    "create": {
-      "button": "Nouvelle disposition du suivi",
-      "title": "Nouvelle disposition du suivi",
-      "description": "Crée une disposition dans _battle-rules/ à la racine du Codex, à partir de celle intégrée.",
-      "nameLabel": "Nom",
-      "namePlaceholder": "Fantasy 5e",
-      "submit": "Créer"
-    },
-    "delete": {
-      "title": "Supprimer {{name}} ?",
-      "description": "{{path}} sera placé dans la corbeille. Les campagnes et rencontres qui l’utilisaient repassent à la disposition intégrée.",
-      "done": "{{name}} supprimée",
-      "error": "Impossible de supprimer la disposition du suivi"
-    },
-    "components": {
-      "initiative": "Initiative",
-      "number": "Nombre",
-      "text": "Texte",
-      "healthbar": "Barre",
-      "statuses": "États",
-      "side": "Camp",
-      "note-link": "Note liée"
-    },
-    "editor": {
-      "builtInHint": "Intégrée, en lecture seule. Personnaliser en crée une copie modifiable.",
-      "saved": "Disposition du suivi enregistrée",
-      "saveError": "Impossible d'enregistrer la disposition du suivi",
-      "conflict": "La disposition du suivi a changé sur le disque.",
-      "formulaInvalid": "Corrigez d'abord la formule d'initiative",
-      "name": "Nom",
-      "template": "Attributs de",
-      "noTemplate": "Aucun modèle",
-      "builtInTemplate": "Intégré · {{type}}",
-      "templateHint": "Les clés du frontmatter de ce modèle sont ce que la disposition peut lire dans la note d'un combattant.",
-      "initiative": "Initiative",
-      "rolled": "Lancer l'initiative depuis une formule",
-      "formula": "Formule",
-      "formulaHint": "Des dés comme 1d20, 1d100 ou 2d6, des nombres entiers et {clé} pour un nombre du frontmatter de la note. Un nombre négatif soustrait.",
-      "variables": "Ajouter",
-      "unknownVariable": "{{key}} n'est pas un attribut du modèle.",
-      "fields": "Ligne du combattant",
-      "fieldsHint": "Ce que montre chaque combattant, dans l'ordre. Le nom et l'initiative sont dans toute disposition.",
-      "alwaysThere": "Toujours présent",
-      "label": "Libellé",
-      "key": "Clé",
-      "source": "Valeur de",
-      "sourceEntity": "Le combattant lui-même",
-      "sourceNote": "Note · {{key}}",
-      "sides": "Camps (séparés par des virgules)",
-      "showInRow": "Afficher dans la ligne",
-      "moveUp": "Monter",
-      "moveDown": "Descendre",
-      "removeField": "Retirer le champ",
-      "addField": "Ajouter un champ",
-      "close": "Fermer",
-      "missingKeys": "La disposition lit des clés que ce modèle n'a pas encore : {{keys}}.",
-      "addKeys": "Ajouter les clés manquantes",
-      "addKeysDone": "{{count}} clés ajoutées à {{path}}",
-      "addKeysError": "Impossible d'ajouter les clés au modèle"
-    },
-    "row": {
-      "hint": "Faites glisser un élément pour le déplacer (sur un autre pour les échanger), faites glisser son bord droit pour le redimensionner, appuyez sur son engrenage pour ses réglages et déposez-le dans la zone du dessous pour le masquer. Le nom et l'initiative restent.",
-      "label": "Ligne d'exemple du combattant",
-      "settings": "Réglages de {{name}}",
-      "settingsTip": "Réglages",
-      "overlap": "Cet emplacement est pris ou hors de la ligne.",
-      "noRoom": "Il n'y a plus de place libre dans la ligne.",
-      "keyInvalid": "La clé demande des minuscules, des chiffres ou _ et ne doit pas être déjà utilisée.",
-      "palette": "Hors de la ligne · glissez dedans, ou cliquez",
-      "show": "Afficher {{name}} dans la ligne",
-      "add": "Ajouter {{name}}",
-      "apply": "Appliquer",
-      "discard": "Annuler",
-      "unconfirmed": "Pas encore appliqué",
-      "resize": "Redimensionner {{name}}"
-    },
-    "builtInSystem": "Intégré · {{system}}",
     "settings": {
       "saved": "Disposition du tracker enregistrée",
       "saveError": "Impossible d'enregistrer la disposition du tracker",

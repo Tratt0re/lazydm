@@ -43,33 +43,14 @@ export interface BattleRuleDto {
   readonly fields: readonly BattleRuleFieldDto[];
 }
 
-/** A rule file of the vault, a system or a campaign. */
-export interface BattleRuleRowDto {
-  readonly path: string;
-  readonly name: string;
-  readonly source: 'vault' | 'system' | 'campaign';
-  readonly scope: string | null;
-  readonly scopeName: string | null;
-}
-
 export interface BattleRuleListDto {
-  readonly rows: readonly BattleRuleRowDto[];
+  /** Always empty: rule files are no longer read (kept so older callers still type-check). */
+  readonly rows: readonly never[];
   /** The default built-in rule (`builtin`). */
   readonly builtIn: BattleRuleDto;
   /** Every built-in rule by reference (`builtin`, `builtin:dnd5e`…), the default first. */
   readonly builtIns: readonly { readonly ref: string; readonly rule: BattleRuleDto }[];
 }
-
-export interface BattleRuleFileDto {
-  readonly path: string;
-  readonly rule: BattleRuleDto;
-  readonly parseError: string | null;
-  readonly contentHash: string;
-}
-
-export type WriteBattleRuleResultDto =
-  | { readonly status: 'saved'; readonly contentHash: string }
-  | { readonly status: 'conflict'; readonly current: BattleRuleFileDto };
 
 /** An entity of a battle: every field is optional, only the id is guaranteed. */
 export interface EncounterEntityDto {

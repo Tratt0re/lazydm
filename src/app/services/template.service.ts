@@ -118,11 +118,6 @@ export class TemplateService extends BaseIpcService<APIChannel.TEMPLATES> {
     return (await this.ipcClient.customize({ type, system })).path;
   }
 
-  /** @deprecated The channel is gone; only the old layout editor page calls this, and it is deleted with it. */
-  async addKeys(_path: string, _keys: readonly string[]): Promise<readonly string[]> {
-    return [];
-  }
-
   async remove(path: string): Promise<void> {
     await this.ipcClient.remove({ path });
   }
