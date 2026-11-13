@@ -433,8 +433,10 @@ Planned Electron modules: `vault`, `cloud-readiness`, `campaign`, `document`, `i
     value of the entity's own that differs from the note's is marked (a small square on the value, plus a text for
     screen readers) and gets *Reset to note value*. A value typed where the note says nothing, or the same as the
     note's, overrides nothing. For a health bar only the **maximum** counts as an override (the current HP changes all
-    fight long), and the reset gives the note's maximum back while the damage stays. Outside a battle a new initiative
-    moves the combatant to its place; in a running battle the order stays. Arrow up / down saves and moves to the same
+    fight long), and the reset gives the note's maximum back while the damage stays. A new initiative moves the
+    combatant to its place, in a running battle too: the turn stays with whoever has it, so *Next turn* goes on from
+    its new place. While an initiative is typed and the layout rolls it, a **dice button** beside the field rolls the
+    formula into it (again to reroll; Enter saves). Arrow up / down saves and moves to the same
     value of the row above or below. Built with the shared `arc-inline-value`. The modal stays for *Insert many* and
     picking the note.
 - **Party roster**: a hidden `encounters/_party.json` per campaign (the same file format and page, without the

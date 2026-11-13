@@ -38,6 +38,7 @@ describe('parseInlineValue', () => {
   imports: [ArcTechInlineValueComponent],
   template: `
     <arc-inline-value
+      #inline="arcInlineValue"
       arcLabel="AC"
       [arcValue]="value()"
       [arcType]="type()"
@@ -48,6 +49,7 @@ describe('parseInlineValue', () => {
       (arcMove)="moves.push($event)"
     >
       <span class="shown">{{ value() ?? '–' }}</span>
+      <button arcInlineAction type="button" class="action" (click)="inline.setDraft('12')">dice</button>
     </arc-inline-value>
   `,
 })
@@ -220,6 +222,46 @@ describe('ArcTechInlineValueComponent', () => {
 
     expect(root.querySelector('button span[aria-hidden="true"]')).not.toBeNull();
     expect(root.querySelector('.sr-only')?.textContent).toBe('Differs from the note');
+  });
+
+  it('shows its actions only while the field is typed', async () => {
+    const { open, root } = setup();
+
+    expect(root.querySelector('.action')).toBeNull();
+    await open();
+    expect(root.querySelector('.action')).not.toBeNull();
+  });
+
+  it('does not let an action take the focus from the field', async () => {
+    const { open, root } = setup();
+
+    await open();
+    const event = new MouseEvent('mousedown', { bubbles: true, cancelable: true });
+    root.querySelector('.action')!.dispatchEvent(event);
+
+    expect(event.defaultPrevented).toBe(true);
+  });
+
+  it('puts a value in the open field, which Enter then saves', async () => {
+    const { open, press, root, input, host, flush } = setup();
+
+    await open();
+    (root.querySelector('.action') as HTMLButtonElement).click();
+    await flush();
+    expect(input()?.value).toBe('12');
+
+    await press('Enter');
+    expect(host.commits).toEqual([12]);
+  });
+
+  it('ignores setDraft while closed', async () => {
+    const { fixture, input } = setup();
+    const inline = fixture.debugElement.children[0].componentInstance as ArcTechInlineValueComponent;
+
+    inline.setDraft('7');
+    fixture.detectChanges();
+
+    expect(input()).toBeNull();
   });
 
   it('keeps text as text', async () => {

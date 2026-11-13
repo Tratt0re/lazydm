@@ -53,7 +53,8 @@ export function parseInlineValue(
 /**
  * A value edited where it is: the projected content at rest, a field while it is typed. Enter or leaving the
  * field saves, Escape cancels, and a text that is not valid keeps the old value (Enter on it marks the field
- * instead of closing it). ArrowUp / ArrowDown save and ask for the same value of the row above or below.
+ * instead of closing it). ArrowUp / ArrowDown save and ask for the same value of the row above or below. Content
+ * marked `arcInlineAction` shows next to the field while it is typed, and `setDraft` puts a value in it.
  */
 @Component({
   selector: 'arc-inline-value',
@@ -72,6 +73,11 @@ export function parseInlineValue(
         (keydown)="onKeydown($event)"
         (blur)="onBlur()"
       />
+      <!-- Buttons next to the field while it is typed (a dice, a reset…). Pressing one must not take the focus
+           from the field, or the field would save and close before the click lands. -->
+      <span class="ml-1 inline-flex shrink-0 items-center gap-0.5 empty:hidden" (mousedown)="$event.preventDefault()">
+        <ng-content select="[arcInlineAction]" />
+      </span>
     } @else {
       <button
         type="button"
@@ -158,6 +164,23 @@ export class ArcTechInlineValueComponent {
       },
       { injector: this.injector },
     );
+  }
+
+  /** Puts `text` in the field while it is open (a rolled value, say); Enter or leaving the field saves it. */
+  setDraft(text: string): void {
+    if (!this.isEditing()) {
+      return;
+    }
+
+    this.text = text;
+    this.draft.set(text);
+    this.isInvalid.set(false);
+    const input = this.field()?.nativeElement;
+    if (input) {
+      input.value = text;
+      input.focus();
+      input.select();
+    }
   }
 
   protected onInput(event: Event): void {

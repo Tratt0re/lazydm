@@ -255,6 +255,7 @@
                       @case ('initiative') {
                         @let initiative = numberOf(entity, field);
                         <arc-inline-value
+                          #initiativeValue="arcInlineValue"
                           class="shrink-0"
                           arcType="number"
                           [arcKey]="field.key"
@@ -266,6 +267,22 @@
                           (arcCommit)="setValue(entity, field, $event)"
                           (arcMove)="moveInColumn($event, entity, field.key)"
                         >
+                          @if (canRollOne()) {
+                            <button
+                              arcInlineAction
+                              type="button"
+                              arc-button
+                              arcType="outline"
+                              arcSize="sm"
+                              class="size-8! shrink-0 p-0!"
+                              tabindex="-1"
+                              [attr.aria-label]="'encounters.roll.one' | translate"
+                              [arcTooltip]="'encounters.roll.one' | translate"
+                              (click)="rollIntoField(entity, initiativeValue)"
+                            >
+                              <arc-icon arcType="dices" />
+                            </button>
+                          }
                           <span
                             class="flex shrink-0 items-center justify-center border border-border bg-recessed font-display font-extrabold"
                             [class]="isCompact() ? 'size-8 text-lg' : 'size-10 text-xl'"

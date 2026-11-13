@@ -540,10 +540,10 @@ export class EncounterPage {
     field: BattleRuleFieldDto,
     value: ArcTechInlineValue,
   ): void {
-    const isInitiative = field.component === 'initiative';
     const next = typeof value === 'string' && value.length === 0 ? null : value;
-    if (isInitiative && !this.isRunning()) {
-      // Outside a battle the list is the order: a new initiative moves the entity to its place.
+    if (field.component === 'initiative') {
+      // A new initiative moves the entity to its place, in a running battle too: the turn stays with whoever has
+      // it (it follows the entity, not its place in the list), so *Next turn* goes on from there in the new order.
       const edited = this.withValue(entity, field.key, next);
       this.updateEncounter((encounter) => ({
         ...encounter,
@@ -552,6 +552,7 @@ export class EncounterPage {
           edited,
         ),
       }));
+      this.scrollToEntity(entity.id);
       return;
     }
 
@@ -657,6 +658,20 @@ export class EncounterPage {
         const row = this.host.nativeElement.querySelector<HTMLElement>('li[aria-current="step"]');
         const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
         row?.scrollIntoView({ block: 'center', behavior: reduceMotion ? 'auto' : 'smooth' });
+      },
+      { injector: this.injector },
+    );
+  }
+
+  /** Once the list has rendered, keeps a row that moved (a new initiative) in view. */
+  private scrollToEntity(id: string): void {
+    afterNextRender(
+      () => {
+        const row = this.host.nativeElement
+          .querySelector(`[data-inline-row="${CSS.escape(id)}"]`)
+          ?.closest('li');
+        const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        row?.scrollIntoView({ block: 'nearest', behavior: reduceMotion ? 'auto' : 'smooth' });
       },
       { injector: this.injector },
     );
@@ -1766,6 +1781,47 @@ export class EncounterPage {
     this.selectedIds.set(new Set());
   }
 
+  /**
+   * One roll of the rule's formula for an entity: `{key}` comes from the integer of that frontmatter key of its
+   * linked note (a negative one subtracts). Throws when the formula cannot be rolled for it (no note, no such key).
+   */
+  private rollFor(entity: EncounterEntityDto, formula: string): number {
+    const notePath = this.noteOf(entity);
+    const frontmatter = notePath ? this.noteFrontmatter().get(notePath) : undefined;
+    const variables: Record<string, number> = {};
+    for (const [name, value] of Object.entries(frontmatter ?? {})) {
+      const integer = this.toInteger(value);
+      if (integer !== null) {
+        variables[name] = integer;
+      }
+    }
+
+    return rollDice(formula, variables).total;
+  }
+
+  /** The dice next to an initiative being typed: rolls the formula into the field (Enter saves it, the dice again rerolls). */
+  protected async rollIntoField(
+    entity: EncounterEntityDto,
+    field: ArcTechInlineValueComponent,
+  ): Promise<void> {
+    const formula = this.rule()?.initiative.roll;
+    if (!formula) {
+      return;
+    }
+
+    await this.loadFrontmatter([entity]);
+    try {
+      field.setDraft(String(this.rollFor(entity, formula)));
+    } catch (error) {
+      toast.error(this.translateService.instant('encounters.roll.oneFailed'), {
+        description: error instanceof Error ? error.message : String(error),
+      });
+    }
+  }
+
+  /** Whether the dice show next to an initiative being typed: the rule rolls it (not on the party roster). */
+  protected readonly canRollOne = computed(() => !this.isParty() && !!this.rule()?.initiative.roll);
+
   /** Whole number of a frontmatter value (`14`, or `"14"` written as text); null for anything else. */
   private toInteger(value: unknown): number | null {
     const number =
@@ -1796,18 +1852,8 @@ export class EncounterPage {
     const results = new Map<string, number | null>();
     const reasons = new Set<string>();
     for (const entity of targets) {
-      const notePath = this.noteOf(entity);
-      const frontmatter = notePath ? this.noteFrontmatter().get(notePath) : undefined;
-      const variables: Record<string, number> = {};
-      for (const [name, value] of Object.entries(frontmatter ?? {})) {
-        const integer = this.toInteger(value);
-        if (integer !== null) {
-          variables[name] = integer;
-        }
-      }
-
       try {
-        results.set(entity.id, rollDice(formula, variables).total);
+        results.set(entity.id, this.rollFor(entity, formula));
       } catch (error) {
         results.set(entity.id, null);
         reasons.add(error instanceof Error ? error.message : String(error));
