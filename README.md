@@ -46,7 +46,8 @@ links to it. Before the session, **Review** shows you any broken links that need
   your own, and use sub-folders as sub-types.
 - **Editor** with Live preview, Source and Reading views, clickable `[[wikilinks]]`, tables edited in place, Info boxes,
   a Properties box and a right-click insert menu.
-- **Templates** give each kind of note a useful starting point, per note type and per campaign.
+- **Templates** give each kind of note a useful starting point, per note type and per campaign, and follow the campaign's
+  game system (D&D 5e and Pathfinder 2e come with the keys a table needs: AC, HP, saves, spell details).
 - **Links** shows what points to the open note and where that note leads next.
 - **Compendium** keeps shared systems and content ready to copy into any campaign.
 - **Assets**: paste or drop images, audio and PDFs into your notes. Audio plays inline and PDFs open in the system
@@ -60,12 +61,13 @@ through the turns while hit points, temporary hit points and timed statuses stay
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="docs/images/tracker-dark.webp" />
-  <img src="docs/images/tracker-light.webp" alt="The LazyDM encounter page: a battle bar with the round and the active turn, then Combatants in initiative order with HP bars and statuses." />
+  <img src="docs/images/tracker-light.webp" alt="The LazyDM encounter page: a battle bar with the round and the active turn, then compact Combatant rows in initiative order, each with its side, an HP bar with damage, heal and temporary HP buttons, AC and statuses." />
 </picture>
 
 - **Encounters** are `.json` files you link like any note (`![[ambush.json]]`).
-- **Tracker layouts** decide the details each Combatant row shows. Pick the built-in one for your game (Generic, D&D 5e,
-  Pathfinder 2e) and the row size, and see it on mock Combatants before the session.
+- **Tracker layouts** decide the details each Combatant row shows. Pick the game system when you create a campaign
+  (Generic, D&D 5e or Pathfinder 2e) and its layout and templates follow; change the layout or the row size later, and
+  see it on mock Combatants before the session.
 - **Battle bar** with Start battle, Stop battle and next turn, and the round and whose turn it is always visible.
 - **Cemetery** keeps defeated enemies in case they return, and a **party roster** can be added to any encounter.
 
