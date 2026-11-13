@@ -36,13 +36,8 @@ const IPC_HANDLERS = Object.freeze({
   [CHANNELS.assets.import]: assetController.importFiles,
 
   [CHANNELS.battleRules.list]: battleRuleController.list,
-  [CHANNELS.battleRules.read]: battleRuleController.read,
-  [CHANNELS.battleRules.write]: battleRuleController.write,
-  [CHANNELS.battleRules.create]: battleRuleController.create,
-  [CHANNELS.battleRules.remove]: battleRuleController.remove,
   [CHANNELS.battleRules.getChoice]: battleRuleController.getChoice,
   [CHANNELS.battleRules.setChoice]: battleRuleController.setChoice,
-  [CHANNELS.battleRules.attributes]: battleRuleController.attributes,
 
   [CHANNELS.campaigns.list]: campaignController.list,
   [CHANNELS.campaigns.get]: campaignController.get,
@@ -112,7 +107,6 @@ const IPC_HANDLERS = Object.freeze({
   [CHANNELS.templates.setRule]: templateController.setRule,
   [CHANNELS.templates.create]: templateController.create,
   [CHANNELS.templates.customize]: templateController.customize,
-  [CHANNELS.templates.addKeys]: templateController.addKeys,
   [CHANNELS.templates.remove]: templateController.remove,
 
   [CHANNELS.index.getStatus]: indexerController.getStatus,

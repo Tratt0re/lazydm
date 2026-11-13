@@ -135,35 +135,6 @@ async function customize(payload) {
   return { path: templatePath };
 }
 
-const TEMPLATE_KEY_PATTERN = /^[a-z][a-z0-9_]*$/;
-const TEMPLATE_KEYS_MAX = 60;
-
-/**
- * Adds frontmatter keys to a template file as empty `key:` lines, so a tracker layout can read them from the notes
- * made with it. Keys the template has are left alone; the built-ins are read-only (copy one out first).
- */
-async function addKeys(payload) {
-  const body = ensurePlainObject(payload, 'payload');
-  const vaultPath = vaultController.getReadyVaultPath();
-  const templatePath = requireTemplatePath(vaultPath, body.path);
-  if (!Array.isArray(body.keys) || body.keys.length > TEMPLATE_KEYS_MAX) {
-    throw new Error(`payload.keys must be a list of at most ${TEMPLATE_KEYS_MAX} keys.`);
-  }
-
-  const keys = body.keys.map((key) => requireString(key, 'payload.keys[]', { maxLength: 40 }));
-  const invalid = keys.find((key) => !TEMPLATE_KEY_PATTERN.test(key));
-  if (invalid !== undefined) {
-    throw new Error(`payload.keys has an invalid key: ${invalid}`);
-  }
-
-  const added = await templateModel.addTemplateKeys(vaultPath, templatePath, keys);
-  if (added.length > 0) {
-    await reindex([templatePath]);
-  }
-
-  return { path: templatePath, added };
-}
-
 /** Deletes a template file; campaigns that used it go back to automatic for that type. */
 async function remove(payload) {
   const body = ensurePlainObject(payload, 'payload');
@@ -175,7 +146,6 @@ async function remove(payload) {
 }
 
 module.exports = {
-  addKeys,
   builtIn,
   create,
   customize,

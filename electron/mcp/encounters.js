@@ -26,8 +26,8 @@ function requireScopeRoot(value) {
 }
 
 /**
- * The battle rule (the *Tracker layout* in the app) the encounters of a scope follow: the campaign's choice, else
- * the built-in. With `encounterPath`, the rule that one encounter uses (its own choice, else the campaign's).
+ * The battle rule (the *Tracker layout* in the app) the encounters of a scope follow: the campaign's built-in
+ * choice, else the default built-in. With `encounterPath`, the rule that one encounter uses (its own choice, else the campaign's).
  */
 async function loadRule(c, root, encounterPath = null) {
   if (encounterPath) {
@@ -42,15 +42,8 @@ async function loadRule(c, root, encounterPath = null) {
   const choice = root.includes('/')
     ? null
     : (await c.battleRule.getChoice({ campaign: root })).rule;
-  // A built-in reference is `builtin` or `builtin:<system>`; a rule file is a path (it has a `/`).
-  if (choice?.includes('/')) {
-    return {
-      rule: (await c.battleRule.read({ path: choice })).rule,
-      rulePath: choice,
-      source: 'the campaign',
-    };
-  }
-
+  // A choice is a built-in reference (`builtin`, `builtin:<system>`). One that is anything else (a rule file of an
+  // older vault) is not read: the campaign falls back to the built-in default.
   const { builtIn, builtIns } = await c.battleRule.list();
   const chosen = choice ? builtIns.find((item) => item.ref === choice) : null;
   return {

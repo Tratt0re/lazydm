@@ -134,18 +134,22 @@ describe('battle rule choices', () => {
     expect(rule).toBe(DEFAULT_BATTLE_RULE);
   });
 
-  it('starts a new rule file from the built-in it is asked to', async () => {
-    const rulePath = await battleRuleModel.createBattleRuleFile(root, 'my-pf', 'My PF', 'builtin:pf2e');
-    const file = await battleRuleModel.readBattleRuleFile(root, rulePath);
-    expect(file.rule.name).toBe('My PF');
-    expect(file.rule.template).toBe('builtin:enemy@pf2e');
-    expect(file.rule.fields.map((field) => field.key)).toContain('fortitude');
+  it('does not read a rule file any more: a choice that points at one falls back to the built-in', async () => {
+    fs.mkdirSync(path.join(root, '_battle-rules'), { recursive: true });
+    fs.writeFileSync(path.join(root, '_battle-rules', 'mine.json'), JSON.stringify({ name: 'Mine', fields: [] }));
+    battleRuleModel.setCampaignChoice(root, 'camp', '_battle-rules/mine.json');
+
+    expect(battleRuleModel.readCampaignChoice(root, 'camp')).toBeNull();
+    const rule = await battleRuleModel.resolveBattleRule(root, 'camp/encounters/a.json', '_battle-rules/mine.json');
+    expect(rule).toBe(DEFAULT_BATTLE_RULE);
+    // The file is left where it is.
+    expect(fs.existsSync(path.join(root, '_battle-rules', 'mine.json'))).toBe(true);
   });
 
-  it('starts a new rule file from the default when no built-in is named', async () => {
-    const rulePath = await battleRuleModel.createBattleRuleFile(root, 'my', 'My');
-    const file = await battleRuleModel.readBattleRuleFile(root, rulePath);
-    expect(file.rule.template).toBe('builtin:enemy');
+  it('has no rule-file API left', () => {
+    for (const name of ['createBattleRuleFile', 'readBattleRuleFile', 'writeBattleRuleFile', 'deleteBattleRuleFile']) {
+      expect(battleRuleModel[name]).toBeUndefined();
+    }
   });
 });
 
@@ -202,15 +206,8 @@ describe('field densities', () => {
     ]);
   });
 
-  it('survives a trip through a rule file', async () => {
-    const root = fs.mkdtempSync(path.join(os.tmpdir(), 'lazydm-rule-density-'));
-    try {
-      const rulePath = await battleRuleModel.createBattleRuleFile(root, 'mine', 'Mine', 'builtin:dnd5e');
-      const file = await battleRuleModel.readBattleRuleFile(root, rulePath);
-      expect(file.rule.fields.find((item) => item.key === 'speed').density).toBe('expanded');
-    } finally {
-      fs.rmSync(root, { recursive: true, force: true });
-    }
+  it('keeps the density of a built-in field', () => {
+    expect(BUILT_IN_RULES['builtin:dnd5e'].fields.find((item) => item.key === 'speed').density).toBe('expanded');
   });
 
   it('only hides fields the row has, never the name or the initiative', () => {

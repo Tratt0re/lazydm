@@ -13,13 +13,8 @@ const CHANNELS = Object.freeze({
   }),
   battleRules: Object.freeze({
     list: 'battleRules:list',
-    read: 'battleRules:read',
-    write: 'battleRules:write',
-    create: 'battleRules:create',
-    remove: 'battleRules:remove',
     getChoice: 'battleRules:getChoice',
     setChoice: 'battleRules:setChoice',
-    attributes: 'battleRules:attributes',
   }),
   campaigns: Object.freeze({
     list: 'campaigns:list',
@@ -105,7 +100,6 @@ const CHANNELS = Object.freeze({
     setRule: 'templates:setRule',
     create: 'templates:create',
     customize: 'templates:customize',
-    addKeys: 'templates:addKeys',
     remove: 'templates:remove',
   }),
   index: Object.freeze({

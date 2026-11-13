@@ -24,7 +24,7 @@ their technical names; only the text the user sees changes. Add to this table be
 | --- | --- | --- |
 | **Codex** | vault, `.lazydm/`, `vault.json` | One fixed word in every language, never translated |
 | **Combatant** | entity | Natural word per language (Combattente, Combattant, Kämpfer, Combatiente, Боєць, 战斗者) |
-| **Tracker layout** | battle rule, `_battle-rules/` | The layout of a combatant row; translated per language |
+| **Tracker layout** | battle rule | The built-in layout of a combatant row (Generic, D&D 5e, Pathfinder 2e); translated per language |
 | **Links** | backlinks panel, linked files / notes | The note panel and its toolbar button; groups inside it are *Notes* and *Assets* |
 | **Review** | broken links page, `/review` | The page and its alert; *Broken links* is only a group title inside it |
 | **Delete forever** | permanent delete | Combatant card, cemetery and its confirmation |
@@ -40,7 +40,6 @@ their technical names; only the text the user sees changes. Add to this table be
 │   ├── vault.json                     vault settings, template rules, folder/display-name mapping
 │   └── …
 ├── _templates/                        note templates (scene.md, enemy.md, character.md…)
-├── _battle-rules/                     battle rules (JSON), see §6d; also per system and per campaign
 ├── compendium/                        cross-campaign material, one folder per "system"
 │   └── <system-slug>/                 created by the user (a game, a setting, anything reused)
 │       ├── system.md                  system card: display name, description
@@ -185,7 +184,7 @@ their technical names; only the text the user sees changes. Add to this table be
 | --- | --- | --- |
 | `.md` frontmatter | `title`, `tags`, aliases, game fields (CR, HP…), any key the user adds (`type: beast`…) | ✅ via the cloud folder |
 | `.md` body | content and `[[links]]` | ✅ |
-| `.json` encounters, battle rules | encounters (`<scope>/encounters/*.json`), the party roster, battle rules (`_battle-rules/*.json`), see §6d | ✅ via the cloud folder |
+| `.json` encounters | encounters (`<scope>/encounters/*.json`) and the party roster, see §6d | ✅ via the cloud folder |
 | `.lazydm/*.json` | template rules (`vault.json` → `templates`, see §6c), battle-rule choices (`vault.json` → `battleRules`, see §6d), per-campaign sections (`vault.json` → `sections`, see §2a), vault format version, vault settings | ✅ |
 | Local SQLite | rebuildable index + device-local state | ❌ never |
 | Device-local preferences | **theme, language** (renderer `localStorage` via `LocalPreferencesService`), Electron-side settings (`settings-store` userData JSON), current vault (`app_meta.current_vault_id`), MCP server settings and token (`settings-store` → `mcp`, §6f) | ❌ never |
@@ -378,8 +377,8 @@ Planned Electron modules: `vault`, `cloud-readiness`, `campaign`, `document`, `i
   sub-folder deeper). It is not a note: no frontmatter, no `type`, not offered as a folder for notes created from
   broken links. The index lists it as an asset; it is linked **like an asset**, with its full file name
   (`![[ambush.json]]`, `[[ambush.json]]`).
-- **File format** (`version: 1`): `name`, `notes`, `rule` (the encounter's own battle rule: a rule path or
-  `builtin`, null follows the campaign), `battle` (`status` idle | running, `round`, `turnId`) and `entities`.
+- **File format** (`version: 1`): `name`, `notes`, `rule` (the encounter's own tracker layout: a built-in
+  reference, `builtin`, `builtin:dnd5e`… ; null follows the campaign), `battle` (`status` idle | running, `round`, `turnId`) and `entities`.
   An entity is `{ id, name, values, isDead }`. **Everything but `id` is optional** and a missing or wrong field
   never breaks the page: the file is normalised when read, so a hand-edited or minimal one opens. A file that is
   not valid JSON opens empty and read-only (it would be replaced by a save). Saves are atomic and
@@ -390,7 +389,7 @@ Planned Electron modules: `vault`, `cloud-readiness`, `campaign`, `document`, `i
 - **Page** (`/<scope>/encounters/<file>`, own tab title and breadcrumb): the **battle bar**, pinned while the list scrolls, on one line: *Start battle* or *Stop battle* /
   *Next turn* on the left (they never move), then the round (`03 / ROUND`: a big two-digit number and a smaller, quieter
   word) with whose turn it is under it, and on the right *Roll initiative* and the *Add party* and *Add entity* icon buttons; then the initiative list. The **toolbar keeps the
-  main and utility actions**: *Battle rule*, *Cemetery* (opens the side panel) and a **"…" menu** with *Copy to…*,
+  main and utility actions**: *Cemetery* (opens the side panel) and a **"…" menu** with *Copy to…*,
   *Rename…* and *Delete…* (Delete last, after a separator). Every edit
   is saved right away. The open encounter follows a rename (its name is the file name) and any change of its
   battle rule or of the rule library.
@@ -406,8 +405,8 @@ Planned Electron modules: `vault`, `cloud-readiness`, `campaign`, `document`, `i
     A field the rule reads from the note shows the note's value **only when the entity has none of its own**;
     nothing is copied into the file.
   - **Hit points**: a labelled bar: the label on the left, `+temp  current / max` on the right of the same row, the
-    meter under it (temporary HP as a second segment); the bar slides when the value goes down or up. *Manage HP* (an icon button) applies damage (temporary HP first, never below 0), healing (up to the
-    maximum) or sets the temporary HP. There is no undo.
+    meter under it (temporary HP as a blue label and a blue strip along the top of the bar); the bar slides when the value goes down or up. Under the bar, right-aligned, an amount field and three **icon
+    buttons with tooltips** apply damage (temporary HP first, never below 0), healing (up to the maximum) or set the temporary HP. There is no undo.
   - **Statuses** are **free tags** typed in place on an entity (one line, no dialog): `stunned`, space, `3`, space
     makes the tag *stunned · 3* (it counts down at the end of that entity's turn and goes at 0); a second space right
     after the name makes it without rounds. Enter or leaving the field also makes one, Backspace on an empty field
@@ -415,10 +414,10 @@ Planned Electron modules: `vault`, `cloud-readiness`, `campaign`, `document`, `i
     icon) is written once above the list, and only when the battle rule shows a statuses component and the encounter is editable.
   - **Entity row**: compact by default (about 80-90px). The drag handle and the roll selection checkbox are always
     visible; every other action (*Edit*, *Duplicate*, *Send to the cemetery*, *Delete forever*) is in the row's "…" menu
-    and nowhere else, *Delete forever* last after a separator, asking before it deletes. The current turn has a bronze left marker plus a *Turn* label
+    and nowhere else, *Delete forever* last after a separator, asking before it deletes. The **side** (enemy, player, ally) is not in the row: it is set from the row's "…" menu and tints the **left rail** (the drag-handle column). The current turn has a bronze left marker plus a *Turn* label
     (never colour alone). The statuses help text is shown once for the whole list, not on every row. The rule's grid
     is the row's body.
-  - **Density**: a switch in the battle bar sets how much of a row shows — *Compact* (one line, about 50px, for
+  - **Density**: a setting (today a switch in the battle bar, moving to the *Tracker layouts* settings page) sets how much of a row shows — *Compact* (one line, about 50px, for
     hordes and for the whole order next to a note), *Card* (two lines, the default, the layout's grid) or *Expanded*
     (the stat-block row: quick damage / heal / temporary HP buttons under the bar, the fields the layout marks
     *Expanded*, and the first line of the linked note). *Follow the turn* (off by default) opens whoever has the
@@ -452,12 +451,14 @@ Planned Electron modules: `vault`, `cloud-readiness`, `campaign`, `document`, `i
 - **In notes**: `![[ambush.json]]` is a row with the battle (swords) icon and the file name, in Live preview and
   Reading; a click opens the encounter (Cmd/Ctrl-click: a new tab). The Linked files panel lists encounters with the
   other assets.
-- **Battle rules** configure the entity row; they are the encounter's equivalent of note templates:
-  - A rule is a **JSON file** `_battle-rules/<name>.json` at the vault root, in a compendium system or in a
-    campaign. The **built-in rules** are **system presets**, like the built-in templates: *Generic* (`builtin`: initiative, AC,
-    HP bar, statuses, linked note; it rolls `1d20 + {initiative_mod}`, a key of the built-in enemy template), *D&D 5e*
-    (`builtin:dnd5e`) and *Pathfinder 2e* (`builtin:pf2e`), each tied to the enemy template of its system. They are
-    read-only and *Customize* copies one out. A preset is data (fields, areas, formula); no battle code names a game. Unknown or duplicate fields are dropped on read, and a rule always has an initiative.
+- **Tracker layouts** (battle rules in the code) configure the entity row; they are the encounter's equivalent of the
+  per-system note templates:
+  - The layouts are **built in** and read-only: *Generic* (`builtin`: initiative, AC, HP bar, statuses, linked note;
+    it rolls `1d20 + {initiative_mod}`, a key of the built-in enemy template), *D&D 5e* (`builtin:dnd5e`) and
+    *Pathfinder 2e* (`builtin:pf2e`), each tied to the enemy template of its system. A layout is data (fields,
+    areas, formula); no battle code names a game, so another system is a new preset. There are **no rule files and no
+    layout editor**: a vault written by an older version may hold `_battle-rules/*.json` files, which are **not read**
+    (a choice that points at one falls back to the campaign's built-in) and are left on disk untouched.
   - A rule has a `name`, a `template` (a template path or `builtin:<type>`) whose **frontmatter keys** are the
     attributes it may read from an entity's note, an `initiative` (`roll`: null when typed by hand, or a dice
     formula) and an ordered list of `fields`: `{ key, component, label, source, showInRow, area, options? }`. The row is a
@@ -466,10 +467,10 @@ Planned Electron modules: `vault`, `cloud-readiness`, `campaign`, `document`, `i
     `component` is `initiative`, `number`, `text`, `healthbar`, `statuses`, `side` or `note-link`; `source` is `entity`
     or `frontmatter:<key>`. The name and the initiative are in every rule. The system is not assumed: nothing in the
     battle code names a game's fields.
-  - **Which rule applies**: the encounter's own choice, else its campaign's (`.lazydm/vault.json` →
-    `battleRules.campaigns.<slug>`), else the built-in; a choice whose file is gone falls through to the next. Both
-    are picked from a *Battle rule* select (encounter toolbar, and the Encounters section toolbar for the campaign).
-    Deleting a rule clears the campaign choices that pointed at it.
+  - **Which layout applies**: the encounter's own choice, else its campaign's (`.lazydm/vault.json` →
+    `battleRules.campaigns.<slug>`, always a built-in reference), else the built-in default; anything else falls
+    through to the next. The campaign's layout is picked in the *Tracker layouts* settings page (and set with the
+    campaign's system when it is created).
   - **Dice formula**: `1d20`, `1d100`, `2d6 + 3`, `1d20 + {dex_mod}`. Terms are dice, whole numbers and `{key}`
     (the **integer** of that frontmatter key of the entity's note: a positive one is added, a negative one
     subtracts), joined by `+` and `-`. Never evaluated as code. The formula is checked while it is edited.
@@ -477,18 +478,8 @@ Planned Electron modules: `vault`, `cloud-readiness`, `campaign`, `document`, `i
     so the button, *Select all* and the row checkboxes leave while it runs). It rolls for the **selected** entities (a
     checkbox per row, *Select all*, *Clear*) and sorts the list. An entity the formula cannot be rolled for (no note, no such
     key, not a whole number) has its initiative **erased**, and the failures are reported.
-  - **Editor**: the *Battle rules* sheet (title-bar button next to Templates) has the same library layout: built-in,
-    vault, systems and campaigns in the secondary sidebar, with a form for the name, the template, the initiative
-    (typed or rolled, formula and the template's keys as chips) and a **mock entity row**: each element sits where
-    the real row will show it. **Drag** an element to move it (a preview shows whether it fits); dropped **on another
-    element** the two swap places when each fits where the other was; the **right edge** is dragged to resize it, a
-    column at a time, until it meets a neighbour. There are no row, column or width fields and no arrows. A **gear** on
-    each element opens its settings (label, key, value source, sides, hide, remove); they are typed into a draft and only
-    reach the rule when *Apply* is pressed (*Discard* drops them). A **palette** holds the hidden elements and the types
-    that can be added (drag in, or click to use the first free place); dropping an element on it hides it. *Linked note*,
-    *Statuses* and *Side* can only exist once in a rule; the health bar type is called *Bar*. The name and the initiative
-    can move but not go. Unsaved edits are saved when another rule is selected or the
-    sheet is closed.
+  - **Settings page** (*Tracker layouts*): picks the campaign's layout and the tracker's **density** and *Follow the
+    turn* (device-local), with a live preview of a combatant using mock data. It edits nothing in the Codex.
 
 ## 6e. Maps
 
@@ -965,7 +956,7 @@ Component behaviour, variant keys and configuration stay as they are.
 | 14.6 | Statuses: free tags the user types on an entity, with an optional round count that ticks down at the end of its turn (no section, no notes; richer statuses may come later) |
 | 14.7 | Side panel: the entity's linked note and rule fields read from the note's frontmatter |
 | 14.8 | Party roster: hidden `encounters/_party.json`, always reachable from the encounters overview, re-added to any encounter |
-| 14.9 | Battle rules: `_battle-rules/` JSON files (vault, system, campaign), built-in rule with *Customize*, per-campaign and per-encounter choice, dice-formula initiative and *Roll initiative* for selected entities, form editor in its own *Battle rules* sheet |
+| 14.9 | Battle rules (tracker layouts): built-in presets (Generic, D&D 5e, Pathfinder 2e), per-campaign and per-encounter choice, dice-formula initiative and *Roll initiative* for selected entities. Rule files and the layout editor were removed in round 2 of the tracker revamp (§6d) |
 | 14.10 | Embedding: `![[x.json]]` renders as an encounter row in notes, link suggestions list encounters, Linked files panel shows them |
 | 14.11 | Docs: §6d written, §2, §3, §8 and §12 updated with the final encounter design |
 | 15.1 | Setup flow: *Welcome* (Franco, name, what it is for, language and theme) and *Vault* (device or cloud folder explained, folder check with the cloud drive), step marker, ornaments, entry guard |

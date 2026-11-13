@@ -53,33 +53,6 @@ const GENERIC_RULE = {
   ],
 };
 
-/** A campaign's own layout: a Pathfinder-style rule with a side, a text field and its own keys. */
-const CUSTOM_RULE = {
-  name: 'Pathfinder 2e',
-  template: '_templates/pf-enemy.md',
-  initiative: { roll: '1d20 + {perception}' },
-  fields: [
-    {
-      key: 'initiative',
-      component: 'initiative',
-      label: 'Init',
-      source: 'entity',
-      showInRow: true,
-    },
-    {
-      key: 'side',
-      component: 'side',
-      label: 'Side',
-      source: 'entity',
-      showInRow: true,
-      options: ['foe', 'pc'],
-    },
-    { key: 'hp', component: 'healthbar', label: 'HP', source: 'frontmatter:hp', showInRow: true },
-    { key: 'trait', component: 'text', label: 'Trait', source: 'entity', showInRow: true },
-    { key: 'note', component: 'note-link', label: 'Note', source: 'entity', showInRow: true },
-  ],
-};
-
 /** Controllers that only record their calls: the tools' wiring and scope checks are what is under test. */
 function createStubControllers() {
   const calls = [];
@@ -154,8 +127,7 @@ function createStubControllers() {
     },
     battleRule: {
       getChoice: record('battleRule.getChoice', { rule: null }),
-      read: record('battleRule.read', { rule: CUSTOM_RULE }),
-      list: record('battleRule.list', { rows: [], builtIn: GENERIC_RULE }),
+      list: record('battleRule.list', { rows: [], builtIn: GENERIC_RULE, builtIns: [] }),
       attributes: record('battleRule.attributes', { keys: ['ac', 'hp', 'initiative_mod'] }),
     },
     map: {
@@ -343,18 +315,16 @@ describe('get_encounter_rule', () => {
     expect(result.json.fields.find((field) => field.key === 'ac').label).toBe('ac');
   });
 
-  it('gives the rule the campaign chose, with its own fields and side options', async () => {
+  it('gives the built-in layout the campaign chose, and falls back for a rule file of an older vault', async () => {
     const controllers = await connect({ allowWrite: false });
     controllers.battleRule.getChoice = vi.fn(async () => ({ rule: '_battle-rules/pf2e.json' }));
 
     const result = await call('get_encounter_rule', { scope: 'lost-mine' });
 
-    expect(result.json.ruleName).toBe('Pathfinder 2e');
-    expect(result.json.ruleChosenBy).toBe('the campaign');
-    expect(result.json.rulePath).toBe('_battle-rules/pf2e.json');
-    expect(result.json.noteTemplate).toBe('_templates/pf-enemy.md');
-    expect(result.json.fields.find((field) => field.key === 'side').valueFormat).toMatch(/foe, pc/);
-    expect(controllers.battleRule.read).toHaveBeenCalledWith({ path: '_battle-rules/pf2e.json' });
+    expect(result.json.ruleName).toBe(GENERIC_RULE.name);
+    expect(result.json.ruleChosenBy).toBe('the built-in default');
+    expect(result.json.rulePath).toBeNull();
+    expect(controllers.battleRule.read).toBeUndefined();
   });
 
   it('asks the app which rule one existing encounter uses', async () => {
@@ -446,32 +416,18 @@ describe('create_encounter', () => {
     expect(written.encounter.entities[1].values.hp.current).toBe(7);
   });
 
-  it('uses the rule the campaign chose to check the values', async () => {
+  it('checks the values against the built-in layout when the choice is a rule file of an older vault', async () => {
     const controllers = await connect({ allowWrite: true });
     controllers.battleRule.getChoice = vi.fn(async () => ({ rule: '_battle-rules/pf2e.json' }));
 
-    const good = await call('create_encounter', {
-      folder,
-      name: 'Bandits',
-      entities: [{ name: 'Bandit', values: { side: 'foe', trait: 'sneaky' } }],
-    });
-    const wrongSide = await call('create_encounter', {
-      folder,
-      name: 'Bandits 2',
-      entities: [{ name: 'Bandit', values: { side: 'enemy' } }],
-    });
-    // "ac" exists in the built-in layout but not in this campaign's.
     const unknownField = await call('create_encounter', {
       folder,
-      name: 'Bandits 3',
-      entities: [{ name: 'Bandit', values: { ac: 15 } }],
+      name: 'Bandits',
+      entities: [{ name: 'Bandit', values: { trait: 'sneaky' } }],
     });
 
-    expect(good.isError).toBe(false);
-    expect(wrongSide.isError).toBe(true);
-    expect(wrongSide.text).toMatch(/one of: foe, pc/);
     expect(unknownField.isError).toBe(true);
-    expect(unknownField.text).toMatch(/Pathfinder 2e.*no field "ac"/);
+    expect(unknownField.text).toMatch(/no field "trait"/);
   });
 
   it('checks every value before creating anything', async () => {
