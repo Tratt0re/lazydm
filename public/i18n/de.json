@@ -1695,7 +1695,8 @@
   "onboarding": {
     "step": "Schritt {{current}} von {{total}}",
     "welcome": {
-      "lead": "Bereite deine Kampagne vor und spiele sie am Tisch in derselben Desktop-App. Mit Absicht faul: sinnvolle Voreinstellungen und kurze Wege halten die Vorbereitung in Fluss und die Werkzeuge für den Tisch griffbereit.",
+      "tagline": "Eine Kampagne, von der Vorbereitung bis zum Spiel.",
+      "lead": "Bereite deine Kampagne vor und spiele sie am Tisch. Deine Notizen bleiben einfaches Markdown in einem Ordner, der dir gehört, während Begegnungen, Karten und Links griffbereit sind, wenn das Spiel beginnt.",
       "points": {
         "prepare": {
           "title": "Am Schreibtisch vorbereiten",
@@ -1705,9 +1706,9 @@
           "title": "Am Tisch spielen",
           "text": "Wenn das Spiel beginnt, liegt die Kampagne schon vor dir: Initiative, TP und Karten liegen neben deinen Notizen."
         },
-        "files": {
-          "title": "Die Kampagne bleibt deine",
-          "text": "Alles ist Markdown in einem Ordner deiner Wahl und mit anderen Werkzeugen kompatibel. Kein Konto, keine Bindung."
+        "ai": {
+          "title": "KI-freundlich, zu deinen Bedingungen",
+          "text": "Wenn du es willst, kann LazyDM den Codex über einen lokalen MCP-Server für einen KI-Assistenten auf diesem Computer öffnen. Es bleibt aus, bis du es einschaltest."
         }
       },
       "continue": "Weiter"

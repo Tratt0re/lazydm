@@ -13,7 +13,12 @@
     <div class="arc-ornament-rule self-start" aria-hidden="true"><span>◇</span><span>✣</span><span>◇</span></div>
   </header>
 
-  <p class="text-base text-foreground-secondary lg:text-lg">{{ 'onboarding.welcome.lead' | translate }}</p>
+  <div class="flex flex-col gap-2">
+    <p class="font-display text-2xl leading-none font-extrabold tracking-[0.02em] text-foreground-strong uppercase lg:text-3xl">
+      {{ 'onboarding.welcome.tagline' | translate }}
+    </p>
+    <p class="text-base text-foreground-secondary lg:text-lg">{{ 'onboarding.welcome.lead' | translate }}</p>
+  </div>
 
   <!-- One lead statement and two supporting lines, not three equal cards. -->
   <ol class="grid gap-x-8 gap-y-5 md:grid-cols-[1.35fr_1fr] md:grid-rows-2">

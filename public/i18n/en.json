@@ -1695,7 +1695,8 @@
   "onboarding": {
     "step": "Step {{current}} of {{total}}",
     "welcome": {
-      "lead": "Prepare your campaign and run it at the table from the same desktop app. Lazy by design: sensible defaults and short paths keep preparation moving and table tools close.",
+      "tagline": "One campaign, from prep to play.",
+      "lead": "Prepare your campaign and run it at the table. Your notes stay plain Markdown in a folder you own, while encounters, maps and links stay close when play begins.",
       "points": {
         "prepare": {
           "title": "Prepare at your desk",
@@ -1705,9 +1706,9 @@
           "title": "Run at the table",
           "text": "When play begins, the campaign is already in front of you: initiative, hit points and maps sit next to your notes."
         },
-        "files": {
-          "title": "The campaign stays yours",
-          "text": "Everything is Markdown in a folder of your choice, compatible with other tools. No account, no lock-in."
+        "ai": {
+          "title": "AI-friendly, on your terms",
+          "text": "When you choose, LazyDM can open the Codex to an AI assistant on this computer through a local MCP server. It stays off until you switch it on."
         }
       },
       "continue": "Continue"

@@ -1695,7 +1695,8 @@
   "onboarding": {
     "step": "Passo {{current}} di {{total}}",
     "welcome": {
-      "lead": "Prepara la campagna e giocala al tavolo con la stessa app desktop. Pigro per scelta: impostazioni sensate e percorsi brevi mantengono fluida la preparazione e gli strumenti del tavolo a portata di mano.",
+      "tagline": "Una campagna, dalla preparazione al gioco.",
+      "lead": "Prepara la campagna e giocala al tavolo. Le tue note restano semplice Markdown in una cartella tua, mentre incontri, mappe e collegamenti restano a portata di mano quando inizia il gioco.",
       "points": {
         "prepare": {
           "title": "Prepara alla scrivania",
@@ -1705,9 +1706,9 @@
           "title": "Gioca al tavolo",
           "text": "Quando inizia il gioco, la campagna è già davanti a te: iniziativa, PF e mappe stanno accanto alle tue note."
         },
-        "files": {
-          "title": "La campagna resta tua",
-          "text": "Tutto è Markdown in una cartella a tua scelta, compatibile con altri strumenti. Nessun account, nessun vincolo."
+        "ai": {
+          "title": "Amico dell'IA, alle tue condizioni",
+          "text": "Se lo scegli, LazyDM può aprire il Codex a un assistente IA su questo computer tramite un server MCP locale. Resta spento finché non lo attivi."
         }
       },
       "continue": "Continua"

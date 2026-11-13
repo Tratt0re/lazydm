@@ -1695,7 +1695,8 @@
   "onboarding": {
     "step": "Étape {{current}} sur {{total}}",
     "welcome": {
-      "lead": "Prépare ta campagne et joue-la à la table dans la même application de bureau. Paresseux par conception : des réglages par défaut sensés et des chemins courts gardent la préparation fluide et les outils de table sous la main.",
+      "tagline": "Une campagne, de la préparation au jeu.",
+      "lead": "Prépare ta campagne et joue-la à la table. Tes notes restent du Markdown simple dans un dossier qui t'appartient, et les rencontres, les cartes et les liens restent sous la main quand la partie commence.",
       "points": {
         "prepare": {
           "title": "Prépare à ton bureau",
@@ -1705,9 +1706,9 @@
           "title": "Joue à la table",
           "text": "Quand le jeu commence, la campagne est déjà devant toi : initiative, PV et cartes sont à côté de tes notes."
         },
-        "files": {
-          "title": "La campagne reste à toi",
-          "text": "Tout est en Markdown dans un dossier de ton choix, compatible avec d’autres outils. Pas de compte, pas d’enfermement."
+        "ai": {
+          "title": "Ouvert à l'IA, selon tes règles",
+          "text": "Si tu le choisis, LazyDM peut ouvrir le Codex à un assistant IA de cet ordinateur via un serveur MCP local. Il reste désactivé tant que tu ne l'actives pas."
         }
       },
       "continue": "Continuer"

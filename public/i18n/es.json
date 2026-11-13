@@ -1695,7 +1695,8 @@
   "onboarding": {
     "step": "Paso {{current}} de {{total}}",
     "welcome": {
-      "lead": "Prepara tu campaña y juégala en la mesa desde la misma aplicación de escritorio. Perezoso a propósito: los valores por defecto sensatos y los caminos cortos mantienen ágil la preparación y las herramientas de la mesa a mano.",
+      "tagline": "Una campaña, de la preparación al juego.",
+      "lead": "Prepara tu campaña y juégala en la mesa. Tus notas siguen siendo Markdown sencillo en una carpeta tuya, y los encuentros, mapas y enlaces quedan a mano cuando empieza la partida.",
       "points": {
         "prepare": {
           "title": "Prepara en tu escritorio",
@@ -1705,9 +1706,9 @@
           "title": "Juega en la mesa",
           "text": "Cuando empieza el juego, la campaña ya está delante de ti: iniciativa, PG y mapas están junto a tus notas."
         },
-        "files": {
-          "title": "La campaña sigue siendo tuya",
-          "text": "Todo es Markdown en una carpeta que eliges, compatible con otras herramientas. Sin cuenta, sin ataduras."
+        "ai": {
+          "title": "Amigable con la IA, en tus términos",
+          "text": "Si lo eliges, LazyDM puede abrir el Codex a un asistente de IA de este ordenador mediante un servidor MCP local. Permanece apagado hasta que lo actives."
         }
       },
       "continue": "Continuar"
