@@ -1,0 +1,359 @@
+<!doctype html>
+<html lang="en" data-theme="system">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>LazyDM | Campaign Manager &amp; Encounter Tracker for DMs</title>
+    <meta
+      name="description"
+      content="LazyDM is a desktop campaign manager and encounter tracker for Dungeon Masters. Prepare Markdown notes, maps and encounters, then run the session at the table."
+    />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'none'; script-src 'self'; style-src 'self'; font-src 'self'; img-src 'self'; connect-src 'none'; base-uri 'none'; form-action 'none'"
+    />
+    <meta name="theme-color" content="#101114" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#e9eae7" media="(prefers-color-scheme: light)" />
+    <meta property="og:title" content="LazyDM | Campaign Manager &amp; Encounter Tracker for DMs" />
+    <meta
+      property="og:description"
+      content="LazyDM is a desktop campaign manager and encounter tracker for Dungeon Masters. Prepare Markdown notes, maps and encounters, then run the session at the table."
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://lazydm.com/" />
+    <meta property="og:site_name" content="LazyDM" />
+    <meta property="og:image" content="https://lazydm.com/assets/img/og.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="LazyDM and its mascot Franco. Prep at your desk. Run at the table." />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="LazyDM | Campaign Manager &amp; Encounter Tracker for DMs" />
+    <meta
+      name="twitter:description"
+      content="Prepare your campaign in plain Markdown, then run encounters, maps and notes from one desktop app."
+    />
+    <meta name="twitter:image" content="https://lazydm.com/assets/img/og.png" />
+    <meta name="twitter:image:alt" content="LazyDM and its mascot Franco. Prep at your desk. Run at the table." />
+    <link rel="canonical" href="https://lazydm.com/" />
+    <link rel="alternate" type="text/markdown" href="https://lazydm.com/product.md" title="LazyDM product facts in Markdown" />
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "WebSite",
+            "@id": "https://lazydm.com/#website",
+            "name": "LazyDM",
+            "url": "https://lazydm.com/"
+          },
+          {
+            "@type": "SoftwareApplication",
+            "@id": "https://lazydm.com/#app",
+            "name": "LazyDM",
+            "applicationCategory": "GameApplication",
+            "operatingSystem": "macOS, Windows, Linux",
+            "description": "A desktop campaign manager and encounter tracker for Dungeon Masters.",
+            "url": "https://lazydm.com/",
+            "image": "https://lazydm.com/assets/img/og.png",
+            "sameAs": ["https://github.com/Tratt0re/lazydm"],
+            "isPartOf": { "@id": "https://lazydm.com/#website" }
+          }
+        ]
+      }
+    </script>
+    <link rel="icon" type="image/png" href="assets/img/favicon.png" />
+    <link rel="preload" href="assets/fonts/barlow-condensed-latin-700-normal.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="assets/fonts/ibm-plex-sans-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin />
+    <script src="assets/js/theme-init.js"></script>
+    <link rel="stylesheet" href="assets/css/styles.css" />
+  </head>
+  <body>
+    <svg class="sprite" width="0" height="0" aria-hidden="true" focusable="false">
+<symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></symbol>
+<symbol id="i-moon" viewBox="0 0 24 24"><path d="M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.803a6 6 0 0 0 8.268 8.268c.344-.215.825-.004.803.401"/></symbol>
+<symbol id="i-monitor" viewBox="0 0 24 24"><rect width="20" height="14" x="2" y="3" rx="2"/><line x1="8" x2="16" y1="21" y2="21"/><line x1="12" x2="12" y1="17" y2="21"/></symbol>
+<symbol id="i-chevron-down" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></symbol>
+<symbol id="i-check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></symbol>
+<symbol id="franco" viewBox="0 0 24 24"><path d="M186 110.204L371.77 8.04661e-05L408.07 110.137L261.821 195.217L186 110.204Z" transform="translate(1.2115 1.88) scale(0.021154)" fill="currentColor" stroke="none"/><path d="M220.062 216.181L447.936 80.9999L447.936 120.5L257.045 232.5L220.062 216.181Z" transform="translate(1.2115 1.88) scale(0.021154)" fill="currentColor" stroke="none"/><path d="M448.184 664.379L439.398 795.02L413.148 847.879L312.904 899.878L300.252 932.878L443.318 904.379L503.91 819.5L505.091 732.364L503.91 682.379L448.184 664.379Z" transform="translate(1.2115 1.88) scale(0.021154)" fill="currentColor" stroke="currentColor" stroke-width="20" stroke-linejoin="miter"/><path d="M571.226 664.379L580.012 795.02L606.263 847.879L706.506 899.878L719.158 932.878L576.092 904.379L515.5 819.5L514.319 732.364L515.5 682.379L571.226 664.379Z" transform="translate(1.2115 1.88) scale(0.021154)" fill="currentColor" stroke="currentColor" stroke-width="20" stroke-linejoin="miter"/><path d="M258.008 646.512L255.946 757.491L197.195 802.347L76.5409 773.476L88.0169 810.708L207.822 859.066L322.437 793.802L324.22 697.819L325.149 647.828L258.008 646.512Z" transform="translate(1.2115 1.88) scale(0.021154)" fill="currentColor" stroke="currentColor" stroke-width="20" stroke-linejoin="miter"/><path d="M762.291 646.512L764.353 757.491L823.104 802.347L943.758 773.476L932.282 810.708L812.477 859.066L697.862 793.802L696.079 697.819L695.15 647.828L762.291 646.512Z" transform="translate(1.2115 1.88) scale(0.021154)" fill="currentColor" stroke="currentColor" stroke-width="20" stroke-linejoin="miter"/><path d="M276.18 531.5H171.07L123.382 513.872L101.97 361.5L57.2016 337L9.99963 351.5V373L57.2016 385V471.5V531.5L134.087 608.5H227.518H276.18V531.5Z" transform="translate(1.2115 1.88) scale(0.021154)" fill="currentColor" stroke="currentColor" stroke-width="20" stroke-linejoin="miter"/><path d="M743.82 531.5H848.93L896.618 513.872L918.03 361.5L962.798 337L1010 351.5V373L962.798 385V471.5V531.5L885.913 608.5H792.482H743.82V531.5Z" transform="translate(1.2115 1.88) scale(0.021154)" fill="currentColor" stroke="currentColor" stroke-width="20" stroke-linejoin="miter"/><path d="M804.993 273V623L509.997 798L215 623V273L509.997 98L804.993 273ZM509.003 508.678L407.332 492L346.689 520.977L329.027 550.5L311.364 609L364.941 595.897L417.544 609L449.72 592.579L479.5 609L509.003 571.283L538.052 609L574.539 592.579L606.135 609L658.236 595.897L709.364 609L691.701 550.5L674.039 520.977L612.489 492L509.003 508.678ZM425.903 315.888L387.361 386.539L402.622 457.189H619.016L634.276 386.539L595.734 315.888L510.364 287L425.903 315.888ZM533.645 360.557L510.953 435.092L487.991 360.557L510.953 328.526L533.645 360.557Z" transform="translate(1.2115 1.88) scale(0.021154)" fill="currentColor" stroke="none" fill-rule="evenodd"/></symbol>
+<symbol id="github" viewBox="0 0 16 16"><path fill="currentColor" stroke="none" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></symbol>
+    </svg>
+    <a class="skip" href="#top">Skip to the note</a>
+
+    <header class="topbar">
+      <a class="crumb" href="#top" aria-label="LazyDM. Back to the top">
+        <svg class="franco" viewBox="0 0 24 24" aria-hidden="true"><use href="#franco" /></svg>
+        <b>LazyDM<span class="dot" aria-hidden="true">.</span></b>
+        <span class="path" aria-hidden="true">/ index.md</span>
+      </a>
+      <nav class="topnav" aria-label="Page">
+        <a class="link" href="#prep">Prep</a>
+        <a class="link" href="#table">Table</a>
+        <a class="link" href="#maps">Maps</a>
+        <a class="link" href="#sync">Sync</a>
+        <a class="link" href="https://github.com/Tratt0re/lazydm">View on GitHub</a>
+        <div class="theme">
+          <button type="button" class="theme-btn" id="theme-btn" aria-haspopup="menu" aria-expanded="false" aria-controls="theme-menu" aria-label="Theme: System" title="Theme: System"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-monitor" /></svg><svg class="i chev" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-chevron-down" /></svg></button>
+          <div class="theme-menu" id="theme-menu" role="menu" aria-label="Theme" hidden>
+            <button type="button" class="mi" role="menuitemradio" aria-checked="false" tabindex="-1" data-theme-choice="light"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-sun" /></svg>Light<svg class="i tick" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-check" /></svg></button>
+            <button type="button" class="mi" role="menuitemradio" aria-checked="false" tabindex="-1" data-theme-choice="dark"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-moon" /></svg>Dark<svg class="i tick" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-check" /></svg></button>
+            <button type="button" class="mi" role="menuitemradio" aria-checked="false" tabindex="-1" data-theme-choice="system"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-monitor" /></svg>System<svg class="i tick" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-check" /></svg></button>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <nav class="jump" aria-label="Sections">
+      <a href="#prep">Prep</a><a href="#table">Table</a><a href="#maps">Maps</a><a href="#split">Side by side</a><a href="#sync">Sync</a><a href="#ai">Optional AI</a>
+    </nav>
+
+    <div class="codemap" id="codemap" aria-hidden="true"></div>
+
+    <main class="note" id="top">
+      <details class="props">
+        <summary>Properties</summary>
+        <dl>
+          <dt>title</dt>
+          <dd>LazyDM</dd>
+          <dt>for</dt>
+          <dd>Dungeon Masters</dd>
+          <dt>runs on</dt>
+          <dd>macOS, Windows, Linux</dd>
+          <dt>status</dt>
+          <dd>pre-1.0</dd>
+        </dl>
+      </details>
+
+      <header class="hero">
+        <svg class="franco" viewBox="0 0 24 24" role="img" aria-label="Franco, the LazyDM mascot"><use href="#franco" /></svg>
+        <h1 class="title">LazyDM<span class="dot" aria-hidden="true">.</span></h1>
+        <p class="tagline">Prep the campaign. Run at the table.</p>
+        <div class="arc-ornament-rule" aria-hidden="true"><span>&#9671;</span><span>&#10019;</span><span>&#9671;</span></div>
+      </header>
+      <p class="lede lede-focus">
+        <span class="lede-focus-opening">LazyDM is a desktop campaign manager and encounter tracker for Dungeon Masters.</span>
+        <span class="lede-focus-detail">Prepare notes in plain Markdown, then keep the right scene, map and Combatants open while you run the session.</span>
+      </p>
+
+      <div class="actions">
+        <a class="btn lg" href="https://github.com/Tratt0re/lazydm"><svg class="i" viewBox="0 0 16 16" aria-hidden="true"><use href="#github" /></svg>Follow development on GitHub</a>
+        <span class="status">Download: coming soon</span>
+      </div>
+      <p class="meta">For macOS &middot; Windows &middot; Linux</p>
+
+      <div class="infobox">
+        <strong>Status</strong>
+        <p>LazyDM is heading toward 1.0 and is not available to download yet.</p>
+      </div>
+
+      <div class="arc-engraved-divider" aria-hidden="true"><span></span></div>
+
+      <section aria-labelledby="own-h">
+        <h2 class="section" id="own-h">The whole campaign, close at hand<span class="dot" aria-hidden="true">.</span></h2>
+        <p>
+          Your Codex keeps notes, encounters, maps, images, audio and PDFs in one campaign folder. Every Markdown note
+          remains yours and works in other editors, including Obsidian. LazyDM can rebuild its local search and link index
+          from those files.
+        </p>
+        <dl class="defs">
+          <div>
+            <dt>One campaign</dt>
+            <dd>Notes, maps and encounters stay together from preparation through play.</dd>
+          </div>
+          <div>
+            <dt>Lazy by design</dt>
+            <dd>Sensible defaults keep preparation moving and table tools close.</dd>
+          </div>
+          <div>
+            <dt>Your folder</dt>
+            <dd>Move the folder, back it up or open its notes in any Markdown editor.</dd>
+          </div>
+          <div>
+            <dt>Built from your files</dt>
+            <dd>Search and links use a local index that LazyDM can rebuild from the Codex.</dd>
+          </div>
+        </dl>
+      </section>
+
+      <div class="arc-engraved-divider" aria-hidden="true"><span></span></div>
+
+      <section id="prep" class="row" aria-labelledby="prep-h">
+        <div class="row-text">
+        <h2 class="section" id="prep-h">Prepare at your desk<span class="dot" aria-hidden="true">.</span></h2>
+        <p>
+          Write scenes, characters and enemies as notes, then connect them with <code>[[links]]</code>. When you rename a
+          note, LazyDM updates every link to it. Before the session, Review finds broken links that need attention.
+        </p>
+
+        <ul class="checks">
+          <li><b>Templates</b> follow the campaign&rsquo;s game system, with ready-made fields for D&amp;D 5e and Pathfinder 2e.</li>
+          <li><b>Links</b> shows what points to the open note and where that note leads next.</li>
+          <li><b>Compendium</b> keeps shared material ready to copy into any campaign.</li>
+          <li><b>Assets</b> bring images, audio and PDFs into your notes.</li>
+        </ul>
+        </div>
+        <figure class="shot">
+          <div class="shot-frame">
+            <span class="arc-card-corner arc-card-corner-tl" aria-hidden="true"></span><span class="arc-card-corner arc-card-corner-tr" aria-hidden="true"></span><span class="arc-card-corner arc-card-corner-bl" aria-hidden="true"></span><span class="arc-card-corner arc-card-corner-br" aria-hidden="true"></span>
+            <div class="shot-bar"><span class="shot-path">lost-mine / scenes / ambush-at-the-fort.md</span><span class="bdg">Note</span></div>
+            <div class="arc-ornament-rule" aria-hidden="true"><span>&#9671;</span><span>&#10019;</span><span>&#9671;</span></div>
+            <div class="shot-media">
+              <img class="theme-light" src="assets/img/shots/note-light-960.webp" srcset="assets/img/shots/note-light-960.webp 960w, assets/img/shots/note-light.webp 1920w" sizes="(min-width: 900px) 36rem, 100vw" width="1920" height="1200" loading="lazy" decoding="async" alt="A LazyDM campaign note in Live preview, with resolved links, an Info box and the code map on the right." />
+              <img class="theme-dark" src="assets/img/shots/note-dark-960.webp" srcset="assets/img/shots/note-dark-960.webp 960w, assets/img/shots/note-dark.webp 1920w" sizes="(min-width: 900px) 36rem, 100vw" width="1920" height="1200" loading="lazy" decoding="async" alt="A LazyDM campaign note in Live preview, with resolved links, an Info box and the code map on the right." />
+            </div>
+          </div>
+          <figcaption>A campaign note in Live preview, with its links and Info box visible while you write. All screenshots use made-up campaign data.</figcaption>
+        </figure>
+      </section>
+
+      <div class="arc-engraved-divider" aria-hidden="true"><span></span></div>
+
+      <section id="table" class="row flip" aria-labelledby="table-h">
+        <div class="row-text">
+        <h2 class="section" id="table-h">Run at the table<span class="dot" aria-hidden="true">.</span></h2>
+        <p>
+          Add Combatants from their stat-block notes or the party roster, roll initiative and advance through the turns.
+          LazyDM reads hit points, defences and other details from each linked note, so the Tracker starts with the stat
+          block you already prepared.
+        </p>
+
+        <p>
+          Set the campaign to Generic, D&amp;D 5e or Pathfinder 2e and the Tracker layout follows. Show rows as Compact, Card
+          or Expanded. Change any value for this fight without changing its linked note. The battle bar keeps the round
+          and active turn in view, while the cemetery holds defeated Combatants until you recover them.
+        </p>
+        </div>
+        <figure class="shot">
+          <div class="shot-frame">
+            <span class="arc-card-corner arc-card-corner-tl" aria-hidden="true"></span><span class="arc-card-corner arc-card-corner-tr" aria-hidden="true"></span><span class="arc-card-corner arc-card-corner-bl" aria-hidden="true"></span><span class="arc-card-corner arc-card-corner-br" aria-hidden="true"></span>
+            <div class="shot-bar"><span class="shot-path">lost-mine / encounters / ambush.json</span><span class="bdg">Encounter</span></div>
+            <div class="arc-ornament-rule" aria-hidden="true"><span>&#9671;</span><span>&#10019;</span><span>&#9671;</span></div>
+            <div class="shot-media">
+              <img class="theme-light" src="assets/img/shots/tracker-light-960.webp" srcset="assets/img/shots/tracker-light-960.webp 960w, assets/img/shots/tracker-light.webp 1920w" sizes="(min-width: 900px) 36rem, 100vw" width="1920" height="1200" loading="lazy" decoding="async" alt="The LazyDM encounter page: a battle bar with round 01 and the turn of Brenna, then four compact combatant rows in initiative order, each with its side, an HP bar with damage, heal and temporary HP buttons, AC and statuses." />
+              <img class="theme-dark" src="assets/img/shots/tracker-dark-960.webp" srcset="assets/img/shots/tracker-dark-960.webp 960w, assets/img/shots/tracker-dark.webp 1920w" sizes="(min-width: 900px) 36rem, 100vw" width="1920" height="1200" loading="lazy" decoding="async" alt="The LazyDM encounter page: a battle bar with round 01 and the turn of Brenna, then four compact combatant rows in initiative order, each with its side, an HP bar with damage, heal and temporary HP buttons, AC and statuses." />
+            </div>
+          </div>
+          <figcaption>The D&amp;D 5e Tracker layout in Compact view, with the round and active turn above the initiative order.</figcaption>
+        </figure>
+      </section>
+
+      <div class="arc-engraved-divider" aria-hidden="true"><span></span></div>
+
+      <section id="maps" class="row" aria-labelledby="maps-h">
+        <div class="row-text">
+        <h2 class="section" id="maps-h">Open the right place<span class="dot" aria-hidden="true">.</span></h2>
+        <p>
+          Add a map image and place pins for the locations that matter. Link a pin to a note, and the guard post on the
+          map opens the guard post you prepared earlier.
+        </p>
+        </div>
+        <figure class="shot">
+          <div class="shot-frame">
+            <span class="arc-card-corner arc-card-corner-tl" aria-hidden="true"></span><span class="arc-card-corner arc-card-corner-tr" aria-hidden="true"></span><span class="arc-card-corner arc-card-corner-bl" aria-hidden="true"></span><span class="arc-card-corner arc-card-corner-br" aria-hidden="true"></span>
+            <div class="shot-bar"><span class="shot-path">lost-mine / maps / the-sunken-halls.json</span><span class="bdg">Map</span></div>
+            <div class="arc-ornament-rule" aria-hidden="true"><span>&#9671;</span><span>&#10019;</span><span>&#9671;</span></div>
+            <div class="shot-media">
+              <img class="theme-light" src="assets/img/shots/map-light-960.webp" srcset="assets/img/shots/map-light-960.webp 960w, assets/img/shots/map-light.webp 1920w" sizes="(min-width: 900px) 36rem, 100vw" width="1920" height="1200" loading="lazy" decoding="async" alt="The LazyDM map page, with a hand-drawn dungeon, six linked pins and an On this map list on the right." />
+              <img class="theme-dark" src="assets/img/shots/map-dark-960.webp" srcset="assets/img/shots/map-dark-960.webp 960w, assets/img/shots/map-dark.webp 1920w" sizes="(min-width: 900px) 36rem, 100vw" width="1920" height="1200" loading="lazy" decoding="async" alt="The LazyDM map page, with a hand-drawn dungeon, six linked pins and an On this map list on the right." />
+            </div>
+          </div>
+          <figcaption>A dungeon map with linked pins and a list of its marked locations.</figcaption>
+        </figure>
+      </section>
+
+      <div class="arc-engraved-divider" aria-hidden="true"><span></span></div>
+
+      <section id="split" class="row flip" aria-labelledby="split-h">
+        <div class="row-text">
+        <h2 class="section" id="split-h">Keep the scene together<span class="dot" aria-hidden="true">.</span></h2>
+        <p>
+          Open any note, map or encounter beside another, with separate tabs on each side. Keep the scene and its map
+          together while you prepare, then put the map beside the encounter when play begins.
+        </p>
+        </div>
+        <figure class="shot">
+          <div class="shot-frame">
+            <span class="arc-card-corner arc-card-corner-tl" aria-hidden="true"></span><span class="arc-card-corner arc-card-corner-tr" aria-hidden="true"></span><span class="arc-card-corner arc-card-corner-bl" aria-hidden="true"></span><span class="arc-card-corner arc-card-corner-br" aria-hidden="true"></span>
+            <div class="shot-bar"><span class="shot-path">ambush-at-the-fort.md + the-sunken-halls.json</span><span class="bdg">Split screen</span></div>
+            <div class="arc-ornament-rule" aria-hidden="true"><span>&#9671;</span><span>&#10019;</span><span>&#9671;</span></div>
+            <div class="shot-media">
+              <img class="theme-light" src="assets/img/shots/split-light-960.webp" srcset="assets/img/shots/split-light-960.webp 960w, assets/img/shots/split-light.webp 1920w" sizes="(min-width: 900px) 36rem, 100vw" width="1920" height="1200" loading="lazy" decoding="async" alt="LazyDM split screen, with an ambush scene and its tabs on the left and a pinned dungeon map on the right." />
+              <img class="theme-dark" src="assets/img/shots/split-dark-960.webp" srcset="assets/img/shots/split-dark-960.webp 960w, assets/img/shots/split-dark.webp 1920w" sizes="(min-width: 900px) 36rem, 100vw" width="1920" height="1200" loading="lazy" decoding="async" alt="LazyDM split screen, with an ambush scene and its tabs on the left and a pinned dungeon map on the right." />
+            </div>
+          </div>
+          <figcaption>A prepared scene and its map stay open side by side, each with its own tabs.</figcaption>
+        </figure>
+      </section>
+
+      <div class="arc-engraved-divider" aria-hidden="true"><span></span></div>
+
+      <section id="sync" aria-labelledby="sync-h">
+        <h2 class="section" id="sync-h">Bring the Codex with you<span class="dot" aria-hidden="true">.</span></h2>
+        <p>
+          Keep the Codex on your computer or put it in an iCloud, Dropbox, OneDrive, Box or Google Drive folder. Your
+          cloud app handles the sync; LazyDM waits for files still downloading and warns you about conflicting copies.
+        </p>
+      </section>
+
+      <div class="arc-engraved-divider" aria-hidden="true"><span></span></div>
+
+      <section id="ai" class="ai-relay ai-rail-corners" aria-labelledby="ai-h">
+        <span class="ai-rail ai-rail-top" aria-hidden="true"></span>
+        <span class="ai-rail ai-rail-bottom" aria-hidden="true"></span>
+        <div class="ai-relay-title">
+          <h2 id="ai-h">Connect a local AI assistant when you want one<span class="dot" aria-hidden="true">.</span></h2>
+        </div>
+        <div class="ai-relay-copy">
+          <p>Enable the local MCP server to give an AI assistant on the same computer access to your Codex. The server stays off until you switch it on.</p>
+        </div>
+      </section>
+
+      <div class="arc-engraved-divider" aria-hidden="true"><span></span></div>
+
+      <section aria-labelledby="close-h">
+        <h2 class="section" id="close-h">Follow LazyDM to 1.0<span class="dot" aria-hidden="true">.</span></h2>
+        <p>LazyDM is still in development. Follow the project on GitHub to see each release take shape.</p>
+        <div class="actions">
+          <a class="btn lg" href="https://github.com/Tratt0re/lazydm"><svg class="i" viewBox="0 0 16 16" aria-hidden="true"><use href="#github" /></svg>Follow development on GitHub</a>
+          <a class="btn ghost lg" href="https://github.com/Tratt0re/lazydm/issues">Browse open issues</a>
+          <span class="status">Download: coming soon</span>
+        </div>
+
+        <div class="faq faq-panel" id="faq">
+          <span class="arc-card-corner arc-card-corner-tl" aria-hidden="true"></span><span class="arc-card-corner arc-card-corner-tr" aria-hidden="true"></span><span class="arc-card-corner arc-card-corner-bl" aria-hidden="true"></span><span class="arc-card-corner arc-card-corner-br" aria-hidden="true"></span>
+          <h3 class="faq-title">Questions before you follow<span class="dot" aria-hidden="true">.</span></h3>
+          <div class="arc-ornament-rule" aria-hidden="true"><span>&#9671;</span><span>&#10019;</span><span>&#9671;</span></div>
+          <div class="faq-list">
+            <details><summary>What is LazyDM?</summary><p>LazyDM is a desktop campaign manager and encounter tracker for Dungeon Masters. It keeps campaign preparation and the tools used during play in one app.</p></details>
+            <details><summary>Does LazyDM work with Obsidian?</summary><p>Yes. Campaign notes are plain Markdown in a folder you own, so they remain compatible with Obsidian and other Markdown editors.</p></details>
+            <details><summary>Where does LazyDM store campaign files?</summary><p>Your campaign lives in a folder called a Codex. LazyDM builds a local search and link index from those files and can rebuild it when needed.</p></details>
+            <details><summary>Which game systems does LazyDM support?</summary><p>LazyDM includes Tracker layouts and note templates for Generic campaigns, D&amp;D 5e and Pathfinder 2e.</p></details>
+            <details><summary>How does campaign sync work?</summary><p>Put the Codex in an iCloud, Dropbox, OneDrive, Box or Google Drive folder. Your cloud app handles synchronization while LazyDM handles placeholder downloads and warns about conflicting copies.</p></details>
+            <details><summary>Is LazyDM available to download?</summary><p>Not yet. LazyDM is heading toward version 1.0. Follow the GitHub project to track development and future releases.</p></details>
+            <details><summary>Can an AI assistant access a Codex?</summary><p>Yes, when you enable the optional local MCP server. It lets an AI assistant on the same computer access the Codex and stays off until you switch it on.</p></details>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="foot">
+      <div class="foot-in">
+        <div class="foot-brand">
+          <svg class="franco" viewBox="0 0 24 24" aria-hidden="true"><use href="#franco" /></svg>
+          <div>
+            <strong>LazyDM<span class="dot" aria-hidden="true">.</span></strong>
+            <p>Your campaign, from prep to play.</p>
+          </div>
+        </div>
+        <nav aria-label="Project">
+          <a href="https://github.com/Tratt0re/lazydm">GitHub</a>
+          <a href="https://github.com/Tratt0re/lazydm/issues">Issues</a>
+          <a href="product.md">Product facts</a>
+          <a href="llms.txt">llms.txt</a>
+          <a href="#top">Back to the top</a>
+        </nav>
+      </div>
+    </footer>
+
+    <script src="assets/js/site.js" defer></script>
+</body>
+</html>
