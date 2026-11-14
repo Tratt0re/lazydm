@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>LazyDM — Campaign Manager &amp; Encounter Tracker for DMs</title>
+    <title>LazyDM | Campaign Manager &amp; Encounter Tracker for DMs</title>
     <meta
       name="description"
       content="LazyDM is a desktop campaign manager and encounter tracker for Dungeon Masters. Prepare Markdown notes, maps and encounters, then run the session at the table."
@@ -14,7 +14,7 @@
     />
     <meta name="theme-color" content="#101114" media="(prefers-color-scheme: dark)" />
     <meta name="theme-color" content="#e9eae7" media="(prefers-color-scheme: light)" />
-    <meta property="og:title" content="LazyDM — Campaign Manager &amp; Encounter Tracker for DMs" />
+    <meta property="og:title" content="LazyDM | Campaign Manager &amp; Encounter Tracker for DMs" />
     <meta
       property="og:description"
       content="LazyDM is a desktop campaign manager and encounter tracker for Dungeon Masters. Prepare Markdown notes, maps and encounters, then run the session at the table."
@@ -27,8 +27,15 @@
     <meta property="og:image:height" content="630" />
     <meta property="og:image:alt" content="LazyDM and its mascot Franco. Prep at your desk. Run at the table." />
     <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="LazyDM | Campaign Manager &amp; Encounter Tracker for DMs" />
+    <meta
+      name="twitter:description"
+      content="Prepare your campaign in plain Markdown, then run encounters, maps and notes from one desktop app."
+    />
     <meta name="twitter:image" content="https://lazydm.com/assets/img/og.png" />
+    <meta name="twitter:image:alt" content="LazyDM and its mascot Franco. Prep at your desk. Run at the table." />
     <link rel="canonical" href="https://lazydm.com/" />
+    <link rel="alternate" type="text/markdown" href="https://lazydm.com/product.md" title="LazyDM product facts in Markdown" />
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
@@ -119,15 +126,16 @@
       <header class="hero">
         <svg class="franco" viewBox="0 0 24 24" role="img" aria-label="Franco, the LazyDM mascot"><use href="#franco" /></svg>
         <h1 class="title">LazyDM<span class="dot" aria-hidden="true">.</span></h1>
+        <p class="tagline">Prep the campaign. Run at the table.</p>
         <div class="arc-ornament-rule" aria-hidden="true"><span>&#9671;</span><span>&#10019;</span><span>&#9671;</span></div>
       </header>
-      <p class="lede">
-        LazyDM is a desktop campaign manager and encounter tracker for Dungeon Masters. Prepare your campaign, keep its
-        notes as plain Markdown in a folder you own, then run the session with maps and links close at hand.
+      <p class="lede lede-focus">
+        <span class="lede-focus-opening">LazyDM is a desktop campaign manager and encounter tracker for Dungeon Masters.</span>
+        <span class="lede-focus-detail">Prepare notes in plain Markdown, then keep the right scene, map and Combatants open while you run the session.</span>
       </p>
 
       <div class="actions">
-        <a class="btn lg" href="https://github.com/Tratt0re/lazydm"><svg class="i" viewBox="0 0 16 16" aria-hidden="true"><use href="#github" /></svg>View LazyDM on GitHub</a>
+        <a class="btn lg" href="https://github.com/Tratt0re/lazydm"><svg class="i" viewBox="0 0 16 16" aria-hidden="true"><use href="#github" /></svg>Follow development on GitHub</a>
         <span class="status">Download: coming soon</span>
       </div>
       <p class="meta">For macOS &middot; Windows &middot; Linux</p>
@@ -142,21 +150,21 @@
       <section aria-labelledby="own-h">
         <h2 class="section" id="own-h">The whole campaign, close at hand<span class="dot" aria-hidden="true">.</span></h2>
         <p>
-          LazyDM keeps your notes, encounters, maps and assets together in the Codex, so everything you prepare is ready
-          when the session starts. The Codex is a folder you own: every file stays yours, and its Markdown notes remain
-          compatible with other tools, including Obsidian.
+          Your Codex keeps notes, encounters, maps, images, audio and PDFs in one campaign folder. Every Markdown note
+          remains yours and works in other editors, including Obsidian. LazyDM can rebuild its local search and link index
+          from those files.
         </p>
         <dl class="defs">
           <div>
-            <dt>Ready to run</dt>
-            <dd>Notes, maps and encounters stay together, from preparation through play.</dd>
+            <dt>One campaign</dt>
+            <dd>Notes, maps and encounters stay together from preparation through play.</dd>
           </div>
           <div>
             <dt>Lazy by design</dt>
-            <dd>Sensible defaults and short paths keep preparation moving and table tools close.</dd>
+            <dd>Sensible defaults keep preparation moving and table tools close.</dd>
           </div>
           <div>
-            <dt>Take it anywhere</dt>
+            <dt>Your folder</dt>
             <dd>Move the folder, back it up or open its notes in any Markdown editor.</dd>
           </div>
           <div>
@@ -172,8 +180,8 @@
         <div class="row-text">
         <h2 class="section" id="prep-h">Prepare at your desk<span class="dot" aria-hidden="true">.</span></h2>
         <p>
-          Write scenes, characters and enemies as notes, then connect them with <code>[[links]]</code>. Rename a note and
-          LazyDM updates the links to it. Before the session, Review shows you any broken links that need attention.
+          Write scenes, characters and enemies as notes, then connect them with <code>[[links]]</code>. When you rename a
+          note, LazyDM updates every link to it. Before the session, Review finds broken links that need attention.
         </p>
 
         <ul class="checks">
@@ -203,15 +211,15 @@
         <div class="row-text">
         <h2 class="section" id="table-h">Run at the table<span class="dot" aria-hidden="true">.</span></h2>
         <p>
-          When play begins, add Combatants from their stat-block notes or bring in the party roster, then roll initiative
-          and advance through the turns. LazyDM reads each note for hit points, defences and other details, so the tracker
-          is ready without retyping them.
+          Add Combatants from their stat-block notes or the party roster, roll initiative and advance through the turns.
+          LazyDM reads hit points, defences and other details from each linked note, so the Tracker starts with the stat
+          block you already prepared.
         </p>
 
         <p>
-          Pick Generic, D&amp;D 5e or Pathfinder 2e for the campaign and its Tracker layout follows. Show each row as Compact,
-          Card or Expanded, and edit any value in place for this fight without changing the note. The battle bar keeps the
-          round and active turn in view, and the cemetery holds defeated Combatants until you recover them.
+          Set the campaign to Generic, D&amp;D 5e or Pathfinder 2e and the Tracker layout follows. Show rows as Compact, Card
+          or Expanded. Change any value for this fight without changing its linked note. The battle bar keeps the round
+          and active turn in view, while the cemetery holds defeated Combatants until you recover them.
         </p>
         </div>
         <figure class="shot">
@@ -258,8 +266,8 @@
         <div class="row-text">
         <h2 class="section" id="split-h">Keep the scene together<span class="dot" aria-hidden="true">.</span></h2>
         <p>
-          Open any note, map or encounter beside another, each side with its own tabs. Use whatever combination fits the
-          moment, whether you are preparing or running the session.
+          Open any note, map or encounter beside another, with separate tabs on each side. Keep the scene and its map
+          together while you prepare, then put the map beside the encounter when play begins.
         </p>
         </div>
         <figure class="shot">
@@ -288,25 +296,41 @@
 
       <div class="arc-engraved-divider" aria-hidden="true"><span></span></div>
 
-      <section id="ai" class="more" aria-labelledby="ai-h">
-        <span class="arc-card-corner arc-card-corner-tl" aria-hidden="true"></span><span class="arc-card-corner arc-card-corner-tr" aria-hidden="true"></span><span class="arc-card-corner arc-card-corner-bl" aria-hidden="true"></span><span class="arc-card-corner arc-card-corner-br" aria-hidden="true"></span>
-        <h2 class="section" id="ai-h">AI-friendly, on your terms<span class="dot" aria-hidden="true">.</span></h2>
-        <div class="arc-ornament-rule" aria-hidden="true"><span>&#9671;</span><span>&#10019;</span><span>&#9671;</span></div>
-        <p class="more-lede">
-          When you choose to enable it, LazyDM can make the Codex available to an AI assistant running on the same
-          computer through a local MCP server. It stays off until you switch it on.
-        </p>
+      <section id="ai" class="ai-relay ai-rail-corners" aria-labelledby="ai-h">
+        <span class="ai-rail ai-rail-top" aria-hidden="true"></span>
+        <span class="ai-rail ai-rail-bottom" aria-hidden="true"></span>
+        <div class="ai-relay-title">
+          <h2 id="ai-h">Connect a local AI assistant when you want one<span class="dot" aria-hidden="true">.</span></h2>
+        </div>
+        <div class="ai-relay-copy">
+          <p>Enable the local MCP server to give an AI assistant on the same computer access to your Codex. The server stays off until you switch it on.</p>
+        </div>
       </section>
 
       <div class="arc-engraved-divider" aria-hidden="true"><span></span></div>
 
       <section aria-labelledby="close-h">
-        <h2 class="section" id="close-h">From prep to play<span class="dot" aria-hidden="true">.</span></h2>
-        <p>LazyDM is still on the road to 1.0. Visit the project on GitHub to follow its progress and see what is coming next.</p>
+        <h2 class="section" id="close-h">Follow LazyDM to 1.0<span class="dot" aria-hidden="true">.</span></h2>
+        <p>LazyDM is still in development. Follow the project on GitHub to see each release take shape.</p>
         <div class="actions">
-          <a class="btn lg" href="https://github.com/Tratt0re/lazydm"><svg class="i" viewBox="0 0 16 16" aria-hidden="true"><use href="#github" /></svg>View LazyDM on GitHub</a>
-          <a class="btn ghost lg" href="https://github.com/Tratt0re/lazydm/issues">View open issues</a>
+          <a class="btn lg" href="https://github.com/Tratt0re/lazydm"><svg class="i" viewBox="0 0 16 16" aria-hidden="true"><use href="#github" /></svg>Follow development on GitHub</a>
+          <a class="btn ghost lg" href="https://github.com/Tratt0re/lazydm/issues">Browse open issues</a>
           <span class="status">Download: coming soon</span>
+        </div>
+
+        <div class="faq faq-panel" id="faq">
+          <span class="arc-card-corner arc-card-corner-tl" aria-hidden="true"></span><span class="arc-card-corner arc-card-corner-tr" aria-hidden="true"></span><span class="arc-card-corner arc-card-corner-bl" aria-hidden="true"></span><span class="arc-card-corner arc-card-corner-br" aria-hidden="true"></span>
+          <h3 class="faq-title">Questions before you follow<span class="dot" aria-hidden="true">.</span></h3>
+          <div class="arc-ornament-rule" aria-hidden="true"><span>&#9671;</span><span>&#10019;</span><span>&#9671;</span></div>
+          <div class="faq-list">
+            <details><summary>What is LazyDM?</summary><p>LazyDM is a desktop campaign manager and encounter tracker for Dungeon Masters. It keeps campaign preparation and the tools used during play in one app.</p></details>
+            <details><summary>Does LazyDM work with Obsidian?</summary><p>Yes. Campaign notes are plain Markdown in a folder you own, so they remain compatible with Obsidian and other Markdown editors.</p></details>
+            <details><summary>Where does LazyDM store campaign files?</summary><p>Your campaign lives in a folder called a Codex. LazyDM builds a local search and link index from those files and can rebuild it when needed.</p></details>
+            <details><summary>Which game systems does LazyDM support?</summary><p>LazyDM includes Tracker layouts and note templates for Generic campaigns, D&amp;D 5e and Pathfinder 2e.</p></details>
+            <details><summary>How does campaign sync work?</summary><p>Put the Codex in an iCloud, Dropbox, OneDrive, Box or Google Drive folder. Your cloud app handles synchronization while LazyDM handles placeholder downloads and warns about conflicting copies.</p></details>
+            <details><summary>Is LazyDM available to download?</summary><p>Not yet. LazyDM is heading toward version 1.0. Follow the GitHub project to track development and future releases.</p></details>
+            <details><summary>Can an AI assistant access a Codex?</summary><p>Yes, when you enable the optional local MCP server. It lets an AI assistant on the same computer access the Codex and stays off until you switch it on.</p></details>
+          </div>
         </div>
       </section>
     </main>
@@ -323,11 +347,13 @@
         <nav aria-label="Project">
           <a href="https://github.com/Tratt0re/lazydm">GitHub</a>
           <a href="https://github.com/Tratt0re/lazydm/issues">Issues</a>
+          <a href="product.md">Product facts</a>
+          <a href="llms.txt">llms.txt</a>
           <a href="#top">Back to the top</a>
         </nav>
       </div>
     </footer>
 
     <script src="assets/js/site.js" defer></script>
-  </body>
+</body>
 </html>

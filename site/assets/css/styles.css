@@ -514,7 +514,7 @@ p code, li code, dd code {
 .props dt { color: var(--muted-foreground); }
 .props dd { margin: 0; color: var(--foreground); }
 
-/* Franco beside the title, on the right: the title and the ornamental rule keep the left column. */
+/* Franco beside the app name; the tagline and ornamental rule complete the title block. */
 .hero {
   display: grid;
   grid-template-columns: auto minmax(0, 1fr);
@@ -525,7 +525,7 @@ p code, li code, dd code {
 }
 .hero .franco {
   grid-column: 1;
-  grid-row: 1 / span 2;
+  grid-row: 1 / span 3;
   width: 5rem;
   height: 5rem;
   color: var(--primary);
@@ -534,7 +534,8 @@ p code, li code, dd code {
   .hero .franco { width: 9rem; height: 9rem; }
 }
 .hero h1.title { grid-column: 2; grid-row: 1; }
-.hero .arc-ornament-rule { grid-column: 2; grid-row: 2; align-self: start; }
+.hero .tagline { grid-column: 2; grid-row: 2; }
+.hero .arc-ornament-rule { grid-column: 2; grid-row: 3; align-self: start; }
 
 h1.title {
   align-self: end;
@@ -545,12 +546,37 @@ h1.title {
   letter-spacing: -0.01em;
 }
 
+.hero .tagline {
+  margin: 0;
+  color: var(--foreground-strong);
+  font-size: clamp(1rem, 3vw, 1.25rem);
+  font-weight: 500;
+  line-height: 1.3;
+}
+
 .lede {
   max-width: 34rem;
   margin-bottom: 2rem;
   font-size: clamp(1.25rem, 3.4vw, 1.5rem);
   line-height: 1.4;
   color: var(--foreground-strong);
+}
+.lede-focus {
+  display: grid;
+  gap: 0.7rem;
+  max-width: 36rem;
+}
+.lede-focus-opening {
+  color: var(--foreground-strong);
+  font-family: var(--font-display);
+  font-size: clamp(1.65rem, 5vw, 2.15rem);
+  font-weight: 700;
+  line-height: 1.08;
+}
+.lede-focus-detail {
+  color: var(--foreground-secondary);
+  font-size: 1.05rem;
+  line-height: 1.55;
 }
 
 .actions {
@@ -559,6 +585,72 @@ h1.title {
   align-items: center;
   gap: 0.75rem 1rem;
   margin-bottom: 2rem;
+}
+
+.faq {
+  margin-top: 3rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--border-strong);
+}
+.faq h3 { margin-bottom: 1rem; }
+.faq-list {
+  padding-top: 0.5rem;
+  border-top: 1px solid var(--border-subtle);
+}
+.faq-list details { border-bottom: 1px solid var(--border-subtle); }
+.faq-list summary {
+  position: relative;
+  padding: 1rem 2.25rem 1rem 0;
+  color: var(--foreground-strong);
+  font-weight: 600;
+  cursor: pointer;
+  list-style: none;
+}
+.faq-list summary::-webkit-details-marker { display: none; }
+.faq-list summary::after {
+  content: '+';
+  position: absolute;
+  top: 50%;
+  right: 0.25rem;
+  color: var(--primary);
+  font: 500 1.25rem var(--font-mono);
+  transform: translateY(-50%);
+}
+.faq-list details[open] summary::after { content: '\2212'; }
+.faq-list details p {
+  max-width: 38rem;
+  margin: -0.15rem 2.25rem 1.25rem 0;
+  color: var(--foreground-secondary);
+}
+
+.faq-panel {
+  --faq-space: 0.68rem;
+  --bracket-grow: 30px;
+  position: relative;
+  margin-top: 3.5rem;
+  padding: 1.5rem;
+  background: var(--card);
+  border: 2px solid var(--border-strong);
+}
+.faq-panel h3.faq-title {
+  margin-bottom: 0.75rem;
+  font-family: var(--font-display);
+  font-size: clamp(2.75rem, 9vw, 3.75rem);
+  font-weight: 700;
+  line-height: 1;
+}
+.faq-panel .arc-ornament-rule { margin-bottom: 1.5rem; }
+.faq-panel .faq-list {
+  padding-top: 0.25rem;
+  border-top-color: var(--border);
+}
+.faq-panel summary { padding-block: var(--faq-space); }
+.faq-panel details[open] { background: var(--recessed); }
+.faq-panel details[open] summary,
+.faq-panel details[open] p { padding-left: 0.75rem; }
+
+@media (max-width: 479px) {
+  .faq-panel { padding: 1.25rem 1rem; }
 }
 
 /* Info box (the app's callout): 1px frame, status bar, mono title */
@@ -747,7 +839,6 @@ h3 { font: 700 1.75rem / 1.1 var(--font-display); }
 /* ---------- themed frame around each screenshot ---------- */
 
 .shot-frame {
-  --bracket-size: 18px;
   --bracket-grow: 30px;
   position: relative;
   padding: 14px 14px 16px;
@@ -774,24 +865,54 @@ h3 { font: 700 1.75rem / 1.1 var(--font-display); }
 
 /* Bronze corner brackets (the app's campaign card): they mark the edge of the frame and grow when it is hovered. */
 .shot-frame > .arc-card-corner,
-.more > .arc-card-corner {
+.more > .arc-card-corner,
+.faq-panel > .arc-card-corner {
   position: absolute;
-  width: var(--bracket-size);
-  height: var(--bracket-size);
-  border: 0 solid var(--primary);
+  width: var(--bracket-grow);
+  height: var(--bracket-grow);
   pointer-events: none;
-  transition: width 180ms ease-out, height 180ms ease-out;
 }
-.arc-card-corner-tl { top: -2px; left: -2px; border-top-width: 3px !important; border-left-width: 3px !important; }
-.arc-card-corner-tr { top: -2px; right: -2px; border-top-width: 3px !important; border-right-width: 3px !important; }
-.arc-card-corner-bl { bottom: -2px; left: -2px; border-bottom-width: 3px !important; border-left-width: 3px !important; }
-.arc-card-corner-br { bottom: -2px; right: -2px; border-bottom-width: 3px !important; border-right-width: 3px !important; }
+.arc-card-corner::before,
+.arc-card-corner::after {
+  content: '';
+  position: absolute;
+  background: var(--primary);
+  transition: transform 180ms ease-out;
+}
+.arc-card-corner::before { width: 100%; height: 3px; transform: scaleX(0.6); }
+.arc-card-corner::after { width: 3px; height: 100%; transform: scaleY(0.6); }
+.arc-card-corner-tl { top: -2px; left: -2px; }
+.arc-card-corner-tr { top: -2px; right: -2px; }
+.arc-card-corner-bl { bottom: -2px; left: -2px; }
+.arc-card-corner-br { right: -2px; bottom: -2px; }
+.arc-card-corner-tl::before,
+.arc-card-corner-tl::after { top: 0; left: 0; transform-origin: top left; }
+.arc-card-corner-tr::before,
+.arc-card-corner-tr::after { top: 0; right: 0; transform-origin: top right; }
+.arc-card-corner-bl::before,
+.arc-card-corner-bl::after { bottom: 0; left: 0; transform-origin: bottom left; }
+.arc-card-corner-br::before,
+.arc-card-corner-br::after { right: 0; bottom: 0; transform-origin: bottom right; }
 .shot-frame:hover > .arc-card-corner,
 .more:hover > .arc-card-corner,
-.more:focus-within > .arc-card-corner { width: var(--bracket-grow); height: var(--bracket-grow); }
+.more:focus-within > .arc-card-corner,
+.faq-panel:hover > .arc-card-corner,
+.faq-panel:focus-within > .arc-card-corner {
+  --bracket-scale: 1;
+}
+.shot-frame:hover > .arc-card-corner::before,
+.more:hover > .arc-card-corner::before,
+.more:focus-within > .arc-card-corner::before,
+.faq-panel:hover > .arc-card-corner::before,
+.faq-panel:focus-within > .arc-card-corner::before { transform: scaleX(var(--bracket-scale)); }
+.shot-frame:hover > .arc-card-corner::after,
+.more:hover > .arc-card-corner::after,
+.more:focus-within > .arc-card-corner::after,
+.faq-panel:hover > .arc-card-corner::after,
+.faq-panel:focus-within > .arc-card-corner::after { transform: scaleY(var(--bracket-scale)); }
 @media (prefers-reduced-motion: reduce) {
-  .shot-frame > .arc-card-corner,
-  .more > .arc-card-corner { transition: none; }
+  .arc-card-corner::before,
+  .arc-card-corner::after { transition: none; }
 }
 
 /* Badge (the app's outlined mono chip): names what the screenshot shows. */
@@ -906,7 +1027,6 @@ h3 { font: 700 1.75rem / 1.1 var(--font-display); }
 /* ---------- "One more thing": a card with the app's corner brackets and ornamental rule ---------- */
 
 .more {
-  --bracket-size: 18px;
   --bracket-grow: 30px;
   position: relative;
   padding: 2rem 1.5rem 1.75rem;
@@ -918,6 +1038,46 @@ h3 { font: 700 1.75rem / 1.1 var(--font-display); }
 .more .more-lede { max-width: none; font-size: 1.125rem; line-height: 1.5; color: var(--foreground-strong); }
 .more .defs { margin-top: 1.5rem; }
 .more .defs > div { grid-template-columns: 11rem minmax(0, 1fr); gap: 0.5rem 1.5rem; padding: 0.75rem 0; }
+
+.ai-relay {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(12rem, 0.78fr) minmax(0, 1.22fr);
+  background: var(--card);
+  border-block: 2px solid var(--border-strong);
+}
+.ai-relay-title,
+.ai-relay-copy { padding: 1.5rem; }
+.ai-relay-title {
+  display: grid;
+  align-content: space-between;
+  gap: 1.25rem;
+  border-right: 1px solid var(--border);
+}
+.ai-relay h2 { margin: 0; font: 700 clamp(1.65rem, 4.5vw, 2.2rem) / 1.06 var(--font-display); }
+.ai-relay p { align-self: center; max-width: 30rem; margin: 0; color: var(--foreground-secondary); }
+.ai-rail {
+  position: absolute;
+  z-index: 1;
+  width: 25%;
+  height: 3px;
+  background: var(--primary);
+  opacity: 0.42;
+  transform: scaleX(0.35);
+  transition: opacity 180ms ease-out, transform 180ms ease-out;
+  pointer-events: none;
+}
+.ai-rail-top { top: -2px; left: 0; transform-origin: left; }
+.ai-rail-bottom { right: 0; bottom: -2px; transform-origin: right; }
+.ai-relay:hover .ai-rail,
+.ai-relay:focus-within .ai-rail { opacity: 1; transform: scaleX(1); }
+@media (max-width: 560px) {
+  .ai-relay { grid-template-columns: 1fr; }
+  .ai-relay-title { border-right: 0; border-bottom: 1px solid var(--border); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ai-rail { transition: none; }
+}
 .more .defs dt { font-size: 1.25rem; }
 .more .defs dd { max-width: none; }
 .more .more-safe {
