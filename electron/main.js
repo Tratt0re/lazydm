@@ -26,7 +26,11 @@ app.setName(APP_NAME);
 app.setAboutPanelOptions({
   applicationName: APP_NAME,
 });
-app.setPath('userData', path.join(app.getPath('appData'), APP_STORAGE_DIR_NAME));
+// LAZYDM_USER_DATA points the app at a throwaway data folder (demo vaults, screenshots) instead of the real one.
+app.setPath(
+  'userData',
+  process.env.LAZYDM_USER_DATA || path.join(app.getPath('appData'), APP_STORAGE_DIR_NAME),
+);
 assetController.registerAssetScheme();
 
 app
