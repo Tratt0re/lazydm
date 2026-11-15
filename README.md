@@ -40,7 +40,9 @@ python3 -m http.server 8123   # then open http://127.0.0.1:8123/
 | `site/assets/css/styles.css` | Tokens, fonts and ornaments copied from the app (`src/styles.css`) |
 | `site/assets/js/theme-init.js` | Sets the theme before first paint (same `localStorage.theme` key as the app) |
 | `site/assets/js/site.js` | The theme menu, the scroll-driven tilt of the screens and the code map (a port of the app's `code-map.ts`) |
-| `site/assets/img/shots/` | Screenshots of the real app, one dark and one light each, in two sizes |
+| `site/assets/img/screens/` | Screenshots of the real app, one dark and one light each, at 2400 and 960 px wide (3:2) |
+| `site/assets/img/loops/` | Short animated WebP loops of the app (960 px, and 1280 px for the larger view), dark and light |
+| `site/assets/video/` | The 35 second tour (desktop and mobile), opened on request, and the app clips from `docs/clips` |
 | `site/assets/img/og.png` | The share image used by Open Graph and Twitter cards |
 | `site/assets/fonts/` | Barlow Condensed, IBM Plex Sans and Mono, from the app |
 | `site/CNAME`, `robots.txt`, `sitemap.xml` | Domain and search files |
@@ -76,18 +78,20 @@ DNS at the registrar: four `A` records on `@` (`185.199.108.153`, `185.199.109.1
 
 ## Provenance of assets
 
-- `site/assets/img/shots/*`: screenshots of the real LazyDM app (Angular build, 1440x900 at 2x, resized to 1920px wide
-  and 960px wide), running in a browser with a faked `window.electronAPI` and made-up data (campaign "Lost Mine", the
-  encounter and scene "Ambush at the fort"). The map is the sample dungeon supplied by the project owner.
+- `site/assets/img/screens/*`, `loops/*` and `video/*`: screenshots, loops and clips of the real LazyDM app, made with the
+  app's own capture scripts (`scripts/capture-screens.mjs` and `scripts/record-clips.mjs` on the `develop` branch) on a
+  local demo vault with made-up data (campaign "The Ember Crown": Castle of Drake, Captain Vex, the Keep of Drake map).
+  The map and the character art were supplied by the project owner.
 - Franco and every icon are drawn from the app's own data (`franco.icon.ts` and the Lucide set it uses), written into
   the icon sprite at the top of `site/index.html`.
 
 ## Retaking the screenshots
 
-Start the app's dev server (`npx ng serve` in the app repo), load `/campaigns/lost-mine` with a fake
-`window.electronAPI`, and capture the encounter, the map, a note and the split screen (open `/campaigns/lost-mine` with
-`window.__workspace` set to a left tab and a right tab) in both themes at 1440x900. Convert to WebP at 1920px and 960px
-wide.
+On the app's `develop` branch: build the local demo vault (kept out of git), start `npm start` and the app with
+`LAZYDM_USER_DATA=/tmp/lazydm-demo npx electron . --remote-debugging-port=9333`, then run
+`node scripts/capture-screens.mjs <demo-vault> <out>` for the stills and `node scripts/record-clips.mjs <demo-vault> <out>`
+for the clips (set `CLIP_THEME=light` for the light ones). Convert the stills to WebP at 2400 px and 960 px wide, and the
+clips the page loops to animated WebP at 960 px and 1280 px (10 fps, `img2webp -lossy`). Both themes are always made together.
 
 ## License
 

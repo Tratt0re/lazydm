@@ -73,7 +73,7 @@ similar in structure to obsidian.md.
 ## Evidence on Hand
 
 - The app itself, README and `docs/design-principles.md` in the `develop` branch of the app repository.
-- Real app screenshots in `site/assets/img/shots/`, in dark and light and at both supported sizes.
+- Real app screenshots in `site/assets/img/screens/`, animated loops in `site/assets/img/loops/` and video in `site/assets/video/`, in dark and light.
 - Absent, and not to be invented: testimonials, user counts, customer logos, ratings, benchmarks, press, pricing
   figures, download counts, release dates.
 
