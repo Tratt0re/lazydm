@@ -60,3 +60,5 @@ Thumbs.db
 # Local tooling
 .claude/
 .impeccable/
+brag-output/
+docs/mock-image/
