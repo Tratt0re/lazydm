@@ -190,6 +190,113 @@
     sync();
   })();
 
+  /* ---------- the eye on each screenshot and loop: the same picture, larger, in a dialog ---------- */
+
+  (function enlarge() {
+    var dialog = document.getElementById('enlarge');
+    var buttons = Array.prototype.slice.call(document.querySelectorAll('[data-enlarge]'));
+    if (!dialog || !buttons.length || typeof dialog.showModal !== 'function') {
+      buttons.forEach(function (b) { b.hidden = true; });
+      return;
+    }
+    var big = dialog.querySelector('.enlarge-img');
+    var title = document.getElementById('enlarge-title');
+    var opener = null;
+
+    // The picture the visitor sees: the one of the current theme (the other is not painted).
+    function visibleImage(media) {
+      var imgs = Array.prototype.slice.call(media.querySelectorAll('img'));
+      for (var i = 0; i < imgs.length; i++) {
+        var r = imgs[i].getBoundingClientRect();
+        if (r.width > 0 && r.height > 0) return imgs[i];
+      }
+      return null;
+    }
+
+    buttons.forEach(function (b) {
+      b.addEventListener('click', function () {
+        var media = b.closest('.shot-media');
+        var img = media && visibleImage(media);
+        if (!img) return;
+        opener = b;
+        var src = img.getAttribute('data-large') || img.currentSrc || img.src;
+        // With reduced motion the page shows a still instead of the loop: open the still, full size.
+        if (/\/screens\//.test(img.currentSrc)) src = img.currentSrc.replace(/-960\.webp/, '.webp');
+        big.setAttribute('src', src);
+        big.setAttribute('alt', img.getAttribute('alt') || '');
+        var frame = b.closest('.shot-frame');
+        var path = frame && frame.querySelector('.shot-path');
+        title.textContent = path ? path.textContent : '';
+        dialog.showModal();
+      });
+    });
+    Array.prototype.forEach.call(dialog.querySelectorAll('[data-enlarge-close]'), function (b) {
+      b.addEventListener('click', function () { dialog.close(); });
+    });
+    dialog.addEventListener('click', function (e) { if (e.target === dialog) dialog.close(); });
+    dialog.addEventListener('close', function () {
+      // Release the picture: an animated one keeps decoding while it is attached.
+      big.removeAttribute('src');
+      if (opener) opener.focus();
+    });
+  })();
+
+
+  /* ---------- the tour: a dialog with the 35 second video; nothing downloads until it is opened ---------- */
+
+  (function tour() {
+    var dialog = document.getElementById('tour');
+    var openers = Array.prototype.slice.call(document.querySelectorAll('[data-tour-open]'));
+    if (!dialog || !openers.length || typeof dialog.showModal !== 'function') {
+      // No <dialog> support: the button would do nothing, so hide it rather than leave a dead control.
+      openers.forEach(function (b) { b.hidden = true; });
+      return;
+    }
+    var tall = window.matchMedia ? window.matchMedia('(max-width: 700px)') : null;
+    var opener = null;
+
+    function current() {
+      return dialog.querySelector(tall && tall.matches ? '.tour-tall' : '.tour-wide');
+    }
+
+    function open(from) {
+      opener = from;
+      var video = current();
+      if (video && !video.getAttribute('src')) {
+        video.setAttribute('src', video.getAttribute('data-src'));
+        // The visitor asked for the tour: load it now, even when the browser then refuses to start it with sound.
+        video.preload = 'auto';
+        video.load();
+      }
+      dialog.showModal();
+      if (video) {
+        var played = video.play();
+        // Autoplay with sound can be refused: the visitor then uses the controls.
+        if (played && played.catch) played.catch(function () {});
+      }
+    }
+
+    function release() {
+      Array.prototype.forEach.call(dialog.querySelectorAll('video'), function (v) {
+        v.pause();
+        v.removeAttribute('src');
+        v.load();
+      });
+      if (opener) opener.focus();
+    }
+
+    openers.forEach(function (b) { b.addEventListener('click', function () { open(b); }); });
+    Array.prototype.forEach.call(dialog.querySelectorAll('[data-tour-close]'), function (b) {
+      b.addEventListener('click', function () { dialog.close(); });
+    });
+    // A click on the backdrop (the dialog element itself, outside its box) closes it too.
+    dialog.addEventListener('click', function (e) {
+      if (e.target === dialog) dialog.close();
+    });
+    dialog.addEventListener('close', release);
+  })();
+
+
   /* ---------- code map (the app's code-map.ts: the whole note at a small scale, headings as labels) ---------- */
 
   (function codeMap() {

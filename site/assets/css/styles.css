@@ -819,14 +819,17 @@ h3 { font: 700 1.75rem / 1.1 var(--font-display); }
   display: block;
   width: 100%;
   height: auto;
-  aspect-ratio: 16 / 10;
+  aspect-ratio: 3 / 2;
   background: var(--recessed);
   border: 1px solid var(--border);
 }
+.shot picture { display: block; }
 /* Each shot exists in both themes; the page theme picks one (and the other is not painted). */
 .shot .theme-dark { display: none; }
 :root.dark .shot .theme-light { display: none; }
 :root.dark .shot .theme-dark { display: block; }
+.shot picture.theme-dark { display: none; }
+:root.dark .shot picture.theme-dark { display: block; }
 .shot figcaption {
   max-width: 38rem;
   margin-top: 0.75rem;
@@ -861,7 +864,7 @@ h3 { font: 700 1.75rem / 1.1 var(--font-display); }
   white-space: nowrap;
 }
 .shot-frame .arc-ornament-rule { margin: 0 2px 14px; }
-.shot-media { line-height: 0; }
+.shot-media { position: relative; line-height: 0; }
 
 /* Bronze corner brackets (the app's campaign card): they mark the edge of the frame and grow when it is hovered. */
 .shot-frame > .arc-card-corner,
@@ -1089,4 +1092,86 @@ h3 { font: 700 1.75rem / 1.1 var(--font-display); }
 @media (max-width: 599px) {
   .more { padding: 1.5rem 1rem 1.25rem; }
   .more .defs > div { grid-template-columns: 1fr; }
+}
+
+
+/* ---------- the tour: a 35 second video, opened on request, with sound ---------- */
+
+.tour-btn .i, .tour-close .i { width: 16px; height: 16px; fill: none; }
+.tour-close { flex: none; }
+.tour {
+  width: min(72rem, calc(100vw - 2 * var(--gutter)));
+  max-height: calc(100dvh - 2 * var(--gutter));
+  margin: auto;
+  padding: 14px 14px 16px;
+  color: var(--foreground);
+  background: var(--card);
+  border: 2px solid var(--border-strong);
+  box-shadow: var(--elevation-overlay);
+}
+.tour::backdrop { background: color-mix(in oklab, var(--background) 22%, #000 78%); }
+.tour-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0 2px 10px;
+}
+.tour-title { margin: 0; font: 700 1.5rem/1 var(--font-display); text-transform: uppercase; letter-spacing: 0.01em; color: var(--foreground-strong); }
+.tour video {
+  display: block;
+  width: 100%;
+  max-height: calc(100dvh - 11rem);
+  aspect-ratio: 16 / 9;
+  background: #000;
+  border: 1px solid var(--border);
+}
+/* The tall cut for narrow screens. */
+.tour .tour-wide { display: block; }
+.tour .tour-tall { display: none; }
+@media (max-width: 700px) {
+  .tour { width: min(26rem, calc(100vw - 2 * var(--gutter))); }
+  .tour .tour-wide { display: none; }
+  .tour .tour-tall { display: block; aspect-ratio: 9 / 16; max-height: calc(100dvh - 11rem); margin-inline: auto; }
+}
+.tour-note { margin: 0.75rem 2px 0; font-size: 0.8125rem; color: var(--muted-foreground); }
+
+
+/* ---------- the eye: opens a screenshot or loop larger ---------- */
+
+.shot-eye {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  z-index: 2;
+  opacity: 0;
+  transition: opacity 150ms, background-color 150ms, border-color 150ms, color 150ms;
+}
+.shot-eye .i { width: 16px; height: 16px; fill: none; }
+.shot-frame:hover .shot-eye,
+.shot-eye:focus-visible { opacity: 1; }
+/* No hover on touch screens: the button is always there. */
+@media (hover: none) { .shot-eye { opacity: 1; } }
+
+.enlarge {
+  width: min(90rem, calc(100vw - 2 * var(--gutter)));
+  max-height: calc(100dvh - 2 * var(--gutter));
+  margin: auto;
+  padding: 14px 14px 16px;
+  color: var(--foreground);
+  background: var(--card);
+  border: 2px solid var(--border-strong);
+  box-shadow: var(--elevation-overlay);
+}
+.enlarge::backdrop { background: color-mix(in oklab, var(--background) 22%, #000 78%); }
+.enlarge-bar { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 0 2px 10px; }
+.enlarge-title { min-width: 0; margin: 0; overflow: hidden; font: 500 0.75rem var(--font-mono); color: var(--foreground-secondary); text-overflow: ellipsis; white-space: nowrap; }
+.enlarge-img {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: calc(100dvh - 7.5rem);
+  object-fit: contain;
+  background: var(--recessed);
+  border: 1px solid var(--border);
 }
