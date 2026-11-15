@@ -38,8 +38,8 @@ Write scenes, characters and enemies as notes, then connect them with `[[links]]
 links to it. Before the session, **Review** shows you any broken links that need attention.
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="docs/images/note-dark.webp" />
-  <img src="docs/images/note-light.webp" alt="A LazyDM note in Live preview, with its links and Info box visible while you write." />
+  <source media="(prefers-color-scheme: dark)" srcset="docs/screens/note-live-dark.webp" />
+  <img src="docs/screens/note-live-light.webp" alt="A LazyDM note in Live preview: an image at half width, an Info box and a table, with links resolved while you write." />
 </picture>
 
 - **Campaigns** with an overview and per-campaign sections (Enemies, Encounters, Assets…): hide, reorder, rename, add
@@ -60,8 +60,8 @@ When play begins, the campaign you prepared is already in front of you. Add Comb
 through the turns while hit points, temporary hit points and timed statuses stay visible.
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="docs/images/tracker-dark.webp" />
-  <img src="docs/images/tracker-light.webp" alt="The LazyDM encounter page: a battle bar with the round and the active turn, then compact Combatant rows in initiative order, each with its side, an HP bar with damage, heal and temporary HP buttons, AC and statuses." />
+  <source media="(prefers-color-scheme: dark)" srcset="docs/screens/tracker-dark.webp" />
+  <img src="docs/screens/tracker-light.webp" alt="A running LazyDM encounter on the left, with its battle bar and Combatant rows, and the sheet of the enemy whose turn it is open on the right." />
 </picture>
 
 - **Encounters** are `.json` files you link like any note (`![[ambush.json]]`).
@@ -77,8 +77,8 @@ Add a map image and place pins for the locations that matter. Link a pin to a no
 the guard post you prepared earlier.
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="docs/images/map-dark.webp" />
-  <img src="docs/images/map-light.webp" alt="A dungeon map in LazyDM with linked pins and a list of its marked locations." />
+  <source media="(prefers-color-scheme: dark)" srcset="docs/screens/map-dark.webp" />
+  <img src="docs/screens/map-light.webp" alt="A dungeon map in LazyDM with linked pins and a list of its marked locations." />
 </picture>
 
 ## Keep the scene together
@@ -87,8 +87,8 @@ Open any note, map or encounter beside another, each side with its own tabs. Dra
 note in both panes is one live document, and maps and encounters share one live state.
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="docs/images/split-dark.webp" />
-  <img src="docs/images/split-light.webp" alt="LazyDM split screen: a campaign note on the left and a dungeon map with pins on the right." />
+  <source media="(prefers-color-scheme: dark)" srcset="docs/screens/split-dark.webp" />
+  <img src="docs/screens/split-light.webp" alt="LazyDM split screen: a campaign note with an image and a read-aloud box on the left, and the dungeon map with its pins on the right." />
 </picture>
 
 ## Bring the Codex with you

@@ -58,6 +58,11 @@ const SHOTS = [
     name: 'tracker',
     route: `${CAMPAIGN}/encounters/Castle%20gatehouse.json(split:campaigns/ember-crown/enemies/Captain%20Vex)`,
   },
+  // Split screen: a note on one side, a map on the other.
+  {
+    name: 'split',
+    route: `${CAMPAIGN}/scenes/Castle%20of%20Drake(split:campaigns/ember-crown/maps/Keep%20of%20Drake.json)`,
+  },
   // Search: the header field, with a term typed.
   {
     name: 'search',
@@ -107,6 +112,7 @@ await run('window.electronAPI.ipcClient.index.rebuild({})');
 for (const theme of ['dark', 'light']) {
   await run(`localStorage.setItem('theme', '${theme}')`);
   for (const shot of SHOTS) {
+    if (process.env.CAPTURE_ONLY && !process.env.CAPTURE_ONLY.split(',').includes(shot.name)) continue;
     // Tabs are saved per campaign: start every shot from an empty workspace.
     await run(
       `window.electronAPI.ipcClient.workspace.save({ campaign: 'ember-crown', tabs: [], activeTabId: null, rightActiveTabId: null })`,
