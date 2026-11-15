@@ -969,14 +969,17 @@ arc-content > main:has(> app-map-page) {
 }
 
 /* Image width (`![[img.png|wide]]`), in Reading and Live preview. */
+.arc-markdown-body .arc-image-width-half,
 .arc-image-width-half {
   width: 50%;
 }
 
+.arc-markdown-body .arc-image-width-wide,
 .arc-image-width-wide {
   width: 75%;
 }
 
+.arc-markdown-body .arc-image-width-full,
 .arc-image-width-full {
   width: 100%;
 }
