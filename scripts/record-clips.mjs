@@ -136,6 +136,30 @@ async function open(route) {
   await run(`window.__clipMove(${cursorAt.x}, ${cursorAt.y})`);
 }
 
+/** Clicks the smallest visible element whose text (or accessible name) starts with `text`, inside the viewport. */
+async function clickText(text, root = 'body') {
+  const spot = await run(
+    `(() => { const t = ${JSON.stringify(text.toLowerCase())}; const els = [...document.querySelector(${JSON.stringify(root)}).querySelectorAll('*')].filter((e) => { const r = e.getBoundingClientRect(); return r.width > 0 && r.y > 0 && r.y < innerHeight && ((e.getAttribute('aria-label') || e.textContent || '').trim().toLowerCase().startsWith(t)); }); els.sort((a, b) => a.textContent.length - b.textContent.length); const e = els[0]; if (!e) return null; const b = e.getBoundingClientRect(); return { x: b.x + b.width / 2, y: b.y + b.height / 2 }; })()`,
+  );
+  if (!spot) throw new Error(`Nothing to click that starts with "${text}"`);
+  await click(spot.x, spot.y);
+}
+/** Waits until a sheet / overlay has slid into view. */
+async function sheetReady() {
+  for (let i = 0; i < 20; i++) {
+    const y = await run(`document.querySelector('app-settings-page section, app-sheet section')?.getBoundingClientRect().y`);
+    if (y !== undefined && y !== null && y >= 0) return;
+    await wait(200);
+  }
+}
+const openCustomize = async (item) => {
+  await clickLabel('Customize');
+  await wait(500);
+  await clickText(item, '[role="menu"]');
+  await sheetReady();
+  await wait(900);
+};
+
 // ---- the clips (each one returns the function that stops its recording) --------------------------------------------
 const CLIPS = {
   // The running encounter: press "Show the note" on an enemy, its sheet opens in the other side of the split screen.
@@ -208,6 +232,115 @@ const CLIPS = {
     await wait(2200);
     return stop;
   },
+
+  // Customize menu → Templates: pick a template, its Markdown opens.
+  templates: async () => {
+    await open(`${CAMPAIGN}`);
+    const stop = startRecording();
+    await wait(1200);
+    await openCustomize('Templates');
+    await wait(900);
+    await clickText('Enemies · D&D 5e');
+    await wait(2500);
+    await clickText('Spells · D&D 5e');
+    await wait(2500);
+    return stop;
+  },
+  // Customize menu → Tracker layouts: change the row size, the preview follows.
+  'tracker-layout': async () => {
+    await open(`${CAMPAIGN}`);
+    const stop = startRecording();
+    await wait(1200);
+    await openCustomize('Tracker layouts');
+    await wait(1200);
+    await clickText('Card');
+    await wait(2200);
+    await clickText('Expanded');
+    await wait(2200);
+    await clickText('Compact');
+    await wait(1800);
+    return stop;
+  },
+  // Settings → AI Agents rules: create the rules file for the campaign.
+  'agent-rules': async () => {
+    await open(`${CAMPAIGN}`);
+    const stop = startRecording();
+    await wait(1200);
+    await clickLabel('Settings');
+    await sheetReady();
+    await wait(1000);
+    await clickText('AI Agents rules');
+    await wait(2800);
+    await clickText('Create the rules file');
+    await wait(2500);
+    // write a few rules into the new file, then save it
+    const editor = await centerOf(`document.querySelector('app-settings-page .cm-content')`);
+    await click(editor.x, editor.y);
+    // the editor continues a list by itself on Enter: type the marker only on the first bullet
+    const rules = ['# Rules for The Ember Crown', '', '- Write in English, in a dark and dry tone.', 'Name every enemy with a short, memorable title.', 'Link every creature to its note, like [[Captain Vex]].'];
+    for (const [index, line] of rules.entries()) {
+      await send('Input.insertText', { text: line });
+      if (index < rules.length - 1) {
+        await send('Input.dispatchKeyEvent', { type: 'keyDown', key: 'Enter', code: 'Enter', windowsVirtualKeyCode: 13, text: '\r' });
+        await send('Input.dispatchKeyEvent', { type: 'keyUp', key: 'Enter', code: 'Enter', windowsVirtualKeyCode: 13 });
+      }
+      await wait(600);
+    }
+    await wait(900);
+    await clickLabel('Save');
+    await wait(2500);
+    return stop;
+  },
+  // Settings → MCP: switch it on (confirm the dialog) and start the server.
+  mcp: async () => {
+    await open(`${CAMPAIGN}`);
+    const stop = startRecording();
+    await wait(1200);
+    await clickLabel('Settings');
+    await sheetReady();
+    await wait(1000);
+    await clickText('MCP.');
+    await wait(3000);
+    await clickLabel('Use MCP');
+    await wait(1800);
+    await clickText('Switch on');
+    await wait(2500);
+    const start = await centerOf(`[...document.querySelectorAll('button')].find((b) => b.textContent.trim() === 'Start' && b.getBoundingClientRect().width > 0)`);
+    await wait(900);
+    if (start) {
+      await click(start.x, start.y);
+      await wait(3500);
+    }
+    return stop;
+  },
+  // The campaign list: create a campaign (name, description, game system) and see it appear.
+  'create-campaign': async () => {
+    await open('/campaigns');
+    const stop = startRecording();
+    await wait(1500);
+    await clickText('New campaign');
+    await wait(1200);
+    const name = await centerOf(`document.querySelector('input[placeholder="Lost Mine of Phandelver"]')`);
+    await click(name.x, name.y);
+    for (const char of 'Tides of Ash') {
+      await send('Input.insertText', { text: char });
+      await wait(90);
+    }
+    const description = await centerOf(`document.querySelector('input[placeholder="A short summary of the adventure"]')`);
+    await click(description.x, description.y);
+    for (const char of 'A port city on fire and a crew with a map.') {
+      await send('Input.insertText', { text: char });
+      await wait(45);
+    }
+    await wait(500);
+    await clickText('Generic');
+    await wait(800);
+    await clickText('D&D 5e');
+    await wait(900);
+    await clickText('Create campaign');
+    await wait(3500);
+    return stop;
+  },
 };
 
 // ---- main ---------------------------------------------------------------------------------------------------------
@@ -230,6 +363,16 @@ for (const [name, clip] of Object.entries(CLIPS)) {
     continue;
   }
   await stop();
+  if (name === 'agent-rules') {
+    fs.rmSync(path.join(path.resolve(vaultFolder), 'ember-crown', 'agents.md'), { force: true });
+  }
+  if (name === 'mcp') {
+    await run(`window.electronAPI.ipcClient.mcp.stop({}).catch(() => null)`);
+    await run(`window.electronAPI.ipcClient.mcp.setEnabled({ enabled: false }).catch(() => null)`);
+  }
+  if (name === 'create-campaign') {
+    await run(`window.electronAPI.ipcClient.campaigns.remove({ slug: 'tides-of-ash' })`);
+  }
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), `clip-${name}-`));
   frames.forEach((frame, index) =>
     fs.writeFileSync(path.join(dir, `${String(index + 1).padStart(4, '0')}.jpg`), Buffer.from(frame.data, 'base64')),

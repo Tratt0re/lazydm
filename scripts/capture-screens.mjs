@@ -21,6 +21,10 @@ const SHOTS = [
   { name: 'note-live', route: `${CAMPAIGN}/scenes/The%20Quiet%20Inn`, mode: 'Live preview' },
   { name: 'map', route: `${CAMPAIGN}/maps/Keep%20of%20Drake.json` },
   { name: 'review', route: `${CAMPAIGN}/review` },
+  // The campaign list, with a few campaigns.
+  { name: 'campaigns', route: '/campaigns' },
+  // The home of one campaign: its sections and the Review card.
+  { name: 'campaign-home', route: CAMPAIGN },
   // Callouts, a table and a task list further down the same note.
   {
     name: 'note-blocks',
