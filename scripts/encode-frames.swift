@@ -26,7 +26,7 @@ let writer = try AVAssetWriter(outputURL: out, fileType: .mp4)
 let input = AVAssetWriterInput(
   mediaType: .video,
   outputSettings: [AVVideoCodecKey: AVVideoCodecType.h264, AVVideoWidthKey: width, AVVideoHeightKey: height,
-    AVVideoCompressionPropertiesKey: [AVVideoAverageBitRateKey: 6_000_000]])
+    AVVideoCompressionPropertiesKey: [AVVideoAverageBitRateKey: 1_200_000]])
 let adaptor = AVAssetWriterInputPixelBufferAdaptor(
   assetWriterInput: input,
   sourcePixelBufferAttributes: [kCVPixelBufferPixelFormatTypeKey as String: kCVPixelFormatType_32ARGB,
