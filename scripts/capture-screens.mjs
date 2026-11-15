@@ -19,8 +19,7 @@ const CAMPAIGN = '/campaigns/ember-crown';
 const SHOTS = [
   { name: 'note-reading', route: `${CAMPAIGN}/scenes/Castle%20of%20Drake`, mode: 'Reading' },
   { name: 'note-live', route: `${CAMPAIGN}/scenes/The%20Quiet%20Inn`, mode: 'Live preview' },
-  { name: 'tracker', route: `${CAMPAIGN}/encounters/Drake's%20gatehouse.json` },
-  { name: 'map', route: `${CAMPAIGN}/maps/The%20Ember%20Coast.json` },
+  { name: 'map', route: `${CAMPAIGN}/maps/Keep%20of%20Drake.json` },
   { name: 'review', route: `${CAMPAIGN}/review` },
   // Callouts, a table and a task list further down the same note.
   {
@@ -52,8 +51,8 @@ const SHOTS = [
   },
   // Split screen: the encounter on one side, the sheet of an enemy on the other.
   {
-    name: 'split',
-    route: `${CAMPAIGN}/encounters/Drake's%20gatehouse.json(split:campaigns/ember-crown/enemies/Captain%20Vex)`,
+    name: 'tracker',
+    route: `${CAMPAIGN}/encounters/Castle%20gatehouse.json(split:campaigns/ember-crown/enemies/Captain%20Vex)`,
   },
   // Search: the header field, with a term typed.
   {
@@ -112,7 +111,7 @@ for (const theme of ['dark', 'light']) {
     await run(`location.href = 'http://localhost:4200${CAMPAIGN}'`);
     await wait(2500);
     await run(
-      `history.pushState({ navigationId: ${++navId} }, '', '${shot.route}'); dispatchEvent(new PopStateEvent('popstate', { state: { navigationId: ${navId} } }))`,
+      `history.pushState({ navigationId: ${++navId} }, '', ${JSON.stringify(shot.route)}); dispatchEvent(new PopStateEvent('popstate', { state: { navigationId: ${navId} } }))`,
     );
     await wait(3000);
     if (shot.mode) {
