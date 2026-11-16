@@ -11,6 +11,7 @@
   --background: #E9EAE7;
   --foreground: #30363A;
   --foreground-strong: #202428;
+  --franco-outline: none;
   --foreground-secondary: #4C5356;
   --card: #FAF9F6;
   --card-foreground: #30363A;
@@ -78,6 +79,7 @@
   --background: #101114;
   --foreground: #D6D1C6;
   --foreground-strong: #F0ECE3;
+  --franco-outline: #F0ECE3;
   --foreground-secondary: #B6B2A9;
   --card: #1A1C1F;
   --card-foreground: #D6D1C6;
