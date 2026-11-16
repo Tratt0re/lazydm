@@ -41,7 +41,7 @@ export const Franco: LucideIconData = [
     {
       d: 'M509.003 508.678L407.332 492L346.689 520.977L329.027 550.5L311.364 609L364.941 595.897L417.544 609L449.72 592.579L479.5 609L509.003 571.283L538.052 609L574.539 592.579L606.135 609L658.236 595.897L709.364 609L691.701 550.5L674.039 520.977L612.489 492Z',
       transform: 'translate(1.5 2.25) scale(0.020588)',
-      fill: 'var(--franco-mustache, #F0ECE3)',
+      fill: 'var(--franco-mustache, var(--primary, #6D5A3E))',
       stroke: 'none',
       key: 'franco-mustache',
     },

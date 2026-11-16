@@ -10,7 +10,7 @@ Inline SVG and the Angular `franco` icon support independent CSS colors:
   style="--franco-hat: #6D5A3E; --franco-mustache: #B9A27A" />
 ```
 
-The defaults remain a dark hat (`#202428`) and ivory moustache (`#F0ECE3`).
+The defaults are a dark hat (`#202428`) and a moustache in the primary colour: `#6D5A3E` in the light theme, `#B9A27A` in the dark theme.
 `--franco-outline` controls the theme outline. For a standalone SVG, edit the
 custom properties inside its `<style>`; CSS on a parent cannot reach an SVG
 loaded through `<img>`.
@@ -25,7 +25,7 @@ npm run icons:mac -- --hat '#6D5A3E' --mustache '#B9A27A'
 npm run icons:mac -- --background '#101114' --outline '#F0ECE3'
 ```
 
-Each color accepts `#RRGGBB`. The background defaults to `#E9EAE7`; the outline
+Each color accepts `#RRGGBB`. The background defaults to `#E9EAE7` (the app's light background), the moustache to `#6D5A3E` (the light theme's primary) and the outline
 defaults to `none`. App icons are fixed artwork and do not follow the OS theme.
 The command writes `APP_ICON.png`, `lazydm_ico_1024.png` (macOS margin and shadow),
 `lazydm_ico_win.png` (Windows/Linux), `lazydm_ico_short.png` (favicon), and

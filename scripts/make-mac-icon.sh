@@ -9,7 +9,7 @@ ARTWORK="$ICON_DIR/APP_ICON.png"
 DEFAULT_ICON="$ICON_DIR/lazydm_ico_1024.png"
 BACKGROUND="#E9EAE7"
 HAT="#202428"
-MUSTACHE="#F0ECE3"
+MUSTACHE="#6D5A3E"
 OUTLINE="none"
 while [[ $# -gt 0 ]]; do
   case "$1" in
