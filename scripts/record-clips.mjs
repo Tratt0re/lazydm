@@ -42,6 +42,13 @@ const run = async (expression) =>
   (await send('Runtime.evaluate', { expression, awaitPromise: true, returnByValue: true })).result
     ?.result?.value;
 
+const vaultRoot = path.resolve(vaultFolder);
+const partyFile = path.join(vaultRoot, 'ember-crown', 'encounters', '_party.json');
+const throneFile = path.join(vaultRoot, 'ember-crown', 'encounters', 'Throne room.json');
+const readJson = (file, fallback) => (fs.existsSync(file) ? JSON.parse(fs.readFileSync(file, 'utf8')) : fallback);
+const partyBackup = readJson(partyFile, { version: 1, name: 'Party', notes: '', rule: null, battle: { status: 'idle', round: 0, turnId: null }, entities: [] });
+const throneBackup = readJson(throneFile, { version: 1, name: 'Throne room', notes: '', rule: null, battle: { status: 'idle', round: 0, turnId: null }, entities: [] });
+
 // ---- the visible cursor -------------------------------------------------------------------------------------------
 const CURSOR_SETUP = `(() => {
   document.getElementById('clip-cursor')?.remove();
@@ -107,6 +114,14 @@ async function click(x, y) {
   await send('Input.dispatchMouseEvent', { type: 'mousePressed', x, y, button: 'left', clickCount: 1 });
   await send('Input.dispatchMouseEvent', { type: 'mouseReleased', x, y, button: 'left', clickCount: 1 });
   await wait(700);
+}
+async function rightClick(x, y) {
+  await moveTo(x, y);
+  await wait(300);
+  await run(`window.__clipRipple(${x}, ${y})`);
+  await send('Input.dispatchMouseEvent', { type: 'mousePressed', x, y, button: 'right', buttons: 2, clickCount: 1 });
+  await send('Input.dispatchMouseEvent', { type: 'mouseReleased', x, y, button: 'right', buttons: 0, clickCount: 1 });
+  await wait(900);
 }
 const centerOf = (elementExpression) =>
   run(`(() => { const el = ${elementExpression}; if (!el) return null; el.scrollIntoView({ block: 'center' }); const b = el.getBoundingClientRect(); return { x: b.x + b.width / 2, y: b.y + b.height / 2 }; })()`);
@@ -341,6 +356,74 @@ const CLIPS = {
     await wait(3500);
     return stop;
   },
+
+  // Map pin → right-click → "Open to the side": the file linked to the pin opens in the other half of the screen.
+  'map-side': async () => {
+    await open(`${CAMPAIGN}/maps/Keep%20of%20Drake.json`);
+    await wait(3000);
+    const stop = startRecording();
+    await wait(1500);
+    const pin = await centerOf(`document.querySelector('.arc-map-pin-dot')`);
+    await moveTo(pin.x, pin.y, 900);
+    await wait(500);
+    await rightClick(pin.x, pin.y);
+    await wait(1200);
+    await clickText('Open to the side');
+    await wait(3800);
+    return stop;
+  },
+  // The party roster: from the Encounters page, add two player characters from their notes.
+  'party-create': async () => {
+    // start from an empty roster, then put it back afterwards (the main loop restores it)
+    fs.writeFileSync(partyFile, JSON.stringify({ ...partyBackup, entities: [] }, null, 2));
+    await run('window.electronAPI.ipcClient.index.rebuild({})');
+    await open(`${CAMPAIGN}/encounters`);
+    const stop = startRecording();
+    await wait(1500);
+    await clickText('Party roster');
+    await wait(2200);
+    for (const member of ['Brannoch', 'Lyra Ashdown']) {
+      await clickText('Add combatant');
+      await wait(1000);
+      await clickText('Select');
+      await wait(900);
+      await clickText(member);
+      await wait(1100);
+      const confirm = await centerOf(`[...document.querySelectorAll('button')].find((b) => b.textContent.trim() === 'Add' && b.getBoundingClientRect().width > 0)`);
+      await click(confirm.x, confirm.y);
+      await wait(1800);
+    }
+    await wait(1500);
+    return stop;
+  },
+  // Add party: the roster joins an encounter in one press.
+  'party-add': async () => {
+    fs.writeFileSync(partyFile, JSON.stringify(partyBackup, null, 2));
+    fs.writeFileSync(throneFile, JSON.stringify(throneBackup, null, 2));
+    await run('window.electronAPI.ipcClient.index.rebuild({})');
+    await open(`${CAMPAIGN}/encounters/Throne%20room.json`);
+    await wait(1500);
+    const stop = startRecording();
+    await wait(1600);
+    await clickText('Add party');
+    await wait(3500);
+    return stop;
+  },
+  // A link inside a note: right-click it and open the linked note to the side.
+  'link-side': async () => {
+    await open(`${CAMPAIGN}/scenes/Castle%20of%20Drake`);
+    await wait(2500);
+    const stop = startRecording();
+    await wait(1500);
+    const link = await centerOf(`[...document.querySelectorAll('a.cm-lp-link')].find((a) => a.getBoundingClientRect().width > 0 && a.textContent === 'Captain Vex')`);
+    await moveTo(link.x, link.y, 900);
+    await wait(500);
+    await rightClick(link.x, link.y);
+    await wait(1200);
+    await clickText('Open to the side');
+    await wait(3800);
+    return stop;
+  },
 };
 
 // ---- main ---------------------------------------------------------------------------------------------------------
@@ -363,6 +446,10 @@ for (const [name, clip] of Object.entries(CLIPS)) {
     continue;
   }
   await stop();
+  if (name === 'party-create' || name === 'party-add') {
+    fs.writeFileSync(partyFile, JSON.stringify(partyBackup, null, 2));
+    fs.writeFileSync(throneFile, JSON.stringify(throneBackup, null, 2));
+  }
   if (name === 'agent-rules') {
     fs.rmSync(path.join(path.resolve(vaultFolder), 'ember-crown', 'agents.md'), { force: true });
   }
