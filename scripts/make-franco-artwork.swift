@@ -19,9 +19,11 @@ func color(_ hex: String) -> CGColor {
                  blue: CGFloat(rgb & 255) / 255, alpha: 1)
 }
 let args = CommandLine.arguments
-guard args.count == 7 else {
-  fail("Usage: make-franco-artwork.swift <Franco.svg> <output.png> <background> <hat> <mustache> <outline|none>")
+guard args.count == 7 || args.count == 8 else {
+  fail("Usage: make-franco-artwork.swift <Franco.svg> <output.png> <background> <hat> <mustache> <outline|none> [face|full]")
 }
+// "face" (default): only the eye and the moustache, large. "full": the whole Franco with the engraved dividers.
+let faceOnly = args.count == 7 || args[7] == "face"
 let background = color(args[3])
 let overrides = ["franco-hat": color(args[4]), "franco-mustache": color(args[5])]
 let outline: CGColor? = args[6] == "none" ? nil : color(args[6])
@@ -63,7 +65,8 @@ func polygon(_ data: String) -> CGPath {
   }
   return path
 }
-let shapes = artwork.paths.map { attributes -> (String, CGPath, CGColor) in
+let facePaths: Set<String> = ["franco-eye", "franco-pupil", "franco-mustache"]
+let shapes = artwork.paths.filter { !faceOnly || facePaths.contains($0["id"] ?? "") }.map { attributes -> (String, CGPath, CGColor) in
   guard let id = attributes["id"], let data = attributes["d"], let fill = attributes["fill"] else {
     fail("Franco paths must have id, d and fill attributes")
   }
@@ -76,6 +79,7 @@ guard let context = CGContext(data: nil, width: 1024, height: 1024, bitsPerCompo
   bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue) else { fail("Cannot create canvas") }
 context.setFillColor(background)
 context.fill(CGRect(x: 0, y: 0, width: 1024, height: 1024))
+if !faceOnly {
 // Engraved dividers along the top and bottom edge: the app's hairline with a big diamond between two small ones
 // (`.arc-engraved-divider`), in the moustache colour. They sit clear of the silhouette and of the rounded corners.
 let dividerInset: CGFloat = 76
@@ -103,9 +107,10 @@ for y in [dividerInset, 1024 - dividerInset] {
   diamond(CGPoint(x: 512 + 76, y: y), 13)
   context.strokePath()
 }
-// Fit the actual silhouette, centered with 9% breathing room on all sides.
+}
+// Fit the drawn shapes, centered: the whole silhouette with 9% breathing room, or the face a little smaller.
 let bounds = shapes.reduce(CGRect.null) { $0.union($1.1.boundingBoxOfPath) }
-let scale = 840 / max(bounds.width, bounds.height)
+let scale = (faceOnly ? 600 : 840) / max(bounds.width, bounds.height)
 context.translateBy(x: 512, y: 512)
 context.scaleBy(x: scale, y: -scale)
 context.translateBy(x: -bounds.midX, y: -bounds.midY)

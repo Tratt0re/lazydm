@@ -1,5 +1,6 @@
 #!/bin/bash
-# Render Franco.svg into APP_ICON.png, then build all platform icons.
+# Render Franco.svg (the eye and the moustache, or with --full the whole Franco) into APP_ICON.png, then build all
+# platform icons.
 # Needs macOS (swift, sips, iconutil). See scripts/ICONS.md for color options.
 set -euo pipefail
 cd "$(dirname "$0")/.."
@@ -7,9 +8,10 @@ cd "$(dirname "$0")/.."
 ICON_DIR="src/assets/icon"
 ARTWORK="$ICON_DIR/APP_ICON.png"
 DEFAULT_ICON="$ICON_DIR/lazydm_ico_1024.png"
-BACKGROUND="#E9EAE7"
+MODE="face"
+BACKGROUND=""
 HAT="#202428"
-MUSTACHE="#6D5A3E"
+MUSTACHE=""
 OUTLINE="none"
 while [[ $# -gt 0 ]]; do
   case "$1" in
@@ -22,18 +24,26 @@ while [[ $# -gt 0 ]]; do
         --outline) OUTLINE="$2" ;;
       esac
       shift 2 ;;
+    --full) MODE="full"; shift ;;
     --help|-h)
-      echo 'Usage: npm run icons:mac -- [--background "#RRGGBB"] [--hat "#RRGGBB"] [--mustache "#RRGGBB"] [--outline "#RRGGBB"|none]'
+      echo 'Usage: npm run icons:mac -- [--full] [--background "#RRGGBB"] [--hat "#RRGGBB"] [--mustache "#RRGGBB"] [--outline "#RRGGBB"|none]'
       exit 0 ;;
     *) echo "Unknown option: $1 (use --help)" >&2; exit 1 ;;
   esac
 done
+# Defaults: the face sits on the dark tone of the body with the dark theme's bronze; the full Franco on the light app
+# background with the light theme's bronze.
+if [[ "$MODE" == "face" ]]; then
+  : "${BACKGROUND:=#202428}" "${MUSTACHE:=#B9A27A}"
+else
+  : "${BACKGROUND:=#E9EAE7}" "${MUSTACHE:=#6D5A3E}"
+fi
 WORK="$(mktemp -d)"
 trap 'rm -rf "$WORK"' EXIT
 
 # Render to temporary artwork first so invalid input never overwrites APP_ICON.png.
 swift -module-cache-path "$WORK/module-cache" scripts/make-franco-artwork.swift "$ICON_DIR/Franco.svg" "$WORK/artwork.png" \
-  "$BACKGROUND" "$HAT" "$MUSTACHE" "$OUTLINE"
+  "$BACKGROUND" "$HAT" "$MUSTACHE" "$OUTLINE" "$MODE"
 cp "$WORK/artwork.png" "$ARTWORK"
 swift -module-cache-path "$WORK/module-cache" scripts/make-mac-icon.swift "$ARTWORK" "$DEFAULT_ICON"
 swift -module-cache-path "$WORK/module-cache" scripts/make-mac-icon.swift "$ARTWORK" "$ICON_DIR/lazydm_ico_win.png" full
