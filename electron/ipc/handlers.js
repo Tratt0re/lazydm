@@ -130,6 +130,7 @@ const IPC_HANDLERS = Object.freeze({
 
   [CHANNELS.update.check]: updateController.check,
   [CHANNELS.update.forceCheck]: updateController.forceCheck,
+  [CHANNELS.update.getVersion]: updateController.getVersion,
   [CHANNELS.update.openRelease]: updateController.openRelease,
   [CHANNELS.update.ignoreVersion]: updateController.ignoreVersion,
 

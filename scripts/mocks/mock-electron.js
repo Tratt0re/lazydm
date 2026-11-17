@@ -33,8 +33,26 @@
     window: { getState: () => ({ isMaximized: false, isFullscreen: false }) },
     menu: { update: () => null },
     update: {
-      forceCheck: () => ({ updateAvailable: false }),
-      check: () => ({ updateAvailable: false }),
+      // Set window.__updateResult (an UpdateCheckDto) to try the other states of Settings → About.
+      getVersion: () => '0.1.0',
+      forceCheck: () =>
+        window.__updateResult ?? {
+          status: 'up-to-date',
+          updateAvailable: false,
+          currentVersion: '0.1.0',
+          latestVersion: '0.1.0',
+          releaseUrl: null,
+          popupDismissedForThisVersion: false,
+        },
+      check: () =>
+        window.__updateResult ?? {
+          status: 'up-to-date',
+          updateAvailable: false,
+          currentVersion: '0.1.0',
+          latestVersion: '0.1.0',
+          releaseUrl: null,
+          popupDismissedForThisVersion: false,
+        },
     },
     cloud: {
       getStatus: () => ({

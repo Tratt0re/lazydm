@@ -81,6 +81,10 @@
       "agentRules": {
         "title": "AI Agents rules",
         "description": "Your instructions for AI assistants: how they should write and format the notes of this campaign."
+      },
+      "about": {
+        "title": "About",
+        "description": "What LazyDM is, the version you run and whether there is a newer one."
       }
     },
     "general": {
@@ -470,6 +474,29 @@
       "pathCopied": "Path copied",
       "instructionCopied": "Instruction copied",
       "copyError": "Couldn't copy"
+    },
+    "about": {
+      "what": {
+        "title": "What is LazyDM",
+        "intro": "LazyDM is a note-based desktop app made by a Dungeon Master for other Dungeon Masters. It is lazy by design: less effort when you prepare, and quick access when you run the session.",
+        "files": "Everything lives as plain Markdown files in your Codex folder. LazyDM only keeps a local index that it can always rebuild.",
+        "repository": "LazyDM on GitHub"
+      },
+      "version": {
+        "title": "Version",
+        "installed": "Installed",
+        "check": "Check for updates",
+        "checking": "Checking…",
+        "available": "Version {{latest}} is available.",
+        "upToDate": "You are up to date.",
+        "noRelease": "No release has been published yet.",
+        "error": "Couldn't check for updates. Are you online?",
+        "viewRelease": "View release"
+      },
+      "startup": {
+        "label": "Check for updates at startup",
+        "description": "Asks GitHub once at startup whether a newer release exists. Nothing else is sent and nothing is installed. Kept on this device."
+      }
     }
   },
   "vault": {

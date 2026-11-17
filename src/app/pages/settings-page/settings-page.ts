@@ -18,6 +18,7 @@ import {
   type SecondarySidebarItem,
 } from '@/components/secondary-sidebar/secondary-sidebar.component';
 import { SettingsSectionHeaderComponent } from './components/settings-section-header/settings-section-header.component';
+import { AboutSectionComponent } from './components/sections/about-section/about-section.component';
 import { AgentRulesSectionComponent } from './components/sections/agent-rules-section/agent-rules-section.component';
 import { EditorSectionComponent } from './components/sections/editor-section/editor-section.component';
 import { GeneralSectionComponent } from './components/sections/general-section/general-section.component';
@@ -43,6 +44,7 @@ import {
     AgentRulesSectionComponent,
     McpSectionComponent,
     VaultSectionComponent,
+    AboutSectionComponent,
   ],
   template: `
     <section
@@ -82,6 +84,9 @@ import {
           }
           @case ('vault') {
             <app-vault-section />
+          }
+          @case ('about') {
+            <app-about-section />
           }
         }
       </div>

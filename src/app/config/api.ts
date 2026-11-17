@@ -196,6 +196,7 @@ export interface ElectronIpcClient {
   readonly update: {
     readonly check: OptionalIpcRequest<void, DTO.UpdateCheckDto>;
     readonly forceCheck: OptionalIpcRequest<void, DTO.UpdateCheckDto>;
+    readonly getVersion: OptionalIpcRequest<void, string>;
     readonly openRelease: OptionalIpcRequest<void, void>;
     readonly ignoreVersion: IpcRequest<{ version: string }, void>;
   };

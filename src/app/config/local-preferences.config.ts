@@ -13,6 +13,7 @@ export enum LocalPreferenceKey {
   NOTE_AUDIO_VOLUME = 'note_audio_volume',
   SHOW_FILE_SIZES = 'show_file_sizes',
   OPEN_LAST_CAMPAIGN = 'open_last_campaign',
+  CHECK_UPDATES_AT_STARTUP = 'check_updates_at_startup',
   LAST_CAMPAIGN = 'last_campaign',
   SPLIT_RATIO = 'split_ratio',
   TRACKER_ROW_DENSITY = 'tracker_density',
@@ -114,6 +115,8 @@ export interface LocalPreferences {
   readonly showFileSizes: boolean;
   /** Settings → General: open the last campaign at start instead of the campaign list. */
   readonly openLastCampaign: boolean;
+  /** Settings → About: look for a newer release when the app starts. */
+  readonly checkUpdatesAtStartup: boolean;
   /** How much of a combatant row the encounter page shows. */
   readonly trackerRowDensity: TrackerRowDensity;
   /** The combatant whose turn it is opens as the Expanded row, whatever the density. */
@@ -130,6 +133,7 @@ export const LOCAL_PREFERENCE_DEFAULTS: Readonly<LocalPreferences> = Object.free
   noteAudioVolume: 1,
   showFileSizes: false,
   openLastCampaign: false,
+  checkUpdatesAtStartup: true,
   trackerRowDensity: 'compact',
   trackerFollowTurn: false,
 });

@@ -1,5 +1,8 @@
 /** Result of an update check (see `electron/controllers/update.controller.js`). */
+export type UpdateStatus = 'available' | 'up-to-date' | 'no-release' | 'error';
+
 export interface UpdateCheckDto {
+  readonly status: UpdateStatus;
   readonly updateAvailable: boolean;
   readonly currentVersion: string;
   readonly latestVersion: string | null;

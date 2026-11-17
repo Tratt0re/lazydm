@@ -47,6 +47,11 @@ export class LocalPreferencesService {
   );
   /** Settings → General → open the last campaign at start, on this device. */
   readonly openLastCampaign = this.openLastCampaignSignal.asReadonly();
+  private readonly checkUpdatesAtStartupSignal = signal<boolean>(
+    LOCAL_PREFERENCE_DEFAULTS.checkUpdatesAtStartup,
+  );
+  /** Settings → About → look for a newer release at start, on this device. */
+  readonly checkUpdatesAtStartup = this.checkUpdatesAtStartupSignal.asReadonly();
   private readonly trackerRowDensitySignal = signal<TrackerRowDensity>(
     LOCAL_PREFERENCE_DEFAULTS.trackerRowDensity,
   );
@@ -73,6 +78,7 @@ export class LocalPreferencesService {
     this.applyEditorSettings(this.readEditorSettings());
     this.showFileSizesSignal.set(this.getShowFileSizes());
     this.openLastCampaignSignal.set(this.getOpenLastCampaign());
+    this.checkUpdatesAtStartupSignal.set(this.getCheckUpdatesAtStartup());
     this.trackerRowDensitySignal.set(this.getTrackerRowDensity());
     this.trackerFollowTurnSignal.set(this.getTrackerFollowTurn());
   }
@@ -162,6 +168,17 @@ export class LocalPreferencesService {
   setOpenLastCampaign(open: boolean): void {
     this.openLastCampaignSignal.set(open);
     this.setText(LocalPreferenceKey.OPEN_LAST_CAMPAIGN, open ? '1' : '0');
+  }
+
+  /** Settings → About: look for a newer release at start, on this device (on unless turned off). */
+  getCheckUpdatesAtStartup(): boolean {
+    const value = this.getText(LocalPreferenceKey.CHECK_UPDATES_AT_STARTUP);
+    return value === undefined ? LOCAL_PREFERENCE_DEFAULTS.checkUpdatesAtStartup : value === '1';
+  }
+
+  setCheckUpdatesAtStartup(check: boolean): void {
+    this.checkUpdatesAtStartupSignal.set(check);
+    this.setText(LocalPreferenceKey.CHECK_UPDATES_AT_STARTUP, check ? '1' : '0');
   }
 
   /**

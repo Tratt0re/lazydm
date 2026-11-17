@@ -81,6 +81,10 @@
       "agentRules": {
         "title": "KI-Agenten-Regeln",
         "description": "Deine Anweisungen für KI-Assistenten: wie sie die Notizen dieser Kampagne schreiben und formatieren sollen."
+      },
+      "about": {
+        "title": "Über",
+        "description": "Was LazyDM ist, welche Version du nutzt und ob es eine neuere gibt."
       }
     },
     "general": {
@@ -470,6 +474,29 @@
       "pathCopied": "Pfad kopiert",
       "instructionCopied": "Anweisung kopiert",
       "copyError": "Kopieren nicht möglich"
+    },
+    "about": {
+      "what": {
+        "title": "Was ist LazyDM",
+        "intro": "LazyDM ist eine notizbasierte Desktop-App, gemacht von einem Spielleiter für andere Spielleiter. Sie ist mit Absicht faul: weniger Aufwand bei der Vorbereitung und schneller Zugriff, wenn du die Sitzung leitest.",
+        "files": "Alles liegt als einfache Markdown-Dateien in deinem Codex-Ordner. LazyDM führt nur einen lokalen Index, den es jederzeit neu aufbauen kann.",
+        "repository": "LazyDM auf GitHub"
+      },
+      "version": {
+        "title": "Version",
+        "installed": "Installiert",
+        "check": "Nach Updates suchen",
+        "checking": "Prüfe…",
+        "available": "Version {{latest}} ist verfügbar.",
+        "upToDate": "Du bist auf dem neuesten Stand.",
+        "noRelease": "Es wurde noch keine Version veröffentlicht.",
+        "error": "Updates konnten nicht geprüft werden. Bist du online?",
+        "viewRelease": "Version ansehen"
+      },
+      "startup": {
+        "label": "Beim Start nach Updates suchen",
+        "description": "Fragt beim Start einmal GitHub, ob es eine neuere Version gibt. Es wird nichts anderes gesendet und nichts installiert. Gilt nur für dieses Gerät."
+      }
     }
   },
   "vault": {

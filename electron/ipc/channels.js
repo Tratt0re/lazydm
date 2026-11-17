@@ -128,6 +128,7 @@ const CHANNELS = Object.freeze({
   update: Object.freeze({
     check: 'update:check',
     forceCheck: 'update:force-check',
+    getVersion: 'update:get-version',
     openRelease: 'update:open-release',
     ignoreVersion: 'update:ignore-version',
   }),

@@ -629,6 +629,12 @@ Codex. It is **off by default** and lives in the Electron main process (`electro
 - **External URLs** go through `openExternalSafe` (`electron/utils/external-url.js`): only `https:`, `http:` and
   `mailto:` are handed to the system. `update:open-release` ignores the renderer and opens only the release page
   found by the last update check, on the configured GitHub repository.
+- **Update check**: the only outbound request the app makes on its own. Main process only, one
+  `GET api.github.com/repos/{owner}/{repo}/releases/latest` with a generic `User-Agent`, no vault data, no
+  identifiers. It runs at startup (unless turned off in *Settings → About*) and on demand from the same page. The
+  app never downloads or installs anything: it compares versions and opens the release page. Releases are made by
+  hand on GitHub: tag `vX.Y.Z` equal to `package.json` `version`, published (not draft, not pre-release, which
+  `/releases/latest` ignores). The repository comes from `package.json` `repository.url`.
 - **Navigation** is limited to the app itself (exact dev origin, or the built `index.html`); IPC calls from any
   other frame are rejected.
 - **CSP** is a `<meta>` tag in `src/index.html` (no remote scripts; the inline theme script is allowed by hash —
@@ -982,10 +988,6 @@ Component behaviour, variant keys and configuration stay as they are.
 - **TODO — settings for the open vault and a factory reset**: Settings has no place to see or manage the current
   vault (path, close it, switch) nor to reset the app. Add both, and make `factoryReset` stop the indexer and the
   cloud controllers first.
-
-- **TODO — update check repository**: `package.json` `repository.url` is still a placeholder
-  (`github.com/yourusername/lazy_dm`). The real repository is now public at `github.com/Tratt0re/lazydm`; set it
-  here once the first release page exists, because the update check and the release-URL allowlist both derive from it.
 
 - **Encounters, later**: richer statuses (shared definitions with descriptions), combat timers, delay / hold turns,
   a roll for several encounters at once, and a starting-HP reset are left out on purpose and can be added without

@@ -1,0 +1,84 @@
+<div class="space-y-5">
+  <section class="rounded-lg border border-border/60 bg-card p-4 md:p-5">
+    <h3 class="mb-3 font-display text-lg font-semibold tracking-wide uppercase">
+      {{ 'settings.about.what.title' | translate }}<span class="text-primary" aria-hidden="true">.</span>
+    </h3>
+    <div class="space-y-2 text-sm text-muted-foreground">
+      <p>{{ 'settings.about.what.intro' | translate }}</p>
+      <p>{{ 'settings.about.what.files' | translate }}</p>
+    </div>
+    <p class="mt-3 text-sm">
+      <a
+        class="text-primary underline-offset-4 hover:underline"
+        [href]="repositoryUrl"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        {{ 'settings.about.what.repository' | translate }}
+      </a>
+    </p>
+  </section>
+
+  <section class="rounded-lg border border-border/60 bg-card p-4 md:p-5">
+    <h3 class="mb-3 font-display text-lg font-semibold tracking-wide uppercase">
+      {{ 'settings.about.version.title' | translate }}<span class="text-primary" aria-hidden="true">.</span>
+    </h3>
+
+    <dl class="grid gap-3 text-sm sm:grid-cols-[8rem_minmax(0,1fr)]">
+      <dt class="font-mono text-xs tracking-[0.08em] text-muted-foreground uppercase">
+        {{ 'settings.about.version.installed' | translate }}
+      </dt>
+      <dd class="font-mono">{{ version() ?? '—' }}</dd>
+    </dl>
+
+    <div class="mt-4 flex flex-wrap items-center justify-between gap-3">
+      <p class="min-w-0 text-sm" role="status" aria-live="polite">
+        @if (checking()) {
+          <span class="text-muted-foreground">{{ 'settings.about.version.checking' | translate }}</span>
+        } @else if (result(); as current) {
+          @switch (current.status) {
+            @case ('available') {
+              <span class="text-primary">
+                {{ 'settings.about.version.available' | translate: { latest: current.latestVersion } }}
+              </span>
+            }
+            @case ('up-to-date') {
+              <span class="text-muted-foreground">{{ 'settings.about.version.upToDate' | translate }}</span>
+            }
+            @case ('no-release') {
+              <span class="text-muted-foreground">{{ 'settings.about.version.noRelease' | translate }}</span>
+            }
+            @default {
+              <span class="text-destructive">{{ 'settings.about.version.error' | translate }}</span>
+            }
+          }
+        }
+      </p>
+
+      <div class="flex flex-wrap items-center gap-2">
+        @if (canOpenRelease()) {
+          <button type="button" arc-button arcType="default" (click)="openRelease()">
+            {{ 'settings.about.version.viewRelease' | translate }}
+          </button>
+        }
+        <button type="button" arc-button arcType="secondary" [disabled]="checking()" (click)="check()">
+          {{ 'settings.about.version.check' | translate }}
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <section class="rounded-lg border border-border/60 bg-card p-4 md:p-5">
+    <div class="flex items-start justify-between gap-4">
+      <div class="min-w-0">
+        <p class="text-sm font-medium">{{ 'settings.about.startup.label' | translate }}</p>
+        <p class="mt-1 text-xs text-muted-foreground">{{ 'settings.about.startup.description' | translate }}</p>
+      </div>
+      <arc-switch
+        [arcChecked]="checkAtStartup()"
+        [arcAriaLabel]="'settings.about.startup.label' | translate"
+        (arcCheckedChange)="setCheckAtStartup($event)"
+      />
+    </div>
+  </section>
+</div>
