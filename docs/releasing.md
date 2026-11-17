@@ -38,11 +38,14 @@ Until the first release exists, *Settings → About* shows "No release has been 
    ```
    | File | Target |
    | --- | --- |
-   | `LazyDM-<version>-arm64-mac.zip` | macOS, Apple Silicon |
-   | `LazyDM-<version>-mac.zip` | macOS, Intel |
-   | `lazydm-setup-<version>-x64.zip` | Windows installer (the `.exe` is inside the zip) |
-   | `lazydm-portable-<version>-x64.zip` | Windows, portable, no install (the `.exe` is inside the zip) |
+   | `lazydm-<version>-mac-arm64.zip` | macOS, Apple Silicon |
+   | `lazydm-<version>-mac-x64.zip` | macOS, Intel |
+   | `lazydm-<version>-win-x64-setup.zip` | Windows installer (the `.exe` is inside the zip) |
+   | `lazydm-<version>-win-x64-portable.zip` | Windows, portable, no install (the `.exe` is inside the zip) |
    | `lazydm-<version>-linux-x64.zip` | Linux |
+
+   All names are lowercase and carry the OS and the architecture (set per platform in the `build` field of
+   `package.json`).
 
    Open each build once before uploading it. The builds are not code-signed, so macOS and Windows warn on first
    launch; say so in the release notes.
