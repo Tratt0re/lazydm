@@ -91,6 +91,7 @@
     },
     "linux": {
       "icon": "src/assets/icon/lazydm_ico_win.png",
+      "artifactName": "lazydm-${version}-linux-${arch}.${ext}",
       "target": [
         "AppImage"
       ],

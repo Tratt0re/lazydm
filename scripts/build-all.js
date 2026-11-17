@@ -4,7 +4,8 @@ const { spawnSync } = require('node:child_process');
 
 /**
  * Builds the app for every desktop target and keeps one file per target in `release/all/`: the .zip of each macOS
- * and Linux build and the two .exe of Windows (the installer and the portable one). Usage:
+ * and Linux build and the two Windows .exe (the installer and the portable one), each of those inside its own
+ * .zip so that every file of a release is a zip. Usage:
  *
  *   npm run dist:all                      every target
  *   npm run dist:all -- mac-x64 win-x64   only these
@@ -17,11 +18,14 @@ const outDir = path.join(releaseDir, 'all');
 const workDir = path.join(releaseDir, '.work');
 const builderCli = path.join(rootDir, 'node_modules', 'electron-builder', 'cli.js');
 
-/** `args` go to electron-builder; `extension` picks the file to keep; `host` is the only OS that can build it. */
+/**
+ * `args` go to electron-builder; `extension` picks the file to keep; `host` is the only OS that can build it; `zip`
+ * wraps each kept file in a .zip of the same name.
+ */
 const TARGETS = {
   'mac-arm64': { args: ['--mac', 'zip', '--arm64'], extension: '.zip', host: 'darwin' },
   'mac-x64': { args: ['--mac', 'zip', '--x64'], extension: '.zip', host: 'darwin' },
-  'win-x64': { args: ['--win', 'nsis', 'portable', '--x64'], extension: '.exe', host: null },
+  'win-x64': { args: ['--win', 'nsis', 'portable', '--x64'], extension: '.exe', host: null, zip: true },
   'linux-x64': { args: ['--linux', 'zip', '--x64'], extension: '.zip', host: null },
 };
 
@@ -76,6 +80,17 @@ function run(label, args) {
   return result.status === 0;
 }
 
+/** Puts `file` alone in a .zip next to it (same name, `.zip` extension) and removes the original. */
+function zipFile(file) {
+  const zipPath = file.slice(0, -path.extname(file).length) + '.zip';
+  const result = spawnSync('zip', ['-j', '-q', zipPath, file], { stdio: 'inherit' });
+  if (result.status !== 0) {
+    throw new Error(`could not zip ${path.basename(file)}: is the \`zip\` command installed?`);
+  }
+  fs.rmSync(file);
+  return path.basename(zipPath);
+}
+
 function formatSize(bytes) {
   return `${(bytes / 1024 / 1024).toFixed(0)} MB`;
 }
@@ -95,7 +110,7 @@ function selectTargets() {
 
 /** Moves the wanted file(s) of one target out of its work folder into `release/all/`; returns their names. */
 function collect(id, targetWorkDir, takenNames) {
-  const { extension } = TARGETS[id];
+  const { extension, zip } = TARGETS[id];
   const files = fs
     .readdirSync(targetWorkDir, { withFileTypes: true })
     .filter((entry) => entry.isFile() && path.extname(entry.name).toLowerCase() === extension)
@@ -107,7 +122,7 @@ function collect(id, targetWorkDir, takenNames) {
     const finalName = takenNames.has(name) ? `${id}-${name}` : name;
     takenNames.add(finalName);
     fs.renameSync(path.join(targetWorkDir, name), path.join(outDir, finalName));
-    return finalName;
+    return zip ? zipFile(path.join(outDir, finalName)) : finalName;
   });
 }
 
