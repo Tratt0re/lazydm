@@ -11,8 +11,9 @@ stay plain Markdown in a folder you own.
 
 </div>
 
-> **Status:** LazyDM is heading toward 1.0 and is not available to download yet. You can follow the project here, or
-> build it yourself (see [Build from source](#build-from-source)).
+> **Download:** LazyDM 1.0 is on the [releases page](https://github.com/Tratt0re/lazydm/releases/latest) for macOS,
+> Windows and Linux. The builds are not code-signed yet, so your system may warn you the first time you open one. You
+> can also build it yourself (see [Build from source](#build-from-source)).
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="docs/images/social-card-dark.png" />
