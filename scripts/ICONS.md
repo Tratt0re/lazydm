@@ -31,9 +31,9 @@ The command writes `APP_ICON.png`, `lazydm_ico_1024.png` (macOS margin and shado
 `lazydm_ico_win.png` (Windows/Linux), `lazydm_ico_short.png` (favicon), and
 `build/icon.icns`. `APP_ICON.png` is generated; make geometry edits in `Franco.svg`.
 
-The artwork also carries four corner brackets in the moustache colour, the ones of the campaign cards and the setup panel
-(`make-franco-artwork.swift`: `bracketInset`, `bracketArm`, `bracketWidth`). They sit inside the curve of the rounded icon
-shape, so they follow `--mustache` and need no option of their own.
+The artwork also carries the app's engraved divider (hairline with a big diamond between two small ones) along the top
+and bottom edge, in the moustache colour (`make-franco-artwork.swift`: `dividerInset`, `dividerHalfWidth`, `dividerGap`,
+`dividerLine`). It follows `--mustache` and needs no option of its own.
 
 The Swift renderer needs no extra dependencies. It supports the absolute M/L/Z
 polygon paths used by Franco and rejects unsupported path commands. If the SVG
