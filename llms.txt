@@ -1,0 +1,16 @@
+# LazyDM
+
+> LazyDM is a desktop campaign manager and encounter tracker for Dungeon Masters.
+
+LazyDM runs on macOS, Windows and Linux. Campaign notes remain plain Markdown in a user-owned folder and stay compatible with Obsidian. Version 1.0.0 is available from the GitHub releases page.
+
+## Product
+
+- [Official website](https://lazydm.com/): Product overview, screenshots, availability and frequently asked questions.
+- [Product facts](https://lazydm.com/product.md): Agent-readable features, supported platforms, file ownership, sync and optional AI access.
+- [Download](https://github.com/Tratt0re/lazydm/releases/latest): The latest release for macOS, Windows and Linux.
+- [GitHub project](https://github.com/Tratt0re/lazydm): Source and repository documentation.
+
+## Optional
+
+- [Open issues](https://github.com/Tratt0re/lazydm/issues): Current work and reported issues.
