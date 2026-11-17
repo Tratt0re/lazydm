@@ -76,6 +76,23 @@ guard let context = CGContext(data: nil, width: 1024, height: 1024, bitsPerCompo
   bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue) else { fail("Cannot create canvas") }
 context.setFillColor(background)
 context.fill(CGRect(x: 0, y: 0, width: 1024, height: 1024))
+// Corner brackets: the bronze ones of the campaign cards and the setup panel, in the moustache colour. They sit
+// inside the curve of the rounded icon shape (its radius is 185/824 of the shape, so ~230 px on this canvas).
+let bracketInset: CGFloat = 96
+let bracketArm: CGFloat = 104
+let bracketWidth: CGFloat = 14
+context.setStrokeColor(overrides["franco-mustache"]!)
+context.setLineWidth(bracketWidth)
+context.setLineCap(.butt)
+context.setLineJoin(.miter)
+for (sx, sy) in [(1, 1), (-1, 1), (1, -1), (-1, -1)] as [(CGFloat, CGFloat)] {
+  let cornerX = sx > 0 ? bracketInset : 1024 - bracketInset
+  let cornerY = sy > 0 ? bracketInset : 1024 - bracketInset
+  context.move(to: CGPoint(x: cornerX + sx * bracketArm, y: cornerY))
+  context.addLine(to: CGPoint(x: cornerX, y: cornerY))
+  context.addLine(to: CGPoint(x: cornerX, y: cornerY + sy * bracketArm))
+  context.strokePath()
+}
 // Fit the actual silhouette, centered with 9% breathing room on all sides.
 let bounds = shapes.reduce(CGRect.null) { $0.union($1.1.boundingBoxOfPath) }
 let scale = 840 / max(bounds.width, bounds.height)
