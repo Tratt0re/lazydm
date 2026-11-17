@@ -1,26 +1,28 @@
 <div class="space-y-5">
   <section class="border border-border/60 bg-card p-5 md:p-6">
-    <header class="flex flex-col items-center gap-3 pt-2 text-center">
-      <arc-icon arcType="franco" class="size-20 shrink-0 text-primary md:size-28" aria-hidden="true" />
-      <h3 class="font-display text-5xl leading-[0.9] font-black tracking-[0.015em] uppercase md:text-7xl">
-        LazyDM<span class="text-primary" aria-hidden="true">.</span>
-      </h3>
+    <header class="flex flex-wrap items-start justify-between gap-x-5 gap-y-4">
+      <div class="flex items-center gap-5">
+        <arc-icon arcType="franco" class="size-16 shrink-0 text-primary md:size-24" aria-hidden="true" />
+        <h3 class="font-display text-4xl leading-[0.9] font-black tracking-[0.015em] uppercase md:text-6xl">
+          LazyDM<span class="text-primary" aria-hidden="true">.</span>
+        </h3>
+      </div>
+
+      <div class="flex flex-wrap gap-2">
+        <a arc-button arcType="outline" [href]="websiteUrl" target="_blank" rel="noopener noreferrer">
+          <arc-icon arcType="external-link" class="size-4" aria-hidden="true" />
+          {{ 'settings.about.links.website' | translate }}
+        </a>
+        <a arc-button arcType="outline" [href]="repositoryUrl" target="_blank" rel="noopener noreferrer">
+          <arc-icon arcType="external-link" class="size-4" aria-hidden="true" />
+          {{ 'settings.about.links.github' | translate }}
+        </a>
+      </div>
     </header>
 
-    <div class="mx-auto mt-6 max-w-[56ch] space-y-4 text-center text-base leading-relaxed text-foreground-secondary">
+    <div class="mt-6 max-w-[62ch] space-y-4 text-base leading-relaxed text-foreground-secondary">
       <p class="text-balance">{{ 'settings.about.description.what' | translate }}</p>
       <p class="text-balance">{{ 'settings.about.description.promise' | translate }}</p>
-    </div>
-
-    <div class="mt-5 flex flex-wrap justify-end gap-2">
-      <a arc-button arcType="outline" [href]="websiteUrl" target="_blank" rel="noopener noreferrer">
-        <arc-icon arcType="external-link" class="size-4" aria-hidden="true" />
-        {{ 'settings.about.links.website' | translate }}
-      </a>
-      <a arc-button arcType="outline" [href]="repositoryUrl" target="_blank" rel="noopener noreferrer">
-        <arc-icon arcType="external-link" class="size-4" aria-hidden="true" />
-        {{ 'settings.about.links.github' | translate }}
-      </a>
     </div>
   </section>
 
