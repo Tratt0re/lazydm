@@ -1,13 +1,13 @@
 # LazyDM product facts
 
-Last verified: 2026-11-14
+Last verified: 2026-11-17
 
 LazyDM is a desktop campaign manager and encounter tracker for Dungeon Masters. It brings campaign preparation and the tools used during play into one app.
 
 ## Availability
 
-- Status: pre-1.0 and in active development
-- Downloads: not available yet
+- Version: 1.0.0
+- Downloads: https://github.com/Tratt0re/lazydm/releases/latest (GitHub releases)
 - Supported operating systems: macOS, Windows and Linux
 - Official website: https://lazydm.com/
 - Official repository: https://github.com/Tratt0re/lazydm

@@ -20,7 +20,7 @@ site's visitor is a DM deciding whether to try LazyDM; many already keep notes i
 
 LazyDM is a desktop app (Electron, macOS / Windows / Linux) built by a Dungeon Master for other DMs and lazy by
 design: it saves the DM effort both when preparing and while running the session. The site exists to explain the app
-and get a DM to follow it and, once releases exist, download it.
+and get a DM to download it from GitHub releases.
 
 ## Positioning
 
@@ -46,8 +46,8 @@ and note templates; interactive maps with pins linked to notes; tabs and split s
 app languages; an opt-in local MCP server for AI assistants on the same computer.
 
 Terminology (DESIGN_PRINCIPLES §1b): say *Codex* (not vault), *Combatant*, *Tracker layout*, *Links*, *Review*,
-*Info box*. *OpenAI Codex* is always written in full, never "Codex" alone. The app is heading to 1.0; it is not
-released yet.
+*Info box*. *OpenAI Codex* is always written in full, never "Codex" alone. LazyDM 1.0 is released; the download is the
+GitHub releases page.
 
 Price and licence (user, 2026-11-09): the app is basically free to use, and the user wants a public project whose
 licence allows personal use but not commercialisation, because paid features may come later. Consequences for copy:
@@ -59,7 +59,7 @@ licence allows personal use but not commercialisation, because paid features may
 - No licence name appears on the landing page itself; the README and the repository carry it.
 
 Other undecided facts, so the copy must not claim them:
-- **Downloads.** No public releases exist. The primary call to action is "Coming soon" next to a GitHub link.
+- **Downloads.** Version 1.0.0 is released on GitHub (`/releases/latest`). The primary call to action is "Download LazyDM".
 - **Hosting.** GitHub Pages (user decision). Asset paths must work from a sub-path (`/lazydm/`) or a custom domain.
 
 ## Brand Commitments
@@ -82,7 +82,7 @@ similar in structure to obsidian.md.
 1. Your files, your folder: content is plain Markdown the DM owns; the app never holds it hostage.
 2. Lazy by design: fewer steps, sensible defaults and one-click paths, both at the desk and at the table.
 3. Made by a DM for DMs: speak the table's language, never generic productivity talk.
-4. Honest about limits: sync is done by the cloud provider, the MCP server is opt-in, the app is pre-1.0.
+4. Honest about limits: sync is done by the cloud provider, the MCP server is opt-in, the builds are not code-signed yet.
 5. Say only what is true today: no claims about licence, price or availability that are not settled.
 
 ## Accessibility & Inclusion
