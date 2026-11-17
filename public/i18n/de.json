@@ -476,12 +476,6 @@
       "copyError": "Kopieren nicht möglich"
     },
     "about": {
-      "what": {
-        "title": "Was ist LazyDM",
-        "intro": "LazyDM ist eine notizbasierte Desktop-App, gemacht von einem Spielleiter für andere Spielleiter. Sie ist mit Absicht faul: weniger Aufwand bei der Vorbereitung und schneller Zugriff, wenn du die Sitzung leitest.",
-        "files": "Alles liegt als einfache Markdown-Dateien in deinem Codex-Ordner. LazyDM führt nur einen lokalen Index, den es jederzeit neu aufbauen kann.",
-        "repository": "LazyDM auf GitHub"
-      },
       "version": {
         "title": "Version",
         "installed": "Installiert",
@@ -496,6 +490,14 @@
       "startup": {
         "label": "Beim Start nach Updates suchen",
         "description": "Fragt beim Start einmal GitHub, ob es eine neuere Version gibt. Es wird nichts anderes gesendet und nichts installiert. Gilt nur für dieses Gerät."
+      },
+      "links": {
+        "website": "Website",
+        "github": "GitHub"
+      },
+      "description": {
+        "what": "Eine Desktop-App für Spielleiter, gemacht von einem.",
+        "promise": "Deine Kampagne besteht aus einfachem Markdown in einem Ordner, der dir gehört, ohne Konto."
       }
     }
   },
@@ -1723,7 +1725,7 @@
     "step": "Schritt {{current}} von {{total}}",
     "welcome": {
       "tagline": "Deine Kampagne, von der Vorbereitung bis zum Spiel.",
-      "lead": "Bereite deine Kampagne vor und spiele sie am Tisch – mit derselben Desktop-App.",
+      "lead": "Von einem Spielleiter, für Spielleiter.",
       "points": {
         "prepare": {
           "title": "Am Schreibtisch vorbereiten",

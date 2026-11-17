@@ -476,12 +476,6 @@
       "copyError": "No se pudo copiar"
     },
     "about": {
-      "what": {
-        "title": "Qué es LazyDM",
-        "intro": "LazyDM es una aplicación de escritorio basada en notas, hecha por un Dungeon Master para otros Dungeon Masters. Es perezosa a propósito: menos esfuerzo al preparar y acceso rápido mientras diriges la sesión.",
-        "files": "Todo vive en archivos Markdown sencillos dentro de la carpeta de tu Codex. LazyDM solo guarda un índice local que siempre puede reconstruir.",
-        "repository": "LazyDM en GitHub"
-      },
       "version": {
         "title": "Versión",
         "installed": "Instalada",
@@ -496,6 +490,14 @@
       "startup": {
         "label": "Buscar actualizaciones al iniciar",
         "description": "Al iniciar, pregunta una vez a GitHub si hay una versión más reciente. No se envía nada más y no se instala nada. Se guarda en este dispositivo."
+      },
+      "links": {
+        "website": "Sitio web",
+        "github": "GitHub"
+      },
+      "description": {
+        "what": "Una aplicación de escritorio para Dungeon Masters, hecha por uno.",
+        "promise": "Tu campaña es Markdown sencillo en una carpeta tuya, sin cuenta."
       }
     }
   },
@@ -1723,7 +1725,7 @@
     "step": "Paso {{current}} de {{total}}",
     "welcome": {
       "tagline": "Tu campaña, de la preparación al juego.",
-      "lead": "Prepara tu campaña y juégala en la mesa desde la misma aplicación de escritorio.",
+      "lead": "Hecha por un Dungeon Master, para Dungeon Masters.",
       "points": {
         "prepare": {
           "title": "Prepara en tu escritorio",

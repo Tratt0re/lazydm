@@ -1,22 +1,27 @@
 <div class="space-y-5">
-  <section class="rounded-lg border border-border/60 bg-card p-4 md:p-5">
-    <h3 class="mb-3 font-display text-lg font-semibold tracking-wide uppercase">
-      {{ 'settings.about.what.title' | translate }}<span class="text-primary" aria-hidden="true">.</span>
-    </h3>
-    <div class="space-y-2 text-sm text-muted-foreground">
-      <p>{{ 'settings.about.what.intro' | translate }}</p>
-      <p>{{ 'settings.about.what.files' | translate }}</p>
+  <section class="border border-border/60 bg-card p-5 md:p-6">
+    <header class="flex items-center gap-5">
+      <arc-icon arcType="franco" class="size-16 shrink-0 text-primary md:size-24" aria-hidden="true" />
+      <h3 class="font-display text-4xl leading-[0.9] font-black tracking-[0.015em] uppercase md:text-6xl">
+        LazyDM<span class="text-primary" aria-hidden="true">.</span>
+      </h3>
+    </header>
+
+    <div class="mt-5 max-w-prose space-y-1 text-base text-foreground-secondary">
+      <p>{{ 'settings.about.description.what' | translate }}</p>
+      <p>{{ 'settings.about.description.promise' | translate }}</p>
     </div>
-    <p class="mt-3 text-sm">
-      <a
-        class="text-primary underline-offset-4 hover:underline"
-        [href]="repositoryUrl"
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        {{ 'settings.about.what.repository' | translate }}
+
+    <div class="mt-5 flex flex-wrap gap-2">
+      <a arc-button arcType="outline" [href]="websiteUrl" target="_blank" rel="noopener noreferrer">
+        <arc-icon arcType="external-link" class="size-4" aria-hidden="true" />
+        {{ 'settings.about.links.website' | translate }}
       </a>
-    </p>
+      <a arc-button arcType="outline" [href]="repositoryUrl" target="_blank" rel="noopener noreferrer">
+        <arc-icon arcType="external-link" class="size-4" aria-hidden="true" />
+        {{ 'settings.about.links.github' | translate }}
+      </a>
+    </div>
   </section>
 
   <section class="rounded-lg border border-border/60 bg-card p-4 md:p-5">

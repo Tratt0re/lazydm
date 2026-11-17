@@ -476,12 +476,6 @@
       "copyError": "无法复制"
     },
     "about": {
-      "what": {
-        "title": "LazyDM 是什么",
-        "intro": "LazyDM 是一款基于笔记的桌面应用，由地下城主为地下城主打造。它的设计宗旨就是“懒”：准备时更省力，主持游戏时能快速找到所需内容。",
-        "files": "所有内容都以普通 Markdown 文件保存在你的 Codex 文件夹中。LazyDM 只保留一份可随时重建的本地索引。",
-        "repository": "GitHub 上的 LazyDM"
-      },
       "version": {
         "title": "版本",
         "installed": "已安装",
@@ -496,6 +490,14 @@
       "startup": {
         "label": "启动时检查更新",
         "description": "启动时向 GitHub 询问一次是否有新版本。不会发送其他内容，也不会安装任何东西。仅保存在此设备上。"
+      },
+      "links": {
+        "website": "网站",
+        "github": "GitHub"
+      },
+      "description": {
+        "what": "一款为地下城主打造的桌面应用，作者本人就是地下城主。",
+        "promise": "你的战役是保存在你自己文件夹中的普通 Markdown，无需账号。"
       }
     }
   },
@@ -1723,7 +1725,7 @@
     "step": "第 {{current}} 步，共 {{total}} 步",
     "welcome": {
       "tagline": "你的战役，从准备到开玩。",
-      "lead": "在同一个桌面应用中准备战役，并在牌桌上运行它。",
+      "lead": "由地下城主打造，为地下城主而生。",
       "points": {
         "prepare": {
           "title": "在书桌前准备",

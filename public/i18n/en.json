@@ -476,12 +476,6 @@
       "copyError": "Couldn't copy"
     },
     "about": {
-      "what": {
-        "title": "What is LazyDM",
-        "intro": "LazyDM is a note-based desktop app made by a Dungeon Master for other Dungeon Masters. It is lazy by design: less effort when you prepare, and quick access when you run the session.",
-        "files": "Everything lives as plain Markdown files in your Codex folder. LazyDM only keeps a local index that it can always rebuild.",
-        "repository": "LazyDM on GitHub"
-      },
       "version": {
         "title": "Version",
         "installed": "Installed",
@@ -496,6 +490,14 @@
       "startup": {
         "label": "Check for updates at startup",
         "description": "Asks GitHub once at startup whether a newer release exists. Nothing else is sent and nothing is installed. Kept on this device."
+      },
+      "links": {
+        "website": "Website",
+        "github": "GitHub"
+      },
+      "description": {
+        "what": "A desktop app for Dungeon Masters, made by one.",
+        "promise": "Your campaign is plain Markdown in a folder you own, with no account."
       }
     }
   },
@@ -1723,7 +1725,7 @@
     "step": "Step {{current}} of {{total}}",
     "welcome": {
       "tagline": "Your campaign, from prep to play.",
-      "lead": "Prepare your campaign and run it at the table from the same desktop app.",
+      "lead": "Made by a Dungeon Master, for Dungeon Masters.",
       "points": {
         "prepare": {
           "title": "Prepare at your desk",

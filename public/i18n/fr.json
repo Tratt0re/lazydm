@@ -476,12 +476,6 @@
       "copyError": "Impossible de copier"
     },
     "about": {
-      "what": {
-        "title": "Qu'est-ce que LazyDM",
-        "intro": "LazyDM est une application de bureau fondée sur les notes, faite par un Maître du Donjon pour d'autres Maîtres du Donjon. Elle est paresseuse par choix : moins d'effort pour préparer et un accès rapide pendant la séance.",
-        "files": "Tout vit dans de simples fichiers Markdown, dans le dossier de ton Codex. LazyDM ne garde qu'un index local qu'il peut toujours reconstruire.",
-        "repository": "LazyDM sur GitHub"
-      },
       "version": {
         "title": "Version",
         "installed": "Installée",
@@ -496,6 +490,14 @@
       "startup": {
         "label": "Rechercher des mises à jour au démarrage",
         "description": "Demande une fois à GitHub au démarrage s'il existe une version plus récente. Rien d'autre n'est envoyé et rien n'est installé. Conservé sur cet appareil."
+      },
+      "links": {
+        "website": "Site web",
+        "github": "GitHub"
+      },
+      "description": {
+        "what": "Une application de bureau pour Maîtres du Donjon, faite par l'un d'eux.",
+        "promise": "Ta campagne, c'est du Markdown simple dans un dossier qui t'appartient, sans compte."
       }
     }
   },
@@ -1723,7 +1725,7 @@
     "step": "Étape {{current}} sur {{total}}",
     "welcome": {
       "tagline": "Ta campagne, de la préparation au jeu.",
-      "lead": "Prépare ta campagne et joue-la à la table depuis la même application de bureau.",
+      "lead": "Faite par un Maître du Donjon, pour des Maîtres du Donjon.",
       "points": {
         "prepare": {
           "title": "Prépare à ton bureau",

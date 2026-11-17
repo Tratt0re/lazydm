@@ -3,22 +3,25 @@ import { TranslatePipe } from '@ngx-translate/core';
 
 import { LocalPreferencesService } from '@/services/local-preferences.service';
 import { ArcTechButtonComponent } from '@/shared/components/button';
+import { ArcTechIconComponent } from '@/shared/components/icon';
 import { ArcTechSwitchComponent } from '@/shared/components/switch';
 import { UpdateService } from '@/shared/core/services/update.service';
 
 /** Where the code and the releases live (the update check derives its repository from `package.json`). */
 const REPOSITORY_URL = 'https://github.com/Tratt0re/lazydm';
+const WEBSITE_URL = 'https://lazydm.com';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-about-section',
-  imports: [TranslatePipe, ArcTechButtonComponent, ArcTechSwitchComponent],
+  imports: [TranslatePipe, ArcTechButtonComponent, ArcTechIconComponent, ArcTechSwitchComponent],
   templateUrl: './about-section.component.html',
 })
 export class AboutSectionComponent {
   protected readonly updateService = inject(UpdateService);
   private readonly localPreferences = inject(LocalPreferencesService);
 
+  protected readonly websiteUrl = WEBSITE_URL;
   protected readonly repositoryUrl = REPOSITORY_URL;
   protected readonly releasesUrl = `${REPOSITORY_URL}/releases`;
   protected readonly checkAtStartup = this.localPreferences.checkUpdatesAtStartup;
