@@ -123,6 +123,8 @@ npm run dev            # Angular dev server + preload watch + Electron
 | `npm run build:desktop` | Unpackaged desktop app |
 | `npm run dist` | Distributable for the current platform (`dist:mac`, `dist:win`, `dist:linux`) |
 
+To publish a version, follow [`docs/releasing.md`](docs/releasing.md).
+
 `electron/preload.bundle.cjs` is generated from `electron/preload.js` by `npm run build:preload` and is not in git. Every
 dev and build script makes it first; run it yourself before starting Electron any other way.
 

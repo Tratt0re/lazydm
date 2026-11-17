@@ -1,7 +1,7 @@
 # LazyDM — Architecture
 
 A snapshot of what the project is and where things live, for anyone reading or contributing to the code. For the rules behind it, read
-[`design-principles.md`](design-principles.md); for setup and commands, the [`README`](../README.md).
+[`design-principles.md`](design-principles.md); for setup and commands, the [`README`](../README.md); for publishing a version, [`releasing.md`](releasing.md).
 
 ## What it is
 
