@@ -480,24 +480,24 @@
         "title": "Versione",
         "installed": "Installata",
         "check": "Cerca aggiornamenti",
-        "checking": "Controllo in corso…",
+        "checking": "Ricerca aggiornamenti…",
         "available": "È disponibile la versione {{latest}}.",
         "upToDate": "Sei aggiornato.",
         "noRelease": "Non è ancora stata pubblicata nessuna versione.",
-        "error": "Impossibile cercare aggiornamenti. Sei online?",
-        "viewRelease": "Vedi versione"
+        "error": "Impossibile cercare aggiornamenti. Controlla la connessione a Internet o riprova più tardi.",
+        "viewRelease": "Vedi versione su GitHub"
       },
       "startup": {
         "label": "Cerca aggiornamenti all'avvio",
-        "description": "All'avvio chiede a GitHub se esiste una versione più recente. Non viene inviato altro e non si installa nulla. Resta su questo dispositivo."
+        "description": "Cerca nuove versioni su GitHub quando apri LazyDM. Scegli tu se scaricare e installare un aggiornamento. Questa impostazione vale per questo dispositivo."
       },
       "links": {
         "website": "Sito web",
         "github": "GitHub"
       },
       "description": {
-        "what": "Un'app desktop per Dungeon Master, fatta da uno di loro.",
-        "promise": "La tua campagna è semplice Markdown in una cartella tua, senza account."
+        "what": "LazyDM riunisce note della campagna, mappe e gestione dei combattimenti. È fatta da un Dungeon Master per usarla al tavolo.",
+        "promise": "Le tue note restano in una cartella che scegli tu, come file Markdown che puoi aprire in Obsidian. LazyDM non richiede un account."
       }
     }
   },
@@ -1725,22 +1725,22 @@
     "step": "Passo {{current}} di {{total}}",
     "welcome": {
       "tagline": "La tua campagna, dalla preparazione al gioco.",
-      "lead": "Fatta da un Dungeon Master, per i Dungeon Master.",
+      "lead": "Tieni note della campagna, mappe e incontri in un’unica app desktop.",
       "points": {
         "prepare": {
-          "title": "Prepara alla scrivania",
-          "text": "Scrivi scene, luoghi e nemici come note collegate. Rinomina una nota e LazyDM aggiorna i suoi collegamenti."
+          "title": "Collega le tue note",
+          "text": "Scrivi le scene e collegale ai luoghi e ai personaggi della tua campagna. LazyDM aggiorna i collegamenti quando rinomini una nota."
         },
         "session": {
-          "title": "Gioca al tavolo",
-          "text": "Aggiungi i Combattenti dalle loro note e tira l’iniziativa. LazyDM legge i loro valori, così il tracker è pronto senza riscriverli."
+          "title": "Gestisci l’incontro",
+          "text": "Aggiungi i Combattenti dalle tue note. Il tracker legge le loro statistiche e tiene in vista iniziativa, punti ferita e condizioni."
         },
         "ownership": {
-          "title": "La campagna resta tua",
-          "text": "Il tuo Codex è semplice Markdown in una cartella tua. Funziona con Obsidian e non richiede un account."
+          "title": "I file restano tuoi",
+          "text": "Le tue note sono file Markdown in una cartella chiamata Codex. Puoi aprirle in Obsidian o in un altro editor Markdown."
         }
       },
-      "continue": "Continua"
+      "continue": "Configura il tuo Codex"
     },
     "vault": {
       "back": "Indietro",

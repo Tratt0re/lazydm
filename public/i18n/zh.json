@@ -480,24 +480,24 @@
         "title": "版本",
         "installed": "已安装",
         "check": "检查更新",
-        "checking": "正在检查…",
+        "checking": "正在检查更新…",
         "available": "新版本 {{latest}} 已发布。",
         "upToDate": "已是最新版本。",
         "noRelease": "尚未发布任何版本。",
-        "error": "无法检查更新。你已联网吗？",
-        "viewRelease": "查看版本"
+        "error": "无法检查更新。请检查网络连接，或稍后重试。",
+        "viewRelease": "在 GitHub 上查看版本"
       },
       "startup": {
         "label": "启动时检查更新",
-        "description": "启动时向 GitHub 询问一次是否有新版本。不会发送其他内容，也不会安装任何东西。仅保存在此设备上。"
+        "description": "打开 LazyDM 时，会在 GitHub 上检查新版本。是否下载和安装更新由你决定。此设置仅适用于本设备。"
       },
       "links": {
         "website": "网站",
         "github": "GitHub"
       },
       "description": {
-        "what": "一款为地下城主打造的桌面应用，作者本人就是地下城主。",
-        "promise": "你的战役是保存在你自己文件夹中的普通 Markdown，无需账号。"
+        "what": "LazyDM 集战役笔记、地图和战斗追踪于一体。作者是一位地下城主，为跑团时使用而开发了这款应用。",
+        "promise": "你的笔记以 Markdown 文件保存在你选择的文件夹中，可以用 Obsidian 打开。使用 LazyDM 无需账号。"
       }
     }
   },
@@ -1725,22 +1725,22 @@
     "step": "第 {{current}} 步，共 {{total}} 步",
     "welcome": {
       "tagline": "你的战役，从准备到开玩。",
-      "lead": "由地下城主打造，为地下城主而生。",
+      "lead": "在同一款桌面应用中管理战役笔记、地图和遭遇。",
       "points": {
         "prepare": {
-          "title": "在书桌前准备",
-          "text": "把场景、地点和敌人写成相互链接的笔记。重命名笔记后，LazyDM 会更新它的链接。"
+          "title": "关联你的笔记",
+          "text": "编写场景，并将其链接到战役中的地点和人物。重命名笔记时，LazyDM 会更新相关链接。"
         },
         "session": {
-          "title": "在牌桌上运行",
-          "text": "从笔记中添加战斗者并掷先攻。LazyDM 会读取其数值，无需重复输入，追踪器即可使用。"
+          "title": "主持战斗",
+          "text": "从笔记中添加战斗者。追踪器会读取其属性，并显示先攻、生命值和状态。"
         },
         "ownership": {
-          "title": "战役始终属于你",
-          "text": "你的 Codex 是自己文件夹中的纯 Markdown，可与 Obsidian 配合使用，也无需账户。"
+          "title": "文件由你保管",
+          "text": "你的笔记以 Markdown 文件保存，所在的文件夹称为 Codex。你可以在 Obsidian 或其他 Markdown 编辑器中打开这些笔记。"
         }
       },
-      "continue": "继续"
+      "continue": "设置你的 Codex"
     },
     "vault": {
       "back": "返回",

@@ -480,24 +480,24 @@
         "title": "Version",
         "installed": "Installed",
         "check": "Check for updates",
-        "checking": "Checking…",
+        "checking": "Checking for updates…",
         "available": "Version {{latest}} is available.",
         "upToDate": "You are up to date.",
         "noRelease": "No release has been published yet.",
-        "error": "Couldn't check for updates. Are you online?",
-        "viewRelease": "View release"
+        "error": "Couldn’t check for updates. Check your internet connection or try again later.",
+        "viewRelease": "View release on GitHub"
       },
       "startup": {
         "label": "Check for updates at startup",
-        "description": "Asks GitHub once at startup whether a newer release exists. Nothing else is sent and nothing is installed. Kept on this device."
+        "description": "Checks GitHub for new releases when you open LazyDM. You choose whether to download and install an update. This setting applies to this device."
       },
       "links": {
         "website": "Website",
         "github": "GitHub"
       },
       "description": {
-        "what": "A desktop app for Dungeon Masters, made by one.",
-        "promise": "Your campaign is plain Markdown in a folder you own, with no account."
+        "what": "LazyDM brings campaign notes, maps and combat tracking together. It’s made by a Dungeon Master for use at the table.",
+        "promise": "Your notes stay in a folder you choose, as Markdown files you can open in Obsidian. LazyDM doesn’t require an account."
       }
     }
   },
@@ -1725,22 +1725,22 @@
     "step": "Step {{current}} of {{total}}",
     "welcome": {
       "tagline": "Your campaign, from prep to play.",
-      "lead": "Made by a Dungeon Master, for Dungeon Masters.",
+      "lead": "Keep your campaign notes, maps and encounters in one desktop app.",
       "points": {
         "prepare": {
-          "title": "Prepare at your desk",
-          "text": "Write scenes, places and enemies as linked notes. Rename one and LazyDM updates its links."
+          "title": "Connect your notes",
+          "text": "Write scenes and link them to the places and people in your campaign. LazyDM updates the links when you rename a note."
         },
         "session": {
-          "title": "Run at the table",
-          "text": "Add Combatants from their notes and roll initiative. LazyDM reads their numbers, so the tracker is ready without retyping."
+          "title": "Run the encounter",
+          "text": "Add Combatants from your notes. The tracker reads their stats and keeps initiative, hit points and conditions in view."
         },
         "ownership": {
-          "title": "The campaign stays yours",
-          "text": "Your Codex is plain Markdown in a folder you own. It works with Obsidian and needs no account."
+          "title": "Keep your files",
+          "text": "Your notes are Markdown files in a folder called a Codex. Open them in Obsidian or another Markdown editor."
         }
       },
-      "continue": "Continue"
+      "continue": "Set up your Codex"
     },
     "vault": {
       "back": "Back",

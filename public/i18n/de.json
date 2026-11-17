@@ -480,24 +480,24 @@
         "title": "Version",
         "installed": "Installiert",
         "check": "Nach Updates suchen",
-        "checking": "Prüfe…",
+        "checking": "Suche nach Updates…",
         "available": "Version {{latest}} ist verfügbar.",
         "upToDate": "Du bist auf dem neuesten Stand.",
         "noRelease": "Es wurde noch keine Version veröffentlicht.",
-        "error": "Updates konnten nicht geprüft werden. Bist du online?",
-        "viewRelease": "Version ansehen"
+        "error": "Updates konnten nicht geprüft werden. Prüfe deine Internetverbindung oder versuche es später erneut.",
+        "viewRelease": "Version auf GitHub ansehen"
       },
       "startup": {
         "label": "Beim Start nach Updates suchen",
-        "description": "Fragt beim Start einmal GitHub, ob es eine neuere Version gibt. Es wird nichts anderes gesendet und nichts installiert. Gilt nur für dieses Gerät."
+        "description": "Sucht beim Öffnen von LazyDM auf GitHub nach neuen Versionen. Du entscheidest, ob du ein Update herunterlädst und installierst. Diese Einstellung gilt für dieses Gerät."
       },
       "links": {
         "website": "Website",
         "github": "GitHub"
       },
       "description": {
-        "what": "Eine Desktop-App für Spielleiter, gemacht von einem.",
-        "promise": "Deine Kampagne besteht aus einfachem Markdown in einem Ordner, der dir gehört, ohne Konto."
+        "what": "LazyDM vereint Kampagnennotizen, Karten und Kampfverwaltung. Ein Spielleiter hat die App für den Einsatz am Spieltisch entwickelt.",
+        "promise": "Deine Notizen bleiben als Markdown-Dateien in einem Ordner deiner Wahl. Du kannst sie in Obsidian öffnen. Für LazyDM brauchst du kein Konto."
       }
     }
   },
@@ -1725,22 +1725,22 @@
     "step": "Schritt {{current}} von {{total}}",
     "welcome": {
       "tagline": "Deine Kampagne, von der Vorbereitung bis zum Spiel.",
-      "lead": "Von einem Spielleiter, für Spielleiter.",
+      "lead": "Verwalte deine Kampagnennotizen, Karten und Begegnungen in einer Desktop-App.",
       "points": {
         "prepare": {
-          "title": "Am Schreibtisch vorbereiten",
-          "text": "Schreibe Szenen, Orte und Gegner als verknüpfte Notizen. Benennst du eine um, aktualisiert LazyDM ihre Links."
+          "title": "Verknüpfe deine Notizen",
+          "text": "Schreibe Szenen und verknüpfe sie mit den Orten und Figuren deiner Kampagne. LazyDM aktualisiert die Links, wenn du eine Notiz umbenennst."
         },
         "session": {
-          "title": "Am Tisch spielen",
-          "text": "Füge Kämpfer aus ihren Notizen hinzu und würfle die Initiative. LazyDM liest ihre Werte, sodass der Tracker ohne erneute Eingabe bereit ist."
+          "title": "Leite den Kampf",
+          "text": "Füge Kämpfer aus deinen Notizen hinzu. Der Tracker liest ihre Werte und zeigt Initiative, Trefferpunkte und Zustände an."
         },
         "ownership": {
-          "title": "Die Kampagne bleibt deine",
-          "text": "Dein Codex bleibt einfaches Markdown in einem Ordner, der dir gehört. Er funktioniert mit Obsidian und braucht kein Konto."
+          "title": "Deine Dateien bleiben bei dir",
+          "text": "Deine Notizen sind Markdown-Dateien in einem Ordner namens Codex. Öffne sie in Obsidian oder einem anderen Markdown-Editor."
         }
       },
-      "continue": "Weiter"
+      "continue": "Codex einrichten"
     },
     "vault": {
       "back": "Zurück",
