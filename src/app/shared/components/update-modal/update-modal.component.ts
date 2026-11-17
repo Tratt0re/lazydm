@@ -24,28 +24,42 @@ import { ArcTechIconComponent } from '@/shared/components/icon/icon.component';
   ],
   template: `
     <div
-      class="fixed inset-0 z-50 flex items-center justify-center bg-scrim"
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby="update-modal-title"
-      cdkTrapFocus
-      [cdkTrapFocusAutoCapture]="true"
-      (keydown.escape)="onDismiss()"
+      class="cdk-overlay-dark-backdrop cdk-overlay-backdrop-showing fixed inset-0 z-50 flex items-center justify-center p-4"
+      (click)="onDismiss()"
     >
       <div
-        class="relative flex w-full max-w-md flex-col gap-5 overflow-hidden rounded-none border-2 border-border-strong bg-card p-6 text-card-foreground shadow-modal"
+        class="relative flex w-full flex-col gap-4 overflow-hidden rounded-none border-2 border-border-strong bg-card p-6 text-card-foreground shadow-modal sm:max-w-lg"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="update-modal-title"
+        aria-describedby="update-modal-description"
+        cdkTrapFocus
+        [cdkTrapFocusAutoCapture]="true"
+        (click)="$event.stopPropagation()"
+        (keydown.escape)="onDismiss()"
       >
-        <header class="flex flex-col gap-3">
-          <div class="flex items-center gap-2 text-primary">
-            <arc-icon arcType="arrow-up" class="size-4 shrink-0" />
-            <h2
-              id="update-modal-title"
-              class="font-display text-[35px] leading-none font-extrabold tracking-[0.025em] text-foreground-strong uppercase"
-            >
-              {{ 'update.modal.title' | translate }}
-            </h2>
-          </div>
-          <p class="text-sm text-muted-foreground">
+        <button
+          type="button"
+          arc-button
+          arcType="ghost"
+          arcSize="sm"
+          class="absolute top-4 right-4 z-10 border border-input"
+          [attr.aria-label]="'common.close' | translate"
+          (click)="onDismiss()"
+        >
+          <arc-icon arcType="x" />
+        </button>
+
+        <header class="flex flex-col gap-2">
+          <h2
+            id="update-modal-title"
+            class="pr-12 text-left font-display text-[35px] leading-none font-extrabold tracking-[0.025em] text-foreground-strong uppercase"
+          >
+            {{ 'update.modal.title' | translate
+            }}<span class="text-primary" aria-hidden="true">.</span>
+          </h2>
+          <div class="arc-engraved-divider mt-2" aria-hidden="true"><span></span></div>
+          <p id="update-modal-description" class="text-sm text-muted-foreground">
             {{
               'update.modal.body'
                 | translate
@@ -66,10 +80,7 @@ import { ArcTechIconComponent } from '@/shared/components/icon/icon.component';
 
         <footer class="flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
           <button type="button" arc-button arcType="outline" (click)="onDismiss()">
-            {{
-              'update.modal.cta.dismiss'
-                | translate: { current: updateService.updateResult()?.currentVersion }
-            }}
+            {{ 'update.modal.cta.dismiss' | translate }}
           </button>
           <button type="button" arc-button arcType="default" (click)="onUpdate()">
             {{ 'update.modal.cta.update' | translate }}
