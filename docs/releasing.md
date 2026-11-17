@@ -30,12 +30,20 @@ Until the first release exists, *Settings → About* shows "No release has been 
    git switch main && git merge --no-ff develop
    git tag v0.2.0
    ```
-4. **Build the installers.** Each platform is built on that platform; the files land in `release/`:
+4. **Build the release files.** One command builds every target and keeps one file per target in `release/all/`
+   (the Mac targets need a Mac; the others build anywhere):
    ```bash
-   npm run dist:mac         # .dmg and .zip (Apple Silicon); dist:mac-intel for Intel
-   npm run dist:win         # lazydm-setup-<version>-x64.exe and lazydm-portable-<version>-x64.exe
-   npm run dist:linux       # .AppImage
+   npm run dist:all                 # everything
+   npm run dist:all -- win-x64      # or only some: mac-arm64, mac-x64, win-x64, linux-x64
    ```
+   | File | Target |
+   | --- | --- |
+   | `LazyDM-<version>-arm64-mac.zip` | macOS, Apple Silicon |
+   | `LazyDM-<version>-mac.zip` | macOS, Intel |
+   | `lazydm-setup-<version>-x64.exe` | Windows installer |
+   | `lazydm-portable-<version>-x64.exe` | Windows, portable (no install) |
+   | `lazydm-<version>.zip` | Linux |
+
    Open each build once before uploading it. The builds are not code-signed, so macOS and Windows warn on first
    launch; say so in the release notes.
 5. **Push**, only when you decide to: `git push origin main develop --tags`.

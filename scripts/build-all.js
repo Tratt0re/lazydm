@@ -4,7 +4,7 @@ const { spawnSync } = require('node:child_process');
 
 /**
  * Builds the app for every desktop target and keeps one file per target in `release/all/`: the .zip of each macOS
- * and Linux build and the portable .exe of Windows (no installers). Usage:
+ * and Linux build and the two .exe of Windows (the installer and the portable one). Usage:
  *
  *   npm run dist:all                      every target
  *   npm run dist:all -- mac-x64 win-x64   only these
@@ -21,7 +21,7 @@ const builderCli = path.join(rootDir, 'node_modules', 'electron-builder', 'cli.j
 const TARGETS = {
   'mac-arm64': { args: ['--mac', 'zip', '--arm64'], extension: '.zip', host: 'darwin' },
   'mac-x64': { args: ['--mac', 'zip', '--x64'], extension: '.zip', host: 'darwin' },
-  'win-x64': { args: ['--win', 'portable', '--x64'], extension: '.exe', host: null },
+  'win-x64': { args: ['--win', 'nsis', 'portable', '--x64'], extension: '.exe', host: null },
   'linux-x64': { args: ['--linux', 'zip', '--x64'], extension: '.zip', host: null },
 };
 
