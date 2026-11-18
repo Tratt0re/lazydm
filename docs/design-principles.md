@@ -620,6 +620,48 @@ Codex. It is **off by default** and lives in the Electron main process (`electro
   `settings-store`, never in the vault, so the token cannot sync through the cloud folder. The renderer follows the
   state through `mcp:statusChanged`.
 
+## 6g. Campaign export and import (planned, not built)
+
+A campaign leaves the Codex as one plain `.zip` and comes back in as a **new** campaign. The format is public and
+simple on purpose: unzipped, it is a folder of `.md` files Obsidian opens, so other tools, sites and AI agents can read
+or generate it without LazyDM.
+
+- **The file.** A plain `.zip` (no custom extension) with one top-level folder named after the campaign slug:
+  `lazydm.json` (the manifest), `campaign.md`, `agents.md` (if any), `_templates/`, the sections, `encounters/`,
+  `maps/` and `assets/`, laid out as in the Codex (§2). The name of the file is the slug.
+- **Left out.** The party roster (`encounters/_party.json`, it may hold the table's real names), hidden files and
+  folders, `.lazydm/`, symlinks, the Trash. The compendium is not part of it: a campaign never links to the compendium
+  (§6b), so there is nothing to bring.
+- **Templates.** The campaign's `_templates/` travel, and so does every template its per-note-type choices point at,
+  from the Codex root or a compendium system, copied into the zip's `_templates/` (a taken name gets a suffix). Built-in
+  references (`builtin`, `builtin@dnd5e`) stay references.
+- **`lazydm.json`** holds only what the campaign owns, with paths relative to the campaign and none of the exporter's
+  paths: `formatVersion` (starts at 1), `title`, `description`, `system` (`generic`, `dnd5e` or `pf2e`), `sections`
+  (hidden, order, labels, custom sections, as in §2a), `templates` (choice per note type) and `battleRule` (a built-in
+  reference, §6d). It never holds device or personal settings: theme, language, Codex path, MCP settings or token, tabs,
+  the index. A reader that ignores it still gets a valid folder of notes; one that does not know a key ignores it, and a
+  newer `formatVersion` than the app knows is refused with a clear message.
+- **Export.** *Export…* in the campaign's menu. It only reads the Codex, writes the zip where the user chooses, and
+  the toast offers *Show in folder*.
+- **Import.** *Import campaign…* on the campaigns page, or dropping a zip. A modal shows what is inside (title, system,
+  counts, anything that will be skipped) **before anything is written**, then creates a **new** campaign: a taken slug
+  is renamed (`-2`), nothing is merged or overwritten, as with the MCP import (§6f). The settings of `lazydm.json` are
+  applied to the new campaign only. A zip with no `lazydm.json` still imports (a folder of notes). Refused while
+  *Limit to some campaigns* is on, like any tool that creates a campaign.
+- **Untrusted input.** A zip comes from someone else (§7). The reader is `yauzl` (it never extracts by itself, so
+  LazyDM's own path guard decides every path) and the writer is `yazl`. The importer: refuses an entry whose resolved
+  path leaves the target folder, an absolute path, `..`, a symlink and a duplicate name; accepts only `.md`, `.json`
+  (`lazydm.json`, encounters, maps) and the media types of §2, and lists the rest as skipped; limits the number of
+  entries, the total uncompressed size and the compression ratio, counting the bytes it really reads and not the sizes
+  the zip declares; reuses the existing slug, name-collision and write code instead of a second copy; parses JSON and
+  frontmatter defensively; and writes nothing if the zip is refused as a whole. Imported notes are sanitized on render
+  like any other.
+- **After import.** A link that does not resolve is not an error: it shows on the *Review* page like any other.
+- **MCP (§6f).** `export_campaign` (read-only on the Codex, writes the zip to a path the agent gives) is added and
+  `import_campaign` accepts a zip as well as a folder, with the same limits.
+- **Not in this step.** Merging into an existing campaign, exporting the whole Codex or the compendium, encryption or
+  signing, conversion of other apps' formats.
+
 ## 7. Security
 
 - **Path guard**: every path received from the renderer is resolved and rejected if it escapes the vault root.

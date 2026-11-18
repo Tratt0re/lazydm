@@ -104,6 +104,33 @@ through a local MCP server. It stays off until you switch it on. It listens only
 token. Writing is a separate switch, and so is deleting; both start off. Claude Code, OpenAI Codex and OpenCode can
 connect to it. The design is in [`docs/design-principles.md`](docs/design-principles.md) §6f.
 
+## Roadmap
+
+What may come next. Nothing here is promised or dated; the order is the one I currently plan to follow, and it can
+change. Finished work is listed in [`docs/design-principles.md`](docs/design-principles.md) §11.
+
+**Next**
+
+- [ ] **Rules cheat sheet**: a quick-open sheet for the rules you look up at the table (conditions, actions,
+      movement…), kept as plain notes in your Codex.
+- [ ] **Export and import a campaign**: move a campaign with its assets, templates and AI Agents rules to another
+      Codex, or hand it to another DM, as a single file.
+- [ ] **Better folder home**: search and filters on the page of a folder, and a choice of views (list, cards, graph).
+
+**Later**
+
+- [ ] **Dice roller**: a small button for the rare moments a physical die is not at hand.
+- [ ] **Random generators**: loot and encounters rolled from the tables and notes in your own Codex; a simple dungeon
+      builder after that.
+
+**Exploring**
+
+- [ ] **Share with players**: serve a note or a folder (handouts, sheets) to the players' phones over your Wi-Fi, read
+      only, and only while you switch it on. It needs a security design first.
+- [ ] **Local AI assistant**: an assistant inside the app that runs on your computer, with no cloud needed.
+
+Ideas and requests are welcome in the [issues](https://github.com/Tratt0re/lazydm/issues).
+
 ## Build from source
 
 You need Node.js 18+ and npm 11+.
