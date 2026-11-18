@@ -6,6 +6,7 @@ const {
   rewriteLinks,
   setFrontmatterField,
 } = require('../utils/markdown-parse');
+const { byName, isInside, takeFreeName } = require('../utils/path-utils');
 const { toSlug } = require('../utils/string-sanitize');
 const campaignModel = require('../models/campaign.model');
 const documentModel = require('../models/document.model');
@@ -29,21 +30,6 @@ const CAMPAIGN_DESCRIPTION_MAX_LENGTH = 500;
 
 /** Sections a source folder can be mapped to: the note sections (encounters, maps and assets are special). */
 const TARGET_SECTIONS = Object.freeze(sectionModel.SECTION_PRESETS.map((section) => section.key));
-
-/** Paths compare without case on macOS and Windows, where `Vault` and `vault` are the same folder. */
-function comparable(value) {
-  return process.platform === 'linux' ? value : value.toLowerCase();
-}
-
-/** Code-point order, so a listing reads the same on every computer (`localeCompare` follows the locale). */
-function byName(left, right) {
-  return left < right ? -1 : left > right ? 1 : 0;
-}
-
-function isInside(parent, child) {
-  const relative = path.relative(comparable(parent), comparable(child));
-  return relative === '' || (!relative.startsWith('..') && !path.isAbsolute(relative));
-}
 
 /**
  * The source folder as its real path, or an error. A source inside the Codex, or one that contains it, is refused
@@ -337,18 +323,6 @@ function createLinkResolver(notes, media) {
 
     return null;
   };
-}
-
-/** `name`, `name-2`, `name-3`… until it is free in `taken`, which is updated. */
-function takeFreeName(taken, base, extension) {
-  let candidate = base;
-  let counter = 2;
-  while (taken.has(`${candidate}${extension}`.toLowerCase())) {
-    candidate = `${base}-${counter}`;
-    counter += 1;
-  }
-  taken.add(`${candidate}${extension}`.toLowerCase());
-  return candidate;
 }
 
 /**
