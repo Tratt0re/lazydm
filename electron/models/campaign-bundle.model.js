@@ -345,4 +345,5 @@ module.exports = {
   applyManifest,
   buildManifest,
   parseManifest,
+  toText,
 };

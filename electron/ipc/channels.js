@@ -28,6 +28,7 @@ const CHANNELS = Object.freeze({
     export: 'campaigns:export',
     revealExport: 'campaigns:revealExport',
     scanImport: 'campaigns:scanImport',
+    import: 'campaigns:import',
   }),
   cloud: Object.freeze({
     getStatus: 'cloud:getStatus',

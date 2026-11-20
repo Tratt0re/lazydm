@@ -6,8 +6,11 @@ const importModel = require('../models/campaign-import.model');
 const { ZipRefusedError, ZIP_REFUSALS } = require('../utils/zip-reader');
 const { isMediaFileName } = require('./asset.controller');
 const { requireExistingCampaign } = require('./campaign.controller');
+const indexerController = require('./indexer.controller');
 const vaultController = require('./vault.controller');
-const { ensurePlainObject } = require('./utils');
+const { ensurePlainObject, normalizeOptionalString } = require('./utils');
+
+const CAMPAIGN_NAME_MAX_LENGTH = 80;
 
 /** The zip the last export wrote: the only file *Show in folder* will reveal (the renderer names no path). */
 let lastExportPath = null;
@@ -80,7 +83,8 @@ async function assertZipPath(value) {
  * See design-principles §6g.
  */
 async function scanImport(payload) {
-  const body = payload === undefined || payload === null ? {} : ensurePlainObject(payload, 'payload');
+  const body =
+    payload === undefined || payload === null ? {} : ensurePlainObject(payload, 'payload');
   vaultController.getReadyVaultPath();
 
   try {
@@ -110,8 +114,41 @@ async function scanImport(payload) {
   }
 }
 
+/**
+ * Imports a campaign zip as a new campaign. `path` is the zip the preview showed (checked again, like a dropped
+ * file), `name` the campaign's name if the user changed it in the preview. Everything in the zip is checked again
+ * here: the file may have changed since the scan. Gives `{ status: 'imported', result }` or
+ * `{ status: 'refused', code }`; any other failure rolls the new campaign back and throws.
+ * See design-principles §6g.
+ */
+async function importCampaign(payload) {
+  const body = ensurePlainObject(payload, 'payload');
+  const vaultPath = vaultController.getReadyVaultPath();
+  const name = normalizeOptionalString(body.name, 'payload.name', {
+    allowEmpty: true,
+    maxLength: CAMPAIGN_NAME_MAX_LENGTH,
+  });
+
+  try {
+    const zipPath = await assertZipPath(body.path);
+    const result = await importModel.importBundle(vaultPath, zipPath, {
+      name: name || null,
+      isMedia: isMediaFileName,
+      reindex: (paths) => indexerController.reindexPaths(paths),
+    });
+    return { status: 'imported', result };
+  } catch (error) {
+    if (error instanceof ZipRefusedError) {
+      return { status: 'refused', code: error.code };
+    }
+
+    throw error;
+  }
+}
+
 module.exports = {
   exportCampaign,
+  importCampaign,
   revealLastExport,
   scanImport,
 };

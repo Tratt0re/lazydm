@@ -98,7 +98,7 @@ function kindOfMode(entry) {
     return 'file';
   }
 
-  const type = ((entry.externalFileAttributes >>> 16) & 0xffff) & MODE_TYPE_MASK;
+  const type = (entry.externalFileAttributes >>> 16) & 0xffff & MODE_TYPE_MASK;
   if (type === 0 || type === MODE_REGULAR) {
     return 'file';
   }

@@ -101,6 +101,23 @@ export type ScanImportResultDto =
   | { readonly status: 'refused'; readonly code: ZipRefusalCode }
   | { readonly status: 'ready'; readonly path: string; readonly preview: ImportPreviewDto };
 
+/** What importing a campaign zip did: the new campaign's folder (slug) and name, and what was left out. */
+export interface ImportedCampaignDto {
+  readonly slug: string;
+  readonly name: string;
+  /** Files written, the campaign card included. */
+  readonly files: number;
+  readonly skipped: readonly ImportSkippedFileDto[];
+  readonly skippedTotal: number;
+  readonly warnings: readonly ImportWarningDto[];
+  readonly counts: ImportPreviewDto['counts'];
+}
+
+/** The answer to importing a zip: the new campaign, or the code of why the zip was refused (nothing is written). */
+export type ImportCampaignResultDto =
+  | { readonly status: 'imported'; readonly result: ImportedCampaignDto }
+  | { readonly status: 'refused'; readonly code: ZipRefusalCode };
+
 /** A file of the campaign that is not in its zip, and why (`type`, `too-large`, `name`, `symlink`…). */
 export interface ExportSkippedFileDto {
   readonly path: string;

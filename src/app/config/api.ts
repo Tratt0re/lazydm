@@ -71,6 +71,7 @@ export interface ElectronIpcClient {
     readonly export: IpcRequest<{ slug: string }, DTO.ExportCampaignResultDto>;
     readonly revealExport: OptionalIpcRequest<void, { revealed: boolean }>;
     readonly scanImport: OptionalIpcRequest<{ path?: string }, DTO.ScanImportResultDto>;
+    readonly import: IpcRequest<{ path: string; name?: string }, DTO.ImportCampaignResultDto>;
   };
   readonly cloud: {
     readonly getStatus: OptionalIpcRequest<void, DTO.CloudReadinessStatusDto>;

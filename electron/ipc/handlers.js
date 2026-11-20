@@ -51,6 +51,7 @@ const IPC_HANDLERS = Object.freeze({
   [CHANNELS.campaigns.export]: campaignBundleController.exportCampaign,
   [CHANNELS.campaigns.revealExport]: campaignBundleController.revealLastExport,
   [CHANNELS.campaigns.scanImport]: campaignBundleController.scanImport,
+  [CHANNELS.campaigns.import]: campaignBundleController.importCampaign,
 
   [CHANNELS.cloud.getStatus]: cloudReadinessController.getStatus,
   [CHANNELS.cloud.skipWait]: cloudReadinessController.skipWait,
