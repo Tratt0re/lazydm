@@ -40,6 +40,67 @@ export interface AgentRulesDto {
   readonly exists: boolean;
 }
 
+/** Why a campaign zip is refused as a whole; each code becomes a plain sentence in the user's language. */
+export type ZipRefusalCode =
+  | 'not-a-zip'
+  | 'too-large-file'
+  | 'too-many-entries'
+  | 'too-many-bytes'
+  | 'ratio'
+  | 'encrypted'
+  | 'unsupported-compression'
+  | 'special-file'
+  | 'unsafe-path'
+  | 'duplicate'
+  | 'corrupt'
+  | 'empty'
+  | 'no-folder'
+  | 'multiple-folders'
+  | 'newer-version';
+
+/** A file of a zip that would be left out on import (`type`, `too-large`, `name`, `party`). */
+export interface ImportSkippedFileDto {
+  readonly path: string;
+  readonly reason: string;
+}
+
+/** A thing in the zip's settings that was ignored: a `code` and the `field` it concerns. */
+export interface ImportWarningDto {
+  readonly code: string;
+  readonly field: string;
+}
+
+/** What a campaign zip holds, shown before anything is written (design-principles §6g). */
+export interface ImportPreviewDto {
+  /** The top-level folder of the zip. */
+  readonly folderName: string;
+  readonly title: string;
+  readonly description: string | null;
+  /** `generic`, `dnd5e` or `pf2e`. */
+  readonly system: string;
+  readonly hasManifest: boolean;
+  readonly counts: {
+    readonly notes: number;
+    readonly assets: number;
+    readonly encounters: number;
+    readonly maps: number;
+    readonly templates: number;
+  };
+  readonly hasAgentRules: boolean;
+  /** The first files left out, and how many there are in all. */
+  readonly skipped: readonly ImportSkippedFileDto[];
+  readonly skippedTotal: number;
+  readonly warnings: readonly ImportWarningDto[];
+  readonly files: number;
+  readonly bytes: number;
+}
+
+/** The answer to looking into a zip: cancelled, refused with a code, or ready with a preview and the zip's path. */
+export type ScanImportResultDto =
+  | { readonly status: 'cancelled' }
+  | { readonly status: 'refused'; readonly code: ZipRefusalCode }
+  | { readonly status: 'ready'; readonly path: string; readonly preview: ImportPreviewDto };
+
 /** A file of the campaign that is not in its zip, and why (`type`, `too-large`, `name`, `symlink`…). */
 export interface ExportSkippedFileDto {
   readonly path: string;

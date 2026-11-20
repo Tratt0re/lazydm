@@ -14,6 +14,8 @@ const ZIP_LIMITS = Object.freeze({
   maxTextBytes: 2 * 1024 * 1024,
   /** Uncompressed over compressed size, for the archive as a whole and for each entry. */
   maxCompressionRatio: 100,
+  /** The ratio is only checked above this many uncompressed bytes (a tiny note can pack tightly). */
+  ratioFloorBytes: 1024 * 1024,
   /** Folders deep, counting the campaign folder. */
   maxDepth: 12,
   /** Characters of an entry's path. */

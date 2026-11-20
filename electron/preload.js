@@ -1,4 +1,4 @@
-const { contextBridge, ipcRenderer } = require('electron');
+const { contextBridge, ipcRenderer, webUtils } = require('electron');
 const { createIpcClient } = require('./ipc/client');
 const packageJson = require('../package.json');
 
@@ -105,6 +105,17 @@ contextBridge.exposeInMainWorld('electronAPI', {
   ipcClient,
   onIpcEvent,
   offIpcEvent,
+  /**
+   * The path of a file dropped on the page, or null: a zip of hundreds of MB must not travel as bytes. It only
+   * names the file; Electron checks it before reading anything (design-principles §7).
+   */
+  getPathForFile: (file) => {
+    try {
+      return webUtils.getPathForFile(file) || null;
+    } catch {
+      return null;
+    }
+  },
   appInfo,
   platform: process.platform,
   versions: Object.freeze({

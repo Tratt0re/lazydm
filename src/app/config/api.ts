@@ -50,7 +50,10 @@ export interface ElectronIpcClient {
   };
   readonly battleRules: {
     readonly list: OptionalIpcRequest<void, DTO.BattleRuleListDto>;
-    readonly getChoice: IpcRequest<{ campaign: string }, { rule: string | null; system: string | null }>;
+    readonly getChoice: IpcRequest<
+      { campaign: string },
+      { rule: string | null; system: string | null }
+    >;
     readonly setChoice: IpcRequest<
       { campaign: string; rule: string | null },
       { rule: string | null }
@@ -67,6 +70,7 @@ export interface ElectronIpcClient {
     readonly remove: IpcRequest<{ slug: string }, { slug: string; deleted: number }>;
     readonly export: IpcRequest<{ slug: string }, DTO.ExportCampaignResultDto>;
     readonly revealExport: OptionalIpcRequest<void, { revealed: boolean }>;
+    readonly scanImport: OptionalIpcRequest<{ path?: string }, DTO.ScanImportResultDto>;
   };
   readonly cloud: {
     readonly getStatus: OptionalIpcRequest<void, DTO.CloudReadinessStatusDto>;
@@ -223,6 +227,8 @@ export interface ElectronAPI {
   readonly ipcClient: ElectronIpcClient;
   readonly onIpcEvent?: (channel: string, listener: IpcEventListener) => void;
   readonly offIpcEvent?: (channel: string, listener: IpcEventListener) => void;
+  /** The path of a file dropped on the page (null when it has none); only names the file, Electron checks it. */
+  readonly getPathForFile?: (file: File) => string | null;
   readonly appInfo: ElectronAppInfo;
   readonly platform: string;
   readonly versions: Readonly<{
