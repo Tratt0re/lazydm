@@ -25,12 +25,18 @@
           arcIcon="book-open"
           [arcTitle]="'campaigns.list.emptyTitle' | translate"
           [arcDescription]="'campaigns.list.emptyDescription' | translate"
-          [arcActions]="[createAction]"
+          [arcActions]="[createAction, importAction]"
         />
         <ng-template #createAction>
           <button arc-button type="button" (click)="openCreateSheet()">
             <arc-icon arcType="plus" />
             {{ 'campaigns.list.create' | translate }}
+          </button>
+        </ng-template>
+        <ng-template #importAction>
+          <button arc-button arcType="outline" type="button" (click)="openImportSheet()">
+            <arc-icon arcType="import" />
+            {{ 'campaigns.import.button' | translate }}
           </button>
         </ng-template>
       } @else {
@@ -89,6 +95,10 @@
                   <button type="button" arc-menu-item (click)="editCampaign(campaign)">
                     <arc-icon arcType="pencil" />
                     {{ 'campaigns.menu.edit' | translate }}
+                  </button>
+                  <button type="button" arc-menu-item (click)="exportCampaign(campaign)">
+                    <arc-icon arcType="archive" />
+                    {{ 'campaigns.menu.export' | translate }}
                   </button>
                   <button type="button" arc-menu-item arcType="destructive" (click)="deleteCampaign(campaign)">
                     <arc-icon arcType="trash" />

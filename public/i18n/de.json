@@ -713,7 +713,8 @@
     "menu": {
       "edit": "Bearbeiten",
       "delete": "Löschen",
-      "open": "Öffnen"
+      "open": "Öffnen",
+      "export": "Exportieren…"
     },
     "edit": {
       "title": "Kampagne bearbeiten",
@@ -733,7 +734,8 @@
     },
     "overview": {
       "edit": "Kampagne bearbeiten",
-      "delete": "Kampagne löschen"
+      "delete": "Kampagne löschen",
+      "export": "Kampagne exportieren…"
     },
     "newAnything": {
       "title": "Neu …",
@@ -744,6 +746,48 @@
       "startTitle": "Fang an, wo du willst",
       "startDescription": "Lege die erste Notiz, den ersten Gegner, die erste Begegnung oder Karte an. Die übrigen Bereiche erscheinen hier, sobald du sie nutzt.",
       "moreSections": "Weitere Bereiche"
+    },
+    "import": {
+      "button": "Kampagne importieren…",
+      "title": "Kampagne importieren",
+      "pickDescription": "Wähle das Zip einer Kampagne. LazyDM sieht es sich zuerst an; dem Codex wird nichts hinzugefügt, bis du bestätigst.",
+      "reviewDescription": "Das enthält das Zip. Die Kampagne wird dem Codex als neue hinzugefügt; nichts Bestehendes ändert sich.",
+      "dropHint": "Zieh das Zip einer Kampagne hierher oder wähle eines aus.",
+      "types": "ZIP · von LazyDM oder ein beliebiger Notizordner",
+      "select": "Zip auswählen…",
+      "submit": "Kampagne importieren",
+      "importing": "Wird importiert…",
+      "nameTaken": "Eine Kampagne mit diesem Namen gibt es schon. Diese bekommt einen eigenen Ordner; nichts wird ersetzt.",
+      "total": "{{count}} Dateien · {{size}}",
+      "skippedTitle": "{{count}} Dateien bleiben draußen",
+      "skippedMore": "…und {{count}} weitere",
+      "settingsWarning": "Einige Einstellungen im Zip waren nicht nutzbar und wurden ignoriert.",
+      "skip": {
+        "type": "keine Notiz, kein Bild, PDF oder Audio",
+        "too-large": "zu groß",
+        "name": "Name nicht erlaubt",
+        "party": "die Gruppenliste bleibt bei ihrem Besitzer",
+        "invalid": "keine gültige Datei"
+      },
+      "done": "{{name}} importiert",
+      "doneSkipped": "{{count}} Dateien blieben draußen.",
+      "error": {
+        "title": "Dieses Zip lässt sich nicht verwenden",
+        "toast": "Die Kampagne konnte nicht importiert werden",
+        "notAZip": "Das ist kein Zip, das LazyDM lesen kann. Wähle eine .zip-Datei.",
+        "shape": "Das Zip einer Kampagne enthält einen Kampagnenordner. Dieses nicht.",
+        "damaged": "Das Zip ist beschädigt. Exportiere es erneut und versuche es noch einmal.",
+        "encrypted": "Das Zip ist passwortgeschützt. LazyDM kann es nicht öffnen.",
+        "tooLarge": "Das Zip ist zu groß zum Importieren.",
+        "unsafe": "Das Zip enthält nicht erlaubte Dateien und wurde abgelehnt. Es wurde nichts hinzugefügt.",
+        "newer": "Das Zip stammt von einer neueren LazyDM-Version. Aktualisiere LazyDM und versuche es erneut."
+      }
+    },
+    "export": {
+      "done": "{{name}} exportiert",
+      "doneWithSkips": "{{name}} exportiert, einige Dateien blieben draußen",
+      "skipped": "{{count}} ausgelassen: {{files}}",
+      "error": "Die Kampagne konnte nicht exportiert werden"
     }
   },
   "document": {

@@ -713,7 +713,8 @@
     "menu": {
       "edit": "Edit",
       "delete": "Delete",
-      "open": "Open"
+      "open": "Open",
+      "export": "Export…"
     },
     "edit": {
       "title": "Edit campaign",
@@ -733,7 +734,8 @@
     },
     "overview": {
       "edit": "Edit campaign",
-      "delete": "Delete campaign"
+      "delete": "Delete campaign",
+      "export": "Export campaign…"
     },
     "newAnything": {
       "title": "New…",
@@ -744,6 +746,48 @@
       "startTitle": "Start anywhere",
       "startDescription": "Create the first note, enemy, encounter or map. The other sections show up here as you use them.",
       "moreSections": "More sections"
+    },
+    "import": {
+      "button": "Import campaign…",
+      "title": "Import campaign",
+      "pickDescription": "Choose a campaign zip. LazyDM looks inside it first; nothing is added to your Codex until you confirm.",
+      "reviewDescription": "This is what the zip holds. The campaign is added to your Codex as a new one; nothing existing is changed.",
+      "dropHint": "Drop a campaign zip here, or choose one.",
+      "types": "ZIP · made by LazyDM or any folder of notes",
+      "select": "Select a zip…",
+      "submit": "Import campaign",
+      "importing": "Importing…",
+      "nameTaken": "A campaign with this name exists. This one gets a folder of its own; nothing is replaced.",
+      "total": "{{count}} files · {{size}}",
+      "skippedTitle": "{{count}} files will be left out",
+      "skippedMore": "…and {{count}} more",
+      "settingsWarning": "Some settings in the zip could not be used and were ignored.",
+      "skip": {
+        "type": "not a note, image, PDF or audio file",
+        "too-large": "too large",
+        "name": "name not allowed",
+        "party": "the party roster stays with its owner",
+        "invalid": "not a valid file"
+      },
+      "done": "Imported {{name}}",
+      "doneSkipped": "{{count}} files were left out.",
+      "error": {
+        "title": "Couldn't use this zip",
+        "toast": "Couldn't import the campaign",
+        "notAZip": "This is not a zip LazyDM can read. Choose a .zip file.",
+        "shape": "A campaign zip holds one campaign folder. This one does not.",
+        "damaged": "The zip is damaged. Export it again and retry.",
+        "encrypted": "The zip is protected by a password. LazyDM cannot open it.",
+        "tooLarge": "The zip is too large to import.",
+        "unsafe": "The zip holds files that are not allowed, so it was refused. Nothing was added.",
+        "newer": "The zip was made by a newer version of LazyDM. Update LazyDM and try again."
+      }
+    },
+    "export": {
+      "done": "Exported {{name}}",
+      "doneWithSkips": "Exported {{name}}, with files left out",
+      "skipped": "{{count}} left out: {{files}}",
+      "error": "Couldn't export the campaign"
     }
   },
   "document": {

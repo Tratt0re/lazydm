@@ -713,7 +713,8 @@
     "menu": {
       "edit": "编辑",
       "delete": "删除",
-      "open": "打开"
+      "open": "打开",
+      "export": "导出…"
     },
     "edit": {
       "title": "编辑战役",
@@ -733,7 +734,8 @@
     },
     "overview": {
       "edit": "编辑战役",
-      "delete": "删除战役"
+      "delete": "删除战役",
+      "export": "导出战役…"
     },
     "newAnything": {
       "title": "新建…",
@@ -744,6 +746,48 @@
       "startTitle": "从哪里开始都行",
       "startDescription": "创建第一篇笔记、敌人、遭遇或地图。其他分区会在你使用后出现在这里。",
       "moreSections": "更多分区"
+    },
+    "import": {
+      "button": "导入战役…",
+      "title": "导入战役",
+      "pickDescription": "选择一个战役 zip。LazyDM 会先查看其内容；在你确认之前，不会向 Codex 添加任何内容。",
+      "reviewDescription": "这是 zip 中的内容。该战役将作为新战役加入 Codex；现有内容不会被更改。",
+      "dropHint": "把战役 zip 拖到这里，或选择一个。",
+      "types": "ZIP · 由 LazyDM 生成，或任意笔记文件夹",
+      "select": "选择 zip…",
+      "submit": "导入战役",
+      "importing": "正在导入…",
+      "nameTaken": "已有同名战役。这个会有自己的文件夹；不会替换任何内容。",
+      "total": "{{count}} 个文件 · {{size}}",
+      "skippedTitle": "有 {{count}} 个文件将被跳过",
+      "skippedMore": "…另有 {{count}} 个",
+      "settingsWarning": "zip 中的部分设置无法使用，已被忽略。",
+      "skip": {
+        "type": "不是笔记、图片、PDF 或音频",
+        "too-large": "太大",
+        "name": "名称不被允许",
+        "party": "队伍名单留给它的主人",
+        "invalid": "无效文件"
+      },
+      "done": "已导入 {{name}}",
+      "doneSkipped": "有 {{count}} 个文件被跳过。",
+      "error": {
+        "title": "无法使用这个 zip",
+        "toast": "无法导入战役",
+        "notAZip": "这不是 LazyDM 能读取的 zip。请选择 .zip 文件。",
+        "shape": "战役 zip 只包含一个战役文件夹，这个不是。",
+        "damaged": "zip 已损坏。请重新导出后再试。",
+        "encrypted": "zip 受密码保护，LazyDM 无法打开。",
+        "tooLarge": "zip 太大，无法导入。",
+        "unsafe": "zip 中含有不被允许的文件，已被拒绝。没有添加任何内容。",
+        "newer": "这个 zip 由更新版本的 LazyDM 生成。请更新 LazyDM 后再试。"
+      }
+    },
+    "export": {
+      "done": "已导出 {{name}}",
+      "doneWithSkips": "已导出 {{name}}，部分文件被跳过",
+      "skipped": "跳过 {{count}} 个：{{files}}",
+      "error": "无法导出战役"
     }
   },
   "document": {

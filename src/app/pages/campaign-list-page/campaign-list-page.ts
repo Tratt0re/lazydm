@@ -90,6 +90,13 @@ export class CampaignListPage implements OnInit {
     this.campaigns().length > 0
       ? [
           {
+            id: 'import-campaign',
+            label: 'campaigns.import.button',
+            icon: 'import',
+            buttonType: 'outline',
+            action: () => this.openImportSheet(),
+          },
+          {
             id: 'create-campaign',
             label: 'campaigns.list.create',
             icon: 'plus',
@@ -110,6 +117,14 @@ export class CampaignListPage implements OnInit {
 
   protected deleteCampaign(campaign: CampaignDto): void {
     void this.campaignActions.openDeleteSheet(campaign);
+  }
+
+  protected exportCampaign(campaign: CampaignDto): void {
+    void this.campaignActions.exportCampaign(campaign);
+  }
+
+  protected openImportSheet(): void {
+    this.campaignActions.openImportSheet();
   }
 
   protected openCreateSheet(): void {

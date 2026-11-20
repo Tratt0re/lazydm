@@ -59,6 +59,7 @@ import { ArcTechEmptyComponent } from '@/shared/components/empty';
 import { ArcTechIconComponent, type ArcTechIcon } from '@/shared/components/icon';
 import { ArcTechMenuImports } from '@/shared/components/menu';
 import { ArcTechTooltipImports } from '@/shared/components/tooltip';
+import { formatFileSize } from '@/shared/utils/file-size';
 import { SectionActionsService } from '@/services/section-actions.service';
 
 export const CAMPAIGN_SECTION_PARAM = 'section';
@@ -74,15 +75,6 @@ const MAPS_SECTION_KEY = 'maps';
 /** A sub-folder of the section with the files directly in it. */
 interface SectionTreeFolder extends DocumentFolderDto {
   readonly files: readonly DocumentFileListItemDto[];
-}
-
-function formatFileSize(sizeInBytes: number): string {
-  if (sizeInBytes < 1024) {
-    return `${sizeInBytes} B`;
-  }
-
-  const sizeInKb = sizeInBytes / 1024;
-  return sizeInKb < 1024 ? `${sizeInKb.toFixed(1)} KB` : `${(sizeInKb / 1024).toFixed(1)} MB`;
 }
 
 @Component({

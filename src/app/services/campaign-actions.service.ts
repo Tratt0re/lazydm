@@ -3,16 +3,23 @@ import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { toast } from 'ngx-sonner';
 
+import {
+  AppCampaignImportSheetComponent,
+  type CampaignImportSheetData,
+} from '@/components/campaign-import-sheet/campaign-import-sheet.component';
 import { AppDialogFormService } from '@/components/sheet-form/dialog-form.service';
 import type {
   AppSheetComboboxField,
   AppSheetSelectField,
 } from '@/components/sheet-form/sheet-form.types';
 import { buildIconPickerField, DEFAULT_CAMPAIGN_ICON } from '@/config/icon-picker.config';
-import type { CampaignDto } from '@/dtos';
+import type { CampaignDto, ImportedCampaignDto } from '@/dtos';
 import { BattleRuleService } from '@/services/battle-rule.service';
+import { CampaignBundleService } from '@/services/campaign-bundle.service';
 import { CampaignService } from '@/services/campaign.service';
+import { FileMoveService } from '@/services/file-move.service';
 import { CUSTOM_SECTION_ICONS } from '@/services/section.service';
+import { ArcTechDialogService } from '@/shared/components/dialog';
 
 /** Icon field of the new / edit campaign forms. */
 export function buildCampaignIconField(current: string | null): AppSheetComboboxField {
@@ -67,6 +74,9 @@ export class CampaignActionsService {
   private readonly campaignService = inject(CampaignService);
   private readonly battleRuleService = inject(BattleRuleService);
   private readonly dialogFormService = inject(AppDialogFormService);
+  private readonly dialogService = inject(ArcTechDialogService);
+  private readonly bundleService = inject(CampaignBundleService);
+  private readonly fileMove = inject(FileMoveService);
   private readonly translateService = inject(TranslateService);
   private readonly router = inject(Router);
 
@@ -122,6 +132,97 @@ export class CampaignActionsService {
         return false;
       },
     });
+  }
+
+  /**
+   * *Export…*: the system *Save* dialog, then a zip of the campaign. Nothing to decide, so no modal of ours: a toast
+   * says where the zip went (with *Show in folder*) and what was left out of it.
+   */
+  async exportCampaign(campaign: CampaignDto): Promise<void> {
+    try {
+      const result = await this.bundleService.exportCampaign(campaign.slug);
+      if (result.cancelled) {
+        return;
+      }
+
+      const name = result.path.split(/[\\/]/).pop() ?? result.path;
+      const skipped = result.skipped.length;
+      const options = {
+        description:
+          skipped > 0
+            ? this.translateService.instant('campaigns.export.skipped', {
+                count: skipped,
+                files: result.skipped
+                  .slice(0, 3)
+                  .map((file) => file.path)
+                  .join(', '),
+              })
+            : undefined,
+        action: {
+          label: this.translateService.instant(this.fileMove.revealLabel),
+          onClick: () => void this.bundleService.revealLastExport(),
+        },
+      };
+      if (skipped > 0 || result.droppedTemplates > 0) {
+        toast.warning(
+          this.translateService.instant('campaigns.export.doneWithSkips', { name }),
+          options,
+        );
+      } else {
+        toast.success(this.translateService.instant('campaigns.export.done', { name }), options);
+      }
+    } catch (error) {
+      toast.error(this.translateService.instant('campaigns.export.error'), {
+        description: error instanceof Error ? error.message : String(error),
+      });
+    }
+  }
+
+  /**
+   * *Import campaign…*: a modal with the drop zone of Assets, then a look at what is in the zip and the name of the
+   * new campaign. Opens the new campaign when it is made. `onImported` runs after that.
+   */
+  openImportSheet(onImported?: (result: ImportedCampaignDto) => void): void {
+    const dialogRef = this.dialogService.create<
+      AppCampaignImportSheetComponent,
+      CampaignImportSheetData
+    >({
+      arcTitle: this.translateService.instant('campaigns.import.title'),
+      arcDescription: this.translateService.instant('campaigns.import.pickDescription'),
+      arcContent: AppCampaignImportSheetComponent,
+      arcData: {
+        onImported: (result) => {
+          this.announceImported(result);
+          void this.router.navigate(['/campaigns', result.slug]);
+          onImported?.(result);
+        },
+      },
+      arcOkText: this.translateService.instant('campaigns.import.submit'),
+      arcCancelText: this.translateService.instant('common.cancel'),
+      arcCustomClasses: 'sm:max-w-lg',
+      arcOnOk: (sheet) => {
+        void sheet.confirm();
+        return false;
+      },
+      arcOnBack: () => dialogRef.componentInstance?.back(),
+    });
+  }
+
+  private announceImported(result: ImportedCampaignDto): void {
+    const options = {
+      description:
+        result.skippedTotal > 0
+          ? this.translateService.instant('campaigns.import.doneSkipped', {
+              count: result.skippedTotal,
+            })
+          : undefined,
+    };
+    const title = this.translateService.instant('campaigns.import.done', { name: result.name });
+    if (result.skippedTotal > 0 || result.warnings.length > 0) {
+      toast.warning(title, options);
+    } else {
+      toast.success(title, options);
+    }
   }
 
   /** Confirmation with the file count; the folder goes to the system Trash. Leaves the campaign when it was open. */

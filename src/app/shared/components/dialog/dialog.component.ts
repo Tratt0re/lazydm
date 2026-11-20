@@ -189,7 +189,7 @@ export class ArcTechDialogOptions<T, U> {
             </button>
           }
 
-          @if (config.arcOkText !== null) {
+          @if (config.arcOkText !== null && !isOkHidden()) {
             <button
               type="button"
               data-testid="arc-ok-button"
@@ -263,6 +263,8 @@ export class ArcTechDialogComponent<T, U> extends BasePortalOutlet {
   protected readonly title = signal<string | TemplateRef<T> | undefined>(this.config.arcTitle);
   protected readonly description = signal<string | undefined>(this.config.arcDescription);
   protected readonly backText = signal<string | null>(null);
+  /** A step with nothing to confirm yet (a file still to pick) hides the confirm button. */
+  protected readonly isOkHidden = signal(false);
   protected readonly titleId = computed(() =>
     this.title() ? `arc-dialog-title-${this.instanceId}` : null,
   );
@@ -329,6 +331,7 @@ export class ArcTechDialogComponent<T, U> extends BasePortalOutlet {
     description?: string | null;
     okText?: string;
     backText?: string | null;
+    okHidden?: boolean;
   }): void {
     const element = this.host.nativeElement as HTMLElement;
     const from = element.offsetHeight;
@@ -347,6 +350,10 @@ export class ArcTechDialogComponent<T, U> extends BasePortalOutlet {
 
     if (step.backText !== undefined) {
       this.backText.set(step.backText);
+    }
+
+    if (step.okHidden !== undefined) {
+      this.isOkHidden.set(step.okHidden);
     }
 
     // The steps differ in height: once the new one is rendered (before it paints), grow or shrink from the old height.

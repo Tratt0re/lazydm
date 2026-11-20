@@ -713,7 +713,8 @@
     "menu": {
       "edit": "Editar",
       "delete": "Eliminar",
-      "open": "Abrir"
+      "open": "Abrir",
+      "export": "Exportar…"
     },
     "edit": {
       "title": "Editar campaña",
@@ -733,7 +734,8 @@
     },
     "overview": {
       "edit": "Editar campaña",
-      "delete": "Eliminar campaña"
+      "delete": "Eliminar campaña",
+      "export": "Exportar campaña…"
     },
     "newAnything": {
       "title": "Nuevo…",
@@ -744,6 +746,48 @@
       "startTitle": "Empieza por donde quieras",
       "startDescription": "Crea la primera nota, enemigo, encuentro o mapa. Las demás secciones aparecen aquí a medida que las uses.",
       "moreSections": "Más secciones"
+    },
+    "import": {
+      "button": "Importar campaña…",
+      "title": "Importar campaña",
+      "pickDescription": "Elige el zip de una campaña. LazyDM lo mira primero; no se añade nada a tu Codex hasta que confirmes.",
+      "reviewDescription": "Esto es lo que contiene el zip. La campaña se añade al Codex como una nueva; nada de lo existente cambia.",
+      "dropHint": "Suelta aquí el zip de una campaña, o elige uno.",
+      "types": "ZIP · creado por LazyDM o cualquier carpeta de notas",
+      "select": "Seleccionar un zip…",
+      "submit": "Importar campaña",
+      "importing": "Importando…",
+      "nameTaken": "Ya existe una campaña con este nombre. Esta tendrá su propia carpeta; no se reemplaza nada.",
+      "total": "{{count}} archivos · {{size}}",
+      "skippedTitle": "{{count}} archivos se dejarán fuera",
+      "skippedMore": "…y {{count}} más",
+      "settingsWarning": "Algunos ajustes del zip no se pudieron usar y se ignoraron.",
+      "skip": {
+        "type": "no es una nota, imagen, PDF o audio",
+        "too-large": "demasiado grande",
+        "name": "nombre no permitido",
+        "party": "el grupo de jugadores se queda con su dueño",
+        "invalid": "archivo no válido"
+      },
+      "done": "{{name}} importada",
+      "doneSkipped": "Se dejaron fuera {{count}} archivos.",
+      "error": {
+        "title": "No se puede usar este zip",
+        "toast": "No se pudo importar la campaña",
+        "notAZip": "Este no es un zip que LazyDM pueda leer. Elige un archivo .zip.",
+        "shape": "El zip de una campaña contiene una sola carpeta de campaña. Este no.",
+        "damaged": "El zip está dañado. Expórtalo de nuevo e inténtalo otra vez.",
+        "encrypted": "El zip está protegido con contraseña. LazyDM no puede abrirlo.",
+        "tooLarge": "El zip es demasiado grande para importarlo.",
+        "unsafe": "El zip contiene archivos no permitidos y se rechazó. No se añadió nada.",
+        "newer": "El zip lo creó una versión más reciente de LazyDM. Actualiza LazyDM e inténtalo de nuevo."
+      }
+    },
+    "export": {
+      "done": "{{name}} exportada",
+      "doneWithSkips": "{{name}} exportada, con archivos dejados fuera",
+      "skipped": "{{count}} fuera: {{files}}",
+      "error": "No se pudo exportar la campaña"
     }
   },
   "document": {

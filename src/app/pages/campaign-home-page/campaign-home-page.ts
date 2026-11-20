@@ -255,6 +255,12 @@ export class CampaignHomePage {
                     action: () => this.campaignActions.openEditSheet(campaign),
                   },
                   {
+                    id: 'export-campaign',
+                    label: 'campaigns.overview.export',
+                    icon: 'archive',
+                    action: () => void this.campaignActions.exportCampaign(campaign),
+                  },
+                  {
                     id: 'delete-campaign',
                     label: 'campaigns.overview.delete',
                     icon: 'trash',

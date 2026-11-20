@@ -65,6 +65,7 @@ export class ArcTechDialogRef<T = any, R = any, U = any> {
     description?: string | null;
     okText?: string;
     backText?: string | null;
+    okHidden?: boolean;
   }): void {
     this.containerInstance.setStep(step);
   }
