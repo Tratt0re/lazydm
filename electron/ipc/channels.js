@@ -25,6 +25,8 @@ const CHANNELS = Object.freeze({
     getAgentRules: 'campaigns:getAgentRules',
     createAgentRules: 'campaigns:createAgentRules',
     remove: 'campaigns:remove',
+    export: 'campaigns:export',
+    revealExport: 'campaigns:revealExport',
   }),
   cloud: Object.freeze({
     getStatus: 'cloud:getStatus',

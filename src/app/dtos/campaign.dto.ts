@@ -39,3 +39,27 @@ export interface AgentRulesDto {
   /** False until the user creates it. */
   readonly exists: boolean;
 }
+
+/** A file of the campaign that is not in its zip, and why (`type`, `too-large`, `name`, `symlink`…). */
+export interface ExportSkippedFileDto {
+  readonly path: string;
+  readonly reason: string;
+}
+
+/**
+ * What exporting a campaign gave: nothing when the user cancelled the Save dialog, else where the zip is and what
+ * went in (design-principles §6g).
+ */
+export type ExportCampaignResultDto =
+  | { readonly cancelled: true }
+  | {
+      readonly cancelled: false;
+      /** Absolute path of the zip. */
+      readonly path: string;
+      /** Files in the zip, the manifest included. */
+      readonly files: number;
+      readonly bytes: number;
+      readonly skipped: readonly ExportSkippedFileDto[];
+      /** Template choices left out because their file is gone. */
+      readonly droppedTemplates: number;
+    };

@@ -1,6 +1,7 @@
 const appMetaController = require('./app-meta.controller');
 const assetController = require('./asset.controller');
 const battleRuleController = require('./battle-rule.controller');
+const campaignBundleController = require('./campaign-bundle.controller');
 const campaignController = require('./campaign.controller');
 const cloudReadinessController = require('./cloud-readiness.controller');
 const compendiumController = require('./compendium.controller');
@@ -25,6 +26,7 @@ module.exports = {
   appMetaController,
   assetController,
   battleRuleController,
+  campaignBundleController,
   campaignController,
   cloudReadinessController,
   compendiumController,

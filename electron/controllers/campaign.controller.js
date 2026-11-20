@@ -203,5 +203,6 @@ module.exports = {
   get,
   list,
   remove,
+  requireExistingCampaign,
   update,
 };

@@ -2,6 +2,7 @@ const {
   appMetaController,
   assetController,
   battleRuleController,
+  campaignBundleController,
   campaignController,
   cloudReadinessController,
   compendiumController,
@@ -47,6 +48,8 @@ const IPC_HANDLERS = Object.freeze({
   [CHANNELS.campaigns.getAgentRules]: campaignController.getAgentRules,
   [CHANNELS.campaigns.createAgentRules]: campaignController.createAgentRules,
   [CHANNELS.campaigns.remove]: campaignController.remove,
+  [CHANNELS.campaigns.export]: campaignBundleController.exportCampaign,
+  [CHANNELS.campaigns.revealExport]: campaignBundleController.revealLastExport,
 
   [CHANNELS.cloud.getStatus]: cloudReadinessController.getStatus,
   [CHANNELS.cloud.skipWait]: cloudReadinessController.skipWait,

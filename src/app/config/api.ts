@@ -65,6 +65,8 @@ export interface ElectronIpcClient {
     readonly getAgentRules: IpcRequest<{ slug: string }, DTO.AgentRulesDto>;
     readonly createAgentRules: IpcRequest<{ slug: string }, DTO.AgentRulesDto>;
     readonly remove: IpcRequest<{ slug: string }, { slug: string; deleted: number }>;
+    readonly export: IpcRequest<{ slug: string }, DTO.ExportCampaignResultDto>;
+    readonly revealExport: OptionalIpcRequest<void, { revealed: boolean }>;
   };
   readonly cloud: {
     readonly getStatus: OptionalIpcRequest<void, DTO.CloudReadinessStatusDto>;
