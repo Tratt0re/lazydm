@@ -658,6 +658,7 @@ module.exports = {
   getBuiltInTemplate,
   isBuiltInSystem,
   isTemplatePath,
+  listCampaignTemplateTypes,
   listSystemsOfType,
   listTemplates,
   parseBuiltInRef,
