@@ -23,6 +23,7 @@ Heading to 1.0. Built and working:
 - Assets: paste, drop, import, inline audio, PDFs
 - Encounter manager with tracker layouts (battle rules), party roster, cemetery and statuses
 - Map with pins linked to files
+- Campaign export and import as a plain zip (`lazydm.json` manifest), also for MCP agents
 - Tabs and split screen with shared live documents
 - Seven languages (en, it, de, es, fr, uk, zh) and the dark and light themes
 
@@ -61,7 +62,9 @@ Current work: UI polish for 1.0 (plans in `.claude/plans/`). The phase-by-phase 
 | Path | What |
 | --- | --- |
 | `electron/controllers/` | Input validation and orchestration, one per feature (campaign, document, encounter, map, review, section, template, compendium…) |
-| `electron/models/` | Data access: vault files, SQLite index |
+| `electron/models/` | Data access: vault files, SQLite index; campaign zips: `campaign-bundle` (the `lazydm.json` manifest), `campaign-export`, `campaign-import` |
+| `electron/utils/zip-*.js`, `path-utils.js` | Campaign zip support: `zip-reader` (hostile-zip reader over `yauzl`), `zip-paths` (entry name checks), `zip-limits` (caps), shared path helpers |
+| `electron/mcp/` | The opt-in MCP server: tools, scope guard, folder importer and `bundles.js` (campaign zips) |
 | `electron/database/` | SQLite setup, schemas, migrations |
 | `electron/ipc/` | Channel names, handler registration, push events |
 | `electron/preload.js` | Preload source (`preload.bundle.cjs` is generated, never edited) |

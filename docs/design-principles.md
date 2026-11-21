@@ -620,7 +620,7 @@ Codex. It is **off by default** and lives in the Electron main process (`electro
   `settings-store`, never in the vault, so the token cannot sync through the cloud folder. The renderer follows the
   state through `mcp:statusChanged`.
 
-## 6g. Campaign export and import (planned, not built)
+## 6g. Campaign export and import
 
 A campaign leaves the Codex as one plain `.zip` and comes back in as a **new** campaign. The format is public and
 simple on purpose: unzipped, it is a folder of `.md` files Obsidian opens, so other tools, sites and AI agents can read
@@ -641,13 +641,29 @@ or generate it without LazyDM.
   reference, §6d). It never holds device or personal settings: theme, language, Codex path, MCP settings or token, tabs,
   the index. A reader that ignores it still gets a valid folder of notes; one that does not know a key ignores it, and a
   newer `formatVersion` than the app knows is refused with a clear message.
-- **Export.** *Export…* in the campaign's menu. It only reads the Codex, writes the zip where the user chooses, and
-  the toast offers *Show in folder*.
-- **Import.** *Import campaign…* on the campaigns page, or dropping a zip. A modal shows what is inside (title, system,
-  counts, anything that will be skipped) **before anything is written**, then creates a **new** campaign: a taken slug
-  is renamed (`-2`), nothing is merged or overwritten, as with the MCP import (§6f). The settings of `lazydm.json` are
-  applied to the new campaign only. A zip with no `lazydm.json` still imports (a folder of notes). Refused while
-  *Limit to some campaigns* is on, like any tool that creates a campaign.
+- **Export.** *Export…* in the campaign's "…" menu (the campaigns page and the campaign overview), between *Edit* and
+  *Delete*. No modal: the system *Save* dialog opens in the main process (the renderer never names a path to write),
+  the zip is written to a temporary file next to it and moved into place when complete, and a toast offers *Show in
+  folder* (the file manager's own name) and says what was left out. It only reads the Codex. Files the importer would
+  refuse (a type it does not take, a name Windows cannot create, over the size caps, a name that differs from another
+  only in case) are left out and listed, so what is exported can always be imported. Entries carry a fixed date and mode,
+  so the same campaign gives the same contents (the manifest holds the day it was exported).
+- **Import.** *Import campaign…* in the toolbar of the campaigns page (and in its empty state) opens one modal, in two
+  steps, built on the *Import from disk* drop zone of Assets (§2): drop a zip on the zone or pick one in the system
+  dialog, then see what is inside (name, game system, counts per kind, what will be left out and why, warnings about
+  the settings) **before anything is written**, with the name of the new campaign to change. Confirming creates a
+  **new** campaign: a taken slug is renamed (`-2`), nothing is merged or overwritten, as with the MCP import (§6f). The
+  settings of `lazydm.json` are applied to the new campaign only. A zip with no `lazydm.json` (a folder of notes from
+  anywhere) still imports. A refused zip stays on the first step with one plain sentence. A dropped zip travels as a
+  **path**, never as bytes (a campaign can be hundreds of MB): the preload exposes `getPathForFile`, which only names
+  the file, and Electron checks it (absolute, a plain file, `.zip`) before reading anything. The scan and the import
+  share one inspection, and the import checks the zip again, so a file swapped after the preview is still checked.
+  The app's own import is not limited by *Limit to some campaigns*: that limit is for assistants (§6f), and it applies
+  to the MCP tools below.
+- **Failure leaves nothing.** The new folder is created first and only under a free name; if anything fails after
+  that, the folder and the settings written for it are removed and nothing is indexed. An encounter or a map that is
+  not valid JSON is skipped and listed. Encounters and maps are written as the app itself would read them (unknown
+  fields dropped, ids made unique, a map's image path checked).
 - **Untrusted input.** A zip comes from someone else (§7). The reader is `yauzl` (it never extracts by itself, so
   LazyDM's own path guard decides every path) and the writer is `yazl`. The importer: refuses an entry whose resolved
   path leaves the target folder, an absolute path, `..`, a symlink and a duplicate name; accepts only `.md`, `.json`
@@ -692,6 +708,13 @@ or generate it without LazyDM.
   update the hash if that script changes). Production builds do not inline critical CSS, which would need
   `unsafe-inline` scripts.
 - `documents:open` only opens media files (images, PDFs, audio), never executables or scripts.
+- **Campaign zips (§6g)** come from other people, so they are read as untrusted input, with `yauzl` in the main
+  process only. Nothing is extracted by the library: every entry is checked first (a path that leaves the campaign,
+  an absolute or drive path, a backslash, `..`, a link or other special file, encryption, a duplicate name compared
+  without case, caps on entries, size and packing ratio), and the bytes that really come out are counted against the
+  entry's declared size and CRC-32 and a budget for the whole zip. The renderer may name a file to read (a dropped
+  zip, through `getPathForFile`) but Electron validates it and no path to write ever comes from the renderer.
+  Tests build hostile zips with a raw writer (`electron/__tests__/helpers/raw-zip.js`).
 - **MCP server (§6f)** is the app's only network listener, with these rules: bound to `127.0.0.1` (never another
   interface), off until the user switches it on, every request needs `Authorization: Bearer <token>` (32 random bytes,
   constant-time compare, regenerable), requests with an `Origin` header or a `Host` other than the loopback name of
@@ -1034,6 +1057,9 @@ Component behaviour, variant keys and configuration stay as they are.
 | 19.3 | Tracker rows edited in place (name, initiative, numbers, text, side, health), edits kept in the entity with *Reset to note value* |
 | 19.4 | Tracker row density: *Compact* / *Card* / *Expanded* and *Follow the turn* in *Tracker layouts* (device-local), per-field `density` in tracker layouts, quick HP buttons and the note's first line in the Expanded row |
 
+| 20.1 | Campaign export and import (§6g), plan in `.claude/plans/campaign-export-import.build.plan.md`: a plain `.zip` with a `lazydm.json` manifest of the settings the campaign owns, *Export…* in the campaign menus and *Import campaign…* (drop zone, preview, name) always as a new campaign, a hostile-zip reader (`yauzl`) and writer (`yazl`), all-or-nothing import |
+| 20.2 | MCP: `export_campaign` (needs *Allow changes*, destination outside the Codex, never overwrites) and campaign zips in `scan_import_source` and `import_campaign` |
+
 ## 12. Open decisions
 
 - **TODO — settings for the open vault and a factory reset**: Settings has no place to see or manage the current
@@ -1044,4 +1070,10 @@ Component behaviour, variant keys and configuration stay as they are.
   a roll for several encounters at once, and a starting-HP reset are left out on purpose and can be added without
   changing the file format (`version: 1`).
 
-- **Backup**: optional "zip the vault" backup to replace the removed DB backup — to be decided later.
+- **Backup**: optional "zip the vault" backup to replace the removed DB backup — to be decided later. Exporting a
+  campaign (§6g) covers **one campaign** (not the compendium, the vault's templates or its settings), so it is a way
+  to move or keep a campaign, not yet a backup of the whole Codex.
+
+- **Campaign zips, later**: merging a zip into an existing campaign (a supplement), an *Include linked compendium
+  notes* option, a size estimate before exporting, and a standalone page for the file format are left out on purpose
+  and need no change to the format (`formatVersion: 1`).

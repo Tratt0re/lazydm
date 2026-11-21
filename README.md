@@ -54,6 +54,10 @@ links to it. Before the session, **Review** shows you any broken links that need
 - **Assets**: paste or drop images, audio and PDFs into your notes. Audio plays inline and PDFs open in the system
   viewer.
 - **Search** from the header, and file actions everywhere: rename, copy, move and delete (to the system Trash).
+- **Export and import a campaign** as one plain `.zip`: its notes, assets, encounters, maps, templates, AI Agents rules
+  and the settings it owns, never the party roster. Hand it to another DM or move it to another Codex; it always arrives
+  as a new campaign, and nothing is added before you have seen what is inside. Unzipped, it is a folder of Markdown
+  that Obsidian opens.
 
 ## Run at the table
 
@@ -101,8 +105,8 @@ handles the sync; LazyDM waits for files still downloading and warns you about c
 
 When you choose to enable it, LazyDM can make the Codex available to an AI assistant running on the same computer
 through a local MCP server. It stays off until you switch it on. It listens only on your own computer and asks for a
-token. Writing is a separate switch, and so is deleting; both start off. Claude Code, OpenAI Codex and OpenCode can
-connect to it. The design is in [`docs/design-principles.md`](docs/design-principles.md) §6f.
+token. Writing is a separate switch, and so is deleting; both start off. With writing on, an assistant can also export
+a campaign to a zip and import one. Claude Code, OpenAI Codex and OpenCode can connect to it. The design is in [`docs/design-principles.md`](docs/design-principles.md) §6f.
 
 ## Roadmap
 
@@ -113,8 +117,6 @@ change. Finished work is listed in [`docs/design-principles.md`](docs/design-pri
 
 - [ ] **Rules cheat sheet**: a quick-open sheet for the rules you look up at the table (conditions, actions,
       movement…), kept as plain notes in your Codex.
-- [ ] **Export and import a campaign**: move a campaign with its assets, templates and AI Agents rules to another
-      Codex, or hand it to another DM, as a single file.
 - [ ] **Better folder home**: search and filters on the page of a folder, and a choice of views (list, cards, graph).
 
 **Later**
