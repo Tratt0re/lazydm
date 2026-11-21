@@ -247,7 +247,15 @@ async function exportCampaign(
   vaultPath,
   slug,
   destination,
-  { isMedia, appVersion = null, allowInsideVault = true, overwrite = true },
+  {
+    isMedia,
+    appVersion = null,
+    allowInsideVault = true,
+    overwrite = true,
+    // false: templates of the Codex root and of compendium systems stay out, so a campaign exported under an access
+    // limit carries nothing from outside it (the manifest drops those choices and `droppedTemplates` counts them).
+    externalTemplates = true,
+  },
 ) {
   const target = await assertDestination(destination, { vaultPath, allowInsideVault, overwrite });
 
@@ -255,7 +263,9 @@ async function exportCampaign(
   const ownTemplates = collected.files
     .filter((file) => file.rel.startsWith(`${bundleModel.BUNDLE_TEMPLATES_DIR}/`))
     .map((file) => path.posix.basename(file.rel).toLowerCase());
-  const external = collectExternalTemplates(vaultPath, slug, ownTemplates);
+  const external = externalTemplates
+    ? collectExternalTemplates(vaultPath, slug, ownTemplates)
+    : { map: new Map(), files: [] };
   const { manifest, dropped } = await bundleModel.buildManifest(vaultPath, slug, {
     templateMap: external.map,
     appVersion,

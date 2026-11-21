@@ -255,6 +255,7 @@ describe('tool list', () => {
       'rename_folder',
       'import_campaign',
       'scan_import_source',
+      'export_campaign',
     ]) {
       expect(names).toContain(name);
     }
@@ -293,6 +294,13 @@ describe('tool list', () => {
 
     expect(names).toContain('scan_import_source');
     expect(names).not.toContain('import_campaign');
+  });
+
+  it('export_campaign writes a file, so read-only mode does not have it', async () => {
+    await connect({ allowWrite: false });
+    const names = (await client.listTools()).tools.map((tool) => tool.name);
+
+    expect(names).not.toContain('export_campaign');
   });
 });
 

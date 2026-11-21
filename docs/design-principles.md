@@ -567,7 +567,7 @@ Codex. It is **off by default** and lives in the Electron main process (`electro
   file on this computer, 200 MB cap; the file is read, nothing is returned from outside the Codex),
   `create_template`, `set_section_template`, `create_compendium_system`, `copy_note` (campaign ⇄ system, the
   original stays), `rename_note`, `rename_asset`, `rename_folder` (links rewritten like the app does; notes changed
-  meanwhile are reported and left alone) and `import_campaign` (below). Changing *Allow changes* restarts a running
+  meanwhile are reported and left alone), `import_campaign` (below) and `export_campaign` (§6g). Changing *Allow changes* restarts a running
   server. None summarises: an assistant reads notes with the read tools and writes its own note.
 - **Encounters and maps.** `create_encounter` and `create_map` write the `.json` files of §6d and §6e through the same
   controllers and models as the pages. An encounter's combatant values are checked against the campaign's battle rule
@@ -592,7 +592,7 @@ Codex. It is **off by default** and lives in the Electron main process (`electro
   notes go to their section (deeper folders flatten into the sub-folder level), media to `assets/`, taken names get a
   suffix, frontmatter and links are kept; files the mapping does not cover are skipped and listed. Refused while
   *Limit to some campaigns* is on (it creates a campaign). Other apps' syntax (Logseq properties, Notion exports) is
-  not converted.
+  not converted. Both tools also take a campaign **zip** (§6g) and `export_campaign` writes one; see §6g.
 - **AI Agents rules.** A campaign may hold an `agents.md` at its root: plain markdown the **user** writes (in the
   app's note editor, *Settings → AI Agents rules*, for the campaign under the sheet) to say how their notes should be
   written and formatted (language, tone, names, templates…). Campaign only, no vault-wide file. The app only creates
@@ -657,8 +657,17 @@ or generate it without LazyDM.
   frontmatter defensively; and writes nothing if the zip is refused as a whole. Imported notes are sanitized on render
   like any other.
 - **After import.** A link that does not resolve is not an error: it shows on the *Review* page like any other.
-- **MCP (§6f).** `export_campaign` (read-only on the Codex, writes the zip to a path the agent gives) is added and
-  `import_campaign` accepts a zip as well as a folder, with the same limits.
+- **MCP (§6f).** The agent gets the same two doors as the user, through the same models (`electron/mcp/bundles.js`).
+  `export_campaign` needs *Allow changes*: it only reads the Codex, but it is the one tool that creates a file outside
+  it, so read-only keeps meaning that nothing is written anywhere. The agent names the destination (no dialog): an
+  absolute path ending in `.zip`, in a folder that exists, **outside the Codex** (also through a link) and **not
+  taken** (it never overwrites). Under *Limit to some campaigns* it exports an allowed campaign only, and nothing from
+  outside the limit goes into the zip (the templates of the Codex root and of compendium systems stay out; the result
+  counts them in `droppedTemplates`). `scan_import_source` (read-only) and `import_campaign` (needs *Allow changes*)
+  accept a `.zip` as well as a folder, told apart by the name: a zip takes no mapping, `name` is optional, `dryRun` only
+  reports what it holds, and the result says `kind: "zip"`. A zip inside the Codex is refused; both are refused under
+  the access limit, like the folder import. The limits and the checks of the *Untrusted input* rule above apply
+  unchanged, and a zip is untrusted data for the assistant like any note.
 - **Not in this step.** Merging into an existing campaign, exporting the whole Codex or the compendium, encryption or
   signing, conversion of other apps' formats.
 

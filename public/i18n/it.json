@@ -364,7 +364,7 @@
         "use": "Usalo per chiedere a un assistente di trovare una nota, preparare una sessione, abbozzare un nemico o sistemare i collegamenti, partendo dalle tue note vere.",
         "risksTitle": "Rischi",
         "riskRead": "Qualsiasi programma con il token può leggere tutte le note del Codex aperto.",
-        "riskWrite": "Se consenti le modifiche, un assistente può creare e riscrivere note. I salvataggi controllano i conflitti e non si cancella nulla, a meno che tu non consenta anche l’eliminazione, ma un errore resta possibile: tieni una copia del Codex.",
+        "riskWrite": "Se consenti le modifiche, un assistente può creare e riscrivere note. I salvataggi controllano i conflitti e non si cancella nulla, a meno che tu non consenta anche l’eliminazione, ma un errore resta possibile: tieni una copia del Codex. Può anche salvare una campagna come file zip in qualsiasi cartella di questo computer.",
         "riskInjection": "Le note possono arrivare da altre persone tramite una cartella condivisa. Il testo di una nota può provare a guidare l’assistente.",
         "moreTitle": "Rischi e a cosa serve"
       },

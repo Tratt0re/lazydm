@@ -2,6 +2,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 const { McpServer } = require('@modelcontextprotocol/sdk/server/mcp.js');
 const { z } = require('zod');
+const { exportZip, importZip, isZipSource, scanZip } = require('./bundles');
 const { createEncounter, describeEncounterRule } = require('./encounters');
 const { importCampaign, scanSource } = require('./importer');
 const { createMap } = require('./maps');
@@ -342,21 +343,28 @@ function registerReadTools(server, scope, c) {
     'scan_import_source',
     {
       description:
-        'Looks at a folder of .md notes on this computer (Obsidian or any plain folder) and copies nothing: ' +
-        'folders with note and media counts, link styles, files that cannot be imported, notes nested deeper ' +
-        'than LazyDM allows, names that collide once slugged. Use it to choose the mapping for import_campaign. ' +
-        'Hidden folders and symbolic links are skipped; a folder inside the Codex is refused.' +
+        'Looks at something to import and copies nothing. A folder of .md notes on this computer (Obsidian or any ' +
+        'plain folder): folders with note and media counts, link styles, files that cannot be imported, notes ' +
+        'nested deeper than LazyDM allows, names that collide once slugged; use it to choose the mapping for ' +
+        'import_campaign. Hidden folders and symbolic links are skipped. Or a campaign .zip (made by export_campaign ' +
+        'or the app): its name, game system, counts of notes, assets, encounters, maps and templates, what would be ' +
+        'left out and why, and warnings about its settings; a zip needs no mapping. A path inside the Codex is ' +
+        'refused.' +
         UNTRUSTED_NOTE,
       inputSchema: {
         sourcePath: z
           .string()
-          .describe('Absolute path of the folder to look at, outside the Codex.'),
+          .describe(
+            'Absolute path of the folder, or of a .zip file, to look at, outside the Codex.',
+          ),
       },
       annotations: READ_ONLY,
     },
     run(async ({ sourcePath }) => {
       requireUnlimited(scope, 'Importing a campaign');
-      return scanSource({ sourcePath }, importDeps(c));
+      return isZipSource(sourcePath)
+        ? scanZip({ sourcePath }, importDeps(c))
+        : scanSource({ sourcePath }, importDeps(c));
     }),
   );
 
@@ -851,27 +859,63 @@ function importDeps(c) {
 
 /** Reads another folder of the computer and writes a new campaign: needs the whole Codex, not a campaign limit. */
 function registerImportTools(server, scope, c) {
+  // The one tool that creates a file outside the Codex, so it sits behind Allow changes like every tool that writes:
+  // read-only keeps meaning that nothing is written anywhere. It only reads the Codex itself, so an access limit
+  // still lets it export an allowed campaign (and `exportZip` then leaves out what lies outside the limit).
+  server.registerTool(
+    'export_campaign',
+    {
+      description:
+        'Writes a campaign as one plain .zip file: its notes, assets, encounters, maps, templates, AI Agents rules ' +
+        'and the settings the campaign owns (sections, template choices, game system, tracker layout) in a ' +
+        'lazydm.json. The party roster, hidden files and links are left out; files LazyDM would not import again ' +
+        'are listed in "skipped". It only reads the Codex and writes the zip at "destination": an absolute path ' +
+        'ending in .zip, in a folder that exists, OUTSIDE the Codex, that is not taken (it never overwrites). ' +
+        'Tell the user where the file went. Under an access limit only an allowed campaign can be exported, and ' +
+        'nothing from outside it (templates of the Codex or of a compendium system) goes into the zip.',
+      inputSchema: {
+        slug: z.string().describe('Slug of the campaign, from list_campaigns.'),
+        destination: z
+          .string()
+          .describe('Absolute path of the new .zip file, outside the Codex. It must not exist yet.'),
+      },
+      annotations: WRITES,
+    },
+    run((input) => exportZip(input, scope, importDeps(c))),
+  );
+
   server.registerTool(
     'import_campaign',
     {
       description:
-        'Imports a folder of .md notes from another app (Obsidian or any plain folder) as a NEW campaign. Run ' +
-        'scan_import_source first, then call this with a mapping { "<source folder>": "<section>" } and dryRun ' +
-        'true to see the plan, then again with dryRun false. Never merges into an existing campaign. Links are ' +
-        'kept working (names become slugs; the old name stays as the link label), media that notes use go to ' +
-        'assets/, folders deeper than one level are flattened, files not mapped are skipped and listed. Only ' +
-        '.md and media files are read; hidden folders and symbolic links are skipped. Logseq properties and ' +
-        'Notion exports are not converted.' +
+        'Imports a campaign as a NEW campaign. Run scan_import_source first. Never merges into an existing ' +
+        'campaign. Two kinds of source. (1) A campaign .zip (made by export_campaign or the app): no mapping; ' +
+        'everything in it is checked again here, it is written under a free name ("-2" when the name is taken), ' +
+        'and the campaign\'s own settings come with it; "name" is optional and renames it; if anything fails ' +
+        'nothing is left behind. (2) A folder of .md notes from another app (Obsidian or any plain folder): call ' +
+        'it with a mapping { "<source folder>": "<section>" } and dryRun true to see the plan, then again with ' +
+        'dryRun false; links are kept working (names become slugs; the old name stays as the link label), media ' +
+        'that notes use go to assets/, folders deeper than one level are flattened, files not mapped are skipped ' +
+        'and listed. Only .md and media files are read; hidden folders and symbolic links are skipped. Logseq ' +
+        'properties and Notion exports are not converted. With dryRun a zip only reports what it holds.' +
         UNTRUSTED_NOTE,
       inputSchema: {
         sourcePath: z
           .string()
-          .describe('Absolute path of the folder to import, outside the Codex.'),
-        name: z.string().describe('Name of the new campaign; its folder is the slug.'),
+          .describe(
+            'Absolute path of the folder, or of the .zip file, to import, outside the Codex.',
+          ),
+        name: z
+          .string()
+          .optional()
+          .describe(
+            'Name of the new campaign; its folder is the slug. Required for a folder; for a zip, the default is the name inside it.',
+          ),
         mapping: z
           .record(z.string(), z.string())
+          .optional()
           .describe(
-            'Source folder name (or "." for notes in the root) -> section, from scan_import_source.',
+            'Folders only: source folder name (or "." for notes in the root) -> section, from scan_import_source. Not used for a zip.',
           ),
         description: z.string().optional().describe('One short line for the campaign card.'),
         includeAllMedia: z
@@ -884,7 +928,9 @@ function registerImportTools(server, scope, c) {
     },
     run(async (input) => {
       requireUnlimited(scope, 'Importing a campaign');
-      return importCampaign(input, importDeps(c));
+      return isZipSource(input.sourcePath)
+        ? importZip(input, importDeps(c))
+        : importCampaign(input, importDeps(c));
     }),
   );
 }
