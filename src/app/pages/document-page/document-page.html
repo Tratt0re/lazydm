@@ -111,7 +111,7 @@
         <app-broken-link-menu (fixBrokenLink)="onFixBrokenLink($event)" />
         @if (mode() === 'reading') {
           <app-document-preview
-            class="h-full"
+            class="absolute inset-0"
             [body]="previewBody()"
             [properties]="previewProperties()"
             [showProperties]="isPropertiesOpen()"
