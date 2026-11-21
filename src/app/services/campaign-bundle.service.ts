@@ -1,11 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 
 import { APIChannel } from '@/config/api';
-import type {
-  ExportCampaignResultDto,
-  ImportCampaignResultDto,
-  ScanImportResultDto,
-} from '@/dtos';
+import type { ExportCampaignResultDto, ImportCampaignResultDto, ScanImportResultDto } from '@/dtos';
 import { BaseIpcService } from '@/services/base-ipc.service';
 import { CampaignService } from '@/services/campaign.service';
 

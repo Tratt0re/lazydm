@@ -482,7 +482,10 @@ describe('export then import: a round trip', () => {
   it('brings back the same files, card, settings and templates in an empty Codex', async () => {
     put('lost-mine/scenes/intro.md', '# Intro\n[[bandit]]\n');
     put('lost-mine/enemies/humans/bandit.md', '---\nhp: 11\n---\n# Bandit\n');
-    put('lost-mine/encounters/ambush.json', '{"name":"Ambush","entities":[{"id":"a","name":"Orc"}]}');
+    put(
+      'lost-mine/encounters/ambush.json',
+      '{"name":"Ambush","entities":[{"id":"a","name":"Orc"}]}',
+    );
     put('lost-mine/encounters/_party.json', '{"entities":[{"id":"p","name":"A real name"}]}');
     put('lost-mine/maps/cave.json', '{"name":"Cave"}');
     put('lost-mine/assets/cave.png', 'png-bytes');

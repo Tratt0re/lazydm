@@ -136,14 +136,20 @@ const NAME_MAX_LENGTH = 80;
         <div>
           <!-- Hairlines are the grid's own gap, so an odd last cell can take the whole row without a stray block. -->
           <dl class="grid grid-cols-2 gap-px border border-border bg-border-subtle text-sm">
-            <div class="flex items-baseline justify-between gap-3 bg-recessed px-3 py-2 odd:last:col-span-2">
+            <div
+              class="flex items-baseline justify-between gap-3 bg-recessed px-3 py-2 odd:last:col-span-2"
+            >
               <dt class="font-mono text-[11px] tracking-[0.04em] text-muted-foreground uppercase">
                 {{ 'campaigns.create.systemLabel' | translate }}
               </dt>
-              <dd class="font-semibold">{{ 'settings.templates.systems.' + info.system | translate }}</dd>
+              <dd class="font-semibold">
+                {{ 'settings.templates.systems.' + info.system | translate }}
+              </dd>
             </div>
             @for (row of rows(); track row.key) {
-              <div class="flex items-baseline justify-between gap-3 bg-recessed px-3 py-2 odd:last:col-span-2">
+              <div
+                class="flex items-baseline justify-between gap-3 bg-recessed px-3 py-2 odd:last:col-span-2"
+              >
                 <dt class="font-mono text-[11px] tracking-[0.04em] text-muted-foreground uppercase">
                   {{ row.label | translate }}
                 </dt>
@@ -151,7 +157,9 @@ const NAME_MAX_LENGTH = 80;
               </div>
             }
             @if (info.hasAgentRules) {
-              <div class="flex items-center justify-between gap-3 bg-recessed px-3 py-2 odd:last:col-span-2">
+              <div
+                class="flex items-center justify-between gap-3 bg-recessed px-3 py-2 odd:last:col-span-2"
+              >
                 <dt class="font-mono text-[11px] tracking-[0.04em] text-muted-foreground uppercase">
                   {{ 'settings.sections.agentRules.title' | translate }}
                 </dt>
@@ -180,7 +188,9 @@ const NAME_MAX_LENGTH = 80;
               <ul class="space-y-1">
                 @for (file of info.skipped; track file.path) {
                   <li class="flex flex-wrap items-baseline gap-x-2">
-                    <span class="font-mono text-xs break-all text-card-foreground">{{ file.path }}</span>
+                    <span class="font-mono text-xs break-all text-card-foreground">{{
+                      file.path
+                    }}</span>
                     <span class="text-xs">{{ skipReasonKey(file.reason) | translate }}</span>
                   </li>
                 }
@@ -230,7 +240,9 @@ export class AppCampaignImportSheetComponent {
     const typed = this.name().trim().toLowerCase();
     return (
       typed.length > 0 &&
-      this.campaignService.campaigns().some((campaign) => campaign.name.trim().toLowerCase() === typed)
+      this.campaignService
+        .campaigns()
+        .some((campaign) => campaign.name.trim().toLowerCase() === typed)
     );
   });
   protected readonly size = computed(() => formatFileSize(this.preview()?.bytes ?? 0));

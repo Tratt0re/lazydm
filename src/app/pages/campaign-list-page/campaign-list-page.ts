@@ -189,7 +189,13 @@ export class CampaignListPage implements OnInit {
     system: string | null,
   ): Promise<boolean> {
     try {
-      const campaign = await this.campaignService.create({ name, description, icon, presets, system });
+      const campaign = await this.campaignService.create({
+        name,
+        description,
+        icon,
+        presets,
+        system,
+      });
       await this.router.navigate(['/campaigns', campaign.slug]);
       return true;
     } catch (error) {

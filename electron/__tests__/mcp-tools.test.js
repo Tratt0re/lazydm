@@ -441,11 +441,19 @@ describe('create_encounter', () => {
   it('needs a name for every combatant, and nothing else', async () => {
     await connect({ allowWrite: true });
 
-    const blank = await call('create_encounter', { folder, name: 'Empty', entities: [{ name: '   ' }] });
+    const blank = await call('create_encounter', {
+      folder,
+      name: 'Empty',
+      entities: [{ name: '   ' }],
+    });
     expect(blank.isError).toBe(true);
     expect(blank.text).toMatch(/needs a name/);
 
-    const onlyName = await call('create_encounter', { folder, name: 'Lone', entities: [{ name: 'Goblin' }] });
+    const onlyName = await call('create_encounter', {
+      folder,
+      name: 'Lone',
+      entities: [{ name: 'Goblin' }],
+    });
     expect(onlyName.isError).toBe(false);
   });
 
@@ -1054,7 +1062,10 @@ describe('append_to_note', () => {
 describe('AI Agents rules', () => {
   it('reports hasAgentRules and returns the rules with a notice', async () => {
     const controllers = await connect({ allowWrite: false });
-    controllers.document.read = vi.fn(async () => ({ content: 'Write in Italian.', contentHash: 'r1' }));
+    controllers.document.read = vi.fn(async () => ({
+      content: 'Write in Italian.',
+      contentHash: 'r1',
+    }));
 
     const list = await call('list_campaigns');
     expect(list.json.rows.map((row) => [row.slug, row.hasAgentRules])).toEqual([

@@ -108,7 +108,10 @@ async function withRulesReminder(c, notePath, result) {
 
   const { exists } = await c.campaign.getAgentRules({ slug }).catch(() => ({ exists: false }));
   return exists
-    ? { ...result, reminder: `The user wrote rules for notes in ${slug}: read them with get_agent_rules.` }
+    ? {
+        ...result,
+        reminder: `The user wrote rules for notes in ${slug}: read them with get_agent_rules.`,
+      }
     : result;
 }
 
@@ -499,7 +502,9 @@ function registerWriteTools(server, scope, c) {
       },
       annotations: WRITES,
     },
-    run(({ folder, name }) => c.document.createFolder({ folder: scope.resolveWritable(folder), name })),
+    run(({ folder, name }) =>
+      c.document.createFolder({ folder: scope.resolveWritable(folder), name }),
+    ),
   );
 
   server.registerTool(
@@ -558,7 +563,10 @@ function registerWriteTools(server, scope, c) {
       annotations: WRITES,
     },
     run(({ path: sourcePath, folder }) =>
-      c.document.move({ path: scope.resolveWritable(sourcePath), folder: scope.resolveWritable(folder) }),
+      c.document.move({
+        path: scope.resolveWritable(sourcePath),
+        folder: scope.resolveWritable(folder),
+      }),
     ),
   );
 
@@ -622,7 +630,10 @@ function registerWriteTools(server, scope, c) {
       inputSchema: {
         campaign: z.string().describe('Campaign slug.'),
         type: z.string().describe('Note type of the section, e.g. "enemy".'),
-        template: z.string().nullable().describe('Template path, "builtin", "builtin@<system>", or null.'),
+        template: z
+          .string()
+          .nullable()
+          .describe('Template path, "builtin", "builtin@<system>", or null.'),
       },
       annotations: { ...WRITES, idempotentHint: true },
     },
@@ -737,7 +748,9 @@ function registerWriteTools(server, scope, c) {
       },
       annotations: WRITES,
     },
-    run(({ folder, name }) => c.document.renameFolder({ folder: scope.resolveWritable(folder), name })),
+    run(({ folder, name }) =>
+      c.document.renameFolder({ folder: scope.resolveWritable(folder), name }),
+    ),
   );
 
   registerGameFileTools(server, scope, c);
@@ -877,7 +890,9 @@ function registerImportTools(server, scope, c) {
         slug: z.string().describe('Slug of the campaign, from list_campaigns.'),
         destination: z
           .string()
-          .describe('Absolute path of the new .zip file, outside the Codex. It must not exist yet.'),
+          .describe(
+            'Absolute path of the new .zip file, outside the Codex. It must not exist yet.',
+          ),
       },
       annotations: WRITES,
     },

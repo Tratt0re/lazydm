@@ -117,7 +117,9 @@ describe('collectCampaignFiles', () => {
 
     const { files, skipped } = await collectCampaignFiles(vault, 'lost-mine', isMedia);
 
-    expect(files.map((file) => file.rel).join()).not.toMatch(/_party|obsidian|hidden|link\.md|outside/);
+    expect(files.map((file) => file.rel).join()).not.toMatch(
+      /_party|obsidian|hidden|link\.md|outside/,
+    );
     expect(skipped).toEqual([
       { path: 'outside', reason: SKIP_REASONS.symlink },
       { path: 'scenes/link.md', reason: SKIP_REASONS.symlink },

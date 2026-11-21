@@ -116,14 +116,13 @@ export class CampaignSectionPage {
   /** Game systems that have their own built-in variant of each note type (`enemy` → dnd5e, pf2e). */
   private readonly templateSystems = signal<Readonly<Record<string, readonly string[]>>>({});
   /** The campaign's game system (`campaign.md`), which "Automatic" follows. */
-  protected readonly campaignSystem = computed(
-    () => {
-      const scope = this.scope();
-      return scope?.kind === 'campaign'
-        ? (this.campaignService.campaigns().find((item) => item.slug === scope.rootPath)?.system ?? null)
-        : null;
-    },
-  );
+  protected readonly campaignSystem = computed(() => {
+    const scope = this.scope();
+    return scope?.kind === 'campaign'
+      ? (this.campaignService.campaigns().find((item) => item.slug === scope.rootPath)?.system ??
+          null)
+      : null;
+  });
   private readonly templateRules = signal<TemplateRulesDto>({});
 
   private readonly sectionKey = toSignal(
@@ -232,7 +231,10 @@ export class CampaignSectionPage {
     // Files or folders of this section changed (an agent, another device, a move from another page).
     onIndexUpdated((paths) => {
       const sectionPath = this.sectionPath();
-      if (this.scope() && paths.some((path) => path.startsWith(`${sectionPath}/`) || path === sectionPath)) {
+      if (
+        this.scope() &&
+        paths.some((path) => path.startsWith(`${sectionPath}/`) || path === sectionPath)
+      ) {
         void this.reloadTreeQuietly(sectionPath);
       }
     });

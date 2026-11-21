@@ -411,7 +411,8 @@ function readCampaignRules(rootPath, campaignSlug) {
   ]);
   return Object.fromEntries(
     Object.entries(rules).filter(
-      ([type, value]) => types.has(type) && (isBuiltInTemplateChoice(value) || isTemplatePath(value)),
+      ([type, value]) =>
+        types.has(type) && (isBuiltInTemplateChoice(value) || isTemplatePath(value)),
     ),
   );
 }
@@ -511,7 +512,9 @@ async function resolveTemplate(rootPath, { folderPath, type }) {
 
   // Automatic: the built-in of the campaign's game system (`campaign.md` → `system`), else the generic one.
   const system =
-    scope?.kind === 'campaign' ? ((await readCampaign(rootPath, scope.slug))?.system ?? null) : null;
+    scope?.kind === 'campaign'
+      ? ((await readCampaign(rootPath, scope.slug))?.system ?? null)
+      : null;
   return (
     (system && isBuiltInSystem(system) ? getBuiltInTemplate(type, system) : null) ??
     BUILT_IN_TEMPLATES[type] ??

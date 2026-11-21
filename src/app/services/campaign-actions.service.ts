@@ -270,7 +270,8 @@ export class CampaignActionsService {
     system: string | null,
   ): Promise<CampaignDto | null> {
     try {
-      const previousSystem = this.campaignService.campaigns().find((item) => item.slug === slug)?.system ?? null;
+      const previousSystem =
+        this.campaignService.campaigns().find((item) => item.slug === slug)?.system ?? null;
       const updated = await this.campaignService.update({
         slug,
         name: name.trim(),

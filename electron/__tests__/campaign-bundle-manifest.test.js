@@ -158,7 +158,13 @@ describe('parseManifest: clamps and reports', () => {
       raw({
         sections: {
           custom: [
-            { key: 'factions', type: 'faction', label: 'Factions', icon: 'flag', description: 'Who.' },
+            {
+              key: 'factions',
+              type: 'faction',
+              label: 'Factions',
+              icon: 'flag',
+              description: 'Who.',
+            },
             { key: 'factions', label: 'Again' },
             { key: 'Bad Key', label: 'x' },
             { key: 'cults' },
@@ -261,7 +267,13 @@ describe('buildManifest', () => {
 
   it('writes a campaign with no settings as plain defaults', async () => {
     const { manifest } = await buildManifest(vault, 'lost-mine');
-    expect(manifest.sections).toEqual({ hidden: [], order: [], removed: [], labels: {}, custom: [] });
+    expect(manifest.sections).toEqual({
+      hidden: [],
+      order: [],
+      removed: [],
+      labels: {},
+      custom: [],
+    });
     expect(manifest.templates).toEqual({});
     expect(manifest.battleRule).toBeNull();
     expect(manifest.app.version).toBeNull();
@@ -279,7 +291,12 @@ describe('buildManifest', () => {
     put('compendium/dnd/_templates/item.md', '---\ntitle: "{{title}}"\n---\n');
     templateModel.setCampaignRule(vault, 'lost-mine', 'scene', 'lost-mine/_templates/scene.md');
     templateModel.setCampaignRule(vault, 'lost-mine', 'enemy', '_templates/enemy.md');
-    templateModel.setCampaignRule(vault, 'lost-mine', 'spell', 'compendium/dnd/_templates/spell.md');
+    templateModel.setCampaignRule(
+      vault,
+      'lost-mine',
+      'spell',
+      'compendium/dnd/_templates/spell.md',
+    );
     templateModel.setCampaignRule(vault, 'lost-mine', 'item', 'compendium/dnd/_templates/item.md');
 
     const { manifest, dropped } = await buildManifest(vault, 'lost-mine', {
