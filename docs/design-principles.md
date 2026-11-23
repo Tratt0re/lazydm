@@ -29,6 +29,7 @@ their technical names; only the text the user sees changes. Add to this table be
 | **Review** | broken links page, `/review` | The page and its alert; *Broken links* is only a group title inside it |
 | **Delete forever** | permanent delete | Combatant card, cemetery and its confirmation |
 | **AI Agents rules** | `agents.md` of a campaign | The campaign's instructions for AI assistants, written by the user in *Settings → AI Agents rules* (§6f) |
+| **Quick reference** | `quick-reference.json` of a campaign | The rules sheet opened from the title bar (§6h); its entries are *rules* and *categories*; translated per language |
 | **Info box** | callout | `> [!note]` stays as the markdown syntax example |
 | **Default** | built-in tracker layout (`Generic` in the file) | Display name only; the stored name never changes |
 
@@ -47,6 +48,7 @@ their technical names; only the text the user sees changes. Add to this table be
 └── <campaign-slug>/                   one folder per campaign (section folders appear with their first file)
     ├── campaign.md                    campaign card: display name, cover, description
     ├── agents.md                      AI Agents rules: the user's instructions for AI assistants (optional, §6f)
+    ├── quick-reference.json           Quick reference: the campaign's rules cheat sheet (optional, §6h)
     ├── scenes/
     ├── characters/
     ├── enemies/
@@ -687,6 +689,91 @@ or generate it without LazyDM.
 - **Not in this step.** Merging into an existing campaign, exporting the whole Codex or the compendium, encryption or
   signing, conversion of other apps' formats.
 
+## 6h. Quick reference
+
+A rules cheat sheet for the table: the rules a DM looks up mid-session (movement, actions, conditions, cover…), one
+shortcut away from any page of the campaign, including the tracker. Per campaign, and editable: the DM adds house
+rules, corrects a line, deletes what the table never uses.
+
+- **The file.** `<campaign>/quick-reference.json`, next to `campaign.md` and `agents.md`. It is a plain file the user
+  owns, not a note: it is not indexed, not in a section, not in note lists, search, link targets or Review. It is
+  created on the first write or on seeding, never when the campaign is created. It travels with the campaign in an
+  export (§6g).
+
+  ```json
+  {
+    "formatVersion": 1,
+    "system": "dnd5e",
+    "categories": [{ "id": "actions", "name": "Actions" }],
+    "rules": [
+      {
+        "id": "dodge",
+        "title": "Dodge",
+        "short": "One line, shown on the card.",
+        "full": "Markdown. A blank line starts a paragraph.",
+        "icon": "shield",
+        "categories": ["actions"],
+        "source": "dnd5e/dodge"
+      }
+    ],
+    "attribution": "…"
+  }
+  ```
+
+  `system` is the game system the seed came from; `source` is a rule's built-in key (absent on the user's own rules),
+  so *Reset to …* can restore that one rule. Categories and rules keep the order of the file. A rule lists its
+  categories by id and is stored once, so a rule that belongs in two places (Prone: movement and conditions) has one
+  text to edit. A rule whose category no longer exists shows under **Uncategorised**, a fixed group created only when
+  needed; deleting a category keeps its rules and moves them there.
+- **Caps** (one frozen object, like the zip caps): file 1 MiB, 50 categories, 500 rules, title 80 characters,
+  category name 60, short description 200, full description 8 000. The icon comes from an allow-list; anything else
+  becomes the default icon.
+- **Reading is defensive.** Every reader (the app, MCP, import) goes through one `parseQuickReference`: size cap,
+  `JSON.parse` in a try, plain-object check, prototype keys dropped, wrong types clamped, unknown keys dropped,
+  dangling category ids dropped. It returns the clean data and a list of warnings. `full` is Markdown rendered with
+  the notes' sanitiser (no raw HTML, no remote images).
+- **Writing** carries `contentHash` and `mtimeMs` like encounters: a file changed on disk (a cloud sync from another
+  computer) answers `conflict` instead of being overwritten.
+- **Content and seeding.** A campaign of a game system with built-in rules gets them the first time its sheet opens
+  and has no file (so campaigns that already exist get them too). Today that is **D&D 5e, the 2014 rules**, written
+  from the SRD 5.1 (movement, actions in combat, bonus action and reaction overviews, conditions with the exhaustion
+  levels, cover, vision and light, falling, suffocation and the other environmental effects). **Generic is empty**: its
+  empty state offers *Add a rule* and *Start from…* (copies a system's rules in, never overwriting). **Pathfinder 2e**
+  follows once its licence terms are checked (see below). The built-in text exists in all 7 languages and is written
+  in the app's language when the file is created; from then on it is the user's content. *Reset* restores one rule's
+  built-in text in the language of the device. A parity test keeps every language complete.
+- **Licences.** The rule text comes from open documents, never from another site's wording (the donjon quick
+  references are only a checklist of topics).
+  - **D&D 5e** is taken from the *System Reference Document 5.1*, under CC-BY 4.0. The attribution statement the
+    document requires is shown as is, with nothing else about Wizards of the Coast, and is stored in the file's
+    `attribution` and shown at the foot of the sheet and in the app's credits:
+    *This work includes material taken from the System Reference Document 5.1 ("SRD 5.1") by Wizards of the Coast
+    LLC and available at https://dnd.wizards.com/resources/systems-reference-document. The SRD 5.1 is licensed under
+    the Creative Commons Attribution 4.0 International License available at
+    https://creativecommons.org/licenses/by/4.0/legalcode.*
+    The wording is shortened and rearranged for cards, which counts as a change: the credits say the material was
+    adapted. LazyDM may say it is "compatible with fifth edition", nothing more.
+  - **Pathfinder 2e**: the Remaster rules are published under the ORC licence, with Paizo's own terms for names and
+    Product Identity. Those terms are **not verified yet**; nothing is seeded for Pathfinder 2e until they are, and if
+    copying is not allowed it is paraphrased summaries only.
+- **The sheet.** A full-page sheet like Settings and the Compendium (§8) that **rises from the bottom** and keeps the
+  campaign underneath. Opened from a book button left of the search bar (campaign pages only, `aria-pressed` while
+  open) and with **Cmd/Ctrl+R**, which the app handles itself (its menu has no reload item; in a browser the handler
+  calls `preventDefault`). Escape closes a dialog first, then the sheet.
+  - **Layout.** Title with its primary dot and a chip *system · campaign*, *New rule* (primary), the engraved divider,
+    then search (`/` focuses it), category chips with counts and *New category*. Below, cards grouped by category
+    (icon, title, one line) with *+ Rule* and *Rename* on each group; on the right a read-only detail panel that says
+    **Select a rule.** until a card is picked, then shows the rule with *Edit* and *Reset to …*. On a narrow window the
+    panel goes under the cards.
+  - **No edit mode.** Rules and categories can always be added, changed and deleted. Every form is a **modal dialog**
+    (§9): *New rule / Edit rule* (title, short and full description, *Icon* as a select, *Categories* as a multiple
+    select) and *New / Rename category* (with delete). Deleting a rule asks for confirmation.
+- **MCP.** `get_quick_reference` returns the clean data of a campaign (read only, inside the scope check); the file is
+  left out of note lists and search like `agents.md`, and the note tools cannot write it. Writing by agents is not
+  offered for now.
+- **Not in this step.** Dice links inside rules, opening a rule from a status in the tracker (the data is keyed to
+  allow it), sharing the sheet with players, importing rules from notes, per-rule tags, a Codex-wide default set.
+
 ## 7. Security
 
 - **Path guard**: every path received from the renderer is resolved and rejected if it escapes the vault root.
@@ -1059,6 +1146,7 @@ Component behaviour, variant keys and configuration stay as they are.
 
 | 20.1 | Campaign export and import (§6g), plan in `.claude/plans/campaign-export-import.build.plan.md`: a plain `.zip` with a `lazydm.json` manifest of the settings the campaign owns, *Export…* in the campaign menus and *Import campaign…* (drop zone, preview, name) always as a new campaign, a hostile-zip reader (`yauzl`) and writer (`yazl`), all-or-nothing import |
 | 20.2 | MCP: `export_campaign` (needs *Allow changes*, destination outside the Codex, never overwrites) and campaign zips in `scan_import_source` and `import_campaign` |
+| 20.3 | Quick reference (§6h), plan in `.claude/plans/quick-reference.plan.md`: per-campaign rules sheet (`quick-reference.json`), bottom-rising full-page sheet on Cmd/Ctrl+R, D&D 5e (2014, SRD 5.1) built in, rules and categories always editable through dialogs, part of campaign export and import, read-only MCP tool. Phase 0 (this section) written; not built |
 
 ## 12. Open decisions
 
