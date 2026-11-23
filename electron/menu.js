@@ -70,6 +70,7 @@ function buildMenuTemplate({ appName, labels = {}, enabled = {}, perform }) {
         item('compendium', 'Compendium'),
         item('templates', 'Templates'),
         item('battleRules', 'Battle Rules'),
+        item('quickReference', 'Quick Reference', 'Cmd+R'),
         { type: 'separator' },
         { role: 'resetZoom', label: label('resetZoom', 'Actual Size') },
         { role: 'zoomIn', label: label('zoomIn', 'Zoom In') },

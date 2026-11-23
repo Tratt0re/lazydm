@@ -1718,7 +1718,8 @@
       "mapPan": "使用选择工具时按住：移动地图",
       "mapSelectAll": "选择所有项目（选择工具）",
       "mapDelete": "删除所选项目",
-      "mapAddToSelection": "Shift/Cmd/Ctrl 点击：加入或移出选择"
+      "mapAddToSelection": "Shift/Cmd/Ctrl 点击：加入或移出选择",
+      "quickReference": "打开快速参考"
     }
   },
   "menu": {
@@ -1762,7 +1763,8 @@
       "forward": "前进",
       "nextTab": "下一个标签页",
       "previousTab": "上一个标签页",
-      "shortcuts": "键盘快捷键"
+      "shortcuts": "键盘快捷键",
+      "quickReference": "快速参考"
     }
   },
   "onboarding": {
@@ -1800,6 +1802,107 @@
         "box": "Box",
         "google-drive": "Google Drive"
       }
+    }
+  },
+  "quickReference": {
+    "title": "快速参考",
+    "detail": "规则",
+    "loading": "正在打开快速参考…",
+    "loadError": "无法打开快速参考。",
+    "newRule": "新建规则",
+    "newCategory": "新建分类",
+    "searchPlaceholder": "搜索规则…",
+    "categories": "分类",
+    "all": "全部",
+    "uncategorised": "未分类",
+    "noMatch": "没有与“{{query}}”匹配的规则。",
+    "clearSearch": "清除搜索",
+    "cancel": "取消",
+    "saveError": "无法保存快速参考",
+    "changedElsewhere": "快速参考在磁盘上已发生变化，现显示较新的版本；请重试。",
+    "warnings": {
+      "unreadable": "无法读取此文件，因此显示为空。在你做出更改之前，它保持原样。",
+      "cleaned": "此文件中有些条目无效，已不在你所见的内容中显示。"
+    },
+    "select": {
+      "title": "选择一条规则",
+      "description": "在左侧选择一张卡片，即可在此阅读完整内容。"
+    },
+    "empty": {
+      "title": "还没有规则",
+      "description": "这张表由你做主：状态、家规、你牌桌上的提醒。添加第一条，或从某个游戏系统开始。",
+      "addRule": "添加规则",
+      "startFrom": "从 {{system}} 开始",
+      "hint": "作为普通文件保存在此战役中，并随战役一同导出。"
+    },
+    "rule": {
+      "shortAdd": "规则",
+      "title": "标题",
+      "titlePlaceholder": "闪避",
+      "short": "简短说明",
+      "shortHint": "一行，显示在卡片上。",
+      "full": "完整说明",
+      "fullHint": "Markdown。空一行即开始新段落。",
+      "icon": "图标",
+      "categories": "分类",
+      "categoriesPlaceholder": "至少选择一个",
+      "categoriesHint": "一条规则可以属于多个分类；需要编辑的文本仍然只有一份。",
+      "newTitle": "新建规则",
+      "editTitle": "编辑规则",
+      "add": "添加规则",
+      "save": "保存",
+      "edit": "编辑",
+      "reset": "恢复为 {{system}}",
+      "delete": "删除规则",
+      "deleteTitle": "删除 {{name}}？",
+      "deleteDescription": "该规则将从此战役的快速参考中移除。从游戏系统恢复即可找回内置规则。"
+    },
+    "category": {
+      "name": "名称",
+      "namePlaceholder": "掩护",
+      "taken": "已有另一个分类使用此名称。",
+      "newTitle": "新建分类",
+      "renameTitle": "重命名分类",
+      "add": "添加分类",
+      "save": "保存",
+      "rename": "重命名",
+      "renameAria": "重命名 {{name}}",
+      "delete": "删除分类",
+      "deleteAria": "删除 {{name}}",
+      "deleteTitle": "删除 {{name}}？",
+      "deleteDescription": "它的 {{count}} 条规则会保留：移入“未分类”，或继续留在它们所属的其他分类中。"
+    },
+    "icons": {
+      "book-open": "书",
+      "footprints": "脚印",
+      "swords": "剑",
+      "shield": "盾牌",
+      "skull": "骷髅",
+      "lock": "锁",
+      "eye": "眼睛",
+      "eye-off": "隐藏",
+      "hand": "手",
+      "ghost": "幽灵",
+      "mountain": "山",
+      "anchor": "锚",
+      "brain": "大脑",
+      "heart": "心",
+      "moon": "月亮",
+      "sun": "太阳",
+      "sparkles": "闪光",
+      "clock": "时钟",
+      "info": "信息",
+      "users": "人物",
+      "dices": "骰子",
+      "star": "星",
+      "cloud": "云",
+      "link": "链接",
+      "arrow-right": "向右箭头",
+      "arrow-down": "向下箭头",
+      "triangle-alert": "警告",
+      "ban": "禁止",
+      "lightbulb": "主意",
+      "volume-x": "静音"
     }
   }
 }

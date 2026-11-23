@@ -103,7 +103,9 @@ const NOTE_ROUTES: Routes = [
 ];
 
 function matchSheetPaths(segments: UrlSegment[]): UrlMatchResult | null {
-  return ['compendium', 'templates', 'battle-rules', 'settings'].includes(segments[0]?.path ?? '')
+  return ['compendium', 'templates', 'battle-rules', 'settings', 'quick-reference'].includes(
+    segments[0]?.path ?? '',
+  )
     ? { consumed: segments }
     : null;
 }
@@ -244,6 +246,22 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./pages/tracker-layouts-page/tracker-layouts-page').then(
             (m) => m.TrackerLayoutsPage,
+          ),
+      },
+    ],
+  },
+  {
+    path: 'quick-reference',
+    outlet: APP_SHEET_OUTLET,
+    canMatch: [vaultGuard],
+    data: { [APP_SHEET_TITLE_ROUTE_DATA]: 'quickReference.title', sheetFrom: 'bottom' },
+    loadComponent: () => import('./layout/app-sheet/app-sheet').then((m) => m.AppSheet),
+    children: [
+      {
+        path: '',
+        loadComponent: () =>
+          import('./pages/quick-reference-page/quick-reference-page').then(
+            (m) => m.QuickReferencePage,
           ),
       },
     ],

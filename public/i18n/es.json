@@ -1718,7 +1718,8 @@
       "mapPan": "Mantener con la herramienta Seleccionar: mover el mapa",
       "mapSelectAll": "Seleccionar todos los elementos (herramienta Seleccionar)",
       "mapDelete": "Eliminar los elementos seleccionados",
-      "mapAddToSelection": "Mayús/Cmd/Ctrl-clic: añadir o quitar de la selección"
+      "mapAddToSelection": "Mayús/Cmd/Ctrl-clic: añadir o quitar de la selección",
+      "quickReference": "Abrir la Referencia rápida"
     }
   },
   "menu": {
@@ -1762,7 +1763,8 @@
       "forward": "Adelante",
       "nextTab": "Pestaña siguiente",
       "previousTab": "Pestaña anterior",
-      "shortcuts": "Atajos de teclado"
+      "shortcuts": "Atajos de teclado",
+      "quickReference": "Referencia rápida"
     }
   },
   "onboarding": {
@@ -1800,6 +1802,107 @@
         "box": "Box",
         "google-drive": "Google Drive"
       }
+    }
+  },
+  "quickReference": {
+    "title": "Referencia rápida",
+    "detail": "Regla",
+    "loading": "Abriendo la Referencia rápida…",
+    "loadError": "No se pudo abrir la Referencia rápida.",
+    "newRule": "Nueva regla",
+    "newCategory": "Nueva categoría",
+    "searchPlaceholder": "Buscar reglas…",
+    "categories": "Categorías",
+    "all": "Todas",
+    "uncategorised": "Sin categoría",
+    "noMatch": "Ninguna regla coincide con «{{query}}».",
+    "clearSearch": "Borrar la búsqueda",
+    "cancel": "Cancelar",
+    "saveError": "No se pudo guardar la Referencia rápida",
+    "changedElsewhere": "La Referencia rápida cambió en el disco. Se muestra la versión más reciente; inténtalo de nuevo.",
+    "warnings": {
+      "unreadable": "No se pudo leer este archivo, así que se muestra vacío. Se queda como está hasta que cambies algo.",
+      "cleaned": "Algunas entradas de este archivo no eran válidas y se han dejado fuera de lo que ves."
+    },
+    "select": {
+      "title": "Elige una regla",
+      "description": "Elige una tarjeta a la izquierda para leerla completa aquí."
+    },
+    "empty": {
+      "title": "Aún no hay reglas",
+      "description": "Esta hoja es tuya: condiciones, reglas de la casa, los recordatorios de tu mesa. Añade la primera, o empieza desde un sistema de juego.",
+      "addRule": "Añadir una regla",
+      "startFrom": "Empezar desde {{system}}",
+      "hint": "Se guarda como un archivo sencillo en esta campaña y se exporta con ella."
+    },
+    "rule": {
+      "shortAdd": "Regla",
+      "title": "Título",
+      "titlePlaceholder": "Esquivar",
+      "short": "Descripción breve",
+      "shortHint": "Una línea, se muestra en la tarjeta.",
+      "full": "Descripción completa",
+      "fullHint": "Markdown. Una línea en blanco empieza un párrafo nuevo.",
+      "icon": "Icono",
+      "categories": "Categorías",
+      "categoriesPlaceholder": "Elige al menos una",
+      "categoriesHint": "Una regla puede estar en varias categorías; sigue habiendo un solo texto que editar.",
+      "newTitle": "Nueva regla",
+      "editTitle": "Editar regla",
+      "add": "Añadir regla",
+      "save": "Guardar",
+      "edit": "Editar",
+      "reset": "Restablecer a {{system}}",
+      "delete": "Eliminar regla",
+      "deleteTitle": "¿Eliminar {{name}}?",
+      "deleteDescription": "La regla se quita de la Referencia rápida de esta campaña. Restablece desde el sistema de juego para recuperar una regla integrada."
+    },
+    "category": {
+      "name": "Nombre",
+      "namePlaceholder": "Cobertura",
+      "taken": "Otra categoría ya tiene este nombre.",
+      "newTitle": "Nueva categoría",
+      "renameTitle": "Renombrar categoría",
+      "add": "Añadir categoría",
+      "save": "Guardar",
+      "rename": "Renombrar",
+      "renameAria": "Renombrar {{name}}",
+      "delete": "Eliminar categoría",
+      "deleteAria": "Eliminar {{name}}",
+      "deleteTitle": "¿Eliminar {{name}}?",
+      "deleteDescription": "Sus {{count}} reglas se conservan: pasan a Sin categoría, o siguen en las otras categorías en las que están."
+    },
+    "icons": {
+      "book-open": "Libro",
+      "footprints": "Huellas",
+      "swords": "Espadas",
+      "shield": "Escudo",
+      "skull": "Calavera",
+      "lock": "Candado",
+      "eye": "Ojo",
+      "eye-off": "Oculto",
+      "hand": "Mano",
+      "ghost": "Fantasma",
+      "mountain": "Montaña",
+      "anchor": "Ancla",
+      "brain": "Cerebro",
+      "heart": "Corazón",
+      "moon": "Luna",
+      "sun": "Sol",
+      "sparkles": "Destellos",
+      "clock": "Reloj",
+      "info": "Información",
+      "users": "Personas",
+      "dices": "Dados",
+      "star": "Estrella",
+      "cloud": "Nube",
+      "link": "Enlace",
+      "arrow-right": "Flecha a la derecha",
+      "arrow-down": "Flecha hacia abajo",
+      "triangle-alert": "Aviso",
+      "ban": "Prohibido",
+      "lightbulb": "Idea",
+      "volume-x": "Silenciado"
     }
   }
 }

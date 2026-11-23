@@ -11,7 +11,7 @@ import {
 } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 
-import { matchesShortcut } from '@/config/shortcuts.config';
+import { matchesShortcut, withShortcut } from '@/config/shortcuts.config';
 import { HeaderSearchComponent } from '@/components/header-search/header-search.component';
 import { type AppSheetKind, AppSheetService } from '@/services/app-sheet.service';
 import { McpService } from '@/services/mcp.service';
@@ -34,6 +34,7 @@ type HeaderNavEntry =
   | { readonly type: 'customize' };
 
 const MAXIMIZED_CHANGED_EVENT = 'window:maximizedChanged';
+const WORKSPACE_SHORTCUT_EVENT = 'workspace:shortcut';
 const FULLSCREEN_CHANGED_EVENT = 'window:fullscreenChanged';
 
 /**
@@ -60,6 +61,7 @@ const FULLSCREEN_CHANGED_EVENT = 'window:fullscreenChanged';
 })
 export class Header {
   protected readonly sheets = inject(AppSheetService);
+  protected readonly withShortcut = withShortcut;
   protected readonly workspace = inject(WorkspaceService);
   protected readonly shortcutsSheet = inject(ShortcutsSheetService);
   private readonly mcp = inject(McpService);
@@ -114,13 +116,28 @@ export class Header {
       .catch((error) => console.warn('[app] Failed to read the window state:', error));
     listenToIpcEvent(MAXIMIZED_CHANGED_EVENT, this.handleMaximizedChanged);
     listenToIpcEvent(FULLSCREEN_CHANGED_EVENT, this.handleFullscreenChanged);
+    // The main process forwards Cmd/Ctrl+R (it would reload the window otherwise).
+    listenToIpcEvent(WORKSPACE_SHORTCUT_EVENT, this.handleShortcutEvent);
   }
+
+  private readonly handleShortcutEvent = (payload: unknown) => {
+    const action = (payload as { action?: string } | null)?.action;
+    if (action === 'quickReference' && this.vault() && this.workspace.isVisible()) {
+      void this.sheets.toggle('quick-reference');
+    }
+  };
 
   @HostListener('document:keydown', ['$event'])
   protected onKeyDown(event: KeyboardEvent): void {
     if (this.vault() && matchesShortcut(event, 'shortcuts')) {
       event.preventDefault();
       this.shortcutsSheet.toggle();
+    }
+
+    // Cmd/Ctrl+R opens the Quick reference on a campaign page; the browser's reload never runs there.
+    if (this.vault() && this.workspace.isVisible() && matchesShortcut(event, 'quickReference')) {
+      event.preventDefault();
+      void this.sheets.toggle('quick-reference');
     }
   }
 

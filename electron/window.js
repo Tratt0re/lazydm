@@ -171,24 +171,22 @@ function registerNavigationGuards(mainWindow, isDev) {
 }
 
 /**
- * The default application menu closes the window on Cmd/Ctrl+W; with the campaign tab bar that
- * shortcut closes the active tab instead, so it is forwarded to the renderer.
+ * Shortcuts the default application menu would take and that the renderer owns: Cmd/Ctrl+W closes the window
+ * there, but with the campaign tab bar it closes the active tab; Cmd/Ctrl+R reloads the page there, but here it
+ * opens the Quick reference. Both are forwarded to the renderer.
  */
+const FORWARDED_SHORTCUTS = Object.freeze({ w: 'closeTab', r: 'quickReference' });
+
 function registerTabShortcuts(mainWindow) {
   mainWindow.webContents.on('before-input-event', (event, input) => {
     const isModifierPressed = isMac ? input.meta : input.control;
-    if (
-      input.type !== 'keyDown' ||
-      !isModifierPressed ||
-      input.shift ||
-      input.alt ||
-      input.key.toLowerCase() !== 'w'
-    ) {
+    const action = FORWARDED_SHORTCUTS[input.key.toLowerCase()];
+    if (input.type !== 'keyDown' || !isModifierPressed || input.shift || input.alt || !action) {
       return;
     }
 
     event.preventDefault();
-    mainWindow.webContents.send('workspace:shortcut', { action: 'closeTab' });
+    mainWindow.webContents.send('workspace:shortcut', { action });
   });
 }
 

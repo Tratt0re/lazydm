@@ -1718,7 +1718,8 @@
       "mapPan": "Maintenir avec l'outil Sélection : déplacer la carte",
       "mapSelectAll": "Sélectionner tous les éléments (outil Sélection)",
       "mapDelete": "Supprimer les éléments sélectionnés",
-      "mapAddToSelection": "Maj/Cmd/Ctrl-clic : ajouter à la sélection ou l'en retirer"
+      "mapAddToSelection": "Maj/Cmd/Ctrl-clic : ajouter à la sélection ou l'en retirer",
+      "quickReference": "Ouvrir la Référence rapide"
     }
   },
   "menu": {
@@ -1762,7 +1763,8 @@
       "forward": "Suivant",
       "nextTab": "Onglet suivant",
       "previousTab": "Onglet précédent",
-      "shortcuts": "Raccourcis clavier"
+      "shortcuts": "Raccourcis clavier",
+      "quickReference": "Référence rapide"
     }
   },
   "onboarding": {
@@ -1800,6 +1802,107 @@
         "box": "Box",
         "google-drive": "Google Drive"
       }
+    }
+  },
+  "quickReference": {
+    "title": "Référence rapide",
+    "detail": "Règle",
+    "loading": "Ouverture de la Référence rapide…",
+    "loadError": "La Référence rapide n'a pas pu être ouverte.",
+    "newRule": "Nouvelle règle",
+    "newCategory": "Nouvelle catégorie",
+    "searchPlaceholder": "Rechercher dans les règles…",
+    "categories": "Catégories",
+    "all": "Toutes",
+    "uncategorised": "Sans catégorie",
+    "noMatch": "Aucune règle ne correspond à « {{query}} ».",
+    "clearSearch": "Effacer la recherche",
+    "cancel": "Annuler",
+    "saveError": "La Référence rapide n'a pas pu être enregistrée",
+    "changedElsewhere": "La Référence rapide a changé sur le disque. La version la plus récente est affichée ; réessayez.",
+    "warnings": {
+      "unreadable": "Ce fichier n'a pas pu être lu, il est donc affiché vide. Il reste tel quel tant que vous ne changez rien.",
+      "cleaned": "Certaines entrées de ce fichier n'étaient pas valides et ont été écartées de ce que vous voyez."
+    },
+    "select": {
+      "title": "Choisissez une règle",
+      "description": "Choisissez une carte à gauche pour la lire en entier ici."
+    },
+    "empty": {
+      "title": "Pas encore de règles",
+      "description": "Cette fiche est la vôtre : états, règles maison, les rappels de votre table. Ajoutez la première, ou partez d'un système de jeu.",
+      "addRule": "Ajouter une règle",
+      "startFrom": "Partir de {{system}}",
+      "hint": "Enregistrée comme un simple fichier dans cette campagne, et exportée avec elle."
+    },
+    "rule": {
+      "shortAdd": "Règle",
+      "title": "Titre",
+      "titlePlaceholder": "Esquiver",
+      "short": "Description courte",
+      "shortHint": "Une ligne, affichée sur la carte.",
+      "full": "Description complète",
+      "fullHint": "Markdown. Une ligne vide commence un nouveau paragraphe.",
+      "icon": "Icône",
+      "categories": "Catégories",
+      "categoriesPlaceholder": "Choisissez-en au moins une",
+      "categoriesHint": "Une règle peut figurer dans plusieurs catégories ; il n'y a toujours qu'un seul texte à modifier.",
+      "newTitle": "Nouvelle règle",
+      "editTitle": "Modifier la règle",
+      "add": "Ajouter la règle",
+      "save": "Enregistrer",
+      "edit": "Modifier",
+      "reset": "Rétablir {{system}}",
+      "delete": "Supprimer la règle",
+      "deleteTitle": "Supprimer {{name}} ?",
+      "deleteDescription": "La règle est retirée de la Référence rapide de cette campagne. Rétablissez-la depuis le système de jeu pour retrouver une règle intégrée."
+    },
+    "category": {
+      "name": "Nom",
+      "namePlaceholder": "Abri",
+      "taken": "Une autre catégorie porte déjà ce nom.",
+      "newTitle": "Nouvelle catégorie",
+      "renameTitle": "Renommer la catégorie",
+      "add": "Ajouter la catégorie",
+      "save": "Enregistrer",
+      "rename": "Renommer",
+      "renameAria": "Renommer {{name}}",
+      "delete": "Supprimer la catégorie",
+      "deleteAria": "Supprimer {{name}}",
+      "deleteTitle": "Supprimer {{name}} ?",
+      "deleteDescription": "Ses {{count}} règles sont conservées : elles passent dans Sans catégorie, ou restent dans les autres catégories où elles figurent."
+    },
+    "icons": {
+      "book-open": "Livre",
+      "footprints": "Empreintes",
+      "swords": "Épées",
+      "shield": "Bouclier",
+      "skull": "Crâne",
+      "lock": "Cadenas",
+      "eye": "Œil",
+      "eye-off": "Caché",
+      "hand": "Main",
+      "ghost": "Fantôme",
+      "mountain": "Montagne",
+      "anchor": "Ancre",
+      "brain": "Cerveau",
+      "heart": "Cœur",
+      "moon": "Lune",
+      "sun": "Soleil",
+      "sparkles": "Étincelles",
+      "clock": "Horloge",
+      "info": "Info",
+      "users": "Personnes",
+      "dices": "Dés",
+      "star": "Étoile",
+      "cloud": "Nuage",
+      "link": "Lien",
+      "arrow-right": "Flèche vers la droite",
+      "arrow-down": "Flèche vers le bas",
+      "triangle-alert": "Avertissement",
+      "ban": "Interdit",
+      "lightbulb": "Idée",
+      "volume-x": "Muet"
     }
   }
 }

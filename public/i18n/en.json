@@ -1718,7 +1718,8 @@
       "mapPan": "Hold with the Select tool: move the map",
       "mapSelectAll": "Select every item (Select tool)",
       "mapDelete": "Delete the selected items",
-      "mapAddToSelection": "Shift/Cmd/Ctrl-click: add to or remove from the selection"
+      "mapAddToSelection": "Shift/Cmd/Ctrl-click: add to or remove from the selection",
+      "quickReference": "Open the Quick reference"
     }
   },
   "menu": {
@@ -1762,7 +1763,8 @@
       "forward": "Forward",
       "nextTab": "Next Tab",
       "previousTab": "Previous Tab",
-      "shortcuts": "Keyboard Shortcuts"
+      "shortcuts": "Keyboard Shortcuts",
+      "quickReference": "Quick Reference"
     }
   },
   "onboarding": {
@@ -1800,6 +1802,107 @@
         "box": "Box",
         "google-drive": "Google Drive"
       }
+    }
+  },
+  "quickReference": {
+    "title": "Quick reference",
+    "detail": "Rule",
+    "loading": "Opening the Quick reference…",
+    "loadError": "The Quick reference could not be opened.",
+    "newRule": "New rule",
+    "newCategory": "New category",
+    "searchPlaceholder": "Search rules…",
+    "categories": "Categories",
+    "all": "All",
+    "uncategorised": "Uncategorised",
+    "noMatch": "No rule matches “{{query}}”.",
+    "clearSearch": "Clear search",
+    "cancel": "Cancel",
+    "saveError": "The Quick reference could not be saved",
+    "changedElsewhere": "The Quick reference changed on disk. The newer version is shown; try again.",
+    "warnings": {
+      "unreadable": "This file could not be read, so it is shown empty. It stays as it is until you change something.",
+      "cleaned": "Some entries of this file were not valid and have been left out of what you see."
+    },
+    "select": {
+      "title": "Select a rule",
+      "description": "Pick a card on the left to read it in full here."
+    },
+    "empty": {
+      "title": "No rules yet",
+      "description": "This sheet is yours: conditions, house rules, the table's own reminders. Add the first one, or start from a game system.",
+      "addRule": "Add a rule",
+      "startFrom": "Start from {{system}}",
+      "hint": "Saved as a plain file in this campaign, and exported with it."
+    },
+    "rule": {
+      "shortAdd": "Rule",
+      "title": "Title",
+      "titlePlaceholder": "Dodge",
+      "short": "Short description",
+      "shortHint": "One line, shown on the card.",
+      "full": "Full description",
+      "fullHint": "Markdown. A blank line starts a new paragraph.",
+      "icon": "Icon",
+      "categories": "Categories",
+      "categoriesPlaceholder": "Pick at least one",
+      "categoriesHint": "A rule can sit in several categories; there is still one text to edit.",
+      "newTitle": "New rule",
+      "editTitle": "Edit rule",
+      "add": "Add rule",
+      "save": "Save",
+      "edit": "Edit",
+      "reset": "Reset to {{system}}",
+      "delete": "Delete rule",
+      "deleteTitle": "Delete {{name}}?",
+      "deleteDescription": "The rule is removed from this campaign's Quick reference. Reset to the game system to get a built-in rule back."
+    },
+    "category": {
+      "name": "Name",
+      "namePlaceholder": "Cover",
+      "taken": "Another category already has this name.",
+      "newTitle": "New category",
+      "renameTitle": "Rename category",
+      "add": "Add category",
+      "save": "Save",
+      "rename": "Rename",
+      "renameAria": "Rename {{name}}",
+      "delete": "Delete category",
+      "deleteAria": "Delete {{name}}",
+      "deleteTitle": "Delete {{name}}?",
+      "deleteDescription": "Its {{count}} rules are kept: they move to Uncategorised, or stay in the other categories they sit in."
+    },
+    "icons": {
+      "book-open": "Book",
+      "footprints": "Footprints",
+      "swords": "Swords",
+      "shield": "Shield",
+      "skull": "Skull",
+      "lock": "Lock",
+      "eye": "Eye",
+      "eye-off": "Hidden",
+      "hand": "Hand",
+      "ghost": "Ghost",
+      "mountain": "Mountain",
+      "anchor": "Anchor",
+      "brain": "Brain",
+      "heart": "Heart",
+      "moon": "Moon",
+      "sun": "Sun",
+      "sparkles": "Sparkles",
+      "clock": "Clock",
+      "info": "Info",
+      "users": "People",
+      "dices": "Dice",
+      "star": "Star",
+      "cloud": "Cloud",
+      "link": "Link",
+      "arrow-right": "Arrow right",
+      "arrow-down": "Arrow down",
+      "triangle-alert": "Warning",
+      "ban": "Forbidden",
+      "lightbulb": "Idea",
+      "volume-x": "Muted"
     }
   }
 }

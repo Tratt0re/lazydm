@@ -1718,7 +1718,8 @@
       "mapPan": "Mit dem Auswahlwerkzeug gedrückt halten: Karte verschieben",
       "mapSelectAll": "Alle Elemente auswählen (Auswahlwerkzeug)",
       "mapDelete": "Ausgewählte Elemente löschen",
-      "mapAddToSelection": "Umschalt/Cmd/Strg-Klick: zur Auswahl hinzufügen oder entfernen"
+      "mapAddToSelection": "Umschalt/Cmd/Strg-Klick: zur Auswahl hinzufügen oder entfernen",
+      "quickReference": "Die Schnellreferenz öffnen"
     }
   },
   "menu": {
@@ -1762,7 +1763,8 @@
       "forward": "Vor",
       "nextTab": "Nächster Tab",
       "previousTab": "Vorheriger Tab",
-      "shortcuts": "Tastenkürzel"
+      "shortcuts": "Tastenkürzel",
+      "quickReference": "Schnellreferenz"
     }
   },
   "onboarding": {
@@ -1800,6 +1802,107 @@
         "box": "Box",
         "google-drive": "Google Drive"
       }
+    }
+  },
+  "quickReference": {
+    "title": "Schnellreferenz",
+    "detail": "Regel",
+    "loading": "Die Schnellreferenz wird geöffnet…",
+    "loadError": "Die Schnellreferenz konnte nicht geöffnet werden.",
+    "newRule": "Neue Regel",
+    "newCategory": "Neue Kategorie",
+    "searchPlaceholder": "Regeln durchsuchen…",
+    "categories": "Kategorien",
+    "all": "Alle",
+    "uncategorised": "Ohne Kategorie",
+    "noMatch": "Keine Regel passt zu „{{query}}“.",
+    "clearSearch": "Suche löschen",
+    "cancel": "Abbrechen",
+    "saveError": "Die Schnellreferenz konnte nicht gespeichert werden",
+    "changedElsewhere": "Die Schnellreferenz hat sich auf der Festplatte geändert. Die neuere Version wird angezeigt; versuche es noch einmal.",
+    "warnings": {
+      "unreadable": "Diese Datei konnte nicht gelesen werden und wird deshalb leer angezeigt. Sie bleibt unverändert, bis du etwas änderst.",
+      "cleaned": "Einige Einträge dieser Datei waren ungültig und werden nicht angezeigt."
+    },
+    "select": {
+      "title": "Wähle eine Regel",
+      "description": "Wähle links eine Karte, um sie hier vollständig zu lesen."
+    },
+    "empty": {
+      "title": "Noch keine Regeln",
+      "description": "Dieses Blatt gehört dir: Zustände, Hausregeln, die Erinnerungen deines Tisches. Füge die erste hinzu oder starte mit einem Spielsystem.",
+      "addRule": "Regel hinzufügen",
+      "startFrom": "Mit {{system}} beginnen",
+      "hint": "Als einfache Datei in dieser Kampagne gespeichert und mit ihr exportiert."
+    },
+    "rule": {
+      "shortAdd": "Regel",
+      "title": "Titel",
+      "titlePlaceholder": "Ausweichen",
+      "short": "Kurzbeschreibung",
+      "shortHint": "Eine Zeile, auf der Karte angezeigt.",
+      "full": "Vollständige Beschreibung",
+      "fullHint": "Markdown. Eine Leerzeile beginnt einen neuen Absatz.",
+      "icon": "Symbol",
+      "categories": "Kategorien",
+      "categoriesPlaceholder": "Wähle mindestens eine",
+      "categoriesHint": "Eine Regel kann in mehreren Kategorien stehen; es gibt trotzdem nur einen Text zu bearbeiten.",
+      "newTitle": "Neue Regel",
+      "editTitle": "Regel bearbeiten",
+      "add": "Regel hinzufügen",
+      "save": "Speichern",
+      "edit": "Bearbeiten",
+      "reset": "Auf {{system}} zurücksetzen",
+      "delete": "Regel löschen",
+      "deleteTitle": "{{name}} löschen?",
+      "deleteDescription": "Die Regel wird aus der Schnellreferenz dieser Kampagne entfernt. Setze sie auf das Spielsystem zurück, um eine integrierte Regel wiederzubekommen."
+    },
+    "category": {
+      "name": "Name",
+      "namePlaceholder": "Deckung",
+      "taken": "Eine andere Kategorie hat bereits diesen Namen.",
+      "newTitle": "Neue Kategorie",
+      "renameTitle": "Kategorie umbenennen",
+      "add": "Kategorie hinzufügen",
+      "save": "Speichern",
+      "rename": "Umbenennen",
+      "renameAria": "{{name}} umbenennen",
+      "delete": "Kategorie löschen",
+      "deleteAria": "{{name}} löschen",
+      "deleteTitle": "{{name}} löschen?",
+      "deleteDescription": "Ihre {{count}} Regeln bleiben erhalten: Sie wandern nach „Ohne Kategorie“ oder bleiben in den anderen Kategorien, in denen sie stehen."
+    },
+    "icons": {
+      "book-open": "Buch",
+      "footprints": "Fußspuren",
+      "swords": "Schwerter",
+      "shield": "Schild",
+      "skull": "Totenkopf",
+      "lock": "Schloss",
+      "eye": "Auge",
+      "eye-off": "Verborgen",
+      "hand": "Hand",
+      "ghost": "Geist",
+      "mountain": "Berg",
+      "anchor": "Anker",
+      "brain": "Gehirn",
+      "heart": "Herz",
+      "moon": "Mond",
+      "sun": "Sonne",
+      "sparkles": "Funken",
+      "clock": "Uhr",
+      "info": "Info",
+      "users": "Personen",
+      "dices": "Würfel",
+      "star": "Stern",
+      "cloud": "Wolke",
+      "link": "Verknüpfung",
+      "arrow-right": "Pfeil nach rechts",
+      "arrow-down": "Pfeil nach unten",
+      "triangle-alert": "Warnung",
+      "ban": "Verboten",
+      "lightbulb": "Idee",
+      "volume-x": "Stumm"
     }
   }
 }

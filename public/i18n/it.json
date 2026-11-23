@@ -1718,7 +1718,8 @@
       "mapPan": "Tieni premuto con lo strumento Seleziona: sposta la mappa",
       "mapSelectAll": "Seleziona ogni elemento (strumento Seleziona)",
       "mapDelete": "Elimina gli elementi selezionati",
-      "mapAddToSelection": "Shift/Cmd/Ctrl-clic: aggiungi o rimuovi dalla selezione"
+      "mapAddToSelection": "Shift/Cmd/Ctrl-clic: aggiungi o rimuovi dalla selezione",
+      "quickReference": "Apri il Riferimento rapido"
     }
   },
   "menu": {
@@ -1762,7 +1763,8 @@
       "forward": "Avanti",
       "nextTab": "Scheda successiva",
       "previousTab": "Scheda precedente",
-      "shortcuts": "Scorciatoie da tastiera"
+      "shortcuts": "Scorciatoie da tastiera",
+      "quickReference": "Riferimento rapido"
     }
   },
   "onboarding": {
@@ -1800,6 +1802,107 @@
         "box": "Box",
         "google-drive": "Google Drive"
       }
+    }
+  },
+  "quickReference": {
+    "title": "Riferimento rapido",
+    "detail": "Regola",
+    "loading": "Apro il Riferimento rapido…",
+    "loadError": "Non è stato possibile aprire il Riferimento rapido.",
+    "newRule": "Nuova regola",
+    "newCategory": "Nuova categoria",
+    "searchPlaceholder": "Cerca nelle regole…",
+    "categories": "Categorie",
+    "all": "Tutte",
+    "uncategorised": "Senza categoria",
+    "noMatch": "Nessuna regola corrisponde a «{{query}}».",
+    "clearSearch": "Cancella la ricerca",
+    "cancel": "Annulla",
+    "saveError": "Non è stato possibile salvare il Riferimento rapido",
+    "changedElsewhere": "Il Riferimento rapido è cambiato sul disco. Ora vedi la versione più recente; riprova.",
+    "warnings": {
+      "unreadable": "Questo file non si è potuto leggere, quindi è mostrato vuoto. Resta com'è finché non cambi qualcosa.",
+      "cleaned": "Alcune voci di questo file non erano valide e sono state escluse da ciò che vedi."
+    },
+    "select": {
+      "title": "Scegli una regola",
+      "description": "Scegli una scheda a sinistra per leggerla per intero qui."
+    },
+    "empty": {
+      "title": "Ancora nessuna regola",
+      "description": "Questo foglio è tuo: condizioni, regole della casa, i promemoria del tuo tavolo. Aggiungi la prima, oppure parti da un sistema di gioco.",
+      "addRule": "Aggiungi una regola",
+      "startFrom": "Parti da {{system}}",
+      "hint": "Salvato come file semplice in questa campagna, ed esportato con essa."
+    },
+    "rule": {
+      "shortAdd": "Regola",
+      "title": "Titolo",
+      "titlePlaceholder": "Schivare",
+      "short": "Descrizione breve",
+      "shortHint": "Una riga, mostrata sulla scheda.",
+      "full": "Descrizione completa",
+      "fullHint": "Markdown. Una riga vuota inizia un nuovo paragrafo.",
+      "icon": "Icona",
+      "categories": "Categorie",
+      "categoriesPlaceholder": "Scegline almeno una",
+      "categoriesHint": "Una regola può stare in più categorie; il testo da modificare resta uno solo.",
+      "newTitle": "Nuova regola",
+      "editTitle": "Modifica regola",
+      "add": "Aggiungi regola",
+      "save": "Salva",
+      "edit": "Modifica",
+      "reset": "Ripristina {{system}}",
+      "delete": "Elimina regola",
+      "deleteTitle": "Eliminare {{name}}?",
+      "deleteDescription": "La regola viene rimossa dal Riferimento rapido di questa campagna. Ripristina dal sistema di gioco per riavere una regola integrata."
+    },
+    "category": {
+      "name": "Nome",
+      "namePlaceholder": "Copertura",
+      "taken": "Un'altra categoria ha già questo nome.",
+      "newTitle": "Nuova categoria",
+      "renameTitle": "Rinomina categoria",
+      "add": "Aggiungi categoria",
+      "save": "Salva",
+      "rename": "Rinomina",
+      "renameAria": "Rinomina {{name}}",
+      "delete": "Elimina categoria",
+      "deleteAria": "Elimina {{name}}",
+      "deleteTitle": "Eliminare {{name}}?",
+      "deleteDescription": "Le sue {{count}} regole restano: passano in Senza categoria, o restano nelle altre categorie in cui si trovano."
+    },
+    "icons": {
+      "book-open": "Libro",
+      "footprints": "Impronte",
+      "swords": "Spade",
+      "shield": "Scudo",
+      "skull": "Teschio",
+      "lock": "Lucchetto",
+      "eye": "Occhio",
+      "eye-off": "Nascosto",
+      "hand": "Mano",
+      "ghost": "Fantasma",
+      "mountain": "Montagna",
+      "anchor": "Ancora",
+      "brain": "Cervello",
+      "heart": "Cuore",
+      "moon": "Luna",
+      "sun": "Sole",
+      "sparkles": "Scintille",
+      "clock": "Orologio",
+      "info": "Info",
+      "users": "Persone",
+      "dices": "Dadi",
+      "star": "Stella",
+      "cloud": "Nuvola",
+      "link": "Collegamento",
+      "arrow-right": "Freccia a destra",
+      "arrow-down": "Freccia in basso",
+      "triangle-alert": "Avviso",
+      "ban": "Vietato",
+      "lightbulb": "Idea",
+      "volume-x": "Muto"
     }
   }
 }

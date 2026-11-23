@@ -25,6 +25,7 @@ export const SHORTCUT_SCOPES: readonly ShortcutScope[] = ['global', 'tabs', 'edi
 export const SHORTCUTS: readonly ShortcutDefinition[] = [
   { id: 'search', scope: 'global', combos: [{ mod: true, key: 'k' }] },
   { id: 'shortcuts', scope: 'global', combos: [{ mod: true, key: '/' }] },
+  { id: 'quickReference', scope: 'global', combos: [{ mod: true, key: 'r' }] },
   { id: 'closeSheet', scope: 'global', combos: [{ key: 'escape' }] },
 
   { id: 'newTab', scope: 'tabs', combos: [{ mod: true, key: 't' }] },

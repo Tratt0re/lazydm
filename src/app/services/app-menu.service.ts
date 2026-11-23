@@ -18,7 +18,7 @@ const MENU_ACTION_EVENT = 'menu:action';
 /** Entries of the macOS menu, with their text (`menu.items.<id>`); Electron owns the roles (copy, quit…). */
 const LABELLED_ENTRIES = [
   'settings', 'newTab', 'closeTab', 'save', 'revealVault', 'search', 'toggleSidebar', 'compendium',
-  'templates', 'battleRules', 'back', 'forward', 'nextTab', 'previousTab', 'shortcuts',
+  'templates', 'battleRules', 'quickReference', 'back', 'forward', 'nextTab', 'previousTab', 'shortcuts',
 ] as const;
 const MENU_TITLES = [
   'file', 'closeWindow', 'edit', 'view', 'go', 'window', 'help', 'about', 'services', 'hide', 'hideOthers', 'unhide',
@@ -75,6 +75,7 @@ export class AppMenuService extends BaseIpcService<APIChannel.MENU> {
         compendium: hasVault,
         templates: hasVault,
         battleRules: hasVault,
+        quickReference: inCampaign,
         shortcuts: hasVault,
         revealVault: hasVault,
         newTab: inCampaign && this.workspace.canOpenTab(),
@@ -120,6 +121,9 @@ export class AppMenuService extends BaseIpcService<APIChannel.MENU> {
         break;
       case 'battleRules':
         void this.sheets.toggle('battle-rules');
+        break;
+      case 'quickReference':
+        void this.sheets.toggle('quick-reference');
         break;
       case 'shortcuts':
         this.shortcutsSheet.toggle();

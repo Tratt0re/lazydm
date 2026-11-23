@@ -1,0 +1,265 @@
+<!-- Under the sheet's title and divider: the campaign's game system, and the one primary action. -->
+<div class="flex shrink-0 flex-wrap items-center gap-3 px-6 pt-1 pb-3">
+  <span
+    class="inline-flex items-center gap-1.5 border border-border px-2 py-0.5 font-mono text-[11px] text-foreground-secondary"
+  >
+    <arc-icon arcType="book-open" class="size-3" />
+    {{ systemLabel() }} · {{ campaign()?.name }}
+  </span>
+  <span class="flex-1"></span>
+  @if (!service.isEmpty()) {
+    <button arc-button type="button" (click)="openRuleDialog(null)">
+      <arc-icon arcType="plus" />
+      {{ 'quickReference.newRule' | translate }}
+    </button>
+  }
+</div>
+
+@if (warningText(); as warning) {
+  <p
+    class="mx-6 mb-2 shrink-0 border border-border bg-recessed px-3 py-2 text-xs text-foreground-secondary"
+    role="status"
+  >
+    {{ warning }}
+  </p>
+}
+
+@if (service.isLoading() && !service.data()) {
+  <p class="px-6 py-10 text-sm text-muted-foreground" role="status">
+    {{ 'quickReference.loading' | translate }}
+  </p>
+} @else if (service.error() && !service.data()) {
+  <p class="px-6 py-10 text-sm text-destructive" role="alert">
+    {{ 'quickReference.loadError' | translate }}
+  </p>
+} @else if (service.isEmpty()) {
+  <!-- Nothing yet (Generic, or everything deleted): say what this is and the ways to start. -->
+  <div class="flex min-h-0 flex-1 flex-col items-start gap-3 overflow-auto px-6 py-10">
+    <h2
+      class="font-display text-[30px] leading-none font-bold tracking-wide text-foreground-strong uppercase"
+    >
+      {{ 'quickReference.empty.title' | translate }}<span class="text-primary" aria-hidden="true">.</span>
+    </h2>
+    <p class="max-w-[52ch] text-foreground-secondary">
+      {{ 'quickReference.empty.description' | translate }}
+    </p>
+    <div class="mt-1 flex flex-wrap gap-2">
+      <button arc-button type="button" (click)="openRuleDialog(null)">
+        <arc-icon arcType="plus" />
+        {{ 'quickReference.empty.addRule' | translate }}
+      </button>
+      @for (system of systemsWithRules; track system) {
+        <button arc-button arcType="outline" type="button" (click)="startFrom(system)">
+          <arc-icon arcType="book-open" />
+          {{ 'quickReference.empty.startFrom' | translate: { system: systemName(system) } }}
+        </button>
+      }
+      <button arc-button arcType="outline" type="button" (click)="openCategoryDialog(null)">
+        <arc-icon arcType="plus" />
+        {{ 'quickReference.newCategory' | translate }}
+      </button>
+    </div>
+    <p class="max-w-[52ch] text-xs text-muted-foreground">
+      {{ 'quickReference.empty.hint' | translate }}
+    </p>
+  </div>
+} @else {
+  <div class="flex shrink-0 flex-wrap items-center gap-3 border-b border-border-subtle px-6 py-3">
+    <label
+      class="flex h-8 w-72 items-center gap-2 border border-input bg-recessed px-2.5 text-muted-foreground focus-within:outline-2 focus-within:outline-ring"
+    >
+      <arc-icon arcType="search" class="size-4 shrink-0" />
+      <input
+        #searchInput
+        type="search"
+        class="min-w-0 flex-1 bg-transparent text-[13px] text-foreground outline-none placeholder:text-muted-foreground [&::-webkit-search-cancel-button]:hidden"
+        [value]="service.query()"
+        [placeholder]="'quickReference.searchPlaceholder' | translate"
+        [attr.aria-label]="'quickReference.searchPlaceholder' | translate"
+        (input)="onSearch($event)"
+        (keydown.escape)="service.query() ? clearSearch() : null"
+      />
+      <kbd class="border border-border px-1.5 font-mono text-[11px] text-muted-foreground" aria-hidden="true">/</kbd>
+    </label>
+
+    <div class="flex min-w-0 flex-1 flex-wrap gap-1" role="group" [attr.aria-label]="'quickReference.categories' | translate">
+      <button
+        type="button"
+        class="h-7 shrink-0 cursor-pointer border px-2.5 font-mono text-xs whitespace-nowrap transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+        [class]="
+          service.category() === null
+            ? 'border-primary bg-primary text-primary-foreground'
+            : 'border-border-subtle text-foreground-secondary hover:bg-accent'
+        "
+        [attr.aria-pressed]="service.category() === null"
+        (click)="service.setCategory(null)"
+      >
+        {{ 'quickReference.all' | translate }}<span class="ml-1.5 opacity-75">{{ service.rules().length }}</span>
+      </button>
+      @for (chip of chips(); track chip.id) {
+        <button
+          type="button"
+          class="h-7 shrink-0 cursor-pointer border px-2.5 font-mono text-xs whitespace-nowrap transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+          [class]="
+            service.category() === chip.id
+              ? 'border-primary bg-primary text-primary-foreground'
+              : 'border-border-subtle text-foreground-secondary hover:bg-accent'
+          "
+          [attr.aria-pressed]="service.category() === chip.id"
+          (click)="toggleCategory(chip.id)"
+        >
+          {{ chip.name }}<span class="ml-1.5 opacity-75">{{ chip.count }}</span>
+        </button>
+      }
+    </div>
+
+    <button arc-button arcType="outline" arcSize="sm" type="button" (click)="openCategoryDialog(null)">
+      <arc-icon arcType="plus" />
+      {{ 'quickReference.newCategory' | translate }}
+    </button>
+  </div>
+
+  <div class="grid min-h-0 flex-1 grid-cols-1 grid-rows-[minmax(0,3fr)_minmax(0,2fr)] lg:grid-cols-[minmax(0,1fr)_30rem] lg:grid-rows-1">
+    <div class="min-h-0 overflow-auto px-6 pt-4 pb-6" data-quick-list>
+      @for (group of service.visibleGroups(); track group.id) {
+        <section class="mb-6" [attr.aria-labelledby]="'qr-group-' + group.id">
+          <div class="mb-2.5 flex items-center gap-2.5">
+            <h2
+              [id]="'qr-group-' + group.id"
+              class="font-display text-[22px] leading-none font-bold tracking-wide text-foreground-strong uppercase"
+            >
+              {{ group.name }}<span class="text-primary" aria-hidden="true">.</span>
+            </h2>
+            <span class="font-mono text-[11px] text-muted-foreground">{{ group.rules.length }}</span>
+            <span class="flex-1"></span>
+            @if (!group.isUncategorised) {
+              <button
+                arc-button
+                arcType="outline"
+                arcSize="sm"
+                type="button"
+                (click)="openRuleDialog(null, group.id)"
+              >
+                <arc-icon arcType="plus" />
+                {{ 'quickReference.rule.shortAdd' | translate }}
+              </button>
+              <button
+                arc-button
+                arcType="outline"
+                arcSize="sm"
+                type="button"
+                [attr.aria-label]="'quickReference.category.renameAria' | translate: { name: group.name }"
+                (click)="openCategoryDialog(group.id)"
+              >
+                <arc-icon arcType="pencil" />
+                {{ 'quickReference.category.rename' | translate }}
+              </button>
+              <button
+                arc-button
+                arcType="ghost"
+                arcSize="sm"
+                type="button"
+                class="size-8"
+                [attr.aria-label]="'quickReference.category.deleteAria' | translate: { name: group.name }"
+                (click)="confirmDeleteCategory(group.id)"
+              >
+                <arc-icon arcType="trash" />
+              </button>
+            }
+          </div>
+          <div class="grid grid-cols-[repeat(auto-fill,minmax(14.5rem,1fr))] gap-1.5">
+            @for (rule of group.rules; track rule.id) {
+              <button
+                type="button"
+                data-rule-card
+                class="grid cursor-pointer grid-cols-[1.75rem_minmax(0,1fr)] gap-2.5 border p-2.5 text-left transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+                [class]="
+                  isSelected(rule)
+                    ? 'border-primary bg-raised'
+                    : 'border-border-subtle bg-card hover:bg-accent'
+                "
+                [attr.aria-pressed]="isSelected(rule)"
+                (click)="service.select(rule.id)"
+                (keydown)="onCardKeydown($event)"
+              >
+                <arc-icon [arcType]="iconOf(rule)" class="mt-0.5 size-5 text-primary" />
+                <span class="min-w-0">
+                  <span class="block text-sm leading-tight font-semibold text-foreground-strong">{{ rule.title }}</span>
+                  <span class="mt-0.5 block text-xs leading-snug text-foreground-secondary">{{ rule.short }}</span>
+                </span>
+              </button>
+            }
+          </div>
+        </section>
+      } @empty {
+        <div class="flex flex-col items-start gap-3 py-8">
+          <p class="text-muted-foreground">
+            {{ 'quickReference.noMatch' | translate: { query: service.query() } }}
+          </p>
+          <button arc-button arcType="outline" arcSize="sm" type="button" (click)="clearSearch()">
+            {{ 'quickReference.clearSearch' | translate }}
+          </button>
+        </div>
+      }
+      @if (service.data()?.attribution; as credit) {
+        <p class="mt-2 max-w-[80ch] border-t border-border-subtle pt-3 text-[11px] leading-snug text-muted-foreground">
+          {{ credit }}
+        </p>
+      }
+    </div>
+
+    <aside
+      class="min-h-0 overflow-auto border-t border-border-subtle bg-recessed px-6 py-5 lg:border-t-0 lg:border-l"
+      [attr.aria-label]="'quickReference.detail' | translate"
+      aria-live="polite"
+    >
+      @if (selected(); as rule) {
+        <div class="mb-3 flex flex-wrap gap-1.5">
+          @for (name of selectedCategories(); track name) {
+            <span class="border border-border px-1.5 py-px font-mono text-[11px] text-foreground-secondary">{{ name }}</span>
+          }
+        </div>
+        <h3 class="font-display text-[30px] leading-none font-bold tracking-wide text-foreground-strong uppercase">
+          {{ rule.title }}<span class="text-primary" aria-hidden="true">.</span>
+        </h3>
+        @if (rule.short) {
+          <p class="mt-3 max-w-[62ch] font-medium text-foreground-strong">{{ rule.short }}</p>
+        }
+        <div class="arc-markdown-body mt-3 max-w-[62ch] !mx-0" [innerHTML]="selectedHtml()"></div>
+        <div class="mt-5 flex flex-wrap gap-2 border-t border-border-subtle pt-3">
+          <button arc-button arcType="outline" type="button" (click)="openRuleDialog(rule)">
+            <arc-icon arcType="pencil" />
+            {{ 'quickReference.rule.edit' | translate }}
+          </button>
+          @if (resetSystem(); as system) {
+            <button arc-button arcType="outline" type="button" (click)="resetSelected()">
+              <arc-icon arcType="rotate-ccw" />
+              {{ 'quickReference.rule.reset' | translate: { system } }}
+            </button>
+          }
+          <span class="flex-1"></span>
+          <button
+            arc-button
+            arcType="ghost"
+            type="button"
+            class="text-destructive"
+            [attr.aria-label]="'quickReference.rule.delete' | translate"
+            (click)="confirmDeleteRule(rule)"
+          >
+            <arc-icon arcType="trash" />
+          </button>
+        </div>
+      } @else {
+        <div class="flex flex-col items-start gap-2.5 pt-12">
+          <arc-icon arcType="book-open" class="size-8 text-muted-foreground" />
+          <h3 class="font-display text-[30px] leading-none font-bold tracking-wide text-foreground-strong uppercase">
+            {{ 'quickReference.select.title' | translate }}<span class="text-primary" aria-hidden="true">.</span>
+          </h3>
+          <p class="max-w-[34ch] text-foreground-secondary">
+            {{ 'quickReference.select.description' | translate }}
+          </p>
+        </div>
+      }
+    </aside>
+  </div>
+}

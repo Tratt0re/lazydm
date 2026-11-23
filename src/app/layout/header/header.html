@@ -15,7 +15,24 @@
 
   <!-- center column: search bar (it searches the open campaign, so only on a campaign page) -->
   @if (vault() && workspace.isVisible()) {
-    <app-header-search class="window-no-drag" />
+    <div class="window-no-drag flex items-center gap-1">
+      <button
+        type="button"
+        arc-button
+        arcType="ghost"
+        arcSize="sm"
+        class="size-8"
+        [class.text-primary]="sheets.activeKind() === 'quick-reference'"
+        [attr.aria-pressed]="sheets.activeKind() === 'quick-reference'"
+        [attr.aria-label]="'quickReference.title' | translate"
+        arcPosition="bottom"
+        [arcTooltip]="withShortcut('quickReference.title' | translate, 'quickReference')"
+        (click)="sheets.toggle('quick-reference')"
+      >
+        <arc-icon arcType="book-open" />
+      </button>
+      <app-header-search />
+    </div>
   } @else {
     <span></span>
   }

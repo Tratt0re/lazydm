@@ -21,7 +21,8 @@ import { ArcTechIconComponent } from '@/shared/components/icon';
   providers: [ToolbarContextService],
   template: `
     <section
-      class="app-sheet-enter flex h-full min-h-0 flex-col border-b-2 border-border-strong bg-background shadow-overlay"
+      class="app-sheet-enter flex h-full min-h-0 flex-col border-border-strong bg-background shadow-overlay"
+      [class]="fromBottom ? 'app-sheet-from-bottom border-t-2' : 'border-b-2'"
       [class.app-sheet-leave]="sheets.isClosing()"
       role="region"
       aria-labelledby="app-sheet-title"
@@ -59,6 +60,9 @@ import { ArcTechIconComponent } from '@/shared/components/icon';
 })
 export class AppSheet {
   protected readonly sheets = inject(AppSheetService);
+  /** Sheets that are not a settings page (the Quick reference) rise from the bottom instead of dropping from the top. */
+  protected readonly fromBottom =
+    inject(ActivatedRoute).snapshot.data['sheetFrom'] === 'bottom';
   protected readonly title = toSignal(
     inject(ActivatedRoute).data.pipe(map((data) => String(data[APP_SHEET_TITLE_ROUTE_DATA] ?? ''))),
     { initialValue: '' },
