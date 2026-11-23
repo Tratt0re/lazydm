@@ -1,0 +1,325 @@
+{
+  "categories": {
+    "turn-order": "Turn order",
+    "movement": "Movement",
+    "actions": "Actions",
+    "bonus-actions": "Bonus actions",
+    "reactions": "Reactions",
+    "attacks": "Attacks",
+    "conditions": "Conditions",
+    "environment": "Environment",
+    "dying": "Dropping to 0 HP"
+  },
+  "rules": {
+    "your-turn": {
+      "title": "Your turn",
+      "short": "Move up to your speed and take one action.",
+      "full": "On your turn you can move a distance up to your speed and take one action, in either order.\n\nYou can also interact with one object or feature of the environment for free, and communicate with brief utterances and gestures. A second interaction costs your action (Use an Object).\n\nYou can forgo moving, acting, or both. If you can't decide what to do, consider the Dodge or Ready action."
+    },
+    "initiative": {
+      "title": "Initiative",
+      "short": "A Dexterity check sets the order; highest goes first.",
+      "full": "When combat starts, every participant makes a Dexterity check to determine their place in the initiative order, from the highest total to the lowest. The order stays the same from round to round.\n\nThe GM makes one roll for a whole group of identical creatures, so they act together.\n\nTies: the GM decides among tied GM-controlled creatures, the players among their own characters, and the GM when a monster ties with a player character. Optionally the tied creatures each roll a d20, highest first."
+    },
+    "surprise": {
+      "title": "Surprise",
+      "short": "A surprised creature loses its first turn.",
+      "full": "If neither side tries to be stealthy, they notice each other. Otherwise the GM compares the Dexterity (Stealth) checks of anyone hiding with the passive Wisdom (Perception) of each creature on the other side. Any creature that doesn't notice a threat is surprised at the start of the encounter.\n\nA surprised creature can't move or take an action on its first turn of the combat, and can't take a reaction until that turn ends. A member of a group can be surprised even if the others aren't."
+    },
+    "move": {
+      "title": "Move",
+      "short": "Up to your speed, split around your action.",
+      "full": "On your turn you can move up to your speed, using as much or as little of it as you like. Jumping, climbing and swimming are part of your move: deduct the distance of each part from your speed until it is used up.\n\n- **Break it up.** You can move before and after your action. With speed 30, you can move 10 feet, act, then move 20.\n- **Between attacks.** If your action includes more than one weapon attack, you can move between them.\n- **More than one speed.** When you switch between speeds (walking and flying, say), subtract the distance already moved from the new speed. If the result is 0 or less, you can't use that speed this move."
+    },
+    "difficult-terrain": {
+      "title": "Difficult terrain",
+      "short": "Every foot costs 1 extra foot.",
+      "full": "Every foot of movement in difficult terrain costs 1 extra foot. This is true even if several things in the space count as difficult terrain.\n\nLow furniture, rubble, undergrowth, steep stairs, snow and shallow bogs are examples. The space of another creature, hostile or not, also counts as difficult terrain."
+    },
+    "prone": {
+      "title": "Prone",
+      "short": "Crawl only; Disadvantage to attack; melee attackers have Advantage.",
+      "full": "**Getting down and up**\n\n- You can drop prone without using any of your speed.\n- Standing up costs movement equal to half your speed (15 feet at speed 30). You can't stand up if you don't have enough movement left or your speed is 0.\n- To move while prone you must crawl (or use magic such as teleportation). Every foot of crawling costs 1 extra foot, so crawling 1 foot in difficult terrain costs 3 feet.\n\n**While prone**\n\n- Your only movement option is to crawl, unless you stand up and end the condition.\n- You have Disadvantage on attack rolls.\n- An attack roll against you has Advantage if the attacker is within 5 feet of you. Otherwise it has Disadvantage."
+    },
+    "moving-around-creatures": {
+      "title": "Moving around creatures",
+      "short": "Through allies yes; through foes only if much bigger or smaller.",
+      "full": "- You can move through a nonhostile creature's space.\n- You can move through a hostile creature's space only if it is at least two sizes larger or smaller than you.\n- Another creature's space is difficult terrain for you.\n- Friend or enemy, you can't willingly end your move in its space.\n- If you leave a hostile creature's reach during your move, you provoke an opportunity attack."
+    },
+    "flying": {
+      "title": "Flying",
+      "short": "A flyer that is knocked prone or can't move falls.",
+      "full": "If a flying creature is knocked prone, has its speed reduced to 0, or is otherwise deprived of the ability to move, it falls, unless it can hover or is being held aloft by magic, such as the fly spell."
+    },
+    "squeezing": {
+      "title": "Squeezing into a smaller space",
+      "short": "One size smaller; costs extra and gives a penalty.",
+      "full": "A creature can squeeze through a space that is large enough for a creature one size smaller than it. A Large creature can squeeze through a passage that is only 5 feet wide.\n\nWhile squeezing, a creature spends 1 extra foot for every foot it moves there, has Disadvantage on attack rolls and Dexterity saving throws, and attack rolls against it have Advantage."
+    },
+    "creature-size": {
+      "title": "Creature size and space",
+      "short": "The space a creature controls in combat.",
+      "full": "A creature's space is the area in feet that it effectively controls in combat, not an expression of its physical size.\n\n- Tiny: 2½ by 2½ feet\n- Small: 5 by 5 feet\n- Medium: 5 by 5 feet\n- Large: 10 by 10 feet\n- Huge: 15 by 15 feet\n- Gargantuan: 20 by 20 feet or larger\n\nEight Medium creatures fit in the 5-foot radius around another one; as many as twenty can surround a Gargantuan creature."
+    },
+    "attack-action": {
+      "title": "Attack",
+      "short": "Make one melee or ranged attack.",
+      "full": "With this action you make one melee or ranged attack, whether you are swinging a sword, firing a bow or brawling with your fists.\n\nCertain features, such as the fighter's Extra Attack, allow you to make more than one attack with this action."
+    },
+    "cast-a-spell": {
+      "title": "Cast a Spell",
+      "short": "Not always an action: check the casting time.",
+      "full": "Each spell has a casting time: an action, a reaction, minutes, or even hours. Casting a spell is therefore not necessarily an action.\n\nMost spells have a casting time of 1 action, so a spellcaster often uses their action to cast one."
+    },
+    "dash": {
+      "title": "Dash",
+      "short": "Gain extra movement equal to your speed.",
+      "full": "You gain extra movement for the current turn equal to your speed, after applying any modifiers. With a speed of 30 feet you can move up to 60 feet on your turn if you dash.\n\nAny increase or decrease to your speed changes this additional movement by the same amount. If your speed of 30 feet is reduced to 15 feet, you can move up to 30 feet if you dash."
+    },
+    "disengage": {
+      "title": "Disengage",
+      "short": "Your movement provokes no opportunity attacks this turn.",
+      "full": "Your movement doesn't provoke opportunity attacks for the rest of the turn."
+    },
+    "dodge": {
+      "title": "Dodge",
+      "short": "Attacks against you have Disadvantage; Dexterity saves have Advantage.",
+      "full": "Until the start of your next turn, any attack roll made against you has Disadvantage if you can see the attacker, and you make Dexterity saving throws with Advantage.\n\nYou lose this benefit if you are incapacitated or if your speed drops to 0."
+    },
+    "help": {
+      "title": "Help",
+      "short": "Give an ally Advantage on a task or an attack.",
+      "full": "**A task.** The creature you aid has Advantage on the next ability check it makes to perform the task, as long as it makes the check before the start of your next turn.\n\n**An attack.** You aid a friendly creature attacking a creature within 5 feet of you (you feint, distract the target, or otherwise team up). If your ally attacks that target before your next turn, the first attack roll is made with Advantage."
+    },
+    "hide": {
+      "title": "Hide",
+      "short": "A Dexterity (Stealth) check to become unseen.",
+      "full": "You make a Dexterity (Stealth) check in an attempt to hide, following the rules for hiding. If you succeed, you gain the benefits described in Unseen attackers and targets."
+    },
+    "ready": {
+      "title": "Ready",
+      "short": "Pick a trigger and a response; use your reaction when it happens.",
+      "full": "You prepare to act using your reaction before the start of your next turn.\n\n1. Decide what perceivable circumstance will trigger your reaction.\n2. Choose the action you will take in response, or to move up to your speed.\n\nWhen the trigger occurs, you can take your reaction right after the trigger finishes, or ignore it. You can take only one reaction per round.\n\n**Readying a spell.** The spell must have a casting time of 1 action. You cast it as normal but hold its energy, which you release with your reaction. Holding it requires concentration: if your concentration is broken, the spell dissipates without effect, and a spell you were already concentrating on ends."
+    },
+    "search": {
+      "title": "Search",
+      "short": "Devote your attention to finding something.",
+      "full": "You devote your attention to finding something. Depending on the nature of the search, the GM might have you make a Wisdom (Perception) check or an Intelligence (Investigation) check."
+    },
+    "use-an-object": {
+      "title": "Use an Object",
+      "short": "When an object needs your action, or for a second interaction.",
+      "full": "You normally interact with an object while doing something else, such as drawing a sword as part of an attack. When an object requires your action for its use, you take the Use an Object action.\n\nThis action is also how you interact with more than one object on your turn."
+    },
+    "free-interaction": {
+      "title": "Interacting with objects",
+      "short": "One free interaction per turn; more costs your action.",
+      "full": "You can interact with one object or feature of the environment for free, during your move or your action: draw or sheathe a sword, open or close a door, pick up a dropped axe, pull a lever, take a book from a shelf, hand an item to another character.\n\nA second interaction needs your action (Use an Object). Some magic items and special objects always require an action. The GM may also require an action for anything that needs special care, such as a stuck door or a drawbridge crank."
+    },
+    "improvise": {
+      "title": "Improvise",
+      "short": "Describe it; the GM says if it works and what to roll.",
+      "full": "On your action you can take one of the actions in the rules, an action from your class or a special feature, or an action you improvise.\n\nWhen you describe an action not detailed elsewhere in the rules, the GM tells you whether it is possible and what kind of roll you need to make, if any."
+    },
+    "bonus-action": {
+      "title": "Bonus action",
+      "short": "One per turn, and only if something gives you one.",
+      "full": "You can take a bonus action only when a class feature, spell, or other ability says you can do something as a bonus action (the rogue's Cunning Action, for example). Otherwise you don't have one.\n\n- You can take only one bonus action on your turn, so choose which if you have more than one.\n- You choose when to take it during your turn, unless its timing is specified.\n- Anything that deprives you of your ability to take actions also prevents you from taking a bonus action."
+    },
+    "two-weapon-fighting": {
+      "title": "Two-weapon fighting",
+      "short": "Bonus attack with a second light weapon; no ability modifier.",
+      "full": "When you take the Attack action and attack with a light melee weapon that you're holding in one hand, you can use a bonus action to attack with a different light melee weapon that you're holding in the other hand.\n\nYou don't add your ability modifier to the damage of the bonus attack, unless that modifier is negative.\n\nIf either weapon has the thrown property, you can throw the weapon instead of making a melee attack with it."
+    },
+    "reaction": {
+      "title": "Reaction",
+      "short": "An instant response to a trigger; one per round.",
+      "full": "A reaction is an instant response to a trigger of some kind, which can occur on your turn or on someone else's. The opportunity attack is the most common.\n\n- When you take a reaction, you can't take another until the start of your next turn.\n- If the reaction interrupts another creature's turn, that creature can continue its turn right after the reaction.\n- A surprised creature can't take a reaction until its first turn ends."
+    },
+    "opportunity-attack": {
+      "title": "Opportunity attack",
+      "short": "One melee attack, as a reaction, on a foe leaving your reach.",
+      "full": "You can make an opportunity attack when a hostile creature that you can see moves out of your reach. You use your reaction to make one melee attack against it. The attack occurs right before the creature leaves your reach.\n\nYou can avoid provoking one by taking the Disengage action. You also don't provoke one when you teleport, or when someone or something moves you without using your movement, action or reaction (an explosion hurls you out of a foe's reach, or you fall past an enemy)."
+    },
+    "making-an-attack": {
+      "title": "Making an attack",
+      "short": "Choose a target, work out modifiers, resolve it.",
+      "full": "1. **Choose a target** within your attack's range: a creature, an object, or a location.\n2. **Determine modifiers.** The GM decides whether the target has cover and whether you have Advantage or Disadvantage. Spells, special abilities and other effects can apply penalties or bonuses.\n3. **Resolve the attack.** Make the attack roll. On a hit, roll damage, unless the attack says otherwise.\n\nIf you are making an attack roll, you are making an attack."
+    },
+    "attack-rolls": {
+      "title": "Attack rolls",
+      "short": "A d20 plus modifiers against the target's AC.",
+      "full": "Roll a d20 and add the modifiers. If the total equals or exceeds the target's Armor Class (AC), the attack hits.\n\n- **Ability modifier.** Strength for a melee weapon, Dexterity for a ranged weapon (finesse and thrown weapons break this rule). A spell attack uses the caster's spellcasting ability.\n- **Proficiency bonus.** Add it when you attack with a weapon you're proficient with, and with spell attacks.\n- **Rolling a 20.** The attack hits regardless of modifiers or AC, and is a critical hit.\n- **Rolling a 1.** The attack misses regardless of modifiers or AC."
+    },
+    "melee-attacks": {
+      "title": "Melee attacks",
+      "short": "Reach is usually 5 feet; an unarmed strike deals 1 + Strength.",
+      "full": "A melee attack hits a foe within your reach. Most creatures have a 5-foot reach; some creatures (typically larger than Medium) have a greater reach, as noted in their descriptions.\n\nInstead of a weapon you can use an unarmed strike: a punch, kick, head-butt or similar blow. On a hit it deals bludgeoning damage equal to 1 + your Strength modifier, and you are proficient with it."
+    },
+    "ranged-attacks": {
+      "title": "Ranged attacks",
+      "short": "Normal range, then long range at Disadvantage.",
+      "full": "You can make ranged attacks only against targets within range. A single range is a hard limit.\n\nSome weapons, such as a longbow or shortbow, have two ranges: the smaller number is the normal range, the larger is the long range. Your attack roll has Disadvantage when the target is beyond normal range, and you can't attack a target beyond long range."
+    },
+    "ranged-in-melee": {
+      "title": "Ranged attack next to a foe",
+      "short": "Disadvantage within 5 feet of a hostile that can see you.",
+      "full": "When you make a ranged attack with a weapon, a spell or any other means, you have Disadvantage on the attack roll if you are within 5 feet of a hostile creature who can see you and who isn't incapacitated."
+    },
+    "unseen-attackers": {
+      "title": "Unseen attackers and targets",
+      "short": "Can't see it: Disadvantage. It can't see you: Advantage.",
+      "full": "- When you attack a target that you can't see, you have Disadvantage on the attack roll. This is true whether you're guessing the target's location or targeting a creature you can hear but not see.\n- If the target isn't in the location you targeted, you automatically miss, but the GM typically just says that the attack missed, not whether you guessed right.\n- When a creature can't see you, you have Advantage on attack rolls against it.\n- If you are hidden (both unseen and unheard) when you make an attack, you give away your location when the attack hits or misses."
+    },
+    "grappling": {
+      "title": "Grappling",
+      "short": "A Strength (Athletics) contest; the target becomes Grappled.",
+      "full": "You use the Attack action to make a special melee attack. If you can make several attacks with the action, this replaces one of them.\n\n- The target must be no more than one size larger than you and within your reach.\n- Using at least one free hand, you make a Strength (Athletics) check contested by the target's Strength (Athletics) or Dexterity (Acrobatics) check (the target chooses).\n- If you succeed, the target is Grappled. You can release it whenever you like (no action).\n\n**Escaping.** A grappled creature can use its action to make a Strength (Athletics) or Dexterity (Acrobatics) check contested by your Strength (Athletics) check.\n\n**Moving a grappled creature.** You can drag or carry it with you, but your speed is halved, unless the creature is two or more sizes smaller than you."
+    },
+    "shoving": {
+      "title": "Shoving a creature",
+      "short": "A Strength (Athletics) contest; knock prone or push 5 feet.",
+      "full": "You use the Attack action to make a special melee attack. If you can make several attacks with the action, this replaces one of them.\n\nThe target must be no more than one size larger than you and within your reach. Instead of an attack roll, you make a Strength (Athletics) check contested by the target's Strength (Athletics) or Dexterity (Acrobatics) check (the target chooses).\n\nIf you win the contest, you either knock the target prone or push it 5 feet away from you."
+    },
+    "about-conditions": {
+      "title": "About conditions",
+      "short": "A creature either has a condition or doesn't.",
+      "full": "Conditions alter a creature's capabilities. Most are impairments; a few, such as invisible, can be advantageous.\n\nA condition lasts until it is countered (prone is countered by standing up, for example) or for the duration the effect specifies.\n\nIf several effects impose the same condition, each has its own duration, but the condition's effects don't get worse."
+    },
+    "blinded": {
+      "title": "Blinded",
+      "short": "Can't see; attacks against it have Advantage.",
+      "full": "- A blinded creature can't see and automatically fails any ability check that requires sight.\n- Attack rolls against the creature have Advantage, and the creature's attack rolls have Disadvantage."
+    },
+    "charmed": {
+      "title": "Charmed",
+      "short": "Can't attack the charmer; the charmer has Advantage socially.",
+      "full": "- A charmed creature can't attack the charmer or target the charmer with harmful abilities or magical effects.\n- The charmer has Advantage on any ability check to interact socially with the creature."
+    },
+    "deafened": {
+      "title": "Deafened",
+      "short": "Can't hear; fails checks that need hearing.",
+      "full": "- A deafened creature can't hear and automatically fails any ability check that requires hearing."
+    },
+    "exhaustion": {
+      "title": "Exhaustion",
+      "short": "Six levels; each level adds to the ones below it.",
+      "full": "Exhaustion is measured in six levels. An effect can give a creature one or more levels.\n\n1. Disadvantage on ability checks\n2. Speed halved\n3. Disadvantage on attack rolls and saving throws\n4. Hit point maximum halved\n5. Speed reduced to 0\n6. Death\n\nIf an already exhausted creature suffers another effect that causes exhaustion, its level increases by the amount the effect specifies. A creature suffers the effect of its current level as well as all lower levels.\n\nAn effect that removes exhaustion reduces its level as specified; all effects end if the level drops below 1. Finishing a long rest reduces the level by 1, provided the creature has also had some food and drink."
+    },
+    "frightened": {
+      "title": "Frightened",
+      "short": "Disadvantage while the source is in sight; can't move closer to it.",
+      "full": "- A frightened creature has Disadvantage on ability checks and attack rolls while the source of its fear is within line of sight.\n- The creature can't willingly move closer to the source of its fear."
+    },
+    "grappled": {
+      "title": "Grappled",
+      "short": "Speed 0.",
+      "full": "- A grappled creature's speed becomes 0, and it can't benefit from any bonus to its speed.\n- The condition ends if the grappler is incapacitated.\n- The condition also ends if an effect removes the grappled creature from the reach of the grappler or grappling effect, such as when a creature is hurled away by the thunderwave spell."
+    },
+    "incapacitated": {
+      "title": "Incapacitated",
+      "short": "Can't take actions or reactions.",
+      "full": "- An incapacitated creature can't take actions or reactions."
+    },
+    "invisible": {
+      "title": "Invisible",
+      "short": "Attacks against it have Disadvantage; its attacks have Advantage.",
+      "full": "- An invisible creature is impossible to see without the aid of magic or a special sense. For the purpose of hiding, the creature is heavily obscured. Its location can be detected by any noise it makes or any tracks it leaves.\n- Attack rolls against the creature have Disadvantage, and the creature's attack rolls have Advantage."
+    },
+    "paralyzed": {
+      "title": "Paralyzed",
+      "short": "Incapacitated and can't move; melee hits are critical hits.",
+      "full": "- A paralyzed creature is incapacitated and can't move or speak.\n- The creature automatically fails Strength and Dexterity saving throws.\n- Attack rolls against the creature have Advantage.\n- Any attack that hits the creature is a critical hit if the attacker is within 5 feet of it."
+    },
+    "petrified": {
+      "title": "Petrified",
+      "short": "Turned to stone; incapacitated, resistant to all damage.",
+      "full": "- A petrified creature is transformed, along with any nonmagical object it is wearing or carrying, into a solid inanimate substance (usually stone). Its weight increases by a factor of ten, and it ceases aging.\n- The creature is incapacitated, can't move or speak, and is unaware of its surroundings.\n- Attack rolls against the creature have Advantage.\n- The creature automatically fails Strength and Dexterity saving throws.\n- The creature has resistance to all damage.\n- The creature is immune to poison and disease, although a poison or disease already in its system is suspended, not neutralized."
+    },
+    "poisoned": {
+      "title": "Poisoned",
+      "short": "Disadvantage on attack rolls and ability checks.",
+      "full": "- A poisoned creature has Disadvantage on attack rolls and ability checks."
+    },
+    "restrained": {
+      "title": "Restrained",
+      "short": "Speed 0; attacks against it have Advantage.",
+      "full": "- A restrained creature's speed becomes 0, and it can't benefit from any bonus to its speed.\n- Attack rolls against the creature have Advantage, and the creature's attack rolls have Disadvantage.\n- The creature has Disadvantage on Dexterity saving throws."
+    },
+    "stunned": {
+      "title": "Stunned",
+      "short": "Incapacitated and can't move; attacks against it have Advantage.",
+      "full": "- A stunned creature is incapacitated, can't move, and can speak only falteringly.\n- The creature automatically fails Strength and Dexterity saving throws.\n- Attack rolls against the creature have Advantage."
+    },
+    "unconscious": {
+      "title": "Unconscious",
+      "short": "Out cold; drops what it holds and falls prone.",
+      "full": "- An unconscious creature is incapacitated, can't move or speak, and is unaware of its surroundings.\n- The creature drops whatever it's holding and falls prone.\n- The creature automatically fails Strength and Dexterity saving throws.\n- Attack rolls against the creature have Advantage.\n- Any attack that hits the creature is a critical hit if the attacker is within 5 feet of it."
+    },
+    "cover": {
+      "title": "Cover",
+      "short": "+2 AC and Dexterity saves for half, +5 for three-quarters.",
+      "full": "Walls, trees, creatures and other obstacles can provide cover. A target benefits from cover only when an attack or effect originates on the opposite side of it.\n\nThere are three degrees of cover. If a target is behind several sources, only the most protective degree applies; they aren't added together.\n\n- **Half cover.** +2 bonus to AC and Dexterity saving throws. An obstacle blocks at least half of the target's body: a low wall, a large piece of furniture, a narrow tree trunk, or a creature, friend or foe.\n- **Three-quarters cover.** +5 bonus to AC and Dexterity saving throws. About three-quarters of the target is covered: a portcullis, an arrow slit, a thick tree trunk.\n- **Total cover.** The target can't be targeted directly by an attack or a spell, although some spells can reach it by including it in an area of effect. It is completely concealed by an obstacle."
+    },
+    "obscured-areas": {
+      "title": "Obscured areas",
+      "short": "Lightly: Disadvantage on sight Perception. Heavily: effectively blinded.",
+      "full": "- **Lightly obscured** (dim light, patchy fog, moderate foliage): creatures have Disadvantage on Wisdom (Perception) checks that rely on sight.\n- **Heavily obscured** (darkness, opaque fog, dense foliage): vision is blocked entirely. A creature trying to see something in that area is effectively blinded."
+    },
+    "light": {
+      "title": "Light",
+      "short": "Bright light, dim light and darkness.",
+      "full": "- **Bright light** lets most creatures see normally. Even gloomy days provide bright light, as do torches, lanterns and fires within a specific radius.\n- **Dim light**, also called shadows, creates a lightly obscured area. It is usually the boundary between a bright light source and surrounding darkness. Twilight, dawn and a brilliant full moon count as dim light.\n- **Darkness** creates a heavily obscured area: outdoors at night (even most moonlit nights), in an unlit dungeon or in an area of magical darkness."
+    },
+    "special-senses": {
+      "title": "Blindsight, darkvision and truesight",
+      "short": "What a creature can perceive without ordinary sight.",
+      "full": "- **Blindsight.** The creature can perceive its surroundings without relying on sight, within a specific radius.\n- **Darkvision.** Within a specified range, the creature sees in darkness as if it were dim light, so darkness is only lightly obscured for it. It can't discern color in darkness, only shades of gray.\n- **Truesight.** Out to a specific range, the creature sees in normal and magical darkness, sees invisible creatures and objects, automatically detects visual illusions and succeeds on saving throws against them, perceives the original form of a shapechanger or a creature transformed by magic, and can see into the Ethereal Plane."
+    },
+    "falling": {
+      "title": "Falling",
+      "short": "1d6 bludgeoning per 10 feet, up to 20d6; you land prone.",
+      "full": "At the end of a fall, a creature takes 1d6 bludgeoning damage for every 10 feet it fell, to a maximum of 20d6. The creature lands prone, unless it avoids taking damage from the fall."
+    },
+    "suffocating": {
+      "title": "Suffocating",
+      "short": "1 + Con modifier minutes of breath, then Con modifier rounds.",
+      "full": "A creature can hold its breath for a number of minutes equal to 1 + its Constitution modifier (minimum of 30 seconds).\n\nWhen a creature runs out of breath or is choking, it can survive for a number of rounds equal to its Constitution modifier (minimum of 1 round). At the start of its next turn, it drops to 0 hit points and is dying, and it can't regain hit points or be stabilized until it can breathe again.\n\nFor example, a creature with Constitution 14 can hold its breath for 3 minutes. If it starts suffocating, it has 2 rounds to reach air before it drops to 0 hit points."
+    },
+    "underwater-combat": {
+      "title": "Underwater combat",
+      "short": "Melee and ranged attacks are limited; fire resistance.",
+      "full": "- A melee weapon attack by a creature without a swimming speed has Disadvantage, unless the weapon is a dagger, javelin, shortsword, spear or trident.\n- A ranged weapon attack automatically misses a target beyond the weapon's normal range. Even within normal range, it has Disadvantage unless the weapon is a crossbow, a net, or a weapon thrown like a javelin (including a spear, trident or dart).\n- Creatures and objects fully immersed in water have resistance to fire damage."
+    },
+    "food-and-water": {
+      "title": "Food and water",
+      "short": "Going without them causes exhaustion.",
+      "full": "Exhaustion caused by lack of food or water can't be removed until the character eats and drinks the full required amount.\n\n**Food.** A character needs 1 pound of food per day; half rations count as half a day without food. A character can go without food for 3 + their Constitution modifier days (minimum 1). At the end of each day beyond that, they automatically suffer one level of exhaustion. A normal day of eating resets the count.\n\n**Water.** A character needs 1 gallon of water per day, or 2 gallons if the weather is hot. Drinking only half that requires a DC 15 Constitution saving throw or one level of exhaustion at the end of the day. Even less water means one level automatically. If the character already has one or more levels of exhaustion, they take two levels in either case."
+    },
+    "dropping-to-0": {
+      "title": "Dropping to 0 hit points",
+      "short": "Die outright, or fall unconscious.",
+      "full": "When you drop to 0 hit points, you either die outright or fall unconscious.\n\n**Instant death.** When damage reduces you to 0 hit points and damage remains, you die if the remaining damage equals or exceeds your hit point maximum.\n\n**Falling unconscious.** If damage reduces you to 0 hit points and fails to kill you, you fall unconscious. This ends if you regain any hit points.\n\n**Monsters.** Most GMs have a monster die the instant it drops to 0 hit points. Mighty villains and special NPCs may follow the rules for player characters."
+    },
+    "death-saving-throws": {
+      "title": "Death saving throws",
+      "short": "Start your turn at 0 HP: roll a d20; 10 or more succeeds.",
+      "full": "Whenever you start your turn with 0 hit points, make a death saving throw. It isn't tied to any ability score.\n\nRoll a d20. On a 10 or higher you succeed; otherwise you fail. Three successes make you stable; three failures and you die. They needn't be consecutive. Both counts reset when you regain any hit points or become stable.\n\n- **Rolling a 1** counts as two failures.\n- **Rolling a 20** you regain 1 hit point.\n- **Damage at 0 hit points** is a failure, or two if it is a critical hit. If the damage equals or exceeds your hit point maximum, you suffer instant death."
+    },
+    "stabilizing": {
+      "title": "Stabilizing a creature",
+      "short": "Action and a DC 10 Wisdom (Medicine) check.",
+      "full": "The best way to save a creature with 0 hit points is to heal it. Failing that, you can use your action to administer first aid to an unconscious creature and attempt to stabilize it: a successful DC 10 Wisdom (Medicine) check.\n\nA stable creature doesn't make death saving throws, even though it has 0 hit points, but it remains unconscious. It stops being stable, and starts making death saving throws again, if it takes any damage. A stable creature that isn't healed regains 1 hit point after 1d4 hours."
+    },
+    "knocking-out": {
+      "title": "Knocking a creature out",
+      "short": "Reduce it to 0 HP in melee and choose not to kill.",
+      "full": "When an attacker reduces a creature to 0 hit points with a melee attack, the attacker can knock the creature out. The attacker makes this choice the instant the damage is dealt. The creature falls unconscious and is stable."
+    },
+    "temporary-hit-points": {
+      "title": "Temporary hit points",
+      "short": "A buffer lost first; they don't stack.",
+      "full": "Temporary hit points aren't actual hit points: they are a buffer against damage. When you take damage, they are lost first, and any leftover damage carries over to your normal hit points.\n\n- They can exceed your hit point maximum. Healing can't restore them.\n- They can't be added together. If you receive more while you have some, you decide whether to keep the ones you have or gain the new ones.\n- At 0 hit points they don't restore consciousness or stabilize you, though they still absorb damage.\n- Unless the feature granting them has a duration, they last until depleted or until you finish a long rest."
+    }
+  }
+}

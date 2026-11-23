@@ -83,7 +83,10 @@ const CHANNELS = Object.freeze({
   }),
   quickReference: Object.freeze({
     read: 'quickReference:read',
+    open: 'quickReference:open',
     write: 'quickReference:write',
+    addBuiltin: 'quickReference:addBuiltin',
+    resetRule: 'quickReference:resetRule',
   }),
   maps: Object.freeze({
     read: 'maps:read',

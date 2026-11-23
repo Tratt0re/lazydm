@@ -63,3 +63,10 @@ export type WriteQuickReferenceResultDto =
       readonly mtimeMs: number;
     }
   | { readonly status: 'conflict'; readonly current: QuickReferenceFileDto };
+
+/** What the built-in rules need: the campaign, the language of the words and the hash the page loaded. */
+export interface QuickReferenceBuiltinPayload {
+  readonly campaign: string;
+  readonly language: string;
+  readonly expectedHash: string | null;
+}

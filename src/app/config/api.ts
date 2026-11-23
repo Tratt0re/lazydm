@@ -139,7 +139,16 @@ export interface ElectronIpcClient {
   };
   readonly quickReference: {
     readonly read: IpcRequest<{ campaign: string }, DTO.QuickReferenceFileDto>;
+    readonly open: IpcRequest<{ campaign: string; language: string }, DTO.QuickReferenceFileDto>;
     readonly write: IpcRequest<DTO.WriteQuickReferencePayload, DTO.WriteQuickReferenceResultDto>;
+    readonly addBuiltin: IpcRequest<
+      DTO.QuickReferenceBuiltinPayload & { readonly system: string },
+      DTO.WriteQuickReferenceResultDto
+    >;
+    readonly resetRule: IpcRequest<
+      DTO.QuickReferenceBuiltinPayload & { readonly rule: string },
+      DTO.WriteQuickReferenceResultDto
+    >;
   };
   readonly maps: {
     readonly read: IpcRequest<{ path: string }, DTO.MapFileDto>;

@@ -1,0 +1,455 @@
+{
+  "system": "dnd5e",
+  "attribution": "This work includes material taken from the System Reference Document 5.1 (\"SRD 5.1\") by Wizards of the Coast LLC and available at https://dnd.wizards.com/resources/systems-reference-document. The SRD 5.1 is licensed under the Creative Commons Attribution 4.0 International License available at https://creativecommons.org/licenses/by/4.0/legalcode. The text has been shortened and rearranged.",
+  "categories": [
+    "turn-order",
+    "movement",
+    "actions",
+    "bonus-actions",
+    "reactions",
+    "attacks",
+    "conditions",
+    "environment",
+    "dying"
+  ],
+  "rules": [
+    {
+      "id": "your-turn",
+      "icon": "clock",
+      "categories": [
+        "turn-order"
+      ]
+    },
+    {
+      "id": "initiative",
+      "icon": "dices",
+      "categories": [
+        "turn-order"
+      ]
+    },
+    {
+      "id": "surprise",
+      "icon": "triangle-alert",
+      "categories": [
+        "turn-order"
+      ]
+    },
+    {
+      "id": "move",
+      "icon": "footprints",
+      "categories": [
+        "movement"
+      ]
+    },
+    {
+      "id": "difficult-terrain",
+      "icon": "mountain",
+      "categories": [
+        "movement"
+      ]
+    },
+    {
+      "id": "prone",
+      "icon": "arrow-down",
+      "categories": [
+        "movement",
+        "conditions"
+      ]
+    },
+    {
+      "id": "moving-around-creatures",
+      "icon": "users",
+      "categories": [
+        "movement"
+      ]
+    },
+    {
+      "id": "flying",
+      "icon": "cloud",
+      "categories": [
+        "movement"
+      ]
+    },
+    {
+      "id": "squeezing",
+      "icon": "arrow-right",
+      "categories": [
+        "movement"
+      ]
+    },
+    {
+      "id": "creature-size",
+      "icon": "users",
+      "categories": [
+        "movement"
+      ]
+    },
+    {
+      "id": "attack-action",
+      "icon": "swords",
+      "categories": [
+        "actions",
+        "attacks"
+      ]
+    },
+    {
+      "id": "cast-a-spell",
+      "icon": "sparkles",
+      "categories": [
+        "actions"
+      ]
+    },
+    {
+      "id": "dash",
+      "icon": "arrow-right",
+      "categories": [
+        "actions"
+      ]
+    },
+    {
+      "id": "disengage",
+      "icon": "footprints",
+      "categories": [
+        "actions"
+      ]
+    },
+    {
+      "id": "dodge",
+      "icon": "shield",
+      "categories": [
+        "actions"
+      ]
+    },
+    {
+      "id": "help",
+      "icon": "hand",
+      "categories": [
+        "actions"
+      ]
+    },
+    {
+      "id": "hide",
+      "icon": "eye-off",
+      "categories": [
+        "actions"
+      ]
+    },
+    {
+      "id": "ready",
+      "icon": "clock",
+      "categories": [
+        "actions"
+      ]
+    },
+    {
+      "id": "search",
+      "icon": "eye",
+      "categories": [
+        "actions"
+      ]
+    },
+    {
+      "id": "use-an-object",
+      "icon": "hand",
+      "categories": [
+        "actions"
+      ]
+    },
+    {
+      "id": "free-interaction",
+      "icon": "hand",
+      "categories": [
+        "actions"
+      ]
+    },
+    {
+      "id": "improvise",
+      "icon": "lightbulb",
+      "categories": [
+        "actions"
+      ]
+    },
+    {
+      "id": "bonus-action",
+      "icon": "star",
+      "categories": [
+        "bonus-actions"
+      ]
+    },
+    {
+      "id": "two-weapon-fighting",
+      "icon": "swords",
+      "categories": [
+        "bonus-actions",
+        "attacks"
+      ]
+    },
+    {
+      "id": "reaction",
+      "icon": "clock",
+      "categories": [
+        "reactions"
+      ]
+    },
+    {
+      "id": "opportunity-attack",
+      "icon": "swords",
+      "categories": [
+        "reactions",
+        "attacks"
+      ]
+    },
+    {
+      "id": "making-an-attack",
+      "icon": "swords",
+      "categories": [
+        "attacks"
+      ]
+    },
+    {
+      "id": "attack-rolls",
+      "icon": "dices",
+      "categories": [
+        "attacks"
+      ]
+    },
+    {
+      "id": "melee-attacks",
+      "icon": "swords",
+      "categories": [
+        "attacks"
+      ]
+    },
+    {
+      "id": "ranged-attacks",
+      "icon": "arrow-right",
+      "categories": [
+        "attacks"
+      ]
+    },
+    {
+      "id": "ranged-in-melee",
+      "icon": "ban",
+      "categories": [
+        "attacks"
+      ]
+    },
+    {
+      "id": "unseen-attackers",
+      "icon": "eye-off",
+      "categories": [
+        "attacks"
+      ]
+    },
+    {
+      "id": "grappling",
+      "icon": "hand",
+      "categories": [
+        "attacks"
+      ]
+    },
+    {
+      "id": "shoving",
+      "icon": "arrow-right",
+      "categories": [
+        "attacks"
+      ]
+    },
+    {
+      "id": "about-conditions",
+      "icon": "info",
+      "categories": [
+        "conditions"
+      ]
+    },
+    {
+      "id": "blinded",
+      "icon": "eye-off",
+      "categories": [
+        "conditions"
+      ]
+    },
+    {
+      "id": "charmed",
+      "icon": "heart",
+      "categories": [
+        "conditions"
+      ]
+    },
+    {
+      "id": "deafened",
+      "icon": "volume-x",
+      "categories": [
+        "conditions"
+      ]
+    },
+    {
+      "id": "exhaustion",
+      "icon": "moon",
+      "categories": [
+        "conditions"
+      ]
+    },
+    {
+      "id": "frightened",
+      "icon": "ghost",
+      "categories": [
+        "conditions"
+      ]
+    },
+    {
+      "id": "grappled",
+      "icon": "hand",
+      "categories": [
+        "conditions"
+      ]
+    },
+    {
+      "id": "incapacitated",
+      "icon": "ban",
+      "categories": [
+        "conditions"
+      ]
+    },
+    {
+      "id": "invisible",
+      "icon": "ghost",
+      "categories": [
+        "conditions"
+      ]
+    },
+    {
+      "id": "paralyzed",
+      "icon": "lock",
+      "categories": [
+        "conditions"
+      ]
+    },
+    {
+      "id": "petrified",
+      "icon": "mountain",
+      "categories": [
+        "conditions"
+      ]
+    },
+    {
+      "id": "poisoned",
+      "icon": "skull",
+      "categories": [
+        "conditions"
+      ]
+    },
+    {
+      "id": "restrained",
+      "icon": "lock",
+      "categories": [
+        "conditions"
+      ]
+    },
+    {
+      "id": "stunned",
+      "icon": "brain",
+      "categories": [
+        "conditions"
+      ]
+    },
+    {
+      "id": "unconscious",
+      "icon": "moon",
+      "categories": [
+        "conditions"
+      ]
+    },
+    {
+      "id": "cover",
+      "icon": "shield",
+      "categories": [
+        "environment"
+      ]
+    },
+    {
+      "id": "obscured-areas",
+      "icon": "cloud",
+      "categories": [
+        "environment"
+      ]
+    },
+    {
+      "id": "light",
+      "icon": "sun",
+      "categories": [
+        "environment"
+      ]
+    },
+    {
+      "id": "special-senses",
+      "icon": "eye",
+      "categories": [
+        "environment"
+      ]
+    },
+    {
+      "id": "falling",
+      "icon": "arrow-down",
+      "categories": [
+        "environment"
+      ]
+    },
+    {
+      "id": "suffocating",
+      "icon": "ban",
+      "categories": [
+        "environment"
+      ]
+    },
+    {
+      "id": "underwater-combat",
+      "icon": "anchor",
+      "categories": [
+        "environment"
+      ]
+    },
+    {
+      "id": "food-and-water",
+      "icon": "heart",
+      "categories": [
+        "environment"
+      ]
+    },
+    {
+      "id": "dropping-to-0",
+      "icon": "skull",
+      "categories": [
+        "dying"
+      ]
+    },
+    {
+      "id": "death-saving-throws",
+      "icon": "dices",
+      "categories": [
+        "dying"
+      ]
+    },
+    {
+      "id": "stabilizing",
+      "icon": "heart",
+      "categories": [
+        "dying"
+      ]
+    },
+    {
+      "id": "knocking-out",
+      "icon": "moon",
+      "categories": [
+        "dying"
+      ]
+    },
+    {
+      "id": "temporary-hit-points",
+      "icon": "shield",
+      "categories": [
+        "dying"
+      ]
+    }
+  ]
+}
