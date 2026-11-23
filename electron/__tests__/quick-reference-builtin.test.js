@@ -13,12 +13,6 @@ const { QUICK_REFERENCE_ICONS, QUICK_REFERENCE_LIMITS: LIMITS } = model;
 const DATA_DIR = path.join(__dirname, '..', 'data', 'quick-reference');
 const SYSTEMS_WITH_RULES = ['dnd5e'];
 
-/** The loader caches what it reads; a test that adds or removes a language file starts it over. */
-function builtinCacheReset() {
-  delete require.cache[require.resolve('../models/quick-reference-builtin.model')];
-  Object.assign(builtin, require('../models/quick-reference-builtin.model'));
-}
-
 const readJson = (...parts) => JSON.parse(fs.readFileSync(path.join(DATA_DIR, ...parts), 'utf8'));
 const hasFile = (...parts) => fs.existsSync(path.join(DATA_DIR, ...parts));
 
@@ -76,7 +70,9 @@ describe.each(SYSTEMS_WITH_RULES)('built-in rules of %s: structure', (system) =>
 
 describe.each(SYSTEMS_WITH_RULES)('built-in rules of %s: words', (system) => {
   const structure = readJson(system, 'rules.json');
-  const present = builtin.BUILTIN_LANGUAGES.filter((language) => hasFile(system, `${language}.json`));
+  const present = builtin.BUILTIN_LANGUAGES.filter((language) =>
+    hasFile(system, `${language}.json`),
+  );
 
   it('ships English, the language every other one falls back to', () => {
     expect(present).toContain('en');
@@ -139,42 +135,48 @@ describe('buildBuiltin', () => {
   });
 
   describe('a language that is only partly written', () => {
-    const partial = path.join(DATA_DIR, 'dnd5e', 'de.json');
-    const existedBefore = fs.existsSync(partial);
+    // The loader reads its folder once, so this runs against a copy in a temp folder in a fresh module.
+    let temp;
+    let partial;
+    let english;
     beforeEach(() => {
-      if (!existedBefore) {
-        fs.writeFileSync(
-          partial,
-          JSON.stringify({
-            categories: { movement: 'Bewegung' },
-            rules: { dodge: { title: 'Ausweichen', short: 'Kurz.', full: 'Lang.' }, dash: { title: 'Spurt' } },
-          }),
-        );
-        builtinCacheReset();
+      temp = fs.mkdtempSync(path.join(os.tmpdir(), 'lazydm-qrdata-'));
+      fs.cpSync(DATA_DIR, temp, { recursive: true });
+      fs.writeFileSync(
+        path.join(temp, 'dnd5e', 'de.json'),
+        JSON.stringify({
+          categories: { movement: 'Bewegung' },
+          rules: {
+            dodge: { title: 'Ausweichen', short: 'Kurz.', full: 'Lang.' },
+            dash: { title: 'Spurt' },
+          },
+        }),
+      );
+      const modulePath = require.resolve('../models/quick-reference-builtin.model');
+      const saved = process.env.LAZYDM_QUICK_REFERENCE_DATA;
+      process.env.LAZYDM_QUICK_REFERENCE_DATA = temp;
+      delete require.cache[modulePath];
+      partial = require('../models/quick-reference-builtin.model');
+      english = partial.buildBuiltin('dnd5e', 'en');
+      process.env.LAZYDM_QUICK_REFERENCE_DATA = saved;
+      if (saved === undefined) {
+        delete process.env.LAZYDM_QUICK_REFERENCE_DATA;
       }
+      delete require.cache[modulePath];
     });
-    afterEach(() => {
-      if (!existedBefore) {
-        fs.rmSync(partial, { force: true });
-        builtinCacheReset();
-      }
-    });
+    afterEach(() => fs.rmSync(temp, { recursive: true, force: true }));
 
     it('uses its words where it has them and English for the rest, so no card is empty', () => {
-      if (existedBefore) {
-        return;
-      }
-      const en = builtin.buildBuiltin('dnd5e', 'en');
-      const de = builtin.buildBuiltin('dnd5e', 'de');
+      const de = partial.buildBuiltin('dnd5e', 'de');
       const rule = (data, id) => data.rules.find((r) => r.id === id);
       expect(rule(de, 'dodge')).toMatchObject({ title: 'Ausweichen', short: 'Kurz.', full: 'Lang.' });
       expect(rule(de, 'dash').title).toBe('Spurt');
-      expect(rule(de, 'dash').short).toBe(rule(en, 'dash').short);
-      expect(rule(de, 'dash').full).toBe(rule(en, 'dash').full);
-      expect(rule(de, 'hide')).toEqual(rule(en, 'hide'));
+      expect(rule(de, 'dash').short).toBe(rule(english, 'dash').short);
+      expect(rule(de, 'dash').full).toBe(rule(english, 'dash').full);
+      expect(rule(de, 'hide')).toEqual(rule(english, 'hide'));
       expect(de.categories.find((c) => c.id === 'movement').name).toBe('Bewegung');
       expect(de.categories.find((c) => c.id === 'actions').name).toBe(
-        en.categories.find((c) => c.id === 'actions').name,
+        english.categories.find((c) => c.id === 'actions').name,
       );
       expect(de.rules.every((r) => r.title && r.short && r.full)).toBe(true);
     });
@@ -262,9 +264,17 @@ describe('seeding a campaign', () => {
     vault = path.join(root, 'codex');
     fs.mkdirSync(path.join(vault, '.lazydm'), { recursive: true });
     fs.writeFileSync(path.join(vault, '.lazydm', 'vault.json'), '{"schemaVersion":1,"name":"t"}\n');
-    await campaignModel.createCampaign(vault, { slug: 'lost-mine', name: 'Lost Mine', system: 'dnd5e' });
+    await campaignModel.createCampaign(vault, {
+      slug: 'lost-mine',
+      name: 'Lost Mine',
+      system: 'dnd5e',
+    });
     await campaignModel.createCampaign(vault, { slug: 'plain', name: 'Plain' });
-    await campaignModel.createCampaign(vault, { slug: 'pathfinder', name: 'Pathfinder', system: 'pf2e' });
+    await campaignModel.createCampaign(vault, {
+      slug: 'pathfinder',
+      name: 'Pathfinder',
+      system: 'pf2e',
+    });
   });
   afterEach(() => fs.rmSync(root, { recursive: true, force: true }));
 
@@ -333,7 +343,11 @@ describe('start from a system, and reset', () => {
     fs.mkdirSync(path.join(vault, '.lazydm'), { recursive: true });
     fs.writeFileSync(path.join(vault, '.lazydm', 'vault.json'), '{"schemaVersion":1,"name":"t"}\n');
     await campaignModel.createCampaign(vault, { slug: 'plain', name: 'Plain' });
-    await campaignModel.createCampaign(vault, { slug: 'lost-mine', name: 'Lost Mine', system: 'dnd5e' });
+    await campaignModel.createCampaign(vault, {
+      slug: 'lost-mine',
+      name: 'Lost Mine',
+      system: 'dnd5e',
+    });
   });
   afterEach(() => fs.rmSync(root, { recursive: true, force: true }));
 
@@ -350,10 +364,23 @@ describe('start from a system, and reset', () => {
     const edited = structuredClone(seeded.data);
     edited.rules.find((r) => r.id === 'dodge').short = 'My table rule.';
     edited.rules = edited.rules.filter((r) => r.id !== 'dash');
-    edited.rules.push({ id: 'mine', title: 'Mine', short: 's', full: 'f', icon: 'star', categories: [] });
+    edited.rules.push({
+      id: 'mine',
+      title: 'Mine',
+      short: 's',
+      full: 'f',
+      icon: 'star',
+      categories: [],
+    });
     const saved = await model.writeQuickReference(vault, 'lost-mine', edited, seeded.contentHash);
 
-    const result = await builtin.addBuiltinRules(vault, 'lost-mine', 'dnd5e', 'en', saved.contentHash);
+    const result = await builtin.addBuiltinRules(
+      vault,
+      'lost-mine',
+      'dnd5e',
+      'en',
+      saved.contentHash,
+    );
     expect(result.status).toBe('saved');
     const ids = result.data.rules.map((r) => r.id);
     expect(new Set(ids).size).toBe(ids.length);
@@ -362,7 +389,13 @@ describe('start from a system, and reset', () => {
     expect(ids).toContain('dash');
     expect(result.data.rules).toHaveLength(builtin.listBuiltinRuleIds('dnd5e').length + 1);
 
-    const again = await builtin.addBuiltinRules(vault, 'lost-mine', 'dnd5e', 'en', result.contentHash);
+    const again = await builtin.addBuiltinRules(
+      vault,
+      'lost-mine',
+      'dnd5e',
+      'en',
+      result.contentHash,
+    );
     expect(again.data).toEqual(result.data);
   });
 
@@ -380,7 +413,13 @@ describe('start from a system, and reset', () => {
       path.join(vault, 'lost-mine', 'quick-reference.json'),
       JSON.stringify({ ...seeded.data, attribution: 'other computer' }),
     );
-    const result = await builtin.addBuiltinRules(vault, 'lost-mine', 'dnd5e', 'en', seeded.contentHash);
+    const result = await builtin.addBuiltinRules(
+      vault,
+      'lost-mine',
+      'dnd5e',
+      'en',
+      seeded.contentHash,
+    );
     expect(result.status).toBe('conflict');
   });
 
@@ -388,11 +427,23 @@ describe('start from a system, and reset', () => {
     const seeded = await builtin.seedQuickReference(vault, 'lost-mine', 'en');
     const edited = structuredClone(seeded.data);
     const dodge = edited.rules.find((r) => r.id === 'dodge');
-    Object.assign(dodge, { title: 'Duck', short: 'x', full: 'y', icon: 'skull', categories: ['reactions'] });
+    Object.assign(dodge, {
+      title: 'Duck',
+      short: 'x',
+      full: 'y',
+      icon: 'skull',
+      categories: ['reactions'],
+    });
     edited.rules.find((r) => r.id === 'dash').short = 'kept';
     const saved = await model.writeQuickReference(vault, 'lost-mine', edited, seeded.contentHash);
 
-    const result = await builtin.resetBuiltinRule(vault, 'lost-mine', 'dodge', 'en', saved.contentHash);
+    const result = await builtin.resetBuiltinRule(
+      vault,
+      'lost-mine',
+      'dodge',
+      'en',
+      saved.contentHash,
+    );
     expect(result.status).toBe('saved');
     const after = result.data.rules.find((r) => r.id === 'dodge');
     const original = seeded.data.rules.find((r) => r.id === 'dodge');
@@ -403,7 +454,14 @@ describe('start from a system, and reset', () => {
   it("has nothing to reset for the user's own rule or for a rule that does not exist", async () => {
     const seeded = await builtin.seedQuickReference(vault, 'lost-mine', 'en');
     const edited = structuredClone(seeded.data);
-    edited.rules.push({ id: 'mine', title: 'Mine', short: '', full: '', icon: 'star', categories: [] });
+    edited.rules.push({
+      id: 'mine',
+      title: 'Mine',
+      short: '',
+      full: '',
+      icon: 'star',
+      categories: [],
+    });
     const saved = await model.writeQuickReference(vault, 'lost-mine', edited, seeded.contentHash);
     await expect(
       builtin.resetBuiltinRule(vault, 'lost-mine', 'mine', 'en', saved.contentHash),

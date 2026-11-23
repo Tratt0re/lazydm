@@ -6,7 +6,9 @@ const quickReference = require('./quick-reference.model');
 /** Languages the app speaks (`public/i18n`); the built-in rules are written in each. */
 const BUILTIN_LANGUAGES = Object.freeze(['en', 'it', 'de', 'es', 'fr', 'uk', 'zh']);
 const FALLBACK_LANGUAGE = 'en';
-const DATA_DIR = path.join(__dirname, '..', 'data', 'quick-reference');
+/** Where the built-in data lives; `LAZYDM_QUICK_REFERENCE_DATA` points tests at a copy they can change. */
+const DATA_DIR =
+  process.env.LAZYDM_QUICK_REFERENCE_DATA ?? path.join(__dirname, '..', 'data', 'quick-reference');
 
 /**
  * A built-in system is a folder of `electron/data/quick-reference/<system>/`: `rules.json` holds the structure (ids,
