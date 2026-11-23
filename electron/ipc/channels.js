@@ -81,6 +81,10 @@ const CHANNELS = Object.freeze({
     write: 'encounters:write',
     create: 'encounters:create',
   }),
+  quickReference: Object.freeze({
+    read: 'quickReference:read',
+    write: 'quickReference:write',
+  }),
   maps: Object.freeze({
     read: 'maps:read',
     write: 'maps:write',

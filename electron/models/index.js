@@ -5,6 +5,7 @@ const compendiumModel = require('./compendium.model');
 const documentModel = require('./document.model');
 const encounterModel = require('./encounter.model');
 const mapModel = require('./map.model');
+const quickReferenceModel = require('./quick-reference.model');
 const sectionModel = require('./section.model');
 const templateModel = require('./template.model');
 const cloudReadinessModel = require('./cloud-readiness.model');
@@ -22,6 +23,7 @@ module.exports = {
   documentModel,
   encounterModel,
   mapModel,
+  quickReferenceModel,
   sectionModel,
   templateModel,
   vaultIndexModel,

@@ -25,6 +25,7 @@ export enum APIChannel {
   MAPS = 'maps',
   MCP = 'mcp',
   MENU = 'menu',
+  QUICK_REFERENCE = 'quickReference',
   REVIEW = 'review',
   SECTIONS = 'sections',
   TEMPLATES = 'templates',
@@ -135,6 +136,10 @@ export interface ElectronIpcClient {
     readonly party: IpcRequest<{ scope: string; name: string }, DTO.EncounterFileDto>;
     readonly write: IpcRequest<DTO.WriteEncounterPayload, DTO.WriteEncounterResultDto>;
     readonly create: IpcRequest<DTO.CreateEncounterPayload, DTO.EncounterFileDto>;
+  };
+  readonly quickReference: {
+    readonly read: IpcRequest<{ campaign: string }, DTO.QuickReferenceFileDto>;
+    readonly write: IpcRequest<DTO.WriteQuickReferencePayload, DTO.WriteQuickReferenceResultDto>;
   };
   readonly maps: {
     readonly read: IpcRequest<{ path: string }, DTO.MapFileDto>;

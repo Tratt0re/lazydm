@@ -101,11 +101,25 @@ function isAgentRulesPath(relativePath) {
   );
 }
 
+/** A campaign's rules sheet, at its root (docs/design-principles.md §6h). */
+const QUICK_REFERENCE_FILE_NAME = 'quick-reference.json';
+
+/** `<campaign>/quick-reference.json`: like `agents.md`, a file of the vault the index never holds. */
+function isQuickReferencePath(relativePath) {
+  const segments = relativePath.split('/');
+  return (
+    segments.length === 2 &&
+    segments[1].toLocaleLowerCase() === QUICK_REFERENCE_FILE_NAME &&
+    isCampaignDirName(segments[0])
+  );
+}
+
 /** Hidden entries (`.lazydm`, `.obsidian`, `.git`, `.DS_Store`, iCloud `.name.icloud` placeholders…) are not vault content. */
 function isIgnoredVaultPath(relativePath) {
   return (
     relativePath.split('/').some((segment) => segment.startsWith('.')) ||
-    isAgentRulesPath(relativePath)
+    isAgentRulesPath(relativePath) ||
+    isQuickReferencePath(relativePath)
   );
 }
 
@@ -147,7 +161,7 @@ async function listVaultFiles(rootPath, relativeDir = '') {
         pendingDirs.push(absolutePath);
       } else if (entry.isFile()) {
         const filePath = toVaultRelativePath(realRootPath, absolutePath);
-        if (isAgentRulesPath(filePath)) {
+        if (isAgentRulesPath(filePath) || isQuickReferencePath(filePath)) {
           continue;
         }
 
@@ -177,6 +191,8 @@ module.exports = {
   isDatalessStats,
   isDirectoryEmpty,
   isAgentRulesPath,
+  isQuickReferencePath,
+  QUICK_REFERENCE_FILE_NAME,
   isIgnoredVaultPath,
   listVaultFiles,
   readVaultConfig,

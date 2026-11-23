@@ -30,6 +30,14 @@ function isAgentRulesPath(relativePath) {
   return segments.length === 2 && segments[1].toLocaleLowerCase() === AGENT_RULES_FILE_NAME;
 }
 
+const QUICK_REFERENCE_FILE_NAME = 'quick-reference.json';
+
+/** `<campaign>/quick-reference.json`: the campaign's rules sheet, which the note tools never write. */
+function isQuickReferencePath(relativePath) {
+  const segments = relativePath.split('/');
+  return segments.length === 2 && segments[1].toLocaleLowerCase() === QUICK_REFERENCE_FILE_NAME;
+}
+
 /**
  * Limits what the MCP tools may reach to some campaigns and compendium systems.
  *
@@ -60,6 +68,12 @@ function createScopeGuard(roots) {
         throw new Error(`${relativePath} holds the user's rules for agents: it is read-only for MCP.`);
       }
 
+      if (isQuickReferencePath(relativePath)) {
+        throw new Error(
+          `${relativePath} is the campaign's quick reference: it is not a note, and MCP cannot write it.`,
+        );
+      }
+
       return relativePath;
     },
     /** Like `resolve`, but a yes/no for results to filter (links pointing out of the scope are dropped). */
@@ -79,6 +93,7 @@ function createScopeGuard(roots) {
 module.exports = {
   AGENT_RULES_FILE_NAME,
   isAgentRulesPath,
+  isQuickReferencePath,
   createScopeGuard,
   normalizeVaultPath,
 };
