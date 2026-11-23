@@ -1,0 +1,325 @@
+{
+  "categories": {
+    "turn-order": "Reihenfolge",
+    "movement": "Bewegung",
+    "actions": "Aktionen",
+    "bonus-actions": "Bonusaktionen",
+    "reactions": "Reaktionen",
+    "attacks": "Angriffe",
+    "conditions": "Zustände",
+    "environment": "Umgebung",
+    "dying": "Bei 0 TP"
+  },
+  "rules": {
+    "your-turn": {
+      "title": "Dein Zug",
+      "short": "Bewege dich bis zu deiner Bewegungsrate und führe eine Aktion aus.",
+      "full": "In deinem Zug kannst du dich bis zu deiner Bewegungsrate weit bewegen und eine Aktion ausführen, in beliebiger Reihenfolge.\n\nAußerdem kannst du kostenlos mit einem Gegenstand oder Merkmal der Umgebung interagieren und dich durch kurze Äußerungen und Gesten verständigen. Eine zweite Interaktion kostet deine Aktion (Gegenstand benutzen).\n\nDu kannst auf Bewegung, Aktion oder beides verzichten. Wenn du dich nicht entscheiden kannst, erwäge die Aktion Ausweichen oder Bereithalten."
+    },
+    "initiative": {
+      "title": "Initiative",
+      "short": "Ein Geschicklichkeitswurf legt die Reihenfolge fest; der höchste Wert beginnt.",
+      "full": "Wenn ein Kampf beginnt, macht jeder Beteiligte einen Geschicklichkeitswurf, um seinen Platz in der Initiativereihenfolge zu bestimmen, vom höchsten Gesamtwert zum niedrigsten. Die Reihenfolge bleibt von Runde zu Runde gleich.\n\nDie SL würfelt einmal für eine ganze Gruppe identischer Kreaturen, sodass sie gemeinsam handeln.\n\nGleichstand: Die SL entscheidet unter gleichauf liegenden Kreaturen der SL, die Spieler unter ihren eigenen Charakteren, und die SL, wenn ein Monster mit einem Spielercharakter gleichauf liegt. Optional würfelt jede gleichauf liegende Kreatur einen W20, der höchste Wert beginnt."
+    },
+    "surprise": {
+      "title": "Überraschung",
+      "short": "Eine überraschte Kreatur verliert ihren ersten Zug.",
+      "full": "Wenn keine Seite versucht, sich leise zu verhalten, bemerken sich beide. Andernfalls vergleicht die SL die Geschicklichkeitswürfe (Heimlichkeit) aller, die sich verstecken, mit der passiven Weisheit (Wahrnehmung) jeder Kreatur der Gegenseite. Jede Kreatur, die eine Bedrohung nicht bemerkt, ist zu Beginn der Begegnung überrascht.\n\nEine überraschte Kreatur kann sich in ihrem ersten Zug des Kampfes weder bewegen noch eine Aktion ausführen und kann bis zum Ende dieses Zuges keine Reaktion ausführen. Ein Mitglied einer Gruppe kann überrascht sein, auch wenn die anderen es nicht sind."
+    },
+    "move": {
+      "title": "Bewegen",
+      "short": "Bis zu deiner Bewegungsrate, aufgeteilt um deine Aktion.",
+      "full": "In deinem Zug kannst du dich bis zu deiner Bewegungsrate weit bewegen und dabei so viel oder so wenig davon nutzen, wie du willst. Springen, Klettern und Schwimmen gehören zu deiner Bewegung: Ziehe die Strecke jeder Teilbewegung von deiner Bewegungsrate ab, bis sie aufgebraucht ist.\n\n- **Aufteilen.** Du kannst dich vor und nach deiner Aktion bewegen. Bei Bewegungsrate 30 kannst du dich 10 Fuß bewegen, handeln und dann 20 Fuß bewegen.\n- **Zwischen Angriffen.** Wenn deine Aktion mehr als einen Waffenangriff umfasst, kannst du dich zwischen den Angriffen bewegen.\n- **Mehrere Bewegungsraten.** Wenn du zwischen Bewegungsarten wechselst (etwa Gehen und Fliegen), ziehe die bereits zurückgelegte Strecke von der neuen Bewegungsrate ab. Ist das Ergebnis 0 oder weniger, kannst du diese Bewegungsart in dieser Bewegung nicht nutzen."
+    },
+    "difficult-terrain": {
+      "title": "Schwieriges Gelände",
+      "short": "Jeder Fuß kostet 1 Fuß extra.",
+      "full": "Jeder Fuß Bewegung in schwierigem Gelände kostet 1 Fuß extra. Das gilt auch, wenn mehrere Dinge im Feld als schwieriges Gelände zählen.\n\nNiedrige Möbel, Geröll, Unterholz, steile Treppen, Schnee und flache Sümpfe sind Beispiele. Auch das Feld einer anderen Kreatur, ob feindlich oder nicht, zählt als schwieriges Gelände."
+    },
+    "prone": {
+      "title": "Liegend",
+      "short": "Nur kriechen; Nachteil auf Angriffe; Nahkampfangreifer haben Vorteil.",
+      "full": "**Hinlegen und Aufstehen**\n\n- Du kannst dich hinlegen, ohne etwas von deiner Bewegungsrate zu verbrauchen.\n- Aufstehen kostet Bewegung in Höhe der Hälfte deiner Bewegungsrate (15 Fuß bei Bewegungsrate 30). Du kannst nicht aufstehen, wenn du nicht genug Bewegung übrig hast oder deine Bewegungsrate 0 beträgt.\n- Um dich liegend zu bewegen, musst du kriechen (oder Magie wie Teleportation nutzen). Jeder Fuß Kriechen kostet 1 Fuß extra, also kostet 1 Fuß Kriechen in schwierigem Gelände 3 Fuß.\n\n**Solange du liegst**\n\n- Deine einzige Bewegungsmöglichkeit ist Kriechen, es sei denn, du stehst auf und beendest den Zustand.\n- Du hast Nachteil auf Angriffswürfe.\n- Ein Angriffswurf gegen dich hat Vorteil, wenn der Angreifer sich höchstens 5 Fuß von dir entfernt befindet. Andernfalls hat er Nachteil."
+    },
+    "moving-around-creatures": {
+      "title": "Bewegung um Kreaturen",
+      "short": "Durch Verbündete ja; durch Feinde nur, wenn viel größer oder kleiner.",
+      "full": "- Du kannst dich durch das Feld einer nicht feindlichen Kreatur bewegen.\n- Du kannst dich durch das Feld einer feindlichen Kreatur nur bewegen, wenn sie mindestens zwei Größenkategorien größer oder kleiner ist als du.\n- Das Feld einer anderen Kreatur ist für dich schwieriges Gelände.\n- Ob Freund oder Feind, du kannst deine Bewegung nicht freiwillig in ihrem Feld beenden.\n- Wenn du während deiner Bewegung die Reichweite einer feindlichen Kreatur verlässt, löst du einen Gelegenheitsangriff aus."
+    },
+    "flying": {
+      "title": "Fliegen",
+      "short": "Ein Flieger, der umgeworfen wird oder sich nicht bewegen kann, stürzt ab.",
+      "full": "Wenn eine fliegende Kreatur umgeworfen wird, ihre Bewegungsrate auf 0 sinkt oder ihr anderweitig die Bewegungsfähigkeit genommen wird, stürzt sie ab, es sei denn, sie kann schweben oder wird durch Magie in der Luft gehalten, etwa durch den Zauber Fliegen."
+    },
+    "squeezing": {
+      "title": "In einen kleineren Raum zwängen",
+      "short": "Eine Größe kleiner; kostet extra und gibt Nachteile.",
+      "full": "Eine Kreatur kann sich durch einen Raum zwängen, der für eine Kreatur einer Größenkategorie kleiner als sie selbst groß genug ist. Eine große Kreatur kann sich durch einen Durchgang zwängen, der nur 5 Fuß breit ist.\n\nWährend sie sich zwängt, gibt eine Kreatur für jeden Fuß, den sie sich dort bewegt, 1 Fuß extra aus, hat Nachteil auf Angriffswürfe und Geschicklichkeitsrettungswürfe, und Angriffswürfe gegen sie haben Vorteil."
+    },
+    "creature-size": {
+      "title": "Kreaturengröße und Raum",
+      "short": "Der Raum, den eine Kreatur im Kampf kontrolliert.",
+      "full": "Der Raum einer Kreatur ist die Fläche in Fuß, die sie im Kampf tatsächlich kontrolliert, nicht ein Ausdruck ihrer körperlichen Größe.\n\n- Winzig: 2½ mal 2½ Fuß\n- Klein: 5 mal 5 Fuß\n- Mittelgroß: 5 mal 5 Fuß\n- Groß: 10 mal 10 Fuß\n- Riesig: 15 mal 15 Fuß\n- Gigantisch: 20 mal 20 Fuß oder größer\n\nAcht mittelgroße Kreaturen passen in den Radius von 5 Fuß um eine andere; bis zu zwanzig können eine gigantische Kreatur umringen."
+    },
+    "attack-action": {
+      "title": "Angriff",
+      "short": "Führe einen Nah- oder Fernkampfangriff aus.",
+      "full": "Mit dieser Aktion führst du einen Nah- oder Fernkampfangriff aus, ob du ein Schwert schwingst, einen Bogen abfeuerst oder mit den Fäusten kämpfst.\n\nBestimmte Merkmale, wie der Zusätzliche Angriff des Kämpfers, erlauben dir, mit dieser Aktion mehr als einen Angriff auszuführen."
+    },
+    "cast-a-spell": {
+      "title": "Zauber wirken",
+      "short": "Nicht immer eine Aktion: Prüfe den Zeitaufwand.",
+      "full": "Jeder Zauber hat einen Zeitaufwand: eine Aktion, eine Reaktion, Minuten oder sogar Stunden. Einen Zauber zu wirken ist daher nicht zwingend eine Aktion.\n\nDie meisten Zauber haben einen Zeitaufwand von 1 Aktion, daher nutzt ein Zauberwirker oft seine Aktion, um einen zu wirken."
+    },
+    "dash": {
+      "title": "Spurt",
+      "short": "Erhalte zusätzliche Bewegung in Höhe deiner Bewegungsrate.",
+      "full": "Du erhältst für den aktuellen Zug zusätzliche Bewegung in Höhe deiner Bewegungsrate, nach Anwendung aller Modifikatoren. Bei einer Bewegungsrate von 30 Fuß kannst du dich in deinem Zug bis zu 60 Fuß bewegen, wenn du einen Spurt machst.\n\nJede Erhöhung oder Verringerung deiner Bewegungsrate ändert diese zusätzliche Bewegung um denselben Betrag. Wird deine Bewegungsrate von 30 Fuß auf 15 Fuß gesenkt, kannst du dich mit einem Spurt bis zu 30 Fuß bewegen."
+    },
+    "disengage": {
+      "title": "Rückzug",
+      "short": "Deine Bewegung löst in diesem Zug keine Gelegenheitsangriffe aus.",
+      "full": "Deine Bewegung löst für den Rest des Zuges keine Gelegenheitsangriffe aus."
+    },
+    "dodge": {
+      "title": "Ausweichen",
+      "short": "Angriffe gegen dich haben Nachteil; Geschicklichkeitsrettungswürfe haben Vorteil.",
+      "full": "Bis zum Beginn deines nächsten Zuges hat jeder Angriffswurf gegen dich Nachteil, wenn du den Angreifer sehen kannst, und du machst Geschicklichkeitsrettungswürfe mit Vorteil.\n\nDu verlierst diesen Vorteil, wenn du kampfunfähig bist oder deine Bewegungsrate auf 0 sinkt."
+    },
+    "help": {
+      "title": "Helfen",
+      "short": "Gib einem Verbündeten Vorteil auf eine Aufgabe oder einen Angriff.",
+      "full": "**Eine Aufgabe.** Die Kreatur, der du hilfst, hat Vorteil auf den nächsten Attributswurf, den sie macht, um die Aufgabe zu erfüllen, solange sie den Wurf vor Beginn deines nächsten Zuges macht.\n\n**Ein Angriff.** Du hilfst einer verbündeten Kreatur, die eine Kreatur in höchstens 5 Fuß Entfernung von dir angreift (du täuschst an, lenkst das Ziel ab oder arbeitest anderweitig mit ihr zusammen). Greift dein Verbündeter dieses Ziel vor deinem nächsten Zug an, wird der erste Angriffswurf mit Vorteil gemacht."
+    },
+    "hide": {
+      "title": "Verstecken",
+      "short": "Ein Geschicklichkeitswurf (Heimlichkeit), um unbemerkt zu werden.",
+      "full": "Du machst einen Geschicklichkeitswurf (Heimlichkeit), um dich zu verstecken, nach den Regeln zum Verstecken. Gelingt er, erhältst du die Vorteile, die unter Ungesehene Angreifer und Ziele beschrieben sind."
+    },
+    "ready": {
+      "title": "Bereithalten",
+      "short": "Wähle einen Auslöser und eine Reaktion; nutze deine Reaktion, wenn er eintritt.",
+      "full": "Du bereitest dich darauf vor, vor Beginn deines nächsten Zuges mit deiner Reaktion zu handeln.\n\n1. Entscheide, welcher wahrnehmbare Umstand deine Reaktion auslöst.\n2. Wähle die Aktion, die du als Antwort ausführst, oder eine Bewegung bis zu deiner Bewegungsrate.\n\nWenn der Auslöser eintritt, kannst du deine Reaktion direkt nach Abschluss des Auslösers ausführen oder ihn ignorieren. Du kannst pro Runde nur eine Reaktion ausführen.\n\n**Einen Zauber bereithalten.** Der Zauber muss einen Zeitaufwand von 1 Aktion haben. Du wirkst ihn normal, hältst aber seine Energie zurück, die du mit deiner Reaktion freisetzt. Das Halten erfordert Konzentration: Wird deine Konzentration unterbrochen, verpufft der Zauber ohne Wirkung, und ein Zauber, auf den du dich bereits konzentriert hast, endet."
+    },
+    "search": {
+      "title": "Suchen",
+      "short": "Richte deine Aufmerksamkeit darauf, etwas zu finden.",
+      "full": "Du richtest deine Aufmerksamkeit darauf, etwas zu finden. Je nach Art der Suche lässt dich die SL einen Weisheitswurf (Wahrnehmung) oder einen Intelligenzwurf (Nachforschungen) machen."
+    },
+    "use-an-object": {
+      "title": "Gegenstand benutzen",
+      "short": "Wenn ein Gegenstand deine Aktion braucht, oder für eine zweite Interaktion.",
+      "full": "Normalerweise interagierst du mit einem Gegenstand, während du etwas anderes tust, etwa ein Schwert als Teil eines Angriffs zu ziehen. Wenn ein Gegenstand für seine Benutzung deine Aktion erfordert, führst du die Aktion Gegenstand benutzen aus.\n\nMit dieser Aktion interagierst du auch in deinem Zug mit mehr als einem Gegenstand."
+    },
+    "free-interaction": {
+      "title": "Mit Gegenständen interagieren",
+      "short": "Eine kostenlose Interaktion pro Zug; weitere kosten deine Aktion.",
+      "full": "Du kannst während deiner Bewegung oder deiner Aktion kostenlos mit einem Gegenstand oder Merkmal der Umgebung interagieren: ein Schwert ziehen oder wegstecken, eine Tür öffnen oder schließen, eine fallen gelassene Axt aufheben, einen Hebel ziehen, ein Buch aus einem Regal nehmen, einem anderen Charakter einen Gegenstand reichen.\n\nEine zweite Interaktion braucht deine Aktion (Gegenstand benutzen). Manche magischen Gegenstände und besonderen Objekte erfordern immer eine Aktion. Die SL kann auch für alles, was besondere Sorgfalt braucht, eine Aktion verlangen, etwa eine klemmende Tür oder die Kurbel einer Zugbrücke."
+    },
+    "improvise": {
+      "title": "Improvisieren",
+      "short": "Beschreibe es; die SL sagt, ob es klappt und was zu würfeln ist.",
+      "full": "Mit deiner Aktion kannst du eine der Aktionen aus den Regeln ausführen, eine Aktion deiner Klasse oder eines besonderen Merkmals oder eine Aktion, die du improvisierst.\n\nWenn du eine Aktion beschreibst, die in den Regeln nicht näher erläutert ist, sagt dir die SL, ob sie möglich ist und welche Art von Wurf du gegebenenfalls machen musst."
+    },
+    "bonus-action": {
+      "title": "Bonusaktion",
+      "short": "Eine pro Zug, und nur wenn dir etwas eine gibt.",
+      "full": "Du kannst nur dann eine Bonusaktion ausführen, wenn ein Klassenmerkmal, ein Zauber oder eine andere Fähigkeit besagt, dass du etwas als Bonusaktion tun kannst (etwa die Gewiefte Aktion des Schurken). Andernfalls hast du keine.\n\n- Du kannst in deinem Zug nur eine Bonusaktion ausführen; wähle also, welche, wenn du mehrere hast.\n- Du wählst, wann in deinem Zug du sie ausführst, es sei denn, ihr Zeitpunkt ist festgelegt.\n- Alles, was dir die Fähigkeit nimmt, Aktionen auszuführen, hindert dich auch daran, eine Bonusaktion auszuführen."
+    },
+    "two-weapon-fighting": {
+      "title": "Kampf mit zwei Waffen",
+      "short": "Bonusangriff mit einer zweiten leichten Waffe; ohne Attributsmodifikator.",
+      "full": "Wenn du die Aktion Angriff ausführst und mit einer leichten Nahkampfwaffe angreifst, die du in einer Hand hältst, kannst du als Bonusaktion mit einer anderen leichten Nahkampfwaffe angreifen, die du in der anderen Hand hältst.\n\nDu addierst deinen Attributsmodifikator nicht zum Schaden des Bonusangriffs, es sei denn, der Modifikator ist negativ.\n\nHat eine der Waffen die Eigenschaft Wurfwaffe, kannst du die Waffe werfen, statt mit ihr einen Nahkampfangriff auszuführen."
+    },
+    "reaction": {
+      "title": "Reaktion",
+      "short": "Eine sofortige Antwort auf einen Auslöser; eine pro Runde.",
+      "full": "Eine Reaktion ist eine sofortige Antwort auf einen Auslöser, der in deinem Zug oder im Zug eines anderen eintreten kann. Der Gelegenheitsangriff ist die häufigste.\n\n- Wenn du eine Reaktion ausführst, kannst du bis zum Beginn deines nächsten Zuges keine weitere ausführen.\n- Unterbricht die Reaktion den Zug einer anderen Kreatur, kann diese ihren Zug direkt nach der Reaktion fortsetzen.\n- Eine überraschte Kreatur kann erst nach dem Ende ihres ersten Zuges eine Reaktion ausführen."
+    },
+    "opportunity-attack": {
+      "title": "Gelegenheitsangriff",
+      "short": "Ein Nahkampfangriff als Reaktion gegen einen Feind, der deine Reichweite verlässt.",
+      "full": "Du kannst einen Gelegenheitsangriff ausführen, wenn sich eine feindliche Kreatur, die du sehen kannst, aus deiner Reichweite herausbewegt. Du nutzt deine Reaktion, um einen Nahkampfangriff gegen sie auszuführen. Der Angriff findet direkt vor dem Moment statt, in dem die Kreatur deine Reichweite verlässt.\n\nDu kannst vermeiden, einen auszulösen, indem du die Aktion Rückzug ausführst. Du löst auch keinen aus, wenn du dich teleportierst oder wenn jemand oder etwas dich bewegt, ohne dass du deine Bewegung, Aktion oder Reaktion einsetzt (eine Explosion schleudert dich aus der Reichweite eines Feindes, oder du fällst an einem Gegner vorbei)."
+    },
+    "making-an-attack": {
+      "title": "Einen Angriff ausführen",
+      "short": "Wähle ein Ziel, bestimme die Modifikatoren, löse ihn auf.",
+      "full": "1. **Wähle ein Ziel** in der Reichweite deines Angriffs: eine Kreatur, ein Objekt oder einen Ort.\n2. **Bestimme die Modifikatoren.** Die SL entscheidet, ob das Ziel Deckung hat und ob du Vorteil oder Nachteil hast. Zauber, besondere Fähigkeiten und andere Effekte können Abzüge oder Boni geben.\n3. **Löse den Angriff auf.** Mache den Angriffswurf. Bei einem Treffer würfle den Schaden, sofern der Angriff nichts anderes besagt.\n\nWenn du einen Angriffswurf machst, führst du einen Angriff aus."
+    },
+    "attack-rolls": {
+      "title": "Angriffswürfe",
+      "short": "Ein W20 plus Modifikatoren gegen die RK des Ziels.",
+      "full": "Würfle einen W20 und addiere die Modifikatoren. Wenn die Summe die Rüstungsklasse (RK) des Ziels erreicht oder übersteigt, trifft der Angriff.\n\n- **Attributsmodifikator.** Stärke für eine Nahkampfwaffe, Geschicklichkeit für eine Fernkampfwaffe (Finesse- und Wurfwaffen brechen diese Regel). Ein Zauberangriff nutzt das Zauberwirker-Attribut des Zauberwirkers.\n- **Übungsbonus.** Addiere ihn, wenn du mit einer Waffe angreifst, in der du geübt bist, und bei Zauberangriffen.\n- **Eine 20 würfeln.** Der Angriff trifft unabhängig von Modifikatoren oder RK und ist ein kritischer Treffer.\n- **Eine 1 würfeln.** Der Angriff verfehlt unabhängig von Modifikatoren oder RK."
+    },
+    "melee-attacks": {
+      "title": "Nahkampfangriffe",
+      "short": "Reichweite meist 5 Fuß; ein unbewaffneter Schlag macht 1 + Stärke.",
+      "full": "Ein Nahkampfangriff trifft einen Gegner in deiner Reichweite. Die meisten Kreaturen haben eine Reichweite von 5 Fuß; manche Kreaturen (meist größer als mittelgroß) haben eine größere Reichweite, wie in ihren Beschreibungen vermerkt.\n\nStatt einer Waffe kannst du einen unbewaffneten Schlag verwenden: einen Faustschlag, Tritt, Kopfstoß oder ähnlichen Hieb. Bei einem Treffer verursacht er Wuchtschaden in Höhe von 1 + deinem Stärkemodifikator, und du bist darin geübt."
+    },
+    "ranged-attacks": {
+      "title": "Fernkampfangriffe",
+      "short": "Normale Reichweite, dann große Reichweite mit Nachteil.",
+      "full": "Du kannst Fernkampfangriffe nur gegen Ziele in Reichweite ausführen. Eine einzelne Reichweite ist eine feste Grenze.\n\nManche Waffen, etwa Langbogen oder Kurzbogen, haben zwei Reichweiten: Die kleinere Zahl ist die normale Reichweite, die größere die große Reichweite. Dein Angriffswurf hat Nachteil, wenn das Ziel jenseits der normalen Reichweite liegt, und du kannst kein Ziel jenseits der großen Reichweite angreifen."
+    },
+    "ranged-in-melee": {
+      "title": "Fernkampfangriff neben einem Gegner",
+      "short": "Nachteil innerhalb von 5 Fuß um einen Feind, der dich sehen kann.",
+      "full": "Wenn du einen Fernkampfangriff mit einer Waffe, einem Zauber oder auf andere Weise ausführst, hast du Nachteil auf den Angriffswurf, wenn du dich innerhalb von 5 Fuß um eine feindliche Kreatur befindest, die dich sehen kann und nicht kampfunfähig ist."
+    },
+    "unseen-attackers": {
+      "title": "Ungesehene Angreifer und Ziele",
+      "short": "Du siehst es nicht: Nachteil. Es sieht dich nicht: Vorteil.",
+      "full": "- Wenn du ein Ziel angreifst, das du nicht sehen kannst, hast du Nachteil auf den Angriffswurf. Das gilt, ob du den Ort des Ziels errätst oder eine Kreatur anvisierst, die du hören, aber nicht sehen kannst.\n- Befindet sich das Ziel nicht an dem Ort, den du anvisiert hast, verfehlst du automatisch, aber die SL sagt meist nur, dass der Angriff verfehlt hat, nicht ob du richtig geraten hast.\n- Wenn eine Kreatur dich nicht sehen kann, hast du Vorteil auf Angriffswürfe gegen sie.\n- Bist du versteckt (weder gesehen noch gehört), wenn du einen Angriff ausführst, verrätst du deinen Standort, ob der Angriff trifft oder verfehlt."
+    },
+    "grappling": {
+      "title": "Packen",
+      "short": "Ein Stärkewurf (Athletik) im Wettstreit; das Ziel wird Gepackt.",
+      "full": "Du nutzt die Aktion Angriff für einen besonderen Nahkampfangriff. Wenn du mit der Aktion mehrere Angriffe ausführen kannst, ersetzt dies einen davon.\n\n- Das Ziel darf höchstens eine Größenkategorie größer sein als du und muss in deiner Reichweite sein.\n- Mit mindestens einer freien Hand machst du einen Stärkewurf (Athletik) im Wettstreit mit dem Stärkewurf (Athletik) oder Geschicklichkeitswurf (Akrobatik) des Ziels (das Ziel wählt).\n- Gewinnst du, ist das Ziel Gepackt. Du kannst es jederzeit loslassen (keine Aktion).\n\n**Entkommen.** Eine gepackte Kreatur kann ihre Aktion nutzen, um einen Stärkewurf (Athletik) oder Geschicklichkeitswurf (Akrobatik) im Wettstreit mit deinem Stärkewurf (Athletik) zu machen.\n\n**Eine gepackte Kreatur bewegen.** Du kannst sie mitziehen oder tragen, aber deine Bewegungsrate wird halbiert, es sei denn, die Kreatur ist zwei oder mehr Größenkategorien kleiner als du."
+    },
+    "shoving": {
+      "title": "Eine Kreatur wegstoßen",
+      "short": "Ein Stärkewurf (Athletik) im Wettstreit; umwerfen oder 5 Fuß wegschieben.",
+      "full": "Du nutzt die Aktion Angriff für einen besonderen Nahkampfangriff. Wenn du mit der Aktion mehrere Angriffe ausführen kannst, ersetzt dies einen davon.\n\nDas Ziel darf höchstens eine Größenkategorie größer sein als du und muss in deiner Reichweite sein. Statt eines Angriffswurfs machst du einen Stärkewurf (Athletik) im Wettstreit mit dem Stärkewurf (Athletik) oder Geschicklichkeitswurf (Akrobatik) des Ziels (das Ziel wählt).\n\nGewinnst du den Wettstreit, wirfst du das Ziel entweder um (Liegend) oder stößt es 5 Fuß von dir weg."
+    },
+    "about-conditions": {
+      "title": "Über Zustände",
+      "short": "Eine Kreatur hat einen Zustand oder nicht.",
+      "full": "Zustände verändern die Fähigkeiten einer Kreatur. Die meisten sind Beeinträchtigungen; manche, wie unsichtbar, können vorteilhaft sein.\n\nEin Zustand dauert an, bis er aufgehoben wird (liegend wird etwa durch Aufstehen aufgehoben) oder für die Dauer, die der Effekt angibt.\n\nVerursachen mehrere Effekte denselben Zustand, hat jeder seine eigene Dauer, aber die Wirkung des Zustands wird nicht schlimmer."
+    },
+    "blinded": {
+      "title": "Blind",
+      "short": "Kann nicht sehen; Angriffe gegen sie haben Vorteil.",
+      "full": "- Eine blinde Kreatur kann nicht sehen und scheitert automatisch bei jedem Attributswurf, der Sicht erfordert.\n- Angriffswürfe gegen die Kreatur haben Vorteil, und die Angriffswürfe der Kreatur haben Nachteil."
+    },
+    "charmed": {
+      "title": "Bezaubert",
+      "short": "Kann den Bezauberer nicht angreifen; der Bezauberer hat sozial Vorteil.",
+      "full": "- Eine bezauberte Kreatur kann den Bezauberer nicht angreifen und ihn nicht mit schädlichen Fähigkeiten oder magischen Effekten anvisieren.\n- Der Bezauberer hat Vorteil auf jeden Attributswurf, um sozial mit der Kreatur zu interagieren."
+    },
+    "deafened": {
+      "title": "Taub",
+      "short": "Kann nicht hören; scheitert bei Würfen, die Gehör erfordern.",
+      "full": "- Eine taube Kreatur kann nicht hören und scheitert automatisch bei jedem Attributswurf, der Gehör erfordert."
+    },
+    "exhaustion": {
+      "title": "Erschöpfung",
+      "short": "Sechs Stufen; jede Stufe kommt zu den darunterliegenden hinzu.",
+      "full": "Erschöpfung wird in sechs Stufen gemessen. Ein Effekt kann einer Kreatur eine oder mehrere Stufen geben.\n\n1. Nachteil auf Attributswürfe\n2. Bewegungsrate halbiert\n3. Nachteil auf Angriffswürfe und Rettungswürfe\n4. Maximale Trefferpunkte halbiert\n5. Bewegungsrate auf 0 gesenkt\n6. Tod\n\nErleidet eine bereits erschöpfte Kreatur einen weiteren Effekt, der Erschöpfung verursacht, steigt ihre Stufe um den Betrag, den der Effekt angibt. Eine Kreatur erleidet die Wirkung ihrer aktuellen Stufe sowie aller niedrigeren Stufen.\n\nEin Effekt, der Erschöpfung entfernt, senkt ihre Stufe wie angegeben; alle Wirkungen enden, wenn die Stufe unter 1 fällt. Eine lange Rast senkt die Stufe um 1, sofern die Kreatur auch etwas gegessen und getrunken hat."
+    },
+    "frightened": {
+      "title": "Verängstigt",
+      "short": "Nachteil, solange die Quelle in Sicht ist; kann sich ihr nicht nähern.",
+      "full": "- Eine verängstigte Kreatur hat Nachteil auf Attributswürfe und Angriffswürfe, solange sich die Quelle ihrer Furcht in ihrer Sichtlinie befindet.\n- Die Kreatur kann sich der Quelle ihrer Furcht nicht freiwillig nähern."
+    },
+    "grappled": {
+      "title": "Gepackt",
+      "short": "Bewegungsrate 0.",
+      "full": "- Die Bewegungsrate einer gepackten Kreatur wird 0, und sie kann von keinem Bonus auf ihre Bewegungsrate profitieren.\n- Der Zustand endet, wenn der Packende kampfunfähig wird.\n- Der Zustand endet auch, wenn ein Effekt die gepackte Kreatur aus der Reichweite des Packenden oder des packenden Effekts entfernt, etwa wenn eine Kreatur durch den Zauber Donnerwoge weggeschleudert wird."
+    },
+    "incapacitated": {
+      "title": "Kampfunfähig",
+      "short": "Kann keine Aktionen oder Reaktionen ausführen.",
+      "full": "- Eine kampfunfähige Kreatur kann keine Aktionen oder Reaktionen ausführen."
+    },
+    "invisible": {
+      "title": "Unsichtbar",
+      "short": "Angriffe gegen sie haben Nachteil; ihre Angriffe haben Vorteil.",
+      "full": "- Eine unsichtbare Kreatur ist ohne Hilfe von Magie oder einem besonderen Sinn unmöglich zu sehen. Zum Verstecken gilt die Kreatur als stark verdeckt. Ihr Standort kann durch jedes Geräusch, das sie macht, oder jede Spur, die sie hinterlässt, entdeckt werden.\n- Angriffswürfe gegen die Kreatur haben Nachteil, und die Angriffswürfe der Kreatur haben Vorteil."
+    },
+    "paralyzed": {
+      "title": "Gelähmt",
+      "short": "Kampfunfähig und bewegungslos; Treffer aus der Nähe sind kritische Treffer.",
+      "full": "- Eine gelähmte Kreatur ist kampfunfähig und kann sich weder bewegen noch sprechen.\n- Die Kreatur scheitert automatisch bei Stärke- und Geschicklichkeitsrettungswürfen.\n- Angriffswürfe gegen die Kreatur haben Vorteil.\n- Jeder Angriff, der die Kreatur trifft, ist ein kritischer Treffer, wenn der Angreifer sich höchstens 5 Fuß von ihr entfernt befindet."
+    },
+    "petrified": {
+      "title": "Versteinert",
+      "short": "In Stein verwandelt; kampfunfähig, resistent gegen allen Schaden.",
+      "full": "- Eine versteinerte Kreatur wird samt allen nichtmagischen Gegenständen, die sie trägt oder bei sich hat, in eine feste, leblose Substanz (meist Stein) verwandelt. Ihr Gewicht verzehnfacht sich, und sie altert nicht mehr.\n- Die Kreatur ist kampfunfähig, kann sich weder bewegen noch sprechen und nimmt ihre Umgebung nicht wahr.\n- Angriffswürfe gegen die Kreatur haben Vorteil.\n- Die Kreatur scheitert automatisch bei Stärke- und Geschicklichkeitsrettungswürfen.\n- Die Kreatur hat Resistenz gegen allen Schaden.\n- Die Kreatur ist immun gegen Gift und Krankheit, wobei ein bereits in ihrem Körper befindliches Gift oder eine Krankheit ausgesetzt, nicht neutralisiert wird."
+    },
+    "poisoned": {
+      "title": "Vergiftet",
+      "short": "Nachteil auf Angriffswürfe und Attributswürfe.",
+      "full": "- Eine vergiftete Kreatur hat Nachteil auf Angriffswürfe und Attributswürfe."
+    },
+    "restrained": {
+      "title": "Festgesetzt",
+      "short": "Bewegungsrate 0; Angriffe gegen sie haben Vorteil.",
+      "full": "- Die Bewegungsrate einer festgesetzten Kreatur wird 0, und sie kann von keinem Bonus auf ihre Bewegungsrate profitieren.\n- Angriffswürfe gegen die Kreatur haben Vorteil, und die Angriffswürfe der Kreatur haben Nachteil.\n- Die Kreatur hat Nachteil auf Geschicklichkeitsrettungswürfe."
+    },
+    "stunned": {
+      "title": "Betäubt",
+      "short": "Kampfunfähig und bewegungslos; Angriffe gegen sie haben Vorteil.",
+      "full": "- Eine betäubte Kreatur ist kampfunfähig, kann sich nicht bewegen und nur stockend sprechen.\n- Die Kreatur scheitert automatisch bei Stärke- und Geschicklichkeitsrettungswürfen.\n- Angriffswürfe gegen die Kreatur haben Vorteil."
+    },
+    "unconscious": {
+      "title": "Bewusstlos",
+      "short": "Ohnmächtig; lässt fallen, was sie hält, und liegt am Boden.",
+      "full": "- Eine bewusstlose Kreatur ist kampfunfähig, kann sich weder bewegen noch sprechen und nimmt ihre Umgebung nicht wahr.\n- Die Kreatur lässt fallen, was sie hält, und wird umgeworfen (Liegend).\n- Die Kreatur scheitert automatisch bei Stärke- und Geschicklichkeitsrettungswürfen.\n- Angriffswürfe gegen die Kreatur haben Vorteil.\n- Jeder Angriff, der die Kreatur trifft, ist ein kritischer Treffer, wenn der Angreifer sich höchstens 5 Fuß von ihr entfernt befindet."
+    },
+    "cover": {
+      "title": "Deckung",
+      "short": "+2 auf RK und Geschicklichkeitsrettungswürfe bei halber, +5 bei Dreiviertel-Deckung.",
+      "full": "Wände, Bäume, Kreaturen und andere Hindernisse können Deckung bieten. Ein Ziel profitiert von Deckung nur, wenn ein Angriff oder Effekt von der gegenüberliegenden Seite ausgeht.\n\nEs gibt drei Deckungsgrade. Befindet sich ein Ziel hinter mehreren Quellen, gilt nur der schützendste Grad; sie werden nicht addiert.\n\n- **Halbe Deckung.** +2 Bonus auf RK und Geschicklichkeitsrettungswürfe. Ein Hindernis blockiert mindestens die Hälfte des Körpers des Ziels: eine niedrige Mauer, ein großes Möbelstück, ein schmaler Baumstamm oder eine Kreatur, ob Freund oder Feind.\n- **Dreiviertel-Deckung.** +5 Bonus auf RK und Geschicklichkeitsrettungswürfe. Etwa drei Viertel des Ziels sind verdeckt: ein Fallgitter, eine Schießscharte, ein dicker Baumstamm.\n- **Volle Deckung.** Das Ziel kann nicht direkt durch einen Angriff oder Zauber anvisiert werden, obwohl manche Zauber es erreichen können, indem sie es in einen Wirkungsbereich einschließen. Es ist vollständig durch ein Hindernis verborgen."
+    },
+    "obscured-areas": {
+      "title": "Verdeckte Bereiche",
+      "short": "Leicht: Nachteil auf Wahrnehmung per Sicht. Stark: faktisch blind.",
+      "full": "- **Leicht verdeckt** (schwaches Licht, lückenhafter Nebel, mäßiges Laub): Kreaturen haben Nachteil auf Weisheitswürfe (Wahrnehmung), die auf Sicht beruhen.\n- **Stark verdeckt** (Dunkelheit, undurchdringlicher Nebel, dichtes Laub): Die Sicht ist völlig blockiert. Eine Kreatur, die versucht, in diesem Bereich etwas zu sehen, ist faktisch blind."
+    },
+    "light": {
+      "title": "Licht",
+      "short": "Helles Licht, schwaches Licht und Dunkelheit.",
+      "full": "- **Helles Licht** lässt die meisten Kreaturen normal sehen. Selbst trübe Tage bieten helles Licht, ebenso Fackeln, Laternen und Feuer innerhalb eines bestimmten Radius.\n- **Schwaches Licht**, auch Schatten genannt, erzeugt einen leicht verdeckten Bereich. Es bildet meist die Grenze zwischen einer hellen Lichtquelle und umgebender Dunkelheit. Dämmerung, Morgengrauen und ein strahlender Vollmond zählen als schwaches Licht.\n- **Dunkelheit** erzeugt einen stark verdeckten Bereich: im Freien bei Nacht (selbst in den meisten mondhellen Nächten), in einem unbeleuchteten Verlies oder in einem Bereich magischer Dunkelheit."
+    },
+    "special-senses": {
+      "title": "Blindsicht, Dunkelsicht und Wahrer Blick",
+      "short": "Was eine Kreatur ohne gewöhnliche Sicht wahrnehmen kann.",
+      "full": "- **Blindsicht.** Die Kreatur kann ihre Umgebung innerhalb eines bestimmten Radius wahrnehmen, ohne sich auf Sicht zu verlassen.\n- **Dunkelsicht.** Innerhalb einer bestimmten Reichweite sieht die Kreatur in Dunkelheit, als wäre es schwaches Licht, sodass Dunkelheit für sie nur leicht verdeckt ist. Sie kann in Dunkelheit keine Farben unterscheiden, nur Grautöne.\n- **Wahrer Blick.** Bis zu einer bestimmten Reichweite sieht die Kreatur in normaler und magischer Dunkelheit, sieht unsichtbare Kreaturen und Gegenstände, erkennt visuelle Illusionen automatisch und besteht Rettungswürfe gegen sie, nimmt die wahre Gestalt eines Gestaltwandlers oder einer magisch verwandelten Kreatur wahr und kann in die Ätherebene sehen."
+    },
+    "falling": {
+      "title": "Fallen",
+      "short": "1W6 Wuchtschaden pro 10 Fuß, höchstens 20W6; du landest liegend.",
+      "full": "Am Ende eines Sturzes erleidet eine Kreatur 1W6 Wuchtschaden für jede 10 Fuß, die sie gefallen ist, höchstens 20W6. Die Kreatur landet liegend, es sei denn, sie vermeidet den Sturzschaden."
+    },
+    "suffocating": {
+      "title": "Ersticken",
+      "short": "1 + Konstitutionsmodifikator Minuten Atem, dann Konstitutionsmodifikator Runden.",
+      "full": "Eine Kreatur kann den Atem für eine Anzahl Minuten anhalten, die 1 + ihrem Konstitutionsmodifikator entspricht (mindestens 30 Sekunden).\n\nWenn einer Kreatur der Atem ausgeht oder sie würgt, kann sie eine Anzahl Runden überleben, die ihrem Konstitutionsmodifikator entspricht (mindestens 1 Runde). Zu Beginn ihres nächsten Zuges sinkt sie auf 0 Trefferpunkte und liegt im Sterben, und sie kann keine Trefferpunkte zurückgewinnen oder stabilisiert werden, bis sie wieder atmen kann.\n\nBeispiel: Eine Kreatur mit Konstitution 14 kann den Atem 3 Minuten anhalten. Beginnt sie zu ersticken, hat sie 2 Runden, um Luft zu erreichen, bevor sie auf 0 Trefferpunkte sinkt."
+    },
+    "underwater-combat": {
+      "title": "Kampf unter Wasser",
+      "short": "Nah- und Fernkampf sind eingeschränkt; Feuerresistenz.",
+      "full": "- Ein Nahkampfwaffenangriff einer Kreatur ohne Schwimmbewegungsrate hat Nachteil, es sei denn, die Waffe ist ein Dolch, Wurfspeer, Kurzschwert, Speer oder Dreizack.\n- Ein Fernkampfwaffenangriff verfehlt ein Ziel jenseits der normalen Reichweite der Waffe automatisch. Selbst innerhalb der normalen Reichweite hat er Nachteil, es sei denn, die Waffe ist eine Armbrust, ein Netz oder eine wie ein Wurfspeer geworfene Waffe (einschließlich Speer, Dreizack oder Wurfpfeil).\n- Kreaturen und Gegenstände, die vollständig im Wasser eingetaucht sind, haben Resistenz gegen Feuerschaden."
+    },
+    "food-and-water": {
+      "title": "Nahrung und Wasser",
+      "short": "Ohne sie entsteht Erschöpfung.",
+      "full": "Erschöpfung durch Mangel an Nahrung oder Wasser kann nicht entfernt werden, bis der Charakter die volle benötigte Menge gegessen und getrunken hat.\n\n**Nahrung.** Ein Charakter braucht 1 Pfund Nahrung pro Tag; halbe Rationen zählen als ein halber Tag ohne Nahrung. Ein Charakter kann 3 + seinen Konstitutionsmodifikator Tage ohne Nahrung auskommen (mindestens 1). Am Ende jedes weiteren Tages erleidet er automatisch eine Stufe Erschöpfung. Ein normaler Tag mit Essen setzt die Zählung zurück.\n\n**Wasser.** Ein Charakter braucht 1 Gallone Wasser pro Tag, oder 2 Gallonen bei heißem Wetter. Trinkt er nur die Hälfte, braucht er am Ende des Tages einen Konstitutionsrettungswurf gegen SG 15 oder erleidet eine Stufe Erschöpfung. Noch weniger Wasser bedeutet automatisch eine Stufe. Hat der Charakter bereits eine oder mehrere Stufen Erschöpfung, erleidet er in beiden Fällen zwei Stufen."
+    },
+    "dropping-to-0": {
+      "title": "Auf 0 Trefferpunkte sinken",
+      "short": "Sofort sterben oder bewusstlos werden.",
+      "full": "Wenn du auf 0 Trefferpunkte sinkst, stirbst du entweder sofort oder wirst bewusstlos.\n\n**Sofortiger Tod.** Wenn Schaden dich auf 0 Trefferpunkte senkt und Schaden übrig bleibt, stirbst du, wenn der übrige Schaden deine maximalen Trefferpunkte erreicht oder übersteigt.\n\n**Bewusstlos werden.** Wenn Schaden dich auf 0 Trefferpunkte senkt und dich nicht tötet, wirst du bewusstlos. Das endet, wenn du Trefferpunkte zurückgewinnst.\n\n**Monster.** Die meisten SL lassen ein Monster im selben Moment sterben, in dem es auf 0 Trefferpunkte sinkt. Mächtige Schurken und besondere NSC können den Regeln für Spielercharaktere folgen."
+    },
+    "death-saving-throws": {
+      "title": "Todesrettungswürfe",
+      "short": "Zug bei 0 TP beginnen: würfle einen W20; 10 oder mehr gelingt.",
+      "full": "Wann immer du deinen Zug mit 0 Trefferpunkten beginnst, mache einen Todesrettungswurf. Er ist an kein Attribut gebunden.\n\nWürfle einen W20. Bei 10 oder höher gelingt er, andernfalls scheitert er. Drei Erfolge machen dich stabil; bei drei Fehlschlägen stirbst du. Sie müssen nicht aufeinanderfolgen. Beide Zähler werden zurückgesetzt, wenn du Trefferpunkte zurückgewinnst oder stabil wirst.\n\n- **Eine 1 würfeln** zählt als zwei Fehlschläge.\n- **Eine 20 würfeln:** Du gewinnst 1 Trefferpunkt zurück.\n- **Schaden bei 0 Trefferpunkten** ist ein Fehlschlag, oder zwei, wenn es ein kritischer Treffer ist. Erreicht oder übersteigt der Schaden deine maximalen Trefferpunkte, erleidest du den sofortigen Tod."
+    },
+    "stabilizing": {
+      "title": "Eine Kreatur stabilisieren",
+      "short": "Aktion und ein Weisheitswurf (Heilkunde) gegen SG 10.",
+      "full": "Der beste Weg, eine Kreatur mit 0 Trefferpunkten zu retten, ist, sie zu heilen. Falls das nicht geht, kannst du deine Aktion nutzen, um einer bewusstlosen Kreatur Erste Hilfe zu leisten und zu versuchen, sie zu stabilisieren: ein erfolgreicher Weisheitswurf (Heilkunde) gegen SG 10.\n\nEine stabile Kreatur macht keine Todesrettungswürfe, obwohl sie 0 Trefferpunkte hat, bleibt aber bewusstlos. Sie ist nicht mehr stabil und macht wieder Todesrettungswürfe, wenn sie Schaden erleidet. Eine stabile Kreatur, die nicht geheilt wird, gewinnt nach 1W4 Stunden 1 Trefferpunkt zurück."
+    },
+    "knocking-out": {
+      "title": "Eine Kreatur k. o. schlagen",
+      "short": "Im Nahkampf auf 0 TP senken und entscheiden, nicht zu töten.",
+      "full": "Wenn ein Angreifer eine Kreatur mit einem Nahkampfangriff auf 0 Trefferpunkte senkt, kann er die Kreatur k. o. schlagen. Der Angreifer trifft diese Entscheidung im Moment, in dem der Schaden verursacht wird. Die Kreatur wird bewusstlos und ist stabil."
+    },
+    "temporary-hit-points": {
+      "title": "Temporäre Trefferpunkte",
+      "short": "Ein Puffer, der zuerst verloren geht; sie addieren sich nicht.",
+      "full": "Temporäre Trefferpunkte sind keine echten Trefferpunkte: Sie sind ein Puffer gegen Schaden. Wenn du Schaden erleidest, gehen sie zuerst verloren, und übriger Schaden geht auf deine normalen Trefferpunkte über.\n\n- Sie können deine maximalen Trefferpunkte übersteigen. Heilung kann sie nicht wiederherstellen.\n- Sie können nicht addiert werden. Erhältst du mehr, während du welche hast, entscheidest du, ob du die vorhandenen behältst oder die neuen annimmst.\n- Bei 0 Trefferpunkten stellen sie weder das Bewusstsein wieder her noch stabilisieren sie dich, absorbieren aber weiterhin Schaden.\n- Sofern das Merkmal, das sie gewährt, keine Dauer hat, halten sie an, bis sie aufgebraucht sind oder du eine lange Rast beendest."
+    }
+  }
+}

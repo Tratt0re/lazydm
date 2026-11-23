@@ -1,0 +1,325 @@
+{
+  "categories": {
+    "turn-order": "Ordine di turno",
+    "movement": "Movimento",
+    "actions": "Azioni",
+    "bonus-actions": "Azioni bonus",
+    "reactions": "Reazioni",
+    "attacks": "Attacchi",
+    "conditions": "Condizioni",
+    "environment": "Ambiente",
+    "dying": "A 0 punti ferita"
+  },
+  "rules": {
+    "your-turn": {
+      "title": "Il tuo turno",
+      "short": "Muoviti fino alla tua velocità e compi un'azione.",
+      "full": "Durante il tuo turno puoi muoverti di una distanza pari al massimo alla tua velocità e compiere un'azione, nell'ordine che preferisci.\n\nPuoi anche interagire gratuitamente con un oggetto o un elemento dell'ambiente e comunicare con brevi frasi e gesti. Una seconda interazione costa la tua azione (Usare un oggetto).\n\nPuoi rinunciare a muoverti, ad agire o a entrambi. Se non sai cosa fare, considera l'azione Schivare o Preparare."
+    },
+    "initiative": {
+      "title": "Iniziativa",
+      "short": "Una prova di Destrezza stabilisce l'ordine; chi ha il totale più alto agisce per primo.",
+      "full": "All'inizio del combattimento ogni partecipante effettua una prova di Destrezza per determinare il proprio posto nell'ordine di iniziativa, dal totale più alto al più basso. L'ordine resta lo stesso di round in round.\n\nIl DM effettua un solo tiro per un intero gruppo di creature identiche, che quindi agiscono insieme.\n\nParità: il DM decide tra le creature pari da lui controllate, i giocatori tra i propri personaggi, e il DM quando un mostro è in parità con un personaggio giocante. In alternativa le creature in parità tirano ciascuna un d20, e chi ottiene il risultato più alto va per primo."
+    },
+    "surprise": {
+      "title": "Sorpresa",
+      "short": "Una creatura sorpresa perde il suo primo turno.",
+      "full": "Se nessuna delle due parti cerca di essere furtiva, si notano a vicenda. Altrimenti il DM confronta le prove di Destrezza (Furtività) di chi si nasconde con la Saggezza (Percezione) passiva di ciascuna creatura dell'altra parte. Ogni creatura che non nota una minaccia è sorpresa all'inizio dell'incontro.\n\nUna creatura sorpresa non può muoversi né compiere azioni durante il suo primo turno di combattimento e non può usare reazioni finché quel turno non finisce. Un membro di un gruppo può essere sorpreso anche se gli altri non lo sono."
+    },
+    "move": {
+      "title": "Muoversi",
+      "short": "Fino alla tua velocità, anche prima e dopo la tua azione.",
+      "full": "Durante il tuo turno puoi muoverti fino alla tua velocità, usandone quanta ne vuoi. Saltare, arrampicarsi e nuotare fanno parte del tuo movimento: sottrai la distanza di ciascuna parte dalla tua velocità finché non è esaurita.\n\n- **Dividerlo.** Puoi muoverti prima e dopo la tua azione. Con velocità 30, puoi muoverti di 10 piedi, agire, poi muoverti di altri 20.\n- **Tra un attacco e l'altro.** Se la tua azione comprende più di un attacco con arma, puoi muoverti tra un attacco e l'altro.\n- **Più di una velocità.** Quando passi da una velocità all'altra (camminare e volare, ad esempio), sottrai la distanza già percorsa dalla nuova velocità. Se il risultato è 0 o meno, non puoi usare quella velocità in questo movimento."
+    },
+    "difficult-terrain": {
+      "title": "Terreno difficile",
+      "short": "Ogni piede costa 1 piede in più.",
+      "full": "Ogni piede di movimento in terreno difficile costa 1 piede in più. Vale anche se più elementi nello spazio contano come terreno difficile.\n\nMobili bassi, macerie, sottobosco, scale ripide, neve e acquitrini poco profondi ne sono esempi. Anche lo spazio di un'altra creatura, ostile o no, conta come terreno difficile."
+    },
+    "prone": {
+      "title": "Prono",
+      "short": "Solo strisciare; Svantaggio agli attacchi; chi attacca in mischia ha Vantaggio.",
+      "full": "**Abbassarsi e rialzarsi**\n\n- Puoi metterti prono senza usare alcuna parte della tua velocità.\n- Rialzarsi costa movimento pari a metà della tua velocità (15 piedi con velocità 30). Non puoi rialzarti se non hai abbastanza movimento rimasto o se la tua velocità è 0.\n- Per muoverti da prono devi strisciare (o usare la magia, come il teletrasporto). Ogni piede strisciato costa 1 piede in più, quindi strisciare per 1 piede in terreno difficile costa 3 piedi.\n\n**Mentre sei prono**\n\n- La tua unica opzione di movimento è strisciare, a meno che tu non ti rialzi e termini la condizione.\n- Hai Svantaggio ai tiri per colpire.\n- Un tiro per colpire contro di te ha Vantaggio se l'attaccante è entro 5 piedi da te. Altrimenti ha Svantaggio."
+    },
+    "moving-around-creatures": {
+      "title": "Muoversi tra le creature",
+      "short": "Attraverso gli alleati sì; attraverso i nemici solo se molto più grandi o piccoli.",
+      "full": "- Puoi muoverti attraverso lo spazio di una creatura non ostile.\n- Puoi muoverti attraverso lo spazio di una creatura ostile solo se è almeno due taglie più grande o più piccola di te.\n- Lo spazio di un'altra creatura è terreno difficile per te.\n- Amico o nemico, non puoi terminare volontariamente il tuo movimento nel suo spazio.\n- Se lasci la portata di una creatura ostile durante il tuo movimento, provochi un attacco di opportunità."
+    },
+    "flying": {
+      "title": "Volare",
+      "short": "Una creatura in volo che finisce prona o non può muoversi cade.",
+      "full": "Se una creatura in volo viene buttata a terra (prona), ha la velocità ridotta a 0 o perde in altro modo la capacità di muoversi, cade, a meno che non possa librarsi o sia sostenuta in aria dalla magia, come l'incantesimo Volare."
+    },
+    "squeezing": {
+      "title": "Infilarsi in uno spazio più piccolo",
+      "short": "Una taglia in meno; costa di più e dà una penalità.",
+      "full": "Una creatura può infilarsi in uno spazio abbastanza grande per una creatura di una taglia più piccola. Una creatura Grande può infilarsi in un passaggio largo solo 5 piedi.\n\nMentre si infila, una creatura spende 1 piede in più per ogni piede che percorre lì, ha Svantaggio ai tiri per colpire e ai tiri salvezza su Destrezza, e i tiri per colpire contro di lei hanno Vantaggio."
+    },
+    "creature-size": {
+      "title": "Taglia e spazio delle creature",
+      "short": "Lo spazio che una creatura controlla in combattimento.",
+      "full": "Lo spazio di una creatura è l'area in piedi che controlla effettivamente in combattimento, non un'espressione della sua dimensione fisica.\n\n- Minuscola: 2½ per 2½ piedi\n- Piccola: 5 per 5 piedi\n- Media: 5 per 5 piedi\n- Grande: 10 per 10 piedi\n- Enorme: 15 per 15 piedi\n- Mastodontica: 20 per 20 piedi o più\n\nOtto creature Medie entrano nel raggio di 5 piedi attorno a un'altra; fino a venti possono circondare una creatura Mastodontica."
+    },
+    "attack-action": {
+      "title": "Attaccare",
+      "short": "Effettua un attacco in mischia o a distanza.",
+      "full": "Con questa azione effettui un attacco in mischia o a distanza, che tu stia brandendo una spada, scoccando un arco o lottando a mani nude.\n\nCerte capacità, come l'Attacco Extra del guerriero, ti permettono di effettuare più di un attacco con questa azione."
+    },
+    "cast-a-spell": {
+      "title": "Lanciare un incantesimo",
+      "short": "Non sempre è un'azione: controlla il tempo di lancio.",
+      "full": "Ogni incantesimo ha un tempo di lancio: un'azione, una reazione, minuti o addirittura ore. Lanciare un incantesimo quindi non è necessariamente un'azione.\n\nLa maggior parte degli incantesimi ha un tempo di lancio di 1 azione, perciò un incantatore usa spesso la propria azione per lanciarne uno."
+    },
+    "dash": {
+      "title": "Scattare",
+      "short": "Ottieni movimento extra pari alla tua velocità.",
+      "full": "Ottieni movimento extra per il turno in corso pari alla tua velocità, dopo aver applicato eventuali modificatori. Con una velocità di 30 piedi puoi muoverti fino a 60 piedi nel tuo turno se scatti.\n\nOgni aumento o riduzione della tua velocità cambia questo movimento aggiuntivo dello stesso valore. Se la tua velocità di 30 piedi è ridotta a 15 piedi, puoi muoverti fino a 30 piedi se scatti."
+    },
+    "disengage": {
+      "title": "Disimpegnarsi",
+      "short": "In questo turno il tuo movimento non provoca attacchi di opportunità.",
+      "full": "Il tuo movimento non provoca attacchi di opportunità per il resto del turno."
+    },
+    "dodge": {
+      "title": "Schivare",
+      "short": "Gli attacchi contro di te hanno Svantaggio; tiri salvezza su Destrezza con Vantaggio.",
+      "full": "Fino all'inizio del tuo prossimo turno, qualsiasi tiro per colpire effettuato contro di te ha Svantaggio se riesci a vedere l'attaccante, e i tuoi tiri salvezza su Destrezza hanno Vantaggio.\n\nPerdi questo beneficio se sei incapacitato o se la tua velocità scende a 0."
+    },
+    "help": {
+      "title": "Aiutare",
+      "short": "Dai a un alleato Vantaggio in un compito o in un attacco.",
+      "full": "**Un compito.** La creatura che aiuti ha Vantaggio sulla prossima prova di caratteristica che effettua per svolgere il compito, purché la effettui prima dell'inizio del tuo prossimo turno.\n\n**Un attacco.** Aiuti una creatura amica che attacca una creatura entro 5 piedi da te (fai una finta, distrai il bersaglio o collabori in altro modo). Se il tuo alleato attacca quel bersaglio prima del tuo prossimo turno, il primo tiro per colpire è effettuato con Vantaggio."
+    },
+    "hide": {
+      "title": "Nascondersi",
+      "short": "Una prova di Destrezza (Furtività) per non essere visto.",
+      "full": "Effettui una prova di Destrezza (Furtività) nel tentativo di nasconderti, seguendo le regole per nascondersi. Se hai successo, ottieni i benefici descritti in Attaccanti e bersagli non visti."
+    },
+    "ready": {
+      "title": "Preparare",
+      "short": "Scegli un innesco e una risposta; usa la tua reazione quando si verifica.",
+      "full": "Ti prepari ad agire usando la tua reazione prima dell'inizio del tuo prossimo turno.\n\n1. Decidi quale circostanza percepibile farà scattare la tua reazione.\n2. Scegli l'azione che compirai in risposta, oppure di muoverti fino alla tua velocità.\n\nQuando l'innesco si verifica, puoi usare la tua reazione subito dopo che l'innesco è terminato, oppure ignorarlo. Puoi usare una sola reazione per round.\n\n**Preparare un incantesimo.** L'incantesimo deve avere un tempo di lancio di 1 azione. Lo lanci normalmente ma trattieni la sua energia, che rilasci con la tua reazione. Trattenerlo richiede concentrazione: se la tua concentrazione si interrompe, l'incantesimo si dissolve senza effetto, e un incantesimo su cui ti stavi già concentrando termina."
+    },
+    "search": {
+      "title": "Cercare",
+      "short": "Dedica la tua attenzione a trovare qualcosa.",
+      "full": "Dedichi la tua attenzione a trovare qualcosa. A seconda della natura della ricerca, il DM può farti effettuare una prova di Saggezza (Percezione) o di Intelligenza (Indagare)."
+    },
+    "use-an-object": {
+      "title": "Usare un oggetto",
+      "short": "Quando un oggetto richiede la tua azione, o per una seconda interazione.",
+      "full": "Di norma interagisci con un oggetto mentre fai altro, come estrarre una spada come parte di un attacco. Quando un oggetto richiede la tua azione per essere usato, compi l'azione Usare un oggetto.\n\nQuesta azione serve anche per interagire con più di un oggetto durante il tuo turno."
+    },
+    "free-interaction": {
+      "title": "Interagire con gli oggetti",
+      "short": "Un'interazione gratuita per turno; altre costano la tua azione.",
+      "full": "Puoi interagire gratuitamente con un oggetto o un elemento dell'ambiente, durante il tuo movimento o la tua azione: estrarre o rinfoderare una spada, aprire o chiudere una porta, raccogliere un'ascia caduta, tirare una leva, prendere un libro da uno scaffale, passare un oggetto a un altro personaggio.\n\nUna seconda interazione richiede la tua azione (Usare un oggetto). Alcuni oggetti magici e oggetti speciali richiedono sempre un'azione. Il DM può anche richiedere un'azione per qualsiasi cosa che necessiti di cura particolare, come una porta bloccata o la manovella di un ponte levatoio."
+    },
+    "improvise": {
+      "title": "Improvvisare",
+      "short": "Descrivilo; il DM dice se funziona e cosa tirare.",
+      "full": "Con la tua azione puoi compiere una delle azioni previste dalle regole, un'azione della tua classe o di una capacità speciale, oppure un'azione che improvvisi.\n\nQuando descrivi un'azione non dettagliata altrove nelle regole, il DM ti dice se è possibile e quale tipo di tiro devi effettuare, se necessario."
+    },
+    "bonus-action": {
+      "title": "Azione bonus",
+      "short": "Una per turno, e solo se qualcosa te ne concede una.",
+      "full": "Puoi compiere un'azione bonus solo quando una capacità di classe, un incantesimo o un'altra capacità dice che puoi fare qualcosa come azione bonus (l'Azione Scaltra del ladro, ad esempio). Altrimenti non ne hai una.\n\n- Puoi compiere una sola azione bonus nel tuo turno, quindi scegli quale se ne hai più di una.\n- Scegli tu quando compierla durante il tuo turno, a meno che i tempi non siano specificati.\n- Qualsiasi cosa ti privi della capacità di compiere azioni ti impedisce anche di compiere un'azione bonus."
+    },
+    "two-weapon-fighting": {
+      "title": "Combattere con due armi",
+      "short": "Attacco bonus con una seconda arma leggera; senza modificatore di caratteristica.",
+      "full": "Quando compi l'azione di Attacco e attacchi con un'arma da mischia leggera che tieni in una mano, puoi usare un'azione bonus per attaccare con un'altra arma da mischia leggera che tieni nell'altra mano.\n\nNon aggiungi il tuo modificatore di caratteristica al danno dell'attacco bonus, a meno che quel modificatore sia negativo.\n\nSe una delle due armi ha la proprietà Lancio, puoi lanciarla invece di effettuare con essa un attacco in mischia."
+    },
+    "reaction": {
+      "title": "Reazione",
+      "short": "Una risposta istantanea a un innesco; una per round.",
+      "full": "Una reazione è una risposta istantanea a un qualche innesco, che può verificarsi nel tuo turno o in quello di qualcun altro. L'attacco di opportunità è la più comune.\n\n- Quando usi una reazione, non puoi usarne un'altra fino all'inizio del tuo prossimo turno.\n- Se la reazione interrompe il turno di un'altra creatura, quella creatura può proseguire il proprio turno subito dopo la reazione.\n- Una creatura sorpresa non può usare una reazione finché il suo primo turno non termina."
+    },
+    "opportunity-attack": {
+      "title": "Attacco di opportunità",
+      "short": "Un attacco in mischia, come reazione, contro un nemico che lascia la tua portata.",
+      "full": "Puoi effettuare un attacco di opportunità quando una creatura ostile che riesci a vedere esce dalla tua portata. Usi la tua reazione per effettuare un attacco in mischia contro di essa. L'attacco avviene appena prima che la creatura lasci la tua portata.\n\nPuoi evitare di provocarne uno compiendo l'azione Disimpegnarsi. Non ne provochi uno nemmeno quando ti teletrasporti, o quando qualcuno o qualcosa ti sposta senza usare il tuo movimento, la tua azione o la tua reazione (un'esplosione ti scaglia fuori dalla portata di un nemico, o cadi oltre un avversario)."
+    },
+    "making-an-attack": {
+      "title": "Effettuare un attacco",
+      "short": "Scegli un bersaglio, determina i modificatori, risolvi l'attacco.",
+      "full": "1. **Scegli un bersaglio** entro la gittata del tuo attacco: una creatura, un oggetto o un luogo.\n2. **Determina i modificatori.** Il DM decide se il bersaglio ha copertura e se hai Vantaggio o Svantaggio. Incantesimi, capacità speciali e altri effetti possono applicare penalità o bonus.\n3. **Risolvi l'attacco.** Effettua il tiro per colpire. Se colpisci, tira i danni, a meno che l'attacco non dica altrimenti.\n\nSe stai effettuando un tiro per colpire, stai effettuando un attacco."
+    },
+    "attack-rolls": {
+      "title": "Tiri per colpire",
+      "short": "Un d20 più modificatori contro la CA del bersaglio.",
+      "full": "Tira un d20 e aggiungi i modificatori. Se il totale uguaglia o supera la Classe Armatura (CA) del bersaglio, l'attacco colpisce.\n\n- **Modificatore di caratteristica.** Forza per un'arma da mischia, Destrezza per un'arma a distanza (le armi accurate e da lancio fanno eccezione a questa regola). Un attacco con incantesimo usa la caratteristica da incantatore del lanciatore.\n- **Bonus di competenza.** Aggiungilo quando attacchi con un'arma nella quale sei competente e con gli attacchi con incantesimo.\n- **Tirando un 20.** L'attacco colpisce a prescindere da modificatori o CA, ed è un colpo critico.\n- **Tirando un 1.** L'attacco manca a prescindere da modificatori o CA."
+    },
+    "melee-attacks": {
+      "title": "Attacchi in mischia",
+      "short": "La portata è di norma 5 piedi; un colpo senz'armi infligge 1 + Forza.",
+      "full": "Un attacco in mischia colpisce un nemico entro la tua portata. La maggior parte delle creature ha una portata di 5 piedi; alcune creature (di solito più grandi di Media) hanno una portata maggiore, come indicato nelle loro descrizioni.\n\nAl posto di un'arma puoi usare un colpo senz'armi: un pugno, un calcio, una testata o un colpo simile. Se colpisce, infligge danni contundenti pari a 1 + il tuo modificatore di Forza, e sei competente con esso."
+    },
+    "ranged-attacks": {
+      "title": "Attacchi a distanza",
+      "short": "Gittata normale, poi gittata lunga con Svantaggio.",
+      "full": "Puoi effettuare attacchi a distanza solo contro bersagli entro la gittata. Una gittata singola è un limite assoluto.\n\nAlcune armi, come l'arco lungo o l'arco corto, hanno due gittate: il numero più piccolo è la gittata normale, il più grande è la gittata lunga. Il tuo tiro per colpire ha Svantaggio quando il bersaglio è oltre la gittata normale, e non puoi attaccare un bersaglio oltre la gittata lunga."
+    },
+    "ranged-in-melee": {
+      "title": "Attacco a distanza vicino a un nemico",
+      "short": "Svantaggio entro 5 piedi da un ostile che ti vede.",
+      "full": "Quando effettui un attacco a distanza con un'arma, un incantesimo o qualsiasi altro mezzo, hai Svantaggio al tiro per colpire se sei entro 5 piedi da una creatura ostile che può vederti e che non è incapacitata."
+    },
+    "unseen-attackers": {
+      "title": "Attaccanti e bersagli non visti",
+      "short": "Non lo vedi: Svantaggio. Non ti vede: Vantaggio.",
+      "full": "- Quando attacchi un bersaglio che non riesci a vedere, hai Svantaggio al tiro per colpire. Vale sia se stai indovinando la posizione del bersaglio, sia se prendi di mira una creatura che senti ma non vedi.\n- Se il bersaglio non si trova nel luogo che hai scelto, manchi automaticamente, ma il DM di solito dice soltanto che l'attacco ha mancato, non se hai indovinato.\n- Quando una creatura non riesce a vederti, hai Vantaggio ai tiri per colpire contro di essa.\n- Se sei nascosto (né visto né sentito) quando effettui un attacco, riveli la tua posizione sia che l'attacco colpisca sia che manchi."
+    },
+    "grappling": {
+      "title": "Afferrare",
+      "short": "Una contesa di Forza (Atletica); il bersaglio diventa Afferrato.",
+      "full": "Usi l'azione di Attacco per effettuare un attacco speciale in mischia. Se puoi effettuare più attacchi con l'azione, questo ne sostituisce uno.\n\n- Il bersaglio deve essere al massimo una taglia più grande di te ed entro la tua portata.\n- Usando almeno una mano libera, effettui una prova di Forza (Atletica) contrapposta alla prova di Forza (Atletica) o di Destrezza (Acrobazia) del bersaglio (sceglie il bersaglio).\n- Se hai successo, il bersaglio è Afferrato. Puoi rilasciarlo quando vuoi (senza azione).\n\n**Liberarsi.** Una creatura afferrata può usare la sua azione per effettuare una prova di Forza (Atletica) o di Destrezza (Acrobazia) contrapposta alla tua prova di Forza (Atletica).\n\n**Spostare una creatura afferrata.** Puoi trascinarla o trasportarla con te, ma la tua velocità è dimezzata, a meno che la creatura non sia due o più taglie più piccola di te."
+    },
+    "shoving": {
+      "title": "Spingere una creatura",
+      "short": "Una contesa di Forza (Atletica); butta a terra o spingi di 5 piedi.",
+      "full": "Usi l'azione di Attacco per effettuare un attacco speciale in mischia. Se puoi effettuare più attacchi con l'azione, questo ne sostituisce uno.\n\nIl bersaglio deve essere al massimo una taglia più grande di te ed entro la tua portata. Invece di un tiro per colpire, effettui una prova di Forza (Atletica) contrapposta alla prova di Forza (Atletica) o di Destrezza (Acrobazia) del bersaglio (sceglie il bersaglio).\n\nSe vinci la contesa, o butti il bersaglio a terra (prono) o lo spingi a 5 piedi di distanza da te."
+    },
+    "about-conditions": {
+      "title": "Sulle condizioni",
+      "short": "Una creatura ha una condizione oppure no.",
+      "full": "Le condizioni alterano le capacità di una creatura. La maggior parte sono menomazioni; alcune, come invisibile, possono essere vantaggiose.\n\nUna condizione dura finché non viene neutralizzata (prono si neutralizza rialzandosi, ad esempio) o per la durata specificata dall'effetto.\n\nSe più effetti impongono la stessa condizione, ciascuno ha la propria durata, ma gli effetti della condizione non peggiorano."
+    },
+    "blinded": {
+      "title": "Accecato",
+      "short": "Non vede; gli attacchi contro di lui hanno Vantaggio.",
+      "full": "- Una creatura accecata non può vedere e fallisce automaticamente qualsiasi prova di caratteristica che richieda la vista.\n- I tiri per colpire contro la creatura hanno Vantaggio, e i tiri per colpire della creatura hanno Svantaggio."
+    },
+    "charmed": {
+      "title": "Affascinato",
+      "short": "Non può attaccare l'ammaliatore; l'ammaliatore ha Vantaggio nelle interazioni sociali.",
+      "full": "- Una creatura affascinata non può attaccare l'ammaliatore né prenderlo di mira con capacità dannose o effetti magici.\n- L'ammaliatore ha Vantaggio a qualsiasi prova di caratteristica per interagire socialmente con la creatura."
+    },
+    "deafened": {
+      "title": "Assordato",
+      "short": "Non sente; fallisce le prove che richiedono l'udito.",
+      "full": "- Una creatura assordata non può sentire e fallisce automaticamente qualsiasi prova di caratteristica che richieda l'udito."
+    },
+    "exhaustion": {
+      "title": "Esaurimento",
+      "short": "Sei livelli; ogni livello si somma a quelli inferiori.",
+      "full": "L'esaurimento si misura in sei livelli. Un effetto può dare a una creatura uno o più livelli.\n\n1. Svantaggio alle prove di caratteristica\n2. Velocità dimezzata\n3. Svantaggio ai tiri per colpire e ai tiri salvezza\n4. Massimo dei punti ferita dimezzato\n5. Velocità ridotta a 0\n6. Morte\n\nSe una creatura già esausta subisce un altro effetto che causa esaurimento, il suo livello aumenta del valore specificato dall'effetto. Una creatura subisce l'effetto del suo livello attuale e di tutti i livelli inferiori.\n\nUn effetto che rimuove l'esaurimento ne riduce il livello come specificato; tutti gli effetti terminano se il livello scende sotto 1. Terminare un riposo lungo riduce il livello di 1, purché la creatura abbia anche assunto un po' di cibo e bevande."
+    },
+    "frightened": {
+      "title": "Spaventato",
+      "short": "Svantaggio finché la fonte è in vista; non può avvicinarsi ad essa.",
+      "full": "- Una creatura spaventata ha Svantaggio alle prove di caratteristica e ai tiri per colpire finché la fonte della sua paura è in linea di vista.\n- La creatura non può avvicinarsi volontariamente alla fonte della sua paura."
+    },
+    "grappled": {
+      "title": "Afferrato",
+      "short": "Velocità 0.",
+      "full": "- La velocità di una creatura afferrata diventa 0 e non può beneficiare di alcun bonus alla sua velocità.\n- La condizione termina se chi afferra è incapacitato.\n- La condizione termina anche se un effetto rimuove la creatura afferrata dalla portata di chi afferra o dell'effetto che afferra, ad esempio quando una creatura viene scagliata via dall'incantesimo Onda Tonante."
+    },
+    "incapacitated": {
+      "title": "Incapacitato",
+      "short": "Non può compiere azioni né reazioni.",
+      "full": "- Una creatura incapacitata non può compiere azioni né reazioni."
+    },
+    "invisible": {
+      "title": "Invisibile",
+      "short": "Gli attacchi contro di lui hanno Svantaggio; i suoi attacchi hanno Vantaggio.",
+      "full": "- Una creatura invisibile è impossibile da vedere senza l'aiuto della magia o di un senso speciale. Ai fini del nascondersi, la creatura è pesantemente oscurata. La sua posizione può essere individuata da qualsiasi rumore che produce o da qualsiasi traccia che lascia.\n- I tiri per colpire contro la creatura hanno Svantaggio, e i tiri per colpire della creatura hanno Vantaggio."
+    },
+    "paralyzed": {
+      "title": "Paralizzato",
+      "short": "Incapacitato e immobile; i colpi in mischia sono colpi critici.",
+      "full": "- Una creatura paralizzata è incapacitata e non può muoversi né parlare.\n- La creatura fallisce automaticamente i tiri salvezza su Forza e Destrezza.\n- I tiri per colpire contro la creatura hanno Vantaggio.\n- Qualsiasi attacco che colpisce la creatura è un colpo critico se l'attaccante è entro 5 piedi da essa."
+    },
+    "petrified": {
+      "title": "Pietrificato",
+      "short": "Trasformato in pietra; incapacitato, resistente a tutti i danni.",
+      "full": "- Una creatura pietrificata viene trasformata, insieme a qualsiasi oggetto non magico che indossa o trasporta, in una sostanza solida inanimata (di solito pietra). Il suo peso aumenta di un fattore dieci e smette di invecchiare.\n- La creatura è incapacitata, non può muoversi né parlare e non è consapevole di ciò che la circonda.\n- I tiri per colpire contro la creatura hanno Vantaggio.\n- La creatura fallisce automaticamente i tiri salvezza su Forza e Destrezza.\n- La creatura ha resistenza a tutti i danni.\n- La creatura è immune a veleno e malattie, anche se un veleno o una malattia già presenti nel suo corpo sono sospesi, non neutralizzati."
+    },
+    "poisoned": {
+      "title": "Avvelenato",
+      "short": "Svantaggio ai tiri per colpire e alle prove di caratteristica.",
+      "full": "- Una creatura avvelenata ha Svantaggio ai tiri per colpire e alle prove di caratteristica."
+    },
+    "restrained": {
+      "title": "Trattenuto",
+      "short": "Velocità 0; gli attacchi contro di lui hanno Vantaggio.",
+      "full": "- La velocità di una creatura trattenuta diventa 0 e non può beneficiare di alcun bonus alla sua velocità.\n- I tiri per colpire contro la creatura hanno Vantaggio, e i tiri per colpire della creatura hanno Svantaggio.\n- La creatura ha Svantaggio ai tiri salvezza su Destrezza."
+    },
+    "stunned": {
+      "title": "Stordito",
+      "short": "Incapacitato e immobile; gli attacchi contro di lui hanno Vantaggio.",
+      "full": "- Una creatura stordita è incapacitata, non può muoversi e può parlare solo in modo esitante.\n- La creatura fallisce automaticamente i tiri salvezza su Forza e Destrezza.\n- I tiri per colpire contro la creatura hanno Vantaggio."
+    },
+    "unconscious": {
+      "title": "Privo di sensi",
+      "short": "Svenuto; lascia cadere ciò che tiene e cade prono.",
+      "full": "- Una creatura priva di sensi è incapacitata, non può muoversi né parlare e non è consapevole di ciò che la circonda.\n- La creatura lascia cadere ciò che tiene in mano e cade prona.\n- La creatura fallisce automaticamente i tiri salvezza su Forza e Destrezza.\n- I tiri per colpire contro la creatura hanno Vantaggio.\n- Qualsiasi attacco che colpisce la creatura è un colpo critico se l'attaccante è entro 5 piedi da essa."
+    },
+    "cover": {
+      "title": "Copertura",
+      "short": "+2 a CA e tiri salvezza su Destrezza per mezza copertura, +5 per tre quarti.",
+      "full": "Muri, alberi, creature e altri ostacoli possono fornire copertura. Un bersaglio beneficia della copertura solo quando un attacco o un effetto ha origine dal lato opposto ad essa.\n\nCi sono tre gradi di copertura. Se un bersaglio è dietro più fonti, si applica solo il grado più protettivo; non si sommano.\n\n- **Mezza copertura.** Bonus di +2 alla CA e ai tiri salvezza su Destrezza. Un ostacolo blocca almeno metà del corpo del bersaglio: un muretto, un grosso mobile, un tronco d'albero stretto, o una creatura, amica o nemica.\n- **Tre quarti di copertura.** Bonus di +5 alla CA e ai tiri salvezza su Destrezza. Circa tre quarti del bersaglio sono coperti: una saracinesca, una feritoia, un tronco d'albero spesso.\n- **Copertura totale.** Il bersaglio non può essere preso di mira direttamente da un attacco o da un incantesimo, anche se alcuni incantesimi possono raggiungerlo includendolo in un'area d'effetto. È completamente nascosto da un ostacolo."
+    },
+    "obscured-areas": {
+      "title": "Aree oscurate",
+      "short": "Scarsamente: Svantaggio alla Percezione visiva. Pesantemente: di fatto accecato.",
+      "full": "- **Scarsamente oscurata** (luce fioca, nebbia a chiazze, fogliame moderato): le creature hanno Svantaggio alle prove di Saggezza (Percezione) che si basano sulla vista.\n- **Pesantemente oscurata** (oscurità, nebbia opaca, fogliame denso): la vista è completamente bloccata. Una creatura che cerca di vedere qualcosa in quell'area è di fatto accecata."
+    },
+    "light": {
+      "title": "Luce",
+      "short": "Luce intensa, luce fioca e oscurità.",
+      "full": "- **La luce intensa** permette alla maggior parte delle creature di vedere normalmente. Anche le giornate cupe forniscono luce intensa, così come torce, lanterne e fuochi entro un raggio specifico.\n- **La luce fioca**, detta anche penombra, crea un'area scarsamente oscurata. Di solito è il confine tra una fonte di luce intensa e l'oscurità circostante. Crepuscolo, alba e una luna piena brillante contano come luce fioca.\n- **L'oscurità** crea un'area pesantemente oscurata: all'aperto di notte (anche la maggior parte delle notti di luna), in un dungeon non illuminato o in un'area di oscurità magica."
+    },
+    "special-senses": {
+      "title": "Vista cieca, scurovisione e visione del vero",
+      "short": "Ciò che una creatura può percepire senza la vista ordinaria.",
+      "full": "- **Vista cieca.** La creatura può percepire ciò che la circonda senza affidarsi alla vista, entro un raggio specifico.\n- **Scurovisione.** Entro una gittata specificata, la creatura vede nell'oscurità come se fosse luce fioca, quindi per lei l'oscurità è solo scarsamente oscurata. Non può distinguere i colori nell'oscurità, solo sfumature di grigio.\n- **Visione del vero.** Fino a una gittata specifica, la creatura vede nell'oscurità normale e magica, vede creature e oggetti invisibili, individua automaticamente le illusioni visive e supera i tiri salvezza contro di esse, percepisce la forma originale di un mutaforma o di una creatura trasformata dalla magia, e può vedere nel Piano Etereo."
+    },
+    "falling": {
+      "title": "Caduta",
+      "short": "1d6 danni contundenti ogni 10 piedi, fino a 20d6; atterri prono.",
+      "full": "Alla fine di una caduta, una creatura subisce 1d6 danni contundenti per ogni 10 piedi caduti, fino a un massimo di 20d6. La creatura atterra prona, a meno che non eviti di subire danni dalla caduta."
+    },
+    "suffocating": {
+      "title": "Soffocamento",
+      "short": "1 + mod. Cos minuti di fiato, poi un numero di round pari al mod. Cos.",
+      "full": "Una creatura può trattenere il respiro per un numero di minuti pari a 1 + il suo modificatore di Costituzione (minimo 30 secondi).\n\nQuando una creatura resta senza fiato o sta soffocando, può sopravvivere per un numero di round pari al suo modificatore di Costituzione (minimo 1 round). All'inizio del suo turno successivo, scende a 0 punti ferita e sta morendo, e non può recuperare punti ferita né essere stabilizzata finché non può respirare di nuovo.\n\nAd esempio, una creatura con Costituzione 14 può trattenere il respiro per 3 minuti. Se inizia a soffocare, ha 2 round per raggiungere l'aria prima di scendere a 0 punti ferita."
+    },
+    "underwater-combat": {
+      "title": "Combattimento subacqueo",
+      "short": "Attacchi in mischia e a distanza limitati; resistenza al fuoco.",
+      "full": "- Un attacco con arma da mischia effettuato da una creatura senza velocità di nuoto ha Svantaggio, a meno che l'arma non sia un pugnale, un giavellotto, una spada corta, una lancia o un tridente.\n- Un attacco con arma a distanza manca automaticamente un bersaglio oltre la gittata normale dell'arma. Anche entro la gittata normale ha Svantaggio, a meno che l'arma non sia una balestra, una rete o un'arma lanciata come un giavellotto (inclusi lancia, tridente o dardo).\n- Le creature e gli oggetti completamente immersi in acqua hanno resistenza ai danni da fuoco."
+    },
+    "food-and-water": {
+      "title": "Cibo e acqua",
+      "short": "Restarne privi causa esaurimento.",
+      "full": "L'esaurimento causato dalla mancanza di cibo o acqua non può essere rimosso finché il personaggio non mangia e beve l'intera quantità richiesta.\n\n**Cibo.** Un personaggio ha bisogno di 1 libbra di cibo al giorno; mezze razioni contano come mezza giornata senza cibo. Un personaggio può restare senza cibo per 3 + il suo modificatore di Costituzione giorni (minimo 1). Alla fine di ogni giorno oltre questo limite, subisce automaticamente un livello di esaurimento. Un giorno normale di pasti azzera il conteggio.\n\n**Acqua.** Un personaggio ha bisogno di 1 gallone d'acqua al giorno, o 2 galloni se il clima è caldo. Bere solo la metà richiede un tiro salvezza su Costituzione con CD 15 o un livello di esaurimento alla fine del giorno. Con ancora meno acqua si subisce automaticamente un livello. Se il personaggio ha già uno o più livelli di esaurimento, in entrambi i casi ne subisce due."
+    },
+    "dropping-to-0": {
+      "title": "Scendere a 0 punti ferita",
+      "short": "Muori sul colpo, oppure cadi privo di sensi.",
+      "full": "Quando scendi a 0 punti ferita, o muori sul colpo o cadi privo di sensi.\n\n**Morte istantanea.** Quando il danno ti riduce a 0 punti ferita e avanza del danno, muori se il danno rimanente uguaglia o supera il tuo massimo dei punti ferita.\n\n**Cadere privo di sensi.** Se il danno ti riduce a 0 punti ferita e non ti uccide, cadi privo di sensi. Questo termina se recuperi dei punti ferita.\n\n**Mostri.** La maggior parte dei DM fa morire un mostro nell'istante in cui scende a 0 punti ferita. Cattivi potenti e PNG speciali possono seguire le regole dei personaggi giocanti."
+    },
+    "death-saving-throws": {
+      "title": "Tiri salvezza contro morte",
+      "short": "Inizi il turno a 0 PF: tira un d20; 10 o più è un successo.",
+      "full": "Ogni volta che inizi il tuo turno con 0 punti ferita, effettua un tiro salvezza contro morte. Non è legato ad alcun punteggio di caratteristica.\n\nTira un d20. Con 10 o più hai successo; altrimenti fallisci. Tre successi ti rendono stabile; tre fallimenti e muori. Non devono essere consecutivi. Entrambi i conteggi si azzerano quando recuperi dei punti ferita o diventi stabile.\n\n- **Tirando un 1** conta come due fallimenti.\n- **Tirando un 20** recuperi 1 punto ferita.\n- **Il danno a 0 punti ferita** è un fallimento, o due se è un colpo critico. Se il danno uguaglia o supera il tuo massimo dei punti ferita, subisci morte istantanea."
+    },
+    "stabilizing": {
+      "title": "Stabilizzare una creatura",
+      "short": "Un'azione e una prova di Saggezza (Medicina) con CD 10.",
+      "full": "Il modo migliore per salvare una creatura a 0 punti ferita è curarla. In mancanza, puoi usare la tua azione per prestare i primi soccorsi a una creatura priva di sensi e tentare di stabilizzarla: una prova di Saggezza (Medicina) con CD 10 riuscita.\n\nUna creatura stabile non effettua tiri salvezza contro morte, anche se ha 0 punti ferita, ma resta priva di sensi. Smette di essere stabile, e ricomincia a effettuare tiri salvezza contro morte, se subisce qualsiasi danno. Una creatura stabile che non viene curata recupera 1 punto ferita dopo 1d4 ore."
+    },
+    "knocking-out": {
+      "title": "Mettere fuori combattimento una creatura",
+      "short": "Riducila a 0 PF in mischia e scegli di non ucciderla.",
+      "full": "Quando un attaccante riduce una creatura a 0 punti ferita con un attacco in mischia, può metterla fuori combattimento. L'attaccante compie questa scelta nell'istante in cui infligge il danno. La creatura cade priva di sensi ed è stabile."
+    },
+    "temporary-hit-points": {
+      "title": "Punti ferita temporanei",
+      "short": "Un cuscinetto che si perde per primo; non si sommano.",
+      "full": "I punti ferita temporanei non sono veri punti ferita: sono un cuscinetto contro il danno. Quando subisci danni, si perdono per primi, e l'eventuale danno residuo passa ai tuoi punti ferita normali.\n\n- Possono superare il tuo massimo dei punti ferita. La guarigione non può ripristinarli.\n- Non possono essere sommati. Se ne ricevi altri mentre ne hai già, decidi se tenere quelli che hai o ottenere i nuovi.\n- A 0 punti ferita non ti ridanno i sensi né ti stabilizzano, anche se assorbono comunque il danno.\n- A meno che la capacità che li concede abbia una durata, durano finché non sono esauriti o finché non termini un riposo lungo."
+    }
+  }
+}

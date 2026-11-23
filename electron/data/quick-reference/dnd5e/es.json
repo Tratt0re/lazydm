@@ -1,0 +1,325 @@
+{
+  "categories": {
+    "turn-order": "Orden de turnos",
+    "movement": "Movimiento",
+    "actions": "Acciones",
+    "bonus-actions": "Acciones adicionales",
+    "reactions": "Reacciones",
+    "attacks": "Ataques",
+    "conditions": "Condiciones",
+    "environment": "Entorno",
+    "dying": "Caer a 0 PG"
+  },
+  "rules": {
+    "your-turn": {
+      "title": "Tu turno",
+      "short": "Muévete hasta tu velocidad y realiza una acción.",
+      "full": "En tu turno puedes moverte una distancia de hasta tu velocidad y realizar una acción, en el orden que prefieras.\n\nAdemás, puedes interactuar con un objeto o elemento del entorno gratis, y comunicarte con breves frases y gestos. Una segunda interacción cuesta tu acción (Usar un objeto).\n\nPuedes renunciar a moverte, a actuar o a ambas cosas. Si no sabes qué hacer, considera la acción Esquivar o Preparar."
+    },
+    "initiative": {
+      "title": "Iniciativa",
+      "short": "Una prueba de Destreza fija el orden; el total más alto actúa primero.",
+      "full": "Cuando empieza el combate, cada participante hace una prueba de Destreza para determinar su lugar en el orden de iniciativa, del total más alto al más bajo. El orden se mantiene igual de ronda en ronda.\n\nEl DM hace una sola tirada para todo un grupo de criaturas idénticas, de modo que actúan juntas.\n\nEmpates: el DM decide entre las criaturas empatadas que controla, los jugadores entre sus propios personajes, y el DM cuando un monstruo empata con un personaje jugador. Opcionalmente, las criaturas empatadas tiran cada una un d20 y actúa primero la más alta."
+    },
+    "surprise": {
+      "title": "Sorpresa",
+      "short": "Una criatura sorprendida pierde su primer turno.",
+      "full": "Si ninguno de los bandos intenta ser sigiloso, se notan mutuamente. En caso contrario, el DM compara las pruebas de Destreza (Sigilo) de quienes se esconden con la Sabiduría (Percepción) pasiva de cada criatura del otro bando. Cualquier criatura que no note una amenaza está sorprendida al comienzo del encuentro.\n\nUna criatura sorprendida no puede moverse ni realizar una acción en su primer turno del combate, y no puede usar una reacción hasta que ese turno termine. Un miembro de un grupo puede estar sorprendido aunque los demás no lo estén."
+    },
+    "move": {
+      "title": "Moverse",
+      "short": "Hasta tu velocidad, repartido alrededor de tu acción.",
+      "full": "En tu turno puedes moverte hasta tu velocidad, usando tanto o tan poco de ella como quieras. Saltar, trepar y nadar forman parte de tu movimiento: resta la distancia de cada parte de tu velocidad hasta agotarla.\n\n- **Dividirlo.** Puedes moverte antes y después de tu acción. Con velocidad 30, puedes moverte 10 pies, actuar y luego moverte 20.\n- **Entre ataques.** Si tu acción incluye más de un ataque con arma, puedes moverte entre ellos.\n- **Más de una velocidad.** Cuando cambias entre velocidades (andar y volar, por ejemplo), resta la distancia ya recorrida de la nueva velocidad. Si el resultado es 0 o menos, no puedes usar esa velocidad en este movimiento."
+    },
+    "difficult-terrain": {
+      "title": "Terreno difícil",
+      "short": "Cada pie cuesta 1 pie adicional.",
+      "full": "Cada pie de movimiento en terreno difícil cuesta 1 pie adicional. Esto es así aunque varios elementos del espacio cuenten como terreno difícil.\n\nSon ejemplos el mobiliario bajo, los escombros, la maleza, las escaleras empinadas, la nieve y los pantanos poco profundos. El espacio de otra criatura, hostil o no, también cuenta como terreno difícil."
+    },
+    "prone": {
+      "title": "Derribado",
+      "short": "Solo puedes arrastrarte; desventaja al atacar; los atacantes cuerpo a cuerpo tienen ventaja.",
+      "full": "**Tirarse al suelo y levantarse**\n\n- Puedes tirarte al suelo sin gastar nada de tu velocidad.\n- Levantarte cuesta movimiento igual a la mitad de tu velocidad (15 pies con velocidad 30). No puedes levantarte si no te queda movimiento suficiente o si tu velocidad es 0.\n- Para moverte estando derribado debes arrastrarte (o usar magia, como el teletransporte). Cada pie arrastrándote cuesta 1 pie adicional, así que arrastrarte 1 pie en terreno difícil cuesta 3 pies.\n\n**Mientras estás derribado**\n\n- Tu única opción de movimiento es arrastrarte, a menos que te levantes y termines la condición.\n- Tienes desventaja en las tiradas de ataque.\n- Una tirada de ataque contra ti tiene ventaja si el atacante está a 5 pies o menos de ti. En caso contrario tiene desventaja."
+    },
+    "moving-around-creatures": {
+      "title": "Moverse entre criaturas",
+      "short": "Por aliados sí; por enemigos solo si son mucho más grandes o pequeños.",
+      "full": "- Puedes moverte por el espacio de una criatura no hostil.\n- Puedes moverte por el espacio de una criatura hostil solo si es al menos dos categorías de tamaño mayor o menor que tú.\n- El espacio de otra criatura es terreno difícil para ti.\n- Sea amiga o enemiga, no puedes terminar voluntariamente tu movimiento en su espacio.\n- Si sales del alcance de una criatura hostil durante tu movimiento, provocas un ataque de oportunidad."
+    },
+    "flying": {
+      "title": "Volar",
+      "short": "Un volador derribado o que no puede moverse cae.",
+      "full": "Si una criatura voladora es derribada, ve su velocidad reducida a 0 o queda privada de la capacidad de moverse, cae, salvo que pueda flotar o esté sostenida en el aire por magia, como el conjuro volar."
+    },
+    "squeezing": {
+      "title": "Apretarse en un espacio menor",
+      "short": "Una categoría de tamaño menos; cuesta más y da penalizador.",
+      "full": "Una criatura puede apretarse por un espacio lo bastante grande para una criatura una categoría de tamaño menor que ella. Una criatura Grande puede apretarse por un pasaje de solo 5 pies de ancho.\n\nMientras se aprieta, una criatura gasta 1 pie adicional por cada pie que se mueve allí, tiene desventaja en las tiradas de ataque y en las tiradas de salvación de Destreza, y las tiradas de ataque contra ella tienen ventaja."
+    },
+    "creature-size": {
+      "title": "Tamaño y espacio de las criaturas",
+      "short": "El espacio que una criatura controla en combate.",
+      "full": "El espacio de una criatura es el área en pies que controla efectivamente en combate, no una expresión de su tamaño físico.\n\n- Diminuta: 2½ por 2½ pies\n- Pequeña: 5 por 5 pies\n- Mediana: 5 por 5 pies\n- Grande: 10 por 10 pies\n- Enorme: 15 por 15 pies\n- Gargantuesca: 20 por 20 pies o más\n\nOcho criaturas Medianas caben en el radio de 5 pies alrededor de otra; hasta veinte pueden rodear a una criatura Gargantuesca."
+    },
+    "attack-action": {
+      "title": "Atacar",
+      "short": "Realiza un ataque cuerpo a cuerpo o a distancia.",
+      "full": "Con esta acción realizas un ataque cuerpo a cuerpo o a distancia, ya sea que blandas una espada, dispares un arco o pelees con los puños.\n\nCiertas características, como el Ataque adicional del guerrero, te permiten realizar más de un ataque con esta acción."
+    },
+    "cast-a-spell": {
+      "title": "Lanzar un conjuro",
+      "short": "No siempre es una acción: mira el tiempo de lanzamiento.",
+      "full": "Cada conjuro tiene un tiempo de lanzamiento: una acción, una reacción, minutos o incluso horas. Por tanto, lanzar un conjuro no es necesariamente una acción.\n\nLa mayoría de los conjuros tienen un tiempo de lanzamiento de 1 acción, así que un lanzador de conjuros suele usar su acción para lanzar uno."
+    },
+    "dash": {
+      "title": "Correr",
+      "short": "Ganas movimiento adicional igual a tu velocidad.",
+      "full": "Ganas movimiento adicional durante el turno actual igual a tu velocidad, después de aplicar cualquier modificador. Con una velocidad de 30 pies puedes moverte hasta 60 pies en tu turno si corres.\n\nCualquier aumento o reducción de tu velocidad cambia este movimiento adicional en la misma cantidad. Si tu velocidad de 30 pies se reduce a 15 pies, puedes moverte hasta 30 pies si corres."
+    },
+    "disengage": {
+      "title": "Retirarse",
+      "short": "Tu movimiento no provoca ataques de oportunidad este turno.",
+      "full": "Tu movimiento no provoca ataques de oportunidad durante el resto del turno."
+    },
+    "dodge": {
+      "title": "Esquivar",
+      "short": "Los ataques contra ti tienen desventaja; salvaciones de Destreza con ventaja.",
+      "full": "Hasta el comienzo de tu siguiente turno, cualquier tirada de ataque contra ti tiene desventaja si puedes ver al atacante, y haces las tiradas de salvación de Destreza con ventaja.\n\nPierdes este beneficio si estás incapacitado o si tu velocidad baja a 0."
+    },
+    "help": {
+      "title": "Ayudar",
+      "short": "Da a un aliado ventaja en una tarea o en un ataque.",
+      "full": "**Una tarea.** La criatura a la que ayudas tiene ventaja en la siguiente prueba de característica que haga para realizar la tarea, siempre que la haga antes del comienzo de tu siguiente turno.\n\n**Un ataque.** Ayudas a una criatura amistosa que ataca a una criatura a 5 pies o menos de ti (finta, distraes al objetivo o colaboras de otro modo). Si tu aliado ataca a ese objetivo antes de tu siguiente turno, la primera tirada de ataque se hace con ventaja."
+    },
+    "hide": {
+      "title": "Esconderse",
+      "short": "Una prueba de Destreza (Sigilo) para pasar desapercibido.",
+      "full": "Haces una prueba de Destreza (Sigilo) para intentar esconderte, siguiendo las reglas para esconderse. Si tienes éxito, obtienes los beneficios descritos en Atacantes y objetivos no vistos."
+    },
+    "ready": {
+      "title": "Preparar",
+      "short": "Elige un desencadenante y una respuesta; usa tu reacción cuando ocurra.",
+      "full": "Te preparas para actuar usando tu reacción antes del comienzo de tu siguiente turno.\n\n1. Decide qué circunstancia perceptible desencadenará tu reacción.\n2. Elige la acción que realizarás en respuesta, o moverte hasta tu velocidad.\n\nCuando ocurre el desencadenante, puedes usar tu reacción justo después de que termine, o ignorarlo. Solo puedes usar una reacción por ronda.\n\n**Preparar un conjuro.** El conjuro debe tener un tiempo de lanzamiento de 1 acción. Lo lanzas normalmente pero retienes su energía, que liberas con tu reacción. Mantenerlo requiere concentración: si tu concentración se rompe, el conjuro se disipa sin efecto, y un conjuro en el que ya estuvieras concentrado termina."
+    },
+    "search": {
+      "title": "Buscar",
+      "short": "Dedicas tu atención a encontrar algo.",
+      "full": "Dedicas tu atención a encontrar algo. Según la naturaleza de la búsqueda, el DM puede pedirte una prueba de Sabiduría (Percepción) o de Inteligencia (Investigación)."
+    },
+    "use-an-object": {
+      "title": "Usar un objeto",
+      "short": "Cuando un objeto requiere tu acción, o para una segunda interacción.",
+      "full": "Normalmente interactúas con un objeto mientras haces otra cosa, como desenvainar una espada como parte de un ataque. Cuando un objeto requiere tu acción para usarse, realizas la acción Usar un objeto.\n\nEsta acción también es la forma de interactuar con más de un objeto en tu turno."
+    },
+    "free-interaction": {
+      "title": "Interactuar con objetos",
+      "short": "Una interacción gratis por turno; más cuestan tu acción.",
+      "full": "Puedes interactuar con un objeto o elemento del entorno gratis, durante tu movimiento o tu acción: desenvainar o envainar una espada, abrir o cerrar una puerta, recoger un hacha caída, accionar una palanca, tomar un libro de una estantería, entregar un objeto a otro personaje.\n\nUna segunda interacción necesita tu acción (Usar un objeto). Algunos objetos mágicos y objetos especiales requieren siempre una acción. El DM también puede exigir una acción para todo lo que requiera un cuidado especial, como una puerta atascada o la manivela de un puente levadizo."
+    },
+    "improvise": {
+      "title": "Improvisar",
+      "short": "Descríbelo; el DM dice si funciona y qué tirar.",
+      "full": "En tu acción puedes realizar una de las acciones de las reglas, una acción de tu clase o de una característica especial, o una acción que improvises.\n\nCuando describes una acción no detallada en otra parte de las reglas, el DM te dice si es posible y qué tipo de tirada necesitas hacer, si hace falta alguna."
+    },
+    "bonus-action": {
+      "title": "Acción adicional",
+      "short": "Una por turno, y solo si algo te la concede.",
+      "full": "Solo puedes realizar una acción adicional cuando una característica de clase, un conjuro u otra habilidad dice que puedes hacer algo como acción adicional (la Acción astuta del pícaro, por ejemplo). En caso contrario no tienes una.\n\n- Solo puedes realizar una acción adicional en tu turno, así que elige cuál si tienes más de una.\n- Eliges cuándo realizarla durante tu turno, a menos que se especifique el momento.\n- Todo lo que te prive de la capacidad de realizar acciones también te impide realizar una acción adicional."
+    },
+    "two-weapon-fighting": {
+      "title": "Combatir con dos armas",
+      "short": "Ataque adicional con un segundo arma ligera; sin modificador de característica.",
+      "full": "Cuando realizas la acción Atacar y atacas con un arma cuerpo a cuerpo ligera que sostienes en una mano, puedes usar una acción adicional para atacar con otra arma cuerpo a cuerpo ligera que sostengas en la otra mano.\n\nNo añades tu modificador de característica al daño del ataque adicional, salvo que ese modificador sea negativo.\n\nSi cualquiera de las armas tiene la propiedad arrojadiza, puedes lanzarla en lugar de hacer un ataque cuerpo a cuerpo con ella."
+    },
+    "reaction": {
+      "title": "Reacción",
+      "short": "Una respuesta instantánea a un desencadenante; una por ronda.",
+      "full": "Una reacción es una respuesta instantánea a un desencadenante de algún tipo, que puede ocurrir en tu turno o en el de otro. El ataque de oportunidad es la más común.\n\n- Cuando usas una reacción, no puedes usar otra hasta el comienzo de tu siguiente turno.\n- Si la reacción interrumpe el turno de otra criatura, esa criatura puede continuar su turno justo después de la reacción.\n- Una criatura sorprendida no puede usar una reacción hasta que termine su primer turno."
+    },
+    "opportunity-attack": {
+      "title": "Ataque de oportunidad",
+      "short": "Un ataque cuerpo a cuerpo, como reacción, contra un enemigo que sale de tu alcance.",
+      "full": "Puedes realizar un ataque de oportunidad cuando una criatura hostil que puedes ver sale de tu alcance. Usas tu reacción para hacer un ataque cuerpo a cuerpo contra ella. El ataque se produce justo antes de que la criatura salga de tu alcance.\n\nPuedes evitar provocar uno realizando la acción Retirarse. Tampoco provocas uno cuando te teletransportas, ni cuando alguien o algo te mueve sin usar tu movimiento, acción o reacción (una explosión te lanza fuera del alcance de un enemigo, o caes junto a un enemigo)."
+    },
+    "making-an-attack": {
+      "title": "Realizar un ataque",
+      "short": "Elige un objetivo, determina los modificadores, resuélvelo.",
+      "full": "1. **Elige un objetivo** dentro del alcance de tu ataque: una criatura, un objeto o un lugar.\n2. **Determina los modificadores.** El DM decide si el objetivo tiene cobertura y si tienes ventaja o desventaja. Los conjuros, habilidades especiales y otros efectos pueden aplicar penalizadores o bonificadores.\n3. **Resuelve el ataque.** Haz la tirada de ataque. Si impacta, tira el daño, salvo que el ataque indique otra cosa.\n\nSi haces una tirada de ataque, estás realizando un ataque."
+    },
+    "attack-rolls": {
+      "title": "Tiradas de ataque",
+      "short": "Un d20 más modificadores contra la CA del objetivo.",
+      "full": "Tira un d20 y suma los modificadores. Si el total iguala o supera la Clase de Armadura (CA) del objetivo, el ataque impacta.\n\n- **Modificador de característica.** Fuerza para un arma cuerpo a cuerpo, Destreza para un arma a distancia (las armas sutiles y arrojadizas rompen esta regla). Un ataque de conjuro usa la característica de lanzamiento de conjuros del lanzador.\n- **Bonificador de competencia.** Súmalo cuando atacas con un arma con la que eres competente, y con los ataques de conjuro.\n- **Sacar un 20.** El ataque impacta sin importar los modificadores ni la CA, y es un golpe crítico.\n- **Sacar un 1.** El ataque falla sin importar los modificadores ni la CA."
+    },
+    "melee-attacks": {
+      "title": "Ataques cuerpo a cuerpo",
+      "short": "El alcance suele ser 5 pies; un ataque desarmado hace 1 + Fuerza.",
+      "full": "Un ataque cuerpo a cuerpo impacta a un enemigo dentro de tu alcance. La mayoría de las criaturas tienen un alcance de 5 pies; algunas (normalmente mayores que Medianas) tienen un alcance mayor, como indican sus descripciones.\n\nEn lugar de un arma puedes usar un ataque desarmado: un puñetazo, patada, cabezazo o golpe similar. Si impacta, causa daño contundente igual a 1 + tu modificador de Fuerza, y eres competente con él."
+    },
+    "ranged-attacks": {
+      "title": "Ataques a distancia",
+      "short": "Alcance normal, luego alcance largo con desventaja.",
+      "full": "Solo puedes realizar ataques a distancia contra objetivos dentro del alcance. Un alcance único es un límite estricto.\n\nAlgunas armas, como el arco largo o el arco corto, tienen dos alcances: el número menor es el alcance normal, el mayor es el alcance largo. Tu tirada de ataque tiene desventaja cuando el objetivo está más allá del alcance normal, y no puedes atacar a un objetivo más allá del alcance largo."
+    },
+    "ranged-in-melee": {
+      "title": "Ataque a distancia junto a un enemigo",
+      "short": "Desventaja a 5 pies o menos de un hostil que puede verte.",
+      "full": "Cuando realizas un ataque a distancia con un arma, un conjuro o cualquier otro medio, tienes desventaja en la tirada de ataque si estás a 5 pies o menos de una criatura hostil que puede verte y que no está incapacitada."
+    },
+    "unseen-attackers": {
+      "title": "Atacantes y objetivos no vistos",
+      "short": "Si no lo ves: desventaja. Si no te ve: ventaja.",
+      "full": "- Cuando atacas a un objetivo que no puedes ver, tienes desventaja en la tirada de ataque. Esto es así tanto si adivinas la ubicación del objetivo como si apuntas a una criatura que oyes pero no ves.\n- Si el objetivo no está en el lugar al que apuntaste, fallas automáticamente, pero el DM normalmente solo dice que el ataque falló, no si adivinaste bien.\n- Cuando una criatura no puede verte, tienes ventaja en las tiradas de ataque contra ella.\n- Si estás oculto (ni visto ni oído) cuando realizas un ataque, delatas tu posición tanto si el ataque impacta como si falla."
+    },
+    "grappling": {
+      "title": "Agarrar",
+      "short": "Una confrontación de Fuerza (Atletismo); el objetivo queda Agarrado.",
+      "full": "Usas la acción Atacar para realizar un ataque cuerpo a cuerpo especial. Si puedes hacer varios ataques con la acción, esto sustituye a uno de ellos.\n\n- El objetivo debe ser como máximo una categoría de tamaño mayor que tú y estar dentro de tu alcance.\n- Usando al menos una mano libre, haces una prueba de Fuerza (Atletismo) enfrentada a la prueba de Fuerza (Atletismo) o Destreza (Acrobacias) del objetivo (el objetivo elige).\n- Si tienes éxito, el objetivo queda Agarrado. Puedes soltarlo cuando quieras (sin acción).\n\n**Escapar.** Una criatura agarrada puede usar su acción para hacer una prueba de Fuerza (Atletismo) o Destreza (Acrobacias) enfrentada a tu prueba de Fuerza (Atletismo).\n\n**Mover a una criatura agarrada.** Puedes arrastrarla o llevarla contigo, pero tu velocidad se reduce a la mitad, salvo que la criatura sea dos o más categorías de tamaño menor que tú."
+    },
+    "shoving": {
+      "title": "Empujar a una criatura",
+      "short": "Una confrontación de Fuerza (Atletismo); derribarla o empujarla 5 pies.",
+      "full": "Usas la acción Atacar para realizar un ataque cuerpo a cuerpo especial. Si puedes hacer varios ataques con la acción, esto sustituye a uno de ellos.\n\nEl objetivo debe ser como máximo una categoría de tamaño mayor que tú y estar dentro de tu alcance. En lugar de una tirada de ataque, haces una prueba de Fuerza (Atletismo) enfrentada a la prueba de Fuerza (Atletismo) o Destreza (Acrobacias) del objetivo (el objetivo elige).\n\nSi ganas la confrontación, o derribas al objetivo o lo empujas 5 pies lejos de ti."
+    },
+    "about-conditions": {
+      "title": "Sobre las condiciones",
+      "short": "Una criatura tiene una condición o no la tiene.",
+      "full": "Las condiciones alteran las capacidades de una criatura. La mayoría son perjuicios; unas pocas, como invisible, pueden ser ventajosas.\n\nUna condición dura hasta que se contrarresta (derribado se contrarresta levantándose, por ejemplo) o durante la duración que especifique el efecto.\n\nSi varios efectos imponen la misma condición, cada uno tiene su propia duración, pero los efectos de la condición no empeoran."
+    },
+    "blinded": {
+      "title": "Cegado",
+      "short": "No puede ver; los ataques contra él tienen ventaja.",
+      "full": "- Una criatura cegada no puede ver y falla automáticamente cualquier prueba de característica que requiera la vista.\n- Las tiradas de ataque contra la criatura tienen ventaja, y las tiradas de ataque de la criatura tienen desventaja."
+    },
+    "charmed": {
+      "title": "Hechizado",
+      "short": "No puede atacar a quien lo hechiza; este tiene ventaja en lo social.",
+      "full": "- Una criatura hechizada no puede atacar a quien la hechizó ni elegirlo como objetivo de habilidades dañinas o efectos mágicos.\n- Quien hechizó a la criatura tiene ventaja en cualquier prueba de característica para interactuar socialmente con ella."
+    },
+    "deafened": {
+      "title": "Ensordecido",
+      "short": "No puede oír; falla las pruebas que requieren oído.",
+      "full": "- Una criatura ensordecida no puede oír y falla automáticamente cualquier prueba de característica que requiera el oído."
+    },
+    "exhaustion": {
+      "title": "Agotamiento",
+      "short": "Seis niveles; cada nivel se suma a los anteriores.",
+      "full": "El agotamiento se mide en seis niveles. Un efecto puede dar a una criatura uno o más niveles.\n\n1. Desventaja en las pruebas de característica\n2. Velocidad reducida a la mitad\n3. Desventaja en las tiradas de ataque y las tiradas de salvación\n4. Máximo de puntos de golpe reducido a la mitad\n5. Velocidad reducida a 0\n6. Muerte\n\nSi una criatura ya agotada sufre otro efecto que cause agotamiento, su nivel aumenta en la cantidad que el efecto especifique. Una criatura sufre el efecto de su nivel actual y de todos los niveles inferiores.\n\nUn efecto que elimina el agotamiento reduce su nivel según se especifique; todos los efectos terminan si el nivel baja de 1. Terminar un descanso largo reduce el nivel en 1, siempre que la criatura también haya comido y bebido algo."
+    },
+    "frightened": {
+      "title": "Asustado",
+      "short": "Desventaja mientras la fuente está a la vista; no puede acercarse a ella.",
+      "full": "- Una criatura asustada tiene desventaja en las pruebas de característica y en las tiradas de ataque mientras la fuente de su miedo esté dentro de su línea de visión.\n- La criatura no puede acercarse voluntariamente a la fuente de su miedo."
+    },
+    "grappled": {
+      "title": "Agarrado",
+      "short": "Velocidad 0.",
+      "full": "- La velocidad de una criatura agarrada pasa a ser 0, y no puede beneficiarse de ningún bonificador a su velocidad.\n- La condición termina si quien agarra queda incapacitado.\n- La condición también termina si un efecto saca a la criatura agarrada del alcance de quien la agarra o del efecto de agarre, como cuando una criatura sale despedida por el conjuro onda atronadora."
+    },
+    "incapacitated": {
+      "title": "Incapacitado",
+      "short": "No puede realizar acciones ni reacciones.",
+      "full": "- Una criatura incapacitada no puede realizar acciones ni reacciones."
+    },
+    "invisible": {
+      "title": "Invisible",
+      "short": "Los ataques contra ella tienen desventaja; sus ataques tienen ventaja.",
+      "full": "- Una criatura invisible es imposible de ver sin ayuda de magia o de un sentido especial. A efectos de esconderse, la criatura está muy oscurecida. Su ubicación puede detectarse por cualquier ruido que haga o rastro que deje.\n- Las tiradas de ataque contra la criatura tienen desventaja, y las tiradas de ataque de la criatura tienen ventaja."
+    },
+    "paralyzed": {
+      "title": "Paralizado",
+      "short": "Incapacitado y no puede moverse; los impactos cuerpo a cuerpo son críticos.",
+      "full": "- Una criatura paralizada está incapacitada y no puede moverse ni hablar.\n- La criatura falla automáticamente las tiradas de salvación de Fuerza y Destreza.\n- Las tiradas de ataque contra la criatura tienen ventaja.\n- Cualquier ataque que impacte a la criatura es un golpe crítico si el atacante está a 5 pies o menos de ella."
+    },
+    "petrified": {
+      "title": "Petrificado",
+      "short": "Convertido en piedra; incapacitado, resistente a todo el daño.",
+      "full": "- Una criatura petrificada se transforma, junto con cualquier objeto no mágico que lleve puesto o porte, en una sustancia sólida e inanimada (normalmente piedra). Su peso se multiplica por diez y deja de envejecer.\n- La criatura está incapacitada, no puede moverse ni hablar, y no es consciente de lo que la rodea.\n- Las tiradas de ataque contra la criatura tienen ventaja.\n- La criatura falla automáticamente las tiradas de salvación de Fuerza y Destreza.\n- La criatura tiene resistencia a todo el daño.\n- La criatura es inmune al veneno y a las enfermedades, aunque un veneno o enfermedad que ya tuviera en el organismo queda suspendido, no neutralizado."
+    },
+    "poisoned": {
+      "title": "Envenenado",
+      "short": "Desventaja en las tiradas de ataque y las pruebas de característica.",
+      "full": "- Una criatura envenenada tiene desventaja en las tiradas de ataque y en las pruebas de característica."
+    },
+    "restrained": {
+      "title": "Apresado",
+      "short": "Velocidad 0; los ataques contra él tienen ventaja.",
+      "full": "- La velocidad de una criatura apresada pasa a ser 0, y no puede beneficiarse de ningún bonificador a su velocidad.\n- Las tiradas de ataque contra la criatura tienen ventaja, y las tiradas de ataque de la criatura tienen desventaja.\n- La criatura tiene desventaja en las tiradas de salvación de Destreza."
+    },
+    "stunned": {
+      "title": "Aturdido",
+      "short": "Incapacitado y no puede moverse; los ataques contra él tienen ventaja.",
+      "full": "- Una criatura aturdida está incapacitada, no puede moverse y solo puede hablar con titubeos.\n- La criatura falla automáticamente las tiradas de salvación de Fuerza y Destreza.\n- Las tiradas de ataque contra la criatura tienen ventaja."
+    },
+    "unconscious": {
+      "title": "Inconsciente",
+      "short": "Fuera de combate; suelta lo que sostiene y queda derribado.",
+      "full": "- Una criatura inconsciente está incapacitada, no puede moverse ni hablar, y no es consciente de lo que la rodea.\n- La criatura suelta lo que sostenga y queda derribada.\n- La criatura falla automáticamente las tiradas de salvación de Fuerza y Destreza.\n- Las tiradas de ataque contra la criatura tienen ventaja.\n- Cualquier ataque que impacte a la criatura es un golpe crítico si el atacante está a 5 pies o menos de ella."
+    },
+    "cover": {
+      "title": "Cobertura",
+      "short": "+2 a CA y salvaciones de Destreza (media), +5 (tres cuartos).",
+      "full": "Muros, árboles, criaturas y otros obstáculos pueden proporcionar cobertura. Un objetivo se beneficia de la cobertura solo cuando un ataque o efecto se origina en el lado opuesto del obstáculo.\n\nHay tres grados de cobertura. Si un objetivo está detrás de varias fuentes, solo se aplica el grado más protector; no se suman.\n\n- **Cobertura media.** Bonificador de +2 a la CA y a las tiradas de salvación de Destreza. Un obstáculo bloquea al menos la mitad del cuerpo del objetivo: un muro bajo, un mueble grande, un tronco estrecho o una criatura, amiga o enemiga.\n- **Cobertura de tres cuartos.** Bonificador de +5 a la CA y a las tiradas de salvación de Destreza. Aproximadamente tres cuartos del objetivo están cubiertos: un rastrillo, una aspillera, un tronco grueso.\n- **Cobertura total.** El objetivo no puede ser elegido directamente por un ataque o conjuro, aunque algunos conjuros pueden alcanzarlo al incluirlo en un área de efecto. Está completamente oculto por un obstáculo."
+    },
+    "obscured-areas": {
+      "title": "Áreas oscurecidas",
+      "short": "Ligeramente: desventaja en Percepción visual. Muy oscurecida: efectivamente cegado.",
+      "full": "- **Ligeramente oscurecida** (luz tenue, niebla irregular, follaje moderado): las criaturas tienen desventaja en las pruebas de Sabiduría (Percepción) que dependan de la vista.\n- **Muy oscurecida** (oscuridad, niebla opaca, follaje denso): la visión queda bloqueada por completo. Una criatura que intenta ver algo en esa área está efectivamente cegada."
+    },
+    "light": {
+      "title": "Luz",
+      "short": "Luz brillante, luz tenue y oscuridad.",
+      "full": "- **La luz brillante** permite a la mayoría de las criaturas ver con normalidad. Incluso los días nublados proporcionan luz brillante, igual que las antorchas, linternas y hogueras dentro de un radio concreto.\n- **La luz tenue**, también llamada sombra, crea un área ligeramente oscurecida. Suele ser el límite entre una fuente de luz brillante y la oscuridad circundante. El crepúsculo, el amanecer y una luna llena brillante cuentan como luz tenue.\n- **La oscuridad** crea un área muy oscurecida: al aire libre de noche (incluso la mayoría de las noches de luna), en una mazmorra sin luz o en un área de oscuridad mágica."
+    },
+    "special-senses": {
+      "title": "Vista ciega, visión en la oscuridad y visión verdadera",
+      "short": "Lo que una criatura percibe sin la vista normal.",
+      "full": "- **Vista ciega.** La criatura puede percibir su entorno sin depender de la vista, dentro de un radio concreto.\n- **Visión en la oscuridad.** Dentro de un alcance especificado, la criatura ve en la oscuridad como si fuera luz tenue, así que para ella la oscuridad solo está ligeramente oscurecida. No distingue los colores en la oscuridad, solo tonos de gris.\n- **Visión verdadera.** Hasta un alcance concreto, la criatura ve en la oscuridad normal y mágica, ve criaturas y objetos invisibles, detecta automáticamente las ilusiones visuales y supera las tiradas de salvación contra ellas, percibe la forma original de un cambiaformas o de una criatura transformada por magia, y puede ver en el Plano Etéreo."
+    },
+    "falling": {
+      "title": "Caída",
+      "short": "1d6 contundente por cada 10 pies, hasta 20d6; caes derribado.",
+      "full": "Al final de una caída, una criatura sufre 1d6 de daño contundente por cada 10 pies que haya caído, hasta un máximo de 20d6. La criatura cae derribada, salvo que evite sufrir daño por la caída."
+    },
+    "suffocating": {
+      "title": "Asfixia",
+      "short": "1 + mod. de Con minutos de aliento, luego mod. de Con rondas.",
+      "full": "Una criatura puede contener la respiración durante un número de minutos igual a 1 + su modificador de Constitución (mínimo 30 segundos).\n\nCuando una criatura se queda sin aliento o se está ahogando, puede sobrevivir un número de rondas igual a su modificador de Constitución (mínimo 1 ronda). Al comienzo de su siguiente turno, cae a 0 puntos de golpe y está muriendo, y no puede recuperar puntos de golpe ni ser estabilizada hasta que pueda respirar de nuevo.\n\nPor ejemplo, una criatura con Constitución 14 puede contener la respiración 3 minutos. Si empieza a asfixiarse, tiene 2 rondas para llegar al aire antes de caer a 0 puntos de golpe."
+    },
+    "underwater-combat": {
+      "title": "Combate bajo el agua",
+      "short": "Los ataques cuerpo a cuerpo y a distancia están limitados; resistencia al fuego.",
+      "full": "- Un ataque con arma cuerpo a cuerpo de una criatura sin velocidad de nado tiene desventaja, salvo que el arma sea una daga, jabalina, espada corta, lanza o tridente.\n- Un ataque con arma a distancia falla automáticamente contra un objetivo más allá del alcance normal del arma. Incluso dentro del alcance normal, tiene desventaja salvo que el arma sea una ballesta, una red o un arma arrojadiza como una jabalina (incluidas lanza, tridente o dardo).\n- Las criaturas y objetos totalmente sumergidos en agua tienen resistencia al daño de fuego."
+    },
+    "food-and-water": {
+      "title": "Comida y agua",
+      "short": "Pasar sin ellas causa agotamiento.",
+      "full": "El agotamiento causado por falta de comida o agua no puede eliminarse hasta que el personaje coma y beba la cantidad completa necesaria.\n\n**Comida.** Un personaje necesita 1 libra de comida al día; media ración cuenta como medio día sin comida. Un personaje puede pasar sin comida 3 + su modificador de Constitución días (mínimo 1). Al final de cada día posterior, sufre automáticamente un nivel de agotamiento. Un día normal comiendo reinicia la cuenta.\n\n**Agua.** Un personaje necesita 1 galón de agua al día, o 2 galones si hace calor. Beber solo la mitad requiere una tirada de salvación de Constitución CD 15 o sufrir un nivel de agotamiento al final del día. Si bebe aún menos, sufre un nivel automáticamente. Si el personaje ya tiene uno o más niveles de agotamiento, sufre dos niveles en cualquiera de los dos casos."
+    },
+    "dropping-to-0": {
+      "title": "Caer a 0 puntos de golpe",
+      "short": "Mueres en el acto, o caes inconsciente.",
+      "full": "Cuando caes a 0 puntos de golpe, o mueres en el acto o caes inconsciente.\n\n**Muerte instantánea.** Cuando el daño te reduce a 0 puntos de golpe y sobra daño, mueres si el daño restante iguala o supera tu máximo de puntos de golpe.\n\n**Caer inconsciente.** Si el daño te reduce a 0 puntos de golpe y no te mata, caes inconsciente. Esto termina si recuperas cualquier punto de golpe.\n\n**Monstruos.** La mayoría de los DM hacen que un monstruo muera en el instante en que cae a 0 puntos de golpe. Los villanos poderosos y los PNJ especiales pueden seguir las reglas de los personajes jugadores."
+    },
+    "death-saving-throws": {
+      "title": "Tiradas de salvación contra muerte",
+      "short": "Empiezas tu turno a 0 PG: tira un d20; 10 o más es un éxito.",
+      "full": "Siempre que empieces tu turno con 0 puntos de golpe, haz una tirada de salvación contra muerte. No está ligada a ninguna puntuación de característica.\n\nTira un d20. Con 10 o más tienes éxito; en caso contrario, fallas. Tres éxitos te estabilizan; con tres fallos mueres. No tienen que ser consecutivos. Ambas cuentas se reinician cuando recuperas cualquier punto de golpe o te estabilizas.\n\n- **Sacar un 1** cuenta como dos fallos.\n- **Sacar un 20** recuperas 1 punto de golpe.\n- **El daño a 0 puntos de golpe** es un fallo, o dos si es un golpe crítico. Si el daño iguala o supera tu máximo de puntos de golpe, sufres muerte instantánea."
+    },
+    "stabilizing": {
+      "title": "Estabilizar a una criatura",
+      "short": "Una acción y una prueba de Sabiduría (Medicina) CD 10.",
+      "full": "La mejor manera de salvar a una criatura con 0 puntos de golpe es curarla. Si no es posible, puedes usar tu acción para administrar primeros auxilios a una criatura inconsciente e intentar estabilizarla: una prueba de Sabiduría (Medicina) CD 10 con éxito.\n\nUna criatura estable no hace tiradas de salvación contra muerte, aunque tenga 0 puntos de golpe, pero sigue inconsciente. Deja de estar estable, y vuelve a hacer tiradas de salvación contra muerte, si sufre cualquier daño. Una criatura estable que no es curada recupera 1 punto de golpe tras 1d4 horas."
+    },
+    "knocking-out": {
+      "title": "Dejar inconsciente a una criatura",
+      "short": "Redúcela a 0 PG cuerpo a cuerpo y elige no matarla.",
+      "full": "Cuando un atacante reduce a una criatura a 0 puntos de golpe con un ataque cuerpo a cuerpo, el atacante puede dejarla inconsciente. El atacante toma esta decisión en el instante en que se inflige el daño. La criatura cae inconsciente y está estable."
+    },
+    "temporary-hit-points": {
+      "title": "Puntos de golpe temporales",
+      "short": "Un colchón que se pierde primero; no se acumulan.",
+      "full": "Los puntos de golpe temporales no son puntos de golpe reales: son un colchón contra el daño. Cuando sufres daño, se pierden primero, y el daño sobrante pasa a tus puntos de golpe normales.\n\n- Pueden superar tu máximo de puntos de golpe. La curación no puede restaurarlos.\n- No pueden sumarse. Si recibes más mientras tienes algunos, decides si conservas los que tienes o ganas los nuevos.\n- A 0 puntos de golpe no te devuelven la consciencia ni te estabilizan, aunque siguen absorbiendo daño.\n- Salvo que la característica que los concede tenga una duración, duran hasta agotarse o hasta que termines un descanso largo."
+    }
+  }
+}

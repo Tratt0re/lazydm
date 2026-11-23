@@ -1,0 +1,325 @@
+{
+  "categories": {
+    "turn-order": "Ordre du tour",
+    "movement": "Déplacement",
+    "actions": "Actions",
+    "bonus-actions": "Actions bonus",
+    "reactions": "Réactions",
+    "attacks": "Attaques",
+    "conditions": "États",
+    "environment": "Environnement",
+    "dying": "Tomber à 0 PV"
+  },
+  "rules": {
+    "your-turn": {
+      "title": "Votre tour",
+      "short": "Déplacez-vous jusqu'à votre vitesse et effectuez une action.",
+      "full": "À votre tour, vous pouvez vous déplacer d'une distance maximale égale à votre vitesse et effectuer une action, dans l'ordre de votre choix.\n\nVous pouvez aussi interagir gratuitement avec un objet ou un élément de l'environnement, et communiquer par de brèves paroles et des gestes. Une seconde interaction coûte votre action (Utiliser un objet).\n\nVous pouvez renoncer à vous déplacer, à agir, ou aux deux. Si vous ne savez pas quoi faire, pensez à l'action Esquiver ou Se préparer."
+    },
+    "initiative": {
+      "title": "Initiative",
+      "short": "Un test de Dextérité fixe l'ordre ; le plus haut agit en premier.",
+      "full": "Quand le combat commence, chaque participant fait un test de Dextérité pour déterminer sa place dans l'ordre d'initiative, du total le plus élevé au plus bas. L'ordre reste le même de round en round.\n\nLe MJ fait un seul jet pour tout un groupe de créatures identiques, qui agissent donc ensemble.\n\nÉgalités : le MJ départage les créatures qu'il contrôle, les joueurs départagent leurs propres personnages, et le MJ tranche quand un monstre est à égalité avec un personnage joueur. En option, les créatures à égalité lancent chacune un d20, la plus haute agissant en premier."
+    },
+    "surprise": {
+      "title": "Surprise",
+      "short": "Une créature surprise perd son premier tour.",
+      "full": "Si aucun camp ne cherche à être discret, ils se remarquent mutuellement. Sinon, le MJ compare les tests de Dextérité (Discrétion) de ceux qui se cachent à la Sagesse (Perception) passive de chaque créature de l'autre camp. Toute créature qui ne remarque pas de menace est surprise au début de la rencontre.\n\nUne créature surprise ne peut ni se déplacer ni effectuer d'action pendant son premier tour de combat, et ne peut pas effectuer de réaction avant la fin de ce tour. Un membre d'un groupe peut être surpris même si les autres ne le sont pas."
+    },
+    "move": {
+      "title": "Se déplacer",
+      "short": "Jusqu'à votre vitesse, en coupant autour de votre action.",
+      "full": "À votre tour, vous pouvez vous déplacer jusqu'à votre vitesse, en utilisant autant ou aussi peu de celle-ci que vous le souhaitez. Sauter, grimper et nager font partie de votre déplacement : déduisez la distance de chacun de votre vitesse jusqu'à l'épuiser.\n\n- **Fractionner.** Vous pouvez vous déplacer avant et après votre action. Avec une vitesse de 30, vous pouvez vous déplacer de 10 pieds, agir, puis vous déplacer de 20.\n- **Entre les attaques.** Si votre action comprend plusieurs attaques avec une arme, vous pouvez vous déplacer entre elles.\n- **Plusieurs vitesses.** Quand vous changez de vitesse (marche et vol, par exemple), soustrayez la distance déjà parcourue de la nouvelle vitesse. Si le résultat est 0 ou moins, vous ne pouvez pas utiliser cette vitesse pour ce déplacement."
+    },
+    "difficult-terrain": {
+      "title": "Terrain difficile",
+      "short": "Chaque pied coûte 1 pied de plus.",
+      "full": "Chaque pied de déplacement en terrain difficile coûte 1 pied supplémentaire. C'est vrai même si plusieurs éléments de la case comptent comme terrain difficile.\n\nMobilier bas, décombres, sous-bois, escaliers raides, neige et marais peu profonds en sont des exemples. La case d'une autre créature, hostile ou non, compte aussi comme terrain difficile."
+    },
+    "prone": {
+      "title": "À terre",
+      "short": "Ramper seulement ; désavantage à l'attaque ; les attaquants au corps à corps ont l'avantage.",
+      "full": "**Se coucher et se relever**\n\n- Vous pouvez vous mettre à terre sans dépenser de vitesse.\n- Vous relever coûte une quantité de déplacement égale à la moitié de votre vitesse (15 pieds pour une vitesse de 30). Vous ne pouvez pas vous relever s'il ne vous reste pas assez de déplacement ou si votre vitesse est 0.\n- Pour vous déplacer à terre, vous devez ramper (ou utiliser la magie, comme la téléportation). Chaque pied parcouru en rampant coûte 1 pied de plus, donc ramper sur 1 pied en terrain difficile coûte 3 pieds.\n\n**Quand vous êtes à terre**\n\n- Votre seul mode de déplacement est de ramper, à moins de vous relever, ce qui met fin à l'état.\n- Vous avez le désavantage à vos jets d'attaque.\n- Un jet d'attaque contre vous a l'avantage si l'attaquant se trouve à 5 pieds ou moins de vous. Sinon, il a le désavantage."
+    },
+    "moving-around-creatures": {
+      "title": "Se déplacer parmi les créatures",
+      "short": "À travers les alliés oui ; à travers les ennemis seulement s'ils sont bien plus grands ou plus petits.",
+      "full": "- Vous pouvez traverser la case d'une créature non hostile.\n- Vous ne pouvez traverser la case d'une créature hostile que si elle est d'au moins deux catégories de taille de plus ou de moins que vous.\n- La case d'une autre créature est un terrain difficile pour vous.\n- Ami ou ennemi, vous ne pouvez pas terminer volontairement votre déplacement dans sa case.\n- Si vous quittez l'allonge d'une créature hostile pendant votre déplacement, vous provoquez une attaque d'opportunité."
+    },
+    "flying": {
+      "title": "Voler",
+      "short": "Une créature volante mise à terre ou qui ne peut plus bouger tombe.",
+      "full": "Si une créature volante est mise à terre, voit sa vitesse réduite à 0 ou est privée de toute autre manière de la capacité de se déplacer, elle tombe, sauf si elle peut faire du sur-place ou si elle est maintenue en l'air par la magie, comme avec le sort vol."
+    },
+    "squeezing": {
+      "title": "Se faufiler dans un espace plus petit",
+      "short": "Une taille en dessous ; coûte plus cher et donne un malus.",
+      "full": "Une créature peut se faufiler dans un espace assez grand pour une créature d'une catégorie de taille inférieure à la sienne. Une créature de taille G peut passer par un couloir large de seulement 5 pieds.\n\nEn se faufilant, une créature dépense 1 pied supplémentaire pour chaque pied parcouru, a le désavantage à ses jets d'attaque et à ses jets de sauvegarde de Dextérité, et les jets d'attaque contre elle ont l'avantage."
+    },
+    "creature-size": {
+      "title": "Taille et espace des créatures",
+      "short": "L'espace qu'une créature contrôle au combat.",
+      "full": "L'espace d'une créature est la zone, en pieds, qu'elle contrôle réellement au combat, et non l'expression de sa taille physique.\n\n- Très petite : 2½ par 2½ pieds\n- Petite : 5 par 5 pieds\n- Moyenne : 5 par 5 pieds\n- Grande : 10 par 10 pieds\n- Très grande : 15 par 15 pieds\n- Gigantesque : 20 par 20 pieds ou plus\n\nHuit créatures de taille moyenne tiennent dans le rayon de 5 pieds autour d'une autre ; jusqu'à vingt peuvent entourer une créature gigantesque."
+    },
+    "attack-action": {
+      "title": "Attaquer",
+      "short": "Effectuez une attaque au corps à corps ou à distance.",
+      "full": "Avec cette action, vous effectuez une attaque au corps à corps ou à distance, que vous brandissiez une épée, tiriez à l'arc ou vous battiez à mains nues.\n\nCertaines capacités, comme l'Attaque supplémentaire du guerrier, vous permettent d'effectuer plusieurs attaques avec cette action."
+    },
+    "cast-a-spell": {
+      "title": "Lancer un sort",
+      "short": "Pas toujours une action : vérifiez le temps d'incantation.",
+      "full": "Chaque sort a un temps d'incantation : une action, une réaction, des minutes, voire des heures. Lancer un sort n'est donc pas forcément une action.\n\nLa plupart des sorts ont un temps d'incantation de 1 action, si bien qu'un lanceur de sorts utilise souvent son action pour en lancer un."
+    },
+    "dash": {
+      "title": "Foncer",
+      "short": "Gagnez un déplacement supplémentaire égal à votre vitesse.",
+      "full": "Vous gagnez un déplacement supplémentaire pour le tour en cours, égal à votre vitesse, après application des modificateurs. Avec une vitesse de 30 pieds, vous pouvez vous déplacer jusqu'à 60 pieds pendant votre tour si vous foncez.\n\nToute augmentation ou diminution de votre vitesse modifie ce déplacement supplémentaire du même montant. Si votre vitesse de 30 pieds est réduite à 15 pieds, vous pouvez vous déplacer jusqu'à 30 pieds si vous foncez."
+    },
+    "disengage": {
+      "title": "Se désengager",
+      "short": "Votre déplacement ne provoque pas d'attaques d'opportunité ce tour-ci.",
+      "full": "Votre déplacement ne provoque pas d'attaques d'opportunité pour le reste du tour."
+    },
+    "dodge": {
+      "title": "Esquiver",
+      "short": "Les attaques contre vous ont le désavantage ; avantage aux jets de sauvegarde de Dextérité.",
+      "full": "Jusqu'au début de votre prochain tour, tout jet d'attaque effectué contre vous a le désavantage si vous voyez l'attaquant, et vous avez l'avantage à vos jets de sauvegarde de Dextérité.\n\nVous perdez cet avantage si vous êtes neutralisé ou si votre vitesse tombe à 0."
+    },
+    "help": {
+      "title": "Aider",
+      "short": "Donnez à un allié l'avantage pour une tâche ou une attaque.",
+      "full": "**Une tâche.** La créature que vous aidez a l'avantage au prochain test de caractéristique qu'elle fait pour accomplir la tâche, à condition de le faire avant le début de votre prochain tour.\n\n**Une attaque.** Vous aidez une créature amie qui attaque une créature située à 5 pieds ou moins de vous (vous feintez, distrayez la cible ou faites équipe d'une autre manière). Si votre allié attaque cette cible avant votre prochain tour, le premier jet d'attaque est effectué avec l'avantage."
+    },
+    "hide": {
+      "title": "Se cacher",
+      "short": "Un test de Dextérité (Discrétion) pour devenir invisible aux regards.",
+      "full": "Vous faites un test de Dextérité (Discrétion) pour tenter de vous cacher, selon les règles pour se cacher. Si vous réussissez, vous obtenez les bénéfices décrits dans Attaquants et cibles non vus."
+    },
+    "ready": {
+      "title": "Se préparer",
+      "short": "Choisissez un déclencheur et une réponse ; utilisez votre réaction quand il survient.",
+      "full": "Vous vous préparez à agir en utilisant votre réaction avant le début de votre prochain tour.\n\n1. Décidez quelle circonstance perceptible déclenchera votre réaction.\n2. Choisissez l'action que vous effectuerez en réponse, ou de vous déplacer jusqu'à votre vitesse.\n\nQuand le déclencheur survient, vous pouvez effectuer votre réaction juste après la fin du déclencheur, ou l'ignorer. Vous ne pouvez effectuer qu'une seule réaction par round.\n\n**Préparer un sort.** Le sort doit avoir un temps d'incantation de 1 action. Vous le lancez normalement mais retenez son énergie, que vous libérez avec votre réaction. La retenir exige de la concentration : si votre concentration est rompue, le sort se dissipe sans effet, et un sort sur lequel vous vous concentriez déjà prend fin."
+    },
+    "search": {
+      "title": "Chercher",
+      "short": "Consacrez votre attention à trouver quelque chose.",
+      "full": "Vous consacrez votre attention à trouver quelque chose. Selon la nature de la recherche, le MJ peut vous demander un test de Sagesse (Perception) ou d'Intelligence (Investigation)."
+    },
+    "use-an-object": {
+      "title": "Utiliser un objet",
+      "short": "Quand un objet exige votre action, ou pour une seconde interaction.",
+      "full": "Vous interagissez normalement avec un objet en faisant autre chose, comme dégainer une épée dans le cadre d'une attaque. Quand un objet exige votre action pour être utilisé, vous effectuez l'action Utiliser un objet.\n\nCette action sert aussi à interagir avec plus d'un objet pendant votre tour."
+    },
+    "free-interaction": {
+      "title": "Interagir avec des objets",
+      "short": "Une interaction gratuite par tour ; les suivantes coûtent votre action.",
+      "full": "Vous pouvez interagir gratuitement avec un objet ou un élément de l'environnement, pendant votre déplacement ou votre action : dégainer ou rengainer une épée, ouvrir ou fermer une porte, ramasser une hache tombée, actionner un levier, prendre un livre sur une étagère, tendre un objet à un autre personnage.\n\nUne seconde interaction exige votre action (Utiliser un objet). Certains objets magiques et objets spéciaux exigent toujours une action. Le MJ peut aussi exiger une action pour tout ce qui demande un soin particulier, comme une porte coincée ou la manivelle d'un pont-levis."
+    },
+    "improvise": {
+      "title": "Improviser",
+      "short": "Décrivez-le ; le MJ dit si cela marche et quel jet faire.",
+      "full": "Avec votre action, vous pouvez effectuer l'une des actions prévues par les règles, une action de votre classe ou d'une capacité spéciale, ou une action que vous improvisez.\n\nQuand vous décrivez une action non détaillée ailleurs dans les règles, le MJ vous dit si elle est possible et quel type de jet vous devez faire, le cas échéant."
+    },
+    "bonus-action": {
+      "title": "Action bonus",
+      "short": "Une par tour, et seulement si quelque chose vous en donne une.",
+      "full": "Vous ne pouvez effectuer une action bonus que si une capacité de classe, un sort ou une autre aptitude indique que vous pouvez faire quelque chose en action bonus (la Ruse du roublard, par exemple). Sinon, vous n'en avez pas.\n\n- Vous ne pouvez effectuer qu'une seule action bonus pendant votre tour : choisissez laquelle si vous en avez plusieurs.\n- Vous choisissez quand l'effectuer pendant votre tour, sauf si son moment est précisé.\n- Tout ce qui vous prive de la capacité d'effectuer des actions vous empêche aussi d'effectuer une action bonus."
+    },
+    "two-weapon-fighting": {
+      "title": "Combat à deux armes",
+      "short": "Attaque bonus avec une seconde arme légère ; sans modificateur de caractéristique.",
+      "full": "Quand vous effectuez l'action Attaquer et attaquez avec une arme de corps à corps légère tenue dans une main, vous pouvez utiliser une action bonus pour attaquer avec une autre arme de corps à corps légère tenue dans l'autre main.\n\nVous n'ajoutez pas votre modificateur de caractéristique aux dégâts de l'attaque bonus, sauf s'il est négatif.\n\nSi l'une des armes a la propriété lancer, vous pouvez la lancer au lieu d'effectuer une attaque de corps à corps avec elle."
+    },
+    "reaction": {
+      "title": "Réaction",
+      "short": "Une réponse instantanée à un déclencheur ; une par round.",
+      "full": "Une réaction est une réponse instantanée à un déclencheur quelconque, qui peut survenir pendant votre tour ou celui d'un autre. L'attaque d'opportunité est la plus courante.\n\n- Quand vous effectuez une réaction, vous ne pouvez pas en effectuer d'autre avant le début de votre prochain tour.\n- Si la réaction interrompt le tour d'une autre créature, celle-ci peut poursuivre son tour juste après la réaction.\n- Une créature surprise ne peut pas effectuer de réaction avant la fin de son premier tour."
+    },
+    "opportunity-attack": {
+      "title": "Attaque d'opportunité",
+      "short": "Une attaque de corps à corps, en réaction, contre un ennemi qui quitte votre allonge.",
+      "full": "Vous pouvez effectuer une attaque d'opportunité quand une créature hostile que vous voyez quitte votre allonge. Vous utilisez votre réaction pour effectuer une attaque de corps à corps contre elle. L'attaque a lieu juste avant que la créature ne quitte votre allonge.\n\nVous pouvez éviter d'en provoquer une en effectuant l'action Se désengager. Vous n'en provoquez pas non plus quand vous vous téléportez, ou quand quelqu'un ou quelque chose vous déplace sans utiliser votre déplacement, votre action ou votre réaction (une explosion vous projette hors de l'allonge d'un ennemi, ou vous tombez devant un adversaire)."
+    },
+    "making-an-attack": {
+      "title": "Effectuer une attaque",
+      "short": "Choisissez une cible, déterminez les modificateurs, résolvez.",
+      "full": "1. **Choisissez une cible** à portée de votre attaque : une créature, un objet ou un lieu.\n2. **Déterminez les modificateurs.** Le MJ décide si la cible bénéficie d'un abri et si vous avez l'avantage ou le désavantage. Les sorts, capacités spéciales et autres effets peuvent appliquer des malus ou des bonus.\n3. **Résolvez l'attaque.** Faites le jet d'attaque. En cas de touche, lancez les dégâts, sauf indication contraire de l'attaque.\n\nSi vous faites un jet d'attaque, vous effectuez une attaque."
+    },
+    "attack-rolls": {
+      "title": "Jets d'attaque",
+      "short": "Un d20 plus les modificateurs contre la CA de la cible.",
+      "full": "Lancez un d20 et ajoutez les modificateurs. Si le total est égal ou supérieur à la Classe d'Armure (CA) de la cible, l'attaque touche.\n\n- **Modificateur de caractéristique.** Force pour une arme de corps à corps, Dextérité pour une arme à distance (les armes à finesse et de lancer font exception). Une attaque de sort utilise la caractéristique d'incantation du lanceur.\n- **Bonus de maîtrise.** Ajoutez-le quand vous attaquez avec une arme dont vous avez la maîtrise, et avec les attaques de sort.\n- **Obtenir un 20.** L'attaque touche quels que soient les modificateurs ou la CA, et c'est un coup critique.\n- **Obtenir un 1.** L'attaque rate quels que soient les modificateurs ou la CA."
+    },
+    "melee-attacks": {
+      "title": "Attaques de corps à corps",
+      "short": "L'allonge est en général de 5 pieds ; une frappe à mains nues inflige 1 + Force.",
+      "full": "Une attaque de corps à corps touche un ennemi à votre allonge. La plupart des créatures ont une allonge de 5 pieds ; certaines (en général plus grandes que la taille moyenne) ont une allonge supérieure, comme indiqué dans leur description.\n\nAu lieu d'une arme, vous pouvez utiliser une frappe à mains nues : coup de poing, de pied, de tête ou coup similaire. En cas de touche, elle inflige des dégâts contondants égaux à 1 + votre modificateur de Force, et vous en avez la maîtrise."
+    },
+    "ranged-attacks": {
+      "title": "Attaques à distance",
+      "short": "Portée normale, puis longue portée avec désavantage.",
+      "full": "Vous ne pouvez effectuer des attaques à distance que contre des cibles à portée. Une portée unique est une limite stricte.\n\nCertaines armes, comme l'arc long ou l'arc court, ont deux portées : le plus petit nombre est la portée normale, le plus grand la longue portée. Votre jet d'attaque a le désavantage quand la cible est au-delà de la portée normale, et vous ne pouvez pas attaquer une cible au-delà de la longue portée."
+    },
+    "ranged-in-melee": {
+      "title": "Attaque à distance au contact d'un ennemi",
+      "short": "Désavantage à 5 pieds ou moins d'une créature hostile qui vous voit.",
+      "full": "Quand vous effectuez une attaque à distance avec une arme, un sort ou tout autre moyen, vous avez le désavantage au jet d'attaque si vous êtes à 5 pieds ou moins d'une créature hostile qui vous voit et qui n'est pas neutralisée."
+    },
+    "unseen-attackers": {
+      "title": "Attaquants et cibles non vus",
+      "short": "Vous ne la voyez pas : désavantage. Elle ne vous voit pas : avantage.",
+      "full": "- Quand vous attaquez une cible que vous ne voyez pas, vous avez le désavantage au jet d'attaque. C'est vrai que vous devinez l'emplacement de la cible ou que vous visiez une créature que vous entendez sans la voir.\n- Si la cible ne se trouve pas à l'endroit visé, vous ratez automatiquement, mais le MJ se contente généralement de dire que l'attaque a raté, sans préciser si vous aviez deviné juste.\n- Quand une créature ne vous voit pas, vous avez l'avantage aux jets d'attaque contre elle.\n- Si vous êtes caché (ni vu ni entendu) quand vous faites une attaque, vous révélez votre position que l'attaque touche ou rate."
+    },
+    "grappling": {
+      "title": "Agripper",
+      "short": "Une opposition de Force (Athlétisme) ; la cible devient agrippée.",
+      "full": "Vous utilisez l'action Attaquer pour effectuer une attaque de corps à corps spéciale. Si vous pouvez effectuer plusieurs attaques avec l'action, celle-ci en remplace une.\n\n- La cible doit être d'au plus une catégorie de taille de plus que vous et à votre allonge.\n- En utilisant au moins une main libre, vous faites un test de Force (Athlétisme) en opposition au test de Force (Athlétisme) ou de Dextérité (Acrobaties) de la cible (au choix de la cible).\n- Si vous réussissez, la cible est agrippée. Vous pouvez la relâcher quand vous le souhaitez (sans action).\n\n**Se libérer.** Une créature agrippée peut utiliser son action pour faire un test de Force (Athlétisme) ou de Dextérité (Acrobaties) en opposition à votre test de Force (Athlétisme).\n\n**Déplacer une créature agrippée.** Vous pouvez la traîner ou la porter avec vous, mais votre vitesse est réduite de moitié, sauf si la créature est d'au moins deux catégories de taille de moins que vous."
+    },
+    "shoving": {
+      "title": "Bousculer une créature",
+      "short": "Une opposition de Force (Athlétisme) ; mettre à terre ou repousser de 5 pieds.",
+      "full": "Vous utilisez l'action Attaquer pour effectuer une attaque de corps à corps spéciale. Si vous pouvez effectuer plusieurs attaques avec l'action, celle-ci en remplace une.\n\nLa cible doit être d'au plus une catégorie de taille de plus que vous et à votre allonge. Au lieu d'un jet d'attaque, vous faites un test de Force (Athlétisme) en opposition au test de Force (Athlétisme) ou de Dextérité (Acrobaties) de la cible (au choix de la cible).\n\nSi vous gagnez l'opposition, vous mettez la cible à terre ou vous la repoussez de 5 pieds."
+    },
+    "about-conditions": {
+      "title": "À propos des états",
+      "short": "Une créature a un état ou ne l'a pas.",
+      "full": "Les états modifient les capacités d'une créature. La plupart sont des handicaps ; quelques-uns, comme invisible, peuvent être avantageux.\n\nUn état dure jusqu'à ce qu'il soit annulé (à terre est annulé en se relevant, par exemple) ou pendant la durée précisée par l'effet.\n\nSi plusieurs effets imposent le même état, chacun a sa propre durée, mais les effets de l'état ne s'aggravent pas."
+    },
+    "blinded": {
+      "title": "Aveuglé",
+      "short": "Ne voit pas ; les attaques contre lui ont l'avantage.",
+      "full": "- Une créature aveuglée ne peut pas voir et rate automatiquement tout test de caractéristique qui nécessite la vue.\n- Les jets d'attaque contre la créature ont l'avantage, et ses jets d'attaque ont le désavantage."
+    },
+    "charmed": {
+      "title": "Charmé",
+      "short": "Ne peut pas attaquer le charmeur ; le charmeur a l'avantage en interaction sociale.",
+      "full": "- Une créature charmée ne peut pas attaquer le charmeur ni le cibler avec des capacités nuisibles ou des effets magiques.\n- Le charmeur a l'avantage à tout test de caractéristique pour interagir socialement avec la créature."
+    },
+    "deafened": {
+      "title": "Assourdi",
+      "short": "N'entend pas ; rate les tests qui nécessitent l'ouïe.",
+      "full": "- Une créature assourdie ne peut pas entendre et rate automatiquement tout test de caractéristique qui nécessite l'ouïe."
+    },
+    "exhaustion": {
+      "title": "Épuisement",
+      "short": "Six niveaux ; chaque niveau s'ajoute à ceux en dessous.",
+      "full": "L'épuisement se mesure en six niveaux. Un effet peut donner à une créature un ou plusieurs niveaux.\n\n1. Désavantage aux tests de caractéristique\n2. Vitesse réduite de moitié\n3. Désavantage aux jets d'attaque et aux jets de sauvegarde\n4. Maximum de points de vie réduit de moitié\n5. Vitesse réduite à 0\n6. Mort\n\nSi une créature déjà épuisée subit un autre effet qui cause de l'épuisement, son niveau augmente du nombre précisé par l'effet. Une créature subit l'effet de son niveau actuel ainsi que de tous les niveaux inférieurs.\n\nUn effet qui supprime l'épuisement réduit son niveau du nombre précisé ; tous les effets cessent si le niveau tombe sous 1. Terminer un repos long réduit le niveau de 1, à condition que la créature ait aussi mangé et bu."
+    },
+    "frightened": {
+      "title": "Effrayé",
+      "short": "Désavantage tant que la source est en vue ; ne peut pas s'en rapprocher.",
+      "full": "- Une créature effrayée a le désavantage aux tests de caractéristique et aux jets d'attaque tant que la source de sa peur est dans sa ligne de vue.\n- La créature ne peut pas se rapprocher volontairement de la source de sa peur."
+    },
+    "grappled": {
+      "title": "Agrippé",
+      "short": "Vitesse 0.",
+      "full": "- La vitesse d'une créature agrippée devient 0, et elle ne peut bénéficier d'aucun bonus à sa vitesse.\n- L'état prend fin si l'agrippeur est neutralisé.\n- L'état prend aussi fin si un effet retire la créature agrippée de l'allonge de l'agrippeur ou de l'effet d'agrippement, par exemple quand une créature est projetée au loin par le sort vague tonnante."
+    },
+    "incapacitated": {
+      "title": "Neutralisé",
+      "short": "Ne peut effectuer ni actions ni réactions.",
+      "full": "- Une créature neutralisée ne peut effectuer ni actions ni réactions."
+    },
+    "invisible": {
+      "title": "Invisible",
+      "short": "Les attaques contre elle ont le désavantage ; ses attaques ont l'avantage.",
+      "full": "- Une créature invisible est impossible à voir sans l'aide de la magie ou d'un sens spécial. Pour ce qui est de se cacher, la créature est fortement obscurcie. Sa position peut être décelée par tout bruit qu'elle fait ou toute trace qu'elle laisse.\n- Les jets d'attaque contre la créature ont le désavantage, et ses jets d'attaque ont l'avantage."
+    },
+    "paralyzed": {
+      "title": "Paralysé",
+      "short": "Neutralisé et ne peut pas bouger ; les touches à 5 pieds ou moins sont des coups critiques.",
+      "full": "- Une créature paralysée est neutralisée et ne peut ni bouger ni parler.\n- La créature rate automatiquement les jets de sauvegarde de Force et de Dextérité.\n- Les jets d'attaque contre la créature ont l'avantage.\n- Toute attaque qui touche la créature est un coup critique si l'attaquant se trouve à 5 pieds ou moins d'elle."
+    },
+    "petrified": {
+      "title": "Pétrifié",
+      "short": "Changé en pierre ; neutralisé, résistant à tous les dégâts.",
+      "full": "- Une créature pétrifiée est transformée, ainsi que tout objet non magique qu'elle porte ou tient, en une substance solide inanimée (généralement de la pierre). Son poids est multiplié par dix et elle cesse de vieillir.\n- La créature est neutralisée, ne peut ni bouger ni parler, et n'a pas conscience de ce qui l'entoure.\n- Les jets d'attaque contre la créature ont l'avantage.\n- La créature rate automatiquement les jets de sauvegarde de Force et de Dextérité.\n- La créature a la résistance contre tous les dégâts.\n- La créature est immunisée contre le poison et la maladie, mais un poison ou une maladie déjà présent dans son organisme est suspendu, non neutralisé."
+    },
+    "poisoned": {
+      "title": "Empoisonné",
+      "short": "Désavantage aux jets d'attaque et aux tests de caractéristique.",
+      "full": "- Une créature empoisonnée a le désavantage aux jets d'attaque et aux tests de caractéristique."
+    },
+    "restrained": {
+      "title": "Entravé",
+      "short": "Vitesse 0 ; les attaques contre lui ont l'avantage.",
+      "full": "- La vitesse d'une créature entravée devient 0, et elle ne peut bénéficier d'aucun bonus à sa vitesse.\n- Les jets d'attaque contre la créature ont l'avantage, et ses jets d'attaque ont le désavantage.\n- La créature a le désavantage aux jets de sauvegarde de Dextérité."
+    },
+    "stunned": {
+      "title": "Étourdi",
+      "short": "Neutralisé et ne peut pas bouger ; les attaques contre lui ont l'avantage.",
+      "full": "- Une créature étourdie est neutralisée, ne peut pas bouger et ne peut parler que de façon hésitante.\n- La créature rate automatiquement les jets de sauvegarde de Force et de Dextérité.\n- Les jets d'attaque contre la créature ont l'avantage."
+    },
+    "unconscious": {
+      "title": "Inconscient",
+      "short": "Assommé ; lâche ce qu'il tient et tombe à terre.",
+      "full": "- Une créature inconsciente est neutralisée, ne peut ni bouger ni parler, et n'a pas conscience de ce qui l'entoure.\n- La créature lâche ce qu'elle tient et tombe à terre.\n- La créature rate automatiquement les jets de sauvegarde de Force et de Dextérité.\n- Les jets d'attaque contre la créature ont l'avantage.\n- Toute attaque qui touche la créature est un coup critique si l'attaquant se trouve à 5 pieds ou moins d'elle."
+    },
+    "cover": {
+      "title": "Abri",
+      "short": "+2 à la CA et aux jets de sauvegarde de Dextérité à moitié, +5 aux trois quarts.",
+      "full": "Les murs, arbres, créatures et autres obstacles peuvent offrir un abri. Une cible ne bénéficie d'un abri que si une attaque ou un effet provient du côté opposé de l'obstacle.\n\nIl existe trois degrés d'abri. Si une cible est derrière plusieurs sources, seul le degré le plus protecteur s'applique ; ils ne s'additionnent pas.\n\n- **Abri partiel.** Bonus de +2 à la CA et aux jets de sauvegarde de Dextérité. Un obstacle bloque au moins la moitié du corps de la cible : un muret, un gros meuble, un tronc d'arbre étroit, ou une créature, amie ou ennemie.\n- **Abri aux trois quarts.** Bonus de +5 à la CA et aux jets de sauvegarde de Dextérité. Environ les trois quarts de la cible sont couverts : une herse, une meurtrière, un tronc d'arbre épais.\n- **Abri total.** La cible ne peut pas être ciblée directement par une attaque ou un sort, bien que certains sorts puissent l'atteindre en l'incluant dans une zone d'effet. Elle est entièrement dissimulée par un obstacle."
+    },
+    "obscured-areas": {
+      "title": "Zones obscurcies",
+      "short": "Légèrement : désavantage aux Perceptions visuelles. Fortement : en pratique aveuglé.",
+      "full": "- **Légèrement obscurcie** (lumière faible, brume éparse, feuillage modéré) : les créatures ont le désavantage aux tests de Sagesse (Perception) qui reposent sur la vue.\n- **Fortement obscurcie** (ténèbres, brouillard opaque, feuillage dense) : la vision est entièrement bloquée. Une créature qui essaie de voir quelque chose dans cette zone est en pratique aveuglée."
+    },
+    "light": {
+      "title": "Lumière",
+      "short": "Lumière vive, lumière faible et ténèbres.",
+      "full": "- **La lumière vive** permet à la plupart des créatures de voir normalement. Même les jours sombres offrent une lumière vive, tout comme les torches, lanternes et feux dans un rayon donné.\n- **La lumière faible**, aussi appelée pénombre, crée une zone légèrement obscurcie. C'est généralement la frontière entre une source de lumière vive et les ténèbres environnantes. Le crépuscule, l'aube et une pleine lune brillante comptent comme lumière faible.\n- **Les ténèbres** créent une zone fortement obscurcie : en extérieur la nuit (même la plupart des nuits de lune), dans un donjon non éclairé ou dans une zone de ténèbres magiques."
+    },
+    "special-senses": {
+      "title": "Vision aveugle, vision dans le noir et vision lucide",
+      "short": "Ce qu'une créature perçoit sans la vue ordinaire.",
+      "full": "- **Vision aveugle.** La créature perçoit ce qui l'entoure sans recourir à la vue, dans un rayon donné.\n- **Vision dans le noir.** Dans une portée donnée, la créature voit dans les ténèbres comme s'il s'agissait de lumière faible, donc les ténèbres ne sont pour elle que légèrement obscurcies. Elle ne distingue pas les couleurs dans les ténèbres, seulement des nuances de gris.\n- **Vision lucide.** Jusqu'à une portée donnée, la créature voit dans les ténèbres normales et magiques, voit les créatures et objets invisibles, détecte automatiquement les illusions visuelles et réussit ses jets de sauvegarde contre elles, perçoit la forme d'origine d'un métamorphe ou d'une créature transformée par la magie, et peut voir dans le Plan éthéré."
+    },
+    "falling": {
+      "title": "Chute",
+      "short": "1d6 contondant par 10 pieds, jusqu'à 20d6 ; vous atterrissez à terre.",
+      "full": "À la fin d'une chute, une créature subit 1d6 dégâts contondants par tranche de 10 pieds de chute, jusqu'à un maximum de 20d6. La créature atterrit à terre, sauf si elle évite de subir des dégâts de la chute."
+    },
+    "suffocating": {
+      "title": "Suffocation",
+      "short": "1 + modificateur de Con minutes de souffle, puis un nombre de rounds égal au modificateur de Con.",
+      "full": "Une créature peut retenir son souffle pendant un nombre de minutes égal à 1 + son modificateur de Constitution (minimum 30 secondes).\n\nQuand une créature est à court de souffle ou s'étouffe, elle peut survivre un nombre de rounds égal à son modificateur de Constitution (minimum 1 round). Au début de son tour suivant, elle tombe à 0 point de vie et est mourante, et elle ne peut ni regagner de points de vie ni être stabilisée tant qu'elle ne peut pas respirer à nouveau.\n\nPar exemple, une créature avec une Constitution de 14 peut retenir son souffle pendant 3 minutes. Si elle commence à suffoquer, elle a 2 rounds pour atteindre l'air avant de tomber à 0 point de vie."
+    },
+    "underwater-combat": {
+      "title": "Combat sous l'eau",
+      "short": "Attaques au corps à corps et à distance limitées ; résistance au feu.",
+      "full": "- Une attaque avec une arme de corps à corps par une créature sans vitesse de nage a le désavantage, sauf si l'arme est une dague, un javelot, une épée courte, une lance ou un trident.\n- Une attaque avec une arme à distance rate automatiquement une cible au-delà de la portée normale de l'arme. Même à portée normale, elle a le désavantage, sauf si l'arme est une arbalète, un filet ou une arme lancée comme un javelot (y compris une lance, un trident ou une fléchette).\n- Les créatures et objets entièrement immergés dans l'eau ont la résistance aux dégâts de feu."
+    },
+    "food-and-water": {
+      "title": "Nourriture et eau",
+      "short": "S'en passer cause de l'épuisement.",
+      "full": "L'épuisement causé par le manque de nourriture ou d'eau ne peut être supprimé tant que le personnage n'a pas mangé et bu la quantité complète requise.\n\n**Nourriture.** Un personnage a besoin de 1 livre de nourriture par jour ; des demi-rations comptent comme une demi-journée sans nourriture. Un personnage peut se passer de nourriture pendant 3 + son modificateur de Constitution jours (minimum 1). À la fin de chaque jour au-delà, il subit automatiquement un niveau d'épuisement. Une journée normale de repas remet le compte à zéro.\n\n**Eau.** Un personnage a besoin de 1 gallon d'eau par jour, ou 2 gallons s'il fait chaud. Ne boire que la moitié exige un jet de sauvegarde de Constitution DD 15 sous peine d'un niveau d'épuisement à la fin de la journée. Boire moins encore entraîne automatiquement un niveau. Si le personnage a déjà un ou plusieurs niveaux d'épuisement, il subit deux niveaux dans les deux cas."
+    },
+    "dropping-to-0": {
+      "title": "Tomber à 0 point de vie",
+      "short": "Mourir sur le coup, ou tomber inconscient.",
+      "full": "Quand vous tombez à 0 point de vie, vous mourez sur le coup ou vous tombez inconscient.\n\n**Mort instantanée.** Quand des dégâts vous réduisent à 0 point de vie et qu'il reste des dégâts, vous mourez si les dégâts restants sont égaux ou supérieurs à votre maximum de points de vie.\n\n**Tomber inconscient.** Si des dégâts vous réduisent à 0 point de vie sans vous tuer, vous tombez inconscient. Cela prend fin si vous regagnez des points de vie.\n\n**Monstres.** La plupart des MJ font mourir un monstre à l'instant où il tombe à 0 point de vie. Les puissants méchants et les PNJ spéciaux peuvent suivre les règles des personnages joueurs."
+    },
+    "death-saving-throws": {
+      "title": "Jets de sauvegarde contre la mort",
+      "short": "Vous commencez votre tour à 0 PV : lancez un d20 ; 10 ou plus est une réussite.",
+      "full": "Chaque fois que vous commencez votre tour avec 0 point de vie, faites un jet de sauvegarde contre la mort. Il n'est lié à aucune caractéristique.\n\nLancez un d20. Avec 10 ou plus, vous réussissez ; sinon, vous échouez. Trois réussites vous stabilisent ; trois échecs et vous mourez. Elles n'ont pas besoin d'être consécutives. Les deux décomptes sont remis à zéro quand vous regagnez des points de vie ou devenez stable.\n\n- **Obtenir un 1** compte pour deux échecs.\n- **Obtenir un 20**, vous regagnez 1 point de vie.\n- **Des dégâts à 0 point de vie** sont un échec, ou deux si c'est un coup critique. Si les dégâts sont égaux ou supérieurs à votre maximum de points de vie, vous subissez une mort instantanée."
+    },
+    "stabilizing": {
+      "title": "Stabiliser une créature",
+      "short": "Une action et un test de Sagesse (Médecine) DD 10.",
+      "full": "Le meilleur moyen de sauver une créature à 0 point de vie est de la soigner. À défaut, vous pouvez utiliser votre action pour prodiguer les premiers soins à une créature inconsciente et tenter de la stabiliser : un test de Sagesse (Médecine) DD 10 réussi.\n\nUne créature stable ne fait pas de jets de sauvegarde contre la mort, même si elle a 0 point de vie, mais elle reste inconsciente. Elle cesse d'être stable, et recommence à faire des jets de sauvegarde contre la mort, si elle subit des dégâts. Une créature stable qui n'est pas soignée regagne 1 point de vie après 1d4 heures."
+    },
+    "knocking-out": {
+      "title": "Assommer une créature",
+      "short": "La réduire à 0 PV au corps à corps et choisir de ne pas la tuer.",
+      "full": "Quand un attaquant réduit une créature à 0 point de vie avec une attaque de corps à corps, il peut l'assommer. L'attaquant fait ce choix à l'instant où les dégâts sont infligés. La créature tombe inconsciente et est stable."
+    },
+    "temporary-hit-points": {
+      "title": "Points de vie temporaires",
+      "short": "Un tampon perdu en premier ; ils ne se cumulent pas.",
+      "full": "Les points de vie temporaires ne sont pas de vrais points de vie : ils forment un tampon contre les dégâts. Quand vous subissez des dégâts, ils sont perdus en premier, et les dégâts restants s'appliquent à vos points de vie normaux.\n\n- Ils peuvent dépasser votre maximum de points de vie. Les soins ne peuvent pas les restaurer.\n- Ils ne peuvent pas être additionnés. Si vous en recevez d'autres alors que vous en avez, vous décidez de garder ceux que vous avez ou de gagner les nouveaux.\n- À 0 point de vie, ils ne vous rendent pas conscience et ne vous stabilisent pas, mais ils absorbent quand même les dégâts.\n- Sauf si la capacité qui les accorde a une durée, ils durent jusqu'à épuisement ou jusqu'à ce que vous terminiez un repos long."
+    }
+  }
+}
