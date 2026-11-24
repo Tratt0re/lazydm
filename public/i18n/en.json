@@ -1820,6 +1820,7 @@
     "uncategorised": "Uncategorised",
     "noMatch": "No rule matches “{{query}}”.",
     "resultCount": "{{count}} found",
+    "groupActions": "More actions for {{name}}",
     "clearSearch": "Clear search",
     "cancel": "Cancel",
     "saveError": "The Quick reference could not be saved",

@@ -1820,6 +1820,7 @@
     "uncategorised": "未分类",
     "noMatch": "没有与“{{query}}”匹配的规则。",
     "resultCount": "找到 {{count}} 条",
+    "groupActions": "“{{name}}”的更多操作",
     "clearSearch": "清除搜索",
     "cancel": "取消",
     "saveError": "无法保存快速参考",

@@ -1820,6 +1820,7 @@
     "uncategorised": "Sans catégorie",
     "noMatch": "Aucune règle ne correspond à « {{query}} ».",
     "resultCount": "{{count}} trouvées",
+    "groupActions": "Plus d’actions pour {{name}}",
     "clearSearch": "Effacer la recherche",
     "cancel": "Annuler",
     "saveError": "La Référence rapide n'a pas pu être enregistrée",

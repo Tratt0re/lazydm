@@ -1820,6 +1820,7 @@
     "uncategorised": "Senza categoria",
     "noMatch": "Nessuna regola corrisponde a «{{query}}».",
     "resultCount": "{{count}} trovate",
+    "groupActions": "Altre azioni per {{name}}",
     "clearSearch": "Cancella la ricerca",
     "cancel": "Annulla",
     "saveError": "Non è stato possibile salvare il Riferimento rapido",

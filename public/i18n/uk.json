@@ -1820,6 +1820,7 @@
     "uncategorised": "Без категорії",
     "noMatch": "Жодне правило не відповідає «{{query}}».",
     "resultCount": "Знайдено: {{count}}",
+    "groupActions": "Інші дії для «{{name}}»",
     "clearSearch": "Очистити пошук",
     "cancel": "Скасувати",
     "saveError": "Не вдалося зберегти Швидкий довідник",
