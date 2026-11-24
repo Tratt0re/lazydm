@@ -58,6 +58,8 @@ export class QuickReferenceService extends BaseIpcService<APIChannel.QUICK_REFER
   private readonly categorySignal = signal<string | null>(null);
   private readonly selectedSignal = signal<string | null>(null);
   private contentHash: string | null = null;
+  /** The campaign whose last-read rule was already brought back, so a later save never re-selects it. */
+  private restoredFor: string | null = null;
   private pending: Promise<unknown> = Promise.resolve();
 
   readonly data = this.dataSignal.asReadonly();
@@ -129,6 +131,7 @@ export class QuickReferenceService extends BaseIpcService<APIChannel.QUICK_REFER
     this.errorSignal.set(null);
     try {
       this.apply(await this.ipcClient.open({ campaign, language: this.i18n.language() }));
+      this.restoreLastRule(campaign);
     } catch (error) {
       this.errorSignal.set(error instanceof Error ? error.message : String(error));
     } finally {
@@ -148,6 +151,9 @@ export class QuickReferenceService extends BaseIpcService<APIChannel.QUICK_REFER
 
   select(ruleId: string | null): void {
     this.selectedSignal.set(ruleId);
+    if (ruleId !== null) {
+      this.rememberRule(ruleId);
+    }
   }
 
   /** Adds a rule at the end of the file; answers its id, or null when the file moved on. */
@@ -254,6 +260,41 @@ export class QuickReferenceService extends BaseIpcService<APIChannel.QUICK_REFER
         expectedHash: hash,
       }),
     );
+  }
+
+  /** The rule last read in a campaign is kept on this device only (a convenience, never part of the file). */
+  private storageKey(campaign: string): string {
+    return `lazydm.quickReference.lastRule.${campaign}`;
+  }
+
+  private rememberRule(ruleId: string): void {
+    const campaign = this.campaignSignal();
+    if (!campaign) {
+      return;
+    }
+
+    try {
+      localStorage.setItem(this.storageKey(campaign), ruleId);
+    } catch {
+      // Storage can be blocked or full: the sheet works the same without it.
+    }
+  }
+
+  /** Opens the sheet on the rule read last time, once per campaign and only if it still exists. */
+  private restoreLastRule(campaign: string): void {
+    if (this.restoredFor === campaign || this.selectedSignal() !== null) {
+      return;
+    }
+
+    this.restoredFor = campaign;
+    try {
+      const id = localStorage.getItem(this.storageKey(campaign));
+      if (id && this.rules().some((rule) => rule.id === id)) {
+        this.selectedSignal.set(id);
+      }
+    } catch {
+      // See rememberRule.
+    }
   }
 
   /** The rule being read always sits in the list: when a search or a category hides it, it is put away. */
