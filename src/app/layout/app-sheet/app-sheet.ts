@@ -69,8 +69,13 @@ export class AppSheet {
   );
 
   /** Escape closes the sheet, unless a menu, dialog or panel above it handles it first. */
-  @HostListener('document:keydown.escape')
-  protected onEscape(): void {
+  @HostListener('document:keydown.escape', ['$event'])
+  protected onEscape(event: Event): void {
+    // A control that already used the key (a select closing its list, a search clearing) has prevented it.
+    if (event.defaultPrevented) {
+      return;
+    }
+
     const hasOpenOverlay = [
       ...document.querySelectorAll('.cdk-overlay-container .cdk-overlay-pane'),
     ].some((pane) => pane.childElementCount > 0);

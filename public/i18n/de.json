@@ -1819,6 +1819,7 @@
     "all": "Alle",
     "uncategorised": "Ohne Kategorie",
     "noMatch": "Keine Regel passt zu „{{query}}“.",
+    "resultCount": "{{count}} gefunden",
     "clearSearch": "Suche löschen",
     "cancel": "Abbrechen",
     "saveError": "Die Schnellreferenz konnte nicht gespeichert werden",

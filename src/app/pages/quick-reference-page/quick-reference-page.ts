@@ -185,6 +185,54 @@ export class QuickReferencePage {
     this.service.setQuery((event.target as HTMLInputElement).value);
   }
 
+  /** Escape in the search clears the text first; with nothing typed it is left for the sheet, which closes. */
+  protected onSearchEscape(event: Event): void {
+    if (this.service.query()) {
+      event.preventDefault();
+      this.clearSearch();
+    }
+  }
+
+  /** ↓ or Enter in the search moves to the first card (and opens it): search, Enter, read. */
+  protected focusFirstCard(event: Event): void {
+    const first = this.cardElements()[0];
+    if (!first) {
+      return;
+    }
+
+    event.preventDefault();
+    first.focus();
+    if ((event as KeyboardEvent).key === 'Enter') {
+      first.click();
+    }
+  }
+
+  /** The one card the Tab key lands on: the selected rule (first place it shows), else the first card. */
+  protected readonly tabStop = computed(() => {
+    const groups = this.service.visibleGroups();
+    const selectedId = this.service.selectedId();
+    for (const group of groups) {
+      if (group.rules.some((rule) => rule.id === selectedId)) {
+        return `${group.id}/${selectedId}`;
+      }
+    }
+
+    const first = groups[0];
+    return first?.rules[0] ? `${first.id}/${first.rules[0].id}` : null;
+  });
+
+  protected cardKey(group: QuickReferenceGroup, rule: QuickReferenceRuleDto): string {
+    return `${group.id}/${rule.id}`;
+  }
+
+  private cardElements(): HTMLElement[] {
+    return Array.from(
+      this.searchInput()
+        ?.nativeElement.closest('app-quick-reference-page')
+        ?.querySelectorAll<HTMLElement>('[data-rule-card]') ?? [],
+    );
+  }
+
   protected clearSearch(): void {
     this.service.setQuery('');
     this.searchInput()?.nativeElement.focus();
@@ -205,18 +253,27 @@ export class QuickReferencePage {
 
   /** Arrow keys move between the cards of the grid, in reading order. */
   protected onCardKeydown(event: KeyboardEvent): void {
-    const move = (
-      { ArrowRight: 1, ArrowDown: 1, ArrowLeft: -1, ArrowUp: -1 } as Record<string, number>
-    )[event.key];
-    if (!move) {
-      return;
-    }
-
     const current = event.currentTarget as HTMLElement;
     const cards = Array.from(
       current.closest('[data-quick-list]')?.querySelectorAll<HTMLElement>('[data-rule-card]') ?? [],
     );
-    const next = cards[cards.indexOf(current) + move];
+    const step = (
+      { ArrowRight: 1, ArrowDown: 1, ArrowLeft: -1, ArrowUp: -1 } as Record<string, number>
+    )[event.key];
+    const next =
+      event.key === 'Home'
+        ? cards[0]
+        : event.key === 'End'
+          ? cards[cards.length - 1]
+          : step
+            ? cards[cards.indexOf(current) + step]
+            : undefined;
+    if (event.key === 'ArrowUp' && !next) {
+      // Above the first card is the search.
+      event.preventDefault();
+      this.searchInput()?.nativeElement.focus();
+      return;
+    }
     if (next) {
       event.preventDefault();
       next.focus();

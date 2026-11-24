@@ -1819,6 +1819,7 @@
     "all": "Todas",
     "uncategorised": "Sin categoría",
     "noMatch": "Ninguna regla coincide con «{{query}}».",
+    "resultCount": "{{count}} encontradas",
     "clearSearch": "Borrar la búsqueda",
     "cancel": "Cancelar",
     "saveError": "No se pudo guardar la Referencia rápida",

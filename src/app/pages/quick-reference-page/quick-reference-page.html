@@ -70,7 +70,9 @@
         [placeholder]="'quickReference.searchPlaceholder' | translate"
         [attr.aria-label]="'quickReference.searchPlaceholder' | translate"
         (input)="onSearch($event)"
-        (keydown.escape)="service.query() ? clearSearch() : null"
+        (keydown.escape)="onSearchEscape($event)"
+        (keydown.arrowdown)="focusFirstCard($event)"
+        (keydown.enter)="focusFirstCard($event)"
       />
       <kbd class="border border-border px-1.5 font-mono text-[11px] text-muted-foreground" aria-hidden="true">/</kbd>
     </label>
@@ -86,6 +88,11 @@
         <arc-select-item [arcValue]="chip.id" [arcLabel]="chip.label" />
       }
     </arc-select>
+    @if (service.query().trim()) {
+      <span class="font-mono text-[11px] text-muted-foreground" role="status">
+        {{ 'quickReference.resultCount' | translate: { count: service.matchCount() } }}
+      </span>
+    }
     <span class="flex-1"></span>
 
     <button arc-button arcType="outline" arcSize="sm" type="button" (click)="openCategoryDialog(null)">
@@ -157,6 +164,7 @@
                     : 'border-border-subtle bg-card hover:bg-accent'
                 "
                 [attr.aria-pressed]="isSelected(rule)"
+                [attr.tabindex]="cardKey(group, rule) === tabStop() ? 0 : -1"
                 (click)="service.select(rule.id)"
                 (keydown)="onCardKeydown($event)"
               >

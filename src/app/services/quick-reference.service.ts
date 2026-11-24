@@ -138,10 +138,12 @@ export class QuickReferenceService extends BaseIpcService<APIChannel.QUICK_REFER
 
   setQuery(query: string): void {
     this.querySignal.set(query);
+    this.dropHiddenSelection();
   }
 
   setCategory(category: string | null): void {
     this.categorySignal.set(category);
+    this.dropHiddenSelection();
   }
 
   select(ruleId: string | null): void {
@@ -252,6 +254,17 @@ export class QuickReferenceService extends BaseIpcService<APIChannel.QUICK_REFER
         expectedHash: hash,
       }),
     );
+  }
+
+  /** The rule being read always sits in the list: when a search or a category hides it, it is put away. */
+  private dropHiddenSelection(): void {
+    const selected = this.selectedSignal();
+    if (
+      selected !== null &&
+      !this.visibleGroups().some((group) => group.rules.some((rule) => rule.id === selected))
+    ) {
+      this.selectedSignal.set(null);
+    }
   }
 
   private reset(): void {

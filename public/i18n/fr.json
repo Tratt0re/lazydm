@@ -1819,6 +1819,7 @@
     "all": "Toutes",
     "uncategorised": "Sans catégorie",
     "noMatch": "Aucune règle ne correspond à « {{query}} ».",
+    "resultCount": "{{count}} trouvées",
     "clearSearch": "Effacer la recherche",
     "cancel": "Annuler",
     "saveError": "La Référence rapide n'a pas pu être enregistrée",
