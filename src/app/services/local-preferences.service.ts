@@ -23,7 +23,11 @@ import {
   isSectionSortMode,
   type SectionSortMode,
 } from '@/config/section-sort.config';
-import { DEFAULT_SECTION_VIEW, isSectionView, type SectionView } from '@/config/section-view.config';
+import {
+  DEFAULT_SECTION_VIEW,
+  isSectionView,
+  type SectionView,
+} from '@/config/section-view.config';
 
 const DOCUMENT_VIEW_MODES_MAX_ENTRIES = 500;
 const EXPLORER_EXPANDED_MAX_ENTRIES = 50;

@@ -78,6 +78,7 @@ import { ArcTechIconComponent, type ArcTechIcon } from '@/shared/components/icon
 import { ArcTechMenuImports } from '@/shared/components/menu';
 import { ArcTechTooltipImports } from '@/shared/components/tooltip';
 import { formatFileSize } from '@/shared/utils/file-size';
+import { relativeTimeParts } from '@/shared/utils/relative-time';
 import { SectionActionsService } from '@/services/section-actions.service';
 
 export const CAMPAIGN_SECTION_PARAM = 'section';
@@ -90,8 +91,8 @@ const ENCOUNTERS_SECTION_KEY = 'encounters';
 /** The Maps section: `.json` files with their own page, created with *New map*. */
 const MAPS_SECTION_KEY = 'maps';
 
-/** Views the page can draw so far; the switch only shows once there is more than one (Cards: phase 4, Graph: phase 6). */
-const BUILT_VIEWS: readonly SectionView[] = ['list'];
+/** Views the page can draw so far; the switch only shows once there is more than one (Graph comes in phase 6). */
+const BUILT_VIEWS: readonly SectionView[] = ['list', 'cards'];
 
 /** A sub-folder of the section with the files directly in it. */
 interface SectionTreeFolder extends DocumentFolderDto {
@@ -844,6 +845,24 @@ export class CampaignSectionPage {
         },
       }),
     );
+  }
+
+  /** Where a card of an asset, encounter or map opens (not a note, not a PDF); null when it opens nothing. */
+  protected cardRoute(file: DocumentFileListItemDto): string | null {
+    const route = this.encounterRoute(file) ?? this.mapRoute(file) ?? this.assetRoute(file);
+    return route === this.scopeRoute() ? null : route;
+  }
+
+  /** The small line at the foot of a card: the file size when the device shows sizes, else when it changed. */
+  protected cardMeta(file: DocumentFileListItemDto): string {
+    if (this.showFileSizes() || file.kind !== 'md') {
+      return formatFileSize(file.size);
+    }
+
+    return new Intl.RelativeTimeFormat(this.translateService.currentLang || undefined, {
+      numeric: 'auto',
+      style: 'short',
+    }).format(...relativeTimeParts(file.mtimeMs));
   }
 
   /** Icon of a non-image file of the list: PDF, audio, anything else. */

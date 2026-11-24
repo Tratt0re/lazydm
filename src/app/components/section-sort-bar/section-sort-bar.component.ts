@@ -179,7 +179,9 @@ export interface FolderOption {
               (click)="viewChange.emit(option)"
             >
               <arc-icon [arcType]="viewIconOf(option)" class="size-4" />
-              <span class="hidden md:inline">{{ 'campaigns.sections.views.' + option | translate }}</span>
+              <span class="hidden md:inline">{{
+                'campaigns.sections.views.' + option | translate
+              }}</span>
             </button>
           }
         </div>

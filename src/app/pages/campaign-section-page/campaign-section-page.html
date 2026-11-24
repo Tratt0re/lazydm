@@ -201,32 +201,79 @@
         }
 
         <ng-template #fileMenu>
-          <div arc-menu-content class="w-56">
-            <app-open-in-tab-menu [path]="file.path" />
-            <button type="button" arc-menu-item (click)="copyTo.openCopySheet(file.path)">
-              <arc-icon [arcType]="copyTo.copyIcon(file.path)" />
-              {{ copyLabel(file) | translate }}
-            </button>
-            <button type="button" arc-menu-item (click)="openRenameSheet(file)">
-              <arc-icon [arcType]="mapRoute(file) ? 'pencil' : 'text-cursor-input'" />
-              {{ renameLabel(file) | translate }}
-            </button>
-            <button type="button" arc-menu-item (click)="openMoveSheet(file)">
-              <arc-icon arcType="move-right" />
-              {{ 'campaigns.sections.move.menu' | translate }}
-            </button>
-            <button type="button" arc-menu-item (click)="reveal(file.path)">
-              <arc-icon arcType="folder" />
-              {{ revealLabel | translate }}
-            </button>
-            <div class="-mx-1 my-1 h-px bg-border-subtle" role="separator"></div>
-            <button type="button" arc-menu-item arcType="destructive" (click)="openDeleteSheet(file)">
-              <arc-icon arcType="trash" />
-              {{ 'files.delete.menu' | translate }}
-            </button>
-          </div>
+          <ng-container *ngTemplateOutlet="fileMenuContent; context: { $implicit: file }" />
         </ng-template>
       </li>
+    </ng-template>
+
+    <!-- The menu of a file (right-click or "…"), the same in the list rows and in the cards. -->
+    <ng-template #fileMenuContent let-file>
+      <div arc-menu-content class="w-56">
+        <app-open-in-tab-menu [path]="file.path" />
+        <button type="button" arc-menu-item (click)="copyTo.openCopySheet(file.path)">
+          <arc-icon [arcType]="copyTo.copyIcon(file.path)" />
+          {{ copyLabel(file) | translate }}
+        </button>
+        <button type="button" arc-menu-item (click)="openRenameSheet(file)">
+          <arc-icon [arcType]="mapRoute(file) ? 'pencil' : 'text-cursor-input'" />
+          {{ renameLabel(file) | translate }}
+        </button>
+        <button type="button" arc-menu-item (click)="openMoveSheet(file)">
+          <arc-icon arcType="move-right" />
+          {{ 'campaigns.sections.move.menu' | translate }}
+        </button>
+        <button type="button" arc-menu-item (click)="reveal(file.path)">
+          <arc-icon arcType="folder" />
+          {{ revealLabel | translate }}
+        </button>
+        <div class="-mx-1 my-1 h-px bg-border-subtle" role="separator"></div>
+        <button type="button" arc-menu-item arcType="destructive" (click)="openDeleteSheet(file)">
+          <arc-icon arcType="trash" />
+          {{ 'files.delete.menu' | translate }}
+        </button>
+      </div>
+    </ng-template>
+
+    <!-- The menu of a sub-folder, the same in the list rows and in the folder cards. -->
+    <ng-template #folderMenuContent let-folder>
+      <div arc-menu-content class="w-56">
+        <a arc-menu-item [routerLink]="[scopeRoute(), section.key]" [queryParams]="{ folder: folder.name }">
+          <arc-icon arcType="folder" />
+          {{ 'campaigns.sections.openFolder' | translate }}
+        </a>
+        @if (canCreateNote()) {
+          <button type="button" arc-menu-item (click)="openCreateSheet(folder.name)">
+            <arc-icon arcType="file-plus" />
+            {{ 'campaigns.sections.newNote.create' | translate }}
+          </button>
+        }
+        @if (isEncountersSection()) {
+          <button type="button" arc-menu-item (click)="openCreateEncounterSheet(folder.name)">
+            <arc-icon arcType="swords" />
+            {{ 'encounters.new.button' | translate }}
+          </button>
+        }
+        @if (isAssetsSection()) {
+          <button type="button" arc-menu-item (click)="openImportFromDiskSheet(folder.name)">
+            <arc-icon arcType="file-up" />
+            {{ 'files.importFromDisk.button' | translate }}
+          </button>
+        }
+        <div class="-mx-1 my-1 h-px bg-border-subtle" role="separator"></div>
+        <button type="button" arc-menu-item (click)="openRenameFolderSheet(folder)">
+          <arc-icon arcType="text-cursor-input" />
+          {{ 'campaigns.sections.renameAsset.menu' | translate }}
+        </button>
+        <button type="button" arc-menu-item (click)="reveal(folderPathOf(folder.name))">
+          <arc-icon arcType="folder" />
+          {{ revealLabel | translate }}
+        </button>
+        <div class="-mx-1 my-1 h-px bg-border-subtle" role="separator"></div>
+        <button type="button" arc-menu-item arcType="destructive" (click)="openDeleteFolderSheet(folder)">
+          <arc-icon arcType="trash" />
+          {{ 'files.delete.menu' | translate }}
+        </button>
+      </div>
     </ng-template>
 
     @if (isAssetsSection() && !isLoading() && !errorMessage()) {
@@ -295,6 +342,144 @@
               {{ 'campaigns.sections.filter.clearAll' | translate }}
             </button>
           </ng-template>
+        } @else if (view() === 'cards') {
+          @if (!isFiltering() && folders().length > 0) {
+            <!-- Sub-folders as compact cards: a click opens the folder page; files can be dropped on them. -->
+            <ul class="grid grid-cols-[repeat(auto-fill,minmax(12.5rem,1fr))] gap-2" [attr.aria-label]="'campaigns.sections.foldersAriaLabel' | translate">
+              @for (folder of folders(); track folder.name) {
+                <li
+                  class="group relative flex h-12 items-center gap-2.5 border bg-recessed px-3 transition-colors hover:bg-accent"
+                  [class]="dropTarget() === folder.name ? 'border-primary bg-accent' : 'border-border'"
+                  arc-context-menu
+                  [arcContextMenuTriggerFor]="folderCardMenu"
+                  [style.cursor]="'auto'"
+                  (dragover)="onDragOver($event, folder.name)"
+                  (dragleave)="onDragLeave(folder.name)"
+                  (drop)="onDrop($event, folder.name)"
+                >
+                  <arc-icon arcType="folder" class="size-4 shrink-0 text-primary" aria-hidden="true" />
+                  <a
+                    [routerLink]="[scopeRoute(), section.key]"
+                    [queryParams]="{ folder: folder.name }"
+                    draggable="false"
+                    class="min-w-0 flex-1 truncate font-display text-lg font-bold tracking-[0.03em] text-foreground-strong uppercase after:absolute after:inset-0 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-ring"
+                  >
+                    {{ toSubfolderLabel(folder.name) }}
+                  </a>
+                  <span class="font-mono text-[11px] tracking-[0.06em] text-muted-foreground uppercase">{{ folder.fileCount }}</span>
+                  <button
+                    type="button"
+                    arc-button
+                    arc-menu
+                    [arcMenuTriggerFor]="folderCardMenu"
+                    arcPlacement="bottomRight"
+                    arcType="ghost"
+                    arcSize="sm"
+                    class="relative z-10 -mr-2 size-7 opacity-0 group-focus-within:opacity-100 group-hover:opacity-100"
+                    [attr.aria-label]="'common.moreActions' | translate"
+                  >
+                    <arc-icon arcType="ellipsis" />
+                  </button>
+                  <ng-template #folderCardMenu>
+                    <ng-container *ngTemplateOutlet="folderMenuContent; context: { $implicit: folder }" />
+                  </ng-template>
+                </li>
+              }
+            </ul>
+          }
+
+          <ul
+            class="grid grid-cols-[repeat(auto-fill,minmax(15.5rem,1fr))] gap-2"
+            [class.mt-3]="!isFiltering() && folders().length > 0"
+          >
+            @for (file of isFiltering() ? results() : files(); track file.path) {
+              <li
+                class="group relative flex min-h-28 flex-col border border-border-subtle bg-card transition-colors hover:border-border-strong"
+                [class.opacity-50]="draggedPath() === file.path"
+                draggable="true"
+                arc-context-menu
+                [arcContextMenuTriggerFor]="cardMenu"
+                [style.cursor]="'auto'"
+                (dragstart)="onDragStart($event, file)"
+                (dragend)="onDragEnd()"
+              >
+                @let imageUrl = thumbnailUrl(file);
+                @if (imageUrl) {
+                  <div class="h-28 overflow-hidden border-b border-border-subtle bg-recessed">
+                    <img [src]="imageUrl" alt="" loading="lazy" draggable="false" class="size-full object-cover" />
+                  </div>
+                } @else if (file.kind !== 'md') {
+                  <div class="flex h-[72px] items-center justify-center border-b border-border-subtle bg-recessed text-primary">
+                    <arc-icon [arcType]="assetIcon(file)" class="size-7" aria-hidden="true" />
+                  </div>
+                }
+
+                <div class="flex items-start gap-2.5 px-3 pt-3 pb-2">
+                  @if (file.kind === 'md') {
+                    <arc-icon arcType="file-text" class="mt-0.5 size-4 shrink-0 text-primary" aria-hidden="true" />
+                  }
+                  @if (file.kind === 'md') {
+                    <a
+                      [routerLink]="noteRoute(file)"
+                      draggable="false"
+                      class="line-clamp-2 min-w-0 flex-1 text-sm leading-snug font-semibold text-foreground-strong after:absolute after:inset-0 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-ring"
+                    >{{ file.title }}</a>
+                  } @else if (isPdf(file)) {
+                    <button
+                      type="button"
+                      draggable="false"
+                      class="line-clamp-2 min-w-0 flex-1 cursor-pointer text-left text-sm leading-snug font-semibold text-foreground-strong after:absolute after:inset-0 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-ring"
+                      (click)="openPdf(file)"
+                    >{{ file.name }}</button>
+                  } @else if (cardRoute(file); as target) {
+                    <a
+                      [routerLink]="target"
+                      draggable="false"
+                      class="line-clamp-2 min-w-0 flex-1 text-sm leading-snug font-semibold text-foreground-strong after:absolute after:inset-0 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-ring"
+                    >{{ file.title || file.name }}</a>
+                  } @else {
+                    <span class="line-clamp-2 min-w-0 flex-1 text-sm leading-snug font-semibold text-foreground-strong">{{ file.name }}</span>
+                  }
+                  <button
+                    type="button"
+                    arc-button
+                    arc-menu
+                    [arcMenuTriggerFor]="cardMenu"
+                    arcPlacement="bottomRight"
+                    arcType="ghost"
+                    arcSize="sm"
+                    class="relative z-10 -mt-1 -mr-2 size-7 shrink-0 opacity-0 group-focus-within:opacity-100 group-hover:opacity-100"
+                    [attr.aria-label]="'common.moreActions' | translate"
+                  >
+                    <arc-icon arcType="ellipsis" />
+                  </button>
+                </div>
+
+                @if (isFiltering() && folderLabelOf(file); as where) {
+                  <p class="-mt-1 mb-2 px-3 font-mono text-[11px] tracking-[0.06em] text-muted-foreground uppercase">{{ where }}</p>
+                }
+
+                <div class="relative z-10 mt-auto flex items-center gap-2 px-3 pb-3">
+                  @if (file.tags.length > 0) {
+                    <app-tag-list
+                      class="min-w-0 flex-1"
+                      [tags]="file.tags"
+                      [active]="filter().tags"
+                      [query]="filter().query"
+                      (tagClicked)="toggleFilterTag($event)"
+                    />
+                  } @else {
+                    <span class="flex-1"></span>
+                  }
+                  <span class="font-mono text-[11px] whitespace-nowrap text-muted-foreground">{{ cardMeta(file) }}</span>
+                </div>
+
+                <ng-template #cardMenu>
+                  <ng-container *ngTemplateOutlet="fileMenuContent; context: { $implicit: file }" />
+                </ng-template>
+              </li>
+            }
+          </ul>
         } @else {
         <ul class="flex flex-col border border-border bg-card">
           @if (isFiltering()) {
@@ -377,44 +562,7 @@
               }
 
               <ng-template #folderMenu>
-                <div arc-menu-content class="w-56">
-                  <a arc-menu-item [routerLink]="[scopeRoute(), section.key]" [queryParams]="{ folder: folder.name }">
-                    <arc-icon arcType="folder" />
-                    {{ 'campaigns.sections.openFolder' | translate }}
-                  </a>
-                  @if (canCreateNote()) {
-                    <button type="button" arc-menu-item (click)="openCreateSheet(folder.name)">
-                      <arc-icon arcType="file-plus" />
-                      {{ 'campaigns.sections.newNote.create' | translate }}
-                    </button>
-                  }
-                  @if (isEncountersSection()) {
-                    <button type="button" arc-menu-item (click)="openCreateEncounterSheet(folder.name)">
-                      <arc-icon arcType="swords" />
-                      {{ 'encounters.new.button' | translate }}
-                    </button>
-                  }
-                  @if (isAssetsSection()) {
-                    <button type="button" arc-menu-item (click)="openImportFromDiskSheet(folder.name)">
-                      <arc-icon arcType="file-up" />
-                      {{ 'files.importFromDisk.button' | translate }}
-                    </button>
-                  }
-                  <div class="-mx-1 my-1 h-px bg-border-subtle" role="separator"></div>
-                  <button type="button" arc-menu-item (click)="openRenameFolderSheet(folder)">
-                    <arc-icon arcType="text-cursor-input" />
-                    {{ 'campaigns.sections.renameAsset.menu' | translate }}
-                  </button>
-                  <button type="button" arc-menu-item (click)="reveal(folderPathOf(folder.name))">
-                    <arc-icon arcType="folder" />
-                    {{ revealLabel | translate }}
-                  </button>
-                  <div class="-mx-1 my-1 h-px bg-border-subtle" role="separator"></div>
-                  <button type="button" arc-menu-item arcType="destructive" (click)="openDeleteFolderSheet(folder)">
-                    <arc-icon arcType="trash" />
-                    {{ 'files.delete.menu' | translate }}
-                  </button>
-                </div>
+                <ng-container *ngTemplateOutlet="folderMenuContent; context: { $implicit: folder }" />
               </ng-template>
             </li>
           }
