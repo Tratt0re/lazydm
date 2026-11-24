@@ -743,6 +743,24 @@
         "list": "Liste",
         "cards": "Cartes",
         "graph": "Graphe"
+      },
+      "graph": {
+        "ariaLabel": "Liens entre les notes de ce dossier",
+        "zoomIn": "Zoom avant",
+        "zoomOut": "Zoom arrière",
+        "fit": "Ajuster à la fenêtre",
+        "legendInside": "Dans ce dossier",
+        "legendOutside": "Hors de ce dossier",
+        "outside": "Hors",
+        "noLinksTitle": "Pas encore de liens",
+        "oneNoteTitle": "Une seule note ici",
+        "noLinksHint": "Écrivez [[Nom de la note]] dans une note et un trait vers elle apparaît ici. Les notes hors de ce dossier apparaissent dès qu’elles sont liées.",
+        "truncated": "Premières notes seulement",
+        "linksTo": "Lie vers",
+        "linkedFrom": "Lié depuis",
+        "nothingYet": "Rien pour l’instant.",
+        "openNote": "Ouvrir la note",
+        "newTab": "Nouvel onglet"
       }
     },
     "assets": {

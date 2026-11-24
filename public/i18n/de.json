@@ -743,6 +743,24 @@
         "list": "Liste",
         "cards": "Karten",
         "graph": "Graph"
+      },
+      "graph": {
+        "ariaLabel": "Verknüpfungen zwischen den Notizen dieses Ordners",
+        "zoomIn": "Vergrößern",
+        "zoomOut": "Verkleinern",
+        "fit": "An Fenster anpassen",
+        "legendInside": "In diesem Ordner",
+        "legendOutside": "Außerhalb dieses Ordners",
+        "outside": "Außerhalb",
+        "noLinksTitle": "Noch keine Links",
+        "oneNoteTitle": "Nur eine Notiz hier",
+        "noLinksHint": "Schreibe [[Notizname]] in eine Notiz, dann erscheint hier eine Linie dorthin. Notizen außerhalb dieses Ordners erscheinen, sobald sie verlinkt sind.",
+        "truncated": "Nur die ersten Notizen",
+        "linksTo": "Verlinkt auf",
+        "linkedFrom": "Verlinkt von",
+        "nothingYet": "Noch nichts.",
+        "openNote": "Notiz öffnen",
+        "newTab": "Neuer Tab"
       }
     },
     "assets": {

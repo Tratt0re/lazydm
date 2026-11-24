@@ -329,7 +329,95 @@
           (changed)="setSortMode($event)"
           (filterChange)="filter.set($event)"
         />
-        @if (isFiltering() && results().length === 0) {
+        @if (view() === 'graph') {
+          <!-- Graph: the notes of the folder and their links. Search and filters dim what does not match. -->
+          <div class="mt-4 grid gap-0 md:grid-cols-[minmax(0,1fr)_auto]">
+            <app-section-graph
+              [graph]="graph()"
+              [matching]="graphMatching()"
+              [selected]="graphSelected()"
+              (nodeSelect)="graphSelected.set($event)"
+              (nodeOpen)="onGraphOpen($event)"
+              (backgroundClick)="graphSelected.set(null)"
+            />
+            @if (graphDetail(); as detail) {
+              <aside
+                class="relative flex w-full flex-col gap-2.5 overflow-auto border border-t-0 border-border bg-card p-5 md:w-[21rem] md:border-t md:border-l-0"
+                [attr.aria-label]="detail.node.title"
+              >
+                <button
+                  type="button"
+                  arc-button
+                  arcType="ghost"
+                  class="absolute top-2 right-2 size-8"
+                  [attr.aria-label]="'common.close' | translate"
+                  (click)="graphSelected.set(null)"
+                >
+                  <arc-icon arcType="x" />
+                </button>
+                <p class="font-mono text-[11px] tracking-[0.08em] text-muted-foreground uppercase">
+                  {{ (detail.node.external ? 'campaigns.sections.graph.legendOutside' : 'campaigns.sections.graph.legendInside') | translate }}
+                </p>
+                <h3 class="pr-8 font-display text-3xl leading-none font-bold text-foreground-strong uppercase">
+                  {{ detail.node.title }}<span class="text-primary" aria-hidden="true">.</span>
+                </h3>
+                @if (detail.tags.length > 0) {
+                  <app-tag-list
+                    [tags]="detail.tags"
+                    [wrap]="true"
+                    [active]="filter().tags"
+                    (tagClicked)="toggleFilterTag($event)"
+                  />
+                }
+                <h4 class="mt-1.5 border-t border-border-subtle pt-2.5 font-mono text-[11px] tracking-[0.08em] text-muted-foreground uppercase">
+                  {{ 'campaigns.sections.graph.linksTo' | translate }} · {{ detail.to.length }}
+                </h4>
+                <ul class="grid gap-0.5">
+                  @for (item of detail.to; track item.path) {
+                    <li>
+                      <button type="button" class="flex w-full cursor-pointer items-center gap-2 px-1.5 py-1 text-left text-[13px] hover:bg-accent focus-visible:outline-2 focus-visible:outline-ring" (click)="graphSelected.set(item.path)">
+                        <arc-icon arcType="file-text" class="size-4 shrink-0 text-primary" />
+                        <span class="truncate">{{ item.title }}</span>
+                        @if (item.external) {
+                          <span class="ml-auto border border-dashed border-border px-1 font-mono text-[10px] tracking-[0.06em] text-muted-foreground uppercase">{{ 'campaigns.sections.graph.outside' | translate }}</span>
+                        }
+                      </button>
+                    </li>
+                  } @empty {
+                    <li class="text-[13px] text-muted-foreground">{{ 'campaigns.sections.graph.nothingYet' | translate }}</li>
+                  }
+                </ul>
+                <h4 class="mt-1.5 border-t border-border-subtle pt-2.5 font-mono text-[11px] tracking-[0.08em] text-muted-foreground uppercase">
+                  {{ 'campaigns.sections.graph.linkedFrom' | translate }} · {{ detail.from.length }}
+                </h4>
+                <ul class="grid gap-0.5">
+                  @for (item of detail.from; track item.path) {
+                    <li>
+                      <button type="button" class="flex w-full cursor-pointer items-center gap-2 px-1.5 py-1 text-left text-[13px] hover:bg-accent focus-visible:outline-2 focus-visible:outline-ring" (click)="graphSelected.set(item.path)">
+                        <arc-icon arcType="file-text" class="size-4 shrink-0 text-primary" />
+                        <span class="truncate">{{ item.title }}</span>
+                        @if (item.external) {
+                          <span class="ml-auto border border-dashed border-border px-1 font-mono text-[10px] tracking-[0.06em] text-muted-foreground uppercase">{{ 'campaigns.sections.graph.outside' | translate }}</span>
+                        }
+                      </button>
+                    </li>
+                  } @empty {
+                    <li class="text-[13px] text-muted-foreground">{{ 'campaigns.sections.graph.nothingYet' | translate }}</li>
+                  }
+                </ul>
+                <div class="mt-auto flex gap-1.5 pt-3">
+                  <button type="button" arc-button (click)="onGraphOpen({ path: detail.node.path, mode: 'here' })">
+                    {{ 'campaigns.sections.graph.openNote' | translate }}
+                  </button>
+                  <button type="button" arc-button arcType="outline" (click)="onGraphOpen({ path: detail.node.path, mode: 'tab' })">
+                    <arc-icon arcType="arrow-up-right" />
+                    {{ 'campaigns.sections.graph.newTab' | translate }}
+                  </button>
+                </div>
+              </aside>
+            }
+          </div>
+        } @else if (isFiltering() && results().length === 0) {
           <arc-empty
             arcIcon="search"
             [arcTitle]="'campaigns.sections.filter.noResultsTitle' | translate"

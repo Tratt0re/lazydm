@@ -1480,7 +1480,10 @@ async function copyMapImage(vaultPath, sourcePath, targetPath, target) {
 
   const imageLocation = await getCopyLocation(vaultPath, source.map.image, target);
   const imageTarget = `${target}/${toCopyFolder(imageLocation, imageLocation.subfolder)}/${path.posix.basename(source.map.image)}`;
-  if (imageTarget !== source.map.image && fs.existsSync(resolveInsideVault(vaultPath, source.map.image))) {
+  if (
+    imageTarget !== source.map.image &&
+    fs.existsSync(resolveInsideVault(vaultPath, source.map.image))
+  ) {
     await documentModel.copyVaultFile(vaultPath, source.map.image, imageTarget);
   }
 
@@ -1550,7 +1553,10 @@ async function copy(payload) {
 
   const linkedPaths = [];
   try {
-    if (location.section === mapModel.MAPS_SECTION_KEY && extension.toLocaleLowerCase() === mapModel.MAP_EXTENSION) {
+    if (
+      location.section === mapModel.MAPS_SECTION_KEY &&
+      extension.toLocaleLowerCase() === mapModel.MAP_EXTENSION
+    ) {
       const imagePath = await copyMapImage(vaultPath, relativePath, targetPath, target);
       if (imagePath) {
         linkedPaths.push(imagePath);

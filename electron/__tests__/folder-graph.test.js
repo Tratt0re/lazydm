@@ -36,7 +36,12 @@ describeWithSqlite('vault index folder graph', () => {
     indexDb.openVaultIndexDatabase('graph-test');
     model = require('../models/vault-index.model');
 
-    note('camp/enemies/captain.md', ['ashen cultist', 'oswin', 'blackwater keep', 'crownless king']);
+    note('camp/enemies/captain.md', [
+      'ashen cultist',
+      'oswin',
+      'blackwater keep',
+      'crownless king',
+    ]);
     note('camp/enemies/ashen cultist.md', ['oswin', 'blackwater keep', 'ashen cultist']);
     note('camp/enemies/humans/oswin.md', ['captain', 'captain']);
     note('camp/enemies/lonely.md', ['no such note']);
@@ -128,7 +133,11 @@ describeWithSqlite('vault index folder graph', () => {
   });
 
   it('is empty for a folder without notes', () => {
-    expect(model.getFolderGraph('camp/nothing')).toEqual({ nodes: [], edges: [], truncated: false });
+    expect(model.getFolderGraph('camp/nothing')).toEqual({
+      nodes: [],
+      edges: [],
+      truncated: false,
+    });
   });
 
   it('keeps the notes of the folder first and says when it cut', () => {
@@ -138,7 +147,9 @@ describeWithSqlite('vault index folder graph', () => {
     expect(graph.nodes.every((node) => !node.external)).toBe(true);
     expect(graph.truncated).toBe(true);
     const shown = new Set(paths(graph.nodes));
-    expect(graph.edges.every((edge) => shown.has(edge.source) && shown.has(edge.target))).toBe(true);
+    expect(graph.edges.every((edge) => shown.has(edge.source) && shown.has(edge.target))).toBe(
+      true,
+    );
   });
 
   it('fills what is left with the neighbours linked from most notes', () => {

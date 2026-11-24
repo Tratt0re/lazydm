@@ -743,6 +743,24 @@
         "list": "Elenco",
         "cards": "Schede",
         "graph": "Grafo"
+      },
+      "graph": {
+        "ariaLabel": "Collegamenti tra le note di questa cartella",
+        "zoomIn": "Ingrandisci",
+        "zoomOut": "Riduci",
+        "fit": "Adatta alla finestra",
+        "legendInside": "In questa cartella",
+        "legendOutside": "Fuori da questa cartella",
+        "outside": "Fuori",
+        "noLinksTitle": "Ancora nessun collegamento",
+        "oneNoteTitle": "Qui c’è una sola nota",
+        "noLinksHint": "Scrivi [[Nome della nota]] in una nota e qui compare una linea verso di essa. Le note fuori da questa cartella appaiono quando sono collegate.",
+        "truncated": "Solo le prime note",
+        "linksTo": "Collega a",
+        "linkedFrom": "Collegata da",
+        "nothingYet": "Ancora niente.",
+        "openNote": "Apri la nota",
+        "newTab": "Nuova scheda"
       }
     },
     "assets": {

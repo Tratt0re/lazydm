@@ -743,6 +743,24 @@
         "list": "List",
         "cards": "Cards",
         "graph": "Graph"
+      },
+      "graph": {
+        "ariaLabel": "Links between the notes of this folder",
+        "zoomIn": "Zoom in",
+        "zoomOut": "Zoom out",
+        "fit": "Fit to window",
+        "legendInside": "In this folder",
+        "legendOutside": "Outside this folder",
+        "outside": "Outside",
+        "noLinksTitle": "No links yet",
+        "oneNoteTitle": "Only one note here",
+        "noLinksHint": "Write [[Note name]] in a note and a line to it appears here. Notes outside this folder show up once they are linked.",
+        "truncated": "Showing the first notes only",
+        "linksTo": "Links to",
+        "linkedFrom": "Linked from",
+        "nothingYet": "Nothing yet.",
+        "openNote": "Open note",
+        "newTab": "New tab"
       }
     },
     "assets": {

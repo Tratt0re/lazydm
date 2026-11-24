@@ -743,6 +743,24 @@
         "list": "列表",
         "cards": "卡片",
         "graph": "图谱"
+      },
+      "graph": {
+        "ariaLabel": "此文件夹中笔记之间的链接",
+        "zoomIn": "放大",
+        "zoomOut": "缩小",
+        "fit": "适应窗口",
+        "legendInside": "在此文件夹中",
+        "legendOutside": "在此文件夹外",
+        "outside": "外部",
+        "noLinksTitle": "还没有链接",
+        "oneNoteTitle": "这里只有一条笔记",
+        "noLinksHint": "在笔记中写 [[笔记名称]]，这里就会出现一条指向它的线。此文件夹外的笔记在被链接后会显示出来。",
+        "truncated": "仅显示前几条笔记",
+        "linksTo": "链接到",
+        "linkedFrom": "被链接自",
+        "nothingYet": "暂时没有。",
+        "openNote": "打开笔记",
+        "newTab": "新标签页"
       }
     },
     "assets": {

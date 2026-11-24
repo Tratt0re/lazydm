@@ -24,6 +24,7 @@ import {
 import type {
   DocumentFileListItemDto,
   DocumentFolderDto,
+  FolderGraphDto,
   TemplateDto,
   TemplateRulesDto,
 } from '@/dtos';
@@ -41,6 +42,11 @@ import {
   sortSectionFiles,
   sortSectionFolders,
 } from '@/config/section-sort.config';
+import {
+  AppSectionGraphComponent,
+  type GraphNodeOpen,
+} from '@/components/section-graph/section-graph.component';
+import { WorkspaceService } from '@/services/workspace.service';
 import {
   DEFAULT_SECTION_VIEW,
   resolveSectionView,
@@ -91,8 +97,8 @@ const ENCOUNTERS_SECTION_KEY = 'encounters';
 /** The Maps section: `.json` files with their own page, created with *New map*. */
 const MAPS_SECTION_KEY = 'maps';
 
-/** Views the page can draw so far; the switch only shows once there is more than one (Graph comes in phase 6). */
-const BUILT_VIEWS: readonly SectionView[] = ['list', 'cards'];
+/** Views the page can draw; the switch shows once a section offers more than one of them. */
+const BUILT_VIEWS: readonly SectionView[] = ['list', 'cards', 'graph'];
 
 /** A sub-folder of the section with the files directly in it. */
 interface SectionTreeFolder extends DocumentFolderDto {
@@ -108,6 +114,7 @@ interface SectionTreeFolder extends DocumentFolderDto {
     TranslatePipe,
     AppOpenInTabMenuComponent,
     ArcTechMenuImports,
+    AppSectionGraphComponent,
     AppSectionSortBarComponent,
     AppTagListComponent,
     ArcTechAlertComponent,
@@ -122,6 +129,7 @@ interface SectionTreeFolder extends DocumentFolderDto {
 export class CampaignSectionPage {
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
+  private readonly workspace = inject(WorkspaceService);
   /** A campaign, or a compendium system (the same page lists both). */
   private readonly scope = inject(NoteScopeService).scopeOf(getNoteScopeKind(this.route));
   private readonly documentService = inject(DocumentService);
@@ -315,6 +323,17 @@ export class CampaignSectionPage {
         paths.some((path) => path.startsWith(`${sectionPath}/`) || path === sectionPath)
       ) {
         void this.reloadTreeQuietly(sectionPath);
+        void this.loadGraph();
+      }
+    });
+
+    // The graph is fetched when the Graph view is shown (and again when the folder changes), never otherwise.
+    effect(() => {
+      if (this.view() === 'graph' && this.scope()) {
+        this.folderPath();
+        void this.loadGraph();
+      } else {
+        this.graphSelected.set(null);
       }
     });
 
@@ -558,6 +577,68 @@ export class CampaignSectionPage {
     return this.copyTo.isInCompendium(file.path)
       ? 'compendium.copy.toCampaign'
       : 'compendium.copy.toCompendium';
+  }
+
+  // --- Graph view --------------------------------------------------------------------------------------
+
+  protected readonly graph = signal<FolderGraphDto>({ nodes: [], edges: [], truncated: false });
+  protected readonly graphSelected = signal<string | null>(null);
+  private graphToken = 0;
+  /** The note shown in the detail panel, with what it links to and what links to it. */
+  protected readonly graphDetail = computed(() => {
+    const path = this.graphSelected();
+    const { nodes, edges } = this.graph();
+    const node = nodes.find((item) => item.path === path);
+    if (!node) {
+      return null;
+    }
+
+    const byPath = new Map(nodes.map((item) => [item.path, item]));
+    const tags = this.allFiles().find((file) => file.path === node.path)?.tags ?? [];
+    return {
+      node,
+      tags,
+      to: edges.filter((edge) => edge.source === path).map((edge) => byPath.get(edge.target)!),
+      from: edges.filter((edge) => edge.target === path).map((edge) => byPath.get(edge.source)!),
+    };
+  });
+  /** Notes of the graph that pass the search and filters (null while nothing is filtered, so none is dimmed). */
+  protected readonly graphMatching = computed<ReadonlySet<string> | null>(() =>
+    this.isFiltering() ? new Set(this.results().map((file) => file.path)) : null,
+  );
+
+  private async loadGraph(): Promise<void> {
+    if (this.view() !== 'graph' || !this.scope()) {
+      return;
+    }
+
+    const token = ++this.graphToken;
+    try {
+      const graph = await this.documentService.folderGraph(this.folderPath());
+      if (token === this.graphToken) {
+        this.graph.set(graph);
+        if (this.graphSelected() && !graph.nodes.some((node) => node.path === this.graphSelected())) {
+          this.graphSelected.set(null);
+        }
+      }
+    } catch (error) {
+      console.warn('[app] Failed to load the graph:', this.folderPath(), error);
+    }
+  }
+
+  protected onGraphOpen(open: GraphNodeOpen): void {
+    const route = toInAppNoteRoute(open.path);
+    if (!route) {
+      return;
+    }
+
+    if (open.mode === 'tab') {
+      void this.workspace.openTab(route, { background: true });
+    } else if (open.mode === 'side') {
+      void this.workspace.openToSide(route);
+    } else {
+      void this.router.navigateByUrl(route);
+    }
   }
 
   /** A tag clicked in a row or card adds it to the filter, or takes it out when it is already there. */

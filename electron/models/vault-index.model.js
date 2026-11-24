@@ -206,9 +206,7 @@ function listBrokenLinks(campaign) {
 
 /** Every indexed file path (the check for copies made by sync works from the index, not from the disk). */
 function listAllPaths() {
-  return getVaultIndexDatabase()
-    .prepare('SELECT path FROM files')
-    .all();
+  return getVaultIndexDatabase().prepare('SELECT path FROM files').all();
 }
 
 /** Links of the whole vault that resolve to no file (templates excluded), for the check for copies made by sync. */
@@ -239,7 +237,9 @@ function listScopeFiles(scope) {
 /** Assets of a scope with a given size in bytes: the candidates a new asset could be a copy of. */
 function listScopeAssetsOfSize(scope, size) {
   return getVaultIndexDatabase()
-    .prepare(`SELECT path FROM files WHERE campaign IS ? AND kind = 'asset' AND size = ? ORDER BY path`)
+    .prepare(
+      `SELECT path FROM files WHERE campaign IS ? AND kind = 'asset' AND size = ? ORDER BY path`,
+    )
     .all(scope, size)
     .map((row) => row.path);
 }
@@ -609,7 +609,9 @@ function resolveLinks(scopes = null) {
       const lookup = buildScopeLookup(listFiles.all(scope));
       for (const link of listScopeLinkRows(database, scope)) {
         const targetId =
-          link.target_name === '' ? link.source_file_id : (findLinkTarget(lookup, link)?.id ?? null);
+          link.target_name === ''
+            ? link.source_file_id
+            : (findLinkTarget(lookup, link)?.id ?? null);
         if (targetId !== link.target_file_id) {
           updateTarget.run(targetId, link.id);
         }
