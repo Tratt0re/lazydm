@@ -708,6 +708,35 @@
       },
       "maps": {
         "description": "Interaktive Karten mit Markierungen, Pfaden und Notizen."
+      },
+      "search": {
+        "placeholder": "In diesem Ordner suchen…",
+        "label": "In diesem Ordner suchen",
+        "clear": "Suche löschen"
+      },
+      "filter": {
+        "button": "Filter",
+        "tags": "Tag",
+        "folders": "Ordner",
+        "findTag": "Tag suchen…",
+        "noTag": "Kein Tag passt.",
+        "hint": "Eine Notiz braucht alle gewählten Tags",
+        "clearShort": "Zurücksetzen",
+        "clear": "Filter zurücksetzen",
+        "clearAll": "Filter zurücksetzen",
+        "tagChip": "Tag",
+        "folderChip": "Ordner",
+        "removeTag": "Tag {{tag}} entfernen",
+        "removeFolder": "Ordner {{folder}} entfernen",
+        "active": "Aktive Filter",
+        "entriesOf": "{{shown}} von {{total}} Einträgen",
+        "mainFolder": "Hauptordner",
+        "noResultsTitle": "Nichts passt.",
+        "noResultsDescription": "Kein Eintrag passt zu Suche und Filtern. Versuche weniger Filter oder ein anderes Wort."
+      },
+      "tags": {
+        "more": "{{count}} weitere Tags",
+        "all": "Alle Tags"
       }
     },
     "assets": {

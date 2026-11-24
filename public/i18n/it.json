@@ -708,6 +708,35 @@
       },
       "maps": {
         "description": "Mappe interattive con segnalini, percorsi e note."
+      },
+      "search": {
+        "placeholder": "Cerca in questa cartella…",
+        "label": "Cerca in questa cartella",
+        "clear": "Cancella la ricerca"
+      },
+      "filter": {
+        "button": "Filtro",
+        "tags": "Tag",
+        "folders": "Cartella",
+        "findTag": "Trova un tag…",
+        "noTag": "Nessun tag corrisponde.",
+        "hint": "Una nota deve avere tutti i tag scelti",
+        "clearShort": "Azzera",
+        "clear": "Azzera i filtri",
+        "clearAll": "Azzera i filtri",
+        "tagChip": "Tag",
+        "folderChip": "Cartella",
+        "removeTag": "Rimuovi il tag {{tag}}",
+        "removeFolder": "Rimuovi la cartella {{folder}}",
+        "active": "Filtri attivi",
+        "entriesOf": "{{shown}} di {{total}} elementi",
+        "mainFolder": "Cartella principale",
+        "noResultsTitle": "Nessun risultato.",
+        "noResultsDescription": "Nessun elemento corrisponde a ricerca e filtri. Prova con meno filtri o un’altra parola."
+      },
+      "tags": {
+        "more": "altri {{count}} tag",
+        "all": "Tutti i tag"
       }
     },
     "assets": {

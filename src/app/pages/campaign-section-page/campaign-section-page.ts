@@ -28,13 +28,25 @@ import type {
   TemplateRulesDto,
 } from '@/dtos';
 import {
+  collectTagOptions,
+  EMPTY_SECTION_FILTER,
+  filterSectionFiles,
+  folderOfFile,
+  isFilterActive,
+  type SectionFilter,
+} from '@/config/section-filter.config';
+import {
   SECTION_SORT_MODES,
   type SectionSortMode,
   sortSectionFiles,
   sortSectionFolders,
 } from '@/config/section-sort.config';
 import { AppOpenInTabMenuComponent } from '@/components/open-in-tab-menu/open-in-tab-menu.component';
-import { AppSectionSortBarComponent } from '@/components/section-sort-bar/section-sort-bar.component';
+import {
+  AppSectionSortBarComponent,
+  type FolderOption,
+} from '@/components/section-sort-bar/section-sort-bar.component';
+import { AppTagListComponent } from '@/components/tag-list/tag-list.component';
 import { AppSheetService } from '@/services/app-sheet.service';
 import { AssetService } from '@/services/asset.service';
 import { getNoteScopeKind, NoteScopeService } from '@/services/note-scope.service';
@@ -87,6 +99,7 @@ interface SectionTreeFolder extends DocumentFolderDto {
     AppOpenInTabMenuComponent,
     ArcTechMenuImports,
     AppSectionSortBarComponent,
+    AppTagListComponent,
     ArcTechAlertComponent,
     ArcTechButtonComponent,
     ArcTechEmptyComponent,
@@ -202,6 +215,45 @@ export class CampaignSectionPage {
       files: sortSectionFiles(folder.files, mode),
     }));
   });
+  /** Search text and Filter menu choices of this visit; they are not remembered (a fresh page is a clean page). */
+  protected readonly filter = signal<SectionFilter>(EMPTY_SECTION_FILTER);
+  protected readonly emptyFilter = EMPTY_SECTION_FILTER;
+  protected readonly isFiltering = computed(() => isFilterActive(this.filter()));
+  /** Every file the page can show: the open sub-folder's, or the section's own plus all its sub-folders'. */
+  private readonly allFiles = computed(() => {
+    const subfolder = this.subfolder();
+    const tree = this.tree();
+    return subfolder
+      ? (tree.folders.find((folder) => folder.name === subfolder)?.files ?? [])
+      : [...tree.files, ...tree.folders.flatMap((folder) => folder.files)];
+  });
+  protected readonly totalCount = computed(() => this.allFiles().length);
+  /** Files passing the search and filters, flat and sorted: the tree gives way to this list while filtering. */
+  protected readonly results = computed(() => {
+    const sectionPath = this.sectionPath();
+    return sortSectionFiles(
+      filterSectionFiles(this.allFiles(), this.filter(), (file) => folderOfFile(file, sectionPath)),
+      this.sortMode(),
+    );
+  });
+  protected readonly tagOptions = computed(() =>
+    collectTagOptions(this.allFiles(), this.filter().tags),
+  );
+  /** Folders the Filter menu offers (`''` is the main folder); none inside a sub-folder or without sub-folders. */
+  protected readonly folderOptions = computed<FolderOption[]>(() => {
+    const tree = this.tree();
+    if (this.subfolder() || tree.folders.length === 0) {
+      return [];
+    }
+
+    return [
+      { value: '', count: tree.files.length },
+      ...sortSectionFolders(tree.folders, this.sortMode()).map((folder) => ({
+        value: folder.name,
+        count: folder.files.length,
+      })),
+    ];
+  });
   protected readonly expandedFolders = signal<ReadonlySet<string>>(new Set());
   /** File being dragged, and the folder it would land in (`''`: the section itself). */
   protected readonly draggedPath = signal<string | null>(null);
@@ -256,6 +308,13 @@ export class CampaignSectionPage {
 
     effect(() => {
       this.sortMode.set(this.localPreferences.getSectionSort(this.sectionPath()));
+    });
+
+    // Another section or sub-folder starts with a clean search and no filters.
+    effect(() => {
+      this.sectionPath();
+      this.subfolder();
+      this.filter.set(EMPTY_SECTION_FILTER);
     });
 
     effect((onCleanup) => {
@@ -471,6 +530,21 @@ export class CampaignSectionPage {
     return this.copyTo.isInCompendium(file.path)
       ? 'compendium.copy.toCampaign'
       : 'compendium.copy.toCompendium';
+  }
+
+  /** A tag clicked in a row or card adds it to the filter, or takes it out when it is already there. */
+  protected toggleFilterTag(tag: string): void {
+    const tags = this.filter().tags;
+    this.filter.update((current) => ({
+      ...current,
+      tags: tags.includes(tag) ? tags.filter((item) => item !== tag) : [...tags, tag],
+    }));
+  }
+
+  /** Label of the sub-folder a file sits in, shown on result rows (empty for the main folder). */
+  protected folderLabelOf(file: DocumentFileListItemDto): string {
+    const folder = folderOfFile(file, this.sectionPath());
+    return folder ? toSubfolderLabel(folder) : '';
   }
 
   protected isExpanded(name: string): boolean {

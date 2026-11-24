@@ -708,6 +708,35 @@
       },
       "maps": {
         "description": "Interactive maps with pins, paths and notes."
+      },
+      "search": {
+        "placeholder": "Search this folder…",
+        "label": "Search in this folder",
+        "clear": "Clear the search"
+      },
+      "filter": {
+        "button": "Filter",
+        "tags": "Tag",
+        "folders": "Folder",
+        "findTag": "Find a tag…",
+        "noTag": "No tag matches.",
+        "hint": "A note needs every chosen tag",
+        "clearShort": "Clear",
+        "clear": "Clear filters",
+        "clearAll": "Clear filters",
+        "tagChip": "Tag",
+        "folderChip": "Folder",
+        "removeTag": "Remove the tag {{tag}}",
+        "removeFolder": "Remove the folder {{folder}}",
+        "active": "Active filters",
+        "entriesOf": "{{shown}} of {{total}} entries",
+        "mainFolder": "Main folder",
+        "noResultsTitle": "Nothing matches.",
+        "noResultsDescription": "No entry fits the search and filters. Try fewer filters or another word."
+      },
+      "tags": {
+        "more": "{{count}} more tags",
+        "all": "All tags"
       }
     },
     "assets": {
