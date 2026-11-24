@@ -1813,7 +1813,6 @@
     "detail": "Rule",
     "loading": "Opening the Quick reference…",
     "loadError": "The Quick reference could not be opened.",
-    "newRule": "New rule",
     "newCategory": "New category",
     "searchPlaceholder": "Search rules…",
     "categories": "Categories",
@@ -1840,7 +1839,6 @@
       "hint": "Saved as a plain file in this campaign, and exported with it."
     },
     "rule": {
-      "shortAdd": "Rule",
       "title": "Title",
       "titlePlaceholder": "Dodge",
       "short": "Short description",
@@ -1870,9 +1868,7 @@
       "add": "Add category",
       "save": "Save",
       "rename": "Rename",
-      "renameAria": "Rename {{name}}",
       "delete": "Delete category",
-      "deleteAria": "Delete {{name}}",
       "deleteTitle": "Delete {{name}}?",
       "deleteDescription": "Its {{count}} rules are kept: they move to Uncategorised, or stay in the other categories they sit in."
     },

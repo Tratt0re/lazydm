@@ -1813,7 +1813,6 @@
     "detail": "Regola",
     "loading": "Apro il Riferimento rapido…",
     "loadError": "Non è stato possibile aprire il Riferimento rapido.",
-    "newRule": "Nuova regola",
     "newCategory": "Nuova categoria",
     "searchPlaceholder": "Cerca nelle regole…",
     "categories": "Categorie",
@@ -1840,7 +1839,6 @@
       "hint": "Salvato come file semplice in questa campagna, ed esportato con essa."
     },
     "rule": {
-      "shortAdd": "Regola",
       "title": "Titolo",
       "titlePlaceholder": "Schivare",
       "short": "Descrizione breve",
@@ -1870,9 +1868,7 @@
       "add": "Aggiungi categoria",
       "save": "Salva",
       "rename": "Rinomina",
-      "renameAria": "Rinomina {{name}}",
       "delete": "Elimina categoria",
-      "deleteAria": "Elimina {{name}}",
       "deleteTitle": "Eliminare {{name}}?",
       "deleteDescription": "Le sue {{count}} regole restano: passano in Senza categoria, o restano nelle altre categorie in cui si trovano."
     },

@@ -1813,7 +1813,6 @@
     "detail": "Règle",
     "loading": "Ouverture de la Référence rapide…",
     "loadError": "La Référence rapide n'a pas pu être ouverte.",
-    "newRule": "Nouvelle règle",
     "newCategory": "Nouvelle catégorie",
     "searchPlaceholder": "Rechercher dans les règles…",
     "categories": "Catégories",
@@ -1840,7 +1839,6 @@
       "hint": "Enregistrée comme un simple fichier dans cette campagne, et exportée avec elle."
     },
     "rule": {
-      "shortAdd": "Règle",
       "title": "Titre",
       "titlePlaceholder": "Esquiver",
       "short": "Description courte",
@@ -1870,9 +1868,7 @@
       "add": "Ajouter la catégorie",
       "save": "Enregistrer",
       "rename": "Renommer",
-      "renameAria": "Renommer {{name}}",
       "delete": "Supprimer la catégorie",
-      "deleteAria": "Supprimer {{name}}",
       "deleteTitle": "Supprimer {{name}} ?",
       "deleteDescription": "Ses {{count}} règles sont conservées : elles passent dans Sans catégorie, ou restent dans les autres catégories où elles figurent."
     },

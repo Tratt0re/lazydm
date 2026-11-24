@@ -15,7 +15,10 @@ import { toast } from 'ngx-sonner';
 
 import { renderMarkdownToSafeHtml } from '@/components/document-preview/document-preview.markdown';
 import { AppDialogFormService } from '@/components/sheet-form/dialog-form.service';
-import type { AppSheetField, AppSheetFieldValueMap } from '@/components/sheet-form/sheet-form.types';
+import type {
+  AppSheetField,
+  AppSheetFieldValueMap,
+} from '@/components/sheet-form/sheet-form.types';
 import type { QuickReferenceRuleDto } from '@/dtos';
 import { CampaignService } from '@/services/campaign.service';
 import {
@@ -26,6 +29,8 @@ import {
 import { ArcTechAlertDialogService } from '@/shared/components/alert-dialog';
 import { ArcTechButtonComponent } from '@/shared/components/button';
 import { ARCTECH_ICONS, ArcTechIconComponent } from '@/shared/components/icon';
+import { ArcTechMenuImports } from '@/shared/components/menu';
+import { ArcTechSelectImports } from '@/shared/components/select';
 
 /** Icons a rule can have: the same list the Electron side lets through (`QUICK_REFERENCE_ICONS`). */
 /** Icon names as text (the registry's own type also allows raw icon data, which a file cannot hold). */
@@ -72,7 +77,13 @@ const SYSTEMS_WITH_RULES = ['dnd5e'] as const;
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-quick-reference-page',
-  imports: [TranslatePipe, ArcTechButtonComponent, ArcTechIconComponent],
+  imports: [
+    TranslatePipe,
+    ArcTechButtonComponent,
+    ArcTechIconComponent,
+    ...ArcTechMenuImports,
+    ...ArcTechSelectImports,
+  ],
   templateUrl: './quick-reference-page.html',
   host: { class: 'flex min-h-0 flex-1 flex-col' },
 })
@@ -87,14 +98,23 @@ export class QuickReferencePage {
   protected readonly searchInput = viewChild<ElementRef<HTMLInputElement>>('searchInput');
   protected readonly systemsWithRules = SYSTEMS_WITH_RULES;
   protected readonly uncategorisedId = UNCATEGORISED_ID;
+  /** Value of the *All* option of the category select (a real category id never looks like this). */
+  protected readonly allValue = '__all';
 
   protected readonly campaign = this.campaigns.activeCampaign;
   protected readonly systemLabel = computed(() => {
     const system = this.service.data()?.system ?? this.campaign()?.system ?? 'generic';
     return this.systemName(system);
   });
+  /** The category select's options: every category with how many rules it holds. */
   protected readonly chips = computed(() =>
-    this.service.groups().map((group) => ({ id: group.id, name: group.name, count: group.rules.length })),
+    this.service.groups().map((group) => ({
+      id: group.id,
+      label: `${group.name} (${group.rules.length})`,
+    })),
+  );
+  protected readonly allLabel = computed(
+    () => `${this.translate.instant('quickReference.all')} (${this.service.rules().length})`,
   );
   protected readonly selected = this.service.selected;
   /** The selected rule's long text as safe HTML (the notes' own renderer: no raw HTML, no remote images). */
@@ -112,7 +132,9 @@ export class QuickReferencePage {
       return [];
     }
 
-    const names = new Map(this.service.categories().map((category) => [category.id, category.name]));
+    const names = new Map(
+      this.service.categories().map((category) => [category.id, category.name]),
+    );
     return rule.categories.map((id) => names.get(id)).filter((name): name is string => !!name);
   });
   /** A built-in rule can go back to its words; the user's own cannot. */
@@ -127,7 +149,9 @@ export class QuickReferencePage {
     }
 
     return this.translate.instant(
-      codes.includes('parse-error') ? 'quickReference.warnings.unreadable' : 'quickReference.warnings.cleaned',
+      codes.includes('parse-error')
+        ? 'quickReference.warnings.unreadable'
+        : 'quickReference.warnings.cleaned',
     );
   });
 
@@ -166,8 +190,8 @@ export class QuickReferencePage {
     this.searchInput()?.nativeElement.focus();
   }
 
-  protected toggleCategory(id: string): void {
-    this.service.setCategory(this.service.category() === id ? null : id);
+  protected onCategoryChange(value: string): void {
+    this.service.setCategory(value === this.allValue ? null : value);
   }
 
   protected isSelected(rule: QuickReferenceRuleDto): boolean {
@@ -181,9 +205,9 @@ export class QuickReferencePage {
 
   /** Arrow keys move between the cards of the grid, in reading order. */
   protected onCardKeydown(event: KeyboardEvent): void {
-    const move = ({ ArrowRight: 1, ArrowDown: 1, ArrowLeft: -1, ArrowUp: -1 } as Record<string, number>)[
-      event.key
-    ];
+    const move = (
+      { ArrowRight: 1, ArrowDown: 1, ArrowLeft: -1, ArrowUp: -1 } as Record<string, number>
+    )[event.key];
     if (!move) {
       return;
     }
@@ -268,8 +292,12 @@ export class QuickReferencePage {
     };
     let isSubmitting = false;
     const dialogRef = this.dialogForm.open({
-      arcTitle: this.translate.instant(rule ? 'quickReference.rule.editTitle' : 'quickReference.rule.newTitle'),
-      arcOkText: this.translate.instant(rule ? 'quickReference.rule.save' : 'quickReference.rule.add'),
+      arcTitle: this.translate.instant(
+        rule ? 'quickReference.rule.editTitle' : 'quickReference.rule.newTitle',
+      ),
+      arcOkText: this.translate.instant(
+        rule ? 'quickReference.rule.save' : 'quickReference.rule.add',
+      ),
       arcCancelText: this.translate.instant('quickReference.cancel'),
       arcCustomClasses: 'sm:max-w-xl',
       fields,
@@ -330,7 +358,9 @@ export class QuickReferencePage {
             const name = (value ?? '').trim().toLocaleLowerCase();
             const taken = this.service
               .categories()
-              .some((item) => item.id !== category?.id && item.name.trim().toLocaleLowerCase() === name);
+              .some(
+                (item) => item.id !== category?.id && item.name.trim().toLocaleLowerCase() === name,
+              );
             return taken ? this.translate.instant('quickReference.category.taken') : null;
           },
         },
@@ -420,8 +450,13 @@ export class QuickReferencePage {
   /** A change that did not reach the file: another computer changed it first, or it could not be written. */
   private notifyNotSaved(): void {
     const error = this.service.error();
-    toast.error(this.translate.instant(error ? 'quickReference.saveError' : 'quickReference.changedElsewhere'), {
-      description: error ?? undefined,
-    });
+    toast.error(
+      this.translate.instant(
+        error ? 'quickReference.saveError' : 'quickReference.changedElsewhere',
+      ),
+      {
+        description: error ?? undefined,
+      },
+    );
   }
 }

@@ -1813,7 +1813,6 @@
     "detail": "Regla",
     "loading": "Abriendo la Referencia rápida…",
     "loadError": "No se pudo abrir la Referencia rápida.",
-    "newRule": "Nueva regla",
     "newCategory": "Nueva categoría",
     "searchPlaceholder": "Buscar reglas…",
     "categories": "Categorías",
@@ -1840,7 +1839,6 @@
       "hint": "Se guarda como un archivo sencillo en esta campaña y se exporta con ella."
     },
     "rule": {
-      "shortAdd": "Regla",
       "title": "Título",
       "titlePlaceholder": "Esquivar",
       "short": "Descripción breve",
@@ -1870,9 +1868,7 @@
       "add": "Añadir categoría",
       "save": "Guardar",
       "rename": "Renombrar",
-      "renameAria": "Renombrar {{name}}",
       "delete": "Eliminar categoría",
-      "deleteAria": "Eliminar {{name}}",
       "deleteTitle": "¿Eliminar {{name}}?",
       "deleteDescription": "Sus {{count}} reglas se conservan: pasan a Sin categoría, o siguen en las otras categorías en las que están."
     },

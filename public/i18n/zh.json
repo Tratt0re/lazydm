@@ -1813,7 +1813,6 @@
     "detail": "规则",
     "loading": "正在打开快速参考…",
     "loadError": "无法打开快速参考。",
-    "newRule": "新建规则",
     "newCategory": "新建分类",
     "searchPlaceholder": "搜索规则…",
     "categories": "分类",
@@ -1840,7 +1839,6 @@
       "hint": "作为普通文件保存在此战役中，并随战役一同导出。"
     },
     "rule": {
-      "shortAdd": "规则",
       "title": "标题",
       "titlePlaceholder": "闪避",
       "short": "简短说明",
@@ -1870,9 +1868,7 @@
       "add": "添加分类",
       "save": "保存",
       "rename": "重命名",
-      "renameAria": "重命名 {{name}}",
       "delete": "删除分类",
-      "deleteAria": "删除 {{name}}",
       "deleteTitle": "删除 {{name}}？",
       "deleteDescription": "它的 {{count}} 条规则会保留：移入“未分类”，或继续留在它们所属的其他分类中。"
     },

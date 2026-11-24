@@ -1813,7 +1813,6 @@
     "detail": "Regel",
     "loading": "Die Schnellreferenz wird geöffnet…",
     "loadError": "Die Schnellreferenz konnte nicht geöffnet werden.",
-    "newRule": "Neue Regel",
     "newCategory": "Neue Kategorie",
     "searchPlaceholder": "Regeln durchsuchen…",
     "categories": "Kategorien",
@@ -1840,7 +1839,6 @@
       "hint": "Als einfache Datei in dieser Kampagne gespeichert und mit ihr exportiert."
     },
     "rule": {
-      "shortAdd": "Regel",
       "title": "Titel",
       "titlePlaceholder": "Ausweichen",
       "short": "Kurzbeschreibung",
@@ -1870,9 +1868,7 @@
       "add": "Kategorie hinzufügen",
       "save": "Speichern",
       "rename": "Umbenennen",
-      "renameAria": "{{name}} umbenennen",
       "delete": "Kategorie löschen",
-      "deleteAria": "{{name}} löschen",
       "deleteTitle": "{{name}} löschen?",
       "deleteDescription": "Ihre {{count}} Regeln bleiben erhalten: Sie wandern nach „Ohne Kategorie“ oder bleiben in den anderen Kategorien, in denen sie stehen."
     },
