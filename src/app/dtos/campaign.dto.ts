@@ -87,6 +87,8 @@ export interface ImportPreviewDto {
     readonly templates: number;
   };
   readonly hasAgentRules: boolean;
+  /** The zip holds the campaign's Quick reference (its rules sheet). */
+  readonly hasQuickReference: boolean;
   /** The first files left out, and how many there are in all. */
   readonly skipped: readonly ImportSkippedFileDto[];
   readonly skippedTotal: number;

@@ -166,6 +166,16 @@ const NAME_MAX_LENGTH = 80;
                 <dd class="text-primary"><arc-icon arcType="check" class="size-4" /></dd>
               </div>
             }
+            @if (info.hasQuickReference) {
+              <div
+                class="flex items-center justify-between gap-3 bg-recessed px-3 py-2 odd:last:col-span-2"
+              >
+                <dt class="font-mono text-[11px] tracking-[0.04em] text-muted-foreground uppercase">
+                  {{ 'quickReference.title' | translate }}
+                </dt>
+                <dd class="text-primary"><arc-icon arcType="check" class="size-4" /></dd>
+              </div>
+            }
           </dl>
           <p class="mt-1.5 font-mono text-[11px] tracking-[0.04em] text-muted-foreground uppercase">
             {{ 'campaigns.import.total' | translate: { count: info.files, size: size() } }}

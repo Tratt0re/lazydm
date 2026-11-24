@@ -7,6 +7,7 @@ const { byName, comparable, isInside, takeFreeName } = require('../utils/path-ut
 const { ZIP_LIMITS } = require('../utils/zip-limits');
 const { safeEntryPath } = require('../utils/zip-paths');
 const bundleModel = require('./campaign-bundle.model');
+const { QUICK_REFERENCE_FILE_NAME } = require('./vault.model');
 const templateModel = require('./template.model');
 
 /** Sections whose `.json` files are part of a campaign (encounters and maps); any other `.json` is not. */
@@ -42,7 +43,10 @@ function kindOfFile(rel, name, isMedia) {
     return 'text';
   }
   if (extension === '.json') {
-    return JSON_SECTIONS.includes(rel.split('/')[0]) ? 'text' : null;
+    // The campaign's Quick reference sits at its root; any other `.json` is only an encounter or a map.
+    return rel === QUICK_REFERENCE_FILE_NAME || JSON_SECTIONS.includes(rel.split('/')[0])
+      ? 'text'
+      : null;
   }
 
   return isMedia(name) ? 'media' : null;

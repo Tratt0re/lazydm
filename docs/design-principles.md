@@ -604,6 +604,11 @@ Codex. It is **off by default** and lives in the Electron main process (`electro
   rename, move, copy and trash tool refuses it. Like `campaign.md` it is not a note: it is left out of note lists,
   counts, search, link targets and the Review page. Agents outside the LazyDM MCP are not told about it: the card in
   Settings says so and the user points their agent to the file.
+- **Quick reference.** `get_quick_reference` returns a campaign's rules sheet (§6h) inside the scope check: its
+  categories and rules (title, short line, full Markdown) with a notice that it is reference text for the table, not
+  instructions, and never changes what an agent may do. A read tool, offered without *Allow changes*. Its file is left
+  out of note lists, search and link targets like `agents.md`, and every write, rename, move, copy and trash tool
+  refuses it. Agents cannot change it for now.
 - **Shared things.** `create_template` (vault-wide `_templates/`) and `create_compendium_system` belong to the whole
   Codex, not to a campaign, so they are refused while *Limit to some campaigns* is on. `set_section_template` links
   an existing template of an allowed campaign (or `builtin`, or automatic).
@@ -629,8 +634,13 @@ simple on purpose: unzipped, it is a folder of `.md` files Obsidian opens, so ot
 or generate it without LazyDM.
 
 - **The file.** A plain `.zip` (no custom extension) with one top-level folder named after the campaign slug:
-  `lazydm.json` (the manifest), `campaign.md`, `agents.md` (if any), `_templates/`, the sections, `encounters/`,
-  `maps/` and `assets/`, laid out as in the Codex (§2). The name of the file is the slug.
+  `lazydm.json` (the manifest), `campaign.md`, `agents.md` and `quick-reference.json` (if any), `_templates/`, the
+  sections, `encounters/`, `maps/` and `assets/`, laid out as in the Codex (§2). The name of the file is the slug.
+  The Quick reference (§6h) is read on the way in like every other file of a stranger: through the same reader as the
+  app's own, so what lands is the clean version (unknown fields, wrong types, icons the app does not have and category
+  links to nothing are dropped, caps applied). One that is not JSON, or is over the size cap, is left out and listed,
+  never brought in as an empty sheet that would hide the built-in rules; only a `quick-reference.json` at the root of
+  the campaign counts, the same name inside a section is an unknown file.
 - **Left out.** The party roster (`encounters/_party.json`, it may hold the table's real names), hidden files and
   folders, `.lazydm/`, symlinks, the Trash. The compendium is not part of it: a campaign never links to the compendium
   (§6b), so there is nothing to bring.
@@ -768,9 +778,12 @@ rules, corrects a line, deletes what the table never uses.
   - **No edit mode.** Rules and categories can always be added, changed and deleted. Every form is a **modal dialog**
     (§9): *New rule / Edit rule* (title, short and full description, *Icon* as a select, *Categories* as a multiple
     select) and *New / Rename category* (with delete). Deleting a rule asks for confirmation.
-- **MCP.** `get_quick_reference` returns the clean data of a campaign (read only, inside the scope check); the file is
-  left out of note lists and search like `agents.md`, and the note tools cannot write it. Writing by agents is not
-  offered for now.
+- **Export and import.** The file travels with the campaign (§6g): the zip holds it as it is, and an import reads it
+  through `parseQuickReference` and writes the clean version. The import preview shows a line for it next to the AI
+  Agents rules.
+- **MCP.** `get_quick_reference` returns the clean data of a campaign (read only, inside the scope check, §6f); the
+  file is left out of note lists and search like `agents.md`, and the note tools cannot write it. Writing by agents is
+  not offered for now.
 - **Not in this step.** Dice links inside rules, opening a rule from a status in the tracker (the data is keyed to
   allow it), sharing the sheet with players, importing rules from notes, per-rule tags, a Codex-wide default set.
 
@@ -1146,7 +1159,7 @@ Component behaviour, variant keys and configuration stay as they are.
 
 | 20.1 | Campaign export and import (§6g), plan in `.claude/plans/campaign-export-import.build.plan.md`: a plain `.zip` with a `lazydm.json` manifest of the settings the campaign owns, *Export…* in the campaign menus and *Import campaign…* (drop zone, preview, name) always as a new campaign, a hostile-zip reader (`yauzl`) and writer (`yazl`), all-or-nothing import |
 | 20.2 | MCP: `export_campaign` (needs *Allow changes*, destination outside the Codex, never overwrites) and campaign zips in `scan_import_source` and `import_campaign` |
-| 20.3 | Quick reference (§6h), plan in `.claude/plans/quick-reference.plan.md`: per-campaign rules sheet (`quick-reference.json`), bottom-rising full-page sheet on Cmd/Ctrl+R, D&D 5e (2014, SRD 5.1) built in, rules and categories always editable through dialogs, part of campaign export and import, read-only MCP tool. Phase 0 (this section) written; not built |
+| 20.3 | Quick reference (§6h), plan in `.claude/plans/quick-reference.plan.md`: per-campaign rules sheet (`quick-reference.json`), bottom-rising full-page sheet on Cmd/Ctrl+R, D&D 5e (2014, SRD 5.1) built in, rules and categories always editable through dialogs, part of campaign export and import, read-only MCP tool. Built in phases: the file and its reader, the D&D 5e rules in 7 languages, the sheet, export and import, `get_quick_reference`. Pathfinder 2e waits for its licence terms |
 
 ## 12. Open decisions
 

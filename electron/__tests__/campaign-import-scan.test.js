@@ -46,6 +46,9 @@ describe('kindOfEntry', () => {
     ['lazydm.json', 'manifest'],
     ['campaign.md', 'card'],
     ['agents.md', 'agents'],
+    ['quick-reference.json', 'quickReference'],
+    ['scenes/quick-reference.json', null],
+    ['Quick-Reference.json', null],
     ['_templates/scene.md', 'template'],
     ['scenes/intro.md', 'note'],
     ['enemies/humans/bandit.md', 'note'],
@@ -72,6 +75,7 @@ describe('scanBundle: what a zip holds', () => {
       ),
       file('lost-mine/campaign.md', '---\ntitle: Lost Mine\n---\n# Lost Mine\n'),
       file('lost-mine/agents.md', 'Be nice.'),
+      file('lost-mine/quick-reference.json', '{"formatVersion":1}'),
       file('lost-mine/_templates/scene.md', '---\ntitle: x\n---\n'),
       file('lost-mine/scenes/a.md'),
       file('lost-mine/scenes/b.md'),
@@ -89,11 +93,12 @@ describe('scanBundle: what a zip holds', () => {
       hasManifest: true,
       formatVersion: 1,
       hasAgentRules: true,
+      hasQuickReference: true,
       counts: { notes: 3, assets: 1, encounters: 1, maps: 1, templates: 1 },
       skipped: [],
       skippedTotal: 0,
       warnings: [],
-      files: 10,
+      files: 11,
     });
   });
 
@@ -332,6 +337,7 @@ describe('scanBundle reads what exportCampaign wrote', () => {
     put('lost-mine/maps/cave.json', '{}');
     put('lost-mine/assets/cave.png', 'png');
     put('lost-mine/agents.md', 'Be nice.');
+    put('lost-mine/quick-reference.json', '{"formatVersion":1}');
     put('_templates/enemy.md', '---\ntitle: "{{title}}"\n---\n');
     templateModel.setCampaignRule(vault, 'lost-mine', 'enemy', '_templates/enemy.md');
     const out = path.join(root, 'out.zip');
@@ -346,7 +352,8 @@ describe('scanBundle reads what exportCampaign wrote', () => {
       system: 'dnd5e',
       hasManifest: true,
       hasAgentRules: true,
-      // The card (campaign.md) and agents.md are counted apart from the notes.
+      hasQuickReference: true,
+      // The card (campaign.md), agents.md and the Quick reference are counted apart from the notes.
       counts: { notes: 2, assets: 1, encounters: 1, maps: 1, templates: 1 },
       skipped: [],
       warnings: [],

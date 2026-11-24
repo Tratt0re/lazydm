@@ -104,6 +104,23 @@ describe('collectCampaignFiles', () => {
     expect(skipped).toEqual([]);
   });
 
+  it('takes the Quick reference at the campaign root, and no other file of that name', async () => {
+    put('lost-mine/quick-reference.json', '{"formatVersion":1}');
+    put('lost-mine/scenes/quick-reference.json', '{}');
+    put('lost-mine/world/data.json', '{}');
+
+    const { files, skipped } = await collectCampaignFiles(vault, 'lost-mine', isMedia);
+
+    expect(files.map((file) => file.rel)).toContain('quick-reference.json');
+    expect(files.map((file) => file.rel)).not.toContain('scenes/quick-reference.json');
+    expect(skipped).toEqual(
+      expect.arrayContaining([
+        { path: 'scenes/quick-reference.json', reason: SKIP_REASONS.type },
+        { path: 'world/data.json', reason: SKIP_REASONS.type },
+      ]),
+    );
+  });
+
   it('leaves out the party roster and hidden entries without listing them, and lists links', async () => {
     put('lost-mine/encounters/_party.json', '{"players":["A real name"]}');
     put('lost-mine/.obsidian/app.json', '{}');
@@ -209,6 +226,16 @@ describe('exportCampaign', () => {
     expect(result.bytes).toBe(fs.statSync(destination).size);
     expect(entries['lost-mine/scenes/intro.md'].toString()).toBe('# Intro\n');
     expect(entries['lost-mine/assets/cave.png'].toString()).toBe('png-bytes');
+  });
+
+  it('puts the Quick reference in the zip, byte for byte', async () => {
+    put('lost-mine/quick-reference.json', '{"formatVersion":1,"system":"dnd5e","categories":[{"id":"actions","name":"Actions"}],"rules":[{"id":"dodge","title":"Dodge","short":"s","full":"f","icon":"shield","categories":["actions"],"source":"dnd5e/dodge"}],"attribution":"credit"}');
+    const destination = path.join(out, 'qr.zip');
+
+    await exportCampaign(vault, 'lost-mine', destination, options);
+
+    const entries = await readZip(destination);
+    expect(entries['lost-mine/quick-reference.json'].toString()).toBe('{"formatVersion":1,"system":"dnd5e","categories":[{"id":"actions","name":"Actions"}],"rules":[{"id":"dodge","title":"Dodge","short":"s","full":"f","icon":"shield","categories":["actions"],"source":"dnd5e/dodge"}],"attribution":"credit"}');
   });
 
   it('writes a manifest that parses back to the campaign settings', async () => {

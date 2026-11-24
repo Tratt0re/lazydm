@@ -21,6 +21,8 @@ const { ZIP_REFUSALS, ZipRefusedError } = zipReader;
 const { IMPORT_SKIPS, importBundle } = importModel;
 const isMedia = (name) => /\.(png|jpg|pdf|mp3)$/i.test(name);
 
+const QR = '{"formatVersion":1,"system":"dnd5e","categories":[{"id":"actions","name":"Actions"}],"rules":[{"id":"dodge","title":"Dodge","short":"s","full":"f","icon":"shield","categories":["actions"],"source":"dnd5e/dodge"}],"attribution":"credit"}';
+
 let root;
 let vault;
 let reindexed;
@@ -272,6 +274,101 @@ describe('importBundle: what it leaves out', () => {
     );
   });
 
+  it('brings the Quick reference in, written clean', async () => {
+    const result = await importZip([
+      file('c/scenes/a.md'),
+      file(
+        'c/quick-reference.json',
+        JSON.stringify({
+          formatVersion: 1,
+          system: 'dnd5e',
+          junk: 'x',
+          categories: [{ id: 'actions', name: 'Actions', extra: 1 }],
+          rules: [
+            { id: 'dodge', title: 'Dodge', icon: 'not-an-icon', categories: ['actions', 'gone'] },
+          ],
+          attribution: 'credit',
+        }),
+      ),
+    ]);
+
+    expect(result.skippedTotal).toBe(0);
+    const written = JSON.parse(read(`${result.slug}/quick-reference.json`));
+    expect(written).toEqual({
+      formatVersion: 1,
+      system: 'dnd5e',
+      categories: [{ id: 'actions', name: 'Actions' }],
+      rules: [
+        {
+          id: 'dodge',
+          title: 'Dodge',
+          short: '',
+          full: '',
+          icon: 'book-open',
+          categories: ['actions'],
+        },
+      ],
+      attribution: 'credit',
+    });
+    expect(reindexed).toContain(`${result.slug}/quick-reference.json`);
+  });
+
+  it('writes a hostile Quick reference clean: prototype keys, huge text and wrong types', async () => {
+    const result = await importZip([
+      file('c/scenes/a.md'),
+      file(
+        'c/quick-reference.json',
+        '{"__proto__":{"x":1},"constructor":{"y":2},"rules":[{"title":"%s","icon":{"a":1},"categories":"nope","source":"../../etc/passwd"},5,null]}'.replace(
+          '%s',
+          't'.repeat(5000),
+        ),
+      ),
+    ]);
+
+    const written = JSON.parse(read(`${result.slug}/quick-reference.json`));
+    expect(Object.keys(written).sort()).toEqual(
+      ['attribution', 'categories', 'formatVersion', 'rules', 'system'].sort(),
+    );
+    expect(written.rules).toHaveLength(1);
+    expect(written.rules[0].title).toHaveLength(80);
+    expect(written.rules[0].icon).toBe('book-open');
+    expect(written.rules[0].categories).toEqual([]);
+    expect(written.rules[0].source).toBeUndefined();
+    expect({}.x).toBeUndefined();
+  });
+
+  it('skips a Quick reference that is not JSON, instead of bringing in an empty one', async () => {
+    const result = await importZip([file('c/scenes/a.md'), file('c/quick-reference.json', '{nope')]);
+
+    expect(exists(`${result.slug}/quick-reference.json`)).toBe(false);
+    expect(result.skipped).toEqual([{ path: 'quick-reference.json', reason: IMPORT_SKIPS.invalid }]);
+  });
+
+  it('takes a Quick reference over the file cap as too large, without writing it', async () => {
+    const result = await importZip(
+      [
+        file('c/scenes/a.md'),
+        file('c/quick-reference.json', JSON.stringify({ rules: [{ title: 'x', full: 'y'.repeat(600) }] })),
+      ],
+      { limits: { ...ZIP_LIMITS, maxTextBytes: 200 } },
+    );
+
+    expect(exists(`${result.slug}/quick-reference.json`)).toBe(false);
+    expect(result.skipped).toEqual([{ path: 'quick-reference.json', reason: IMPORT_SKIPS.tooLarge }]);
+  });
+
+  it('leaves a Quick reference nested in a section alone, as the unknown file it is', async () => {
+    const result = await importZip([
+      file('c/scenes/a.md'),
+      file('c/scenes/quick-reference.json', QR),
+    ]);
+
+    expect(exists(`${result.slug}/scenes/quick-reference.json`)).toBe(false);
+    expect(result.skipped).toEqual([
+      { path: 'scenes/quick-reference.json', reason: IMPORT_SKIPS.type },
+    ]);
+  });
+
   it('skips an encounter or a map that is not JSON, and says so', async () => {
     const result = await importZip([
       file('c/encounters/good.json', '{"name":"Good"}'),
@@ -490,6 +587,7 @@ describe('export then import: a round trip', () => {
     put('lost-mine/maps/cave.json', '{"name":"Cave"}');
     put('lost-mine/assets/cave.png', 'png-bytes');
     put('lost-mine/agents.md', 'Be nice.');
+    put('lost-mine/quick-reference.json', QR);
     put('_templates/enemy.md', '---\ntitle: "{{title}}"\nhp: \n---\n');
     sectionModel.saveCampaignSectionSettings(source, 'lost-mine', {
       hidden: ['spells'],
@@ -518,6 +616,8 @@ describe('export then import: a round trip', () => {
         fs.readFileSync(path.join(source, 'lost-mine', rel), 'utf8'),
       );
     }
+    // The Quick reference comes back as it was: the app wrote it, so reading it again changes nothing.
+    expect(JSON.parse(read('lost-mine/quick-reference.json'))).toEqual(JSON.parse(QR));
     // Encounters and maps are written in the app's own form (defaults filled in), with the same content.
     expect(JSON.parse(read('lost-mine/encounters/ambush.json')).entities[0].name).toBe('Orc');
     expect(JSON.parse(read('lost-mine/maps/cave.json'))).toMatchObject({ name: 'Cave', pins: [] });

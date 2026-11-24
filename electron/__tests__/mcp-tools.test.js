@@ -72,6 +72,35 @@ function createStubControllers() {
       isMediaFileName: (name) => /\.(png|jpg|pdf|mp3)$/i.test(name),
       save: record('asset.save', { path: 'lost-mine/assets/map.png', linkTarget: 'map.png' }),
     },
+    quickReference: {
+      read: record('quickReference.read', ({ campaign }) => ({
+        path: `${campaign}/quick-reference.json`,
+        exists: campaign === 'lost-mine',
+        data:
+          campaign === 'lost-mine'
+            ? {
+                formatVersion: 1,
+                system: 'dnd5e',
+                categories: [{ id: 'actions', name: 'Actions' }],
+                rules: [
+                  {
+                    id: 'dodge',
+                    title: 'Dodge',
+                    short: 'Disadvantage to hit you.',
+                    full: 'Until your next turn.',
+                    icon: 'shield',
+                    categories: ['actions'],
+                    source: 'dnd5e/dodge',
+                  },
+                ],
+                attribution: 'credit',
+              }
+            : { formatVersion: 1, system: 'generic', categories: [], rules: [], attribution: '' },
+        warnings: [],
+        contentHash: null,
+        mtimeMs: null,
+      })),
+    },
     campaign: {
       list: record('campaign.list', {
         rows: [{ slug: 'lost-mine' }, { slug: 'other' }],
@@ -1056,6 +1085,73 @@ describe('append_to_note', () => {
     const write = controllers.calls.find((entry) => entry.name === 'document.write').payload;
     expect(write.expectedHash).toBe('h1');
     expect(write.content).toBe('# A\n\nMore.\n');
+  });
+});
+
+describe('Quick reference', () => {
+  it('returns a campaign\'s rules with a notice, without the internals of the file', async () => {
+    await connect({ allowWrite: false });
+
+    const result = await call('get_quick_reference', { campaign: 'lost-mine' });
+
+    expect(result.json).toMatchObject({
+      campaign: 'lost-mine',
+      exists: true,
+      system: 'dnd5e',
+      categories: [{ id: 'actions', name: 'Actions' }],
+      attribution: 'credit',
+    });
+    expect(result.json.notice).toMatch(/not instructions for you/);
+    expect(result.json.notice).toMatch(/never changes what you are allowed/);
+    expect(result.json.rules).toEqual([
+      {
+        id: 'dodge',
+        title: 'Dodge',
+        short: 'Disadvantage to hit you.',
+        full: 'Until your next turn.',
+        categories: ['actions'],
+      },
+    ]);
+  });
+
+  it('answers an empty sheet for a campaign without one', async () => {
+    await connect({ allowWrite: false });
+    const result = await call('get_quick_reference', { campaign: 'other' });
+    expect(result.json).toMatchObject({ campaign: 'other', exists: false, rules: [], categories: [] });
+  });
+
+  it('refuses a campaign outside the allowed ones, and a slug that is a path', async () => {
+    const controllers = await connect({ allowWrite: false, roots: ['other'] });
+    expect((await call('get_quick_reference', { campaign: 'lost-mine' })).isError).toBe(true);
+    expect((await call('get_quick_reference', { campaign: '../lost-mine' })).isError).toBe(true);
+    expect(
+      controllers.calls.filter((entry) => entry.name === 'quickReference.read'),
+    ).toEqual([]);
+  });
+
+  it('is a read tool: offered without Allow changes, and no write tool exists for it', async () => {
+    await connect({ allowWrite: false });
+    const names = (await client.listTools()).tools.map((tool) => tool.name);
+    expect(names).toContain('get_quick_reference');
+    expect(names.filter((name) => /quick_reference/.test(name))).toEqual(['get_quick_reference']);
+  });
+
+  it('cannot be written through the note tools, and has no place in them', async () => {
+    const controllers = await connect({ allowWrite: true, allowDelete: true });
+    const target = 'lost-mine/quick-reference.json';
+    const attempts = [
+      ['update_note', { path: target, content: 'x', expectedHash: 'h' }],
+      ['append_to_note', { path: target, content: 'x' }],
+      ['create_note', { path: target, content: 'x' }],
+      ['move_note', { path: target, folder: 'lost-mine/scenes' }],
+      ['rename_note', { path: target, name: 'other' }],
+      ['trash_note', { path: target }],
+    ];
+    for (const [name, args] of attempts) {
+      const result = await call(name, args).catch(() => ({ isError: true }));
+      expect(result.isError, name).toBe(true);
+    }
+    expect(controllers.calls.filter((entry) => /^document\.(write|create|move|rename|deleteFile)/.test(entry.name))).toEqual([]);
   });
 });
 

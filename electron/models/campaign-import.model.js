@@ -19,6 +19,7 @@ const campaignModel = require('./campaign.model');
 const documentModel = require('./document.model');
 const encounterModel = require('./encounter.model');
 const mapModel = require('./map.model');
+const quickReferenceModel = require('./quick-reference.model');
 const templateModel = require('./template.model');
 
 /** How many skipped files a preview lists; the rest are only counted. */
@@ -28,6 +29,7 @@ const JSON_SECTIONS = Object.freeze(['encounters', 'maps']);
 const PARTY_ROSTER_PATH = 'encounters/_party.json';
 const CARD_FILE = 'campaign.md';
 const AGENT_RULES_FILE = 'agents.md';
+const QUICK_REFERENCE_FILE = quickReferenceModel.QUICK_REFERENCE_FILE_NAME;
 const TEMPLATES_PREFIX = `${bundleModel.BUNDLE_TEMPLATES_DIR}/`;
 const NAME_MAX_LENGTH = 80;
 const DESCRIPTION_MAX_LENGTH = 500;
@@ -59,6 +61,9 @@ function kindOfEntry(rel, isMedia) {
   }
   if (rel === AGENT_RULES_FILE) {
     return 'agents';
+  }
+  if (rel === QUICK_REFERENCE_FILE) {
+    return 'quickReference';
   }
 
   const extension = path.posix.extname(rel).toLowerCase();
@@ -223,6 +228,7 @@ function toPreview(info) {
     formatVersion: info.manifest?.formatVersion ?? null,
     counts: countsOf(info.taken),
     hasAgentRules: info.taken.some((file) => file.kind === 'agents'),
+    hasQuickReference: info.taken.some((file) => file.kind === 'quickReference'),
     skipped: info.skipped.slice(0, MAX_LISTED_SKIPS),
     skippedTotal: info.skipped.length,
     warnings: info.warnings,
@@ -323,6 +329,16 @@ async function writeEntry(archive, vaultPath, slug, file, { limits, budget }) {
     if (bytes === null) {
       return false;
     }
+  }
+  if (file.kind === 'quickReference') {
+    // Read as the app reads it, then written clean: a hostile file never lands as it came. One that is not JSON at
+    // all is left out (and listed) instead of arriving as an empty sheet that would hide the seed.
+    const parsed = quickReferenceModel.parseQuickReference(bytes.toString('utf8'));
+    if (parsed.warnings.some((warning) => ['parse-error', 'too-large'].includes(warning.code))) {
+      return false;
+    }
+
+    bytes = Buffer.from(quickReferenceModel.serialize(parsed.data), 'utf8');
   }
 
   const result = await documentModel.writeVaultFile(vaultPath, vaultRel, bytes);
