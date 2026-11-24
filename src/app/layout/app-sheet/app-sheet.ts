@@ -61,8 +61,7 @@ import { ArcTechIconComponent } from '@/shared/components/icon';
 export class AppSheet {
   protected readonly sheets = inject(AppSheetService);
   /** Sheets that are not a settings page (the Quick reference) rise from the bottom instead of dropping from the top. */
-  protected readonly fromBottom =
-    inject(ActivatedRoute).snapshot.data['sheetFrom'] === 'bottom';
+  protected readonly fromBottom = inject(ActivatedRoute).snapshot.data['sheetFrom'] === 'bottom';
   protected readonly title = toSignal(
     inject(ActivatedRoute).data.pipe(map((data) => String(data[APP_SHEET_TITLE_ROUTE_DATA] ?? ''))),
     { initialValue: '' },

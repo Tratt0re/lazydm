@@ -82,7 +82,13 @@ describe('normalizeQuickReference', () => {
     const { data, warnings } = normalizeQuickReference({
       system: 'dnd2024',
       categories: [null, 'x', { name: '' }, { name: 3 }, { name: 'Ok' }],
-      rules: [null, 5, { title: '   ' }, { title: 7 }, { title: 'Real', short: 4, full: {}, icon: 9 }],
+      rules: [
+        null,
+        5,
+        { title: '   ' },
+        { title: 7 },
+        { title: 'Real', short: 4, full: {}, icon: 9 },
+      ],
     });
     expect(data.system).toBe('generic');
     expect(data.categories).toEqual([{ id: 'ok', name: 'Ok' }]);
@@ -140,7 +146,12 @@ describe('normalizeQuickReference', () => {
         { title: 'D', source: 9 },
       ],
     });
-    expect(data.rules.map((r) => r.source)).toEqual(['dnd5e/dodge', undefined, undefined, undefined]);
+    expect(data.rules.map((r) => r.source)).toEqual([
+      'dnd5e/dodge',
+      undefined,
+      undefined,
+      undefined,
+    ]);
   });
 
   it('cuts every text to its cap and strips control characters', () => {
@@ -229,7 +240,11 @@ describe('the file on disk', () => {
     vault = path.join(root, 'codex');
     fs.mkdirSync(path.join(vault, '.lazydm'), { recursive: true });
     fs.writeFileSync(path.join(vault, '.lazydm', 'vault.json'), '{"schemaVersion":1,"name":"t"}\n');
-    await campaignModel.createCampaign(vault, { slug: 'lost-mine', name: 'Lost Mine', system: 'dnd5e' });
+    await campaignModel.createCampaign(vault, {
+      slug: 'lost-mine',
+      name: 'Lost Mine',
+      system: 'dnd5e',
+    });
   });
   afterEach(() => fs.rmSync(root, { recursive: true, force: true }));
 
@@ -290,7 +305,11 @@ describe('the file on disk', () => {
   it('opens a file that is not valid JSON as an empty sheet with a warning, and keeps it until saved', async () => {
     fs.writeFileSync(file(), '{ broken');
     const read = await model.readQuickReference(vault, 'lost-mine');
-    expect(read).toMatchObject({ exists: true, data: { rules: [] }, warnings: [{ code: 'parse-error' }] });
+    expect(read).toMatchObject({
+      exists: true,
+      data: { rules: [] },
+      warnings: [{ code: 'parse-error' }],
+    });
     expect(fs.readFileSync(file(), 'utf8')).toBe('{ broken');
   });
 
@@ -308,7 +327,20 @@ describe('the file on disk', () => {
 
   it('refuses a campaign that does not exist, and a slug that is a path', async () => {
     await expect(model.readQuickReference(vault, 'nope')).rejects.toThrow(/not found/i);
-    for (const slug of ['../codex', '../codex/lost-mine', './lost-mine', 'lost-mine/', 'lost-mine/..', '..', 'a/b', '', '.lazydm', 'Lost Mine', 3, null]) {
+    for (const slug of [
+      '../codex',
+      '../codex/lost-mine',
+      './lost-mine',
+      'lost-mine/',
+      'lost-mine/..',
+      '..',
+      'a/b',
+      '',
+      '.lazydm',
+      'Lost Mine',
+      3,
+      null,
+    ]) {
       await expect(model.readQuickReference(vault, slug)).rejects.toThrow();
       await expect(model.writeQuickReference(vault, slug, sample(), null)).rejects.toThrow();
     }
@@ -334,8 +366,12 @@ describe('the file on disk', () => {
 describe('MCP scope', () => {
   it('never lets a note tool write the quick reference, and still lets it be read', () => {
     const guard = createScopeGuard(null);
-    expect(() => guard.resolveWritable('lost-mine/quick-reference.json')).toThrow(/quick reference/i);
-    expect(() => guard.resolveWritable('lost-mine/Quick-Reference.json')).toThrow(/quick reference/i);
+    expect(() => guard.resolveWritable('lost-mine/quick-reference.json')).toThrow(
+      /quick reference/i,
+    );
+    expect(() => guard.resolveWritable('lost-mine/Quick-Reference.json')).toThrow(
+      /quick reference/i,
+    );
     expect(guard.resolve('lost-mine/quick-reference.json')).toBe('lost-mine/quick-reference.json');
     expect(guard.resolveWritable('lost-mine/scenes/quick-reference.json')).toBe(
       'lost-mine/scenes/quick-reference.json',
