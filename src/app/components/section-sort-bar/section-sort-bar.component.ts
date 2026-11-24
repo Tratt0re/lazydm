@@ -18,6 +18,7 @@ import {
   type TagOption,
 } from '@/config/section-filter.config';
 import { SECTION_SORT_MODES, type SectionSortMode } from '@/config/section-sort.config';
+import type { SectionView } from '@/config/section-view.config';
 import { ArcTechButtonComponent } from '@/shared/components/button';
 import { ArcTechCheckboxComponent } from '@/shared/components/checkbox';
 import { ArcTechIconComponent, type ArcTechIcon } from '@/shared/components/icon';
@@ -31,6 +32,12 @@ const SORT_ICONS: Readonly<Record<SectionSortMode, ArcTechIcon>> = {
   modified: 'clock',
   size: 'arrow-down-wide-narrow',
   type: 'file-type',
+};
+
+const VIEW_ICONS: Readonly<Record<SectionView, ArcTechIcon>> = {
+  list: 'list',
+  cards: 'layout-grid',
+  graph: 'waypoints',
 };
 
 /** A folder the Filter menu can narrow to (`''` is the section's main folder). */
@@ -126,7 +133,9 @@ export interface FolderOption {
         aria-live="polite"
       >
         @if (isFiltering()) {
-          {{ 'campaigns.sections.filter.entriesOf' | translate: { shown: count(), total: total() } }}
+          {{
+            'campaigns.sections.filter.entriesOf' | translate: { shown: count(), total: total() }
+          }}
         } @else {
           {{ 'campaigns.sections.sort.entries' | translate: { count: count() } }}
         }
@@ -148,6 +157,33 @@ export interface FolderOption {
         <arc-icon [arcType]="currentIcon()" class="size-3.5" />
         {{ 'campaigns.sections.sort.' + mode() | translate }}
       </button>
+
+      @if (views().length > 1) {
+        <div
+          class="inline-flex border border-input bg-card"
+          role="group"
+          [attr.aria-label]="'campaigns.sections.views.label' | translate"
+        >
+          @for (option of views(); track option) {
+            <button
+              type="button"
+              class="flex h-[30px] cursor-pointer items-center gap-1.5 border-r border-border-subtle px-2.5 font-mono text-xs tracking-[0.04em] uppercase last:border-r-0 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-ring"
+              [class]="
+                option === view()
+                  ? 'bg-primary text-primary-foreground'
+                  : 'text-muted-foreground hover:bg-accent hover:text-foreground'
+              "
+              [attr.aria-pressed]="option === view()"
+              [attr.aria-label]="'campaigns.sections.views.' + option | translate"
+              [attr.title]="'campaigns.sections.views.' + option | translate"
+              (click)="viewChange.emit(option)"
+            >
+              <arc-icon [arcType]="viewIconOf(option)" class="size-4" />
+              <span class="hidden md:inline">{{ 'campaigns.sections.views.' + option | translate }}</span>
+            </button>
+          }
+        </div>
+      }
     </div>
 
     @if (menuCount() > 0) {
@@ -186,7 +222,8 @@ export interface FolderOption {
               type="button"
               class="flex size-5 cursor-pointer items-center justify-center text-muted-foreground hover:bg-card hover:text-foreground focus-visible:outline-2 focus-visible:outline-ring"
               [attr.aria-label]="
-                'campaigns.sections.filter.removeFolder' | translate: { folder: folderLabel(folder) }
+                'campaigns.sections.filter.removeFolder'
+                  | translate: { folder: folderLabel(folder) }
               "
               (click)="toggleFolder(folder)"
             >
@@ -224,7 +261,9 @@ export interface FolderOption {
         [attr.aria-label]="'campaigns.sections.filter.button' | translate"
       >
         @if (tagOptions().length > 0) {
-          <p class="px-3 pt-2.5 pb-1.5 font-mono text-[11px] tracking-[0.08em] text-muted-foreground uppercase">
+          <p
+            class="px-3 pt-2.5 pb-1.5 font-mono text-[11px] tracking-[0.08em] text-muted-foreground uppercase"
+          >
             {{ 'campaigns.sections.filter.tags' | translate }}
           </p>
           <label
@@ -305,12 +344,16 @@ export class AppSectionSortBarComponent {
   /** Files the page holds before any filter. */
   readonly total = input.required<number>();
   readonly mode = input.required<SectionSortMode>();
+  /** The view shown and the ones this section offers (the switch is hidden when there is only one). */
+  readonly view = input<SectionView>('list');
+  readonly views = input<readonly SectionView[]>([]);
   readonly filter = input.required<SectionFilter>();
   readonly tagOptions = input<readonly TagOption[]>([]);
   readonly folderOptions = input<readonly FolderOption[]>([]);
   /** Label of the section's main folder in the Filter menu and its chips. */
   readonly mainFolderLabel = input('');
   readonly changed = output<SectionSortMode>();
+  readonly viewChange = output<SectionView>();
   readonly filterChange = output<SectionFilter>();
 
   private readonly searchInput = viewChild<ElementRef<HTMLInputElement>>('searchInput');
@@ -354,6 +397,10 @@ export class AppSectionSortBarComponent {
 
   protected iconOf(mode: SectionSortMode): ArcTechIcon {
     return SORT_ICONS[mode];
+  }
+
+  protected viewIconOf(view: SectionView): ArcTechIcon {
+    return VIEW_ICONS[view];
   }
 
   protected folderLabel(folder: string): string {

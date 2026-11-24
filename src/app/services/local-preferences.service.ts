@@ -23,11 +23,13 @@ import {
   isSectionSortMode,
   type SectionSortMode,
 } from '@/config/section-sort.config';
+import { DEFAULT_SECTION_VIEW, isSectionView, type SectionView } from '@/config/section-view.config';
 
 const DOCUMENT_VIEW_MODES_MAX_ENTRIES = 500;
 const EXPLORER_EXPANDED_MAX_ENTRIES = 50;
 const MAP_VIEWS_MAX_ENTRIES = 200;
 const SECTION_SORTS_MAX_ENTRIES = 200;
+const SECTION_VIEWS_MAX_ENTRIES = 200;
 
 @Injectable({
   providedIn: 'root',
@@ -385,6 +387,28 @@ export class LocalPreferencesService {
 
   private readSectionSorts(): Record<string, unknown> {
     const parsed = this.getJson<unknown>(LocalPreferenceKey.SECTION_SORTS);
+    return parsed && typeof parsed === 'object' && !Array.isArray(parsed)
+      ? { ...(parsed as Record<string, unknown>) }
+      : {};
+  }
+
+  /** The view (list, cards, graph) of a section (its folder path in the vault) on this device. */
+  getSectionView(sectionPath: string): SectionView {
+    const view = this.readSectionViews()[sectionPath];
+    return isSectionView(view) ? view : DEFAULT_SECTION_VIEW;
+  }
+
+  /** Remembers the view of a section; only the most recent sections are kept. */
+  setSectionView(sectionPath: string, view: SectionView): void {
+    const all = this.readSectionViews();
+    delete all[sectionPath];
+    all[sectionPath] = view;
+    const entries = Object.entries(all).slice(-SECTION_VIEWS_MAX_ENTRIES);
+    this.setJson(LocalPreferenceKey.SECTION_VIEWS, Object.fromEntries(entries));
+  }
+
+  private readSectionViews(): Record<string, unknown> {
+    const parsed = this.getJson<unknown>(LocalPreferenceKey.SECTION_VIEWS);
     return parsed && typeof parsed === 'object' && !Array.isArray(parsed)
       ? { ...(parsed as Record<string, unknown>) }
       : {};

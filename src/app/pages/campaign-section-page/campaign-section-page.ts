@@ -41,6 +41,12 @@ import {
   sortSectionFiles,
   sortSectionFolders,
 } from '@/config/section-sort.config';
+import {
+  DEFAULT_SECTION_VIEW,
+  resolveSectionView,
+  type SectionView,
+  viewsForSection,
+} from '@/config/section-view.config';
 import { AppOpenInTabMenuComponent } from '@/components/open-in-tab-menu/open-in-tab-menu.component';
 import {
   AppSectionSortBarComponent,
@@ -83,6 +89,9 @@ const ASSETS_SECTION_KEY = 'assets';
 const ENCOUNTERS_SECTION_KEY = 'encounters';
 /** The Maps section: `.json` files with their own page, created with *New map*. */
 const MAPS_SECTION_KEY = 'maps';
+
+/** Views the page can draw so far; the switch only shows once there is more than one (Cards: phase 4, Graph: phase 6). */
+const BUILT_VIEWS: readonly SectionView[] = ['list'];
 
 /** A sub-folder of the section with the files directly in it. */
 interface SectionTreeFolder extends DocumentFolderDto {
@@ -193,6 +202,23 @@ export class CampaignSectionPage {
   protected setSortMode(mode: SectionSortMode): void {
     this.sortMode.set(mode);
     this.localPreferences.setSectionSort(this.sectionPath(), mode);
+  }
+  /** Views this section offers: the graph draws links between notes, so it is left out of Assets, Encounters, Maps. */
+  protected readonly views = computed(() => {
+    const section = this.section();
+    return viewsForSection(
+      !!section &&
+        !this.isAssetsSection() &&
+        !this.isEncountersSection() &&
+        section.key !== MAPS_SECTION_KEY,
+    ).filter((view) => BUILT_VIEWS.includes(view));
+  });
+  private readonly rememberedView = signal<SectionView>(DEFAULT_SECTION_VIEW);
+  /** The view shown: the one remembered for this section on this device, or the list when it is not offered. */
+  protected readonly view = computed(() => resolveSectionView(this.rememberedView(), this.views()));
+  protected setView(view: SectionView): void {
+    this.rememberedView.set(view);
+    this.localPreferences.setSectionView(this.sectionPath(), view);
   }
   /** Files shown: those of the open sub-folder, else those directly in the section. */
   protected readonly files = computed(() => {
@@ -308,6 +334,7 @@ export class CampaignSectionPage {
 
     effect(() => {
       this.sortMode.set(this.localPreferences.getSectionSort(this.sectionPath()));
+      this.rememberedView.set(this.localPreferences.getSectionView(this.sectionPath()));
     });
 
     // Another section or sub-folder starts with a clean search and no filters.

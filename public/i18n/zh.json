@@ -737,6 +737,12 @@
       "tags": {
         "more": "另外 {{count}} 个标签",
         "all": "全部标签"
+      },
+      "views": {
+        "label": "视图",
+        "list": "列表",
+        "cards": "卡片",
+        "graph": "图谱"
       }
     },
     "assets": {

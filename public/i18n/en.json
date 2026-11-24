@@ -737,6 +737,12 @@
       "tags": {
         "more": "{{count}} more tags",
         "all": "All tags"
+      },
+      "views": {
+        "label": "Views",
+        "list": "List",
+        "cards": "Cards",
+        "graph": "Graph"
       }
     },
     "assets": {

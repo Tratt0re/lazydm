@@ -29,7 +29,9 @@ import { ArcTechPopoverDirective } from '@/shared/components/popover';
         [arcVisible]="isOpen()"
         (arcVisibleChange)="isOpen.set($event)"
         class="inline-flex h-5 shrink-0 cursor-pointer items-center border border-dashed border-border-subtle px-1.5 font-mono text-[11px] text-muted-foreground hover:border-primary hover:text-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
-        [attr.aria-label]="'campaigns.sections.tags.more' | translate: { count: parts().hidden.length }"
+        [attr.aria-label]="
+          'campaigns.sections.tags.more' | translate: { count: parts().hidden.length }
+        "
         [attr.aria-expanded]="isOpen()"
         (click)="$event.stopPropagation()"
       >

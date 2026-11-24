@@ -21,7 +21,10 @@ function file(
 ): DocumentFileListItemDto {
   return {
     path,
-    name: path.split('/').pop()!.replace(/\.[^.]+$/, ''),
+    name: path
+      .split('/')
+      .pop()!
+      .replace(/\.[^.]+$/, ''),
     kind: 'md',
     type: null,
     title,
@@ -200,11 +203,7 @@ describe('splitTags', () => {
   });
 
   it('puts active tags before text matches', () => {
-    expect(splitTags(tags, ['ranged'], 'ember').visible).toEqual([
-      'ranged',
-      'ember-crown',
-      'boss',
-    ]);
+    expect(splitTags(tags, ['ranged'], 'ember').visible).toEqual(['ranged', 'ember-crown', 'boss']);
   });
 
   it('respects a custom maximum', () => {
