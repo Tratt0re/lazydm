@@ -498,6 +498,10 @@
       "description": {
         "what": "LazyDM riunisce note della campagna, mappe e gestione dei combattimenti. È fatta da un Dungeon Master per usarla al tavolo.",
         "promise": "Le tue note restano in una cartella che scegli tu, come file Markdown che puoi aprire in Obsidian. LazyDM non richiede un account."
+      },
+      "credits": {
+        "title": "Crediti",
+        "changes": "Il testo delle regole del Riferimento rapido per D&D 5e è abbreviato e riorganizzato a partire da questo documento."
       }
     }
   },

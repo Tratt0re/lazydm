@@ -74,6 +74,10 @@ through the turns while hit points, temporary hit points and timed statuses stay
   (Generic, D&D 5e or Pathfinder 2e) and its layout and templates follow; change the layout or the row size later, and
   see it on mock Combatants before the session.
 - **Battle bar** with Start battle, Stop battle and next turn, and the round and whose turn it is always visible.
+- **Quick reference** (Cmd/Ctrl+R): the rules you look up mid-fight, a keystroke away from any page of the campaign,
+  with search and categories. A D&D 5e campaign starts with the 2014 rules from the SRD 5.1 in all seven languages; you
+  can add, edit and delete rules and categories at any time, and your house rules travel with the campaign. Pathfinder
+  2e is not included yet.
 - **Cemetery** keeps defeated enemies in case they return, and a **party roster** can be added to any encounter.
 
 ## Open the right place
@@ -106,7 +110,7 @@ handles the sync; LazyDM waits for files still downloading and warns you about c
 When you choose to enable it, LazyDM can make the Codex available to an AI assistant running on the same computer
 through a local MCP server. It stays off until you switch it on. It listens only on your own computer and asks for a
 token. Writing is a separate switch, and so is deleting; both start off. With writing on, an assistant can also export
-a campaign to a zip and import one. Claude Code, OpenAI Codex and OpenCode can connect to it. The design is in [`docs/design-principles.md`](docs/design-principles.md) §6f.
+a campaign to a zip and import one. It can read a campaign's Quick reference, never change it. Claude Code, OpenAI Codex and OpenCode can connect to it. The design is in [`docs/design-principles.md`](docs/design-principles.md) §6f.
 
 ## Roadmap
 
@@ -115,8 +119,6 @@ change. Finished work is listed in [`docs/design-principles.md`](docs/design-pri
 
 **Next**
 
-- [ ] **Rules cheat sheet**: a quick-open sheet for the rules you look up at the table (conditions, actions,
-      movement…), kept as plain notes in your Codex.
 - [ ] **Better folder home**: search and filters on the page of a folder, and a choice of views (list, cards, graph).
 
 **Later**

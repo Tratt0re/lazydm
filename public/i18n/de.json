@@ -498,6 +498,10 @@
       "description": {
         "what": "LazyDM vereint Kampagnennotizen, Karten und Kampfverwaltung. Ein Spielleiter hat die App für den Einsatz am Spieltisch entwickelt.",
         "promise": "Deine Notizen bleiben als Markdown-Dateien in einem Ordner deiner Wahl. Du kannst sie in Obsidian öffnen. Für LazyDM brauchst du kein Konto."
+      },
+      "credits": {
+        "title": "Danksagung",
+        "changes": "Der Regeltext der Schnellreferenz für D&D 5e ist aus diesem Dokument gekürzt und umgestellt."
       }
     }
   },

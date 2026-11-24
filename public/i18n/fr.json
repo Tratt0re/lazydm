@@ -498,6 +498,10 @@
       "description": {
         "what": "LazyDM réunit notes de campagne, cartes et suivi des combats. Un Maître du Donjon l’a créée pour s’en servir à la table de jeu.",
         "promise": "Tes notes restent dans le dossier de ton choix, sous forme de fichiers Markdown que tu peux ouvrir dans Obsidian. LazyDM ne nécessite pas de compte."
+      },
+      "credits": {
+        "title": "Crédits",
+        "changes": "Le texte des règles de la Référence rapide pour D&D 5e est raccourci et réorganisé à partir de ce document."
       }
     }
   },

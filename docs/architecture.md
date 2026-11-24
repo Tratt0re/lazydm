@@ -23,6 +23,7 @@ Heading to 1.0. Built and working:
 - Assets: paste, drop, import, inline audio, PDFs
 - Encounter manager with tracker layouts (battle rules), party roster, cemetery and statuses
 - Map with pins linked to files
+- Quick reference: the campaign's rules sheet on Cmd/Ctrl+R (`quick-reference.json`), D&D 5e built in
 - Campaign export and import as a plain zip (`lazydm.json` manifest), also for MCP agents
 - Tabs and split screen with shared live documents
 - Seven languages (en, it, de, es, fr, uk, zh) and the dark and light themes
@@ -62,7 +63,8 @@ Current work: UI polish for 1.0 (plans in `.claude/plans/`). The phase-by-phase 
 | Path | What |
 | --- | --- |
 | `electron/controllers/` | Input validation and orchestration, one per feature (campaign, document, encounter, map, review, section, template, compendium…) |
-| `electron/models/` | Data access: vault files, SQLite index; campaign zips: `campaign-bundle` (the `lazydm.json` manifest), `campaign-export`, `campaign-import` |
+| `electron/models/` | Data access: vault files, SQLite index; campaign zips: `campaign-bundle` (the `lazydm.json` manifest), `campaign-export`, `campaign-import`; the Quick reference: `quick-reference` (the file and its one reader) and `quick-reference-builtin` (seeding, *Start from…*, reset) |
+| `electron/data/quick-reference/<system>/` | The built-in rules: `rules.json` (structure, credit line) and one `<language>.json` per language |
 | `electron/utils/zip-*.js`, `path-utils.js` | Campaign zip support: `zip-reader` (hostile-zip reader over `yauzl`), `zip-paths` (entry name checks), `zip-limits` (caps), shared path helpers |
 | `electron/mcp/` | The opt-in MCP server: tools, scope guard, folder importer and `bundles.js` (campaign zips) |
 | `electron/database/` | SQLite setup, schemas, migrations |
@@ -108,4 +110,4 @@ Current work: UI polish for 1.0 (plans in `.claude/plans/`). The phase-by-phase 
 ---
 
 **Created**: 2026-06-16
-**Last updated**: 2026-11-12
+**Last updated**: 2026-11-24

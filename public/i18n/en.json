@@ -498,6 +498,10 @@
       "description": {
         "what": "LazyDM brings campaign notes, maps and combat tracking together. It’s made by a Dungeon Master for use at the table.",
         "promise": "Your notes stay in a folder you choose, as Markdown files you can open in Obsidian. LazyDM doesn’t require an account."
+      },
+      "credits": {
+        "title": "Credits",
+        "changes": "The rules text of the Quick reference for D&D 5e is shortened and rearranged from this document."
       }
     }
   },

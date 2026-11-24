@@ -76,6 +76,16 @@
   </section>
 
   <section class="rounded-lg border border-border/60 bg-card p-4 md:p-5">
+    <h3 class="mb-3 font-display text-lg font-semibold tracking-wide uppercase">
+      {{ 'settings.about.credits.title' | translate }}<span class="text-primary" aria-hidden="true">.</span>
+    </h3>
+    <p class="max-w-[72ch] text-sm leading-relaxed text-foreground-secondary" lang="en">{{ srdAttribution }}</p>
+    <p class="mt-2 max-w-[72ch] text-xs text-muted-foreground">
+      {{ 'settings.about.credits.changes' | translate }}
+    </p>
+  </section>
+
+  <section class="rounded-lg border border-border/60 bg-card p-4 md:p-5">
     <div class="flex items-start justify-between gap-4">
       <div class="min-w-0">
         <p class="text-sm font-medium">{{ 'settings.about.startup.label' | translate }}</p>

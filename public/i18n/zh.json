@@ -498,6 +498,10 @@
       "description": {
         "what": "LazyDM 集战役笔记、地图和战斗追踪于一体。作者是一位地下城主，为跑团时使用而开发了这款应用。",
         "promise": "你的笔记以 Markdown 文件保存在你选择的文件夹中，可以用 Obsidian 打开。使用 LazyDM 无需账号。"
+      },
+      "credits": {
+        "title": "致谢",
+        "changes": "D&D 5e 快速参考中的规则文本由此文档缩写并重新编排而成。"
       }
     }
   },

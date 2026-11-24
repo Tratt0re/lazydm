@@ -763,9 +763,17 @@ rules, corrects a line, deletes what the table never uses.
     https://creativecommons.org/licenses/by/4.0/legalcode.*
     The wording is shortened and rearranged for cards, which counts as a change: the credits say the material was
     adapted. LazyDM may say it is "compatible with fifth edition", nothing more.
+  - The statement is also shown in *Settings → About → Credits*, word for word and in English, with a line saying
+    the text was shortened and rearranged.
   - **Pathfinder 2e**: the Remaster rules are published under the ORC licence, with Paizo's own terms for names and
-    Product Identity. Those terms are **not verified yet**; nothing is seeded for Pathfinder 2e until they are, and if
-    copying is not allowed it is paraphrased summaries only.
+    Product Identity. Only a **draft** of the ORC licence (April 2023) could be read, not the published text and not
+    Paizo's own notice for the Remaster. What the draft says: game rules and mechanics (actions, reactions, conditions,
+    movement, combat…) are licensed content and names and settings are not; and it is **share-alike**: a work adapted
+    from ORC content must be offered to its recipients under the ORC licence, with an ORC notice, an attribution notice
+    naming the licensor and a Product Identity notice. LazyDM's own licence is PolyForm Noncommercial, so shipping
+    Pathfinder 2e rules is a licensing decision for the author (the rules file would be ORC, the app is not), to be
+    taken against the published licence and Paizo's notice. Nothing is seeded for Pathfinder 2e until then; a
+    Pathfinder 2e campaign opens the sheet empty, like Generic, and *Start from…* offers D&D 5e only.
 - **The sheet.** A full-page sheet like Settings and the Compendium (§8) that **rises from the bottom** and keeps the
   campaign underneath. Opened from a book button left of the search bar (campaign pages only, `aria-pressed` while
   open) and with **Cmd/Ctrl+R**, which the app handles itself (its menu has no reload item; in a browser the handler
