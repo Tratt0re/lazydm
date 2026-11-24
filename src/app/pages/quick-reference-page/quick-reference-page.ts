@@ -32,8 +32,10 @@ import { ARCTECH_ICONS, ArcTechIconComponent } from '@/shared/components/icon';
 import { ArcTechMenuImports } from '@/shared/components/menu';
 import { ArcTechSelectImports } from '@/shared/components/select';
 
-/** Icons a rule can have: the same list the Electron side lets through (`QUICK_REFERENCE_ICONS`). */
-/** Icon names as text (the registry's own type also allows raw icon data, which a file cannot hold). */
+/**
+ * Icon names as text (the registry's own type also allows raw icon data, which a file cannot hold). The list below
+ * is the one the Electron side lets through (`QUICK_REFERENCE_ICONS`).
+ */
 type RuleIconName = Extract<keyof typeof ARCTECH_ICONS, string>;
 const RULE_ICONS: readonly RuleIconName[] = [
   'book-open',
@@ -498,10 +500,6 @@ export class QuickReferencePage {
     if (rule && !(await this.service.resetRule(rule.id))) {
       this.notifyNotSaved();
     }
-  }
-
-  protected trackGroup(_: number, group: QuickReferenceGroup): string {
-    return group.id;
   }
 
   /** A change that did not reach the file: another computer changed it first, or it could not be written. */
