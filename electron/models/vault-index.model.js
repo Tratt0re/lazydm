@@ -109,6 +109,86 @@ function listIncomingLinks(targetPath) {
     .all(targetPath);
 }
 
+/** Most nodes a folder graph holds; the notes of the folder come first, the neighbours outside it fill what is left. */
+const FOLDER_GRAPH_MAX_NODES = 300;
+
+/**
+ * The links between the notes of a folder (and its sub-folders), for the graph view: a node per note, an edge per
+ * resolved link from one of them to another file. A link that leaves the folder adds that file as an `external`
+ * node, one hop only (its own links are not followed). Self-links, repeated links and broken links are left out,
+ * and so are templates. Cut at `maxNodes`, with `truncated` set: the notes of the folder win, then the neighbours
+ * that most notes link to.
+ */
+function getFolderGraph(folderPath, maxNodes = FOLDER_GRAPH_MAX_NODES) {
+  const prefix = `${folderPath.replace(/\/+$/, '')}/`;
+  const database = getVaultIndexDatabase();
+  const notes = database
+    .prepare(
+      `SELECT id, path, title, type FROM files
+       WHERE kind = 'md' AND substr(path, 1, length(?)) = ? AND path NOT LIKE '%/!_templates/%' ESCAPE '!'
+       ORDER BY title COLLATE NOCASE, path`,
+    )
+    .all(prefix, prefix);
+  const edgeRows = database
+    .prepare(
+      `SELECT DISTINCT s.path AS source, t.path AS target, t.title AS targetTitle, t.type AS targetType, t.kind AS targetKind
+       FROM links l
+       JOIN files s ON s.id = l.source_file_id
+       JOIN files t ON t.id = l.target_file_id
+       WHERE s.kind = 'md' AND substr(s.path, 1, length(?)) = ?
+         AND s.path NOT LIKE '%/!_templates/%' ESCAPE '!'
+         AND s.id <> t.id`,
+    )
+    .all(prefix, prefix);
+
+  const inFolder = new Set(notes.map((note) => note.path));
+  const outside = new Map();
+  for (const edge of edgeRows) {
+    if (inFolder.has(edge.target)) {
+      continue;
+    }
+
+    const known = outside.get(edge.target) ?? {
+      path: edge.target,
+      title: edge.targetTitle,
+      type: edge.targetType,
+      kind: edge.targetKind,
+      links: 0,
+    };
+    known.links += 1;
+    outside.set(edge.target, known);
+  }
+
+  const kept = notes.slice(0, maxNodes);
+  const room = Math.max(0, maxNodes - kept.length);
+  const neighbours = [...outside.values()]
+    .sort((a, b) => b.links - a.links || a.path.localeCompare(b.path))
+    .slice(0, room);
+  const shown = new Set([...kept.map((note) => note.path), ...neighbours.map((note) => note.path)]);
+
+  return {
+    nodes: [
+      ...kept.map((note) => ({
+        path: note.path,
+        title: note.title,
+        type: note.type,
+        external: false,
+      })),
+      ...neighbours.map((note) => ({
+        path: note.path,
+        title: note.title,
+        type: note.type,
+        external: true,
+      })),
+    ],
+    edges: edgeRows
+      .filter((edge) => shown.has(edge.source) && shown.has(edge.target))
+      .map((edge) => ({ source: edge.source, target: edge.target }))
+      .sort((a, b) => a.source.localeCompare(b.source) || a.target.localeCompare(b.target)),
+    truncated: notes.length > kept.length || outside.size > neighbours.length,
+  };
+}
+
 /** Links written in the notes of a campaign that resolve to no file (templates excluded: their links are placeholders). */
 function listBrokenLinks(campaign) {
   return getVaultIndexDatabase()
@@ -549,6 +629,7 @@ module.exports = {
   getFileName,
   hasFileNamed,
   getFileState,
+  getFolderGraph,
   listAllBrokenLinks,
   listAllPaths,
   listBrokenLinks,

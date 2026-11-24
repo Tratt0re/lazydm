@@ -116,6 +116,7 @@ export interface ElectronIpcClient {
       DTO.DeleteSectionResultDto
     >;
     readonly links: IpcRequest<DTO.ReadDocumentPayload, DTO.DocumentLinksDto>;
+    readonly folderGraph: IpcRequest<{ folder: string }, DTO.FolderGraphDto>;
     readonly linkTargets: IpcRequest<{ sourcePath: string }, { rows: DTO.LinkTargetDto[] }>;
     readonly brokenLinks: IpcRequest<{ campaign: string }, { rows: DTO.BrokenLinkDto[] }>;
     readonly unlink: IpcRequest<DTO.UnlinkPayload, { path: string; linkCount: number }>;

@@ -71,6 +71,20 @@ async function list(payload) {
   };
 }
 
+/**
+ * The graph of a folder: its notes (and those of its sub-folders), the links between them, and the files
+ * they link to outside it. Empty while the index is not open yet.
+ */
+async function folderGraph(payload) {
+  const body = ensurePlainObject(payload, 'payload');
+  const folder = requirePath(body, 'folder');
+  if (!indexerController.isOpen()) {
+    return { nodes: [], edges: [], truncated: false };
+  }
+
+  return vaultIndexModel.getFolderGraph(folder);
+}
+
 const FOLDER_NAME_MAX_LENGTH = 60;
 
 /** New sub-folder of a section: one level deep, in a section that holds notes. */
@@ -1583,6 +1597,7 @@ module.exports = {
   deleteFolder,
   deleteSection,
   deleteStrayFolder,
+  folderGraph,
   getCopyLocation,
   linkTargets,
   links,

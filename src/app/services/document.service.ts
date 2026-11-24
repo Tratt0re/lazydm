@@ -16,6 +16,7 @@ import type {
   DocumentFileListItemDto,
   DocumentFolderDto,
   DocumentLinksDto,
+  FolderGraphDto,
   LinkTargetDto,
   MoveDocumentResultDto,
   RenameAssetPayload,
@@ -164,6 +165,11 @@ export class DocumentService extends BaseIpcService<APIChannel.DOCUMENTS> {
   /** Deletes a folder the Review page lists (unknown or too deep) with its files (to the system Trash). */
   deleteStrayFolder(folder: string, rewriteLinks: boolean): Promise<DeleteSectionResultDto> {
     return this.ipcClient.deleteStrayFolder({ folder, rewriteLinks });
+  }
+
+  /** The notes of a folder and the links between them (and to files outside it), for the graph view. */
+  folderGraph(folder: string): Promise<FolderGraphDto> {
+    return this.ipcClient.folderGraph({ folder });
   }
 
   links(path: string): Promise<DocumentLinksDto> {

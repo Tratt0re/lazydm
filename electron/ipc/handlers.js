@@ -82,6 +82,7 @@ const IPC_HANDLERS = Object.freeze({
   [CHANNELS.documents.deleteSection]: documentController.deleteSection,
   [CHANNELS.documents.deleteStrayFolder]: documentController.deleteStrayFolder,
   [CHANNELS.documents.links]: documentController.links,
+  [CHANNELS.documents.folderGraph]: documentController.folderGraph,
   [CHANNELS.documents.linkTargets]: documentController.linkTargets,
   [CHANNELS.documents.brokenLinks]: documentController.brokenLinks,
   [CHANNELS.documents.unlink]: documentController.unlink,

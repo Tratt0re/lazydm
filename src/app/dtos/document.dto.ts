@@ -111,6 +111,29 @@ export interface DocumentLinksDto {
   readonly brokenLinks: readonly DocumentLinkDto[];
 }
 
+/** A note of a folder graph, or a file it links to outside the folder (`external`). */
+export interface FolderGraphNodeDto {
+  /** Vault-relative path; it identifies the node. */
+  readonly path: string;
+  readonly title: string;
+  readonly type: string | null;
+  readonly external: boolean;
+}
+
+/** A resolved link from one node to another (several links between two notes count once). */
+export interface FolderGraphEdgeDto {
+  readonly source: string;
+  readonly target: string;
+}
+
+/** The links between the notes of a folder and its sub-folders, for the graph view. */
+export interface FolderGraphDto {
+  readonly nodes: readonly FolderGraphNodeDto[];
+  readonly edges: readonly FolderGraphEdgeDto[];
+  /** True when the folder holds more notes (or neighbours) than the graph draws. */
+  readonly truncated: boolean;
+}
+
 export interface UnlinkPayload {
   readonly path: string;
   /** Raw target of the link to remove (every occurrence in the note is replaced by its text). */

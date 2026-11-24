@@ -63,6 +63,7 @@ const CHANNELS = Object.freeze({
     deleteSection: 'documents:deleteSection',
     deleteStrayFolder: 'documents:deleteStrayFolder',
     links: 'documents:links',
+    folderGraph: 'documents:folderGraph',
     linkTargets: 'documents:linkTargets',
     brokenLinks: 'documents:brokenLinks',
     unlink: 'documents:unlink',
