@@ -30,6 +30,8 @@ their technical names; only the text the user sees changes. Add to this table be
 | **Delete forever** | permanent delete | Combatant card, cemetery and its confirmation |
 | **AI Agents rules** | `agents.md` of a campaign | The campaign's instructions for AI assistants, written by the user in *Settings → AI Agents rules* (§6f) |
 | **Quick reference** | `quick-reference.json` of a campaign | The rules sheet opened from the title bar (§6h); its entries are *rules* and *categories*; translated per language |
+| **Views** | section page views (`list`, `cards`, `graph`) | The switch on a section or folder page: *List*, *Cards*, *Graph*; translated per language |
+| **Filter** | section page filters | Narrows a section or folder page by tag, type and kind; next to the search field |
 | **Info box** | callout | `> [!note]` stays as the markdown syntax example |
 | **Default** | built-in tracker layout (`Generic` in the file) | Display name only; the stored name never changes |
 
@@ -125,6 +127,13 @@ their technical names; only the text the user sees changes. Add to this table be
   while dragging, to move them (one section only); right-click a file for *Rename…*, *Move to…* (main folder or a
   sub-folder), *Reveal in Finder* (*Show in Explorer* / file manager elsewhere) and *Delete…*, a folder for *Open*,
   *Rename…*, *Reveal* and *Delete…*.
+- **Folder home: search, filters and views** (planned, `.claude/plans/folder-home.plan.md`). A section or sub-folder
+  page has a toolbar with a search field (title, name, tags), *Filter* (tag, type, kind), the *Views* switch and the
+  sort. They act on the open folder only. While a search or filter is active the tree flattens to a result list
+  (each row names its sub-folder). The view (*List*, *Cards*, *Graph*) is remembered per section on this device;
+  search and filters are not. *Graph* shows the folder's notes and their direct neighbours from the index `links`.
+  **Tags in rows are badges** (a few, then `+N`), never one plain string; clicking one adds it to the filter. The
+  interface is designed with the `impeccable` skill and approved as a mockup before any code.
 - **Asset rows** show a small thumbnail for images (an icon for PDF and audio), a *Rename* button and *Copy to
   compendium*. Clicking an image (section page or explorer) opens the **asset page**
   (`/<section>/…/<file name with extension>`, its own tab title and breadcrumb; a rename moves it): only the
