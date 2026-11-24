@@ -38,6 +38,15 @@ function haystack(rule: QuickReferenceRuleDto): string {
   return `${rule.title}\n${rule.short}\n${rule.full}`.toLocaleLowerCase();
 }
 
+/** How well a rule matches a search: 0 in the title, 1 in the short text, 2 only in the long text. */
+function matchRank(rule: QuickReferenceRuleDto, term: string): number {
+  if (rule.title.toLocaleLowerCase().includes(term)) {
+    return 0;
+  }
+
+  return rule.short.toLocaleLowerCase().includes(term) ? 1 : 2;
+}
+
 /**
  * The Quick reference of the campaign under the sheet: loads and seeds its file, and keeps each change (a rule or
  * a category added, edited, deleted) in the file, one at a time. A file changed on disk meanwhile is never
@@ -99,17 +108,30 @@ export class QuickReferenceService extends BaseIpcService<APIChannel.QUICK_REFER
 
     return groups;
   });
-  /** The groups after the search and the category chip. A search hides the groups it leaves empty. */
+  /**
+   * The groups after the search and the category select. A search shows each rule once (in the first group that
+   * holds it) and puts the rules whose title matches before those that only match in the text.
+   */
   readonly visibleGroups = computed<readonly QuickReferenceGroup[]>(() => {
     const term = this.querySignal().trim().toLocaleLowerCase();
     const category = this.categorySignal();
-    return this.groups()
-      .filter((group) => category === null || group.id === category)
-      .map((group) => ({
-        ...group,
-        rules: term ? group.rules.filter((rule) => haystack(rule).includes(term)) : group.rules,
-      }))
-      .filter((group) => term === '' || group.rules.length > 0);
+    const groups = this.groups().filter((group) => category === null || group.id === category);
+    if (term === '') {
+      return groups;
+    }
+
+    const seen = new Set<string>();
+    return groups
+      .map((group) => {
+        const rules = group.rules
+          .filter((rule) => haystack(rule).includes(term) && !seen.has(rule.id))
+          .map((rule) => ({ rule, rank: matchRank(rule, term) }))
+          .sort((a, b) => a.rank - b.rank)
+          .map((entry) => entry.rule);
+        rules.forEach((rule) => seen.add(rule.id));
+        return { ...group, rules };
+      })
+      .filter((group) => group.rules.length > 0);
   });
   readonly matchCount = computed(
     () => new Set(this.visibleGroups().flatMap((group) => group.rules.map((rule) => rule.id))).size,

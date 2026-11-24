@@ -1,4 +1,4 @@
-<!-- Under the sheet's title and divider: the campaign's game system, and the one primary action. -->
+<!-- Under the sheet's title and divider: the campaign's game system. -->
 <div class="flex shrink-0 flex-wrap items-center gap-3 px-6 pt-1 pb-3">
   <span
     class="inline-flex items-center gap-1.5 border border-border px-2 py-0.5 font-mono text-[11px] text-foreground-secondary"
@@ -168,7 +168,10 @@
                 (click)="service.select(rule.id)"
                 (keydown)="onCardKeydown($event)"
               >
-                <arc-icon [arcType]="iconOf(rule)" class="mt-0.5 size-5 text-primary" />
+                <arc-icon
+                  [arcType]="iconOf(rule)"
+                  [class]="isSelected(rule) ? 'mt-0.5 size-5 text-primary' : 'mt-0.5 size-5 text-muted-foreground'"
+                />
                 <span class="min-w-0">
                   <span class="block text-sm leading-tight font-semibold text-foreground-strong">{{ rule.title }}</span>
                   <span class="mt-0.5 block text-xs leading-snug text-foreground-secondary">{{ rule.short }}</span>
