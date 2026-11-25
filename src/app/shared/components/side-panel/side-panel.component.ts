@@ -64,8 +64,12 @@ import { ArcTechIconComponent } from '@/shared/components/icon';
       [style.width]="mode() === 'beside' ? arcWidth() + 'rem' : overWidth"
     >
       @if (arcTitle()) {
-        <div class="flex h-12 shrink-0 items-center justify-between gap-2 border-b border-border pr-2 pl-4">
-          <h2 class="font-mono text-[11px] font-semibold tracking-[0.11em] text-muted-foreground uppercase">
+        <div
+          class="flex h-12 shrink-0 items-center justify-between gap-2 border-b border-border pr-2 pl-4"
+        >
+          <h2
+            class="font-mono text-[11px] font-semibold tracking-[0.11em] text-muted-foreground uppercase"
+          >
             {{ arcTitle() }}
           </h2>
           <button
@@ -159,7 +163,8 @@ export class ArcTechSidePanelComponent {
       const isOpen = this.arcOpen();
       untracked(() => {
         if (isOver && isOpen) {
-          this.returnFocusTo = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+          this.returnFocusTo =
+            document.activeElement instanceof HTMLElement ? document.activeElement : null;
           queueMicrotask(() => this.panel().nativeElement.focus({ preventScroll: true }));
         } else if (this.returnFocusTo) {
           const target = this.returnFocusTo;
@@ -179,7 +184,9 @@ export class ArcTechSidePanelComponent {
       this.mode() !== 'over' ||
       !this.arcOpen() ||
       event.defaultPrevented ||
-      document.querySelector('.cdk-overlay-pane [arc-menu-content], .cdk-overlay-pane [role="dialog"]')
+      document.querySelector(
+        '.cdk-overlay-pane [arc-menu-content], .cdk-overlay-pane [role="dialog"]',
+      )
     ) {
       return;
     }

@@ -15,6 +15,10 @@ export const SIDE_PANEL_OVER_MAX_REM = 22;
  * Measured on the pane (the page's own area), not on the window: a pane is narrower than the window when the
  * sidebar is open or the screen is split.
  */
-export function sidePanelMode(paneWidthPx: number, panelWidthRem: number, remPx = 16): SidePanelMode {
+export function sidePanelMode(
+  paneWidthPx: number,
+  panelWidthRem: number,
+  remPx = 16,
+): SidePanelMode {
   return paneWidthPx >= (panelWidthRem + SIDE_PANEL_MIN_CONTENT_REM) * remPx ? 'beside' : 'over';
 }
