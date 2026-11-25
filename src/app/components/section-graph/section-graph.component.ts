@@ -23,6 +23,9 @@ import {
   GRAPH_FIT_PADDING,
   GRAPH_MAX_LEVEL,
   GRAPH_MIN_LEVEL,
+  gridFor,
+  type IconShapes,
+  iconToDataUrl,
   keyPan,
   keyZoom,
   levelToScale,
@@ -32,7 +35,8 @@ import {
   wheelLevelDelta,
 } from '@/config/section-graph.config';
 import { ArcTechButtonComponent } from '@/shared/components/button';
-import { ArcTechIconComponent } from '@/shared/components/icon';
+import { ARCTECH_ICONS, ArcTechIconComponent } from '@/shared/components/icon';
+import type { SectionIcon } from '@/services/section.service';
 import { ArcTechTooltipImports } from '@/shared/components/tooltip';
 
 /** What a click on a node asks for: select it, open it, open it in a tab or to the side. */
@@ -43,6 +47,12 @@ export interface GraphNodeOpen {
 
 interface GraphColours {
   readonly card: string;
+  /** The node's fill: the lightest surface in light, the lifted one in dark, so a node reads against the frame. */
+  readonly raised: string;
+  /** The frame behind the graph: darker than the page in both themes (the label halo uses it too). */
+  readonly frame: string;
+  /** The tint of a node's drop shadow. */
+  readonly shadow: string;
   readonly recessed: string;
   readonly foreground: string;
   readonly muted: string;
@@ -52,13 +62,19 @@ interface GraphColours {
   readonly ring: string;
 }
 
-const NODE_SIZE = 32;
+const NODE_SIZE = 46;
+/** The icon of a node's home folder, as a share of the node. */
+const NODE_ICON_SHARE = '56%';
 const LABEL_MAX_LENGTH = 22;
 
 function readColours(host: HTMLElement): GraphColours {
   const styles = getComputedStyle(host);
   const read = (name: string, fallback: string) => styles.getPropertyValue(name).trim() || fallback;
+  const isDark = document.documentElement.classList.contains('dark');
   return {
+    raised: read('--raised', '#fdfcfa'),
+    frame: isDark ? read('--background', '#101114') : read('--accent', '#e2e4e2'),
+    shadow: isDark ? '#000000' : read('--border-strong', '#676e71'),
     card: read('--card', '#fff'),
     recessed: read('--recessed', '#eee'),
     foreground: read('--foreground', '#222'),
@@ -83,17 +99,28 @@ function shorten(text: string): string {
   selector: 'app-section-graph',
   imports: [TranslatePipe, ArcTechButtonComponent, ArcTechIconComponent, ArcTechTooltipImports],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  host: { class: 'relative block h-[34rem] min-h-80 border border-border bg-recessed' },
+  // The frame is a step darker than the page (accent in light, the page's own dark in dark): the tiles are the
+  // lightest things in it. The inset shadow makes it a well, not a flat panel.
+  host: {
+    class:
+      'relative block h-[34rem] min-h-80 border border-border-strong bg-accent shadow-[inset_0_1px_6px_rgb(0_0_0/0.12)] dark:bg-background dark:shadow-[inset_0_1px_8px_rgb(0_0_0/0.5)]',
+  },
   template: `
-    <!-- Cytoscape makes its container position: relative, so the sized wrapper does the absolute positioning. -->
-    <div class="absolute inset-0 overflow-hidden">
+    <!-- Cytoscape makes its container position: relative, so the sized wrapper does the absolute positioning.
+         The dots are the backdrop: they scale with the zoom and slide with the pan (see syncGrid), which makes
+         the view feel like a surface and the movement readable. -->
+    <div
+      #backdrop
+      class="absolute inset-0 overflow-hidden"
+      style="background-image: radial-gradient(circle, var(--border) 1px, transparent 1.4px)"
+    >
       <div
         #canvas
         class="size-full touch-none outline-none focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-ring"
         tabindex="0"
         role="application"
         [attr.aria-label]="'campaigns.sections.graph.ariaLabel' | translate"
-        [style.cursor]="isPanning() ? 'grabbing' : 'grab'"
+        [style.cursor]="cursor()"
         (keydown)="onKeydown($event)"
       ></div>
     </div>
@@ -138,7 +165,9 @@ function shorten(text: string): string {
       <div
         class="pointer-events-none absolute top-2.5 left-3 z-10 max-w-[46ch] border border-border-subtle bg-card px-3 py-2.5 text-[13px] text-foreground-secondary"
       >
-        <p class="font-display text-lg font-bold tracking-[0.02em] text-foreground-strong uppercase">
+        <p
+          class="font-display text-lg font-bold tracking-[0.02em] text-foreground-strong uppercase"
+        >
           {{
             (graph().nodes.length === 1
               ? 'campaigns.sections.graph.oneNoteTitle'
@@ -163,11 +192,11 @@ function shorten(text: string): string {
       aria-hidden="true"
     >
       <span class="inline-flex items-center gap-1.5">
-        <i class="inline-block size-3 border-[1.5px] border-border-strong bg-card"></i>
+        <i class="inline-block size-3 border-2 border-border-strong bg-raised"></i>
         {{ 'campaigns.sections.graph.legendInside' | translate }}
       </span>
       <span class="inline-flex items-center gap-1.5">
-        <i class="inline-block size-3 border-[1.5px] border-dashed border-border bg-recessed"></i>
+        <i class="inline-block size-3 border-2 border-dashed border-border bg-transparent"></i>
         {{ 'campaigns.sections.graph.legendOutside' | translate }}
       </span>
     </div>
@@ -191,12 +220,15 @@ export class AppSectionGraphComponent {
   /** Paths of the notes that pass the search and filters; the others are dimmed. Null: nothing is filtered. */
   readonly matching = input<ReadonlySet<string> | null>(null);
   readonly selected = input<string | null>(null);
+  /** The icon of each node's home section, by node path (a section's own icon: skull for Enemies…). */
+  readonly nodeIcons = input<Readonly<Record<string, SectionIcon>>>({});
   readonly nodeSelect = output<string>();
   readonly nodeOpen = output<GraphNodeOpen>();
   /** The background was clicked: the page closes the detail panel. */
   readonly backgroundClick = output<void>();
 
   private readonly canvas = viewChild.required<ElementRef<HTMLElement>>('canvas');
+  private readonly backdrop = viewChild.required<ElementRef<HTMLElement>>('backdrop');
   private readonly zone = inject(NgZone);
   private readonly destroyRef = inject(DestroyRef);
   private cy: cytoscape.Core | null = null;
@@ -206,6 +238,11 @@ export class AppSectionGraphComponent {
   private themeObserver: MutationObserver | null = null;
   private layoutKey = '';
   protected readonly isPanning = signal(false);
+  /** A node is under the pointer (`grab`) or being carried (`grabbing`, shared with panning). */
+  private readonly isOverNode = signal(false);
+  protected readonly cursor = computed(() =>
+    this.isPanning() ? 'grabbing' : this.isOverNode() ? 'pointer' : 'grab',
+  );
   private readonly outgoing = computed(() => {
     const map = new Map<string, string[]>();
     const titles = new Map(this.graph().nodes.map((node) => [node.path, node.title]));
@@ -234,6 +271,12 @@ export class AppSectionGraphComponent {
       this.matching();
       this.selected();
       this.refreshClasses();
+    });
+    // The home-folder icon of each node: set again when the icons arrive or the theme changes the colour.
+    effect(() => {
+      this.nodeIcons();
+      this.graph();
+      this.paintIcons();
     });
     this.destroyRef.onDestroy(() => this.destroy());
   }
@@ -299,7 +342,8 @@ export class AppSectionGraphComponent {
       userZoomingEnabled: false,
       userPanningEnabled: true,
       boxSelectionEnabled: false,
-      autoungrabify: true,
+      // Nodes can be moved around by hand: it only changes this view (nothing is written to the vault).
+      autoungrabify: false,
       minZoom: levelToScale(GRAPH_MIN_LEVEL),
       maxZoom: levelToScale(GRAPH_MAX_LEVEL),
       // No `pixelRatio`: left out, the canvas follows the screen's own (a retina display draws 2x). The value
@@ -329,17 +373,22 @@ export class AppSectionGraphComponent {
         this.zone.run(() => this.backgroundClick.emit());
       }
     });
-    cy.on('mouseover', 'node', (event) =>
-      this.highlight((event.target as cytoscape.NodeSingular).id()),
-    );
-    cy.on('mouseout', 'node', () => this.highlight(null));
-    // A drag of the background pans: show the closed hand while it does.
-    cy.on('vmousedown', (event) => {
-      if (event.target === cy) {
-        this.zone.run(() => this.isPanning.set(true));
-      }
+    cy.on('mouseover', 'node', (event) => {
+      this.highlight((event.target as cytoscape.NodeSingular).id());
+      this.zone.run(() => this.isOverNode.set(true));
     });
+    cy.on('mouseout', 'node', () => {
+      this.highlight(null);
+      this.zone.run(() => this.isOverNode.set(false));
+    });
+    // A drag of the background pans and a drag of a node carries it: the closed hand shows for both.
+    cy.on('vmousedown', () => this.zone.run(() => this.isPanning.set(true)));
     cy.on('vmouseup', () => this.zone.run(() => this.isPanning.set(false)));
+    // The backdrop dots follow the view; carrying a node does not change what the others are linked to.
+    cy.on('viewport', () => this.syncGrid());
+    cy.on('resize', () => this.syncGrid());
+    // A tap that moved a node must not count as a click: a drag is not a selection.
+    cy.on('dragfree', 'node', () => this.zone.run(() => this.isPanning.set(false)));
 
     const onWheel = (event: WheelEvent) => {
       event.preventDefault();
@@ -353,7 +402,10 @@ export class AppSectionGraphComponent {
     const observer = new ResizeObserver(() => cy.resize());
     observer.observe(container);
     // Colours come from the theme tokens, which a canvas cannot read by itself: restyle on a theme change.
-    this.themeObserver = new MutationObserver(() => cy.style(this.style(readColours(container))));
+    this.themeObserver = new MutationObserver(() => {
+      cy.style(this.style(readColours(container)));
+      this.paintIcons();
+    });
     this.themeObserver.observe(document.documentElement, {
       attributes: true,
       attributeFilter: ['class', 'data-theme'],
@@ -440,7 +492,11 @@ export class AppSectionGraphComponent {
 
     // Fit once the container has its final size (a new layout can arrive while the page is still settling).
     this.fit();
-    requestAnimationFrame(() => this.fit());
+    this.syncGrid();
+    requestAnimationFrame(() => {
+      this.fit();
+      this.syncGrid();
+    });
   }
 
   private style(colours: GraphColours): cytoscape.StylesheetJson {
@@ -451,17 +507,25 @@ export class AppSectionGraphComponent {
           shape: 'rectangle',
           width: NODE_SIZE,
           height: NODE_SIZE,
-          'background-color': colours.card,
-          'border-width': 1.5,
+          // A raised tile: the lightest surface with a firm border and a soft shadow, so it stands off the frame.
+          'background-color': colours.raised,
+          'border-width': 2,
           'border-color': colours.borderStrong,
+          'underlay-color': colours.shadow,
+          'underlay-opacity': 0.35,
+          'underlay-padding': 2,
+          // Cytoscape only offers a rounded underlay; the app is square, so keep the corners at nothing.
+          'underlay-shape': 'round-rectangle',
           label: 'data(label)',
           color: colours.foreground,
           'font-size': 12,
+          'font-weight': 500,
           'font-family': 'IBM Plex Sans, sans-serif',
           'text-valign': 'bottom',
-          'text-margin-y': 6,
-          'text-outline-color': colours.recessed,
+          'text-margin-y': 7,
+          'text-outline-color': colours.frame,
           'text-outline-width': 3,
+          'text-outline-opacity': 1,
           'min-zoomed-font-size': 7,
           'overlay-opacity': 0,
         },
@@ -469,9 +533,11 @@ export class AppSectionGraphComponent {
       {
         selector: 'node.outside',
         style: {
-          'background-color': colours.recessed,
+          // Outside the folder: the same tile, but empty-looking (the frame's colour) and dashed.
+          'background-color': colours.frame,
           'border-style': 'dashed',
           'border-color': colours.border,
+          'underlay-opacity': 0,
           color: colours.muted,
         },
       },
@@ -491,6 +557,69 @@ export class AppSectionGraphComponent {
       { selector: 'node.faded', style: { opacity: 0.35 } },
       { selector: 'edge.near', style: { 'line-color': colours.primary, width: 1.75, opacity: 1 } },
     ];
+  }
+
+  /**
+   * Gives every node the icon of its home section as a background image, in the theme's colour: a canvas cannot
+   * use the icon components, so the icon becomes an SVG image first. Outside nodes keep it, a little quieter.
+   */
+  private paintIcons(): void {
+    const cy = this.cy;
+    if (!cy) {
+      return;
+    }
+
+    const colours = readColours(this.canvas().nativeElement);
+    const urls = new Map<string, string>();
+    const urlFor = (icon: SectionIcon, colour: string): string => {
+      const key = `${icon}|${colour}`;
+      let url = urls.get(key);
+      if (!url) {
+        url = iconToDataUrl(ARCTECH_ICONS[icon] as unknown as IconShapes, colour);
+        urls.set(key, url);
+      }
+
+      return url;
+    };
+
+    const icons = this.nodeIcons();
+    cy.batch(() => {
+      cy.nodes().forEach((node) => {
+        const icon = icons[node.id()];
+        if (!icon || !(icon in ARCTECH_ICONS)) {
+          node.removeStyle('background-image');
+          return;
+        }
+
+        const colour = node.hasClass('outside') ? colours.muted : colours.primary;
+        node.style({
+          'background-image': urlFor(icon, colour),
+          'background-fit': 'none',
+          'background-width': NODE_ICON_SHARE,
+          'background-height': NODE_ICON_SHARE,
+          'background-clip': 'none',
+          'background-image-containment': 'inside',
+        });
+      });
+    });
+  }
+
+  /** The dotted backdrop follows the view: its spacing is the zoom, its offset the pan (set on every move). */
+  private syncGrid(): void {
+    const cy = this.cy;
+    const element = this.backdrop().nativeElement;
+    if (!cy) {
+      return;
+    }
+
+    const grid = gridFor(cy.zoom(), cy.pan());
+    if (!grid) {
+      element.style.backgroundSize = '0 0';
+      return;
+    }
+
+    element.style.backgroundSize = `${grid.size}px ${grid.size}px`;
+    element.style.backgroundPosition = `${grid.x}px ${grid.y}px`;
   }
 
   /** The state the inputs ask for: the selected node, and the nodes that do not pass the filter. */

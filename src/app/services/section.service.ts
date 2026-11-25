@@ -225,6 +225,15 @@ export class SectionService extends BaseIpcService<APIChannel.SECTIONS> {
       : this.labelOfKey(segments[1] ?? '');
   }
 
+  /** Icon of the section a vault file is in; the folder icon for a file outside every section. */
+  iconOfPath(path: string): SectionIcon {
+    const segments = path.split('/');
+    const isSystem = segments[0] === 'compendium';
+    const key = (isSystem ? segments[2] : segments[1]) ?? '';
+    const section = isSystem ? this.findSystemSection(key) : this.findCampaignSection(key);
+    return section?.icon ?? FALLBACK_SECTION_ICON;
+  }
+
   private remember(campaign: string, rows: readonly SectionDto[]): void {
     if (campaign === this.campaignService.activeCampaign()?.slug) {
       this.loadedSignal.set({ slug: campaign, rows });

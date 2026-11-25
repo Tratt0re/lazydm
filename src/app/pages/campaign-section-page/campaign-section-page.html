@@ -336,6 +336,7 @@
               [graph]="graph()"
               [matching]="graphMatching()"
               [selected]="graphSelected()"
+              [nodeIcons]="graphIcons()"
               (nodeSelect)="graphSelected.set($event)"
               (nodeOpen)="onGraphOpen($event)"
               (backgroundClick)="graphSelected.set(null)"
@@ -376,7 +377,7 @@
                   @for (item of detail.to; track item.path) {
                     <li>
                       <button type="button" class="flex w-full cursor-pointer items-center gap-2 px-1.5 py-1 text-left text-[13px] hover:bg-accent focus-visible:outline-2 focus-visible:outline-ring" (click)="graphSelected.set(item.path)">
-                        <arc-icon arcType="file-text" class="size-4 shrink-0 text-primary" />
+                        <arc-icon [arcType]="iconOfNode(item.path)" class="size-4 shrink-0 text-primary" />
                         <span class="truncate">{{ item.title }}</span>
                         @if (item.external) {
                           <span class="ml-auto border border-dashed border-border px-1 font-mono text-[10px] tracking-[0.06em] text-muted-foreground uppercase">{{ 'campaigns.sections.graph.outside' | translate }}</span>
@@ -394,7 +395,7 @@
                   @for (item of detail.from; track item.path) {
                     <li>
                       <button type="button" class="flex w-full cursor-pointer items-center gap-2 px-1.5 py-1 text-left text-[13px] hover:bg-accent focus-visible:outline-2 focus-visible:outline-ring" (click)="graphSelected.set(item.path)">
-                        <arc-icon arcType="file-text" class="size-4 shrink-0 text-primary" />
+                        <arc-icon [arcType]="iconOfNode(item.path)" class="size-4 shrink-0 text-primary" />
                         <span class="truncate">{{ item.title }}</span>
                         @if (item.external) {
                           <span class="ml-auto border border-dashed border-border px-1 font-mono text-[10px] tracking-[0.06em] text-muted-foreground uppercase">{{ 'campaigns.sections.graph.outside' | translate }}</span>

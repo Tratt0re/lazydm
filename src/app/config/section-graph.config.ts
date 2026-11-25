@@ -95,6 +95,50 @@ export function seedPositions(count: number, spacing = 70): GraphPoint[] {
   }));
 }
 
+/** Spacing (px) of the dots of the graph's backdrop at zoom 1; they scale with the zoom and move with the pan. */
+export const GRID_SPACING = 28;
+/** Below this on-screen spacing (px) the dots are left out: they would only be noise. */
+export const GRID_MIN_SPACING = 7;
+
+/** The backdrop of the graph for a view: dot size and spacing follow the zoom, the offset follows the pan. */
+export function gridFor(
+  zoom: number,
+  pan: GraphPoint,
+): { readonly size: number; readonly x: number; readonly y: number } | null {
+  const size = GRID_SPACING * zoom;
+  if (size < GRID_MIN_SPACING) {
+    return null;
+  }
+
+  return { size, x: pan.x % size, y: pan.y % size };
+}
+
+/** Lucide icon data: a list of `[tag, attributes]` shapes. */
+export type IconShapes = readonly (readonly [string, Readonly<Record<string, string | number>>])[];
+
+const escapeAttribute = (value: string | number): string =>
+  String(value).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;');
+
+/**
+ * An icon as an SVG image (a `data:` URL) in one colour, for a canvas that cannot use CSS: the shapes of the
+ * icon, stroked as Lucide draws them. Bookkeeping attributes (`key`) are dropped.
+ */
+export function iconToDataUrl(shapes: IconShapes, colour: string): string {
+  const body = shapes
+    .map(([tag, attributes]) => {
+      const written = Object.entries(attributes)
+        .filter(([name]) => name !== 'key')
+        .map(([name, value]) => `${name}="${escapeAttribute(value)}"`)
+        .join(' ');
+      return `<${tag} ${written}/>`;
+    })
+    .join('');
+  const svg =
+    `<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" ` +
+    `stroke="${escapeAttribute(colour)}" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter">${body}</svg>`;
+  return `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`;
+}
+
 /** The node and the nodes it shares a link with, in either direction. */
 export function neighbourhood(
   edges: readonly { readonly source: string; readonly target: string }[],

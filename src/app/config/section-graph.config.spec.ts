@@ -7,6 +7,9 @@ import {
   GRAPH_MAX_LEVEL,
   GRAPH_MIN_LEVEL,
   GRAPH_ZOOM_EASING,
+  GRID_SPACING,
+  gridFor,
+  iconToDataUrl,
   keyPan,
   keyZoom,
   levelToScale,
@@ -132,6 +135,45 @@ describe('seedPositions', () => {
     const points = seedPositions(40);
     const spots = new Set(points.map((point) => `${point.x},${point.y}`));
     expect(spots.size).toBe(40);
+  });
+});
+
+describe('gridFor', () => {
+  it('scales the dots with the zoom and shifts them with the pan, wrapping at one spacing', () => {
+    expect(gridFor(1, { x: 0, y: 0 })).toEqual({ size: GRID_SPACING, x: 0, y: 0 });
+    expect(gridFor(2, { x: 10, y: 20 })?.size).toBe(GRID_SPACING * 2);
+    expect(gridFor(1, { x: GRID_SPACING + 5, y: -3 })).toEqual({ size: GRID_SPACING, x: 5, y: -3 });
+  });
+
+  it('leaves the dots out when zoomed so far out that they would be noise', () => {
+    expect(gridFor(0.125, { x: 0, y: 0 })).toBeNull();
+    expect(gridFor(0.25, { x: 0, y: 0 })).not.toBeNull();
+  });
+});
+
+describe('iconToDataUrl', () => {
+  const shapes = [
+    ['circle', { cx: 12, cy: 12, r: 4, key: 'a' }],
+    ['path', { d: 'M3 3h18' }],
+  ] as const;
+
+  it('draws every shape in the colour asked for, without bookkeeping attributes', () => {
+    const svg = decodeURIComponent(iconToDataUrl(shapes, '#b9a27a').split(',')[1]);
+    expect(svg).toContain('stroke="#b9a27a"');
+    expect(svg).toContain('<circle cx="12" cy="12" r="4"/>');
+    expect(svg).toContain('<path d="M3 3h18"/>');
+    expect(svg).not.toContain('key');
+    expect(svg).toContain('viewBox="0 0 24 24"');
+  });
+
+  it('is an SVG data URL', () => {
+    expect(iconToDataUrl(shapes, 'red')).toMatch(/^data:image\/svg\+xml;charset=utf-8,/);
+  });
+
+  it('escapes what could break out of an attribute', () => {
+    const svg = decodeURIComponent(iconToDataUrl([['path', { d: 'a"b<c&d' }]], 'x"y').split(',')[1]);
+    expect(svg).toContain('d="a&quot;b&lt;c&amp;d"');
+    expect(svg).toContain('stroke="x&quot;y"');
   });
 });
 

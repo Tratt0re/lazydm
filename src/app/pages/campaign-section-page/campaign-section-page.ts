@@ -70,7 +70,7 @@ import { FileActionsService } from '@/services/file-actions.service';
 import { FileMoveService, type MoveSection } from '@/services/file-move.service';
 import { onIndexUpdated } from '@/services/ipc-events';
 import { LocalPreferencesService } from '@/services/local-preferences.service';
-import { SectionService, toSubfolderLabel } from '@/services/section.service';
+import { type SectionIcon, SectionService, toSubfolderLabel } from '@/services/section.service';
 import { AUTOMATIC_TEMPLATE_RULE, TemplateService } from '@/services/template.service';
 import {
   ToolbarContextService,
@@ -602,6 +602,18 @@ export class CampaignSectionPage {
       from: edges.filter((edge) => edge.target === path).map((edge) => byPath.get(edge.source)!),
     };
   });
+  /** Each node's home-section icon (skull for an enemy, map pin for a place…), so a node says where it lives. */
+  protected readonly graphIcons = computed<Record<string, SectionIcon>>(() => {
+    const icons: Record<string, SectionIcon> = {};
+    for (const node of this.graph().nodes) {
+      icons[node.path] = this.sectionService.iconOfPath(node.path);
+    }
+
+    return icons;
+  });
+  protected iconOfNode(path: string): SectionIcon {
+    return this.sectionService.iconOfPath(path);
+  }
   /** Notes of the graph that pass the search and filters (null while nothing is filtered, so none is dimmed). */
   protected readonly graphMatching = computed<ReadonlySet<string> | null>(() =>
     this.isFiltering() ? new Set(this.results().map((file) => file.path)) : null,
@@ -617,7 +629,10 @@ export class CampaignSectionPage {
       const graph = await this.documentService.folderGraph(this.folderPath());
       if (token === this.graphToken) {
         this.graph.set(graph);
-        if (this.graphSelected() && !graph.nodes.some((node) => node.path === this.graphSelected())) {
+        if (
+          this.graphSelected() &&
+          !graph.nodes.some((node) => node.path === this.graphSelected())
+        ) {
           this.graphSelected.set(null);
         }
       }
