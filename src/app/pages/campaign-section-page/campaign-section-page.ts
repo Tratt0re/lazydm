@@ -82,6 +82,7 @@ import { ArcTechButtonComponent } from '@/shared/components/button';
 import { ArcTechEmptyComponent } from '@/shared/components/empty';
 import { ArcTechIconComponent, type ArcTechIcon } from '@/shared/components/icon';
 import { ArcTechMenuImports } from '@/shared/components/menu';
+import { ArcTechSidePanelComponent } from '@/shared/components/side-panel';
 import { ArcTechTooltipImports } from '@/shared/components/tooltip';
 import { formatFileSize } from '@/shared/utils/file-size';
 import { relativeTimeParts } from '@/shared/utils/relative-time';
@@ -114,6 +115,7 @@ interface SectionTreeFolder extends DocumentFolderDto {
     TranslatePipe,
     AppOpenInTabMenuComponent,
     ArcTechMenuImports,
+    ArcTechSidePanelComponent,
     AppSectionGraphComponent,
     AppSectionSortBarComponent,
     AppTagListComponent,

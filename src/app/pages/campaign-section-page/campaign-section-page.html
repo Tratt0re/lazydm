@@ -332,7 +332,7 @@
         @if (view() === 'graph') {
           <!-- Graph: the notes of the folder and their links. Search and filters dim what does not match. -->
           <!-- The panel sits beside the graph and slides in like the map's: information and actions of one note. -->
-          <div class="mt-4 flex">
+          <div class="relative mt-4 flex">
             <app-section-graph
               class="min-w-0 flex-1"
               [graph]="graph()"
@@ -343,29 +343,16 @@
               (nodeOpen)="onGraphOpen($event)"
               (backgroundClick)="graphSelected.set(null)"
             />
-            <aside
-              class="flex shrink-0 flex-col overflow-hidden transition-[width,opacity] duration-200 ease-out motion-reduce:transition-none"
-              [class]="graphDetail() ? 'w-[21rem] opacity-100' : 'w-0 opacity-0'"
-              [attr.inert]="graphDetail() ? null : ''"
-              [attr.aria-hidden]="graphDetail() ? null : 'true'"
-              [attr.aria-label]="graphPanel()?.node?.title ?? ('campaigns.sections.graph.ariaLabel' | translate)"
+            <!-- Beside the graph when the pane has the room, over it when it does not (§9, side panels). -->
+            <arc-side-panel
+              [arcOpen]="graphDetail() !== null"
+              [arcLabel]="graphPanel()?.node?.title ?? ('campaigns.sections.graph.ariaLabel' | translate)"
+              [arcTitle]="graphPanel() ? ((graphPanel()!.node.external ? 'campaigns.sections.graph.legendOutside' : 'campaigns.sections.graph.legendInside') | translate) : ''"
+              (closed)="graphSelected.set(null)"
             >
               @if (graphPanel(); as detail) {
-              <div class="relative flex w-[21rem] flex-1 flex-col gap-2.5 overflow-auto border-y border-r border-border bg-card p-5">
-                <button
-                  type="button"
-                  arc-button
-                  arcType="ghost"
-                  class="absolute top-2 right-2 size-8"
-                  [attr.aria-label]="'common.close' | translate"
-                  (click)="graphSelected.set(null)"
-                >
-                  <arc-icon arcType="x" />
-                </button>
-                <p class="font-mono text-[11px] tracking-[0.08em] text-muted-foreground uppercase">
-                  {{ (detail.node.external ? 'campaigns.sections.graph.legendOutside' : 'campaigns.sections.graph.legendInside') | translate }}
-                </p>
-                <h3 class="pr-8 font-display text-3xl leading-none font-bold text-foreground-strong uppercase">
+              <div class="flex min-h-0 flex-1 flex-col gap-2.5 overflow-auto p-4">
+                <h3 class="font-display text-3xl leading-none font-bold text-foreground-strong uppercase">
                   {{ detail.node.title }}<span class="text-primary" aria-hidden="true">.</span>
                 </h3>
                 @if (detail.tags.length > 0) {
@@ -412,7 +399,8 @@
                     <li class="text-[13px] text-muted-foreground">{{ 'campaigns.sections.graph.nothingYet' | translate }}</li>
                   }
                 </ul>
-                <div class="mt-auto flex items-center gap-1.5 pt-3">
+              </div>
+                <div class="flex shrink-0 items-center gap-1.5 border-t border-border-subtle px-4 py-3">
                   <button
                     type="button"
                     arc-button
@@ -450,7 +438,7 @@
                       type="button"
                       arc-button
                       arc-menu
-                      class="shrink-0"
+                      class="ml-auto shrink-0"
                       [arcMenuTriggerFor]="graphFileMenu"
                       arcPlacement="topRight"
                       arcType="outline"
@@ -465,9 +453,8 @@
                     </ng-template>
                   }
                 </div>
-              </div>
               }
-            </aside>
+            </arc-side-panel>
           </div>
         } @else if (isFiltering() && results().length === 0) {
           <arc-empty
