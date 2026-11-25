@@ -1205,6 +1205,20 @@ Component behaviour, variant keys and configuration stay as they are.
   vault (path, close it, switch) nor to reset the app. Add both, and make `factoryReset` stop the indexer and the
   cloud controllers first.
 
+- **Campaign graph, to evaluate**: a graph of a whole campaign from the overview page (not decided; the folder
+  graph of §6 is built). Notes for whoever picks it up:
+  - *Where*: a wide card under the section tiles of the overview (note and link counts, an *Open* button) that opens a
+    page of its own, `/campaigns/<slug>/graph`, with the graph and the same side panel as the folder graph. The overview
+    itself only runs one count query, so it stays as fast as it is.
+  - *Cost*: reading the data is cheap (one join over the index `links`, as `documents:folderGraph` does). Drawing is the
+    cost: a Cytoscape `cose` layout of about a thousand nodes and several thousand edges can freeze the window for
+    seconds, and the picture is an unreadable hairball. The folder graph caps at 300 nodes for that reason. Not
+    measured yet: a synthetic vault of about 2,000 notes would give the real numbers before building.
+  - *Shape that scales*: level 1 shows the **sections** as nodes (about ten) with link thickness by the number of links
+    between them (one grouped SQL query); a click on a section opens the existing folder graph for it. Beside it, two
+    lists that help preparation more than the picture: the **most linked notes** and the **notes without links**.
+    Notes without links are hidden by default, and no layout runs until the page is opened.
+  - *Not planned*: every note of a big campaign at once; a faster layout library (a new dependency, to ask first).
 - **Encounters, later**: richer statuses (shared definitions with descriptions), combat timers, delay / hold turns,
   a roll for several encounters at once, and a starting-HP reset are left out on purpose and can be added without
   changing the file format (`version: 1`).

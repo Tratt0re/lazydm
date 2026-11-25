@@ -130,6 +130,8 @@ change. Finished work is listed in [`docs/design-principles.md`](docs/design-pri
 - [ ] **Share with players**: serve a note or a folder (handouts, sheets) to the players' phones over your Wi-Fi, read
       only, and only while you switch it on. It needs a security design first.
 - [ ] **Local AI assistant**: an assistant inside the app that runs on your computer, with no cloud needed.
+- [ ] **Campaign graph**: how the sections and notes of a whole campaign link together, from the overview page, built
+      to stay fast on a campaign with thousands of files.
 
 Ideas and requests are welcome in the [issues](https://github.com/Tratt0re/lazydm/issues).
 
