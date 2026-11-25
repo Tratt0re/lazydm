@@ -171,7 +171,9 @@ describe('iconToDataUrl', () => {
   });
 
   it('escapes what could break out of an attribute', () => {
-    const svg = decodeURIComponent(iconToDataUrl([['path', { d: 'a"b<c&d' }]], 'x"y').split(',')[1]);
+    const svg = decodeURIComponent(
+      iconToDataUrl([['path', { d: 'a"b<c&d' }]], 'x"y').split(',')[1],
+    );
     expect(svg).toContain('d="a&quot;b&lt;c&amp;d"');
     expect(svg).toContain('stroke="x&quot;y"');
   });

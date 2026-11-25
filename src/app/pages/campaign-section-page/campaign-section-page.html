@@ -331,12 +331,25 @@
         />
         @if (view() === 'graph') {
           <!-- Graph: the notes of the folder and their links. Search and filters dim what does not match. -->
+          <!-- Right-click on a node opens that file's menu (the same one as a row or a card) at the pointer. -->
+          <span
+            #graphMenuAnchor
+            aria-hidden="true"
+            [cdkContextMenuTriggerFor]="graphFileMenu"
+            class="hidden"
+          ></span>
+          <ng-template #graphFileMenu>
+            @if (graphMenuFile(); as file) {
+              <ng-container *ngTemplateOutlet="fileMenuContent; context: { $implicit: file }" />
+            }
+          </ng-template>
           <div class="mt-4 grid gap-0 md:grid-cols-[minmax(0,1fr)_auto]">
             <app-section-graph
               [graph]="graph()"
               [matching]="graphMatching()"
               [selected]="graphSelected()"
               [nodeIcons]="graphIcons()"
+              (nodeContextMenu)="onGraphContextMenu($event)"
               (nodeSelect)="graphSelected.set($event)"
               (nodeOpen)="onGraphOpen($event)"
               (backgroundClick)="graphSelected.set(null)"

@@ -53,6 +53,9 @@ interface GraphColours {
   readonly frame: string;
   /** The tint of a node's drop shadow. */
   readonly shadow: string;
+  /** A link between two files of the folder (solid) and one that leaves it (dashed). */
+  readonly linkInside: string;
+  readonly linkOutside: string;
   readonly recessed: string;
   readonly foreground: string;
   readonly muted: string;
@@ -75,6 +78,10 @@ function readColours(host: HTMLElement): GraphColours {
     raised: read('--raised', '#fdfcfa'),
     frame: isDark ? read('--background', '#101114') : read('--accent', '#e2e4e2'),
     shadow: isDark ? '#000000' : read('--border-strong', '#676e71'),
+    // Inside links lean on the highlight tone (a touch lighter than primary in dark, deeper in light) so they read
+    // against the frame; outside links stay neutral, so the two kinds differ by hue as well as by dash.
+    linkInside: isDark ? read('--primary-pressed', '#8f7b58') : read('--primary', '#6d5a3e'),
+    linkOutside: isDark ? read('--input', '#6a7075') : read('--border-strong', '#676e71'),
     card: read('--card', '#fff'),
     recessed: read('--recessed', '#eee'),
     foreground: read('--foreground', '#222'),
@@ -112,7 +119,7 @@ function shorten(text: string): string {
     <div
       #backdrop
       class="absolute inset-0 overflow-hidden"
-      style="background-image: radial-gradient(circle, var(--border) 1px, transparent 1.4px)"
+      style="background-image: radial-gradient(circle, color-mix(in srgb, var(--border) 38%, transparent) 1px, transparent 1.4px)"
     >
       <div
         #canvas
@@ -193,10 +200,16 @@ function shorten(text: string): string {
     >
       <span class="inline-flex items-center gap-1.5">
         <i class="inline-block size-3 border-2 border-border-strong bg-raised"></i>
+        <i
+          class="inline-block h-0 w-5 border-t-[3px] border-primary dark:border-primary-pressed"
+        ></i>
         {{ 'campaigns.sections.graph.legendInside' | translate }}
       </span>
       <span class="inline-flex items-center gap-1.5">
         <i class="inline-block size-3 border-2 border-dashed border-border bg-transparent"></i>
+        <i
+          class="inline-block h-0 w-5 border-t-[3px] border-dashed border-border-strong dark:border-input"
+        ></i>
         {{ 'campaigns.sections.graph.legendOutside' | translate }}
       </span>
     </div>
@@ -224,6 +237,8 @@ export class AppSectionGraphComponent {
   readonly nodeIcons = input<Readonly<Record<string, SectionIcon>>>({});
   readonly nodeSelect = output<string>();
   readonly nodeOpen = output<GraphNodeOpen>();
+  /** A right-click landed on a node: where (screen pixels), so the page can open that file's menu there. */
+  readonly nodeContextMenu = output<{ path: string; x: number; y: number }>();
   /** The background was clicked: the page closes the detail panel. */
   readonly backgroundClick = output<void>();
 
@@ -399,6 +414,29 @@ export class AppSectionGraphComponent {
       });
     };
     container.addEventListener('wheel', onWheel, { passive: false });
+    // Right-click: on a node it opens that file's menu; anywhere else the event goes on to the page's own menu.
+    const onContextMenu = (event: MouseEvent) => {
+      const rect = container.getBoundingClientRect();
+      const x = event.clientX - rect.left;
+      const y = event.clientY - rect.top;
+      const hit = cy
+        .nodes()
+        .filter((node) => {
+          const box = node.renderedBoundingBox({ includeLabels: false, includeOverlays: false });
+          return x >= box.x1 && x <= box.x2 && y >= box.y1 && y <= box.y2;
+        })
+        .first();
+      if (hit.empty()) {
+        return;
+      }
+
+      event.preventDefault();
+      event.stopPropagation();
+      this.zone.run(() =>
+        this.nodeContextMenu.emit({ path: hit.id(), x: event.clientX, y: event.clientY }),
+      );
+    };
+    container.addEventListener('contextmenu', onContextMenu);
     const observer = new ResizeObserver(() => cy.resize());
     observer.observe(container);
     // Colours come from the theme tokens, which a canvas cannot read by itself: restyle on a theme change.
@@ -412,6 +450,7 @@ export class AppSectionGraphComponent {
     });
     this.destroyRef.onDestroy(() => {
       container.removeEventListener('wheel', onWheel);
+      container.removeEventListener('contextmenu', onContextMenu);
       observer.disconnect();
     });
   }
@@ -440,6 +479,7 @@ export class AppSectionGraphComponent {
 
     this.layoutKey = key;
     const seeds = seedPositions(graph.nodes.length);
+    const outside = new Set(graph.nodes.filter((node) => node.external).map((node) => node.path));
     cy.batch(() => {
       cy.elements().remove();
       cy.add([
@@ -447,6 +487,8 @@ export class AppSectionGraphComponent {
         ...graph.edges.map((edge) => ({
           group: 'edges' as const,
           data: { id: `${edge.source}>${edge.target}`, source: edge.source, target: edge.target },
+          // A link that reaches a file outside the folder looks different from one between the folder's own files.
+          classes: outside.has(edge.source) || outside.has(edge.target) ? 'outside' : '',
         })),
       ]);
     });
@@ -544,18 +586,33 @@ export class AppSectionGraphComponent {
       {
         selector: 'edge',
         style: {
-          width: 1,
-          'line-color': colours.borderStrong,
+          // A link between two files of the folder: a solid line, in the warm accent so it reads as "ours".
+          width: 2.5,
+          'line-color': colours.linkInside,
+          'line-style': 'solid',
           'curve-style': 'straight',
-          opacity: 0.8,
+          opacity: 1,
           'overlay-opacity': 0,
+        },
+      },
+      {
+        // A link that leaves the folder: thinner, dashed and neutral, like the dashed tile it points to.
+        selector: 'edge.outside',
+        style: {
+          width: 2,
+          'line-color': colours.linkOutside,
+          'line-style': 'dashed',
+          'line-dash-pattern': [7, 5],
+          opacity: 1,
         },
       },
       { selector: 'node.selected', style: { 'border-color': colours.primary, 'border-width': 3 } },
       { selector: '.dim', style: { opacity: 0.3 } },
-      { selector: 'edge.faded', style: { opacity: 0.12 } },
+      { selector: 'edge.faded', style: { opacity: 0.14 } },
       { selector: 'node.faded', style: { opacity: 0.35 } },
-      { selector: 'edge.near', style: { 'line-color': colours.primary, width: 1.75, opacity: 1 } },
+      // Hover: the links of the node under the pointer turn to the primary colour and thicken, kinds kept.
+      { selector: 'edge.near', style: { 'line-color': colours.primary, width: 3.5, opacity: 1 } },
+      { selector: 'edge.outside.near', style: { width: 3 } },
     ];
   }
 
