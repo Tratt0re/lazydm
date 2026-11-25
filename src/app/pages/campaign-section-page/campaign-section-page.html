@@ -331,25 +331,12 @@
         />
         @if (view() === 'graph') {
           <!-- Graph: the notes of the folder and their links. Search and filters dim what does not match. -->
-          <!-- Right-click on a node opens that file's menu (the same one as a row or a card) at the pointer. -->
-          <span
-            #graphMenuAnchor
-            aria-hidden="true"
-            [cdkContextMenuTriggerFor]="graphFileMenu"
-            class="hidden"
-          ></span>
-          <ng-template #graphFileMenu>
-            @if (graphMenuFile(); as file) {
-              <ng-container *ngTemplateOutlet="fileMenuContent; context: { $implicit: file }" />
-            }
-          </ng-template>
           <div class="mt-4 grid gap-0 md:grid-cols-[minmax(0,1fr)_auto]">
             <app-section-graph
               [graph]="graph()"
               [matching]="graphMatching()"
               [selected]="graphSelected()"
               [nodeIcons]="graphIcons()"
-              (nodeContextMenu)="onGraphContextMenu($event)"
               (nodeSelect)="graphSelected.set($event)"
               (nodeOpen)="onGraphOpen($event)"
               (backgroundClick)="graphSelected.set(null)"
@@ -427,6 +414,24 @@
                     <arc-icon arcType="arrow-up-right" />
                     {{ 'campaigns.sections.graph.newTab' | translate }}
                   </button>
+                  @if (graphDetailFile(); as file) {
+                    <!-- The file's menu (rename, move, delete…), the same as a row's or a card's. -->
+                    <button
+                      type="button"
+                      arc-button
+                      arc-menu
+                      [arcMenuTriggerFor]="graphFileMenu"
+                      arcPlacement="topRight"
+                      arcType="outline"
+                      class="size-9 shrink-0 px-0"
+                      [attr.aria-label]="'common.moreActions' | translate"
+                    >
+                      <arc-icon arcType="ellipsis" />
+                    </button>
+                    <ng-template #graphFileMenu>
+                      <ng-container *ngTemplateOutlet="fileMenuContent; context: { $implicit: file }" />
+                    </ng-template>
+                  }
                 </div>
               </aside>
             }

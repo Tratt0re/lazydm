@@ -1,4 +1,3 @@
-import { CdkContextMenuTrigger } from '@angular/cdk/menu';
 import { NgTemplateOutlet } from '@angular/common';
 import {
   ChangeDetectionStrategy,
@@ -8,7 +7,6 @@ import {
   HostListener,
   inject,
   signal,
-  viewChild,
 } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
@@ -111,7 +109,6 @@ interface SectionTreeFolder extends DocumentFolderDto {
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-campaign-section-page',
   imports: [
-    CdkContextMenuTrigger,
     NgTemplateOutlet,
     RouterLink,
     TranslatePipe,
@@ -644,22 +641,11 @@ export class CampaignSectionPage {
     }
   }
 
-  /** The file of the node a right-click landed on; its menu is the same as a row's or a card's. */
-  protected readonly graphMenuFile = signal<DocumentFileListItemDto | null>(null);
-  private readonly graphMenuTrigger = viewChild('graphMenuAnchor', { read: CdkContextMenuTrigger });
-
-  protected onGraphContextMenu(request: { path: string; x: number; y: number }): void {
-    const file = this.allFiles().find((item) => item.path === request.path);
-    if (!file) {
-      // A node outside the folder is not in this page's list: there is no menu for it here.
-      return;
-    }
-
-    this.graphMenuFile.set(file);
-    this.graphSelected.set(file.path);
-    // The menu template is rendered once the file is set: open on the next turn of the event loop.
-    setTimeout(() => this.graphMenuTrigger()?.open({ x: request.x, y: request.y }));
-  }
+  /** The file of the selected node, when it is in this folder (an outside node has no menu here). */
+  protected readonly graphDetailFile = computed(() => {
+    const path = this.graphSelected();
+    return path ? (this.allFiles().find((item) => item.path === path) ?? null) : null;
+  });
 
   protected onGraphOpen(open: GraphNodeOpen): void {
     const route = toInAppNoteRoute(open.path);

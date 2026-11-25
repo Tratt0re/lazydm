@@ -237,8 +237,6 @@ export class AppSectionGraphComponent {
   readonly nodeIcons = input<Readonly<Record<string, SectionIcon>>>({});
   readonly nodeSelect = output<string>();
   readonly nodeOpen = output<GraphNodeOpen>();
-  /** A right-click landed on a node: where (screen pixels), so the page can open that file's menu there. */
-  readonly nodeContextMenu = output<{ path: string; x: number; y: number }>();
   /** The background was clicked: the page closes the detail panel. */
   readonly backgroundClick = output<void>();
 
@@ -414,27 +412,10 @@ export class AppSectionGraphComponent {
       });
     };
     container.addEventListener('wheel', onWheel, { passive: false });
-    // Right-click: on a node it opens that file's menu; anywhere else the event goes on to the page's own menu.
+    // No context menu over the graph (neither the browser's nor the page's): a node's actions are in its panel.
     const onContextMenu = (event: MouseEvent) => {
-      const rect = container.getBoundingClientRect();
-      const x = event.clientX - rect.left;
-      const y = event.clientY - rect.top;
-      const hit = cy
-        .nodes()
-        .filter((node) => {
-          const box = node.renderedBoundingBox({ includeLabels: false, includeOverlays: false });
-          return x >= box.x1 && x <= box.x2 && y >= box.y1 && y <= box.y2;
-        })
-        .first();
-      if (hit.empty()) {
-        return;
-      }
-
       event.preventDefault();
       event.stopPropagation();
-      this.zone.run(() =>
-        this.nodeContextMenu.emit({ path: hit.id(), x: event.clientX, y: event.clientY }),
-      );
     };
     container.addEventListener('contextmenu', onContextMenu);
     const observer = new ResizeObserver(() => cy.resize());
