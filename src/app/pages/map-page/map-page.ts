@@ -27,6 +27,7 @@ import {
 } from '@/components/document-preview/document-preview.markdown';
 import { AppDialogFormService } from '@/components/sheet-form/dialog-form.service';
 import type { AppSheetField } from '@/components/sheet-form/sheet-form.types';
+import type { SidePanelMode } from '@/config/side-panel.config';
 import { withShortcut } from '@/config/shortcuts.config';
 import {
   DEFAULT_NOTE_COLOR,
@@ -69,6 +70,7 @@ import { ArcTechButtonComponent } from '@/shared/components/button';
 import { ArcTechDialogService } from '@/shared/components/dialog';
 import { ARCTECH_ICONS, ArcTechIconComponent, type ArcTechIcon } from '@/shared/components/icon';
 import { ArcTechMenuImports } from '@/shared/components/menu';
+import { ArcTechSidePanelComponent } from '@/shared/components/side-panel';
 import { ArcTechTooltipImports } from '@/shared/components/tooltip';
 
 type MapTool = 'interact' | 'select' | 'pin' | 'path' | 'note';
@@ -229,6 +231,7 @@ function createIconSvg(icon: ArcTechIcon): SVGElement {
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-map-page',
   imports: [
+    ArcTechSidePanelComponent,
     TranslatePipe,
     ArcTechAlertComponent,
     ArcTechButtonComponent,
@@ -327,7 +330,15 @@ export class MapPage {
   protected readonly isLoading = signal(true);
   protected readonly imageState = signal<ImageState>('none');
   protected readonly tool = signal<MapTool>('interact');
+  /** The panel beside the map: open by default, closed by the split screen, remembered while the page lives. */
   protected readonly isPanelOpen = signal(true);
+  /** Beside the map or over it, as the panel measured the pane. */
+  protected readonly panelMode = signal<SidePanelMode>('beside');
+  /** Over the map the panel opens only on an action: a panel open by default would cover the map. */
+  private readonly isPanelOverOpen = signal(false);
+  protected readonly isPanelShown = computed(() =>
+    this.panelMode() === 'beside' ? this.isPanelOpen() : this.isPanelOverOpen(),
+  );
   protected readonly menuTarget = signal<MenuTarget | null>(null);
   /** Points of the path being drawn (*Done* and *Cancel* next to the tool need to know). */
   protected readonly drawCount = signal(0);
@@ -473,11 +484,26 @@ export class MapPage {
       if (opens !== seenSplitOpens) {
         seenSplitOpens = opens;
         this.isPanelOpen.set(false);
+        this.isPanelOverOpen.set(false);
       }
     });
     if (this.workspace.hasSplit()) {
       this.isPanelOpen.set(false);
     }
+
+    // Over the map, a selection brings the panel up and clearing it puts the panel away; the list opens on request.
+    let hadSelection = false;
+    effect(() => {
+      const hasSelection = this.selectedCount() > 0;
+      const isOver = this.panelMode() === 'over';
+      untracked(() => {
+        if (isOver && hasSelection !== hadSelection) {
+          this.isPanelOverOpen.set(hasSelection);
+        }
+
+        hadSelection = hasSelection;
+      });
+    });
 
     document.addEventListener('auxclick', this.swallowMenuAuxClick, true);
     this.destroyRef.onDestroy(() =>
@@ -552,9 +578,9 @@ export class MapPage {
           id: 'details',
           label: this.translateService.instant('maps.panel.toggle'),
           icon: 'map-pinned',
-          buttonType: this.isPanelOpen() ? 'default' : 'outline',
+          buttonType: this.isPanelShown() ? 'default' : 'outline',
           iconOnly: true,
-          action: () => this.isPanelOpen.update((isOpen) => !isOpen),
+          action: () => this.togglePanel(),
         },
         {
           // Less used: behind the "…" like every other page; Delete last, after a separator.
@@ -1107,6 +1133,21 @@ export class MapPage {
     }
 
     this.selectedIds.set(next);
+  }
+
+  protected togglePanel(): void {
+    if (this.panelMode() === 'over') {
+      this.isPanelOverOpen.update((isOpen) => !isOpen);
+    } else {
+      this.isPanelOpen.update((isOpen) => !isOpen);
+    }
+  }
+
+  /** Escape, a click on the scrim or the list's close button (only over the map). */
+  protected closePanel(): void {
+    if (this.panelMode() === 'over') {
+      this.isPanelOverOpen.set(false);
+    }
   }
 
   protected clearSelection(): void {
