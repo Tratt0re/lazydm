@@ -11,15 +11,8 @@ import { ArcTechTooltipImports } from '@/shared/components/tooltip';
   selector: 'app-encounter-cemetery',
   imports: [TranslatePipe, ArcTechButtonComponent, ArcTechIconComponent, ArcTechTooltipImports],
   template: `
-    <h2
-      class="flex h-8 shrink-0 items-center justify-between px-2 font-mono text-[11px] font-semibold tracking-[0.11em] text-muted-foreground uppercase"
-    >
-      {{ 'encounters.cemetery.title' | translate }}
-      <span>{{ entities().length }}</span>
-    </h2>
-
     @if (entities().length === 0) {
-      <p class="px-3 pb-3 text-xs leading-5 text-muted-foreground">
+      <p class="text-xs leading-5 text-muted-foreground">
         {{ 'encounters.cemetery.empty' | translate }}
       </p>
     } @else {
@@ -70,7 +63,7 @@ import { ArcTechTooltipImports } from '@/shared/components/tooltip';
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
-    class: 'flex h-full min-h-0 w-80 flex-col overflow-hidden border border-border bg-card p-2',
+    class: 'flex h-full min-h-0 w-full flex-col overflow-hidden',
   },
 })
 export class AppEncounterCemeteryComponent {

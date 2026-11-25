@@ -1,4 +1,4 @@
-<div class="flex min-h-0 flex-1">
+<div class="relative flex min-h-0 flex-1">
 <div class="min-h-0 min-w-0 flex-1 overflow-y-auto">
 <div class="flex w-full flex-col gap-4 py-6">
   @if (encounter()) {
@@ -230,14 +230,15 @@
 </div>
 </div>
 
-<!-- Kept mounted so opening and closing can slide instead of re-rendering. -->
-<div
-  class="shrink-0 overflow-hidden transition-[width,opacity] duration-200 ease-out motion-reduce:transition-none"
-  [class]="isCemeteryOpen() ? 'w-88 opacity-100' : 'w-0 opacity-0'"
-  [attr.inert]="isCemeteryOpen() ? null : ''"
-  [attr.aria-hidden]="isCemeteryOpen() ? null : 'true'"
+<!-- Beside the battle when the pane has the room, over it when it does not (§9, side panels). -->
+<arc-side-panel
+  [arcOpen]="isCemeteryOpen()"
+  [arcLabel]="'encounters.cemetery.title' | translate"
+  [arcTitle]="('encounters.cemetery.title' | translate) + ' · ' + deadEntities().length"
+  [arcWidth]="22"
+  (closed)="closeCemetery()"
 >
-  <div class="h-full py-4 pr-4 pl-4">
+  <div class="flex min-h-0 flex-1 flex-col p-4">
     <app-encounter-cemetery
       [entities]="deadEntities()"
       [isDisabled]="!isEditable()"
@@ -245,5 +246,5 @@
       (deleteForever)="confirmDeleteEntity($event)"
     />
   </div>
-</div>
+</arc-side-panel>
 </div>

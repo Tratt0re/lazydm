@@ -85,6 +85,7 @@ import { ArcTechIconComponent, type ArcTechIcon } from '@/shared/components/icon
 import { ArcTechAlertDialogService } from '@/shared/components/alert-dialog';
 import { ArcTechDialogService } from '@/shared/components/dialog';
 import { ArcTechMenuImports } from '@/shared/components/menu';
+import { ArcTechSidePanelComponent } from '@/shared/components/side-panel';
 import { ArcTechTooltipImports } from '@/shared/components/tooltip';
 import { rollDice } from '@/shared/utils/dice';
 import { toDisplayPath } from '@/shared/utils/vault-path';
@@ -101,6 +102,7 @@ const ENTITY_QUANTITY_MAX = 15;
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-encounter-page',
   imports: [
+    ArcTechSidePanelComponent,
     CdkDrag,
     CdkDropList,
     TranslatePipe,
@@ -222,6 +224,10 @@ export class EncounterPage {
     (this.encounter()?.entities ?? []).filter((entity) => entity.isDead),
   );
   protected readonly isCemeteryOpen = signal(false);
+
+  protected closeCemetery(): void {
+    this.isCemeteryOpen.set(false);
+  }
   /** Rules the encounter can pick (the toolbar's select), and the campaign's own choice for the label. */
   /** Entities picked for *Roll initiative* (by id). */
   protected readonly selectedIds = signal<ReadonlySet<string>>(new Set());
