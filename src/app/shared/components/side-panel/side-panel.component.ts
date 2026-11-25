@@ -184,6 +184,8 @@ export class ArcTechSidePanelComponent {
       return;
     }
 
+    // The key is used: the sheet or page under the panel must not close with it.
+    event.preventDefault();
     this.closed.emit();
   }
 

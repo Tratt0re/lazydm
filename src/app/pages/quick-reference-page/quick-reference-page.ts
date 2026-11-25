@@ -6,6 +6,7 @@ import {
   ElementRef,
   HostListener,
   inject,
+  signal,
   untracked,
   viewChild,
 } from '@angular/core';
@@ -20,6 +21,7 @@ import type {
   AppSheetFieldValueMap,
 } from '@/components/sheet-form/sheet-form.types';
 import type { QuickReferenceRuleDto } from '@/dtos';
+import type { SidePanelMode } from '@/config/side-panel.config';
 import { CampaignService } from '@/services/campaign.service';
 import {
   QuickReferenceService,
@@ -31,6 +33,7 @@ import { ArcTechButtonComponent } from '@/shared/components/button';
 import { ARCTECH_ICONS, ArcTechIconComponent } from '@/shared/components/icon';
 import { ArcTechMenuImports } from '@/shared/components/menu';
 import { ArcTechSelectImports } from '@/shared/components/select';
+import { ArcTechSidePanelComponent } from '@/shared/components/side-panel';
 import { ArcTechTooltipImports } from '@/shared/components/tooltip';
 
 /**
@@ -86,6 +89,7 @@ const SYSTEMS_WITH_RULES = ['dnd5e'] as const;
     ArcTechIconComponent,
     ...ArcTechMenuImports,
     ...ArcTechSelectImports,
+    ArcTechSidePanelComponent,
     ...ArcTechTooltipImports,
   ],
   templateUrl: './quick-reference-page.html',
@@ -121,6 +125,13 @@ export class QuickReferencePage {
     () => `${this.translate.instant('quickReference.all')} (${this.service.rules().length})`,
   );
   protected readonly selected = this.service.selected;
+  /** Beside the list or over it, as the panel measured the pane. */
+  protected readonly panelMode = signal<SidePanelMode>('beside');
+  /** Over the list, the panel opens only on an action (a card, a saved rule): a restored rule must not cover the list. */
+  private readonly ruleRequested = signal(false);
+  protected readonly isRulePanelOpen = computed(
+    () => this.panelMode() === 'beside' || (this.selected() !== null && this.ruleRequested()),
+  );
   /** The selected rule's long text as safe HTML (the notes' own renderer: no raw HTML, no remote images). */
   protected readonly selectedHtml = computed(() => {
     const rule = this.service.selected();
@@ -244,6 +255,18 @@ export class QuickReferencePage {
 
   protected onCategoryChange(value: string): void {
     this.service.setCategory(value === this.allValue ? null : value);
+  }
+
+  protected openRule(ruleId: string): void {
+    this.ruleRequested.set(true);
+    this.service.select(ruleId);
+  }
+
+  protected closeRule(): void {
+    this.ruleRequested.set(false);
+    if (this.panelMode() === 'beside') {
+      this.service.select(null);
+    }
   }
 
   protected isSelected(rule: QuickReferenceRuleDto): boolean {
@@ -383,7 +406,7 @@ export class QuickReferencePage {
         void save.then((id) => {
           isSubmitting = false;
           if (id) {
-            this.service.select(id);
+            this.openRule(id);
             dialogRef.close();
           } else {
             this.notifyNotSaved();

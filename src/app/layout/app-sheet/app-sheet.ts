@@ -78,7 +78,11 @@ export class AppSheet {
     const hasOpenOverlay = [
       ...document.querySelectorAll('.cdk-overlay-container .cdk-overlay-pane'),
     ].some((pane) => pane.childElementCount > 0);
-    if (!hasOpenOverlay) {
+    // A side panel floating over the sheet's content (a rule of the Quick reference) takes the key to close itself.
+    const hasOpenSidePanel = !!document.querySelector(
+      'arc-side-panel[data-mode="over"]:not([aria-hidden="true"])',
+    );
+    if (!hasOpenOverlay && !hasOpenSidePanel) {
       void this.sheets.close();
     }
   }
