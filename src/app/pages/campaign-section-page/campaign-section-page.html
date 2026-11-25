@@ -201,7 +201,7 @@
         }
 
         <ng-template #fileMenu>
-          <ng-container *ngTemplateOutlet="fileMenuContent; context: { $implicit: file }" />
+          <ng-container *ngTemplateOutlet="fileMenuContent; context: { $implicit: file }; injector: 'outlet'" />
         </ng-template>
       </li>
     </ng-template>
@@ -420,16 +420,19 @@
                       type="button"
                       arc-button
                       arc-menu
+                      class="shrink-0"
                       [arcMenuTriggerFor]="graphFileMenu"
                       arcPlacement="topRight"
                       arcType="outline"
-                      class="size-9 shrink-0 px-0"
+                      arcSize="sm"
                       [attr.aria-label]="'common.moreActions' | translate"
+                      arcPosition="top"
+                      [arcTooltip]="'common.moreActions' | translate"
                     >
-                      <arc-icon arcType="ellipsis" />
+                      <arc-icon arcType="ellipsis" class="size-4" />
                     </button>
                     <ng-template #graphFileMenu>
-                      <ng-container *ngTemplateOutlet="fileMenuContent; context: { $implicit: file }" />
+                      <ng-container *ngTemplateOutlet="fileMenuContent; context: { $implicit: file }; injector: 'outlet'" />
                     </ng-template>
                   }
                 </div>
@@ -488,7 +491,7 @@
                     <arc-icon arcType="ellipsis" />
                   </button>
                   <ng-template #folderCardMenu>
-                    <ng-container *ngTemplateOutlet="folderMenuContent; context: { $implicit: folder }" />
+                    <ng-container *ngTemplateOutlet="folderMenuContent; context: { $implicit: folder }; injector: 'outlet'" />
                   </ng-template>
                 </li>
               }
@@ -582,7 +585,7 @@
                 </div>
 
                 <ng-template #cardMenu>
-                  <ng-container *ngTemplateOutlet="fileMenuContent; context: { $implicit: file }" />
+                  <ng-container *ngTemplateOutlet="fileMenuContent; context: { $implicit: file }; injector: 'outlet'" />
                 </ng-template>
               </li>
             }
@@ -669,7 +672,7 @@
               }
 
               <ng-template #folderMenu>
-                <ng-container *ngTemplateOutlet="folderMenuContent; context: { $implicit: folder }" />
+                <ng-container *ngTemplateOutlet="folderMenuContent; context: { $implicit: folder }; injector: 'outlet'" />
               </ng-template>
             </li>
           }
