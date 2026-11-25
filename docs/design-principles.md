@@ -127,11 +127,16 @@ their technical names; only the text the user sees changes. Add to this table be
   while dragging, to move them (one section only); right-click a file for *Rename…*, *Move to…* (main folder or a
   sub-folder), *Reveal in Finder* (*Show in Explorer* / file manager elsewhere) and *Delete…*, a folder for *Open*,
   *Rename…*, *Reveal* and *Delete…*.
-- **Folder home: search, filters and views** (planned, `.claude/plans/folder-home.plan.md`). A section or sub-folder
+- **Folder home: search, filters and views** (built, §11 row 21.1). A section or sub-folder
   page has a toolbar with a search field (title, name, tags), *Filter* (tag, type, kind), the *Views* switch and the
   sort. They act on the open folder only. While a search or filter is active the tree flattens to a result list
   (each row names its sub-folder). The view (*List*, *Cards*, *Graph*) is remembered per section on this device;
-  search and filters are not. *Graph* shows the folder's notes and their direct neighbours from the index `links`.
+  search and filters are not. *Graph* shows the folder's notes and their direct neighbours from the index `links`
+  (`documents:folderGraph`, at most 300 nodes; a note outside the folder appears as a dashed, *outside* node).
+  Search and filters dim what does not match instead of removing it. It is drawn with Cytoscape.js (canvas), with the
+  map's pan and zoom (wheel, pinch, buttons, keys), movable nodes (positions are not saved), the icon of each note's
+  section on its node, solid links inside the folder and dashed ones to other folders. A node's actions are in its
+  side panel (*Open note*, *New tab*, **…**); there is no right-click menu over the graph.
   **Tags in rows are badges** (a few, then `+N`), never one plain string; clicking one adds it to the filter. The
   interface is designed with the `impeccable` skill and approved as a mockup before any code.
 - **Asset rows** show a small thumbnail for images (an icon for PDF and audio), a *Rename* button and *Copy to
@@ -1090,6 +1095,8 @@ Component behaviour, variant keys and configuration stay as they are.
     description, square close button on the right.
   - Tooltips: raised surface with a bronze border. Everything from the toolbar up (title bar, tab bar, toolbar)
     shows its tooltips **below** the element (`arcPosition="bottom"`), never over the window edge.
+- **The graph's dotted backdrop is the one grid allowed.** It moves and scales with the pan and zoom, so it shows
+  that the graph can be moved; it is faint, and it disappears when zoomed far out. A grid that does not do this stays banned.
 - **Ornament is allowed, sparingly and with a job.** The ornamental symbols of *engraved geometry* (the ◇ ✣ ◇
   rule under the toolbar of the top-level pages, the ◇ of a note divider) stay: they mark an edge or a break. What is banned is
   decoration that carries fake meaning or fills space: fake codes ("CODE00//"), mottos, background grids, and runes
@@ -1177,6 +1184,7 @@ Component behaviour, variant keys and configuration stay as they are.
 | 20.1 | Campaign export and import (§6g), plan in `.claude/plans/campaign-export-import.build.plan.md`: a plain `.zip` with a `lazydm.json` manifest of the settings the campaign owns, *Export…* in the campaign menus and *Import campaign…* (drop zone, preview, name) always as a new campaign, a hostile-zip reader (`yauzl`) and writer (`yazl`), all-or-nothing import |
 | 20.2 | MCP: `export_campaign` (needs *Allow changes*, destination outside the Codex, never overwrites) and campaign zips in `scan_import_source` and `import_campaign` |
 | 20.3 | Quick reference (§6h), plan in `.claude/plans/quick-reference.plan.md`: per-campaign rules sheet (`quick-reference.json`), bottom-rising full-page sheet on Cmd/Ctrl+R, D&D 5e (2014, SRD 5.1) built in, rules and categories always editable through dialogs, part of campaign export and import, read-only MCP tool. Built in phases: the file and its reader, the D&D 5e rules in 7 languages, the sheet, export and import, `get_quick_reference`. Pathfinder 2e waits for its licence terms |
+| 21.1 | Folder home (plan in `.claude/plans/folder-home.plan.md`): search, *Filter* (tag, type, kind) with chips, the *Views* switch (*List*, *Cards*, *Graph*, remembered per section on this device), tag badges with `+N` in rows, and the *Graph* (Cytoscape.js, `documents:folderGraph` from the index `links`) |
 
 ## 12. Open decisions
 

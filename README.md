@@ -50,6 +50,8 @@ links to it. Before the session, **Review** shows you any broken links that need
 - **Templates** give each kind of note a useful starting point, per note type and per campaign, and follow the campaign's
   game system (D&D 5e and Pathfinder 2e come with the keys a table needs: AC, HP, saves, spell details).
 - **Links** shows what points to the open note and where that note leads next.
+- **Folder home**: search a folder, filter it by tag, type or kind, and see it as a **List**, as **Cards** or as a
+  **Graph** of its notes and how they link, with pan, zoom and movable nodes. Tags are badges you can click to filter.
 - **Compendium** keeps shared systems and content ready to copy into any campaign.
 - **Assets**: paste or drop images, audio and PDFs into your notes. Audio plays inline and PDFs open in the system
   viewer.
@@ -116,10 +118,6 @@ a campaign to a zip and import one. It can read a campaign's Quick reference, ne
 
 What may come next. Nothing here is promised or dated; the order is the one I currently plan to follow, and it can
 change. Finished work is listed in [`docs/design-principles.md`](docs/design-principles.md) §11.
-
-**Next**
-
-- [ ] **Better folder home**: search and filters on the page of a folder, and a choice of views (list, cards, graph).
 
 **Later**
 
