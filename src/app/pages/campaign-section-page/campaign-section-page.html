@@ -331,8 +331,10 @@
         />
         @if (view() === 'graph') {
           <!-- Graph: the notes of the folder and their links. Search and filters dim what does not match. -->
-          <div class="mt-4 grid gap-0 md:grid-cols-[minmax(0,1fr)_auto]">
+          <!-- The panel sits beside the graph and slides in like the map's: information and actions of one note. -->
+          <div class="mt-4 flex">
             <app-section-graph
+              class="min-w-0 flex-1"
               [graph]="graph()"
               [matching]="graphMatching()"
               [selected]="graphSelected()"
@@ -341,11 +343,15 @@
               (nodeOpen)="onGraphOpen($event)"
               (backgroundClick)="graphSelected.set(null)"
             />
-            @if (graphDetail(); as detail) {
-              <aside
-                class="relative flex w-full flex-col gap-2.5 overflow-auto border border-t-0 border-border bg-card p-5 md:w-[21rem] md:border-t md:border-l-0"
-                [attr.aria-label]="detail.node.title"
-              >
+            <aside
+              class="flex shrink-0 flex-col overflow-hidden transition-[width,opacity] duration-200 ease-out motion-reduce:transition-none"
+              [class]="graphDetail() ? 'w-[21rem] opacity-100' : 'w-0 opacity-0'"
+              [attr.inert]="graphDetail() ? null : ''"
+              [attr.aria-hidden]="graphDetail() ? null : 'true'"
+              [attr.aria-label]="graphPanel()?.node?.title ?? ('campaigns.sections.graph.ariaLabel' | translate)"
+            >
+              @if (graphPanel(); as detail) {
+              <div class="relative flex w-[21rem] flex-1 flex-col gap-2.5 overflow-auto border-y border-r border-border bg-card p-5">
                 <button
                   type="button"
                   arc-button
@@ -406,13 +412,37 @@
                     <li class="text-[13px] text-muted-foreground">{{ 'campaigns.sections.graph.nothingYet' | translate }}</li>
                   }
                 </ul>
-                <div class="mt-auto flex gap-1.5 pt-3">
-                  <button type="button" arc-button (click)="onGraphOpen({ path: detail.node.path, mode: 'here' })">
-                    {{ 'campaigns.sections.graph.openNote' | translate }}
+                <div class="mt-auto flex items-center gap-1.5 pt-3">
+                  <button
+                    type="button"
+                    arc-button
+                    [arcTooltip]="'campaigns.sections.graph.openNote' | translate"
+                    [attr.aria-label]="'campaigns.sections.graph.openNote' | translate"
+                    (click)="onGraphOpen({ path: detail.node.path, mode: 'here' })"
+                  >
+                    <arc-icon arcType="file-text" />
                   </button>
-                  <button type="button" arc-button arcType="outline" (click)="onGraphOpen({ path: detail.node.path, mode: 'tab' })">
-                    <arc-icon arcType="arrow-up-right" />
-                    {{ 'campaigns.sections.graph.newTab' | translate }}
+                  <button
+                    type="button"
+                    arc-button
+                    arcType="outline"
+                    [disabled]="!workspace.canOpenTab()"
+                    [arcTooltip]="'tabs.menu.openInBackground' | translate"
+                    [attr.aria-label]="'tabs.menu.openInBackground' | translate"
+                    (click)="onGraphOpen({ path: detail.node.path, mode: 'tab' })"
+                  >
+                    <arc-icon arcType="copy-plus" />
+                  </button>
+                  <button
+                    type="button"
+                    arc-button
+                    arcType="outline"
+                    [disabled]="!workspace.canOpenTab()"
+                    [arcTooltip]="'tabs.menu.openToSide' | translate"
+                    [attr.aria-label]="'tabs.menu.openToSide' | translate"
+                    (click)="onGraphOpen({ path: detail.node.path, mode: 'side' })"
+                  >
+                    <arc-icon arcType="panel-right" />
                   </button>
                   @if (graphDetailFile(); as file) {
                     <!-- The file's menu (rename, move, delete…), the same as a row's or a card's. -->
@@ -424,7 +454,6 @@
                       [arcMenuTriggerFor]="graphFileMenu"
                       arcPlacement="topRight"
                       arcType="outline"
-                      arcSize="sm"
                       [attr.aria-label]="'common.moreActions' | translate"
                       arcPosition="top"
                       [arcTooltip]="'common.moreActions' | translate"
@@ -436,8 +465,9 @@
                     </ng-template>
                   }
                 </div>
-              </aside>
-            }
+              </div>
+              }
+            </aside>
           </div>
         } @else if (isFiltering() && results().length === 0) {
           <arc-empty

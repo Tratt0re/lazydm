@@ -129,7 +129,7 @@ interface SectionTreeFolder extends DocumentFolderDto {
 export class CampaignSectionPage {
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
-  private readonly workspace = inject(WorkspaceService);
+  protected readonly workspace = inject(WorkspaceService);
   /** A campaign, or a compendium system (the same page lists both). */
   private readonly scope = inject(NoteScopeService).scopeOf(getNoteScopeKind(this.route));
   private readonly documentService = inject(DocumentService);
@@ -315,6 +315,13 @@ export class CampaignSectionPage {
   protected readonly errorMessage = signal<string | null>(null);
 
   constructor() {
+    effect(() => {
+      const detail = this.graphDetail();
+      if (detail) {
+        this.lastGraphDetail.set(detail);
+      }
+    });
+
     // Files or folders of this section changed (an agent, another device, a move from another page).
     onIndexUpdated((paths) => {
       const sectionPath = this.sectionPath();
@@ -602,6 +609,9 @@ export class CampaignSectionPage {
       from: edges.filter((edge) => edge.target === path).map((edge) => byPath.get(edge.source)!),
     };
   });
+  /** What the panel shows: the open note's detail, kept while the panel slides shut so it does not empty first. */
+  private readonly lastGraphDetail = signal<ReturnType<typeof this.graphDetail>>(null);
+  protected readonly graphPanel = computed(() => this.graphDetail() ?? this.lastGraphDetail());
   /** Each node's home-section icon (skull for an enemy, map pin for a place…), so a node says where it lives. */
   protected readonly graphIcons = computed<Record<string, SectionIcon>>(() => {
     const icons: Record<string, SectionIcon> = {};
