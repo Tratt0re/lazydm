@@ -31,6 +31,7 @@ import { ArcTechButtonComponent } from '@/shared/components/button';
 import { ARCTECH_ICONS, ArcTechIconComponent } from '@/shared/components/icon';
 import { ArcTechMenuImports } from '@/shared/components/menu';
 import { ArcTechSelectImports } from '@/shared/components/select';
+import { ArcTechTooltipImports } from '@/shared/components/tooltip';
 
 /**
  * Icon names as text (the registry's own type also allows raw icon data, which a file cannot hold). The list below
@@ -85,6 +86,7 @@ const SYSTEMS_WITH_RULES = ['dnd5e'] as const;
     ArcTechIconComponent,
     ...ArcTechMenuImports,
     ...ArcTechSelectImports,
+    ...ArcTechTooltipImports,
   ],
   templateUrl: './quick-reference-page.html',
   host: { class: 'flex min-h-0 flex-1 flex-col' },
