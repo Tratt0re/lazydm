@@ -67,7 +67,7 @@ function getFileName(path: string): string {
   templateUrl: './document-links-panel.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
-    class: 'flex h-full min-h-0 w-80 flex-col overflow-hidden border border-border bg-card p-2',
+    class: 'flex h-full min-h-0 w-full flex-col overflow-hidden',
   },
 })
 export class AppDocumentLinksPanelComponent {

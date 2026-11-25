@@ -8,7 +8,7 @@
     />
   </div>
 } @else if (!isLoading()) {
-  <div class="flex min-h-80 flex-1">
+  <div class="relative flex min-h-80 flex-1">
     <div class="flex h-full min-h-0 min-w-0 flex-1 flex-col gap-2 py-4">
       <div class="flex shrink-0 items-center justify-between gap-3">
         <div
@@ -134,20 +134,22 @@
       </div>
     </div>
 
-    <!-- Kept mounted so opening and closing can slide instead of re-rendering. -->
-    <div
-      class="shrink-0 overflow-hidden transition-[width,opacity] duration-200 ease-out motion-reduce:transition-none"
-      [class]="isLinksPanelOpen() ? 'w-88 opacity-100' : 'w-0 opacity-0'"
-      [attr.inert]="isLinksPanelOpen() ? null : ''"
-      [attr.aria-hidden]="isLinksPanelOpen() ? null : 'true'"
+    <!-- Beside the note when the pane has the room, over it when it does not (§9, side panels). -->
+    <arc-side-panel
+      [arcWidth]="22"
+      [arcOpen]="isLinksPanelShown()"
+      [arcLabel]="'document.toolbar.links' | translate"
+      [arcTitle]="'document.toolbar.links' | translate"
+      (modeChange)="linksPanelMode.set($event)"
+      (closed)="closeLinksPanel()"
     >
-      <div class="h-full py-4 pr-4 pl-4">
+      <div class="flex min-h-0 flex-1 flex-col p-4">
         <app-document-links-panel
           [path]="notePath()"
           (fixBrokenLink)="onFixBrokenLink($event)"
           (linkCount)="linkCount.set($event)"
         />
       </div>
-    </div>
+    </arc-side-panel>
   </div>
 }

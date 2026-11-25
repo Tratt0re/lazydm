@@ -48,6 +48,7 @@ import { getNoteScopeKind, NoteScopeService } from '@/services/note-scope.servic
 import { DocumentService } from '@/services/document.service';
 import { SectionService, toSubfolderLabel } from '@/services/section.service';
 import type { DocumentViewMode } from '@/config/local-preferences.config';
+import type { SidePanelMode } from '@/config/side-panel.config';
 import { LocalPreferencesService } from '@/services/local-preferences.service';
 import { ToolbarContextService } from '@/services/toolbar-context.service';
 import { type SharedNote, SharedNoteService } from '@/services/shared-note.service';
@@ -57,6 +58,7 @@ import { ArcTechButtonComponent } from '@/shared/components/button';
 import { ArcTechIconComponent, type ArcTechIcon } from '@/shared/components/icon';
 import { ArcTechDialogService, type ArcTechDialogRef } from '@/shared/components/dialog';
 import { ArcTechSheetService } from '@/shared/components/sheet';
+import { ArcTechSidePanelComponent } from '@/shared/components/side-panel';
 import { ArcTechTooltipImports } from '@/shared/components/tooltip';
 import { onIndexUpdated } from '@/services/ipc-events';
 
@@ -81,6 +83,7 @@ const EDITOR_MODES: readonly { value: DocumentViewMode; label: string; icon: Arc
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-document-page',
   imports: [
+    ArcTechSidePanelComponent,
     TranslatePipe,
     ArcTechAlertComponent,
     ArcTechButtonComponent,
@@ -184,6 +187,13 @@ export class DocumentPage {
   protected readonly isLinksPanelOpen = signal(
     !this.workspace.hasSplit() && this.localPreferences.getDocumentLinksPanelOpen(),
   );
+  /** Beside the note or over it, as the Links panel measured the pane. */
+  protected readonly linksPanelMode = signal<SidePanelMode>('beside');
+  /** Over the note the panel opens only on an action and is not remembered: a saved "open" must not cover the note. */
+  private readonly isLinksOverOpen = signal(false);
+  protected readonly isLinksPanelShown = computed(() =>
+    this.linksPanelMode() === 'beside' ? this.isLinksPanelOpen() : this.isLinksOverOpen(),
+  );
   /** The properties box (frontmatter) of the live preview: collapsed until the trigger opens it, remembered per device. */
   protected readonly isPropertiesOpen = signal(this.localPreferences.getDocumentPropertiesOpen());
   /** Shown as a badge on the Links button, so a closed panel still tells whether the note has links. */
@@ -267,7 +277,7 @@ export class DocumentPage {
                   : this.translateService.instant('document.toolbar.links'),
               badge: this.linkCount(),
               icon: 'link',
-              buttonType: this.isLinksPanelOpen() ? 'default' : 'outline',
+              buttonType: this.isLinksPanelShown() ? 'default' : 'outline',
               iconOnly: true,
               action: () => this.toggleLinksPanel(),
             },
@@ -334,6 +344,7 @@ export class DocumentPage {
       if (opens !== seenSplitOpens) {
         seenSplitOpens = opens;
         this.isLinksPanelOpen.set(false);
+        this.isLinksOverOpen.set(false);
       }
     });
 
@@ -615,9 +626,23 @@ export class DocumentPage {
   }
 
   protected toggleLinksPanel(): void {
+    if (this.linksPanelMode() === 'over') {
+      this.isLinksOverOpen.update((isOpen) => !isOpen);
+      return;
+    }
+
     const isOpen = !this.isLinksPanelOpen();
     this.isLinksPanelOpen.set(isOpen);
     this.localPreferences.setDocumentLinksPanelOpen(isOpen);
+  }
+
+  /** The panel's own close button, Escape or a click on the scrim. */
+  protected closeLinksPanel(): void {
+    if (this.linksPanelMode() === 'over') {
+      this.isLinksOverOpen.set(false);
+    } else if (this.isLinksPanelOpen()) {
+      this.toggleLinksPanel();
+    }
   }
 
   protected toggleProperties(): void {
