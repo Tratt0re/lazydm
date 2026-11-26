@@ -133,6 +133,7 @@
     "markdown-it": "^15.0.2",
     "ngx-echarts": "^21.0.0",
     "ngx-sonner": "^3.1.0",
+    "polygon-clipping": "^0.15.7",
     "rxjs": "~7.8.0",
     "semver": "^7.7.4",
     "tailwind-merge": "^3.4.0",

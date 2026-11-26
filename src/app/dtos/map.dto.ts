@@ -63,11 +63,60 @@ export interface MapNoteDto extends MapPointDto {
   readonly color: MapColor;
 }
 
+export const MAP_DRAWING_GRIDS = ['cross', 'lines', 'none'] as const;
+export const MAP_DRAWING_BORDERS = ['contour', 'rocks', 'dots', 'none'] as const;
+export const MAP_DRAWING_THEMES = ['slate', 'moss', 'indigo'] as const;
+export const MAP_DRAWING_FORMATS = ['png', 'jpg'] as const;
+export const MAP_DRAWING_RESOLUTIONS = [1, 2, 3] as const;
+
+export interface MapDrawingStyleDto {
+  readonly grid: (typeof MAP_DRAWING_GRIDS)[number];
+  readonly border: (typeof MAP_DRAWING_BORDERS)[number];
+  readonly shadow: boolean;
+  readonly theme: (typeof MAP_DRAWING_THEMES)[number];
+  readonly format: (typeof MAP_DRAWING_FORMATS)[number];
+  readonly resolution: (typeof MAP_DRAWING_RESOLUTIONS)[number];
+  /** JPG quality, 50..100. */
+  readonly quality: number;
+}
+
+/** A point in world pixels (`CELL` px per square), origin top-left of the sheet. */
+export type MapDrawingPoint = readonly [number, number];
+/** A closed loop: the last point repeats the first. */
+export type MapDrawingRing = readonly MapDrawingPoint[];
+/** An outline followed by its holes. */
+export type MapDrawingPolygon = readonly MapDrawingRing[];
+
+export interface MapDrawingDoorDto {
+  readonly x: number;
+  readonly y: number;
+  /** Radians. */
+  readonly angle: number;
+}
+
+export interface MapDrawingTextDto {
+  readonly x: number;
+  readonly y: number;
+  readonly s: string;
+}
+
+/** The editable drawing of a drawn map; the generated image is the map's `image`. The sheet size is fixed. */
+export interface MapDrawingDto {
+  readonly cols: number;
+  readonly rows: number;
+  readonly floor: readonly MapDrawingPolygon[];
+  readonly doors: readonly MapDrawingDoorDto[];
+  readonly texts: readonly MapDrawingTextDto[];
+  readonly style: MapDrawingStyleDto;
+}
+
 export interface MapDto {
   readonly version: number;
   readonly name: string;
   /** Vault path of the image in the scope's assets/; null when none is set. */
   readonly image: string | null;
+  /** The drawing of a drawn map; null for a map made from an imported image. */
+  readonly drawing: MapDrawingDto | null;
   readonly pins: readonly MapPinDto[];
   readonly paths: readonly MapPathDto[];
   readonly notes: readonly MapNoteDto[];
@@ -96,6 +145,8 @@ export type WriteMapResultDto =
 export interface CreateMapPayload {
   readonly folder: string;
   readonly name: string;
-  /** Vault path of an image of the scope's assets/. */
-  readonly image: string;
+  /** Vault path of an image of the scope's assets/; omitted for a drawn map. */
+  readonly image?: string;
+  /** A drawn map: the sheet size in squares; the image comes with the first save of the drawing. */
+  readonly drawing?: { readonly cols: number; readonly rows: number };
 }
