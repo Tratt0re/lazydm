@@ -1612,7 +1612,11 @@
       "noImages": "No image in the assets yet",
       "noImagesHint": "Add an image to the Assets section first, then create the map.",
       "importFromDisk": "Import an image from disk…",
-      "importError": "Couldn't import the image"
+      "importError": "Couldn't import the image",
+      "drawNew": "Draw a new map",
+      "cols": "Columns",
+      "rows": "Rows",
+      "sizeError": "Enter a whole number from {{min}} to {{max}}"
     },
     "page": {
       "loadError": "Couldn't load this map",
@@ -1739,6 +1743,85 @@
       "title": "Edit map",
       "description": "The title gives the file name. The pins and paths keep their place on a new image.",
       "error": "Couldn't save the map"
+    },
+    "drawing": {
+      "canvas": "Map drawing area",
+      "menu": "Drawing menu",
+      "undo": "Undo",
+      "redo": "Redo",
+      "fit": "Center the map",
+      "options": "View and export",
+      "erase": "Erase mode",
+      "done": "Done",
+      "edit": "Edit drawing",
+      "reduced": "The map is very large: the resolution was lowered.",
+      "imageError": "Couldn't make the image of the map",
+      "clear": {
+        "title": "Clear the map",
+        "description": "All rooms, doors and texts are removed. You can undo this.",
+        "confirm": "Clear"
+      },
+      "text": {
+        "title": "Text",
+        "label": "Text",
+        "placeholder": "Leave empty to delete"
+      },
+      "tools": {
+        "rect": "Rectangle",
+        "circle": "Circle",
+        "poly": "Polygon",
+        "corr": "Corridor",
+        "door": "Door",
+        "text": "Text",
+        "pan": "Move"
+      },
+      "hint": {
+        "rect": "Drag to make a room.",
+        "circle": "Drag from the centre to the edge.",
+        "poly": "Click the corners. Double-click or Enter to close, Esc to cancel.",
+        "corr": "Drag: an L-shaped corridor one square wide.",
+        "door": "Click a wall or a gap. Click a door to remove it.",
+        "text": "Click to write. Click a text to edit it (empty = delete).",
+        "pan": "Drag to move around. The wheel zooms."
+      },
+      "view": {
+        "title": "View",
+        "grid": "Grid",
+        "border": "Border",
+        "theme": "Colours",
+        "shadow": "Shading",
+        "grids": {
+          "cross": "Crosses",
+          "lines": "Lines",
+          "none": "None"
+        },
+        "borders": {
+          "contour": "Contour lines",
+          "rocks": "Rocks",
+          "dots": "Dots",
+          "none": "None"
+        },
+        "themes": {
+          "slate": "Slate",
+          "moss": "Moss",
+          "indigo": "Indigo"
+        }
+      },
+      "export": {
+        "title": "Image",
+        "format": "Format",
+        "resolution": "Resolution",
+        "quality": "JPG quality",
+        "formats": {
+          "png": "PNG",
+          "jpg": "JPG"
+        },
+        "resolutions": {
+          "1": "1× (40 px per square)",
+          "2": "2× (80 px)",
+          "3": "3× (120 px)"
+        }
+      }
     }
   },
   "shortcuts": {
@@ -1749,7 +1832,8 @@
       "tabs": "Tabs and navigation",
       "editor": "Note editor",
       "map": "Map editor",
-      "global": "Everywhere"
+      "global": "Everywhere",
+      "drawing": "Map drawing"
     },
     "items": {
       "search": "Search the campaign",
@@ -1775,7 +1859,10 @@
       "mapSelectAll": "Select every item (Select tool)",
       "mapDelete": "Delete the selected items",
       "mapAddToSelection": "Shift/Cmd/Ctrl-click: add to or remove from the selection",
-      "quickReference": "Open the Quick reference"
+      "quickReference": "Open the Quick reference",
+      "drawUndo": "Undo",
+      "drawRedo": "Redo",
+      "drawErase": "Erase mode (or hold Shift)"
     }
   },
   "menu": {

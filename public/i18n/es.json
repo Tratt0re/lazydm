@@ -1612,7 +1612,11 @@
       "noImages": "Aún no hay imágenes en los recursos",
       "noImagesHint": "Añade primero una imagen a la sección Recursos y luego crea el mapa.",
       "importFromDisk": "Importar una imagen del disco…",
-      "importError": "No se pudo importar la imagen"
+      "importError": "No se pudo importar la imagen",
+      "drawNew": "Dibujar un mapa nuevo",
+      "cols": "Columnas",
+      "rows": "Filas",
+      "sizeError": "Introduce un número entero de {{min}} a {{max}}"
     },
     "page": {
       "loadError": "No se pudo cargar este mapa",
@@ -1739,6 +1743,85 @@
       "title": "Editar mapa",
       "description": "El título da el nombre del archivo. Los marcadores y las rutas conservan su posición en una imagen nueva.",
       "error": "No se pudo guardar el mapa"
+    },
+    "drawing": {
+      "canvas": "Área de dibujo del mapa",
+      "menu": "Menú del dibujo",
+      "undo": "Deshacer",
+      "redo": "Rehacer",
+      "fit": "Centrar el mapa",
+      "options": "Vista y exportación",
+      "erase": "Modo borrar",
+      "done": "Hecho",
+      "edit": "Editar el dibujo",
+      "reduced": "El mapa es muy grande: se redujo la resolución.",
+      "imageError": "No se pudo crear la imagen del mapa",
+      "clear": {
+        "title": "Vaciar el mapa",
+        "description": "Se quitan todas las salas, puertas y textos. Puedes deshacerlo.",
+        "confirm": "Vaciar"
+      },
+      "text": {
+        "title": "Texto",
+        "label": "Texto",
+        "placeholder": "Déjalo vacío para eliminar"
+      },
+      "tools": {
+        "rect": "Rectángulo",
+        "circle": "Círculo",
+        "poly": "Polígono",
+        "corr": "Pasillo",
+        "door": "Puerta",
+        "text": "Texto",
+        "pan": "Mover"
+      },
+      "hint": {
+        "rect": "Arrastra para crear una sala.",
+        "circle": "Arrastra desde el centro hasta el borde.",
+        "poly": "Haz clic en los vértices. Doble clic o Intro para cerrar, Esc para cancelar.",
+        "corr": "Arrastra: un pasillo en L de una casilla de ancho.",
+        "door": "Haz clic en un muro o en un hueco. Haz clic en una puerta para quitarla.",
+        "text": "Haz clic para escribir. Haz clic en un texto para editarlo (vacío = eliminar).",
+        "pan": "Arrastra para moverte. La rueda hace zoom."
+      },
+      "view": {
+        "title": "Vista",
+        "grid": "Cuadrícula",
+        "border": "Borde",
+        "theme": "Colores",
+        "shadow": "Sombreado",
+        "grids": {
+          "cross": "Cruces",
+          "lines": "Líneas",
+          "none": "Ninguna"
+        },
+        "borders": {
+          "contour": "Curvas de nivel",
+          "rocks": "Rocas",
+          "dots": "Puntos",
+          "none": "Ninguno"
+        },
+        "themes": {
+          "slate": "Pizarra",
+          "moss": "Musgo",
+          "indigo": "Índigo"
+        }
+      },
+      "export": {
+        "title": "Imagen",
+        "format": "Formato",
+        "resolution": "Resolución",
+        "quality": "Calidad JPG",
+        "formats": {
+          "png": "PNG",
+          "jpg": "JPG"
+        },
+        "resolutions": {
+          "1": "1× (40 px por casilla)",
+          "2": "2× (80 px)",
+          "3": "3× (120 px)"
+        }
+      }
     }
   },
   "shortcuts": {
@@ -1749,7 +1832,8 @@
       "tabs": "Pestañas y navegación",
       "editor": "Editor de notas",
       "map": "Editor de mapas",
-      "global": "En todas partes"
+      "global": "En todas partes",
+      "drawing": "Dibujo del mapa"
     },
     "items": {
       "search": "Buscar en la campaña",
@@ -1775,7 +1859,10 @@
       "mapSelectAll": "Seleccionar todos los elementos (herramienta Seleccionar)",
       "mapDelete": "Eliminar los elementos seleccionados",
       "mapAddToSelection": "Mayús/Cmd/Ctrl-clic: añadir o quitar de la selección",
-      "quickReference": "Abrir la Referencia rápida"
+      "quickReference": "Abrir la Referencia rápida",
+      "drawUndo": "Deshacer",
+      "drawRedo": "Rehacer",
+      "drawErase": "Modo borrar (o mantén Mayús)"
     }
   },
   "menu": {

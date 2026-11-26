@@ -1612,7 +1612,11 @@
       "noImages": "Ancora nessuna immagine negli asset",
       "noImagesHint": "Aggiungi prima un'immagine alla sezione Asset, poi crea la mappa.",
       "importFromDisk": "Importa un’immagine dal disco…",
-      "importError": "Impossibile importare l’immagine"
+      "importError": "Impossibile importare l’immagine",
+      "drawNew": "Disegna una nuova mappa",
+      "cols": "Colonne",
+      "rows": "Righe",
+      "sizeError": "Inserisci un numero intero da {{min}} a {{max}}"
     },
     "page": {
       "loadError": "Impossibile caricare questa mappa",
@@ -1739,6 +1743,85 @@
       "title": "Modifica mappa",
       "description": "Il titolo dà il nome al file. Segnalini e percorsi restano al loro posto su una nuova immagine.",
       "error": "Impossibile salvare la mappa"
+    },
+    "drawing": {
+      "canvas": "Area di disegno della mappa",
+      "menu": "Menu del disegno",
+      "undo": "Annulla",
+      "redo": "Ripeti",
+      "fit": "Centra la mappa",
+      "options": "Vista ed esportazione",
+      "erase": "Modalità cancella",
+      "done": "Fatto",
+      "edit": "Modifica il disegno",
+      "reduced": "La mappa è molto grande: la risoluzione è stata ridotta.",
+      "imageError": "Impossibile creare l'immagine della mappa",
+      "clear": {
+        "title": "Svuota la mappa",
+        "description": "Stanze, porte e testi vengono rimossi. Potrai usare Annulla.",
+        "confirm": "Svuota"
+      },
+      "text": {
+        "title": "Testo",
+        "label": "Testo",
+        "placeholder": "Lascia vuoto per eliminare"
+      },
+      "tools": {
+        "rect": "Rettangolo",
+        "circle": "Cerchio",
+        "poly": "Poligono",
+        "corr": "Corridoio",
+        "door": "Porta",
+        "text": "Testo",
+        "pan": "Sposta"
+      },
+      "hint": {
+        "rect": "Trascina per creare una stanza.",
+        "circle": "Trascina dal centro verso il bordo.",
+        "poly": "Clicca i vertici. Doppio clic o Invio per chiudere, Esc per annullare.",
+        "corr": "Trascina: corridoio a L largo una casella.",
+        "door": "Clicca su un muro o in un varco. Clicca una porta per toglierla.",
+        "text": "Clicca per scrivere. Clicca un testo per modificarlo (vuoto = elimina).",
+        "pan": "Trascina per muoverti. La rotella fa lo zoom."
+      },
+      "view": {
+        "title": "Vista",
+        "grid": "Griglia",
+        "border": "Bordo",
+        "theme": "Colori",
+        "shadow": "Sfumatura",
+        "grids": {
+          "cross": "Crocette",
+          "lines": "Linee",
+          "none": "Nessuna"
+        },
+        "borders": {
+          "contour": "Curve di livello",
+          "rocks": "Rocce",
+          "dots": "Puntinato",
+          "none": "Nessuno"
+        },
+        "themes": {
+          "slate": "Ardesia",
+          "moss": "Muschio",
+          "indigo": "Indaco"
+        }
+      },
+      "export": {
+        "title": "Immagine",
+        "format": "Formato",
+        "resolution": "Risoluzione",
+        "quality": "Qualità JPG",
+        "formats": {
+          "png": "PNG",
+          "jpg": "JPG"
+        },
+        "resolutions": {
+          "1": "1× (40 px a casella)",
+          "2": "2× (80 px)",
+          "3": "3× (120 px)"
+        }
+      }
     }
   },
   "shortcuts": {
@@ -1749,7 +1832,8 @@
       "tabs": "Schede e navigazione",
       "editor": "Editor delle note",
       "map": "Editor delle mappe",
-      "global": "Ovunque"
+      "global": "Ovunque",
+      "drawing": "Disegno della mappa"
     },
     "items": {
       "search": "Cerca nella campagna",
@@ -1775,7 +1859,10 @@
       "mapSelectAll": "Seleziona ogni elemento (strumento Seleziona)",
       "mapDelete": "Elimina gli elementi selezionati",
       "mapAddToSelection": "Shift/Cmd/Ctrl-clic: aggiungi o rimuovi dalla selezione",
-      "quickReference": "Apri il Riferimento rapido"
+      "quickReference": "Apri il Riferimento rapido",
+      "drawUndo": "Annulla",
+      "drawRedo": "Ripeti",
+      "drawErase": "Modalità cancella (o tieni premuto Maiusc)"
     }
   },
   "menu": {

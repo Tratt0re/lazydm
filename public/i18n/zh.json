@@ -1612,7 +1612,11 @@
       "noImages": "资源中还没有图片",
       "noImagesHint": "请先向“资源”部分添加一张图片，然后再创建地图。",
       "importFromDisk": "从磁盘导入图片…",
-      "importError": "无法导入图片"
+      "importError": "无法导入图片",
+      "drawNew": "绘制新地图",
+      "cols": "列数",
+      "rows": "行数",
+      "sizeError": "请输入 {{min}} 到 {{max}} 之间的整数"
     },
     "page": {
       "loadError": "无法加载此地图",
@@ -1739,6 +1743,85 @@
       "title": "编辑地图",
       "description": "标题决定文件名。更换图片后，标记和路径会保持原位。",
       "error": "无法保存地图"
+    },
+    "drawing": {
+      "canvas": "地图绘制区域",
+      "menu": "绘制菜单",
+      "undo": "撤销",
+      "redo": "重做",
+      "fit": "居中地图",
+      "options": "视图与导出",
+      "erase": "擦除模式",
+      "done": "完成",
+      "edit": "编辑绘图",
+      "reduced": "地图非常大：已降低分辨率。",
+      "imageError": "无法生成地图图像",
+      "clear": {
+        "title": "清空地图",
+        "description": "所有房间、门和文字都会被移除。你可以撤销。",
+        "confirm": "清空"
+      },
+      "text": {
+        "title": "文字",
+        "label": "文字",
+        "placeholder": "留空即删除"
+      },
+      "tools": {
+        "rect": "矩形",
+        "circle": "圆形",
+        "poly": "多边形",
+        "corr": "走廊",
+        "door": "门",
+        "text": "文字",
+        "pan": "移动"
+      },
+      "hint": {
+        "rect": "拖动以创建房间。",
+        "circle": "从圆心拖向边缘。",
+        "poly": "点击各个顶点。双击或按回车闭合，按 Esc 取消。",
+        "corr": "拖动：一格宽的 L 形走廊。",
+        "door": "点击墙壁或缺口。点击门可将其移除。",
+        "text": "点击以书写。点击文字可编辑（留空 = 删除）。",
+        "pan": "拖动以移动。滚轮缩放。"
+      },
+      "view": {
+        "title": "视图",
+        "grid": "网格",
+        "border": "边缘",
+        "theme": "颜色",
+        "shadow": "阴影",
+        "grids": {
+          "cross": "十字",
+          "lines": "线条",
+          "none": "无"
+        },
+        "borders": {
+          "contour": "等高线",
+          "rocks": "岩石",
+          "dots": "点状",
+          "none": "无"
+        },
+        "themes": {
+          "slate": "石板",
+          "moss": "苔藓",
+          "indigo": "靛蓝"
+        }
+      },
+      "export": {
+        "title": "图像",
+        "format": "格式",
+        "resolution": "分辨率",
+        "quality": "JPG 质量",
+        "formats": {
+          "png": "PNG",
+          "jpg": "JPG"
+        },
+        "resolutions": {
+          "1": "1×（每格 40 像素）",
+          "2": "2×（80 像素）",
+          "3": "3×（120 像素）"
+        }
+      }
     }
   },
   "shortcuts": {
@@ -1749,7 +1832,8 @@
       "tabs": "标签页与导航",
       "editor": "笔记编辑器",
       "map": "地图编辑器",
-      "global": "全局"
+      "global": "全局",
+      "drawing": "地图绘制"
     },
     "items": {
       "search": "搜索战役",
@@ -1775,7 +1859,10 @@
       "mapSelectAll": "选择所有项目（选择工具）",
       "mapDelete": "删除所选项目",
       "mapAddToSelection": "Shift/Cmd/Ctrl 点击：加入或移出选择",
-      "quickReference": "打开快速参考"
+      "quickReference": "打开快速参考",
+      "drawUndo": "撤销",
+      "drawRedo": "重做",
+      "drawErase": "擦除模式（或按住 Shift）"
     }
   },
   "menu": {
