@@ -1612,7 +1612,11 @@
       "noImages": "Aucune image dans les ressources pour l’instant",
       "noImagesHint": "Ajoutez d’abord une image à la section Ressources, puis créez la carte.",
       "importFromDisk": "Importer une image depuis le disque…",
-      "importError": "Impossible d’importer l’image"
+      "importError": "Impossible d’importer l’image",
+      "drawNew": "Dessiner une nouvelle carte",
+      "cols": "Colonnes",
+      "rows": "Lignes",
+      "sizeError": "Saisis un nombre entier de {{min}} à {{max}}"
     },
     "page": {
       "loadError": "Impossible de charger cette carte",
@@ -1739,6 +1743,91 @@
       "title": "Modifier la carte",
       "description": "Le titre donne le nom du fichier. Les repères et les chemins gardent leur place sur une nouvelle image.",
       "error": "Impossible d’enregistrer la carte"
+    },
+    "drawing": {
+      "canvas": "Zone de dessin de la carte",
+      "menu": "Menu du dessin",
+      "undo": "Annuler",
+      "redo": "Rétablir",
+      "fit": "Centrer la carte",
+      "options": "Vue et export",
+      "erase": "Mode effacer",
+      "done": "Terminé",
+      "edit": "Modifier le dessin",
+      "reduced": "La carte est très grande : la résolution a été réduite.",
+      "imageError": "Impossible de créer l'image de la carte",
+      "clear": {
+        "title": "Vider la carte",
+        "description": "Toutes les salles, portes et textes sont retirés. Tu peux annuler.",
+        "confirm": "Vider"
+      },
+      "text": {
+        "title": "Texte",
+        "label": "Texte",
+        "placeholder": "Laisse vide pour supprimer"
+      },
+      "tools": {
+        "rect": "Rectangle",
+        "circle": "Cercle",
+        "poly": "Polygone",
+        "corr": "Couloir",
+        "door": "Porte",
+        "text": "Texte",
+        "pan": "Déplacer"
+      },
+      "hint": {
+        "rect": "Glisse pour créer une salle.",
+        "circle": "Glisse du centre vers le bord.",
+        "poly": "Clique les sommets. Double-clic ou Entrée pour fermer, Échap pour annuler.",
+        "corr": "Glisse : un couloir en L large d’une case.",
+        "door": "Clique sur un mur ou un passage. Clique sur une porte pour la retirer.",
+        "text": "Clique pour écrire. Clique sur un texte pour le modifier (vide = supprimer).",
+        "pan": "Glisse pour te déplacer. La molette zoome."
+      },
+      "view": {
+        "title": "Vue",
+        "grid": "Grille",
+        "border": "Bordure",
+        "theme": "Couleurs",
+        "shadow": "Ombrage",
+        "grids": {
+          "cross": "Croix",
+          "lines": "Lignes",
+          "none": "Aucune"
+        },
+        "borders": {
+          "contour": "Courbes de niveau",
+          "rocks": "Rochers",
+          "dots": "Pointillé",
+          "none": "Aucune"
+        },
+        "themes": {
+          "slate": "Ardoise",
+          "moss": "Mousse",
+          "indigo": "Indigo"
+        }
+      },
+      "export": {
+        "title": "Image",
+        "format": "Format",
+        "resolution": "Résolution",
+        "quality": "Qualité JPG",
+        "formats": {
+          "png": "PNG",
+          "jpg": "JPG"
+        },
+        "resolutions": {
+          "1": "1× (40 px par case)",
+          "2": "2× (80 px)",
+          "3": "3× (120 px)"
+        }
+      },
+      "save": {
+        "title": "Remplacer l'image précédente ?",
+        "description": "Cette carte a déjà une image créée à partir du dessin. La remplacer par la nouvelle, ou la garder et créer une copie ?",
+        "overwrite": "Écraser",
+        "copy": "Créer une copie"
+      }
     }
   },
   "shortcuts": {
@@ -1749,7 +1838,8 @@
       "tabs": "Onglets et navigation",
       "editor": "Éditeur de notes",
       "map": "Éditeur de cartes",
-      "global": "Partout"
+      "global": "Partout",
+      "drawing": "Dessin de la carte"
     },
     "items": {
       "search": "Rechercher dans la campagne",
@@ -1775,7 +1865,10 @@
       "mapSelectAll": "Sélectionner tous les éléments (outil Sélection)",
       "mapDelete": "Supprimer les éléments sélectionnés",
       "mapAddToSelection": "Maj/Cmd/Ctrl-clic : ajouter à la sélection ou l'en retirer",
-      "quickReference": "Ouvrir la Référence rapide"
+      "quickReference": "Ouvrir la Référence rapide",
+      "drawUndo": "Annuler",
+      "drawRedo": "Rétablir",
+      "drawErase": "Mode effacer (ou maintiens Maj)"
     }
   },
   "menu": {

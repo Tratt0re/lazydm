@@ -7,12 +7,121 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 const require = createRequire(import.meta.url);
 const { createMap, normalizeMap, readMap, writeMap } = require('../models/map.model');
 
+describe('normalizeMap: drawing', () => {
+  const square = [
+    [0, 0],
+    [80, 0],
+    [80, 80],
+    [0, 80],
+    [0, 0],
+  ];
+  const drawingOf = (drawing) => normalizeMap({ drawing }, 'm').drawing;
+
+  it('is null for an imported map and for anything that is not an object', () => {
+    expect(drawingOf(undefined)).toBeNull();
+    expect(drawingOf('x')).toBeNull();
+    expect(drawingOf([])).toBeNull();
+  });
+
+  it('keeps a valid drawing and fills the defaults of an empty one', () => {
+    expect(drawingOf({})).toEqual({
+      cols: 30,
+      rows: 20,
+      floor: [],
+      doors: [],
+      texts: [],
+      style: {
+        grid: 'cross',
+        border: 'contour',
+        shadow: true,
+        theme: 'slate',
+        format: 'png',
+        resolution: 2,
+        quality: 92,
+      },
+    });
+
+    const drawing = drawingOf({
+      cols: 10,
+      rows: 8,
+      floor: [[square]],
+      doors: [{ x: 40, y: 0, angle: 1.5 }],
+      texts: [{ x: 20, y: 20, s: ' Hall ' }],
+      style: { grid: 'lines', border: 'rocks', shadow: false, theme: 'moss', format: 'jpg' },
+    });
+    expect(drawing.floor).toEqual([[square]]);
+    expect(drawing.doors).toEqual([{ x: 40, y: 0, angle: 1.5 }]);
+    expect(drawing.texts).toEqual([{ x: 20, y: 20, s: 'Hall' }]);
+    expect(drawing.style).toMatchObject({
+      grid: 'lines',
+      border: 'rocks',
+      shadow: false,
+      theme: 'moss',
+      format: 'jpg',
+    });
+  });
+
+  it('falls back to defaults for values outside the lists and clamps the numbers', () => {
+    const drawing = drawingOf({
+      cols: 9999,
+      rows: 1,
+      style: { grid: 'x', border: 'y', theme: 'z', format: 'gif', resolution: 9, quality: 5 },
+    });
+    expect(drawing).toMatchObject({ cols: 200, rows: 4 });
+    expect(drawing.style).toMatchObject({
+      grid: 'cross',
+      border: 'contour',
+      theme: 'slate',
+      format: 'png',
+      resolution: 2,
+      quality: 50,
+    });
+  });
+
+  it('drops what is malformed, keeps points inside the sheet and caps the lists', () => {
+    const drawing = drawingOf({
+      cols: 4,
+      rows: 4,
+      floor: [
+        [
+          [
+            [0, 0],
+            [999, 0],
+            [0, 80],
+          ],
+        ],
+        [
+          [
+            [0, 0],
+            ['a', 1],
+            [10, 10],
+            [0, 0],
+          ],
+        ],
+        'x',
+        [square],
+      ],
+      doors: [{ x: 'a', y: 1 }, { x: -5, y: 500, angle: 'q' }, null],
+      texts: [
+        { x: 1, y: 1, s: '   ' },
+        { x: 1, y: 1, s: 'x'.repeat(500) },
+      ],
+    });
+    // rings that are not a loop (or lose a bad point and stop being one) are dropped; the square survives
+    expect(drawing.floor).toEqual([[square]]);
+    expect(drawing.doors).toEqual([{ x: 0, y: 160, angle: 0 }]);
+    expect(drawing.texts).toHaveLength(1);
+    expect(drawing.texts[0].s).toHaveLength(120);
+  });
+});
+
 describe('normalizeMap', () => {
   it('opens a minimal or empty file with defaults', () => {
     expect(normalizeMap({}, 'world')).toEqual({
       version: 1,
       name: 'world',
       image: null,
+      drawing: null,
       pins: [],
       paths: [],
       notes: [],
@@ -187,6 +296,29 @@ describe('map files', () => {
         image: 'camp/assets/c.png',
       }),
     ).rejects.toThrow(/Not a map file/);
+  });
+
+  it('creates a drawn map without an image and keeps its drawing through a save', async () => {
+    const created = await createMap(vault, {
+      folderPath: 'camp/maps',
+      slug: 'dungeon',
+      name: 'Dungeon',
+      image: null,
+      drawing: { cols: 12, rows: 9 },
+    });
+    expect(created.map.image).toBeNull();
+    expect(created.map.drawing).toMatchObject({ cols: 12, rows: 9 });
+
+    const saved = await writeMap(
+      vault,
+      created.path,
+      { ...created.map, image: 'camp/assets/dungeon.png' },
+      created.contentHash,
+    );
+    expect(saved.status).toBe('saved');
+    const reread = await readMap(vault, created.path);
+    expect(reread.map.image).toBe('camp/assets/dungeon.png');
+    expect(reread.map.drawing).toMatchObject({ cols: 12, rows: 9 });
   });
 
   it('saves with the hash it loaded and reports a conflict when the file changed', async () => {

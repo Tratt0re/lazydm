@@ -22,7 +22,7 @@ Heading to 1.0. Built and working:
 - Editor (Live preview, Source, Reading), links panel, rename with link refactoring, Review page
 - Assets: paste, drop, import, inline audio, PDFs
 - Encounter manager with tracker layouts (battle rules), party roster, cemetery and statuses
-- Map with pins linked to files
+- Map with pins linked to files, and a built-in map drawing editor
 - Folder home: search, filters, and List / Cards / Graph views of a section or folder (`documents:folderGraph` feeds the graph)
 - Quick reference: the campaign's rules sheet on Cmd/Ctrl+R (`quick-reference.json`), D&D 5e built in
 - Campaign export and import as a plain zip (`lazydm.json` manifest), also for MCP agents

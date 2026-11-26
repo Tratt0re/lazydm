@@ -84,6 +84,7 @@ their technical names; only the text the user sees changes. Add to this table be
   (`pasted-<timestamp>.<ext>` for a pasted screenshot); a taken name gets a `-<timestamp>` suffix — an asset is
   never overwritten. A file **identical** to an asset already in the scope (same size, then same content) is not
   saved again: the existing one is embedded and the toast says *Already in assets*.
+  One exception: the image a drawn map made of its drawing can be overwritten when the user chooses so (§6e).
 
 ## 2a. Sections (campaign folders)
 
@@ -524,6 +525,27 @@ Planned Electron modules: `vault`, `cloud-readiness`, `campaign`, `document`, `i
   - **Path**: `{ id, points: [{ x, y }], color, width, label, closed }`; `closed` (three points at least) is a
     polygon: its area is filled with the colour at low opacity.
   - **Note**: `{ id, x, y, text, color }`, a free text box anchored to a point.
+- **Drawn map**: *New map* offers a third image choice, *Draw a new map*, besides an existing image or one imported
+  from disk. The map file gets an optional **`drawing`**: `{ cols, rows, floor, doors, texts, style }`.
+  The sheet has a **fixed size** (`cols × rows` squares, chosen at creation), so pins (fractions of the image)
+  never move when the drawing is edited again.
+  - `floor` is a multipolygon in world pixels (`CELL = 40` px per square: rings of `[x, y]` points); `doors` are
+    `{ x, y, angle }`; `texts` are `{ x, y, s }`; `style` is `{ grid: cross|lines|none, border:
+    contour|rocks|dots|none, shadow, theme: slate|moss|indigo, format: png|jpg, resolution: 1|2|3, quality: 50..100 }`.
+  - Normalised when read like the rest: caps on rings, vertices, doors and texts, values outside a list fall back
+    to the default, unknown fields are dropped, texts are cut to the label length.
+  - **The generated image is a normal asset** of the scope's `assets/` (slug name, taken name gets a suffix, indexed
+    like the others) and the map's `image` points at it, so the map behaves like an imported one. When a drawing
+    that already has an image is edited again, *Done* asks: **overwrite** the previous image (the one exception to
+    "an asset is never overwritten", §2: only the image of that map, same format, through its own channel) or
+    **create a copy** (a new asset, `image` repointed; the old one stays until the user deletes it). Closing the
+    page without answering always makes a copy. A change of format (PNG or JPG) is always a copy.
+  - The editor (tools: rectangle, circle, polygon, corridor, door, text, move, erase; undo/redo; view and export
+    options) replaces the map view while it is open (*Edit drawing* / *Done*). The drawing data is saved right away;
+    the image is generated and saved on *Done* and when the tab closes. The three colour schemes (slate, moss,
+    indigo) are colours **of the image content**, not of the UI: they live in a config of their own and do not use
+    theme tokens (the editor's own chrome does).
+  - Agents (MCP) read a drawn map like any other but do not write `drawing`.
 - **Library**: Leaflet (core only) with `CRS.Simple`, the image as an overlay. Pins and notes are `divIcon` markers
   styled by us; no Leaflet default marker images and no drawing plugin. Leaflet's own chrome (zoom control,
   attribution) is replaced by ArcTechUI controls.
@@ -1123,6 +1145,7 @@ Component behaviour, variant keys and configuration stay as they are.
 - **Ask before adding a dependency**. Planned (to be approved in the phase that needs them):
   `yaml` (frontmatter), CodeMirror 6 (`@codemirror/state`, `view`, `lang-markdown`, `language-data`),
   `markdown-it` + `DOMPurify` (reading mode), possibly `chokidar` (if `fs.watch` is not reliable enough).
+  Approved: `polygon-clipping` (MIT; union and difference of the polygons of a drawn map, §6e).
 - When in doubt about requirements, ask.
 - Angular: standalone components, signals, `inject()`, `@/` path alias, i18n keys for user-facing strings.
 

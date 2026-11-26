@@ -21,6 +21,9 @@ export function mapColorVar(color: MapColor): string {
 /** The first choice of every map image list: it imports an image from disk instead of choosing an asset. */
 export const IMPORT_IMAGE_CHOICE = '__import-from-disk__';
 
+/** The other special choice of *New map*: draw a new map instead of picking an image. */
+export const DRAW_NEW_CHOICE = '__draw-new-map__';
+
 export const DEFAULT_PIN_COLOR: MapColor = 'red';
 export const DEFAULT_PATH_COLOR: MapColor = 'blue';
 export const DEFAULT_NOTE_COLOR: MapColor = 'yellow';

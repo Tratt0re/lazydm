@@ -21,6 +21,20 @@ const LINK_MAX_LENGTH = 512;
 const PATH_WIDTH_MIN = 1;
 const PATH_WIDTH_MAX = 12;
 const DEFAULT_PATH_WIDTH = 3;
+/** A drawn map (§6e): one square is `DRAWING_CELL` world pixels; the sheet is `cols × rows` squares. */
+const DRAWING_CELL = 40;
+const DRAWING_SIZE_MIN = 4;
+const DRAWING_SIZE_MAX = 200;
+const DRAWING_POLYGONS_MAX = 500;
+const DRAWING_RINGS_MAX = 50;
+const DRAWING_VERTICES_MAX = 100000;
+const DRAWING_DOORS_MAX = 2000;
+const DRAWING_TEXTS_MAX = 500;
+const DRAWING_GRIDS = Object.freeze(['cross', 'lines', 'none']);
+const DRAWING_BORDERS = Object.freeze(['contour', 'rocks', 'dots', 'none']);
+const DRAWING_THEMES = Object.freeze(['slate', 'moss', 'indigo']);
+const DRAWING_FORMATS = Object.freeze(['png', 'jpg']);
+const DRAWING_RESOLUTIONS = Object.freeze([1, 2, 3]);
 
 /** User colours are keys of a fixed palette; the page maps them to theme tokens. Never free hex input. */
 const MAP_COLORS = Object.freeze([
@@ -186,6 +200,103 @@ function toImagePath(value) {
   return image;
 }
 
+function toNumber(value, min, max, fallback) {
+  return typeof value === 'number' && Number.isFinite(value)
+    ? Math.min(max, Math.max(min, value))
+    : fallback;
+}
+
+function toChoice(value, list, fallback) {
+  return list.includes(value) ? value : fallback;
+}
+
+/** A point of the sheet in world pixels, kept inside it and rounded to hundredths. */
+function toWorldPoint(point, width, height) {
+  if (!Array.isArray(point)) {
+    return null;
+  }
+
+  const x = toNumber(point[0], 0, width, null);
+  const y = toNumber(point[1], 0, height, null);
+  return x === null || y === null ? null : [Math.round(x * 100) / 100, Math.round(y * 100) / 100];
+}
+
+/** The floor: polygons of rings of points. A ring needs a closed loop (four points at least). Vertices are capped overall. */
+function normalizeFloor(value, width, height) {
+  let vertices = 0;
+  const polygons = [];
+  for (const polygon of (Array.isArray(value) ? value : []).slice(0, DRAWING_POLYGONS_MAX)) {
+    const rings = [];
+    for (const ring of (Array.isArray(polygon) ? polygon : []).slice(0, DRAWING_RINGS_MAX)) {
+      const points = (Array.isArray(ring) ? ring : [])
+        .map((point) => toWorldPoint(point, width, height))
+        .filter(Boolean);
+      vertices += points.length;
+      if (points.length >= 4 && vertices <= DRAWING_VERTICES_MAX) {
+        rings.push(points);
+      }
+    }
+
+    if (rings.length > 0) {
+      polygons.push(rings);
+    }
+  }
+
+  return polygons;
+}
+
+function normalizeDrawingStyle(value) {
+  const style = isPlainObject(value) ? value : {};
+  return {
+    grid: toChoice(style.grid, DRAWING_GRIDS, 'cross'),
+    border: toChoice(style.border, DRAWING_BORDERS, 'contour'),
+    shadow: style.shadow !== false,
+    theme: toChoice(style.theme, DRAWING_THEMES, 'slate'),
+    format: toChoice(style.format, DRAWING_FORMATS, 'png'),
+    resolution: toChoice(style.resolution, DRAWING_RESOLUTIONS, 2),
+    quality: Math.round(toNumber(style.quality, 50, 100, 92)),
+  };
+}
+
+/**
+ * The editable drawing of a drawn map, null for an imported one. The sheet size (`cols` × `rows` squares) is fixed
+ * when the map is created, so pins keep their place; everything else is normalised like the rest of the file.
+ */
+function normalizeDrawing(value) {
+  if (!isPlainObject(value)) {
+    return null;
+  }
+
+  const cols = Math.round(toNumber(value.cols, DRAWING_SIZE_MIN, DRAWING_SIZE_MAX, 30));
+  const rows = Math.round(toNumber(value.rows, DRAWING_SIZE_MIN, DRAWING_SIZE_MAX, 20));
+  const width = cols * DRAWING_CELL;
+  const height = rows * DRAWING_CELL;
+  const doors = (Array.isArray(value.doors) ? value.doors : [])
+    .slice(0, DRAWING_DOORS_MAX)
+    .map((door) => {
+      const point = isPlainObject(door) ? toWorldPoint([door.x, door.y], width, height) : null;
+      return point && { x: point[0], y: point[1], angle: toNumber(door.angle, -7, 7, 0) };
+    })
+    .filter(Boolean);
+  const texts = (Array.isArray(value.texts) ? value.texts : [])
+    .slice(0, DRAWING_TEXTS_MAX)
+    .map((item) => {
+      const point = isPlainObject(item) ? toWorldPoint([item.x, item.y], width, height) : null;
+      const s = isPlainObject(item) ? toText(item.s, LABEL_MAX_LENGTH) : null;
+      return point && s && { x: point[0], y: point[1], s };
+    })
+    .filter(Boolean);
+
+  return {
+    cols,
+    rows,
+    floor: normalizeFloor(value.floor, width, height),
+    doors,
+    texts,
+    style: normalizeDrawingStyle(value.style),
+  };
+}
+
 /**
  * A map read from a file. Missing or wrong fields get defaults instead of failing, so a hand-edited or minimal
  * file still opens; unknown fields are dropped and ids are made unique.
@@ -196,6 +307,7 @@ function normalizeMap(value, fallbackName) {
     version: MAP_VERSION,
     name: toText(source.name, MAP_NAME_MAX_LENGTH) ?? fallbackName,
     image: toImagePath(source.image),
+    drawing: normalizeDrawing(source.drawing),
     pins: normalizeList(source.pins, PINS_MAX, normalizePin),
     paths: normalizeList(source.paths, PATHS_MAX, normalizePath),
     notes: normalizeList(source.notes, NOTES_MAX, normalizeNote),
@@ -279,7 +391,7 @@ async function writeMap(rootPath, relativePath, map, expectedHash) {
 }
 
 /** Creates `<folder>/<slug>.json` pointing at `image`; refuses a taken name. */
-async function createMap(rootPath, { folderPath, slug, name, image }) {
+async function createMap(rootPath, { folderPath, slug, name, image, drawing }) {
   const relativePath = `${folderPath.replace(/\/+$/, '')}/${slug}${MAP_EXTENSION}`;
   assertMapPath(relativePath);
   const absolutePath = resolveInsideVault(rootPath, relativePath);
@@ -287,7 +399,7 @@ async function createMap(rootPath, { folderPath, slug, name, image }) {
     throw new Error(`A map named "${slug}${MAP_EXTENSION}" already exists in ${folderPath}.`);
   }
 
-  safeWriteFileAtomic(absolutePath, serialize(normalizeMap({ name, image }, name)));
+  safeWriteFileAtomic(absolutePath, serialize(normalizeMap({ name, image, drawing }, name)));
   return readMap(rootPath, relativePath);
 }
 

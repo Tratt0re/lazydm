@@ -1612,7 +1612,11 @@
       "noImages": "Noch kein Bild in den Assets",
       "noImagesHint": "Füge zuerst ein Bild zum Bereich „Assets“ hinzu und erstelle dann die Karte.",
       "importFromDisk": "Bild von der Festplatte importieren…",
-      "importError": "Das Bild konnte nicht importiert werden"
+      "importError": "Das Bild konnte nicht importiert werden",
+      "drawNew": "Neue Karte zeichnen",
+      "cols": "Spalten",
+      "rows": "Zeilen",
+      "sizeError": "Gib eine ganze Zahl von {{min}} bis {{max}} ein"
     },
     "page": {
       "loadError": "Diese Karte konnte nicht geladen werden",
@@ -1739,6 +1743,91 @@
       "title": "Karte bearbeiten",
       "description": "Der Titel bestimmt den Dateinamen. Markierungen und Pfade behalten ihre Position auf einem neuen Bild.",
       "error": "Die Karte konnte nicht gespeichert werden"
+    },
+    "drawing": {
+      "canvas": "Zeichenfläche der Karte",
+      "menu": "Zeichenmenü",
+      "undo": "Rückgängig",
+      "redo": "Wiederholen",
+      "fit": "Karte zentrieren",
+      "options": "Ansicht und Export",
+      "erase": "Löschmodus",
+      "done": "Fertig",
+      "edit": "Zeichnung bearbeiten",
+      "reduced": "Die Karte ist sehr groß: Die Auflösung wurde verringert.",
+      "imageError": "Das Bild der Karte konnte nicht erstellt werden",
+      "clear": {
+        "title": "Karte leeren",
+        "description": "Alle Räume, Türen und Texte werden entfernt. Du kannst das rückgängig machen.",
+        "confirm": "Leeren"
+      },
+      "text": {
+        "title": "Text",
+        "label": "Text",
+        "placeholder": "Leer lassen zum Löschen"
+      },
+      "tools": {
+        "rect": "Rechteck",
+        "circle": "Kreis",
+        "poly": "Polygon",
+        "corr": "Gang",
+        "door": "Tür",
+        "text": "Text",
+        "pan": "Verschieben"
+      },
+      "hint": {
+        "rect": "Ziehen, um einen Raum zu erstellen.",
+        "circle": "Vom Mittelpunkt zum Rand ziehen.",
+        "poly": "Ecken anklicken. Doppelklick oder Eingabe zum Schließen, Esc zum Abbrechen.",
+        "corr": "Ziehen: ein L-förmiger Gang, ein Feld breit.",
+        "door": "Wand oder Lücke anklicken. Eine Tür anklicken, um sie zu entfernen.",
+        "text": "Klicken, um zu schreiben. Einen Text anklicken, um ihn zu bearbeiten (leer = löschen).",
+        "pan": "Ziehen, um dich zu bewegen. Das Mausrad zoomt."
+      },
+      "view": {
+        "title": "Ansicht",
+        "grid": "Raster",
+        "border": "Rand",
+        "theme": "Farben",
+        "shadow": "Schattierung",
+        "grids": {
+          "cross": "Kreuze",
+          "lines": "Linien",
+          "none": "Keines"
+        },
+        "borders": {
+          "contour": "Höhenlinien",
+          "rocks": "Felsen",
+          "dots": "Punkte",
+          "none": "Keiner"
+        },
+        "themes": {
+          "slate": "Schiefer",
+          "moss": "Moos",
+          "indigo": "Indigo"
+        }
+      },
+      "export": {
+        "title": "Bild",
+        "format": "Format",
+        "resolution": "Auflösung",
+        "quality": "JPG-Qualität",
+        "formats": {
+          "png": "PNG",
+          "jpg": "JPG"
+        },
+        "resolutions": {
+          "1": "1× (40 px pro Feld)",
+          "2": "2× (80 px)",
+          "3": "3× (120 px)"
+        }
+      },
+      "save": {
+        "title": "Das vorherige Bild ersetzen?",
+        "description": "Diese Karte hat bereits ein aus der Zeichnung erstelltes Bild. Mit dem neuen überschreiben oder behalten und eine Kopie erstellen?",
+        "overwrite": "Überschreiben",
+        "copy": "Kopie erstellen"
+      }
     }
   },
   "shortcuts": {
@@ -1749,7 +1838,8 @@
       "tabs": "Tabs und Navigation",
       "editor": "Notizeditor",
       "map": "Karteneditor",
-      "global": "Überall"
+      "global": "Überall",
+      "drawing": "Kartenzeichnung"
     },
     "items": {
       "search": "Kampagne durchsuchen",
@@ -1775,7 +1865,10 @@
       "mapSelectAll": "Alle Elemente auswählen (Auswahlwerkzeug)",
       "mapDelete": "Ausgewählte Elemente löschen",
       "mapAddToSelection": "Umschalt/Cmd/Strg-Klick: zur Auswahl hinzufügen oder entfernen",
-      "quickReference": "Die Schnellreferenz öffnen"
+      "quickReference": "Die Schnellreferenz öffnen",
+      "drawUndo": "Rückgängig",
+      "drawRedo": "Wiederholen",
+      "drawErase": "Löschmodus (oder Umschalttaste halten)"
     }
   },
   "menu": {

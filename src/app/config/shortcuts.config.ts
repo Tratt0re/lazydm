@@ -1,5 +1,5 @@
 /** Where a shortcut works: it groups the shortcuts in the overlay. */
-export type ShortcutScope = 'global' | 'tabs' | 'editor' | 'map';
+export type ShortcutScope = 'global' | 'tabs' | 'editor' | 'map' | 'drawing';
 
 /** `mod` is Cmd on macOS and Ctrl elsewhere; `alt` is Option on macOS. */
 export interface ShortcutKeys {
@@ -20,7 +20,13 @@ export interface ShortcutDefinition {
   readonly gesture?: boolean;
 }
 
-export const SHORTCUT_SCOPES: readonly ShortcutScope[] = ['global', 'tabs', 'editor', 'map'];
+export const SHORTCUT_SCOPES: readonly ShortcutScope[] = [
+  'global',
+  'tabs',
+  'editor',
+  'map',
+  'drawing',
+];
 
 export const SHORTCUTS: readonly ShortcutDefinition[] = [
   { id: 'search', scope: 'global', combos: [{ mod: true, key: 'k' }] },
@@ -50,6 +56,17 @@ export const SHORTCUTS: readonly ShortcutDefinition[] = [
   { id: 'mapSelectAll', scope: 'map', combos: [{ mod: true, key: 'a' }] },
   { id: 'mapDelete', scope: 'map', combos: [{ key: 'delete' }, { key: 'backspace' }] },
   { id: 'mapAddToSelection', scope: 'map', combos: [], gesture: true },
+
+  { id: 'drawUndo', scope: 'drawing', combos: [{ mod: true, key: 'z' }] },
+  {
+    id: 'drawRedo',
+    scope: 'drawing',
+    combos: [
+      { mod: true, key: 'y' },
+      { mod: true, shift: true, key: 'z' },
+    ],
+  },
+  { id: 'drawErase', scope: 'drawing', combos: [{ key: 'e' }, { key: 'shift' }] },
 ];
 
 import { TOOLTIP_SHORTCUT_SEPARATOR } from '@/shared/components/tooltip';
