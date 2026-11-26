@@ -35,9 +35,12 @@ function create(payload) {
     throw new Error('payload.name must contain at least one letter or number.');
   }
 
+  // A drawn map starts without an image: the editor generates it (an asset) on its first save.
+  const drawing =
+    body.drawing === undefined ? null : ensurePlainObject(body.drawing, 'payload.drawing');
   // The image is a file of the scope's assets/; the model rejects anything that is not an image path in the vault.
-  const image = requireString(body.image, 'payload.image');
-  if (!mapModel.normalizeMap({ image }, name).image) {
+  const image = drawing ? null : requireString(body.image, 'payload.image');
+  if (image && !mapModel.normalizeMap({ image }, name).image) {
     throw new Error('payload.image must be the vault path of an image.');
   }
 
@@ -46,6 +49,7 @@ function create(payload) {
     slug,
     name,
     image,
+    drawing,
   });
 }
 

@@ -525,18 +525,17 @@ Planned Electron modules: `vault`, `cloud-readiness`, `campaign`, `document`, `i
     polygon: its area is filled with the colour at low opacity.
   - **Note**: `{ id, x, y, text, color }`, a free text box anchored to a point.
 - **Drawn map**: *New map* offers a third image choice, *Draw a new map*, besides an existing image or one imported
-  from disk. The map file gets an optional **`drawing`**: `{ cols, rows, floor, doors, texts, style, image }`.
+  from disk. The map file gets an optional **`drawing`**: `{ cols, rows, floor, doors, texts, style }`.
   The sheet has a **fixed size** (`cols × rows` squares, chosen at creation), so pins (fractions of the image)
   never move when the drawing is edited again.
   - `floor` is a multipolygon in world pixels (`CELL = 40` px per square: rings of `[x, y]` points); `doors` are
     `{ x, y, angle }`; `texts` are `{ x, y, s }`; `style` is `{ grid: cross|lines|none, border:
-    contour|rocks|dots|none, shadow, theme: slate|moss|indigo, format: png|jpg, resolution: 1|2|3, quality: 50..100 }`;
-    `image` is the vault path of the last generated image.
+    contour|rocks|dots|none, shadow, theme: slate|moss|indigo, format: png|jpg, resolution: 1|2|3, quality: 50..100 }`.
   - Normalised when read like the rest: caps on rings, vertices, doors and texts, values outside a list fall back
     to the default, unknown fields are dropped, texts are cut to the label length.
   - **The generated image is a normal asset** of the scope's `assets/` (slug name, taken name gets a suffix, indexed
     like the others) and the map's `image` points at it, so the map behaves like an imported one. Every save of the
-    drawing writes a **new** asset (an asset is never overwritten, §2) and repoints `image` and `drawing.image` at it;
+    drawing writes a **new** asset (an asset is never overwritten, §2) and repoints the map's `image` at it;
     the previous images stay in the assets until the user deletes them.
   - The editor (tools: rectangle, circle, polygon, corridor, door, text, move, erase; undo/redo; view and export
     options) replaces the map view while it is open (*Edit drawing* / *Done*). The drawing data is saved right away;
