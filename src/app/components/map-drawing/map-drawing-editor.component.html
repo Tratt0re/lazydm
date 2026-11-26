@@ -1,0 +1,174 @@
+<div class="relative size-full overflow-hidden bg-recessed">
+  <canvas
+    #canvas
+    class="absolute inset-0 block size-full touch-none"
+    [class.cursor-crosshair]="tool() !== 'pan'"
+    [class.cursor-grab]="tool() === 'pan'"
+    [attr.aria-label]="'maps.drawing.canvas' | translate"
+    (pointerdown)="onPointerDown($event)"
+    (pointermove)="onPointerMove($event)"
+    (pointerup)="onPointerUp($event)"
+    (pointercancel)="onPointerCancel()"
+    (dblclick)="onDoubleClick()"
+    (wheel)="onWheel($event)"
+    (contextmenu)="$event.preventDefault()"
+  ></canvas>
+
+  <!-- Edit and view: undo, redo, fit, clear, and the options panel. -->
+  <div
+    class="absolute top-4 left-4 z-10 flex border border-border bg-raised"
+    role="toolbar"
+    [attr.aria-label]="'maps.drawing.menu' | translate"
+  >
+    <button
+      type="button"
+      arc-button
+      arcType="ghost"
+      [arcDisabled]="!canUndo()"
+      [arcTooltip]="'maps.drawing.undo' | translate"
+      [attr.aria-label]="'maps.drawing.undo' | translate"
+      (click)="undo()"
+    >
+      <arc-icon arcType="undo-2" />
+    </button>
+    <button
+      type="button"
+      arc-button
+      arcType="ghost"
+      [arcDisabled]="!canRedo()"
+      [arcTooltip]="'maps.drawing.redo' | translate"
+      [attr.aria-label]="'maps.drawing.redo' | translate"
+      (click)="redo()"
+    >
+      <arc-icon arcType="redo-2" />
+    </button>
+    <button
+      type="button"
+      arc-button
+      arcType="ghost"
+      [arcTooltip]="'maps.drawing.fit' | translate"
+      [attr.aria-label]="'maps.drawing.fit' | translate"
+      (click)="fit()"
+    >
+      <arc-icon arcType="maximize" />
+    </button>
+    <button
+      type="button"
+      arc-button
+      arcType="ghost"
+      [arcTooltip]="'maps.drawing.clear.title' | translate"
+      [attr.aria-label]="'maps.drawing.clear.title' | translate"
+      (click)="askClear()"
+    >
+      <arc-icon arcType="trash" />
+    </button>
+    <button
+      type="button"
+      arc-button
+      [arcType]="isOptionsOpen() ? 'default' : 'ghost'"
+      [arcTooltip]="'maps.drawing.options' | translate"
+      [attr.aria-label]="'maps.drawing.options' | translate"
+      [attr.aria-expanded]="isOptionsOpen()"
+      (click)="toggleOptions()"
+    >
+      <arc-icon arcType="sliders-horizontal" />
+    </button>
+  </div>
+
+  @if (isOptionsOpen() && state(); as drawing) {
+    <div class="absolute top-16 left-4 z-10 w-72 border border-border bg-raised p-3">
+      <p class="mb-2 font-mono text-xs uppercase text-muted-foreground">
+        {{ 'maps.drawing.view.title' | translate }}
+      </p>
+      <div class="flex flex-col gap-2">
+        @for (option of styleOptions.slice(0, 3); track option.key) {
+          <label class="flex items-center justify-between gap-3 text-sm">
+            {{ option.label | translate }}
+            <arc-select
+              class="w-40"
+              [arcValue]="styleValue(option.key)"
+              (arcSelectionChange)="setStyle(option.key, $event)"
+            >
+              @for (value of option.values; track value) {
+                <arc-select-item [arcValue]="'' + value" [arcLabel]="label(option, value)" />
+              }
+            </arc-select>
+          </label>
+        }
+        <label class="flex items-center justify-between gap-3 text-sm">
+          {{ 'maps.drawing.view.shadow' | translate }}
+          <arc-switch
+            [arcChecked]="drawing.style.shadow"
+            [arcAriaLabel]="'maps.drawing.view.shadow' | translate"
+            (arcCheckedChange)="setShadow($event)"
+          />
+        </label>
+      </div>
+
+      <p class="mt-4 mb-2 font-mono text-xs uppercase text-muted-foreground">
+        {{ 'maps.drawing.export.title' | translate }}
+      </p>
+      <div class="flex flex-col gap-2">
+        @for (option of styleOptions.slice(3); track option.key) {
+          @if (option.key !== 'quality' || isJpg()) {
+            <label class="flex items-center justify-between gap-3 text-sm">
+              {{ option.label | translate }}
+              <arc-select
+                class="w-40"
+                [arcValue]="styleValue(option.key)"
+                (arcSelectionChange)="setStyle(option.key, $event)"
+              >
+                @for (value of option.values; track value) {
+                  <arc-select-item [arcValue]="'' + value" [arcLabel]="label(option, value)" />
+                }
+              </arc-select>
+            </label>
+          }
+        }
+      </div>
+    </div>
+  }
+
+  <!-- Tools: the palette at the bottom, with the erase switch. -->
+  <div
+    class="absolute bottom-4 left-1/2 z-10 flex -translate-x-1/2 border border-border bg-raised"
+    role="toolbar"
+    [attr.aria-label]="'maps.tools.label' | translate"
+  >
+    @for (item of tools; track item.id) {
+      <button
+        type="button"
+        arc-button
+        [arcType]="tool() === item.id ? 'default' : 'ghost'"
+        [arcTooltip]="(toolLabel(item.id) | translate) + ' (' + item.key + ')'"
+        [attr.aria-label]="toolLabel(item.id) | translate"
+        [attr.aria-pressed]="tool() === item.id"
+        (click)="setTool(item.id)"
+      >
+        <arc-icon [arcType]="item.icon" />
+      </button>
+    }
+    <button
+      type="button"
+      arc-button
+      [arcType]="isErasing() ? 'destructive' : 'ghost'"
+      [arcTooltip]="('maps.drawing.erase' | translate) + ' (E / Shift)'"
+      [attr.aria-label]="'maps.drawing.erase' | translate"
+      [attr.aria-pressed]="isErasing()"
+      (click)="setErase(!isErasing())"
+    >
+      <arc-icon arcType="eraser" />
+    </button>
+  </div>
+
+  <p
+    class="pointer-events-none absolute right-4 bottom-20 z-10 max-w-xs text-right text-xs text-muted-foreground"
+  >
+    {{ 'maps.drawing.hint.' + tool() | translate }}
+  </p>
+
+  <button type="button" arc-button class="absolute top-4 right-4 z-10" (click)="done.emit()">
+    <arc-icon arcType="check" />
+    {{ 'maps.drawing.done' | translate }}
+  </button>
+</div>

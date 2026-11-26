@@ -10,7 +10,13 @@ import {
   toInAppMapRoute,
   toInAppNoteRoute,
 } from '@/components/document-preview/document-preview.markdown';
-import { IMPORT_IMAGE_CHOICE } from '@/config/map.config';
+import {
+  DRAWING_DEFAULT_COLS,
+  DRAWING_DEFAULT_ROWS,
+  DRAWING_SIZE_MAX,
+  DRAWING_SIZE_MIN,
+} from '@/config/map-drawing.config';
+import { DRAW_NEW_CHOICE, IMPORT_IMAGE_CHOICE } from '@/config/map.config';
 import {
   AppAssetImportSheetComponent,
   type AssetImportSheetData,
@@ -372,6 +378,26 @@ export class FileActionsService {
       MAP_IMAGE_PATTERN.test(file.name),
     );
 
+    // Drawing a new map asks for the size of the sheet instead of the image's own size.
+    const sizeField = (id: 'cols' | 'rows', label: string): AppSheetField => ({
+      id,
+      type: 'input',
+      inputType: 'number',
+      label,
+      width: '1/2',
+      translate: true,
+      required: true,
+      validate: (value) => {
+        const size = Number(value);
+        return Number.isInteger(size) && size >= DRAWING_SIZE_MIN && size <= DRAWING_SIZE_MAX
+          ? null
+          : this.translateService.instant('maps.new.sizeError', {
+              min: DRAWING_SIZE_MIN,
+              max: DRAWING_SIZE_MAX,
+            });
+      },
+    });
+    let isDrawing = false;
     const buildFields = (
       imageList: readonly { path: string; name: string }[],
     ): readonly AppSheetField[] => [
@@ -387,10 +413,14 @@ export class FileActionsService {
         required: true,
         translate: true,
         options: [
+          { value: DRAW_NEW_CHOICE, label: 'maps.new.drawNew', translate: true },
           { value: IMPORT_IMAGE_CHOICE, label: 'maps.new.importFromDisk', translate: true },
           ...imageList.map((file) => ({ value: file.path, label: file.name })),
         ],
       },
+      ...(isDrawing
+        ? [sizeField('cols', 'maps.new.cols'), sizeField('rows', 'maps.new.rows')]
+        : []),
     ];
 
     const step: AppDialogWizardStep = {
@@ -400,11 +430,29 @@ export class FileActionsService {
       fields: buildFields(images),
       values: selectedImage ? { image: selectedImage } : undefined,
       onFieldChange: (fieldId, value, form) => {
-        if (fieldId !== 'image' || value !== IMPORT_IMAGE_CHOICE) {
+        if (fieldId !== 'image') {
           return;
         }
 
         const name = form.getValue('name');
+        const wantsDrawing = value === DRAW_NEW_CHOICE;
+        if (wantsDrawing !== isDrawing && value !== IMPORT_IMAGE_CHOICE) {
+          isDrawing = wantsDrawing;
+          form.setFields(buildFields(images), {
+            name: typeof name === 'string' ? name : '',
+            image: typeof value === 'string' ? value : null,
+            ...(wantsDrawing
+              ? { cols: String(DRAWING_DEFAULT_COLS), rows: String(DRAWING_DEFAULT_ROWS) }
+              : {}),
+          });
+          return;
+        }
+
+        if (value !== IMPORT_IMAGE_CHOICE) {
+          return;
+        }
+
+        isDrawing = false;
         void this.importMapImage(scope).then((saved) => {
           const imageList = saved
             ? [...images, { path: saved.path, name: saved.path.split('/').pop() ?? saved.path }]
@@ -417,10 +465,15 @@ export class FileActionsService {
       },
       onSubmit: (form) => {
         const values = form.getValues();
+        const drawing =
+          values['image'] === DRAW_NEW_CHOICE
+            ? { cols: Number(values['cols']), rows: Number(values['rows']) }
+            : undefined;
         return this.createMap(
           folderPath,
           String(values['name'] ?? ''),
-          String(values['image'] ?? ''),
+          drawing ? undefined : String(values['image'] ?? ''),
+          drawing,
         );
       },
     };
@@ -527,9 +580,14 @@ export class FileActionsService {
     }
   }
 
-  private async createMap(folderPath: string, name: string, image: string): Promise<boolean> {
+  private async createMap(
+    folderPath: string,
+    name: string,
+    image?: string,
+    drawing?: { readonly cols: number; readonly rows: number },
+  ): Promise<boolean> {
     try {
-      const map = await this.mapService.create({ folder: folderPath, name, image });
+      const map = await this.mapService.create({ folder: folderPath, name, image, drawing });
       const route = toInAppMapRoute(map.path);
       if (route) {
         await this.router.navigateByUrl(route);

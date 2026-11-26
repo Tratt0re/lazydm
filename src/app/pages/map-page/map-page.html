@@ -126,6 +126,15 @@
       </div>
     }
 
+    @if (isDrawing() && data()?.drawing; as drawing) {
+      <app-map-drawing-editor
+        class="absolute inset-0 z-[800]"
+        [drawing]="drawing"
+        (drawingChange)="onDrawingChange($event)"
+        (done)="finishDrawing()"
+      />
+    }
+
     @if (!errorMessage() && imageState() === 'missing') {
       <div class="absolute inset-0 z-[600] flex items-start justify-center bg-background/80 p-6">
         <arc-alert
@@ -136,7 +145,7 @@
           [arcDescription]="'maps.page.missingImageHint' | translate: { image: data()?.image }"
         />
       </div>
-    } @else if (!errorMessage() && data() && imageState() === 'none') {
+    } @else if (!errorMessage() && data() && imageState() === 'none' && !isDrawing()) {
       <div class="absolute inset-0 z-[600] flex items-start justify-center bg-background/80 p-6">
         <arc-alert
           class="max-w-xl"

@@ -1,4 +1,5 @@
 import type { MapDrawingStyleDto } from '@/dtos';
+import type { ArcTechIcon } from '@/shared/components/icon';
 
 /** World pixels of one square of the sheet; the same value as the Electron model. */
 export const DRAWING_CELL = 40;
@@ -77,7 +78,7 @@ export type DrawingTool = 'rect' | 'circle' | 'poly' | 'corr' | 'door' | 'text' 
 export const DRAWING_TOOLS: readonly {
   readonly id: DrawingTool;
   readonly key: string;
-  readonly icon: string;
+  readonly icon: ArcTechIcon;
 }[] = [
   { id: 'rect', key: 'R', icon: 'square' },
   { id: 'circle', key: 'C', icon: 'circle' },

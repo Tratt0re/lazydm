@@ -25,6 +25,8 @@ import {
   toInAppMapRoute,
   toInAppNoteRoute,
 } from '@/components/document-preview/document-preview.markdown';
+import { AppMapDrawingEditorComponent } from '@/components/map-drawing/map-drawing-editor.component';
+import { exportDrawing } from '@/components/map-drawing/map-drawing.render';
 import { AppDialogFormService } from '@/components/sheet-form/dialog-form.service';
 import type { AppSheetField } from '@/components/sheet-form/sheet-form.types';
 import type { SidePanelMode } from '@/config/side-panel.config';
@@ -41,6 +43,7 @@ import {
   MAP_COLORS,
   MAP_PIN_ICONS,
   type MapColor,
+  type MapDrawingDto,
   type MapDto,
   type MapFileDto,
   type MapNoteDto,
@@ -54,6 +57,7 @@ import { CAMPAIGN_SECTION_PARAM } from '@/pages/campaign-section-page/campaign-s
 import { onIndexUpdated } from '@/services/ipc-events';
 import { getLinkOpenMode, type LinkOpenMode } from '@/shared/utils/link-open-mode';
 import { toDisplayPath } from '@/shared/utils/vault-path';
+import { AssetService } from '@/services/asset.service';
 import { DocumentService } from '@/services/document.service';
 import { CopyToService } from '@/services/copy-to.service';
 import { FileActionsService } from '@/services/file-actions.service';
@@ -231,6 +235,7 @@ function createIconSvg(icon: ArcTechIcon): SVGElement {
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-map-page',
   imports: [
+    AppMapDrawingEditorComponent,
     ArcTechSidePanelComponent,
     TranslatePipe,
     ArcTechAlertComponent,
@@ -257,6 +262,7 @@ export class MapPage {
   private readonly fileActions = inject(FileActionsService);
   private readonly copyTo = inject(CopyToService);
   private readonly mapService = inject(MapService);
+  private readonly assetService = inject(AssetService);
   private readonly documentService = inject(DocumentService);
   private readonly workspace = inject(WorkspaceService);
   private readonly sharedFiles = inject(SharedFileService);
@@ -357,6 +363,12 @@ export class MapPage {
     () => this.data() !== null && !this.parseError() && this.imageState() === 'ready',
   );
   private readonly imagePath = computed(() => this.data()?.image ?? null);
+  /** A drawn map (it has a drawing to edit) rather than one made from an imported image. */
+  protected readonly isDrawn = computed(() => this.data()?.drawing != null);
+  /** The drawing editor is open over the map. */
+  protected readonly isDrawing = signal(false);
+  /** The drawing changed since its image was made: the image is made again on *Done* and when the page closes. */
+  private isImageStale = false;
 
   protected readonly tools: readonly {
     readonly tool: MapTool;
@@ -511,6 +523,8 @@ export class MapPage {
     );
 
     afterNextRender(() => this.initLeaflet());
+    // Closing the page with a drawing not turned into an image yet: make the image anyway.
+    this.destroyRef.onDestroy(() => void this.refreshDrawingImage());
 
     effect(() => {
       if (this.scope()) {
@@ -574,6 +588,18 @@ export class MapPage {
       const sectionPath = `${scope.routeBase}/${this.sectionKey()}`;
       const subfolder = this.subfolder();
       const actions: ToolbarItemAction[] = [
+        ...(this.isDrawn()
+          ? [
+              {
+                id: 'drawing',
+                label: this.translateService.instant('maps.drawing.edit'),
+                icon: 'pencil' as const,
+                buttonType: this.isDrawing() ? ('default' as const) : ('outline' as const),
+                iconOnly: true,
+                action: () => this.isDrawing.set(true),
+              },
+            ]
+          : []),
         {
           id: 'details',
           label: this.translateService.instant('maps.panel.toggle'),
@@ -1752,6 +1778,7 @@ export class MapPage {
   protected onKeydown(event: KeyboardEvent): void {
     const target = event.target instanceof HTMLElement ? event.target : null;
     if (
+      this.isDrawing() ||
       event.defaultPrevented ||
       !this.leaflet ||
       target?.closest('input, textarea, select, [contenteditable="true"]') ||
@@ -2205,6 +2232,8 @@ export class MapPage {
         }
         this.selectedIds.set(new Set());
         this.tool.set('interact');
+        // A new drawn map has no image yet: it opens straight in the editor.
+        this.isDrawing.set(!!file.map.drawing && !file.map.image);
         // Another map with the same image reuses the page: it still has to show its own view.
         if (this.imageSize && this.shownImage === file.map.image) {
           this.applyView();
@@ -2235,6 +2264,49 @@ export class MapPage {
     const shared = this.sharedFiles.join<MapFileDto, MapDto>(path, this);
     this.shared.set(shared);
     return shared;
+  }
+
+  // --- Drawing -----------------------------------------------------------------------------------------
+
+  /** Every change of the drawing is saved right away, like any other edit of the map. */
+  protected onDrawingChange(drawing: MapDrawingDto): void {
+    this.isImageStale = true;
+    this.update((data) => ({ ...data, drawing }));
+  }
+
+  /** *Done*: the image is made from the drawing, then the map shows it. */
+  protected async finishDrawing(): Promise<void> {
+    await this.refreshDrawingImage();
+    this.isDrawing.set(false);
+  }
+
+  /** Makes the image of the drawing, saves it as a new asset and points the map at it. */
+  private async refreshDrawingImage(): Promise<void> {
+    const drawing = this.data()?.drawing;
+    const scope = this.scope();
+    if (!drawing || !scope || !this.isImageStale) {
+      return;
+    }
+
+    try {
+      const image = await exportDrawing(drawing);
+      this.isImageStale = false;
+      if (!image) {
+        return; // nothing drawn yet: there is no image to make
+      }
+
+      const name = `${this.fileName().replace(ENCOUNTER_EXTENSION_PATTERN, '')}.${image.extension}`;
+      const file = new File([image.bytes as BlobPart], name, { type: image.mimeType });
+      const saved = await this.assetService.save({ folder: `${scope.rootPath}/assets` }, file);
+      this.update((data) => ({ ...data, image: saved.path }));
+      if (image.reduced) {
+        toast.info(this.translateService.instant('maps.drawing.reduced'));
+      }
+    } catch (error) {
+      toast.error(this.translateService.instant('maps.drawing.imageError'), {
+        description: error instanceof Error ? error.message : String(error),
+      });
+    }
   }
 
   /** Saves the map; changes made while a save runs are saved right after it, in order. */
