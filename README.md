@@ -85,7 +85,7 @@ through the turns while hit points, temporary hit points and timed statuses stay
 ## Open the right place
 
 Add a map image and place pins for the locations that matter. Link a pin to a note, and the guard post on the map opens
-the guard post you prepared earlier.
+the guard post you prepared earlier. No map image yet? Draw one inside LazyDM.
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="docs/screens/map-dark.webp" />
