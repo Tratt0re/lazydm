@@ -1821,6 +1821,12 @@
           "2": "2× (80 px)",
           "3": "3× (120 px)"
         }
+      },
+      "save": {
+        "title": "¿Reemplazar la imagen anterior?",
+        "description": "Este mapa ya tiene una imagen creada a partir del dibujo. ¿Quieres sobrescribirla con la nueva o conservarla y crear una copia?",
+        "overwrite": "Sobrescribir",
+        "copy": "Crear una copia"
       }
     }
   },

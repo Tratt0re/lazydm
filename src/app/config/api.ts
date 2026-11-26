@@ -48,6 +48,7 @@ export interface ElectronIpcClient {
       DTO.AssetTarget & { readonly imageOnly?: boolean },
       { files: DTO.SavedAssetDto[] }
     >;
+    readonly replace: IpcRequest<{ path: string; bytes: Uint8Array }, { path: string }>;
   };
   readonly battleRules: {
     readonly list: OptionalIpcRequest<void, DTO.BattleRuleListDto>;

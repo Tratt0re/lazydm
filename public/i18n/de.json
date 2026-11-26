@@ -1821,6 +1821,12 @@
           "2": "2× (80 px)",
           "3": "3× (120 px)"
         }
+      },
+      "save": {
+        "title": "Das vorherige Bild ersetzen?",
+        "description": "Diese Karte hat bereits ein aus der Zeichnung erstelltes Bild. Mit dem neuen überschreiben oder behalten und eine Kopie erstellen?",
+        "overwrite": "Überschreiben",
+        "copy": "Kopie erstellen"
       }
     }
   },

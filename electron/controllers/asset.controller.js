@@ -2,7 +2,11 @@ const fs = require('node:fs');
 const path = require('node:path');
 const { dialog, net, protocol } = require('electron');
 const { pathToFileURL } = require('node:url');
-const { formatTimestampForFilename, resolveInsideVault } = require('../utils/file-utils');
+const {
+  formatTimestampForFilename,
+  resolveInsideVault,
+  safeWriteFileAtomic,
+} = require('../utils/file-utils');
 const { toLinkKey, toSlug } = require('../utils/string-sanitize');
 const { documentModel, sectionModel, vaultIndexModel } = require('../models');
 const indexerController = require('./indexer.controller');
@@ -276,8 +280,40 @@ async function importFiles(payload) {
   return { files };
 }
 
+/**
+ * The one exception to "an asset is never overwritten" (design principles §2, §6e): the image a drawn map made
+ * of its drawing can be replaced by the next version of that drawing. Only an image that already exists in an
+ * `assets/` folder; the bytes are checked like a saved asset's.
+ */
+async function replaceImage(payload) {
+  const body = ensurePlainObject(payload, 'payload');
+  const relativePath = requireString(body.path, 'payload.path');
+  if (!(body.bytes instanceof Uint8Array)) {
+    throw new Error('payload.bytes must be the file content.');
+  }
+  if (body.bytes.byteLength === 0 || body.bytes.byteLength > ASSET_MAX_BYTES) {
+    throw new Error(`Media files must be between 1 byte and ${ASSET_MAX_BYTES / 1024 / 1024} MB.`);
+  }
+  if (
+    !/\.(png|jpe?g)$/i.test(relativePath) ||
+    !relativePath.split('/').slice(0, -1).includes(ASSETS_DIR_NAME)
+  ) {
+    throw new Error(`Not an image of the assets: ${relativePath}`);
+  }
+
+  const absolutePath = resolveInsideVault(vaultController.getReadyVaultPath(), relativePath);
+  if (!fs.existsSync(absolutePath)) {
+    throw new Error(`The image does not exist: ${relativePath}`);
+  }
+
+  safeWriteFileAtomic(absolutePath, Buffer.from(body.bytes));
+  await indexerController.reindexPaths([relativePath]);
+  return { path: relativePath };
+}
+
 module.exports = {
   handleAssetRequests,
+  replaceImage,
   importFiles,
   isMediaFileName,
   registerAssetScheme,

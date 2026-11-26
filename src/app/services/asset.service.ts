@@ -52,6 +52,11 @@ export class AssetService extends BaseIpcService<APIChannel.ASSETS> {
     });
   }
 
+  /** Replaces the bytes of an image already in the assets (the image a drawn map made of its drawing). */
+  async replaceImage(path: string, bytes: Uint8Array): Promise<void> {
+    await this.ipcClient.replace({ path, bytes });
+  }
+
   /** Lets the user pick media files on disk and saves them as assets (none when the dialog is cancelled). */
   async importFiles(target: AssetTarget): Promise<readonly SavedAssetDto[]> {
     return (await this.ipcClient.import(target)).files;

@@ -10,6 +10,7 @@ const CHANNELS = Object.freeze({
   assets: Object.freeze({
     save: 'assets:save',
     import: 'assets:import',
+    replace: 'assets:replace',
   }),
   battleRules: Object.freeze({
     list: 'battleRules:list',

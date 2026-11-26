@@ -1821,6 +1821,12 @@
           "2": "2× (80 px)",
           "3": "3× (120 px)"
         }
+      },
+      "save": {
+        "title": "Remplacer l'image précédente ?",
+        "description": "Cette carte a déjà une image créée à partir du dessin. La remplacer par la nouvelle, ou la garder et créer une copie ?",
+        "overwrite": "Écraser",
+        "copy": "Créer une copie"
       }
     }
   },

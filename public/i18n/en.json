@@ -1821,6 +1821,12 @@
           "2": "2× (80 px)",
           "3": "3× (120 px)"
         }
+      },
+      "save": {
+        "title": "Replace the previous image?",
+        "description": "This map already has an image made from its drawing. Overwrite it with the new one, or keep it and create a copy?",
+        "overwrite": "Overwrite",
+        "copy": "Create a copy"
       }
     }
   },

@@ -84,6 +84,7 @@ their technical names; only the text the user sees changes. Add to this table be
   (`pasted-<timestamp>.<ext>` for a pasted screenshot); a taken name gets a `-<timestamp>` suffix — an asset is
   never overwritten. A file **identical** to an asset already in the scope (same size, then same content) is not
   saved again: the existing one is embedded and the toast says *Already in assets*.
+  One exception: the image a drawn map made of its drawing can be overwritten when the user chooses so (§6e).
 
 ## 2a. Sections (campaign folders)
 
@@ -534,9 +535,11 @@ Planned Electron modules: `vault`, `cloud-readiness`, `campaign`, `document`, `i
   - Normalised when read like the rest: caps on rings, vertices, doors and texts, values outside a list fall back
     to the default, unknown fields are dropped, texts are cut to the label length.
   - **The generated image is a normal asset** of the scope's `assets/` (slug name, taken name gets a suffix, indexed
-    like the others) and the map's `image` points at it, so the map behaves like an imported one. Every save of the
-    drawing writes a **new** asset (an asset is never overwritten, §2) and repoints the map's `image` at it;
-    the previous images stay in the assets until the user deletes them.
+    like the others) and the map's `image` points at it, so the map behaves like an imported one. When a drawing
+    that already has an image is edited again, *Done* asks: **overwrite** the previous image (the one exception to
+    "an asset is never overwritten", §2: only the image of that map, same format, through its own channel) or
+    **create a copy** (a new asset, `image` repointed; the old one stays until the user deletes it). Closing the
+    page without answering always makes a copy. A change of format (PNG or JPG) is always a copy.
   - The editor (tools: rectangle, circle, polygon, corridor, door, text, move, erase; undo/redo; view and export
     options) replaces the map view while it is open (*Edit drawing* / *Done*). The drawing data is saved right away;
     the image is generated and saved on *Done* and when the tab closes. The three colour schemes (slate, moss,

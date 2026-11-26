@@ -285,6 +285,8 @@ export class MapPage {
   private bounds: L.LatLngBounds | null = null;
   private imageSize: { readonly width: number; readonly height: number } | null = null;
   private shownImage: string | null = null;
+  /** Raised when an image is replaced in place, so the new content is loaded instead of the cached one. */
+  private imageVersion = 0;
   private readonly layerIndex = new Map<string, ItemLayers>();
   private groupDrag: GroupDrag | null = null;
   private readonly viewVersion = signal(0);
@@ -740,7 +742,7 @@ export class MapPage {
     }
 
     this.imageState.set('loading');
-    const url = toAssetUrl(image);
+    const url = `${toAssetUrl(image)}?v=${this.imageVersion}`;
     const probe = new Image();
     probe.onload = () => {
       if (this.shownImage !== image || !this.leaflet) {
@@ -2276,12 +2278,38 @@ export class MapPage {
 
   /** *Done*: the image is made from the drawing, then the map shows it. */
   protected async finishDrawing(): Promise<void> {
-    await this.refreshDrawingImage();
+    const data = this.data();
+    // Editing a drawing that already has an image: ask whether the new image replaces it or is a copy.
+    const canOverwrite =
+      this.isImageStale &&
+      !!data?.image &&
+      data.image.toLowerCase().endsWith(`.${data.drawing?.style.format}`) &&
+      (data.drawing?.floor.length ?? 0) > 0;
+    await this.refreshDrawingImage(canOverwrite ? await this.askImageMode() : 'copy');
     this.isDrawing.set(false);
   }
 
+  /** Overwrite the map's previous image or keep it and make a copy; dismissing the question keeps both. */
+  private askImageMode(): Promise<'overwrite' | 'copy'> {
+    return new Promise((resolve) => {
+      const dialogRef = this.dialogService.create({
+        arcTitle: this.translateService.instant('maps.drawing.save.title'),
+        arcContent: this.translateService.instant('maps.drawing.save.description'),
+        arcOkText: this.translateService.instant('maps.drawing.save.overwrite'),
+        arcOkDestructive: true,
+        arcCancelText: this.translateService.instant('maps.drawing.save.copy'),
+        arcOnOk: () => {
+          resolve('overwrite');
+          dialogRef.close();
+          return false;
+        },
+        arcOnCancel: () => resolve('copy'),
+      });
+    });
+  }
+
   /** Makes the image of the drawing, saves it as a new asset and points the map at it. */
-  private async refreshDrawingImage(): Promise<void> {
+  private async refreshDrawingImage(mode: 'overwrite' | 'copy' = 'copy'): Promise<void> {
     const drawing = this.data()?.drawing;
     const scope = this.scope();
     if (!drawing || !scope || !this.isImageStale) {
@@ -2293,6 +2321,16 @@ export class MapPage {
       this.isImageStale = false;
       if (!image) {
         return; // nothing drawn yet: there is no image to make
+      }
+
+      const previous = this.data()?.image;
+      if (mode === 'overwrite' && previous) {
+        await this.assetService.replaceImage(previous, image.bytes);
+        // Same path, new content: show it again, past the browser's cache.
+        this.imageVersion++;
+        this.shownImage = null;
+        this.showImage(previous);
+        return;
       }
 
       const name = `${this.fileName().replace(ENCOUNTER_EXTENSION_PATTERN, '')}.${image.extension}`;

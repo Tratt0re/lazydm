@@ -36,6 +36,7 @@ const IPC_HANDLERS = Object.freeze({
 
   [CHANNELS.assets.save]: assetController.save,
   [CHANNELS.assets.import]: assetController.importFiles,
+  [CHANNELS.assets.replace]: assetController.replaceImage,
 
   [CHANNELS.battleRules.list]: battleRuleController.list,
   [CHANNELS.battleRules.getChoice]: battleRuleController.getChoice,
